@@ -1,0 +1,3 @@
+rootProject.name = 'kitsu_mobile'
+
+include ':app'

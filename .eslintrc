@@ -1,0 +1,11 @@
+{
+  "extends": "airbnb",
+  "globals": {
+    "fetch": false
+  },
+  "env": {
+    "jest": true,
+    "browser": true
+  },
+  "rules": {}
+}
