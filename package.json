@@ -10,8 +10,17 @@
     "babel-eslint": "^7.2.3",
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^7.0.1",
+    "native-base": "^2.1.3",
     "react": "16.0.0-alpha.6",
-    "react-native": "0.44.0"
+    "react-native": "0.44.0",
+    "react-native-code-push": "^2.0.3-beta",
+    "react-navigation": "^1.0.0-beta.9",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0",
+    "redux-action-buffer": "^1.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^4.8.0",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",
@@ -22,6 +31,7 @@
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-react": "^7.0.1",
     "jest": "20.0.3",
+    "prettier-eslint": "^6.2.2",
     "react-test-renderer": "16.0.0-alpha.6"
   },
   "jest": {

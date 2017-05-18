@@ -1,3 +1,4 @@
 <resources>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">vHpLQFUfuH4hrSoZvao4c_IgvEAiNJyXT3z-z</string>
     <string name="app_name">kitsu_mobile</string>
 </resources>
