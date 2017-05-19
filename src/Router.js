@@ -1,5 +1,6 @@
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import HomeScreen from './screens/HomeScreen';
+import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
 
 const Tabs = TabNavigator({
   Feed: {
@@ -14,16 +15,22 @@ const Tabs = TabNavigator({
 
 // })
 
-const Root = StackNavigator({
-  Tabs: {
-    screen: Tabs,
+const Root = StackNavigator(
+  {
+    Onboarding: {
+      screen: OnboardingScreen,
+    },
+    Tabs: {
+      screen: Tabs,
+    },
+    // Onboarding: {
+    //   screen: Onboarding,
+    // },
+    // Settings: {
+    //   screen: Settings,
+    // },
   },
-  // Onboarding: {
-  //   screen: Onboarding,
-  // },
-  // Settings: {
-  //   screen: Settings,
-  // },
-});
+  { headerMode: 'screen' },
+);
 
 export default Root;
