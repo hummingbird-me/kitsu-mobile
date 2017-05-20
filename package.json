@@ -11,10 +11,12 @@
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^7.0.1",
     "native-base": "^2.1.3",
+    "prop-types": "^15.5.10",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
     "react-native-code-push": "^2.0.3-beta",
     "react-native-snap-carousel": "^2.1.4",
+    "react-native-vector-icons": "^4.1.1",
     "react-navigation": "^1.0.0-beta.9",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
@@ -37,5 +39,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "src/assets/fonts"
+    ]
   }
 }
