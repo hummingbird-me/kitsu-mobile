@@ -11,7 +11,6 @@ class HomeScreen extends Component {
   }
   render() {
     const { profile, logoutUser, navigation, loading } = this.props;
-    console.log(profile.avatar.medium.split('?'));
     return (
       <Container>
         <Content>
