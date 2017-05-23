@@ -9,7 +9,7 @@ import createActionBuffer from 'redux-action-buffer';
 import * as reducers from './reducers';
 
 const middlewares = [thunk, createActionBuffer(REHYDRATE)];
-if (__DEV__ === true) {
+if (__DEV__) {
   middlewares.push(createLogger({}));
 }
 

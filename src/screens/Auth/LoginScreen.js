@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Image, Dimensions } from 'react-native';
+import { LoginManager } from 'react-native-fbsdk';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import { connect } from 'react-redux';
+
 import * as colors from '../../constants/colors';
 import CustomIcon from '../../components/Icon';
 import LoginForm from '../../components/Forms/LoginForm';
-import { loginUser } from '../../store/auth/actions';
+import { loginUser, loginUserFb } from '../../store/auth/actions';
 
 class LoginScreen extends Component {
   static navigationOptions = {
@@ -19,10 +21,12 @@ class LoginScreen extends Component {
     this.state = {
       username: '',
       password: '',
+      loading: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.loginFacebook = this.loginFacebook.bind(this);
   }
 
   onSubmit() {
@@ -34,6 +38,22 @@ class LoginScreen extends Component {
 
   handleChange(text, name) {
     this.setState({ [name]: text });
+  }
+  loginFacebook() {
+    this.setState({loading: true})
+    LoginManager.logInWithReadPermissions(['public_profile']).then(
+      (result) => {
+        if (result.isCancelled) {
+          console.log('login canceled');
+        } else {
+          this.props.loginUser();
+        }
+        this.setState({loading: false})        
+      },
+      (error) => {
+        alert(`Login fail with error: ${error}`);
+      },
+    );
   }
   render() {
     const ind = Math.floor(Math.random() * 4);
@@ -64,6 +84,7 @@ class LoginScreen extends Component {
             data={this.state}
             handleChange={this.handleChange}
             onSubmit={this.onSubmit}
+            loading={this.props.signingIn || this.state.loading}
           />
           <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>
             <Text
@@ -117,8 +138,10 @@ class LoginScreen extends Component {
         <Footer style={styles.footer}>
           <FooterTab>
             <Button
-              style={{ flexDirection: 'row', justifyContent: 'flex-start' }}
+              style={{ flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: colors.fbBlue }}
               block
+              disabled={this.props.signingIn}
+              onPress={this.loginFacebook}
             >
               <CustomIcon
                 size={25}
@@ -174,4 +197,9 @@ const images = [
 const kitsuLogo = require('../../assets/img/kitsu-logo.png');
 /* eslint-enable global-require */
 
-export default connect(null, { loginUser })(LoginScreen);
+const mapStateToProps = ({auth}) => {
+  const { signingIn } = auth;
+  return {signingIn};
+}
+
+export default connect(mapStateToProps, { loginUser, loginUserFb })(LoginScreen);

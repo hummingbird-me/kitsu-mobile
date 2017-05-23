@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Form, Input, Item, Button } from 'native-base';
+import { Form, Input, Item, Button, Spinner } from 'native-base';
 import CustomIcon from '../Icon';
 import * as colors from '../../constants/colors';
 
-const LoginForm = ({ handleChange, data, onSubmit }) => (
+const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
   <View>
     <Form style={{ padding: 20, paddingLeft: 10 }}>
       <Item
@@ -15,12 +15,7 @@ const LoginForm = ({ handleChange, data, onSubmit }) => (
         }}
       >
         <View style={{ width: 25 }}>
-          <CustomIcon
-            name="mail-icon"
-            size={13}
-            color="white"
-            styles={{ opacity: 0.5 }}
-          />
+          <CustomIcon name="mail-icon" size={13} color="white" styles={{ opacity: 0.5 }} />
         </View>
         <Input
           placeholder="Email or Username"
@@ -43,12 +38,7 @@ const LoginForm = ({ handleChange, data, onSubmit }) => (
         }}
       >
         <View style={{ width: 25 }}>
-          <CustomIcon
-            name="password-icon"
-            size={18}
-            color="white"
-            styles={{ opacity: 0.5 }}
-          />
+          <CustomIcon name="password-icon" size={18} color="white" styles={{ opacity: 0.5 }} />
         </View>
         <Input
           placeholder="Password"
@@ -68,6 +58,7 @@ const LoginForm = ({ handleChange, data, onSubmit }) => (
     <View style={{ padding: 10, paddingLeft: 25 }}>
       <Button
         block
+        disabled={loading}
         onPress={onSubmit}
         style={{
           backgroundColor: colors.lightGreen,
@@ -75,17 +66,19 @@ const LoginForm = ({ handleChange, data, onSubmit }) => (
           borderRadius: 3,
         }}
       >
-        <Text
-          style={{
-            color: colors.white,
-            fontWeight: '600',
-            fontFamily: 'OpenSans',
-            lineHeight: 20,
-            fontSize: 15,
-          }}
-        >
-          Sign in to your account
-        </Text>
+        {loading
+          ? <Spinner size="small" />
+          : <Text
+            style={{
+              color: colors.white,
+              fontWeight: '600',
+              fontFamily: 'OpenSans',
+              lineHeight: 20,
+              fontSize: 15,
+            }}
+          >
+              Sign in to your account
+            </Text>}
       </Button>
     </View>
   </View>

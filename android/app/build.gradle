@@ -127,6 +127,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fbsdk')
     compile project(':react-native-svg')
     compile project(':react-native-vector-icons')
     compile project(':react-native-code-push')
