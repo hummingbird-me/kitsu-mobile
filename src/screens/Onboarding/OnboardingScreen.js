@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, Text, Image, Dimensions } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
@@ -87,6 +88,7 @@ class OnboardingScreen extends Component {
   }
   render() {
     let btnStyle = styles.button;
+    const { navigate } = this.props.navigation;
     const last = this.state.step === intros.length - 1;
     if (last) {
       btnStyle = { ...styles.button, ...styles.buttonLast };
@@ -96,7 +98,7 @@ class OnboardingScreen extends Component {
         <Content scrollEnabled={false}>
           <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
             <Carousel
-              ref={carousel => {
+              ref={(carousel) => {
                 this._carousel = carousel;
               }}
               inactiveSlideScale={0.90}
@@ -122,7 +124,7 @@ class OnboardingScreen extends Component {
         </Content>
         <Footer style={styles.footer}>
           <FooterTab>
-            <Button full>
+            <Button full onPress={() => navigate('Login')}>
               <Text style={styles.footerButtonText}>
                 Have an account? Sign in
               </Text>
@@ -134,6 +136,13 @@ class OnboardingScreen extends Component {
   }
 }
 
+OnboardingScreen.propTypes = {
+  navigation: PropTypes.object,
+};
+
+OnboardingScreen.defaultProps = {
+  navigation: {},
+};
 const styles = {
   container: {
     backgroundColor: colors.darkPurple,
@@ -179,7 +188,7 @@ const styles = {
     alignSelf: 'center',
   },
   buttonLast: {
-    backgroundColor: '#16A085',
+    backgroundColor: colors.lightGreen,
     borderWidth: 0,
   },
   dotContainer: {
