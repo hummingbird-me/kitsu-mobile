@@ -22,11 +22,17 @@ class LoginScreen extends Component {
       username: '',
       password: '',
       loading: false,
+      ind: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.loginFacebook = this.loginFacebook.bind(this);
+  }
+
+  componentDidMount() {
+    const ind = Math.floor(Math.random() * 4);
+    this.setState({ ind });
   }
 
   onSubmit() {
@@ -56,7 +62,7 @@ class LoginScreen extends Component {
     );
   }
   render() {
-    const ind = Math.floor(Math.random() * 4);
+    const {ind} = this.state;
     return (
       <Container style={styles.container}>
         <Content scrollEnabled={false}>
@@ -88,7 +94,9 @@ class LoginScreen extends Component {
           />
           <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>
             {this.props.loginError
-              ? <Text style={{ color: 'red', paddingBottom: 10, textAlign: 'center' }}>{this.props.loginError}</Text>
+              ? <Text style={{ color: 'red', paddingBottom: 10, textAlign: 'center' }}>
+                {this.props.loginError}
+              </Text>
               : null}
             <Text
               style={{

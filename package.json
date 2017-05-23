@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "babel-eslint": "^7.2.3",
+    "base-64": "^0.1.0",
     "client-oauth2": "^4.1.0",
     "devour-client": "^1.4.3",
     "eslint": "^3.19.0",
