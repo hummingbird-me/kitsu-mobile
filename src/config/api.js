@@ -22,6 +22,10 @@ Kitsu.define(
     name: '',
     createdAt: '',
     updatedAt: '',
+    email: '',
+    avatar: '',
+    gender: '',
+    birthday: '',
   },
   { collectionPath: 'users' },
 );
@@ -29,6 +33,11 @@ Kitsu.define(
   'user',
   {
     name: '',
+    email: '',
+    avatar: '',
+    about: '',
+    bio: '',
+    createdAt: '',
   },
   { collectionPath: 'user' },
 );

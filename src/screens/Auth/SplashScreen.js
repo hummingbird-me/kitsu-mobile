@@ -22,12 +22,25 @@ class SplashScreen extends Component {
   }
 
   init(authorized) {
-    const { navigate } = this.props.navigation;
+    const { dispatch } = this.props.navigation;
+    let resetAction = null;
+    console.log('reset');
     if (authorized) {
-      navigate('Tabs');
+      // navigate('Tabs');
+      resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+        key: null,
+      });
     } else {
-      navigate('Onboarding');
+      // navigate('Onboarding');
+      resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+        key: null,
+      });
     }
+    dispatch(resetAction);
   }
   render() {
     return (

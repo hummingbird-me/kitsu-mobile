@@ -1,11 +1,17 @@
 import { AccessToken } from 'react-native-fbsdk';
+import { NavigationActions } from 'react-navigation';
 import * as types from '../types';
 import { auth, Kitsu, setToken } from '../../config/api';
 import { kitsuConfig } from '../../config/env';
 
-export const loginUser = data => async (dispatch) => {
+export const loginUser = (data, nav) => async (dispatch) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
+  const loginAction = NavigationActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+    key: null,
+  });
   try {
     if (data) {
       const user = await auth.owner.getToken(data.username, data.password);
@@ -15,21 +21,13 @@ export const loginUser = data => async (dispatch) => {
       tokens = await userFb.json();
     }
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: { data: tokens } });
-    setToken(tokens.access_token);
-    Kitsu.findAll('users', {
-      fields: {
-        users: 'id,name',
-      },
-      filter: { self: true },
-      page: { limit: 1 },
-    }).then((response) => {
-      console.log(response);
-    });
+    // dispatch(loginAction)
+    nav.dispatch(loginAction);
   } catch (e) {
     console.log(e);
     dispatch({
       type: types.LOGIN_USER_FAIL,
-      payload: { error: 'Wrong credentials' },
+      payload: 'Wrong credentials',
     });
   }
 };
@@ -50,6 +48,12 @@ const loginUserFb = async () => {
   });
   return result;
 };
-export const logoutUser = () => (dispatch) => {
+export const logoutUser = (nav) => (dispatch) => {
+  const loginAction = NavigationActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({ routeName: 'Login' })],
+    key: null,
+  });
+  nav.dispatch(loginAction);  
   dispatch({ type: types.LOGOUT_USER });
 };

@@ -4,7 +4,7 @@ import * as types from '../types';
 const INITIAL_STATE = {
   signingIn: false,
   user: {},
-  token: '',
+  tokens: {},
   loginError: '',
   isAuthenticated: false,
   rehydratedAt: null,
@@ -39,6 +39,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ...incoming,
+        loginError: null,
         signingIn: false,
         rehydratedAt: new Date(),
       }

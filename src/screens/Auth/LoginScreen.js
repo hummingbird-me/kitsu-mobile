@@ -32,7 +32,7 @@ class LoginScreen extends Component {
   onSubmit() {
     const { username, password } = this.state;
     if (username.length > 0 && password.length > 0) {
-      this.props.loginUser({ username, password });
+      this.props.loginUser({ username, password }, this.props.navigation);
     }
   }
 
@@ -40,15 +40,15 @@ class LoginScreen extends Component {
     this.setState({ [name]: text });
   }
   loginFacebook() {
-    this.setState({loading: true})
+    this.setState({ loading: true });
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (result.isCancelled) {
           console.log('login canceled');
         } else {
-          this.props.loginUser();
+          this.props.loginUser(null, this.props.navigation);
         }
-        this.setState({loading: false})        
+        this.setState({ loading: false });
       },
       (error) => {
         alert(`Login fail with error: ${error}`);
@@ -87,6 +87,9 @@ class LoginScreen extends Component {
             loading={this.props.signingIn || this.state.loading}
           />
           <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>
+            {this.props.loginError
+              ? <Text style={{ color: 'red', paddingBottom: 10, textAlign: 'center' }}>{this.props.loginError}</Text>
+              : null}
             <Text
               style={{
                 color: colors.white,
@@ -138,7 +141,11 @@ class LoginScreen extends Component {
         <Footer style={styles.footer}>
           <FooterTab>
             <Button
-              style={{ flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: colors.fbBlue }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                backgroundColor: colors.fbBlue,
+              }}
               block
               disabled={this.props.signingIn}
               onPress={this.loginFacebook}
@@ -197,9 +204,9 @@ const images = [
 const kitsuLogo = require('../../assets/img/kitsu-logo.png');
 /* eslint-enable global-require */
 
-const mapStateToProps = ({auth}) => {
-  const { signingIn } = auth;
-  return {signingIn};
-}
+const mapStateToProps = ({ auth }) => {
+  const { signingIn, loginError } = auth;
+  return { signingIn, loginError };
+};
 
 export default connect(mapStateToProps, { loginUser, loginUserFb })(LoginScreen);
