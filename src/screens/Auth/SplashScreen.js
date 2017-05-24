@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { Spinner } from 'native-base';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
+import Animation from 'lottie-react-native';
+
+import anim from '../../assets/animation/kitsu.json';
 import * as colors from '../../constants/colors';
 
 class SplashScreen extends Component {
@@ -12,28 +15,27 @@ class SplashScreen extends Component {
 
   constructor(props) {
     super(props);
-
-    this.init = this.init.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     const { isAuthenticated } = nextProps;
     this.init(isAuthenticated);
   }
+  componentDidMount() {
+    this.animation.play();
+    // this.init(this.props.isAuthenticated);    
+  }
 
   init(authorized) {
     const { dispatch } = this.props.navigation;
     let resetAction = null;
-    console.log('reset');
     if (authorized) {
-      // navigate('Tabs');
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
         key: null,
       });
     } else {
-      // navigate('Onboarding');
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
@@ -52,7 +54,19 @@ class SplashScreen extends Component {
           backgroundColor: colors.darkPurple,
         }}
       >
-        <Spinner size="large" />
+        <View>
+          <Animation
+            ref={(animation) => {
+              this.animation = animation;
+            }}
+            style={{
+              width: Dimensions.get('window').width,
+              height: Dimensions.get('window').height,
+            }}
+            loop
+            source={anim}
+          />
+        </View>
       </View>
     );
   }
