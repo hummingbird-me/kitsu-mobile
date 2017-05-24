@@ -4111,6 +4111,10 @@ react-devtools-core@^2.0.8:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
+react-native-animatable@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.0.tgz#fd279c6ee4b49161c6cc3b951ed7765b35a73467"
+
 react-native-code-push@^2.0.3-beta:
   version "2.0.3-beta"
   resolved "https://registry.yarnpkg.com/react-native-code-push/-/react-native-code-push-2.0.3-beta.tgz#2eca24e125a85711abda4e5a553deb4ff61c9177"
@@ -4148,6 +4152,13 @@ react-native-easy-grid@0.1.7:
   resolved "https://registry.yarnpkg.com/react-native-easy-grid/-/react-native-easy-grid-0.1.7.tgz#44205cc39adff32a8a20efa8451d76a4499f0a3f"
   dependencies:
     lodash "^4.11.1"
+
+react-native-fading-slides@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-fading-slides/-/react-native-fading-slides-0.1.4.tgz#d94a00ff952b231acf159121c672c2a707b36435"
+  dependencies:
+    react-timer-mixin "^0.13.3"
+    react-tween-state "^0.1.3"
 
 react-native-fbsdk@^0.5.0:
   version "0.5.0"
@@ -4352,7 +4363,7 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react-tween-state@^0.1.5:
+react-tween-state@^0.1.3, react-tween-state@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/react-tween-state/-/react-tween-state-0.1.5.tgz#e98b066551efb93cb92dd1be14995c2e3deae339"
   dependencies:

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Image, Dimensions } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import { connect } from 'react-redux';
+import { Image } from 'react-native-animatable';
 
 import * as colors from '../../constants/colors';
 import CustomIcon from '../../components/Icon';
@@ -28,11 +29,13 @@ class LoginScreen extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.loginFacebook = this.loginFacebook.bind(this);
+    this.startAnimation = this.startAnimation.bind(this);
   }
 
   componentDidMount() {
     const ind = Math.floor(Math.random() * 4);
     this.setState({ ind });
+    this.startAnimation();
   }
 
   onSubmit() {
@@ -61,31 +64,61 @@ class LoginScreen extends Component {
       },
     );
   }
+
+  startAnimation(e) {
+    const s1 = this.state.scale || 1;
+    const s2 = s1 === 1 ? 1.1 : 1;
+    const tx2 = (Math.floor(Math.random() * 6) - 3) * 2;
+    const ty2 = (Math.floor(Math.random() * 6) - 3) * 2;
+    console.log(tx2, ty2);
+
+    this.refs.image.transition(
+      { opacity: 0, scale: s1, translateX: 0, translateY: 0 },
+      { opacity: 0.6, scale: 1.05, translateX: tx2 / 2, translateY: ty2 / 2 },
+      animDuration,
+      'ease-in',
+    );
+    setTimeout(
+      () =>
+        this.refs.image.transition(
+          { opacity: 0.6, scale: 1.05, translateX: tx2 / 2, translateY: ty2 / 2 },
+          { opacity: 0, scale: s2, translateX: tx2, translateY: ty2 },
+          animDuration,
+          'ease-out',
+        ),
+      animDuration - 10,
+    );
+    setTimeout(this.startAnimation, 2 * animDuration-400);
+    const ind = this.state.ind === images.length - 1 ? 0 : this.state.ind + 1;
+    this.setState({ ind, scale: s2 });
+  }
   render() {
-    const {ind} = this.state;
+    const { ind } = this.state;
     return (
       <Container style={styles.container}>
         <Content scrollEnabled={false}>
-          <View style={{ flex: 1, alignItems: 'center' }}>
+          <View style={{ flex: 1, alignItems: 'center', height: 174, overflow: 'hidden' }}>
             <Image
+              ref="image"
               style={{
-                opacity: 0.2,
+                opacity: 0.4,
                 width: Dimensions.get('window').width,
                 height: 174,
               }}
               resizeMode="cover"
               source={images[ind]}
             />
+          </View>
             <Image
               style={{
                 marginTop: -35,
                 width: 71,
                 height: 79,
+                alignSelf: 'center',
               }}
               resizeMode="cover"
               source={kitsuLogo}
             />
-          </View>
           <LoginForm
             data={this.state}
             handleChange={this.handleChange}
@@ -202,10 +235,10 @@ LoginScreen.propTypes = {
 };
 
 /* eslint-disable global-require */
+const animDuration = 3000;
 const images = [
   require('../../assets/img/posters/fullmetal.jpg'),
   require('../../assets/img/posters/fullmetal2.png'),
-  require('../../assets/img/posters/naruto.png'),
   require('../../assets/img/posters/naruto2.jpg'),
   require('../../assets/img/posters/deatnote.jpg'),
 ];

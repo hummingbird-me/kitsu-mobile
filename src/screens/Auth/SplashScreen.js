@@ -42,7 +42,7 @@ class SplashScreen extends Component {
         key: null,
       });
     }
-    // dispatch(resetAction);
+    dispatch(resetAction);
   }
   render() {
     return (
