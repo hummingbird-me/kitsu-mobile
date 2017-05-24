@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 import Animation from 'lottie-react-native';
 
-import anim from '../../assets/animation/splashy_loader.json';
+import anim from '../../assets/animation/kitsu.json';
 import * as colors from '../../constants/colors';
 
 class SplashScreen extends Component {
@@ -61,7 +61,7 @@ class SplashScreen extends Component {
             }}
             style={{
               width: Dimensions.get('window').width,
-              height: Dimensions.get('window').width,
+              height: Dimensions.get('window').height,
             }}
             loop
             source={anim}
