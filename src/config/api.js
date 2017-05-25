@@ -42,6 +42,6 @@ Kitsu.define(
   { collectionPath: 'user' },
 );
 
-export const setToken = token => {
+export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
 };

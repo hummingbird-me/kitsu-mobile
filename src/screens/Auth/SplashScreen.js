@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native';
-import { Spinner } from 'native-base';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 import Animation from 'lottie-react-native';

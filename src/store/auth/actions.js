@@ -1,12 +1,13 @@
 import { AccessToken } from 'react-native-fbsdk';
 import { NavigationActions } from 'react-navigation';
 import * as types from '../types';
-import { auth, Kitsu, setToken } from '../../config/api';
+import { auth } from '../../config/api';
 import { kitsuConfig } from '../../config/env';
 
 export const loginUser = (data, nav) => async (dispatch) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
+  console.log(data);
   const loginAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
@@ -48,12 +49,12 @@ const loginUserFb = async () => {
   });
   return result;
 };
-export const logoutUser = (nav) => (dispatch) => {
+export const logoutUser = nav => (dispatch) => {
   const loginAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Login' })],
     key: null,
   });
-  nav.dispatch(loginAction);  
+  nav.dispatch(loginAction);
   dispatch({ type: types.LOGOUT_USER });
 };
