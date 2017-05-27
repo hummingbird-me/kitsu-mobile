@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Form, Input, Item, Button, Spinner } from 'native-base';
+import { Form, Input, Item, Button } from 'native-base';
 import CustomIcon from '../Icon';
 import * as colors from '../../constants/colors';
 import withSpinner from '../../utils/withSpinner';
@@ -87,5 +87,6 @@ LoginForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 export default withSpinner(LoginForm);

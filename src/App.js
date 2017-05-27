@@ -7,9 +7,6 @@ import Root from './Router';
 
 const store = configureStore();
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     // these errors are library wornings. most of them will be resolved with newer versions

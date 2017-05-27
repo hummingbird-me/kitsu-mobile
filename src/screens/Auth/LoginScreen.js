@@ -30,9 +30,6 @@ class LoginScreen extends Component {
   onSubmit(isFb) {
     const { username, password } = this.state;
     const { navigation } = this.props;
-    console.log(isFb);
-    console.log(username);
-    console.log(password);
     if (isFb) {
       this.props.loginUser(null, navigation);
     } else if (username.length > 0 && password.length > 0) {

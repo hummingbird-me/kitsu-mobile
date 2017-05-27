@@ -15,7 +15,6 @@ const withSpinner = WrappedComponent =>
     }
 
     componentWillReceiveProps(nextProps) {
-      console.log(this.animation);
       if (this.animation && nextProps.loading) {
         this.animation.play();
       }
@@ -27,7 +26,7 @@ const withSpinner = WrappedComponent =>
         width: this.state.height / (lottieFactor || 4),
         height: this.state.height / (lottieFactor || 4),
       };
-      if (this.props.lottie) {
+      if (lottie) {
         return (
           <View style={animStyle}>
             <Animation
@@ -36,10 +35,10 @@ const withSpinner = WrappedComponent =>
               }}
               style={animStyle}
               loop
-              onLayout={(e) => {
+              onLayout={() => {
                 this.animation.play();
               }}
-              source={this.props.lottie}
+              source={lottie}
             />
           </View>
         );
@@ -49,7 +48,7 @@ const withSpinner = WrappedComponent =>
       return <Spinner size="large" color="grey" />;
     }
     render() {
-      const { spinner, noSpinner, loading } = this.props;
+      const { noSpinner, loading } = this.props;
       if (noSpinner) {
         return <WrappedComponent {...this.props} />;
       }
@@ -60,7 +59,7 @@ const withSpinner = WrappedComponent =>
             this.setState({ width, height });
           }}
         >
-          <View style={{ opacity: this.props.loading ? 0.4 : 1 }}>
+          <View style={{ opacity: loading ? 0.4 : 1 }}>
             <WrappedComponent {...this.props} />
           </View>
           {loading &&

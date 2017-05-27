@@ -52,10 +52,9 @@ export default (state = INITIAL_STATE, action) => {
     case types.LOGOUT_USER:
       return INITIAL_STATE;
     case REHYDRATE:
-      const incoming = action.payload.user;
       return {
         ...state,
-        ...incoming,
+        ...action.payload.user,
         signingIn: false,
         signingUp: false,
         signupError: {},

@@ -37,17 +37,8 @@ class SignupScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.fbuser.name && nextProps.fbuser.name !== this.props.fbuser.name) {
       this.populateFB(nextProps.fbuser);
-    }
-  }
-
-  populateFB(fbuser) {
-    const { name, email } = fbuser;
-    if (name) {
-      const username = name.replace(' ', '_').toLowerCase();
-      this.setState({ username, email });
     }
   }
   onSubmit(isFb, data) {
@@ -58,6 +49,14 @@ class SignupScreen extends Component {
       this.setState({ ...data });
       this.props.createUser(data, navigation);
       // this.props.loginUser({ username, password }, navigation);
+    }
+  }
+
+  populateFB(fbuser) {
+    const { name, email } = fbuser;
+    if (name) {
+      const username = name.replace(' ', '_').toLowerCase();
+      this.setState({ username, email });
     }
   }
 
@@ -144,6 +143,8 @@ SignupScreen.propTypes = {
   signingIn: PropTypes.bool.isRequired,
   signingUp: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
+  fbuser: PropTypes.object.isRequired,
+  loadFBuser: PropTypes.bool.isRequired,
 };
 
 SignupScreen.defaultProps = {

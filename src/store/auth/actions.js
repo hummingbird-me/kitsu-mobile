@@ -7,7 +7,6 @@ import { kitsuConfig } from '../../config/env';
 export const loginUser = (data, nav, screen) => async (dispatch) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
-  console.log(data);
   const loginAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
@@ -70,9 +69,8 @@ const loginUserFb = async (dispatch) => {
         },
       },
     },
-    (error, result) => {
-      dispatch({ type: types.GET_FBUSER_SUCCESS, payload: result });
-      console.log(result);
+    (error, fbdata) => {
+      dispatch({ type: types.GET_FBUSER_SUCCESS, payload: fbdata });
     },
   );
   // Start the graph request.

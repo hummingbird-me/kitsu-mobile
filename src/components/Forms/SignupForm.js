@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Input, Item, Button, Spinner } from 'native-base';
-import _ from 'lodash';
+import { Button } from 'native-base';
 import t from 'tcomb-form-native';
 import * as colors from '../../constants/colors';
 import textbox from './tcomb/textbox';
@@ -20,14 +19,9 @@ let form = null;
 
 const onPress = (onSubmit) => {
   const data = form.getValue();
-  console.log(data);
   if (data) {
     onSubmit(data);
   }
-};
-
-const onChange = (data) => {
-  console.log(data);
 };
 
 const SignupForm = ({ onSubmit, loading, data, errors }) => {
@@ -69,7 +63,6 @@ const SignupForm = ({ onSubmit, loading, data, errors }) => {
           type={Signup}
           options={options}
           value={data}
-          onChange={onChange}
         />
       </View>
       <View style={{ padding: 10, paddingLeft: 25, paddingRight: 25 }}>
@@ -104,5 +97,11 @@ SignupForm.propTypes = {
   data: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  errors: PropTypes.object,
 };
+
+SignupForm.defaultProps = {
+  errors: {},
+};
+
 export default withSpinner(SignupForm);

@@ -1,4 +1,4 @@
-import {REHYDRATE} from 'redux-persist/constants';
+import { REHYDRATE } from 'redux-persist/constants';
 import * as types from '../types';
 
 const INITIAL_STATE = {
@@ -65,15 +65,14 @@ export default (state = INITIAL_STATE, action) => {
     case types.LOGOUT_USER:
       return INITIAL_STATE;
     case REHYDRATE:
-      const incoming = action.payload.auth
       return {
         ...state,
-        ...incoming,
+        ...action.payload.auth,
         loginError: null,
         signingIn: false,
         fbuser: {},
         rehydratedAt: new Date(),
-      }
+      };
     default:
       return state;
   }

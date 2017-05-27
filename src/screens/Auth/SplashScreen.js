@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation';
 import Animation from 'lottie-react-native';
 
@@ -12,17 +13,13 @@ class SplashScreen extends Component {
     header: null,
   };
 
-  constructor(props) {
-    super(props);
+  componentDidMount() {
+    this.animation.play();
   }
 
   componentWillReceiveProps(nextProps) {
     const { isAuthenticated } = nextProps;
     this.init(isAuthenticated);
-  }
-  componentDidMount() {
-    this.animation.play();
-    // this.init(this.props.isAuthenticated);    
   }
 
   init(authorized) {
@@ -72,8 +69,13 @@ class SplashScreen extends Component {
 }
 
 const mapStateToProps = ({ auth }) => {
-  const { isAuthenticated, rehydratedAt } = auth;
-  return { isAuthenticated, rehydratedAt };
+  const { isAuthenticated } = auth;
+  return { isAuthenticated };
+};
+
+SplashScreen.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  navigation: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps)(SplashScreen);
