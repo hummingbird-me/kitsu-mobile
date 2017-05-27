@@ -20,12 +20,10 @@ Kitsu.define(
   'users',
   {
     name: '',
-    createdAt: '',
-    updatedAt: '',
     email: '',
-    avatar: '',
+    password: '',
     gender: '',
-    birthday: '',
+    facebookId: '',
   },
   { collectionPath: 'users' },
 );

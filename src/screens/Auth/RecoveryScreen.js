@@ -100,7 +100,7 @@ class RecoveryScreen extends Component {
               this.props.navigation.dispatch(
                 NavigationActions.reset({
                   index: 0,
-                  actions: [NavigationActions.navigate({ routeName: 'Register' })],
+                  actions: [NavigationActions.navigate({ routeName: 'Signup' })],
                   key: null,
                 }),
               )}

@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import { Form, Input, Item, Button, Spinner } from 'native-base';
 import CustomIcon from '../Icon';
 import * as colors from '../../constants/colors';
+import withSpinner from '../../utils/withSpinner';
 
 const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
   <View>
@@ -66,19 +67,17 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
           borderRadius: 3,
         }}
       >
-        {loading
-          ? <Spinner size="small" />
-          : <Text
-            style={{
-              color: colors.white,
-              fontWeight: '600',
-              fontFamily: 'OpenSans',
-              lineHeight: 20,
-              fontSize: 15,
-            }}
-          >
-              Sign in to your account
-            </Text>}
+        <Text
+          style={{
+            color: colors.white,
+            fontWeight: '600',
+            fontFamily: 'OpenSans',
+            lineHeight: 20,
+            fontSize: 15,
+          }}
+        >
+          Sign in to your account
+        </Text>
       </Button>
     </View>
   </View>
@@ -89,4 +88,4 @@ LoginForm.propTypes = {
   data: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
-export default LoginForm;
+export default withSpinner(LoginForm);

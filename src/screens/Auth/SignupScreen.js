@@ -5,11 +5,13 @@ import { Button } from 'native-base';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 
-import RegisterForm from '../../components/Forms/RegisterForm';
+import SignupForm from '../../components/Forms/SignupForm';
 import { loginUser } from '../../store/auth/actions';
+import { createUser } from '../../store/user/actions';
 import AuthWrapper from './AuthWrapper';
+import anim from '../../assets/animation/splashy.json';
 
-class RegistrationScreen extends Component {
+class SignupScreen extends Component {
   static navigationOptions = {
     header: null,
     gesturesEnabled: false,
@@ -25,15 +27,36 @@ class RegistrationScreen extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.populateFB = this.populateFB.bind(this);
   }
 
-  onSubmit(isFb) {
-    const { username, password, email } = this.state;
+  componentDidMount() {
+    if (this.props.fbuser.name) {
+      this.populateFB(this.props.fbuser);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.fbuser.name && nextProps.fbuser.name !== this.props.fbuser.name) {
+      this.populateFB(nextProps.fbuser);
+    }
+  }
+
+  populateFB(fbuser) {
+    const { name, email } = fbuser;
+    if (name) {
+      const username = name.replace(' ', '_').toLowerCase();
+      this.setState({ username, email });
+    }
+  }
+  onSubmit(isFb, data) {
     const { navigation } = this.props;
-    console.log(this.state);
     if (isFb) {
-      this.props.loginUser(null, navigation);
-    } else if (username.length > 0 && password.length > 0) {
+      this.props.loginUser(null, navigation, 'signup');
+    } else {
+      this.setState({ ...data });
+      this.props.createUser(data, navigation);
       // this.props.loginUser({ username, password }, navigation);
     }
   }
@@ -43,16 +66,19 @@ class RegistrationScreen extends Component {
   }
 
   render() {
+    const { signingIn, loadFBuser, signingUp, loginError, signupError, navigation } = this.props;
     return (
-      <AuthWrapper loading={this.props.signingIn} onSuccess={this.onSubmit}>
-        <RegisterForm
+      <AuthWrapper loading={signingIn || loadFBuser} onSuccess={this.onSubmit}>
+        <SignupForm
           data={this.state}
           handleChange={this.handleChange}
-          onSubmit={() => this.onSubmit()}
-          loading={this.props.signingIn}
+          onSubmit={data => this.onSubmit(false, data)}
+          loading={signingUp || loadFBuser}
+          errors={signupError}
+          lottie={anim}
         />
         <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>
-          {this.props.loginError
+          {loginError
             ? <Text
               style={{
                 color: 'red',
@@ -60,11 +86,11 @@ class RegistrationScreen extends Component {
                 textAlign: 'center',
               }}
             >
-              {this.props.loginError}
+              {loginError}
             </Text>
             : null}
         </View>
-        <View style={{ padding: 20, paddingLeft: 25, paddingTop: 52 }}>
+        <View style={{ padding: 20, paddingLeft: 25, paddingTop: 20 }}>
           <Button
             block
             bordered
@@ -76,7 +102,7 @@ class RegistrationScreen extends Component {
               borderRadius: 3,
             }}
             onPress={() =>
-              this.props.navigation.dispatch(
+              navigation.dispatch(
                 NavigationActions.reset({
                   index: 0,
                   actions: [NavigationActions.navigate({ routeName: 'Login' })],
@@ -110,20 +136,25 @@ class RegistrationScreen extends Component {
   }
 }
 
-RegistrationScreen.propTypes = {
+SignupScreen.propTypes = {
   loginUser: PropTypes.func.isRequired,
+  createUser: PropTypes.func.isRequired,
   loginError: PropTypes.string,
+  signupError: PropTypes.object,
   signingIn: PropTypes.bool.isRequired,
+  signingUp: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
 };
 
-RegistrationScreen.defaultProps = {
+SignupScreen.defaultProps = {
   loginError: '',
+  signupError: {},
 };
 
-const mapStateToProps = ({ auth }) => {
-  const { signingIn, loginError } = auth;
-  return { signingIn, loginError };
+const mapStateToProps = ({ user, auth }) => {
+  const { signingUp, signupError } = user;
+  const { signingIn, loadFBuser, fbuser } = auth;
+  return { signingUp, signingIn, signupError, loadFBuser, fbuser };
 };
 
-export default connect(mapStateToProps, { loginUser })(RegistrationScreen);
+export default connect(mapStateToProps, { loginUser, createUser })(SignupScreen);

@@ -13,6 +13,7 @@
     "devour-client": "^1.4.3",
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^7.0.1",
+    "lodash": "^4.17.4",
     "lottie-react-native": "^1.1.1",
     "native-base": "^2.1.3",
     "prop-types": "^15.5.10",

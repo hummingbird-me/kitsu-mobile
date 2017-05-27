@@ -92,7 +92,7 @@ class LoginScreen extends Component {
               borderColor: 'rgba(255,255,255,0.3)',
               borderRadius: 3,
             }}
-            onPress={() => navigate('Register')}
+            onPress={() => navigate('Signup')}
           >
             <Text
               style={{

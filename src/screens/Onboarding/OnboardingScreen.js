@@ -114,7 +114,7 @@ class OnboardingScreen extends Component {
           <View style={styles.dotContainer}>
             {this.renderDots()}
           </View>
-          <Button rounded bordered={!last} light block style={btnStyle}>
+          <Button rounded bordered={!last} light block style={btnStyle} onPress={()=>navigate('Signup')}>
             <Text
               style={{ color: colors.white, textAlign: 'center', fontSize: 17 }}
             >
