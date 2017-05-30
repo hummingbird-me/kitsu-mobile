@@ -5,9 +5,9 @@ import { Form, Input, Item, Button, Spinner } from 'native-base';
 import CustomIcon from '../Icon';
 import * as colors from '../../constants/colors';
 
-const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
+const RecoveryForm = ({ handleChange, data, onSubmit, loading }) => (
   <View>
-    <Form style={{ padding: 20, paddingLeft: 10 }}>
+    <Form style={{ padding: 20, paddingLeft: 10, paddingTop: 30 }}>
       <Item
         style={{
           borderBottomColor: 'rgba(255,255,255,0.2)',
@@ -18,44 +18,16 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
           <CustomIcon name="mail-icon" size={13} color="white" styles={{ opacity: 0.5 }} />
         </View>
         <Input
-          placeholder="Email or Username"
+          placeholder="Email address"
           placeholderTextColor="rgba(255,255,254,0.5)"
           autoCapitalize="none"
-          value={data.username}
-          onChangeText={text => handleChange(text, 'username')}
-          style={{
-            fontSize: 15,
-            fontFamily: 'OpenSans',
-            color: 'rgba(255,255,255,0.7)',
-          }}
-        />
-      </Item>
-      <Item
-        style={{
-          borderBottomColor: 'rgba(255,255,255,0.2)',
-          borderBottomWidth: 0.5,
-          paddingTop: 10,
-        }}
-      >
-        <View style={{ width: 25 }}>
-          <CustomIcon name="password-icon" size={18} color="white" styles={{ opacity: 0.5 }} />
-        </View>
-        <Input
-          placeholder="Password"
-          placeholderTextColor="rgba(255,255,255,0.5)"
-          secureTextEntry
-          value={data.password}
-          onChangeText={text => handleChange(text, 'password')}
-          autoCapitalize="none"
-          style={{
-            fontSize: 15,
-            fontFamily: 'OpenSans',
-            color: 'rgba(255,255,255,0.7)',
-          }}
+          value={data.email}
+          onChangeText={text => handleChange(text, 'email')}
+          style={styles.inputStyle}
         />
       </Item>
     </Form>
-    <View style={{ padding: 10, paddingLeft: 25, paddingRight: 25 }}>
+    <View style={{ padding: 10, paddingLeft: 25 }}>
       <Button
         block
         disabled={loading}
@@ -67,7 +39,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
         }}
       >
         {loading
-          ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
+          ? <Spinner size="small" />
           : <Text
             style={{
               color: colors.white,
@@ -77,17 +49,24 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
               fontSize: 15,
             }}
           >
-              Sign in to your account
+              Send password reset
             </Text>}
       </Button>
     </View>
   </View>
 );
-
-LoginForm.propTypes = {
+const styles = {
+  inputStyle: {
+    fontSize: 15,
+    height: 40.5,
+    fontFamily: 'OpenSans',
+    color: 'rgba(255,255,255,0.7)',
+  },
+};
+RecoveryForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
-export default LoginForm;
+export default RecoveryForm;

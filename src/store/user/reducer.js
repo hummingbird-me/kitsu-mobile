@@ -1,10 +1,12 @@
-import {REHYDRATE} from 'redux-persist/constants';
+import { REHYDRATE } from 'redux-persist/constants';
 import * as types from '../types';
 
 const INITIAL_STATE = {
   profile: {},
   loading: false,
-  error: ''
+  error: '',
+  signingUp: false,
+  signupError: {},
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,8 +30,36 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         error: action.payload,
       };
+    case types.CREATE_USER:
+      return {
+        ...state,
+        signingUp: true,
+        signupError: {},
+      };
+    case types.CREATE_USER_SUCCESS:
+      return {
+        ...state,
+        signingUp: false,
+        profile: action.payload,
+        signupError: {},
+      };
+    case types.CREATE_USER_FAIL:
+      return {
+        ...state,
+        signingUp: false,
+        signupError: action.payload,
+      };
     case types.LOGOUT_USER:
       return INITIAL_STATE;
+    case REHYDRATE:
+      return {
+        ...state,
+        ...action.payload.user,
+        signingIn: false,
+        signingUp: false,
+        signupError: {},
+        rehydratedAt: new Date(),
+      };
     default:
       return state;
   }

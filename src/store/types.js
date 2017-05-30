@@ -4,6 +4,15 @@ export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 
 export const LOGOUT_USER = 'LOGOUT_USER';
 
+export const CREATE_USER = 'CREATE_USER';
+export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
+export const CREATE_USER_FAIL = 'CREATE_USER_FAIL';
+
 export const FETCH_USER = 'FETCH_USER';
 export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
 export const FETCH_USER_FAIL = 'FETCH_USER_FAIL';
+
+export const GET_FBUSER = 'GET_FBUSER';
+export const CLEAR_FBUSER = 'CLEAR_FBUSER';
+export const GET_FBUSER_SUCCESS = 'GET_FBUSER_SUCCESS';
+export const GET_FBUSER_FAIL = 'GET_FBUSER_FAIL';

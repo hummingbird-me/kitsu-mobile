@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 import { Button } from 'native-base';
 import { connect } from 'react-redux';
+import { NavigationActions } from 'react-navigation';
 
 import * as colors from '../../constants/colors';
-import LoginForm from '../../components/Forms/LoginForm';
+import RecoveryForm from '../../components/Forms/RecoveryForm';
 import { loginUser } from '../../store/auth/actions';
 import AuthWrapper from './AuthWrapper';
 
-class LoginScreen extends Component {
+class RecoveryScreen extends Component {
   static navigationOptions = {
     header: null,
     gesturesEnabled: false,
@@ -18,8 +19,7 @@ class LoginScreen extends Component {
     super(props);
 
     this.state = {
-      username: '',
-      password: '',
+      email: '',
       loading: false,
     };
 
@@ -30,11 +30,6 @@ class LoginScreen extends Component {
   onSubmit(isFb) {
     const { username, password } = this.state;
     const { navigation } = this.props;
-    if (isFb) {
-      this.props.loginUser(null, navigation);
-    } else if (username.length > 0 && password.length > 0) {
-      this.props.loginUser({ username, password }, navigation);
-    }
   }
 
   handleChange(text, name) {
@@ -42,29 +37,25 @@ class LoginScreen extends Component {
   }
 
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <AuthWrapper loading={this.props.signingIn} onSuccess={this.onSubmit}>
-        <LoginForm
+        <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15, paddingBottom: 0 }}>
+          <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: 'bold', color: 'white' }}>
+            Reset password
+          </Text>
+          <Text style={{ fontSize: 12, lineHeight: 17, color: 'white', paddingTop: 10 }}>
+            Don’t worry, we’ve been there. Enter your email below and we’ll
+            get you running again in no time!
+          </Text>
+        </View>
+        <RecoveryForm
           data={this.state}
           handleChange={this.handleChange}
-          onSubmit={() => this.onSubmit()}
+          onSubmit={this.onSubmit}
           loading={this.props.signingIn || this.state.loading}
         />
         <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>
-          {this.props.loginError
-            ? <Text
-              style={{
-                color: 'red',
-                paddingBottom: 10,
-                textAlign: 'center',
-              }}
-            >
-              {this.props.loginError}
-            </Text>
-            : null}
           <Text
-            onPress={() => navigate('Recovery')}
             style={{
               color: colors.white,
               opacity: 0.6,
@@ -74,11 +65,27 @@ class LoginScreen extends Component {
               fontFamily: 'OpenSans',
               textAlign: 'center',
             }}
+            onPress={() =>
+              this.props.navigation.dispatch(
+                NavigationActions.reset({
+                  index: 0,
+                  actions: [NavigationActions.navigate({ routeName: 'Login' })],
+                  key: null,
+                }),
+              )}
           >
-            Forgot your password?
+            Remember what it was?
+            <Text
+              style={{
+                fontWeight: '700',
+                color: 'rgba(255,255,255,0.5)',
+              }}
+            >
+              {' '}Sign in
+            </Text>
           </Text>
         </View>
-        <View style={{ padding: 20, paddingLeft: 25, paddingTop: 45 }}>
+        <View style={{ padding: 20, paddingLeft: 25, paddingTop: 40 }}>
           <Button
             block
             bordered
@@ -89,7 +96,14 @@ class LoginScreen extends Component {
               borderColor: 'rgba(255,255,255,0.3)',
               borderRadius: 3,
             }}
-            onPress={() => navigate('Signup')}
+            onPress={() =>
+              this.props.navigation.dispatch(
+                NavigationActions.reset({
+                  index: 0,
+                  actions: [NavigationActions.navigate({ routeName: 'Signup' })],
+                  key: null,
+                }),
+              )}
           >
             <Text
               style={{
@@ -117,14 +131,12 @@ class LoginScreen extends Component {
   }
 }
 
-LoginScreen.propTypes = {
-  loginUser: PropTypes.func.isRequired,
-  loginError: PropTypes.string,
+RecoveryScreen.propTypes = {
   signingIn: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
 };
 
-LoginScreen.defaultProps = {
+RecoveryScreen.defaultProps = {
   loginError: '',
 };
 
@@ -133,4 +145,4 @@ const mapStateToProps = ({ auth }) => {
   return { signingIn, loginError };
 };
 
-export default connect(mapStateToProps, { loginUser })(LoginScreen);
+export default connect(mapStateToProps, { loginUser })(RecoveryScreen);

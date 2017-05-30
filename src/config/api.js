@@ -20,12 +20,10 @@ Kitsu.define(
   'users',
   {
     name: '',
-    createdAt: '',
-    updatedAt: '',
     email: '',
-    avatar: '',
+    password: '',
     gender: '',
-    birthday: '',
+    facebookId: '',
   },
   { collectionPath: 'users' },
 );
@@ -42,6 +40,6 @@ Kitsu.define(
   { collectionPath: 'user' },
 );
 
-export const setToken = token => {
+export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
 };

@@ -72,9 +72,7 @@ class OnboardingScreen extends Component {
       <View
         key={index}
         style={{
-          backgroundColor: index === this.state.step
-            ? colors.white
-            : colors.lightPink,
+          backgroundColor: index === this.state.step ? colors.white : colors.lightPink,
           width: 8,
           height: 8,
           borderRadius: 4,
@@ -114,10 +112,15 @@ class OnboardingScreen extends Component {
           <View style={styles.dotContainer}>
             {this.renderDots()}
           </View>
-          <Button rounded bordered={!last} light block style={btnStyle}>
-            <Text
-              style={{ color: colors.white, textAlign: 'center', fontSize: 17 }}
-            >
+          <Button
+            rounded
+            bordered={!last}
+            light
+            block
+            style={btnStyle}
+            onPress={() => navigate('Signup')}
+          >
+            <Text style={{ color: colors.white, textAlign: 'center', fontSize: 17 }}>
               Get Started
             </Text>
           </Button>
