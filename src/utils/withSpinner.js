@@ -22,9 +22,15 @@ const withSpinner = WrappedComponent =>
 
     renderAnimation() {
       const { lottie, spinner, lottieFactor } = this.props;
+      let width = this.state.width;
+      let height = this.state.height;
+      if (lottieFactor !== 0) {
+        width = this.state.height / (lottieFactor || 4);
+        height = this.state.height / (lottieFactor || 4);
+      }
       const animStyle = {
-        width: this.state.height / (lottieFactor || 4),
-        height: this.state.height / (lottieFactor || 4),
+        width,
+        height,
       };
       if (lottie) {
         return (
@@ -59,7 +65,7 @@ const withSpinner = WrappedComponent =>
             this.setState({ width, height });
           }}
         >
-          <View style={{ opacity: loading ? 0.4 : 1 }}>
+          <View style={{ opacity: loading ? 0.3 : 1 }}>
             <WrappedComponent {...this.props} />
           </View>
           {loading &&

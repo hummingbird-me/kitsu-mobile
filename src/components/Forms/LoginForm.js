@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Form, Input, Item, Button } from 'native-base';
+import { Form, Input, Item, Button, Spinner } from 'native-base';
 import CustomIcon from '../Icon';
 import * as colors from '../../constants/colors';
-import withSpinner from '../../utils/withSpinner';
 
 const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
   <View>
@@ -56,7 +55,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
         />
       </Item>
     </Form>
-    <View style={{ padding: 10, paddingLeft: 25 }}>
+    <View style={{ padding: 10, paddingLeft: 25, paddingRight: 25 }}>
       <Button
         block
         disabled={loading}
@@ -67,17 +66,19 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
           borderRadius: 3,
         }}
       >
-        <Text
-          style={{
-            color: colors.white,
-            fontWeight: '600',
-            fontFamily: 'OpenSans',
-            lineHeight: 20,
-            fontSize: 15,
-          }}
-        >
-          Sign in to your account
-        </Text>
+        {loading
+          ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
+          : <Text
+            style={{
+              color: colors.white,
+              fontWeight: '600',
+              fontFamily: 'OpenSans',
+              lineHeight: 20,
+              fontSize: 15,
+            }}
+          >
+              Sign in to your account
+            </Text>}
       </Button>
     </View>
   </View>
@@ -89,4 +90,4 @@ LoginForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
-export default withSpinner(LoginForm);
+export default LoginForm;

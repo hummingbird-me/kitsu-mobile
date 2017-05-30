@@ -69,8 +69,8 @@ class SplashScreen extends Component {
 }
 
 const mapStateToProps = ({ auth }) => {
-  const { isAuthenticated } = auth;
-  return { isAuthenticated };
+  const { isAuthenticated, rehydratedAt } = auth;
+  return { isAuthenticated, rehydratedAt };
 };
 
 SplashScreen.propTypes = {

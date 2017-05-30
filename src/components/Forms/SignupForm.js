@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Button } from 'native-base';
+import { Button, Spinner } from 'native-base';
 import t from 'tcomb-form-native';
 import * as colors from '../../constants/colors';
 import textbox from './tcomb/textbox';
-import withSpinner from '../../utils/withSpinner';
 
 const { Form } = t.form;
 
@@ -58,12 +57,7 @@ const SignupForm = ({ onSubmit, loading, data, errors }) => {
   return (
     <View>
       <View style={{ padding: 25, paddingBottom: 20, paddingTop: 30 }}>
-        <Form
-          ref={el => (form = el)}
-          type={Signup}
-          options={options}
-          value={data}
-        />
+        <Form ref={el => (form = el)} type={Signup} options={options} value={data} />
       </View>
       <View style={{ padding: 10, paddingLeft: 25, paddingRight: 25 }}>
         <Button
@@ -76,17 +70,19 @@ const SignupForm = ({ onSubmit, loading, data, errors }) => {
             borderRadius: 3,
           }}
         >
-          <Text
-            style={{
-              color: colors.white,
-              fontWeight: '600',
-              fontFamily: 'OpenSans',
-              lineHeight: 20,
-              fontSize: 15,
-            }}
-          >
-            Create your account
-          </Text>
+          {loading
+            ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
+            : <Text
+              style={{
+                color: colors.white,
+                fontWeight: '600',
+                fontFamily: 'OpenSans',
+                lineHeight: 20,
+                fontSize: 15,
+              }}
+            >
+                Create your account
+              </Text>}
         </Button>
       </View>
     </View>
@@ -104,4 +100,4 @@ SignupForm.defaultProps = {
   errors: {},
 };
 
-export default withSpinner(SignupForm);
+export default SignupForm;

@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { Spinner, Button, Container, Content } from 'native-base';
+import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 
 import { logoutUser } from '../store/auth/actions';
 import { fetchCurrentUser } from '../store/user/actions';
 
 class HomeScreen extends Component {
+  static navigationOptions = {
+    tabBarLabel: 'Home',
+    showLabel: false,
+    showIcon: false,
+    tabBarIcon: ({ tintColor }) => <Icon ios="ios-search" android="md-search" style={{ fontSize: 20, color: tintColor }} />,
+  };
   componentWillMount() {
     this.props.fetchCurrentUser();
   }

@@ -9,7 +9,6 @@ import SignupForm from '../../components/Forms/SignupForm';
 import { loginUser } from '../../store/auth/actions';
 import { createUser } from '../../store/user/actions';
 import AuthWrapper from './AuthWrapper';
-import anim from '../../assets/animation/splashy.json';
 
 class SignupScreen extends Component {
   static navigationOptions = {
@@ -74,7 +73,6 @@ class SignupScreen extends Component {
           onSubmit={data => this.onSubmit(false, data)}
           loading={signingUp || loadFBuser}
           errors={signupError}
-          lottie={anim}
         />
         <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>
           {loginError
