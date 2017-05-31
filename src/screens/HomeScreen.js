@@ -9,10 +9,8 @@ import { fetchCurrentUser } from '../store/user/actions';
 
 class HomeScreen extends Component {
   static navigationOptions = {
-    tabBarLabel: 'Home',
-    showLabel: false,
-    showIcon: false,
-    tabBarIcon: ({ tintColor }) => <Icon ios="ios-search" android="md-search" style={{ fontSize: 20, color: tintColor }} />,
+    title: 'Home',
+    tabBarIcon: ({ tintColor }) => <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />,
   };
   componentWillMount() {
     this.props.fetchCurrentUser();
