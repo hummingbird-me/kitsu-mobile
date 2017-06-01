@@ -7,6 +7,7 @@ import RecoveryScreen from './screens/Auth/RecoveryScreen';
 import SplashScreen from './screens/Auth/SplashScreen';
 import SearchScreen from './screens/Search/SearchScreen';
 import SearchCategory from './screens/Search/SearchCategory';
+import SearchResults from './screens/Search/SearchResults';
 import * as colors from './constants/colors';
 
 const SearchStack = StackNavigator(
@@ -16,6 +17,9 @@ const SearchStack = StackNavigator(
     },
     SearchCategory: {
       screen: SearchCategory,
+    },
+    SearchResults: {
+      screen: SearchResults,
     },
   },
   {

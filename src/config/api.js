@@ -15,6 +15,26 @@ export const Kitsu = new JsonApi({
 
 Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
 
+const errorMiddleware = {
+  name: 'error-middleware',
+  error: (payload) => {
+    if (payload.status === 401) {
+      return {
+        request: {
+          authorized: false,
+        },
+      };
+    }
+    const data = payload.data;
+    if (!data.errors) {
+      console.log('Unidentified error');
+      console.log(payload);
+      return null;
+    }
+    return payload.data.errors;
+  },
+};
+Kitsu.replaceMiddleware('errors', errorMiddleware);
 
 Kitsu.define(
   'users',
@@ -26,6 +46,19 @@ Kitsu.define(
     facebookId: '',
   },
   { collectionPath: 'users' },
+);
+
+Kitsu.define(
+  'anime',
+  {
+    slug: '',
+    synopsis: '',
+    titles: '',
+    posterImage: '',
+    startDate: '',
+    endDate: '',
+  },
+  { collectionPath: 'anime' },
 );
 Kitsu.define(
   'user',

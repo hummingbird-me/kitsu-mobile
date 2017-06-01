@@ -12,6 +12,11 @@ export const FETCH_USER = 'FETCH_USER';
 export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
 export const FETCH_USER_FAIL = 'FETCH_USER_FAIL';
 
+export const SEARCH = 'SEARCH';
+export const SEARCH_MORE = 'SEARCH_MORE';
+export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
+export const SEARCH_FAIL = 'SEARCH_FAIL';
+
 export const GET_FBUSER = 'GET_FBUSER';
 export const CLEAR_FBUSER = 'CLEAR_FBUSER';
 export const GET_FBUSER_SUCCESS = 'GET_FBUSER_SUCCESS';
