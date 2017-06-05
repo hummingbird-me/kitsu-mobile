@@ -1,4 +1,3 @@
-import { REHYDRATE } from 'redux-persist/constants';
 import * as types from '../types';
 
 const INITIAL_STATE = {

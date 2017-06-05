@@ -49,18 +49,6 @@ Kitsu.define(
 );
 
 Kitsu.define(
-  'anime',
-  {
-    slug: '',
-    synopsis: '',
-    titles: '',
-    posterImage: '',
-    startDate: '',
-    endDate: '',
-  },
-  { collectionPath: 'anime' },
-);
-Kitsu.define(
   'user',
   {
     name: '',
@@ -71,6 +59,42 @@ Kitsu.define(
     createdAt: '',
   },
   { collectionPath: 'user' },
+);
+
+Kitsu.define(
+  'anime',
+  {
+    slug: '',
+    synopsis: '',
+    titles: '',
+    posterImage: '',
+    startDate: '',
+    endDate: '',
+    coverImageTopOffset: '',
+    canonicalTitle: '',
+    abbreviatedTitles: '',
+    averageRating: '',
+    ratingFrequencies: '',
+  },
+  { collectionPath: 'anime' },
+);
+
+Kitsu.define(
+  'manga',
+  {
+    slug: '',
+    synopsis: '',
+    titles: '',
+    posterImage: '',
+    startDate: '',
+    endDate: '',
+    coverImageTopOffset: '',
+    canonicalTitle: '',
+    abbreviatedTitles: '',
+    averageRating: '',
+    ratingFrequencies: '',
+  },
+  { collectionPath: 'manga' },
 );
 
 export const setToken = (token) => {

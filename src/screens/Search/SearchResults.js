@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, FlatList } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Content, Icon, Button } from 'native-base';
-import * as colors from '../../constants/colors';
+import { Icon, Button } from 'native-base';
 import { search } from '../../store/anime/actions';
+import { ResultsList } from './Lists';
 
 class SearchResults extends Component {
-  static navigationOptions = ({ navigation, screenProps }) => ({
+  static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.label,
     headerLeft: (
       <Button transparent color="white" onPress={() => navigation.goBack()}>
@@ -27,13 +27,11 @@ class SearchResults extends Component {
 
     this.loadMore = this.loadMore.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.getData = this.getData.bind(this);
   }
 
   componentDidMount() {
-    const { params } = this.props.navigation.state;
-    if (params.default) {
-      this.props.search({}, {}, this.state.index, params.default);
-    }
+    this.getData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,61 +40,55 @@ class SearchResults extends Component {
     }
   }
 
-  refresh() {
+  getData(index = 0) {
     const { params } = this.props.navigation.state;
-    this.setState({ loading: true });
     if (params.default) {
-      this.props.search({}, {}, 0, params.default);
+      this.props.search({}, {}, index, params.default, params.active);
     }
   }
 
+  refresh() {
+    this.setState({ loading: true, index: 0 });
+    this.getData();
+  }
+
   loadMore() {
-    const { params } = this.props.navigation.state;
-    this.props.search({}, {}, this.state.index + 1, params.default);
-    this.setState({ index: this.state.index + 1 });
+    if (!this.props.loading) {
+      const index = this.state.index + 1;
+      this.getData(index);
+      this.setState({ index });
+    }
   }
 
   render() {
+    const data = this.props.results.length > 0
+      ? this.props.results
+      : Array(20).fill(1).map((item, index) => ({ key: index }));
     return (
-      <View>
-        <FlatList
-          removeClippedSubviews={false}
-          data={this.props.results}
-          onEndReached={() => this.loadMore()}
-          onEndReachedThreshold={0.1}
-          getItemLayout={(data, index) => ({
-            length: 119,
-            offset: 119 * index,
-            index,
-          })}
-          initialNumToRender={10}
-          numColumns={4}
-          refreshing={this.state.loading}
-          onRefresh={() => this.refresh()}
-          contentContainerStyle={styles.list}
-          keyExtractor={item => item.id}
-          renderItem={({ item, index }) => (
-            <Image
-              source={{ uri: item.posterImage.medium }}
-              style={{ height: 119, width: 80, margin: 3 }}
-            />
-          )}
-        />
-      </View>
+      <ResultsList
+        dataArray={data}
+        loadMore={this.loadMore}
+        refresh={this.refresh}
+        refreshing={this.state.refresh}
+      />
     );
   }
 }
 
-const styles = {
-  list: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
+SearchResults.propTypes = {
+  results: PropTypes.array.isRequired,
+  navigation: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  search: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ anime }) => {
-  const { results, loading } = anime;
-  return { results, loading };
+  const { results, resultsLoading } = anime;
+  const data = results.map(item => ({
+    image: item.posterImage ? item.posterImage.small : 'none',
+    titles: item.titles ? item.titles : {},
+    key: item.id,
+  }));
+  return { results: data, loading: resultsLoading };
 };
 export default connect(mapStateToProps, { search })(SearchResults);

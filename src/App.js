@@ -10,7 +10,8 @@ class App extends Component {
 
   componentDidMount() {
     // these errors are library wornings. most of them will be resolved with newer versions
-    console.ignoredYellowBox = ['Warning: View.propTypes', 'Warning: BackAndroid is deprecated.'];
+    console.disableYellowBox = true;
+    // console.ignoredYellowBox = ['Warning: View.propTypes', 'Warning: BackAndroid is deprecated.'];
   }
   render() {
     return (

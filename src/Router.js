@@ -38,11 +38,11 @@ const SearchStack = StackNavigator(
 
 const Tabs = TabNavigator(
   {
-    Feed: {
-      screen: HomeScreen,
-    },
     Search: {
       screen: SearchStack,
+    },
+    Feed: {
+      screen: HomeScreen,
     },
     Add: {
       screen: HomeScreen,

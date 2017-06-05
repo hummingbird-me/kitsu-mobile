@@ -1,21 +1,6 @@
 import * as types from '../types';
 import { Kitsu } from '../../config/api';
 
-const defaultSort = {
-  popular: '-userCount',
-  topAiring: '-userCount',
-  highest: '-averageRating',
-};
-
-const defaultFilter = {
-  topAiring: {
-    status: 'current',
-  },
-  topUpcoming: {
-    status: 'upcoming',
-  },
-};
-
 const defaults = {
   popular: {
     sort: '-userCount',
@@ -32,7 +17,10 @@ const defaults = {
   },
 };
 
-export const search = (filter = {}, sort = {}, pageIndex, field) => async (dispatch, getState) => {
+export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime') => async (
+  dispatch,
+  getState,
+) => {
   let data = [];
   if (pageIndex > 0) {
     data = [...getState().anime.results];
@@ -41,7 +29,7 @@ export const search = (filter = {}, sort = {}, pageIndex, field) => async (dispa
   try {
     let query = {
       fields: {
-        anime: 'posterImage',
+        [type]: 'posterImage,titles',
       },
       filter,
       sort,
@@ -56,19 +44,19 @@ export const search = (filter = {}, sort = {}, pageIndex, field) => async (dispa
         ...defaults[field],
       };
     }
-    const results = await Kitsu.findAll('anime', query);
+    const results = await Kitsu.findAll([type], query);
     data = [...data, ...results];
     dispatch({ type: types.SEARCH_SUCCESS, field: 'results', payload: data });
   } catch (e) {
     console.log(e);
   }
 };
-export const getDefaults = field => async (dispatch) => {
+export const getDefaults = (field, type = 'anime') => async (dispatch) => {
   dispatch({ type: types.SEARCH, field });
   try {
     let query = {
       fields: {
-        anime: 'posterImage',
+        [type]: 'posterImage,titles',
       },
     };
 
@@ -78,7 +66,7 @@ export const getDefaults = field => async (dispatch) => {
         ...defaults[field],
       };
     }
-    const results = await Kitsu.findAll('anime', query);
+    const results = await Kitsu.findAll(type, query);
     dispatch({ type: types.SEARCH_SUCCESS, payload: results, field });
   } catch (e) {
     console.log(e);
