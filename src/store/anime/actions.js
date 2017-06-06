@@ -23,7 +23,7 @@ export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime')
 ) => {
   let data = [];
   if (pageIndex > 0) {
-    data = [...getState().anime.results];
+    data = [...getState().anime[`results${type}`]];
   }
   dispatch({ type: pageIndex > 0 ? types.SEARCH_MORE : types.SEARCH, field: 'results' });
   try {

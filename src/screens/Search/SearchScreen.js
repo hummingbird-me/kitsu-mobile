@@ -38,6 +38,8 @@ class SearchScreen extends Component {
     this.search = this.search.bind(this);
     this.handleSearchQuery = this.handleSearchQuery.bind(this);
     this.renderSearchBar = this.renderSearchBar.bind(this);
+    this.loadMore = this.loadMore.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
 
   segmentChange(e, active) {
@@ -53,9 +55,10 @@ class SearchScreen extends Component {
   }
 
   loadMore() {
+    const { query, active } = this.state;
     if (!this.props.loading) {
       const index = this.state.index + 1;
-      this.search(index);
+      this.search(query, active, index);
       this.setState({ index });
     }
   }
@@ -63,7 +66,6 @@ class SearchScreen extends Component {
   refresh() {
     this.setState({ loading: true, index: 0 });
     const { query, active } = this.state;
-    console.log(query);
     if (query.length > 0) {
       this.search(query, active);
     }
@@ -110,7 +112,7 @@ class SearchScreen extends Component {
   }
 
   render() {
-    const { active, query, selected } = this.state;
+    const { query, selected } = this.state;
     const { resultsanime, resultsmanga, loading } = this.props;
     return (
       <Container style={{ backgroundColor: '#FAFAFA' }}>

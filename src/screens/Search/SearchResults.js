@@ -24,7 +24,6 @@ class SearchResults extends Component {
       loading: false,
       index: 0,
     };
-
     this.loadMore = this.loadMore.bind(this);
     this.refresh = this.refresh.bind(this);
     this.getData = this.getData.bind(this);
@@ -42,9 +41,7 @@ class SearchResults extends Component {
 
   getData(index = 0) {
     const { params } = this.props.navigation.state;
-    if (params.default) {
-      this.props.search({}, {}, index, params.default, params.active);
-    }
+    this.props.search(params.filter, params.sort, index, params.default, params.active);
   }
 
   refresh() {
@@ -85,8 +82,6 @@ SearchResults.propTypes = {
 const mapStateToProps = ({ anime }, ownProps) => {
   const { resultsLoading } = anime;
   const { navigation: { state: { params: { active } } } } = ownProps;
-  console.log(active);
-  console.log(`results${active}`);
   const data = anime[`results${active}`].map(item => ({
     image: item.posterImage ? item.posterImage.small : 'none',
     titles: item.titles ? item.titles : {},

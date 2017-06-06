@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { Icon, Left, Right, Button, Text } from 'native-base';
+import { Icon, Left, Right, Button, Text, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -35,19 +35,20 @@ class TopsList extends Component {
   }
 
   init(type) {
-    _.debounce(() => this.props.getDefaults('topAiring', type), 500);
-    _.debounce(() => this.props.getDefaults('popular', type), 1000);
-    _.debounce(() => this.props.getDefaults('highest', type), 1500);
-    _.debounce(() => this.props.getDefaults('topUpcoming', type), 2000);
+    this.props.getDefaults('topAiring', type);
+    this.props.getDefaults('popular', type);
+    this.props.getDefaults('highest', type);
+    this.props.getDefaults('topUpcoming', type);
   }
 
   renderList() {
+    const { active } = this.props;
     return (
       <FlatList
         data={list}
         removeClippedSubviews={false}
         renderItem={({ item }) => (
-          <View
+          <Item
             button
             key={item.id}
             style={{
@@ -59,7 +60,7 @@ class TopsList extends Component {
               borderBottomWidth: StyleSheet.hairlineWidth,
               borderColor: '#EEEEEE',
             }}
-            onPress={() => this.props.navigation.navigate('SearchCategory', item)}
+            onPress={() => this.props.navigation.navigate('SearchCategory', { ...item, active })}
           >
             <Left>
               <Text
@@ -77,7 +78,7 @@ class TopsList extends Component {
             <Right>
               <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
             </Right>
-          </View>
+          </Item>
         )}
       />
     );
