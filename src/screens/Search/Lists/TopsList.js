@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  Icon,
-  Left,
-  Right,
-  Button,
-  Text,
-} from 'native-base';
+import { Icon, Left, Right, Button, Text } from 'native-base';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -19,9 +13,6 @@ const list = [
   { label: 'Release date', key: 'release' },
   { label: 'Genre', key: 'genre' },
   { label: 'Service', key: 'service' },
-  { label: 'Highest rated', key: 'highestRated' },
-  { label: 'Most anticipated', key: 'anticipated' },
-  { label: 'Upcoming', key: 'upcoming' },
 ];
 
 class TopsList extends Component {
@@ -34,20 +25,20 @@ class TopsList extends Component {
   }
 
   componentDidMount() {
-    this.init();
+    this.init(this.props.active);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.active !== this.props.active) {
-      this.init(nextProps.active);
+    if (nextProps.mounted && nextProps.mounted !== this.props.mounted) {
+      // this.init(nextProps.active);
     }
   }
 
   init(type) {
-    this.props.getDefaults('topAiring', type);
-    this.props.getDefaults('popular', type);
-    this.props.getDefaults('highest', type);
-    this.props.getDefaults('topUpcoming', type);
+    _.debounce(() => this.props.getDefaults('topAiring', type), 500);
+    _.debounce(() => this.props.getDefaults('popular', type), 1000);
+    _.debounce(() => this.props.getDefaults('highest', type), 1500);
+    _.debounce(() => this.props.getDefaults('topUpcoming', type), 2000);
   }
 
   renderList() {
@@ -177,17 +168,18 @@ class TopsList extends Component {
   }
 
   render() {
-    const { anime, active } = this.props;
+    const { anime, manga, active } = this.props;
+    const data = this.props[active];
     return (
       <View style={{ backgroundColor: '#FAFAFA' }}>
-        {this.renderGallery(anime.topAiring, `Top Airing ${_.upperFirst(active)}`, 'topAiring')}
+        {this.renderGallery(data.topAiring, `Top Airing ${_.upperFirst(active)}`, 'topAiring')}
         {this.renderGallery(
-          anime.topUpcoming,
+          data.topUpcoming,
           `Top Upcoming ${_.upperFirst(active)}`,
           'topUpcoming',
         )}
-        {this.renderGallery(anime.highest, `Highest Rated ${_.upperFirst(active)}`, 'highest')}
-        {this.renderGallery(anime.popular, `Most Popular ${_.upperFirst(active)}`, 'popular')}
+        {this.renderGallery(data.highest, `Highest Rated ${_.upperFirst(active)}`, 'highest')}
+        {this.renderGallery(data.popular, `Most Popular ${_.upperFirst(active)}`, 'popular')}
         <View style={{ padding: 10, marginTop: 17 }}>
           <Text
             style={{
@@ -214,10 +206,14 @@ TopsList.propTypes = {
 
 const mapStateToProps = ({ anime }) => {
   const {
-    topAiring,
-    topUpcoming,
-    highest,
-    popular,
+    topAiringanime,
+    topAiringmanga,
+    topUpcominganime,
+    topUpcomingmanga,
+    highestanime,
+    highestmanga,
+    popularanime,
+    popularmanga,
     topAiringLoading,
     topUpcomingLoading,
     highestLoading,
@@ -225,10 +221,20 @@ const mapStateToProps = ({ anime }) => {
   } = anime;
   return {
     anime: {
-      topAiring,
-      topUpcoming,
-      highest,
-      popular,
+      topAiring: topAiringanime,
+      topUpcoming: topUpcominganime,
+      highest: highestanime,
+      popular: popularanime,
+      topAiringLoading,
+      topUpcomingLoading,
+      highestLoading,
+      popularLoading,
+    },
+    manga: {
+      topAiring: topAiringmanga,
+      topUpcoming: topUpcomingmanga,
+      highest: highestmanga,
+      popular: popularmanga,
       topAiringLoading,
       topUpcomingLoading,
       highestLoading,

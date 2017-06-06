@@ -77,14 +77,17 @@ class SearchResults extends Component {
 
 SearchResults.propTypes = {
   results: PropTypes.array.isRequired,
-  navigation: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   search: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ anime }) => {
-  const { results, resultsLoading } = anime;
-  const data = results.map(item => ({
+const mapStateToProps = ({ anime }, ownProps) => {
+  const { resultsLoading } = anime;
+  const { navigation: { state: { params: { active } } } } = ownProps;
+  console.log(active);
+  console.log(`results${active}`);
+  const data = anime[`results${active}`].map(item => ({
     image: item.posterImage ? item.posterImage.small : 'none',
     titles: item.titles ? item.titles : {},
     key: item.id,

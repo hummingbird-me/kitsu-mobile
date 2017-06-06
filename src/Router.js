@@ -44,15 +44,6 @@ const Tabs = TabNavigator(
     Feed: {
       screen: HomeScreen,
     },
-    Add: {
-      screen: HomeScreen,
-    },
-    Notifications: {
-      screen: HomeScreen,
-    },
-    Settings: {
-      screen: HomeScreen,
-    },
   },
   {
     tabBarOptions: {

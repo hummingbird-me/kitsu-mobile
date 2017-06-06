@@ -1,31 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, FlatList, Text } from 'react-native';
+import { Spinner } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import * as colors from '../../../constants/colors';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 
-const ResultsList = ({ dataArray, loadMore, refreshing = false, refresh }) => (
-  <View style={{ backgroundColor: '#FAFAFA' }}>
-    <FlatList
-      removeClippedSubviews={false}
-      data={dataArray}
-      onEndReached={() => loadMore()}
-      onEndReachedThreshold={0.1}
-      getItemLayout={(data, index) => ({
-        length: 125,
-        offset: 125 * index,
-        index,
-      })}
-      initialNumToRender={10}
-      numColumns={4}
-      refreshing={refreshing}
-      onRefresh={() => refresh()}
-      contentContainerStyle={styles.list}
-      renderItem={renderItem}
-    />
-  </View>
-);
+const ResultsList = ({ dataArray, loadMore, refreshing = false, refresh, loading }) => {
+  console.log(loadMore);
+  return (
+    <View style={{ backgroundColor: '#FAFAFA' }}>
+      <FlatList
+        removeClippedSubviews={false}
+        data={dataArray}
+        onEndReached={() => loadMore()}
+        onEndReachedThreshold={2}
+        getItemLayout={(data, index) => ({
+          length: 125,
+          offset: 125 * index,
+          index,
+        })}
+        initialNumToRender={10}
+        numColumns={4}
+        refreshing={refreshing}
+        onRefresh={() => refresh()}
+        contentContainerStyle={styles.list}
+        renderItem={renderItem}
+      />
+    </View>
+  );
+};
 
 const renderItem = ({ item }) => {
   let title = null;

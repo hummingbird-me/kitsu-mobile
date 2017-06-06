@@ -4193,6 +4193,12 @@ react-native-safe-module@^1.1.0:
   dependencies:
     dedent "^0.6.0"
 
+react-native-scrollable-tab-view@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/react-native-scrollable-tab-view/-/react-native-scrollable-tab-view-0.6.6.tgz#d49d21060745845e9c59e3d39a2bacd4056a8b59"
+  dependencies:
+    react-timer-mixin "^0.13.3"
+
 react-native-snap-carousel@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-2.1.4.tgz#7d9b7bfade489a34fd34869531d8d10a2a21018d"

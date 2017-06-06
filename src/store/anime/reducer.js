@@ -1,11 +1,16 @@
 import * as types from '../types';
 
 const INITIAL_STATE = {
-  topAiring: [],
-  topUpcoming: [],
-  highest: [],
-  popular: [],
-  results: [],
+  topAiringanime: [],
+  topAiringmanga: [],
+  topUpcominganime: [],
+  topUpcomingmanga: [],
+  highestanime: [],
+  highestmanga: [],
+  popularanime: [],
+  popularmanga: [],
+  resultsanime: [],
+  resultsmanga: [],
   topAiringLoading: false,
   topUpcomingLoading: false,
   highestLoading: false,
@@ -20,7 +25,9 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [`${action.field}Loading`]: true,
-        [action.field]: [],
+        [`${action.field}${action.selected}`]: [],
+        resultsanime: [],
+        resultsmanga: [],
         error: '',
       };
     case types.SEARCH_MORE:
@@ -33,7 +40,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [`${action.field}Loading`]: false,
-        [action.field]: action.payload,
+        [`${action.field}${action.selected}`]: action.payload,
         error: '',
       };
     case types.SEARCH_FAIL:

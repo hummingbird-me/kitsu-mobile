@@ -46,7 +46,7 @@ export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime')
     }
     const results = await Kitsu.findAll([type], query);
     data = [...data, ...results];
-    dispatch({ type: types.SEARCH_SUCCESS, field: 'results', payload: data });
+    dispatch({ type: types.SEARCH_SUCCESS, field: 'results', payload: data, selected: type });
   } catch (e) {
     console.log(e);
   }
@@ -67,7 +67,7 @@ export const getDefaults = (field, type = 'anime') => async (dispatch) => {
       };
     }
     const results = await Kitsu.findAll(type, query);
-    dispatch({ type: types.SEARCH_SUCCESS, payload: results, field });
+    dispatch({ type: types.SEARCH_SUCCESS, payload: results, field, selected: type });
   } catch (e) {
     console.log(e);
     dispatch({ type: types.SEARCH_FAIL, payload: `${e[0].title}: ${e[0].detail}` });

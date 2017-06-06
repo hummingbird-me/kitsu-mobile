@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  Container,
-  Content,
-  Icon,
-  Segment,
-  Button,
-  Text,
-  StyleProvider,
-  Item,
-  Input,
-} from 'native-base';
+import { Container, Icon, Text, Item, Input } from 'native-base';
 import PropTypes from 'prop-types';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
+import _ from 'lodash';
 
 import * as colors from '../../constants/colors';
-import getTheme from '../../../native-base-theme/components';
-import kitsuStyles from '../../../native-base-theme/variables/kitsu';
+
 import { search } from '../../store/anime/actions';
 import { ResultsList, TopsList } from './Lists';
+import SegmentTabBar from '../../components/SegmentTabBar';
 
 class SearchScreen extends Component {
   static navigationOptions = {
@@ -45,6 +37,7 @@ class SearchScreen extends Component {
     this.segmentChange = this.segmentChange.bind(this);
     this.search = this.search.bind(this);
     this.handleSearchQuery = this.handleSearchQuery.bind(this);
+    this.renderSearchBar = this.renderSearchBar.bind(this);
   }
 
   segmentChange(e, active) {
@@ -53,7 +46,10 @@ class SearchScreen extends Component {
   }
 
   search(query, active, index = 0) {
-    this.props.search({ text: query }, {}, index, null, active);
+    if (query.length > 0) {
+      this.props.search({ text: query }, {}, index, null, active);
+      // _.debounce(() => this.props.search({ text: query }, {}, index, null, active), 1000);
+    }
   }
 
   loadMore() {
@@ -67,7 +63,10 @@ class SearchScreen extends Component {
   refresh() {
     this.setState({ loading: true, index: 0 });
     const { query, active } = this.state;
-    this.search(query, active);
+    console.log(query);
+    if (query.length > 0) {
+      this.search(query, active);
+    }
   }
 
   handleSearchQuery(query) {
@@ -75,96 +74,122 @@ class SearchScreen extends Component {
     this.search(query, this.state.active);
   }
 
-  render() {
-    const { active, query } = this.state;
-    const { results } = this.props;
+  renderSearchBar(active) {
+    const { query } = this.state;
+
     return (
-      <Container>
-        <StyleProvider style={getTheme(kitsuStyles)}>
-          <Segment
-            style={{
-              backgroundColor: colors.darkPurple,
-              borderTopWidth: 0,
-              height: 44,
-              shadowColor: 'black',
-              shadowOpacity: 0.1,
-              shadowRadius: StyleSheet.hairlineWidth,
-            }}
-          >
-            <Button
-              style={{ height: 28, marginTop: 0 }}
-              active={active === 'anime'}
-              onPress={e => this.segmentChange(e, 'anime')}
-              first
-            >
-              <Text>Anime</Text>
-            </Button>
-            <Button
-              style={{ height: 28, marginTop: 0 }}
-              onPress={e => this.segmentChange(e, 'manga')}
-              active={active === 'manga'}
-            >
-              <Text>Manga</Text>
-            </Button>
-            <Button
-              style={{ height: 28, marginTop: 0 }}
-              onPress={e => this.segmentChange(e, 'users')}
-              active={active === 'users'}
-              last
-            >
-              <Text>Users</Text>
-            </Button>
-          </Segment>
-        </StyleProvider>
-        <Content style={{ backgroundColor: '#FAFAFA' }}>
-          <Item
-            style={{ height: 36, backgroundColor: '#FAFAFA', paddingLeft: 14, paddingRight: 14 }}
-          >
-            <Icon
-              name="ios-search"
-              style={{ color: '#9D9D9D', fontSize: 17, alignItems: 'center', marginTop: 5 }}
-            />
-            <Input
-              placeholder={`Search ${active}`}
-              value={query}
-              onChangeText={this.handleSearchQuery}
-              style={{
-                fontSize: 13,
-                fontFamily: 'OpenSans',
-                fontWeight: '600',
-                color: colors.placeholderGrey,
-                alignSelf: 'center',
-              }}
-              placeholderTextColor={colors.placeholderGrey}
-            />
-          </Item>
-          {query.length === 0
-            ? <TopsList active={active} navigation={this.props.navigation} />
-            : <ResultsList dataArray={results} />}
-        </Content>
+      <Item
+        style={{
+          height: 36,
+          backgroundColor: '#FAFAFA',
+          paddingLeft: 14,
+          paddingRight: 14,
+          borderColor: colors.imageGrey,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+        }}
+      >
+        <Icon
+          name="ios-search"
+          style={{ color: '#9D9D9D', fontSize: 17, alignItems: 'center', marginTop: 5 }}
+        />
+        <Input
+          placeholder={`Search ${active}`}
+          value={query}
+          onChangeText={this.handleSearchQuery}
+          style={{
+            fontSize: 13,
+            fontFamily: 'OpenSans',
+            fontWeight: '600',
+            color: colors.placeholderGrey,
+            alignSelf: 'center',
+          }}
+          placeholderTextColor={colors.placeholderGrey}
+        />
+      </Item>
+    );
+  }
+
+  render() {
+    const { active, query, selected } = this.state;
+    const { resultsanime, resultsmanga, loading } = this.props;
+    return (
+      <Container style={{ backgroundColor: '#FAFAFA' }}>
+        <ScrollableTabView
+          renderTabBar={() => <SegmentTabBar />}
+          prerenderingSiblingsNumber={1}
+          onChangeTab={(e) => {
+            this.setState({ selected: e.i, active: e.ref.props.id });
+            this.search(this.state.query, e.ref.props.id);
+          }}
+        >
+          <ScrollView key="Anime" tabLabel="Anime" id="anime">
+            {this.renderSearchBar('anime')}
+            {query.length === 0
+              ? <TopsList
+                active="anime"
+                mounted={selected === 0}
+                navigation={this.props.navigation}
+              />
+              : <ResultsList
+                dataArray={resultsanime}
+                loading={loading}
+                loadMore={this.loadMore}
+                refresh={this.refresh}
+              />}
+          </ScrollView>
+          <ScrollView key="Manga" tabLabel="Manga" id="manga">
+            {this.renderSearchBar('manga')}
+            {query.length === 0
+              ? <TopsList
+                active="manga"
+                mounted={selected === 1}
+                navigation={this.props.navigation}
+              />
+              : <ResultsList
+                dataArray={resultsmanga}
+                loading={loading}
+                loadMore={this.loadMore}
+                refresh={this.refresh}
+              />}
+          </ScrollView>
+          <ScrollView key="Users" tabLabel="Users">
+            <Text>Users</Text>
+          </ScrollView>
+        </ScrollableTabView>
       </Container>
     );
   }
 }
 
 const mapStateToProps = ({ anime }) => {
-  const { results, resultsLoading } = anime;
-  let data = [];
-  if (results.length > 0) {
-    data = results.map(item => ({
+  const { resultsanime, resultsmanga, resultsLoading } = anime;
+  let animeR = [];
+  let mangaR = [];
+  if (resultsanime.length > 0) {
+    animeR = resultsanime.map(item => ({
       image: item.posterImage ? item.posterImage.small : 'none',
       titles: item.titles ? item.titles : {},
       key: item.id,
     }));
   } else {
-    data = Array(20).fill(1).map((item, index) => ({ key: index }));
+    animeR = Array(20).fill(1).map((item, index) => ({ key: index }));
   }
-  return { results: data, loading: resultsLoading };
+  if (resultsmanga.length > 0) {
+    mangaR = resultsmanga.map(item => ({
+      image: item.posterImage ? item.posterImage.small : 'none',
+      titles: item.titles ? item.titles : {},
+      key: item.id,
+    }));
+  } else {
+    mangaR = Array(20).fill(1).map((item, index) => ({ key: index }));
+  }
+  return { resultsanime: animeR, resultsmanga: mangaR, loading: resultsLoading };
 };
 
 SearchScreen.propTypes = {
-  results: PropTypes.array.isRequired,
-  navigation: PropTypes.func.isRequired,
+  resultsanime: PropTypes.array.isRequired,
+  resultsmanga: PropTypes.array.isRequired,
+  navigation: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   search: PropTypes.func.isRequired,
 };
