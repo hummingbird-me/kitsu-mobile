@@ -9,7 +9,7 @@ import _ from 'lodash';
 import * as colors from '../../constants/colors';
 
 import { search } from '../../store/anime/actions';
-import { ResultsList, TopsList } from './Lists';
+import { ResultsList, TopsList, UsersList } from './Lists';
 import SegmentTabBar from '../../components/SegmentTabBar';
 
 class SearchScreen extends Component {
@@ -155,7 +155,8 @@ class SearchScreen extends Component {
               />}
           </ScrollView>
           <ScrollView key="Users" tabLabel="Users">
-            <Text>Users</Text>
+            {this.renderSearchBar('users')}
+            <UsersList />
           </ScrollView>
         </ScrollableTabView>
       </Container>

@@ -11,7 +11,7 @@ class SearchCategory extends Component {
     title: navigation.state.params.label,
     headerLeft: (
       <Button transparent color="white" onPress={() => navigation.goBack()}>
-        <Icon name="md-arrow-back" style={{ color: 'white' }} />
+        <Icon name="arrow-back" style={{ color: 'white' }} />
       </Button>
     ),
     tabBarIcon: ({ tintColor }) => (
