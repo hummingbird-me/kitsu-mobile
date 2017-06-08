@@ -5,6 +5,7 @@ import { loginUser } from '../auth/actions';
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_USER });
   const token = getState().auth.tokens.access_token;
+  console.log(token);
   setToken(token);
   try {
     const user = await Kitsu.findAll('users', {
@@ -13,6 +14,7 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
       },
       filter: { self: true },
     });
+    console.log(user);
     dispatch({ type: types.FETCH_USER_SUCCESS, payload: user[0] });
   } catch (e) {
     console.log(e);

@@ -8,7 +8,7 @@ if (__DEV__) {
     },
     baseUrl: 'https://staging.kitsu.io/api',
     version: '0.0.1',
-  }
+  };
 } else {
   kitsuConfig = {
     authConfig: {
@@ -17,5 +17,5 @@ if (__DEV__) {
     },
     baseUrl: 'https://kitsu.io/api',
     version: '0.0.0',
-  }
+  };
 }

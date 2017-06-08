@@ -15,6 +15,26 @@ export const Kitsu = new JsonApi({
 
 Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
 
+const errorMiddleware = {
+  name: 'error-middleware',
+  error: (payload) => {
+    if (payload.status === 401) {
+      return {
+        request: {
+          authorized: false,
+        },
+      };
+    }
+    const data = payload.data;
+    if (!data.errors) {
+      console.log('Unidentified error');
+      console.log(payload);
+      return null;
+    }
+    return payload.data.errors;
+  },
+};
+Kitsu.replaceMiddleware('errors', errorMiddleware);
 
 Kitsu.define(
   'users',
@@ -27,6 +47,7 @@ Kitsu.define(
   },
   { collectionPath: 'users' },
 );
+
 Kitsu.define(
   'user',
   {
@@ -38,6 +59,42 @@ Kitsu.define(
     createdAt: '',
   },
   { collectionPath: 'user' },
+);
+
+Kitsu.define(
+  'anime',
+  {
+    slug: '',
+    synopsis: '',
+    titles: '',
+    posterImage: '',
+    startDate: '',
+    endDate: '',
+    coverImageTopOffset: '',
+    canonicalTitle: '',
+    abbreviatedTitles: '',
+    averageRating: '',
+    ratingFrequencies: '',
+  },
+  { collectionPath: 'anime' },
+);
+
+Kitsu.define(
+  'manga',
+  {
+    slug: '',
+    synopsis: '',
+    titles: '',
+    posterImage: '',
+    startDate: '',
+    endDate: '',
+    coverImageTopOffset: '',
+    canonicalTitle: '',
+    abbreviatedTitles: '',
+    averageRating: '',
+    ratingFrequencies: '',
+  },
+  { collectionPath: 'manga' },
 );
 
 export const setToken = (token) => {

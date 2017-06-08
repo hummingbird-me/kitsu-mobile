@@ -5,23 +5,43 @@ import LoginScreen from './screens/Auth/LoginScreen';
 import SignupScreen from './screens/Auth/SignupScreen';
 import RecoveryScreen from './screens/Auth/RecoveryScreen';
 import SplashScreen from './screens/Auth/SplashScreen';
+import SearchScreen from './screens/Search/SearchScreen';
+import SearchCategory from './screens/Search/SearchCategory';
+import SearchResults from './screens/Search/SearchResults';
 import * as colors from './constants/colors';
+
+const SearchStack = StackNavigator(
+  {
+    SearchAll: {
+      screen: SearchScreen,
+    },
+    SearchCategory: {
+      screen: SearchCategory,
+    },
+    SearchResults: {
+      screen: SearchResults,
+    },
+  },
+  {
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerTitleStyle: {
+        color: colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: 'bold',
+        fontSize: 15,
+        marginTop: -10,
+      },
+    },
+  },
+);
 
 const Tabs = TabNavigator(
   {
-    Feed: {
-      screen: HomeScreen,
-    },
     Search: {
-      screen: HomeScreen,
+      screen: SearchStack,
     },
-    Add: {
-      screen: HomeScreen,
-    },
-    Notifications: {
-      screen: HomeScreen,
-    },
-    Settings: {
+    Feed: {
       screen: HomeScreen,
     },
   },
@@ -29,6 +49,7 @@ const Tabs = TabNavigator(
     tabBarOptions: {
       activeTintColor: colors.tabRed,
       showLabel: false,
+      style: { height: 44 },
     },
   },
 );
@@ -54,7 +75,20 @@ const Root = StackNavigator(
       screen: Tabs,
     },
   },
-  { headerMode: 'screen', mode: 'modal' },
+  {
+    headerMode: 'none',
+    mode: 'modal',
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerTitleStyle: {
+        color: colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: 'bold',
+        fontSize: 15,
+        marginTop: -10,
+      },
+    },
+  },
 );
 
 export default Root;
