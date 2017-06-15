@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Icon, Button } from 'native-base';
+import AweIcon from 'react-native-vector-icons/FontAwesome';
+
 import { search } from '../../store/anime/actions';
 import { ResultsList } from './Lists';
 
@@ -11,6 +13,25 @@ class SearchResults extends Component {
     headerLeft: (
       <Button transparent color="white" onPress={() => navigation.goBack()}>
         <Icon name="arrow-back" style={{ color: 'white' }} />
+      </Button>
+    ),
+    headerRight: (
+      <Button
+        transparent
+        color="white"
+        onPress={() =>
+          navigation.navigate('SearchFilter', {
+            ...navigation.state.params,
+            onApply: (data, state) => {
+              navigation.goBack(null);
+              setTimeout(
+                () => navigation.setParams({ filter: data.filter, sort: data.sort, default: null, label: 'Search', data: state, fade: data.fade }),
+                10,
+              );
+            },
+          })}
+      >
+        <AweIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
       </Button>
     ),
     tabBarIcon: ({ tintColor }) => (
@@ -37,10 +58,13 @@ class SearchResults extends Component {
     if (nextProps.results !== this.props.results) {
       this.setState({ loading: false });
     }
+    if (this.props.navigation.state.params !== nextProps.navigation.state.params) {
+      this.getData(0, nextProps.navigation.state);
+    }
   }
 
-  getData(index = 0) {
-    const { params } = this.props.navigation.state;
+  getData(index = 0, newParams) {
+    const { params } = newParams || this.props.navigation.state;
     this.props.search(params.filter, params.sort, index, params.default, params.active);
   }
 

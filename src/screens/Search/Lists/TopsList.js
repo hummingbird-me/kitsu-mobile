@@ -11,8 +11,8 @@ import ProgressiveImage from '../../../components/ProgressiveImage';
 
 const list = [
   { label: 'Release date', key: 'release' },
-  { label: 'Genre', key: 'genre' },
-  { label: 'Service', key: 'service' },
+  { label: 'Category', key: 'categories', title: 'Select Categories' },
+  { label: 'Streaming Service', key: 'service' },
 ];
 
 class TopsList extends Component {
@@ -26,12 +26,6 @@ class TopsList extends Component {
 
   componentDidMount() {
     this.init(this.props.active);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.mounted && nextProps.mounted !== this.props.mounted) {
-      // this.init(nextProps.active);
-    }
   }
 
   init(type) {
@@ -169,7 +163,7 @@ class TopsList extends Component {
   }
 
   render() {
-    const { anime, manga, active } = this.props;
+    const { active } = this.props;
     const data = this.props[active];
     return (
       <View style={{ backgroundColor: '#FAFAFA' }}>
@@ -202,7 +196,6 @@ class TopsList extends Component {
 TopsList.propTypes = {
   active: PropTypes.string.isRequired,
   getDefaults: PropTypes.func.isRequired,
-  anime: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = ({ anime }) => {
