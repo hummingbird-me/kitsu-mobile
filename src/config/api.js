@@ -11,6 +11,7 @@ export const auth = new OAuth2({
 export const Kitsu = new JsonApi({
   apiUrl: `${kitsuConfig.baseUrl}/edge`,
   logger: false,
+  pluralize: false,
 });
 
 Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
@@ -41,9 +42,10 @@ Kitsu.define(
   {
     name: '',
     email: '',
-    password: '',
-    gender: '',
-    facebookId: '',
+    avatar: '',
+    about: '',
+    bio: '',
+    createdAt: '',
   },
   { collectionPath: 'users' },
 );
@@ -95,6 +97,46 @@ Kitsu.define(
     ratingFrequencies: '',
   },
   { collectionPath: 'manga' },
+);
+
+Kitsu.define(
+  'categories',
+  {
+    title: '',
+    nsfw: '',
+    childCount: '',
+    image: '',
+    slug: '',
+    description: '',
+    totalMediaCount: '',
+    parent: {
+      jsonApi: 'hasMany',
+    },
+    anime: {
+      jsonApi: 'hasMany',
+    },
+    drama: {
+      jsonApi: 'hasMany',
+    },
+    manga: {
+      jsonApi: 'hasMany',
+    },
+  },
+  {
+    collectionPath: 'categories',
+  },
+);
+
+Kitsu.define(
+  'streamers',
+  {
+    siteName: '',
+    logo: '',
+    streamingLinks: '',
+  },
+  {
+    collectionPath: 'streamers',
+  },
 );
 
 export const setToken = (token) => {

@@ -2,7 +2,7 @@ import { TabNavigator, StackNavigator } from 'react-navigation';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
 import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
-import { SearchScreen, SearchCategory, SearchResults } from './screens/Search';
+import { SearchScreen, SearchCategory, SearchResults, SearchFilter, FilterSub } from './screens/Search';
 import NotificationsScreen from './screens/Notifications/NotificationsScreen';
 import * as colors from './constants/colors';
 
@@ -36,6 +36,31 @@ const NotifStack = StackNavigator(
   {
     Notifications: {
       screen: NotificationsScreen,
+    },
+  },
+  {
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerTitleStyle: {
+        color: colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: 'bold',
+        fontSize: 15,
+        marginTop: -10,
+      },
+    },
+  },
+);
+const FilterStack = StackNavigator(
+  {
+    Filter: {
+      screen: SearchFilter,
+    },
+    FilterCategory: {
+      screen: SearchCategory,
+    },
+    FilterSub: {
+      screen: FilterSub,
     },
   },
   {
@@ -92,6 +117,9 @@ const Root = StackNavigator(
     },
     Tabs: {
       screen: Tabs,
+    },
+    SearchFilter: {
+      screen: FilterStack,
     },
   },
   {
