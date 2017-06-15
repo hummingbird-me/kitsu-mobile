@@ -21,7 +21,7 @@ export default function configureStore() {
     compose(applyMiddleware(...middlewares), autoRehydrate()),
   );
 
-  persistStore(store, { storage: AsyncStorage });
+  persistStore(store, { storage: AsyncStorage, blacklist: ['anime'] });
 
   return store;
 }

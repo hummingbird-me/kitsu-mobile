@@ -16,6 +16,8 @@ const INITIAL_STATE = {
   highestLoading: false,
   popularLoading: false,
   resultsLoading: false,
+  categories: {},
+  streamers: [],
   error: '',
 };
 
@@ -49,6 +51,30 @@ export default (state = INITIAL_STATE, action) => {
         searching: false,
         [`${action.field}Loading`]: false,
         error: action.payload,
+      };
+    case types.GET_CATEGORIES:
+      return {
+        ...state,
+        categoriesLoading: true,
+        error: action.payload,
+      };
+    case types.GET_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        categories: action.payload,
+        categoriesLoading: false,
+      };
+    case types.GET_STREAMERS:
+      return {
+        ...state,
+        streamersLoading: true,
+        error: action.payload,
+      };
+    case types.GET_STREAMERS_SUCCESS:
+      return {
+        ...state,
+        streamers: action.payload,
+        streamersLoading: false,
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;
