@@ -1,13 +1,9 @@
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
-import LoginScreen from './screens/Auth/LoginScreen';
-import SignupScreen from './screens/Auth/SignupScreen';
-import RecoveryScreen from './screens/Auth/RecoveryScreen';
-import SplashScreen from './screens/Auth/SplashScreen';
-import SearchScreen from './screens/Search/SearchScreen';
-import SearchCategory from './screens/Search/SearchCategory';
-import SearchResults from './screens/Search/SearchResults';
+import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
+import { SearchScreen, SearchCategory, SearchResults } from './screens/Search';
+import NotificationsScreen from './screens/Notifications/NotificationsScreen';
 import * as colors from './constants/colors';
 
 const SearchStack = StackNavigator(
@@ -36,6 +32,26 @@ const SearchStack = StackNavigator(
   },
 );
 
+const NotifStack = StackNavigator(
+  {
+    Notifications: {
+      screen: NotificationsScreen,
+    },
+  },
+  {
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerTitleStyle: {
+        color: colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: 'bold',
+        fontSize: 15,
+        marginTop: -10,
+      },
+    },
+  },
+);
+
 const Tabs = TabNavigator(
   {
     Search: {
@@ -43,6 +59,9 @@ const Tabs = TabNavigator(
     },
     Feed: {
       screen: HomeScreen,
+    },
+    Notif: {
+      screen: NotifStack,
     },
   },
   {

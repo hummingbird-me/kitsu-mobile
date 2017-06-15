@@ -7,11 +7,9 @@ import Root from './Router';
 
 const store = configureStore();
 class App extends Component {
-
   componentDidMount() {
     // these errors are library wornings. most of them will be resolved with newer versions
     console.disableYellowBox = true;
-    // console.ignoredYellowBox = ['Warning: View.propTypes', 'Warning: BackAndroid is deprecated.'];
   }
   render() {
     return (
