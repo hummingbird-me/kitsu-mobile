@@ -20,13 +20,13 @@ const SearchStack = StackNavigator(
   },
   {
     navigationOptions: {
-      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerStyle: { backgroundColor: colors.darkPurple, height: 64 },
       headerTitleStyle: {
         color: colors.white,
         fontFamily: 'OpenSans',
         fontWeight: 'bold',
         fontSize: 15,
-        marginTop: -10,
+        marginTop: 0,
       },
     },
   },
@@ -40,7 +40,7 @@ const NotifStack = StackNavigator(
   },
   {
     navigationOptions: {
-      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerStyle: { backgroundColor: colors.darkPurple, height: 83 },
       headerTitleStyle: {
         color: colors.white,
         fontFamily: 'OpenSans',
@@ -65,7 +65,7 @@ const FilterStack = StackNavigator(
   },
   {
     navigationOptions: {
-      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerStyle: { backgroundColor: colors.darkPurple, height: 64 },
       headerTitleStyle: {
         color: colors.white,
         fontFamily: 'OpenSans',
@@ -126,7 +126,7 @@ const Root = StackNavigator(
     headerMode: 'none',
     mode: 'modal',
     navigationOptions: {
-      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerStyle: { backgroundColor: colors.darkPurple, height: 64 },
       headerTitleStyle: {
         color: colors.white,
         fontFamily: 'OpenSans',
