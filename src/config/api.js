@@ -27,7 +27,7 @@ const errorMiddleware = {
       };
     }
     const data = payload.data;
-    if (!data.errors) {
+    if (!(data && data.errors)) {
       console.log('Unidentified error');
       console.log(payload);
       return null;
@@ -46,6 +46,41 @@ Kitsu.define(
     about: '',
     bio: '',
     createdAt: '',
+    website: '',
+    birthday: '',
+    aboutFormatted: '',
+    location: '',
+    waifuOrHusbando: '',
+    followersCount: '',
+    facebookId: '',
+    followingCount: '',
+    lifeSpentOnAnime: '',
+    gender: '',
+    updatedAt: '',
+    commentsCount: '',
+    favoritesCount: '',
+    likesGivenCount: '',
+    reviewsCount: '',
+    likesReceivedCount: '',
+    postsCount: '',
+    ratingsCount: '',
+    proExpiresAt: '',
+    title: '',
+    profileCompleted: '',
+    feedCompleted: '',
+    coverImage: '',
+    ratingSystem: '',
+    theme: '',
+    pastNames: '',
+    timeZone: '',
+    country: '',
+    sfwFilter: '',
+    titleLanguagePreference: '',
+    shareToGlobal: '',
+    language: '',
+    previousEmail: '',
+    confirmed: '',
+    password: '',
   },
   { collectionPath: 'users' },
 );
@@ -59,8 +94,34 @@ Kitsu.define(
     about: '',
     bio: '',
     createdAt: '',
+    website: '',
+    birthday: '',
+    aboutFormatted: '',
+    location: '',
+    waifuOrHusbando: '',
+    followersCount: '',
+    facebookId: '',
+    followingCount: '',
+    lifeSpentOnAnime: '',
+    gender: '',
+    updatedAt: '',
+    commentsCount: '',
+    favoritesCount: '',
+    likesGivenCount: '',
+    reviewsCount: '',
+    likesReceivedCount: '',
+    postsCount: '',
+    ratingsCount: '',
+    proExpiresAt: '',
+    title: '',
+    profileCompleted: '',
+    feedCompleted: '',
+    coverImage: '',
+    ratingSystem: '',
+    theme: '',
+    pastNames: '',
   },
-  { collectionPath: 'user' },
+  { collectionPath: 'users' },
 );
 
 Kitsu.define(
@@ -124,6 +185,75 @@ Kitsu.define(
   },
   {
     collectionPath: 'categories',
+  },
+);
+
+Kitsu.define(
+  'activities',
+  {
+    status: '',
+    streamId: '',
+    foreignId: '',
+    progress: '',
+    replyToType: '',
+    replyToUser: '',
+    nineteenScale: '',
+    mentionedUsers: '',
+    verb: '',
+    time: '',
+    rating: '',
+    actor: {
+      jsonApi: 'hasMany',
+    },
+    user: {
+      jsonApi: 'hasMany',
+    },
+    target: {
+      jsonApi: 'hasMany',
+    },
+  },
+  {
+    collectionPath: 'feeds/notifications',
+  },
+);
+
+Kitsu.define(
+  'posts',
+  {
+    link: '',
+    title: '',
+    commentsCount: '',
+    pastNames: '',
+    content: '',
+    contentFormatted: '',
+    postLikesCount: '',
+    spoiler: '',
+    nsfw: '',
+    blocked: '',
+    deletedAt: '',
+    createdAt: '',
+    updatedAt: '',
+    topLevelCommentsCount: '',
+    editedAt: '',
+    user: { jsonApi: 'hasMany', type: 'users' },
+  },
+  {
+    collectionPath: 'posts',
+  },
+);
+
+Kitsu.define(
+  'activityGroups',
+  {
+    group: '',
+    isSeen: '',
+    activities: {
+      jsonApi: 'hasMany',
+    },
+    isRead: '',
+  },
+  {
+    collectionPath: 'feeds/notifications',
   },
 );
 

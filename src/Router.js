@@ -93,6 +93,7 @@ const Tabs = TabNavigator(
     tabBarOptions: {
       activeTintColor: colors.tabRed,
       showLabel: false,
+      lazy: true,
       style: { height: 44 },
     },
   },
