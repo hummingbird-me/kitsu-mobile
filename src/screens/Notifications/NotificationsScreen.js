@@ -166,6 +166,7 @@ class NotificationsScreen extends Component {
           data={notifications}
           renderItem={this.renderItem}
           onEndReached={() => this.loadMore()}
+          keyExtractor={(item) => item.id}
           onEndReachedThreshold={0.5}
           initialNumToRender={30}
           refreshing={loadingNotifications}
@@ -179,7 +180,7 @@ class NotificationsScreen extends Component {
 NotificationsScreen.propTypes = {
   getNotifications: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-  notifications: PropTypes.object.isRequired,
+  notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
 };
 
