@@ -123,7 +123,7 @@ class NotificationsScreen extends Component {
           <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
         </Text>);
     }
-    const ava = activity.actor[0].avatar
+    const ava = activity.actor && activity.actor[0].avatar
       ? activity.actor[0].avatar.tiny
       : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
@@ -140,7 +140,7 @@ class NotificationsScreen extends Component {
             <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
               <Text style={{ fontFamily: 'OpenSans', fontSize: 12, fontWeight: '400' }}>
                 <Text style={{ color: '#FF300A', fontWeight: '500' }}>
-                  {activity.actor[0].name}{' '}
+                  {activity.actor && activity.actor[0].name}{' '}
                 </Text>
                 {others && <Text>and {others}</Text>}
                 {this.renderText(activity)}

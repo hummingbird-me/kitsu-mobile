@@ -1,0 +1,99 @@
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { Button, Left, Right } from 'native-base';
+import PropTypes from 'prop-types';
+
+const renderFooter = (props) => {
+  if (props.single) {
+    if (!props.singleText) {
+      return null;
+    }
+    return (
+      <View style={{ ...styles.footer }}>
+        <Button
+          style={{ height: 30, justifyContent: 'center', flex: 1 }}
+          transparent
+          block
+          onPress={() => props.onPress()}
+        >
+          <Text
+            style={{ textAlign: 'center', color: '#333333', fontFamily: 'OpenSans', fontSize: 10 }}
+          >
+            {props.singleText}
+          </Text>
+        </Button>
+      </View>
+    );
+  }
+  return (
+    <View style={styles.footer}>
+      <Left>
+        <Button style={{ height: 35 }} transparent block onPress={() => props.onLeftPress()}>
+          <Text>{props.leftText}</Text>
+        </Button>
+      </Left>
+      <View style={styles.footerDivider} />
+      <Right>
+        <Button style={{ height: 35 }} transparent block onPress={() => props.onRightPress()}>
+          <Text>{props.rightText}</Text>
+        </Button>
+      </Right>
+    </View>
+  );
+};
+const CardFull = props => (
+  <View style={{ ...styles.container, ...props.style }}>
+    <View style={{ padding: 12 }}>
+      <View><Text style={styles.headerText}>{props.heading}</Text></View>
+      <View style={{ paddingTop: 10 }}>
+        {props.children}
+      </View>
+    </View>
+    {renderFooter(props)}
+  </View>
+);
+
+CardFull.propTypes = {
+  leftText: PropTypes.string,
+  rightText: PropTypes.string,
+  children: PropTypes.any,
+  style: PropTypes.object,
+};
+
+CardFull.defaultProps = {
+  leftText: 'Cancel',
+  rightText: 'Save',
+  children: {},
+  style: {},
+};
+
+const styles = {
+  container: {
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    marginTop: 0,
+    marginBottom: 5,
+    borderRadius: 5,
+    backgroundColor: 'white',
+  },
+  footer: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    justifyContent: 'center',
+    borderColor: '#EEEEEE',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 12,
+    color: '#333333',
+    fontFamily: 'OpenSans',
+  },
+  footerDivider: {
+    width: 0,
+    height: '60%',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#EEEEEE',
+  },
+};
+
+export default CardFull;

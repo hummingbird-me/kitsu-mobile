@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Animated } from 'react-native';
+import * as colors from '../constants/colors';
 
 let i = 0;
 const genKey = () => `key:${++i}`;
@@ -24,9 +25,9 @@ class ProgressiveImage extends Component {
 
   render() {
     const { key, thumbnailOpacity } = this.state;
-    const { containerStyle, source, style } = this.props;
+    const { source, style } = this.props;
     return (
-      <View style={containerStyle}>
+      <View style={{ backgroundColor: colors.imageGrey, ...style }}>
         <Animated.Image
           resizeMode={'cover'}
           key={key}
@@ -45,7 +46,6 @@ class ProgressiveImage extends Component {
 }
 
 ProgressiveImage.propTypes = {
-  containerStyle: PropTypes.object.isRequired,
   source: PropTypes.object.isRequired,
   style: PropTypes.object.isRequired,
 };

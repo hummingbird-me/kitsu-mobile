@@ -4370,6 +4370,20 @@ react-native-multi-slider@^0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/react-native-multi-slider/-/react-native-multi-slider-0.3.5.tgz#eda1f7b7062c74578441d434678a78052e120673"
 
+react-native-optimized-flatlist@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-optimized-flatlist/-/react-native-optimized-flatlist-1.0.1.tgz#dbee82f208b48bef23c6cb26f1d5f3ac58e675b2"
+
+react-native-progress-bar@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-progress-bar/-/react-native-progress-bar-0.1.2.tgz#2fbe32ed49d15e2a57a2b9d29b6d588a4fa1554e"
+
+react-native-progress@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-3.2.1.tgz#9f2353045c49f06803ae04d86a2cd5baa83cd465"
+  dependencies:
+    prop-types "^15.5.8"
+
 react-native-safe-module@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-module/-/react-native-safe-module-1.2.0.tgz#a23824ca24edc2901913694a76646475113d570d"
@@ -4392,6 +4406,10 @@ react-native-snap-carousel@^2.1.4:
   dependencies:
     react-addons-shallow-compare "15.5.2"
 
+react-native-swipeable@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-swipeable/-/react-native-swipeable-0.4.0.tgz#10ca127af1d206e857eb94c6bc49207ee21fa3e7"
+
 react-native-tab-navigator@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/react-native-tab-navigator/-/react-native-tab-navigator-0.3.3.tgz#b222bad21fbe773c8d28f9a0de30ce62b08724d3"
@@ -4411,6 +4429,10 @@ react-native-vector-icons@^4.1.1, react-native-vector-icons@~4.1.1:
     lodash "^4.0.0"
     prop-types "^15.5.8"
     yargs "^6.3.0"
+
+react-native-youtube@^1.0.0-alpha.4:
+  version "1.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/react-native-youtube/-/react-native-youtube-1.0.0-alpha.4.tgz#52d33bca04fb8011985703eb89ac29bdad224250"
 
 react-native@0.44.0:
   version "0.44.0"
