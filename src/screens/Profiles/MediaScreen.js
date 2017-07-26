@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, FlatList, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  FlatList,
+  Animated,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Container, Content, Icon } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
+import _ from 'lodash';
 
 import CustomHeader from '../../components/CustomHeader';
 import DoubleProgress from '../../components/DoubleProgress';
@@ -13,7 +22,9 @@ import CardStatus from '../../components/Card/CardStatus';
 import CardFull from '../../components/Card/CardFull';
 import CardActivity from '../../components/Card/CardActivity';
 import ProgressiveImage from '../../components/ProgressiveImage';
-import * as colors from '../../constants/colors';
+import { defaultAvatar } from '../../constants/app';
+import getTitleField from '../../utils/getTitleField';
+import { fetchMedia, fetchMediaReviews, fetchMediaCastings } from '../../store/media/actions';
 
 const { width } = Dimensions.get('window');
 
@@ -55,55 +66,296 @@ class MediaScreen extends Component {
       expanded: false,
     };
     this.animatedValue = new Animated.Value(0);
+    this.renderEpisodes = this.renderEpisodes.bind(this);
+    this.renderCharacters = this.renderCharacters.bind(this);
+  }
+
+  componentWillMount() {
+    const { state } = this.props.navigation;
+    const { mediaId, type } = state.params;
+    this.props.fetchMedia(mediaId, type);
+  }
+  componentDidMount() {
+    const { state } = this.props.navigation;
+    const { mediaId, type } = state.params;
+    this.props.fetchMediaReviews(mediaId);
+    this.props.fetchMediaCastings(mediaId);
   }
   expand() {
     if (this.view) {
       if (this.state.expanded) {
-        this.view.transition({ height: 130 }, { height: 70 }, 100, 'ease-in');
+        this.view.transition({ height: 200 }, { height: 70 }, 100, 'ease-in');
       } else {
-        this.view.transition({ height: 70 }, { height: 130 }, 100, 'ease-in');
+        this.view.transition({ height: 70 }, { height: 200 }, 100, 'ease-in');
       }
       this.setState({ expanded: !this.state.expanded });
     }
   }
-  renderImageRow(data, height = 120, hasCaption) {
+
+  renderScrollableRow(items) {
+    const data = items.map((e) => {
+      let char = {
+        image: defaultAvatar,
+      };
+      if (e.activities && e.activities[0]) {
+        const activity = e.activities[0];
+        let caption = '';
+        if (activity.verb === 'progressed') {
+          caption = `${activity.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${activity.progress}`;
+        } else if (activity.verb === 'updated') {
+          caption = `${_.capitalize(activity.status.replace('_', ' '))}`;
+        } else if (activity.verb === 'rated') {
+          caption = `Rated: ${activity.rating}`;
+        }
+        char = {
+          ...activity,
+          image: activity.media.posterImage.original,
+          caption,
+        };
+      }
+      return char;
+    });
     return (
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 }}>
+      <ScrollView horizontal style={{ flexDirection: 'row' }}>
         {data.map((item, index) => (
-          <View key={index} style={{ flex: 1, paddingRight: index === data.length - 1 ? 0 : 5 }}>
-            <ProgressiveImage
-              source={{ uri: item.image }}
-              containerStyle={{
-                height,
-                backgroundColor: colors.imageGrey,
+          <TouchableOpacity
+            key={index}
+            style={{ margin: 2 }}
+            onPress={media =>
+              this.props.navigation.navigate('Media', {
+                mediaId: item.media.id,
+                type: item.media.type,
+              })}
+          >
+            <ProgressiveImage source={{ uri: item.image }} style={{ height: 118, width: 83 }} />
+            <Text
+              style={{
+                fontSize: 9,
+                paddingTop: 3,
+                fontFamily: 'OpenSans',
+                textAlign: 'center',
               }}
-              style={{ height }}
-            />
+            >
+              {item.caption}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  }
+
+  renderImageRow(data, height = 120, width = 85, type = 'media', hasCaption = false) {
+    return (
+      <ScrollView horizontal style={{ flexDirection: 'row', marginBottom: 5 }}>
+        {data.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={{ margin: 2 }}
+            onPress={media =>
+              this.props.navigation.navigate('Media', {
+                mediaId: item.id,
+                type: item.type,
+              })}
+          >
+            <ProgressiveImage source={{ uri: item.image }} style={{ height, width }} />
+            {hasCaption &&
+              <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.5)']}
+                style={[{ height, width }, { position: 'absolute', top: 0 }]}
+              />}
             {hasCaption &&
               <Text
                 style={{
-                  fontSize: 9,
-                  paddingTop: 3,
+                  color: 'white',
+                  fontWeight: '500',
+                  fontSize: 12,
                   fontFamily: 'OpenSans',
-                  textAlign: 'center',
+                  position: 'absolute',
+                  bottom: 5,
+                  backgroundColor: 'transparent',
+                  alignSelf: 'center',
                 }}
               >
-                {item.caption}
+                {item.name}
               </Text>}
-          </View>
+          </TouchableOpacity>
         ))}
+      </ScrollView>
+    );
+  }
+
+  renderEpisodes() {
+    const { media, navigation } = this.props;
+    const { type } = navigation.state.params;
+    let series = type === 'anime' ? media.episodes || [] : media.chapters || [];
+    series = series.sort((a, b) => a - b).slice(0, 12);
+    const imageStyle = { height: 83, width: 148, borderRadius: 5 };
+    if (series.length === 0) return;
+    return (
+      <View style={{ margin: 10 }}>
+        <Text style={{ color: '#969696', fontSize: 10, marginLeft: 5 }}>
+          EPISODES · {media.episodeCount}
+        </Text>
+        <ScrollView horizontal style={{ flexDirection: 'row' }}>
+          {series.map((item, index) => (
+            <View style={{ margin: 5 }} key={item.id}>
+              <ProgressiveImage
+                source={{ uri: item.thumbnail ? item.thumbnail.original : media.posterImage.large }}
+                style={imageStyle}
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['transparent', 'black']}
+                style={[imageStyle, { position: 'absolute', top: 0 }]}
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  padding: 5,
+                  bottom: 0,
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Text
+                  style={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontSize: 12,
+                    fontFamily: 'OpenSans',
+                  }}
+                >
+                  Episode {index + 1}
+                </Text>
+                {item.titles.en_jp &&
+                  <Text
+                    style={{
+                      color: 'white',
+                      padding: 2,
+                      paddingLeft: 0,
+                      fontSize: 10,
+                      fontFamily: 'OpenSans',
+                    }}
+                    numberOfLines={1}
+                  >
+                    {item.titles.en_jp || ''}
+                  </Text>}
+              </View>
+            </View>
+          ))}
+          {media.episodeCount > 12 &&
+            <View style={{ margin: 5 }}>
+              <ProgressiveImage
+                source={{ uri: media.posterImage.large }}
+                style={imageStyle}
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['transparent', 'black']}
+                style={[imageStyle, { position: 'absolute', top: 0 }]}
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  padding: 5,
+                  top: 30,
+                  backgroundColor: 'transparent',
+                  flex: 1,
+                  alignSelf: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontSize: 12,
+                    fontFamily: 'OpenSans',
+                    alignSelf: 'center',
+                  }}
+                >
+                  View all {media.episodeCount} episodes
+                </Text>
+              </View>
+            </View>}
+        </ScrollView>
       </View>
     );
   }
 
+  renderRelatedMedia() {
+    let more = [0, 1, 2, 3];
+    const { mediaRelationships } = this.props.media;
+    if (mediaRelationships && mediaRelationships.length === 0) return;
+    if (mediaRelationships) {
+      more = mediaRelationships.map((item) => {
+        const title = item.destination.titles.en || item.destination.titles.en_jp;
+        return {
+          image: item.destination.posterImage.original,
+          title,
+          id: item.destination.id,
+          type: item.destination.type,
+          key: item.destination.id,
+        };
+      });
+    }
+    return (
+      <CardFull single singleText="View All" heading="More from this series">
+        {this.renderImageRow(more.slice(0, 12), 118, 83, 'media')}
+      </CardFull>
+    );
+  }
+
+  renderCharacters() {
+    console.log(this.props);
+    const { media } = this.props;
+    const characters = this.props.castings.map(item => ({
+      image: item.character.image ? item.character.image.original : defaultAvatar,
+      id: item.character.id,
+      name: item.character.name,
+      key: item.character.id,
+    }));
+    return (
+      <CardFull
+        single
+        singleText="View All"
+        heading="Characters"
+        onPress={() =>
+          this.props.navigation.navigate('FavoriteCharacters', {
+            label: 'Media Characters',
+            mediaId: this.props.media.id,
+          })}
+      >
+        {characters.length === 0 &&
+          <Text
+            style={{
+              fontFamily: 'OpenSans',
+              fontSize: 12,
+              alignSelf: 'center',
+              textAlign: 'center',
+              marginTop: 20,
+            }}
+          >
+            Hmm, there doesn't seem to be anything here yet.
+          </Text>}
+        {this.renderImageRow(
+          _.uniqBy(characters, item => item.id).slice(0, 6),
+          115,
+          115,
+          'character',
+          true,
+        )}
+      </CardFull>
+    );
+  }
+
   render() {
-    const { profile, navigation, loading } = this.props;
+    const { media, reviews, navigation, currentUser } = this.props;
     return (
       <Container style={styles.container}>
         <CustomHeader
           navigation={navigation}
+          hasOverlay
           headerImage={{
-            uri: 'https://static1.comicvine.com/uploads/original/11113/111130700/5480313-2167585338-12301.jpg',
+            uri: media.coverImage && media.coverImage.original,
           }}
           style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
           right={
@@ -119,18 +371,23 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-        <Content style={{ width }}>
+        <Content style={{ width, marginTop: 65 }}>
           <View
             style={{
-              marginTop: 120,
+              marginTop: 85,
               margin: 10,
               borderRadius: 5,
             }}
           >
-            <Image
-              source={{ uri: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg' }}
-              style={{ width: 30, height: 30, borderRadius: 15, marginBottom: 5 }}
-            />
+            {reviews[0] &&
+              <View style={{ marginTop: -30 }}>
+                <ProgressiveImage
+                  source={{
+                    uri: reviews[0].user.avatar ? reviews[0].user.avatar.small : defaultAvatar,
+                  }}
+                  style={{ width: 30, height: 30, borderRadius: 15, marginBottom: 5 }}
+                />
+              </View>}
             <Text
               style={{
                 color: 'white',
@@ -141,7 +398,7 @@ class MediaScreen extends Component {
               }}
               numberOfLines={3}
             >
-              “The most visually interesting, effectively comedic, genuinely heart-felt satire I’ve seen. Wonderful and re-watchable.”
+              {reviews[0] && reviews[0].content}
             </Text>
           </View>
           <View style={{ backgroundColor: '#F7F7F7', borderRadius: 0 }}>
@@ -153,7 +410,7 @@ class MediaScreen extends Component {
                 paddingTop: 5,
               }}
             >
-              <View>
+              <View style={{ width: '66%' }}>
                 <Text
                   style={{
                     color: '#333333',
@@ -162,44 +419,61 @@ class MediaScreen extends Component {
                     fontFamily: 'OpenSans',
                   }}
                 >
-                  One-Punch Man <Text style={{ color: '#929292', fontSize: 12 }}>2017</Text>
+                  {(media.titles && media.titles[getTitleField()]) || media.canonicalTitle}
+                  {' '}
+                  <Text style={{ color: '#929292', fontSize: 12 }}>
+                    {media.startDate && new Date(media.startDate).getFullYear()}
+                  </Text>
                 </Text>
                 <Text style={{ color: '#929292', fontSize: 12, marginBottom: 5, marginTop: 3 }}>
-                  91% <Text style={{ color: '#575757', fontWeight: 'bold' }}>TV</Text>
+                  {media.averageRating &&
+                    <Text>
+                      {media.averageRating}
+                      %
+                      {' '}
+                    </Text>}
+                  <Text style={{ color: '#575757', fontWeight: 'bold' }}>
+                    {_.upperCase(media.subtype)}
+                  </Text>
                 </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <IconAwe
-                    name="heart"
-                    style={{ fontSize: 11, color: '#e74c3c', marginRight: 5 }}
-                  />
-                  <Text
-                    style={{
-                      color: '#464646',
-                      fontWeight: '500',
-                      fontFamily: 'OpenSans',
-                      fontSize: 12,
-                    }}
-                  >
-                    Rank #29 (Most Popular)
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <IconAwe name="star" style={{ fontSize: 11, color: '#f39c12', marginRight: 5 }} />
-                  <Text
-                    style={{
-                      color: '#464646',
-                      fontWeight: '500',
-                      fontFamily: 'OpenSans',
-                      fontSize: 12,
-                    }}
-                  >
-                    Rank #29 (Highest Rated Anime)
-                  </Text>
-                </View>
+                {media.popularityRank &&
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <IconAwe
+                      name="heart"
+                      style={{ fontSize: 11, color: '#e74c3c', marginRight: 5 }}
+                    />
+                    <Text
+                      style={{
+                        color: '#464646',
+                        fontWeight: '500',
+                        fontFamily: 'OpenSans',
+                        fontSize: 12,
+                      }}
+                    >
+                      Rank #{media.popularityRank} (Most Popular)
+                    </Text>
+                  </View>}
+                {media.ratingRank &&
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <IconAwe
+                      name="star"
+                      style={{ fontSize: 11, color: '#f39c12', marginRight: 5 }}
+                    />
+                    <Text
+                      style={{
+                        color: '#464646',
+                        fontWeight: '500',
+                        fontFamily: 'OpenSans',
+                        fontSize: 12,
+                      }}
+                    >
+                      Rank #{media.ratingRank} (Highest Rated Anime)
+                    </Text>
+                  </View>}
               </View>
-              <View style={{ marginTop: -100 }}>
+              <View style={{ marginTop: -100, flex: 3 }}>
                 <ProgressiveImage
-                  source={{ uri: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg' }}
+                  source={{ uri: media.posterImage && media.posterImage.large }}
                   style={{ height: 167, width: 118, borderRadius: 3 }}
                 />
               </View>
@@ -213,29 +487,23 @@ class MediaScreen extends Component {
                 flexWrap: 'wrap',
               }}
             >
-              {[
-                'Action',
-                'Adventure',
-                'Contemporary Fantasy',
-                'Fantasy',
-                'Military',
-                'Magic',
-                'Fantasy',
-              ].map(item => (
-                <Button
-                  style={{
-                    height: 20,
-                    borderColor: '#eaeaea',
-                    backgroundColor: '#FFFFFF',
-                    marginRight: 5,
-                    marginBottom: 5,
-                  }}
-                  bordered
-                  light
-                >
-                  <Text style={{ fontSize: 12, fontFamily: 'OpenSans' }}>{item}</Text>
-                </Button>
-              ))}
+              {media.categories &&
+                media.categories.map(item => (
+                  <Button
+                    style={{
+                      height: 20,
+                      borderColor: '#eaeaea',
+                      backgroundColor: '#FFFFFF',
+                      marginRight: 5,
+                      marginBottom: 5,
+                    }}
+                    bordered
+                    key={item.id}
+                    light
+                  >
+                    <Text style={{ fontSize: 12, fontFamily: 'OpenSans' }}>{item.title}</Text>
+                  </Button>
+                ))}
             </View>
             <Animatable.View
               style={{ padding: 15, paddingTop: 0, height: 70, overflow: 'hidden', zIndex: 2 }}
@@ -253,7 +521,7 @@ class MediaScreen extends Component {
                 onPress={() => this.expand()}
                 style={{ fontSize: 11, color: '#333333', lineHeight: 15, fontFamily: 'OpenSans' }}
               >
-                The seemingly ordinary and unimpressive Saitama has a rather unique hobby: being a hero. In order to pursue his childhood dream, he trained relentlessly for three years—and lost all of his hair in the process. Now, Saitama is incredibly powerful, so much so that no enemy is able to defeat him in battle. In fact, all it takes to defeat evildoers with just one punch has led to an unexpected problem—he is no longer able to enjoy the thrill of battling and has become quite bored
+                {media && media.synopsis}
               </Text>
             </Animatable.View>
             <CardFull single heading="Theme / Plot">
@@ -271,95 +539,17 @@ class MediaScreen extends Component {
                 }}
               />
             </CardFull>
-            <View style={{ margin: 10 }}>
-              <Text style={{ color: '#969696', fontSize: 10, marginLeft: 5 }}>EPISODES · 12</Text>
-              <View style={{ flexDirection: 'row' }}>
-                {['Episode 1', 'Episode 2', 'Episode 3'].map(item => (
-                  <View style={{ margin: 5 }}>
-                    <ProgressiveImage
-                      source={{ uri: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg' }}
-                      style={{ height: 83, width: 148, borderRadius: 5 }}
-                    />
-                    <View
-                      style={{
-                        position: 'absolute',
-                        padding: 5,
-                        bottom: 0,
-                        backgroundColor: 'transparent',
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontWeight: 'bold',
-                          fontSize: 12,
-                          fontFamily: 'OpenSans',
-                        }}
-                      >
-                        Episode 1
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 10,
-                          fontFamily: 'OpenSans',
-                        }}
-                      >
-                        The Strongest Man
-                      </Text>
-                    </View>
-                  </View>
-                ))}
-              </View>
-            </View>
-            <CardFull
-              single
-              singleText="View All"
-              heading="More from this series"
-            >
-              {this.renderImageRow(
-                [
-                  {
-                    image: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-                    key: 1,
-                  },
-                  {
-                    image: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-                    key: 2,
-                  },
-                  {
-                    image: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-                    key: 3,
-                  },
-                  {
-                    image: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-                    key: 4,
-                  },
-                ],
-                110,
-                false,
-              )}
-            </CardFull>
-            <CardFull single singleText="View All" heading="Characters">
-              {this.renderImageRow(
-                [
-                  {
-                    image: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-                    key: 1,
-                  },
-                  {
-                    image: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-                    key: 2,
-                  },
-                  {
-                    image: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-                    key: 3,
-                  },
-                ],
-                115,
-              )}
-            </CardFull>
-            <CardStatus leftText="Write Post" rightText="Share Photo" style={{ margin: 10 }} />
+            {this.renderEpisodes()}
+            {this.renderRelatedMedia()}
+            {this.renderCharacters()}
+            {/*
+            */}
+            <CardStatus
+              leftText="Write Post"
+              rightText="Share Photo"
+              user={currentUser}
+              toUser={media}
+            />
             <Text
               style={{
                 color: '#A8A8A8',
@@ -372,45 +562,6 @@ class MediaScreen extends Component {
             >
               ACTIVITY
             </Text>
-            <FlatList
-              data={[
-                {
-                  liked: true,
-                  data: { type: 'text' },
-                  key: 1,
-                },
-                {
-                  liked: true,
-                  data: { type: 'text' },
-                  key: 3,
-                },
-                {
-                  liked: false,
-                  data: {
-                    type: 'video',
-                    image: 'http://static.zerochan.net/Fullmetal.Alchemist.Brotherhood.full.1907775.jpg',
-                  },
-                  key: 2,
-                },
-                {
-                  liked: false,
-                  data: {
-                    type: 'video',
-                    image: 'http://static.zerochan.net/Fullmetal.Alchemist.Brotherhood.full.1907775.jpg',
-                  },
-                  key: 4,
-                },
-                {
-                  liked: false,
-                  data: {
-                    type: 'video',
-                    image: 'http://static.zerochan.net/Fullmetal.Alchemist.Brotherhood.full.1907775.jpg',
-                  },
-                  key: 5,
-                },
-              ]}
-              renderItem={({ item }) => <CardActivity {...item} />}
-            />
           </View>
         </Content>
       </Container>
@@ -418,9 +569,17 @@ class MediaScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { loading, profile } = user;
-  return { loading, profile };
+const mapStateToProps = (state, ownProps) => {
+  const { navigation: { state: { params: { mediaId } } } } = ownProps;
+  const { loading, media, reviews, castings } = state.media;
+  const { currentUser } = state.user;
+  return {
+    loading,
+    media: media[mediaId] || {},
+    reviews: reviews[mediaId] || [],
+    castings: castings[mediaId] || [],
+    currentUser,
+  };
 };
 
 const styles = {
@@ -434,7 +593,9 @@ const styles = {
 MediaScreen.propTypes = {
   loading: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
+  media: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(MediaScreen);
+export default connect(mapStateToProps, { fetchMedia, fetchMediaReviews, fetchMediaCastings })(
+  MediaScreen,
+);

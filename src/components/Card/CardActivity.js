@@ -4,7 +4,11 @@ import { Button, Left, Right, Thumbnail } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import YouTube from 'react-native-youtube';
+import moment from 'moment';
+// import HTMLView from 'react-native-htmlview';
+
 import ProgressiveImage from '../../components/ProgressiveImage';
+import HTMLView from '../../components/htmlView';
 import * as colors from '../../constants/colors';
 
 class CardActivity extends Component {
@@ -13,72 +17,50 @@ class CardActivity extends Component {
     this.renderMain = this.renderMain.bind(this);
   }
   renderMain(data) {
-    if (data.type === 'text') {
+    if (data.verb === 'post') {
       return (
-        <View style={{ padding: 10 }}>
-          <Text
-            style={{ color: '#464646', fontFamily: 'OpenSans', fontSize: 12, paddingBottom: 5 }}
-          >
-            I’m going to the premiere of Ghost in the Shell movie on friday.
-            I have high expectations for entertaining, action-packed, candy-eye sci-fi.
-            Yes, I haven’t watched the anime yet.
-          </Text>
-          {data.image &&
-            <ProgressiveImage
-              source={{ uri: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg' }}
-              containerStyle={{
-                height: 200,
-                backgroundColor: colors.imageGrey,
-              }}
-              style={{ height: 200 }}
-            />}
+        <View style={{ marginLeft: -1 }}>
+          <HTMLView
+            value={data.subject.contentFormatted}
+            addLineBreaks={false}
+            stylesheet={{
+              p: { color: '#464646', fontFamily: 'OpenSans', fontSize: 12, padding: 20 },
+              img: { width: 200, height: 200 },
+            }}
+          />
         </View>
       );
     }
+    // <Text
+    //   style={{
+    //     color: '#464646',
+    //     fontFamily: 'OpenSans',
+    //     fontSize: 12,
+    //     padding: 10,
+    //     paddingBottom: 5,
+    //   }}
+    // >
+    //   I’m going to the premiere of Ghost in the Shell movie on friday.
+    //   I have high expectations for entertaining, action-packed, candy-eye sci-fi.
+    //   Yes, I haven’t watched the anime yet.
+    // </Text>
     return (
       <View style={{ padding: 0 }}>
-        <Text
-          style={{
-            color: '#464646',
-            fontFamily: 'OpenSans',
-            fontSize: 12,
-            padding: 10,
-            paddingBottom: 5,
-          }}
-        >
-          I’m going to the premiere of Ghost in the Shell movie on friday.
-          I have high expectations for entertaining, action-packed, candy-eye sci-fi.
-          Yes, I haven’t watched the anime yet.
-        </Text>
-        <YouTube
-          ref={(component) => {
-            this._youTubePlayer = component;
-          }}
-          videoId="KVZ-P-ZI6W4" // The YouTube video ID
-          playlistId="PLF797E961509B4EB5" // A playlist's ID, overridden by `videoId`
-          play={false} // control playback of video with true/false
-          fullscreen={false} // control whether the video should play in fullscreen or inline
-          loop={false} // control whether the video should loop when ended
-          style={{
-            alignSelf: 'stretch',
-            height: 250,
-            backgroundColor: 'black',
-            marginVertical: 10,
-          }}
-        />
+        <Text>No content</Text>
       </View>
     );
   }
   render() {
     const { props } = this;
-    console.log(this.props);
+    const activities = (props.activities && props.activities[0]) || {};
+    const actor = activities.actor || {};
     return (
       <View style={{ ...styles.container, ...props.style }}>
         <View style={{ padding: 10 }}>
           <View style={{ flexDirection: 'row' }}>
             <Thumbnail
               style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
-              source={require('../../assets/img/posters/fullmetal.jpg')}
+              source={{ uri: actor.avatar && actor.avatar.original }}
             />
             <View style={{ marginLeft: 10 }}>
               <Text
@@ -89,15 +71,15 @@ class CardActivity extends Component {
                   fontFamily: 'OpenSans',
                 }}
               >
-                Rob
+                {actor.name}
               </Text>
               <Text style={{ color: '#909090', fontSize: 11, fontFamily: 'OpenSans' }}>
-                41 mins
+                {moment(activities.time).fromNow()}
               </Text>
             </View>
           </View>
         </View>
-        {this.renderMain(props.data)}
+        {this.renderMain(activities)}
         <View style={styles.footer}>
           <Left>
             <Button

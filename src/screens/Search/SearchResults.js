@@ -105,6 +105,12 @@ class SearchResults extends Component {
             h: Dimensions.get('window').width / 4 * 1.25,
             w: (Dimensions.get('window').width - 5) / 4,
           }}
+          onPress={(media) => {
+            this.props.navigation.navigate('Media', {
+              mediaId: media.id,
+              type: media.type,
+            });
+          }}
         />
       </View>
     );
@@ -125,6 +131,8 @@ const mapStateToProps = ({ anime }, ownProps) => {
     image: item.posterImage ? item.posterImage.small : 'none',
     titles: item.titles ? item.titles : {},
     key: item.id,
+    type: item.type,
+    id: item.id,
   }));
   return { results: data, loading: resultsLoading };
 };

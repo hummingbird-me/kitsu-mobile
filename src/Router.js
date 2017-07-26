@@ -19,6 +19,8 @@ import {
   FavoriteMedia,
   LibraryScreen,
 } from './screens/Profiles';
+
+import DismissableStackNavigator from './components/DismissableStackNavigator';
 import * as colors from './constants/colors';
 
 const SearchStack = StackNavigator(
@@ -67,12 +69,15 @@ const NotifStack = StackNavigator(
   },
 );
 
-const ProfileStack = StackNavigator(
+const ProfileStack = DismissableStackNavigator(
   {
     UserProfile: {
       screen: ProfileScreen,
     },
     Media: {
+      screen: MediaScreen,
+    },
+    Character: {
       screen: MediaScreen,
     },
     Library: {
@@ -130,15 +135,18 @@ const FilterStack = StackNavigator(
 
 const Tabs = TabNavigator(
   {
-    Profile: {
-      screen: ProfileStack,
+    // Home: {
+    //   screen: HomeScreen,
+    // },
+    Feed: {
+      screen: HomeScreen,
     },
     Search: {
       screen: SearchStack,
     },
-    Feed: {
-      screen: HomeScreen,
-    },
+    // Profile: {
+    //   screen: ProfileStack,
+    // },
     Notif: {
       screen: NotifStack,
     },
@@ -175,6 +183,9 @@ const Root = StackNavigator(
     },
     SearchFilter: {
       screen: FilterStack,
+    },
+    Profile: {
+      screen: ProfileStack,
     },
   },
   {

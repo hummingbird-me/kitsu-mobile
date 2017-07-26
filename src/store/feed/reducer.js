@@ -2,12 +2,15 @@ import * as types from '../types';
 
 const INITIAL_STATE = {
   notifications: [],
+  userFeed: [],
   notificationsUnseen: 0,
   loadingNotifications: false,
+  loadingUserFeed: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
   let notifications = [];
+  let feed = [];
   let filtered = [];
   switch (action.type) {
     case types.GET_NOTIFICATIONS:
@@ -47,6 +50,47 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         notifications: [],
         loadingNotifications: false,
+        error: action.payload,
+      };
+    case types.GET_USER_FEED:
+      const empty = action.payload ? {} : { userFeed: [] };
+      return {
+        ...state,
+        ...empty,
+        loadingUserFeed: true,
+      };
+    case types.GET_USER_FEED_SUCCESS:
+      return {
+        ...state,
+        userFeed: action.payload,
+        loadingUserFeed: false,
+        notificationsUnseen: action.meta.unseenCount,
+        error: '',
+      };
+    case types.GET_USER_FEED_MORE:
+      filtered = state.userFeed.filter(value => value.group !== action.payload[0].group);
+      feed = [...action.payload, ...filtered];
+      return {
+        ...state,
+        userFeed: feed,
+        loadingUserFeed: false,
+        userFeedUnseen: action.meta.unseenCount,
+        error: '',
+      };
+    case types.GET_USER_FEED_LESS:
+      feed = state.userFeed.filter(value => value.id !== action.payload);
+      return {
+        ...state,
+        userFeed: feed,
+        loadingUserFeed: false,
+        userFeedUnseen: action.meta.unseenCount,
+        error: '',
+      };
+    case types.GET_USER_FEED_FAIL:
+      return {
+        ...state,
+        userFeed: [],
+        loadingUserFeed: false,
         error: action.payload,
       };
     case types.LOGOUT_USER:

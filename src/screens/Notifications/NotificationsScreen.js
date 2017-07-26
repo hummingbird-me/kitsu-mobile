@@ -73,7 +73,7 @@ class NotificationsScreen extends Component {
   }
 
   renderText(activity) {
-    const { profile: { id } } = this.props;
+    const { currentUser: { id } } = this.props;
     const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
     let text = '';
     switch (activity.verb) {
@@ -90,12 +90,12 @@ class NotificationsScreen extends Component {
       case 'comment':
         if (id === replyToUser.split(':')[1]) {
           text = `replied to your ${replyToType}.`;
-        } else if (isMentioned(mentionedUsers, id)) {
+        } else if (isMentioned(mentionedUsers || [], id)) {
           text = 'mentioned you in a comment.';
         } else {
           text = 'replied to';
           if (target && target[0].user) {
-            if (target[0].user[0].id === actor[0].id) {
+            if (target[0].user[0].id === actor.id) {
               text = `${text} their`;
             } else if (target[0].user[0].id === id) {
               text = `${text} your`;
@@ -117,14 +117,14 @@ class NotificationsScreen extends Component {
     if (item.activities.length > 1) {
       others = item.activities.length === 2
         ? (<Text style={{ color: '#FF300A', fontWeight: '500' }}>
-          {item.activities[1].actor[0] ? item.activities[1].actor[0].name : 'Unknown'}{' '}
+          {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
         </Text>)
         : (<Text>
           <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
         </Text>);
     }
-    const ava = activity.actor && activity.actor[0].avatar
-      ? activity.actor[0].avatar.tiny
+    const ava = activity.actor && activity.actor.avatar
+      ? activity.actor.avatar.tiny
       : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
@@ -140,7 +140,7 @@ class NotificationsScreen extends Component {
             <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
               <Text style={{ fontFamily: 'OpenSans', fontSize: 12, fontWeight: '400' }}>
                 <Text style={{ color: '#FF300A', fontWeight: '500' }}>
-                  {activity.actor && activity.actor[0].name}{' '}
+                  {activity.actor && activity.actor.name}{' '}
                 </Text>
                 {others && <Text>and {others}</Text>}
                 {this.renderText(activity)}
@@ -179,7 +179,7 @@ class NotificationsScreen extends Component {
 
 NotificationsScreen.propTypes = {
   getNotifications: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
 };
@@ -212,8 +212,8 @@ const styles = {
 
 const mapStateToProps = ({ feed, user }) => {
   const { notifications, notificationsUnseen, loadingNotifications } = feed;
-  const { profile } = user;
-  return { notifications, notificationsUnseen, loadingNotifications, profile };
+  const { currentUser } = user;
+  return { notifications, notificationsUnseen, loadingNotifications, currentUser };
 };
 export default connect(mapStateToProps, { getNotifications, seenNotifications })(
   NotificationsScreen,

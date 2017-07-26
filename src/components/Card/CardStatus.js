@@ -2,23 +2,27 @@ import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Button, Left, Right, Thumbnail } from 'native-base';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+
+import { defaultAvatar } from '../../constants/app';
 
 import Card from './Card';
 
 const CardStatus = (props) => {
   const size = props.thumbSize || 34;
+  const image = props.user.avatar ? props.user.avatar.medium : defaultAvatar;
   return (
     <Card {...props}>
       <View style={{ flexDirection: 'row', paddingRight: 5, paddingLeft: 5 }}>
         <Thumbnail
-          style={{ width: size, height: size, borderRadius: size / 2 }}
-          source={require('../../assets/img/posters/fullmetal.jpg')}
+          style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: '#d3d3d3' }}
+          source={{ uri: image }}
         />
         <TextInput
           style={{ flex: 1, padding: 10, fontSize: 14, fontFamily: 'OpenSans' }}
           multiline
           placeholderTextColor="#B5B5B5"
-          placeholder="Write something to Rob…"
+          placeholder={`Write something to ${_.capitalize(props.toUser.name)}…`}
         />
       </View>
     </Card>

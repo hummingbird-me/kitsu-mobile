@@ -12,8 +12,6 @@ class DoubleProgress extends Component {
     const borderRadius = 6;
 
     const textStyle = { color: '#565656', fontWeight: '600' };
-    console.log(leftProgress > rightProgress);
-    console.log(leftProgress < rightProgress);
 
     return (
       <View
@@ -89,9 +87,5 @@ class DoubleProgress extends Component {
   }
 }
 
-DoubleProgress.propTypes = {
-  source: PropTypes.object.isRequired,
-  style: PropTypes.object.isRequired,
-};
 
 export default DoubleProgress;

@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Dimensions, FlatList, ScrollView } from 'react-native';
+import { View, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { Icon, Button, Container, Content } from 'native-base';
-import AweIcon from 'react-native-vector-icons/FontAwesome';
-import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
+import { Icon, Button, Container } from 'native-base';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import SimpleTabBar from '../../components/SimpleTabBar';
 import ProgressiveImage from '../../components/ProgressiveImage';
-import ResultsList from '../../screens/Search/Lists/ResultsList';
-import * as colors from '../../constants/colors';
+import { fetchProfileFavorites } from '../../store/profile/actions';
 
 class FavoriteMedia extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -27,104 +25,96 @@ class FavoriteMedia extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
       index: 0,
+      mangaloading: false,
+      animeloading: false,
     };
+    this.loadMore = this.loadMore.bind(this);
   }
 
-  renderItem({ item, index }, imageSize) {
+  loadMore(type) {
+    const { query, active, index } = this.state;
+    const { loading, fetchProfileFavorites, userId } = this.props;
+    if (!this.state[`${type}loading`]) {
+      const page = index + 1;
+      this.setState({ index: page, [`${type}loading`]: true });
+      fetchProfileFavorites(userId, type, 20, page);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // if (nextProps.anime !== this.props.anime) {
+    //   this.setState({ animeloading: false });
+    // }
+    // if (nextProps.manga !== this.props.manga) {
+    //   this.setState({ mangaloading: false });
+    // }
+  }
+
+  renderItem({ item, index }) {
     let height = Dimensions.get('window').width / 3;
     let width = Dimensions.get('window').width / 4 - 7;
     if (index < 2) {
       height = Dimensions.get('window').width / 1.5;
       width = Dimensions.get('window').width / 2 - 10;
     }
+    const image = item.posterImage ? item.posterImage.original : '';
     return (
-      <View
+      <TouchableOpacity
         style={{
           height,
           width,
           margin: 2,
         }}
+        onPress={() =>
+          this.props.navigation.navigate('Media', {
+            mediaId: item.id,
+            type: item.type,
+          })}
       >
         <ProgressiveImage
-          source={{ uri: item.image }}
+          source={{ uri: image }}
           style={{
             height,
             width,
           }}
         />
-      </View>
+      </TouchableOpacity>
     );
   }
 
-  renderTab(data) {
+  renderTab(type) {
+    const { userId, loading, fetchProfileFavorites } = this.props;
     return (
       <FlatList
         removeClippedSubviews={false}
-        data={data}
+        keyExtractor={item => item.id}
+        data={this.getData(this.props[type])}
         numColumns={4}
-        refreshing={false}
-        onRefresh={() => console.log('object')}
+        onEndReached={() => console.log(type)}
+        onEndReachedThreshold={0.5}
+        refreshing={loading[type]}
+        onRefresh={() => fetchProfileFavorites(userId, type)}
         renderItem={e => this.renderItem(e)}
       />
     );
   }
 
-  render() {
-    const data = this.props.results.length > 0
-      ? this.props.results
+  getData(main) {
+    return main.length > 0
+      ? [...main.slice(0, 2), ...main.slice(0, 2), ...main.slice(2)]
       : Array(20).fill(1).map((item, index) => ({ key: index }));
+  }
+
+  render() {
     return (
       <Container>
         <ScrollableTabView renderTabBar={() => <SimpleTabBar />}>
           <View tabLabel="Anime" style={{ padding: 5, paddingTop: 0, backgroundColor: 'white' }}>
-            {this.renderTab([
-              { key: 1, val: 'aaa' },
-              { key: 2, val: 'aaa' },
-              { key: '1', val: 'aaa' },
-              { key: '2', val: 'aaa' },
-              { key: 3, val: 'aaa' },
-              { key: 4, val: 'aaa' },
-              { key: 5, val: 'aaa' },
-              { key: 6, val: 'aaa' },
-              { key: 7, val: 'aaa' },
-              { key: 8, val: 'aaa' },
-              { key: 13, val: 'aaa' },
-              { key: 14, val: 'aaa' },
-              { key: 15, val: 'aaa' },
-              { key: 16, val: 'aaa' },
-              { key: 17, val: 'aaa' },
-              { key: 18, val: 'aaa' },
-              { key: 19, val: 'aaa' },
-              { key: 20, val: 'aaa' },
-              { key: 19, val: 'aaa' },
-              { key: 20, val: 'aaa' },
-            ])}
+            {this.renderTab('anime')}
           </View>
           <View tabLabel="Manga" style={{ padding: 5, paddingTop: 0, backgroundColor: 'white' }}>
-            {this.renderTab([
-              { key: 1, val: 'aaa' },
-              { key: 2, val: 'aaa' },
-              { key: '1', val: 'aaa' },
-              { key: '2', val: 'aaa' },
-              { key: 3, val: 'aaa' },
-              { key: 4, val: 'aaa' },
-              { key: 5, val: 'aaa' },
-              { key: 6, val: 'aaa' },
-              { key: 7, val: 'aaa' },
-              { key: 8, val: 'aaa' },
-              { key: 13, val: 'aaa' },
-              { key: 14, val: 'aaa' },
-              { key: 15, val: 'aaa' },
-              { key: 16, val: 'aaa' },
-              { key: 17, val: 'aaa' },
-              { key: 18, val: 'aaa' },
-              { key: 19, val: 'aaa' },
-              { key: 20, val: 'aaa' },
-              { key: 19, val: 'aaa' },
-              { key: 20, val: 'aaa' },
-            ])}
+            {this.renderTab('manga')}
           </View>
         </ScrollableTabView>
       </Container>
@@ -133,14 +123,25 @@ class FavoriteMedia extends Component {
 }
 
 FavoriteMedia.propTypes = {
-  results: PropTypes.array.isRequired,
-  navigation: PropTypes.object.isRequired,
+  anime: PropTypes.array.isRequired,
+  manga: PropTypes.array.isRequired,
+  loading: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ anime }, ownProps) => {
-  const { resultsLoading } = anime;
-  const { navigation: { state: { params: { active } } } } = ownProps;
-
-  return { results: [], loading: resultsLoading };
+const mapStateToProps = ({ profile }, ownProps) => {
+  const { manga, anime, favoritesLoading } = profile;
+  const { navigation: { state: { params: { userId } } } } = ownProps;
+  console.log(anime[userId]);
+  const animes = (anime[userId] && anime[userId].map(({ item }) => item)) || [];
+  const mangas = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
+  return {
+    userId,
+    anime: animes,
+    manga: mangas,
+    loading: {
+      anime: favoritesLoading.anime,
+      manga: favoritesLoading.manga,
+    },
+  };
 };
-export default connect(mapStateToProps)(FavoriteMedia);
+export default connect(mapStateToProps, { fetchProfileFavorites })(FavoriteMedia);

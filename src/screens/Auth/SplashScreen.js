@@ -14,11 +14,14 @@ class SplashScreen extends Component {
   };
 
   componentDidMount() {
-    this.animation.play();
+    // this.animation.play();
+    const { isAuthenticated } = this.props;
+    if (this.props.rehydratedAt) {
+      this.init(isAuthenticated);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     const { isAuthenticated } = nextProps;
     this.init(isAuthenticated);
   }

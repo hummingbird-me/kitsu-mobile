@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { Icon, Button, Container, Content } from 'native-base';
-import AweIcon from 'react-native-vector-icons/FontAwesome';
+import { Icon, Button, Container } from 'native-base';
 
 import ProgressiveImage from '../../components/ProgressiveImage';
-import ResultsList from '../../screens/Search/Lists/ResultsList';
-import * as colors from '../../constants/colors';
+import { defaultAvatar } from '../../constants/app';
+import { fetchProfileFavorites } from '../../store/profile/actions';
+import { fetchMediaCastings } from '../../store/media/actions';
 
 class FavoriteCharacter extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -30,82 +30,128 @@ class FavoriteCharacter extends Component {
     };
   }
 
-  renderImageRow(data, height = 120, hasCaption) {
+  componentDidMount() {
+    console.log(this.props.navigation);
+    const { mediaId } = this.props.navigation.state.params;
+    if (mediaId) {
+      this.props.fetchMediaCastings(mediaId);
+    }
+  }
+
+  renderItem({ item, index }, imageSize) {
+    let height = Dimensions.get('window').width / 3;
+    let width = Dimensions.get('window').width / 3;
+    if (index < 2) {
+      height = Dimensions.get('window').width / 2;
+      width = Dimensions.get('window').width / 2;
+    }
+
+    console.log(index);
+
+    const image = item.image ? item.image.original : defaultAvatar;
     return (
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 }}>
-        {data.map((item, index) => (
-          <View key={index} style={{ flex: 1, paddingRight: index === data.length - 1 ? 0 : 5 }}>
-            <ProgressiveImage
-              source={{ uri: item.image }}
-              containerStyle={{
-                height,
-                backgroundColor: colors.imageGrey,
-              }}
-              style={{ height }}
-            />
-            {hasCaption &&
-              <Text
-                style={{
-                  fontSize: 9,
-                  paddingTop: 3,
-                  fontFamily: 'OpenSans',
-                  textAlign: 'center',
-                }}
-              >
-                {item.caption}
-              </Text>}
-          </View>
-        ))}
+      <View
+        style={{
+          height,
+          width,
+          margin: 2,
+        }}
+      >
+        <ProgressiveImage
+          source={{ uri: image }}
+          style={{
+            height,
+            width,
+          }}
+          hasOverlay
+        />
+        {true &&
+          <Text
+            style={{
+              color: 'white',
+              fontWeight: '500',
+              fontSize: 14,
+              fontFamily: 'OpenSans',
+              backgroundColor: 'transparent',
+              alignSelf: 'center',
+              marginTop: -25,
+            }}
+          >
+            {item.name}
+          </Text>}
       </View>
     );
   }
 
+  renderTab(data) {
+    const { fetchProfileFavorites, userId, loading } = this.props;
+    if (data.length === 0) {
+      return (
+        <Text
+          style={{
+            fontFamily: 'OpenSans',
+            fontSize: 12,
+            alignSelf: 'center',
+            textAlign: 'center',
+            padding: 30,
+          }}
+        >
+          No Characters.
+        </Text>
+      );
+    }
+    return (
+      <FlatList
+        removeClippedSubviews={false}
+        data={data}
+        keyExtractor={item => item.id}
+        numColumns={4}
+        refreshing={loading}
+        onRefresh={() => fetchProfileFavorites(userId, 'characters')}
+        renderItem={e => this.renderItem(e)}
+      />
+    );
+  }
+
   render() {
-    const data = this.props.results.length > 0
-      ? this.props.results
-      : Array(20).fill(1).map((item, index) => ({ key: index }));
+    const data = this.props.characters.length > 0
+      ? [
+        ...this.props.characters.slice(0, 2),
+        ...this.props.characters.slice(0, 2),
+        ...this.props.characters.slice(2),
+      ]
+      : [];
+    console.log(data);
     return (
       <Container>
-        <Content>
-          <View style={{ padding: 5, paddingTop: 0 }}>
-            <ResultsList
-              dataArray={Array(2).fill(1).map((item, index) => ({ key: index }))}
-              loadMore={() => console.log('1')}
-              refresh={() => console.log('2')}
-              numColumns={3}
-              imageSize={{
-                h: Dimensions.get('window').width / 2,
-                w: Dimensions.get('window').width / 2,
-              }}
-              refreshing={false}
-            />
-            <ResultsList
-              dataArray={Array(21).fill(1).map((item, index) => ({ key: index }))}
-              loadMore={() => console.log('1')}
-              refresh={() => console.log('2')}
-              numColumns={3}
-              imageSize={{
-                h: Dimensions.get('window').width / 3,
-                w: Dimensions.get('window').width / 3,
-              }}
-              refreshing={false}
-            />
-          </View>
-        </Content>
+        {this.renderTab(data)}
       </Container>
     );
   }
 }
 
 FavoriteCharacter.propTypes = {
-  results: PropTypes.array.isRequired,
-  navigation: PropTypes.object.isRequired,
+  characters: PropTypes.array.isRequired,
+  // navigation: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ anime }, ownProps) => {
-  const { resultsLoading } = anime;
-  const { navigation: { state: { params: { active } } } } = ownProps;
-
-  return { results: [], loading: resultsLoading };
+const mapStateToProps = ({ profile, media }, ownProps) => {
+  const { character, favoritesLoading } = profile;
+  const { castings, loadingCastings } = media;
+  const { navigation: { state: { params: { userId, mediaId } } } } = ownProps;
+  let characters = [];
+  let loading = false;
+  if (userId) {
+    characters = (character[userId] && character[userId].map(({ item }) => item)) || [];
+    loading = favoritesLoading.character;
+  } else {
+    characters = (castings[mediaId] && castings[mediaId].map(item => item.character)) || [];
+    loading = loadingCastings;
+  }
+  console.log(media);
+  console.log(characters);
+  return { characters, userId, loading };
 };
-export default connect(mapStateToProps)(FavoriteCharacter);
+export default connect(mapStateToProps, { fetchProfileFavorites, fetchMediaCastings })(
+  FavoriteCharacter,
+);

@@ -10,39 +10,46 @@ import { fetchCurrentUser } from '../store/user/actions';
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
-    tabBarIcon: ({ tintColor }) => <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />,
+    tabBarIcon: ({ tintColor }) => (
+      <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
+    ),
   };
   componentWillMount() {
     this.props.fetchCurrentUser();
   }
   render() {
-    const { profile, navigation, loading } = this.props;
+    const { currentUser, navigation, loading } = this.props;
     return (
       <Container>
-        <Content>
+        <Content style={{ padding: 50 }}>
           {loading
             ? <Spinner size="large" />
             : <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row' }}>
-                {profile.avatar
+                {currentUser.avatar
                     ? <Image
                       style={{ width: 100, height: 100, borderRadius: 50 }}
-                      source={{ uri: profile.avatar.medium.split('?')[0] }}
+                      source={{ uri: currentUser.avatar.medium.split('?')[0] }}
                     />
                     : null}
                 <View>
                   <Text>
-                    {profile.name}
+                    {currentUser.name}
                   </Text>
                   <Text>
-                    {profile.email}
+                    {currentUser.email}
                   </Text>
                   <Text>
-                    {profile.about}
+                    {currentUser.about}
                   </Text>
                 </View>
               </View>
             </View>}
+          <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
+            <Text>
+              Nuck
+            </Text>
+          </Button>
           <Button onPress={() => this.props.logoutUser(navigation)}>
             <Text>
               Logout
@@ -55,14 +62,14 @@ class HomeScreen extends Component {
 }
 
 const mapStateToProps = ({ user }) => {
-  const { loading, profile } = user;
-  return { loading, profile };
+  const { loading, currentUser } = user;
+  return { loading, currentUser };
 };
 
 HomeScreen.propTypes = {
   loading: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   logoutUser: PropTypes.func.isRequired,
   fetchCurrentUser: PropTypes.func.isRequired,
 };

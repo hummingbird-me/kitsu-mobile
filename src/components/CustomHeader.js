@@ -3,8 +3,18 @@ import { View, Dimensions, Text, Image } from 'react-native';
 import { Button, Icon, Left, Right } from 'native-base';
 
 import LinearGradient from 'react-native-linear-gradient';
+import ProgressiveImage from './ProgressiveImage';
+import { defaultCover } from '../constants/app';
 
-const CustomHeader = ({ navigation, headerImage, right, left, leftText, rightText }) => {
+const CustomHeader = ({
+  navigation,
+  headerImage,
+  right,
+  left,
+  leftText,
+  rightText,
+  hasOverlay,
+}) => {
   const rightBtn = (
     <Button
       style={{
@@ -23,25 +33,23 @@ const CustomHeader = ({ navigation, headerImage, right, left, leftText, rightTex
     </Button>
   );
   const leftBtn = (
-    <Button transparent color="white" onPress={() => navigation.goBack()}>
+    <Button transparent color="white" onPress={() => navigation.dismiss()}>
       <Icon name="arrow-back" style={{ color: 'white' }} />
       {leftText && <Text style={{ color: 'white', fontWeight: '600' }}>{leftText}</Text>}
     </Button>
   );
+  const colors = [hasOverlay ? 'transparent' : '#0E0805', 'transparent'];
   return (
     <View style={styles.absolute}>
-      <Image
+      <ProgressiveImage
         style={{
           width: Dimensions.get('window').width,
           height: 210,
         }}
         resizeMode="cover"
-        source={headerImage}
+        source={{ uri: headerImage.uri || defaultCover }}
       />
-      <LinearGradient
-        colors={['#0E0805', 'transparent']}
-        style={{ ...styles.absolute, ...styles.header }}
-      >
+      <LinearGradient colors={colors} style={{ ...styles.absolute, ...styles.header }}>
         <Left>
           {left || leftBtn}
         </Left>
@@ -49,6 +57,8 @@ const CustomHeader = ({ navigation, headerImage, right, left, leftText, rightTex
           {right || rightBtn}
         </Right>
       </LinearGradient>
+      {hasOverlay &&
+        <View style={[styles.absolute, { backgroundColor: 'rgba(0,0,0,0.36)', height: 210 }]} />}
     </View>
   );
 };
@@ -66,6 +76,7 @@ const styles = {
     paddingTop: 10,
     width: Dimensions.get('window').width,
     flexDirection: 'row',
+    zIndex: 1,
   },
 };
 export default CustomHeader;

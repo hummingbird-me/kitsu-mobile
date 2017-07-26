@@ -81,47 +81,165 @@ Kitsu.define(
     previousEmail: '',
     confirmed: '',
     password: '',
+    waifu: {
+      jsonApi: 'hasOne',
+      type: 'characters',
+    },
+    followers: {
+      jsonApi: 'hasMany',
+      type: 'follows',
+    },
+    following: {
+      jsonApi: 'hasMany',
+      type: 'follows',
+    },
+    libraryEntries: {
+      jsonApi: 'hasMany',
+      type: 'libraryEntries',
+    },
+    favorites: {
+      jsonApi: 'hasMany',
+    },
+    pinnedPost: {
+      jsonApi: 'hasMany',
+    },
+    blocks: {
+      jsonApi: 'hasMany',
+    },
+    linkedAccounts: {
+      jsonApi: 'hasMany',
+    },
+    profileLinks: {
+      jsonApi: 'hasMany',
+    },
+    mediaFollows: {
+      jsonApi: 'hasMany',
+    },
+    userRoles: {
+      jsonApi: 'hasMany',
+    },
+    reviews: {
+      jsonApi: 'hasMany',
+    },
+    stats: {
+      jsonApi: 'hasMany',
+    },
+    notificationSettings: {
+      jsonApi: 'hasMany',
+    },
+    oneSignalPlayers: {
+      jsonApi: 'hasMany',
+    },
   },
   { collectionPath: 'users' },
 );
 
 Kitsu.define(
-  'user',
+  'libraryEntries',
+  {
+    createdAt: '',
+    updatedAt: '',
+    status: '',
+    progress: '',
+    volumesOwned: '',
+    reconsuming: '',
+    reconsumeCount: '',
+    notes: '',
+    private: '',
+    progressedAt: '',
+    startedAt: '',
+    finishedAt: '',
+    rating: '',
+    ratingTwenty: '',
+    user: {
+      jsonApi: 'hasMany',
+      type: 'users',
+    },
+    anime: {
+      jsonApi: 'hasMany',
+    },
+    manga: {
+      jsonApi: 'hasMany',
+    },
+    drama: {
+      jsonApi: 'hasMany',
+    },
+    review: {
+      jsonApi: 'hasMany',
+    },
+    mediaReaction: {
+      jsonApi: 'hasMany',
+    },
+    media: {
+      jsonApi: 'hasOne',
+      type: ['anime', 'manga', 'drama'],
+    },
+    unit: {
+      jsonApi: 'hasMany',
+    },
+    nextUnit: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'library-entries' },
+);
+
+Kitsu.define(
+  'characters',
   {
     name: '',
-    email: '',
-    avatar: '',
-    about: '',
-    bio: '',
+    slug: '',
+    malId: '',
+    description: '',
+    image: '',
     createdAt: '',
-    website: '',
-    birthday: '',
-    aboutFormatted: '',
-    location: '',
-    waifuOrHusbando: '',
-    followersCount: '',
-    facebookId: '',
-    followingCount: '',
-    lifeSpentOnAnime: '',
-    gender: '',
     updatedAt: '',
-    commentsCount: '',
-    favoritesCount: '',
-    likesGivenCount: '',
-    reviewsCount: '',
-    likesReceivedCount: '',
-    postsCount: '',
-    ratingsCount: '',
-    proExpiresAt: '',
-    title: '',
-    profileCompleted: '',
-    feedCompleted: '',
-    coverImage: '',
-    ratingSystem: '',
-    theme: '',
-    pastNames: '',
+    castings: {
+      jsonApi: 'hasMany',
+    },
+    primaryMedia: {
+      jsonApi: 'hasMany',
+    },
   },
-  { collectionPath: 'users' },
+  { collectionPath: 'characters' },
+);
+
+Kitsu.define(
+  'castings',
+  {
+    createdAt: '',
+    role: '',
+    voiceActor: '',
+    featured: '',
+    language: '',
+    media: {
+      jsonApi: 'hasOne',
+    },
+    person: {
+      jsonApi: 'hasOne',
+    },
+    updatedAt: '',
+    character: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'castings' },
+);
+
+Kitsu.define(
+  'follows',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    follower: {
+      jsonApi: 'hasOne',
+    },
+    followed: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'follows' },
 );
 
 Kitsu.define(
@@ -138,6 +256,58 @@ Kitsu.define(
     abbreviatedTitles: '',
     averageRating: '',
     ratingFrequencies: '',
+    createdAt: '',
+    updatedAt: '',
+    userCount: '',
+    favoritesCount: '',
+    popularityRank: '',
+    ratingRank: '',
+    ageRating: '',
+    ageRatingGuide: '',
+    subtype: '',
+    status: '',
+    coverImage: '',
+    episodeCount: '',
+    episodeLength: '',
+    youtubeVideoId: '',
+    showType: '',
+    nsfw: '',
+    genres: {
+      jsonApi: 'hasMany',
+    },
+    categories: {
+      jsonApi: 'hasMany',
+    },
+    castings: {
+      jsonApi: 'hasMany',
+    },
+    installments: {
+      jsonApi: 'hasMany',
+    },
+    mappings: {
+      jsonApi: 'hasMany',
+    },
+    reviews: {
+      jsonApi: 'hasMany',
+    },
+    mediaRelationships: {
+      jsonApi: 'hasMany',
+    },
+    episodes: {
+      jsonApi: 'hasMany',
+    },
+    streamingLinks: {
+      jsonApi: 'hasMany',
+    },
+    animeProductions: {
+      jsonApi: 'hasMany',
+    },
+    animeCharacters: {
+      jsonApi: 'hasMany',
+    },
+    animeStaff: {
+      jsonApi: 'hasMany',
+    },
   },
   { collectionPath: 'anime' },
 );
@@ -156,14 +326,157 @@ Kitsu.define(
     abbreviatedTitles: '',
     averageRating: '',
     ratingFrequencies: '',
+    createdAt: '',
+    updatedAt: '',
+    userCount: '',
+    favoritesCount: '',
+    popularityRank: '',
+    ratingRank: '',
+    ageRating: '',
+    ageRatingGuide: '',
+    subtype: '',
+    status: '',
+    coverImage: '',
+    chapterCount: '',
+    volumeCount: '',
+    serialization: '',
+    mangaType: '',
+    genres: {
+      jsonApi: 'hasMany',
+    },
+    categories: {
+      jsonApi: 'hasMany',
+    },
+    castings: {
+      jsonApi: 'hasMany',
+    },
+    installments: {
+      jsonApi: 'hasMany',
+    },
+    mappings: {
+      jsonApi: 'hasMany',
+    },
+    reviews: {
+      jsonApi: 'hasMany',
+    },
+    mediaRelationships: {
+      jsonApi: 'hasMany',
+    },
+    chapters: {
+      jsonApi: 'hasMany',
+    },
+    mangaProductions: {
+      jsonApi: 'hasMany',
+    },
+    mangaCharacters: {
+      jsonApi: 'hasMany',
+    },
+    mangaStaff: {
+      jsonApi: 'hasMany',
+    },
   },
   { collectionPath: 'manga' },
+);
+
+Kitsu.define(
+  'genres',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    name: '',
+    slug: '',
+    description: '',
+  },
+  { collectionPath: 'genres' },
+);
+Kitsu.define(
+  'mediaRelationships',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    role: '',
+    source: {
+      jsonApi: 'hasMany',
+    },
+    destination: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'mediaRelationships' },
+);
+Kitsu.define(
+  'episodes',
+  {
+    canonicalTitle: '',
+    seasonNumber: '',
+    number: '',
+    titles: '',
+    updatedAt: '',
+    synopsis: '',
+    airdate: '',
+    length: '',
+    thumbnail: '',
+    media: {
+      jsonApi: 'hasOne',
+    },
+    createdAt: '',
+  },
+  { collectionPath: 'episodes' },
+);
+
+Kitsu.define(
+  'reviews',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    content: '',
+    contentFormatted: '',
+    likesCount: '',
+    progress: '',
+    rating: '',
+    source: '',
+    spoiler: '',
+    libraryEntry: {
+      jsonApi: 'hasMany',
+    },
+    media: {
+      jsonApi: 'hasMany',
+    },
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'reviews' },
+);
+
+Kitsu.define(
+  'favorites',
+  {
+    createdAt: '',
+    updatedAt: '',
+    id: '',
+    favRank: '',
+    user: {
+      jsonApi: 'hasMany',
+    },
+    item: {
+      jsonApi: 'hasOne',
+      type: ['anime', 'manga', 'characters'],
+    },
+  },
+  { collectionPath: 'favorites' },
 );
 
 Kitsu.define(
   'categories',
   {
     title: '',
+    createdAt: '',
+    updatedAt: '',
     nsfw: '',
     childCount: '',
     image: '',
@@ -183,13 +496,80 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  {
-    collectionPath: 'categories',
-  },
+  { collectionPath: 'categories' },
 );
 
 Kitsu.define(
   'activities',
+  {
+    status: '',
+    streamId: '',
+    foreignId: '',
+    progress: '',
+    replyToType: '',
+    replyToUser: '',
+    nineteenScale: '',
+    mentionedUsers: '',
+    createdAt: '',
+    updatedAt: '',
+    verb: '',
+    time: '',
+    rating: '',
+    media: {
+      jsonApi: 'hasOne',
+    },
+    actor: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      jsonApi: 'hasMany',
+    },
+    target: {
+      jsonApi: 'hasMany',
+    },
+    subject: {
+      jsonApi: 'hasOne',
+    },
+    unit: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/notifications' },
+);
+
+Kitsu.define('comments', {}, { collectionPath: 'comments' });
+
+Kitsu.define(
+  'userFeed',
+  {
+    createdAt: '',
+    updatedAt: '',
+    status: '',
+    streamId: '',
+    foreignId: '',
+    progress: '',
+    replyToType: '',
+    replyToUser: '',
+    nineteenScale: '',
+    mentionedUsers: '',
+    verb: '',
+    time: '',
+    rating: '',
+    actor: {
+      jsonApi: 'hasMany',
+    },
+    user: {
+      jsonApi: 'hasMany',
+    },
+    target: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/user_aggr' },
+);
+
+Kitsu.define(
+  'mediaFeed',
   {
     status: '',
     streamId: '',
@@ -212,9 +592,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  {
-    collectionPath: 'feeds/notifications',
-  },
+  { collectionPath: 'feeds/media_aggr' },
 );
 
 Kitsu.define(
@@ -235,11 +613,12 @@ Kitsu.define(
     updatedAt: '',
     topLevelCommentsCount: '',
     editedAt: '',
-    user: { jsonApi: 'hasMany', type: 'users' },
+    user: {
+      jsonApi: 'hasMany',
+      type: 'users',
+    },
   },
-  {
-    collectionPath: 'posts',
-  },
+  { collectionPath: 'posts' },
 );
 
 Kitsu.define(
@@ -247,14 +626,14 @@ Kitsu.define(
   {
     group: '',
     isSeen: '',
+    createdAt: '',
+    updatedAt: '',
     activities: {
       jsonApi: 'hasMany',
     },
     isRead: '',
   },
-  {
-    collectionPath: 'feeds/notifications',
-  },
+  { collectionPath: 'feeds/notifications' },
 );
 
 Kitsu.define(
@@ -264,9 +643,7 @@ Kitsu.define(
     logo: '',
     streamingLinks: '',
   },
-  {
-    collectionPath: 'streamers',
-  },
+  { collectionPath: 'streamers' },
 );
 
 export const setToken = (token) => {

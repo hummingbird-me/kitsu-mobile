@@ -1,17 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Dimensions, FlatList, Text, TextInput, Image } from 'react-native';
+import {
+  View,
+  Dimensions,
+  FlatList,
+  Text,
+  TextInput,
+  Image,
+  TouchableHighlight,
+} from 'react-native';
 import { connect } from 'react-redux';
-import { Icon, Button, Container } from 'native-base';
+import { Icon, Button, Container, Spinner } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import AweIcon from 'react-native-vector-icons/FontAwesome';
 
 import SimpleTabBar from '../../components/SimpleTabBar';
+import { fetchNetwork } from '../../store/profile/actions';
+import { defaultAvatar } from '../../constants/app';
 
 const { width } = Dimensions.get('window');
 class NetworkScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "Rob's Network",
+    title: `${navigation.state.params.name}'s Network`,
     headerLeft: (
       <Button transparent color="white" onPress={() => navigation.goBack()}>
         <Icon name="arrow-back" style={{ color: 'white' }} />
@@ -25,92 +35,83 @@ class NetworkScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      index: 0,
-      val: '',
+      follower: 0,
+      followed: 0,
     };
 
     this.renderHeader = this.renderHeader.bind(this);
+    this.renderFooter = this.renderFooter.bind(this);
+    this.renderItem = this.renderItem.bind(this);
+    this.loadMore = this.loadMore.bind(this);
   }
 
-  renderItem({ item, index }) {
+  componentDidMount() {
+    const { userId } = this.props.navigation.state.params;
+    this.props.fetchNetwork(userId, 'followed');
+    this.props.fetchNetwork(userId, 'follower');
+  }
+
+  renderItem({ item, index }, type) {
+    const { ifollow, currentUser } = this.props;
+    const a = type === 'Following' ? 'followed' : 'follower';
+    if (!item[a]) return <View style={styles.itemStyle}><Spinner size="small" /></View>;
     return (
-      <View
-        style={{
-          height: 76,
-          borderBottomWidth: 1,
-          borderBottomColor: '#E6E6E6',
-          backgroundColor: '#FAFAFA',
-          flexDirection: 'row',
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 10,
-          paddingRight: 0,
-        }}
+      <TouchableHighlight
+        onPress={() => this.props.navigation.navigate('UserProfile', { userId: item[a].id })}
       >
-        <View style={{ paddingRight: 10 }}>
-          <Image
-            style={{ width: 60, height: 60, borderRadius: 30 }}
-            source={{
-              uri: 'https://i.ytimg.com/vi/C0_EkYWJGEw/maxresdefault.jpg',
-            }}
-          />
-        </View>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
-            <Text style={{ fontFamily: 'OpenSans', fontSize: 12, fontWeight: '600' }}>
-              Akidearest
-            </Text>
-          </View>
-          <View style={{ justifyContent: 'flex-start' }}>
-            <Text style={{ fontSize: 12, fontFamily: 'OpenSans', color: 'rgba(97, 97, 97, 0.7)' }}>
-              89 followers
-            </Text>
-          </View>
-        </View>
-        <View style={{ justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
-          {index % 2 === 0 &&
-            <Button
-              style={{
-                height: 27,
-                width: 94,
-                alignSelf: 'center',
-                backgroundColor: '#16A085',
-                justifyContent: 'center',
-                borderRadius: 0,
-              }}
-              small
-              success
-            >
-              <Text style={{ color: 'white', fontSize: 11 }}>Follow</Text>
-            </Button>}
-          {index % 2 === 1 &&
-            <Button
-              style={{
-                height: 27,
-                width: 94,
-                alignSelf: 'center',
-                backgroundColor: '#878787',
-                justifyContent: 'center',
-                borderRadius: 0,
-              }}
-              small
-              success
-            >
-              <Text style={{ color: 'white', fontSize: 11 }}>Unfollow</Text>
-            </Button>}
-          <Button transparent style={{ paddingLeft: 12 }}>
-            <AweIcon
-              name="ellipsis-v"
-              style={{
-                color: '#989898',
-                fontSize: 18,
+        <View style={styles.itemStyle}>
+          <View style={{ paddingRight: 10 }}>
+            <Image
+              style={{ width: 60, height: 60, borderRadius: 30 }}
+              source={{
+                uri: item[a].avatar ? item[a].avatar.medium : defaultAvatar,
               }}
             />
-          </Button>
+          </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
+              <Text style={{ fontFamily: 'OpenSans', fontSize: 12, fontWeight: '600' }}>
+                {item[a].name}
+              </Text>
+            </View>
+            <View style={{ justifyContent: 'flex-start' }}>
+              <Text
+                style={{ fontSize: 12, fontFamily: 'OpenSans', color: 'rgba(97, 97, 97, 0.7)' }}
+              >
+                {item[a].followersCount} followers
+              </Text>
+            </View>
+          </View>
+          <View style={{ justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
+            {currentUser.id !== item[a].id &&
+              <Button
+                style={{
+                  height: 27,
+                  width: 94,
+                  alignSelf: 'center',
+                  backgroundColor: ifollow[item[a].id] ? '#878787' : '#16A085',
+                  justifyContent: 'center',
+                  borderRadius: 0,
+                }}
+                small
+                success
+              >
+                <Text style={{ color: 'white', fontSize: 11 }}>
+                  {ifollow[item[a].id] ? 'Unfollow' : 'Follow'}
+                </Text>
+              </Button>}
+            <Button transparent style={{ paddingLeft: 12 }}>
+              <AweIcon
+                name="ellipsis-v"
+                style={{
+                  color: '#989898',
+                  fontSize: 18,
+                }}
+              />
+            </Button>
+          </View>
         </View>
-      </View>
+      </TouchableHighlight>
     );
   }
 
@@ -149,69 +150,62 @@ class NetworkScreen extends Component {
     );
   }
 
+  loadMore(dat) {
+    const type = dat === 'Following' ? 'followed' : 'follower';
+    const { userId } = this.props.navigation.state.params;
+    if (!this.props.networkLoading[type]) {
+      this.props.fetchNetwork(userId, type, 20, this.state[type] + 1);
+      this.setState({ [type]: this.state[type] + 1 });
+    }
+  }
+
+  renderFooter(dat) {
+    const { networkLoading } = this.props;
+    const type = dat === 'Following' ? 'followed' : 'follower';
+    if (this.state[type] > 0 && networkLoading[type]) {
+      return <Spinner size="small" color="grey" />;
+    }
+    return null;
+  }
+
   renderTab(data, type) {
     return (
       <FlatList
         removeClippedSubviews={false}
         data={data}
+        keyExtractor={item => item.id}
         refreshing={false}
         onRefresh={() => console.log('object')}
         ListHeaderComponent={() => this.renderHeader(type)}
-        renderItem={e => this.renderItem(e)}
+        ListFooterComponent={() => this.renderFooter(type)}
+        renderItem={e => this.renderItem(e, type)}
+        onEndReached={() => this.loadMore(type)}
+        onEndReachedThreshold={0.5}
       />
     );
   }
 
   render() {
+    const { userId } = this.props.navigation.state.params;
+    const { followed, follower, profile, networkLoading } = this.props;
     return (
       <Container>
         <ScrollableTabView renderTabBar={() => <SimpleTabBar />}>
-          <View tabLabel={`Following · ${24}`} style={{ paddingTop: 0, backgroundColor: 'white' }}>
-            {this.renderTab([
-              { key: 1, val: 'aaa' },
-              { key: 2, val: 'aaa' },
-              { key: 3, val: 'aaa' },
-              { key: 4, val: 'aaa' },
-              { key: 5, val: 'aaa' },
-              { key: 6, val: 'aaa' },
-              { key: 7, val: 'aaa' },
-              { key: 8, val: 'aaa' },
-              { key: 13, val: 'aaa' },
-              { key: 14, val: 'aaa' },
-              { key: 15, val: 'aaa' },
-              { key: 16, val: 'aaa' },
-              { key: 17, val: 'aaa' },
-              { key: 18, val: 'aaa' },
-              { key: 19, val: 'aaa' },
-              { key: 20, val: 'aaa' },
-              { key: 29, val: 'aaa' },
-              { key: 30, val: 'aaa' },
-            ], 'Following')}
+          <View
+            tabLabel={`Following · ${profile.followingCount}`}
+            style={{ paddingTop: 0, backgroundColor: 'white' }}
+          >
+            {networkLoading.followed && this.state.followed === 0
+              ? <Spinner color="grey" size="small" />
+              : this.renderTab(followed[userId], 'Following')}
           </View>
           <View
-            tabLabel={`Followers · ${79}`}
+            tabLabel={`Followers · ${profile.followersCount}`}
             style={{ padding: 5, paddingTop: 0, backgroundColor: 'white' }}
           >
-            {this.renderTab([
-              { key: 21, val: 'aaa' },
-              { key: 22, val: 'aaa' },
-              { key: 23, val: 'aaa' },
-              { key: 24, val: 'aaa' },
-              { key: 25, val: 'aaa' },
-              { key: 26, val: 'aaa' },
-              { key: 27, val: 'aaa' },
-              { key: 28, val: 'aaa' },
-              { key: 213, val: 'aaa' },
-              { key: 214, val: 'aaa' },
-              { key: 215, val: 'aaa' },
-              { key: 216, val: 'aaa' },
-              { key: 217, val: 'aaa' },
-              { key: 218, val: 'aaa' },
-              { key: 219, val: 'aaa' },
-              { key: 220, val: 'aaa' },
-              { key: 229, val: 'aaa' },
-              { key: 230, val: 'aaa' },
-            ], 'Followers')}
+            {networkLoading.follower && this.state.follower === 0
+              ? <Spinner color="grey" size="small" />
+              : this.renderTab(follower[userId], 'Followers')}
           </View>
         </ScrollableTabView>
       </Container>
@@ -220,13 +214,35 @@ class NetworkScreen extends Component {
 }
 
 NetworkScreen.propTypes = {
-  results: PropTypes.array.isRequired,
+  followed: PropTypes.object.isRequired,
+  follower: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+  networkLoading: PropTypes.object.isRequired,
   navigation: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ anime }) => {
-  const { resultsLoading } = anime;
+const mapStateToProps = (state, ownProps) => {
+  const { followed, follower, profile, networkLoading } = state.profile;
+  const { ifollow, currentUser } = state.user;
+  const userId = ownProps.navigation.state.params && ownProps.navigation.state.params.userId;
+  console.log(userId);
+  console.log(profile);
 
-  return { results: [], loading: resultsLoading };
+  return { followed, follower, ifollow, profile: profile[userId], currentUser, networkLoading };
 };
-export default connect(mapStateToProps)(NetworkScreen);
+
+const styles = {
+  itemStyle: {
+    height: 76,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+    backgroundColor: '#FAFAFA',
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+    paddingRight: 0,
+  },
+};
+export default connect(mapStateToProps, { fetchNetwork })(NetworkScreen);

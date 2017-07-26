@@ -54,17 +54,34 @@ const CardFull = props => (
 );
 
 CardFull.propTypes = {
-  leftText: PropTypes.string,
-  rightText: PropTypes.string,
   children: PropTypes.any,
   style: PropTypes.object,
+  onPress: PropTypes.func,
+  onRightPress: PropTypes.func,
+  onLeftPress: PropTypes.func,
 };
 
 CardFull.defaultProps = {
-  leftText: 'Cancel',
-  rightText: 'Save',
   children: {},
   style: {},
+  onPress: () => {},
+  onRightPress: () => {},
+  onLeftPress: () => {},
+};
+
+renderFooter.propTypes = {
+  leftText: PropTypes.string,
+  rightText: PropTypes.string,
+  onPress: PropTypes.func,
+  onRightPress: PropTypes.func,
+  onLeftPress: PropTypes.func,
+};
+renderFooter.defaultProps = {
+  leftText: 'Cancel',
+  rightText: 'Save',
+  onPress: () => {},
+  onRightPress: () => {},
+  onLeftPress: () => {},
 };
 
 const styles = {

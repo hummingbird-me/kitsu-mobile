@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
 import * as colors from '../constants/colors';
+import { defaultAvatar } from '../constants/app';
 
 let i = 0;
 const genKey = () => `key:${++i}`;
@@ -13,6 +16,8 @@ class ProgressiveImage extends Component {
       thumbnailOpacity: new Animated.Value(0),
       key: genKey(),
       mainLoaded: false,
+      width: 0,
+      height: 0,
     };
   }
 
@@ -25,21 +30,36 @@ class ProgressiveImage extends Component {
 
   render() {
     const { key, thumbnailOpacity } = this.state;
-    const { source, style } = this.props;
+    const { source, style, resizeMode, hasOverlay } = this.props;
     return (
-      <View style={{ backgroundColor: colors.imageGrey, ...style }}>
-        <Animated.Image
-          resizeMode={'cover'}
-          key={key}
-          style={[
-            style,
-            {
-              opacity: thumbnailOpacity,
-            },
-          ]}
-          source={source}
-          onLoad={this.onLoad}
-        />
+      <View
+        style={{ backgroundColor: colors.imageGrey, ...style }}
+        onLayout={e =>
+          this.setState({ height: e.nativeEvent.layout.height, width: e.nativeEvent.layout.width })}
+      >
+        {source.uri &&
+          <Animated.Image
+            resizeMode={resizeMode}
+            key={key}
+            style={[
+              style,
+              {
+                opacity: thumbnailOpacity,
+              },
+            ]}
+            source={{ uri: source.uri ? source.uri : '' }}
+            onLoad={this.onLoad}
+          />}
+        {(hasOverlay && source.uri) &&
+          <LinearGradient
+            colors={['transparent', 'rgba(0,0,0,0.6)']}
+            style={{
+              height: this.state.height,
+              width: this.state.width,
+              position: 'absolute',
+              top: 0,
+            }}
+          />}
       </View>
     );
   }
@@ -48,6 +68,13 @@ class ProgressiveImage extends Component {
 ProgressiveImage.propTypes = {
   source: PropTypes.object.isRequired,
   style: PropTypes.object.isRequired,
+  resizeMode: PropTypes.string,
+  hasOverlay: PropTypes.bool,
+};
+
+ProgressiveImage.defaultProps = {
+  resizeMode: 'cover',
+  hasOverlay: false,
 };
 
 export default ProgressiveImage;
