@@ -152,17 +152,17 @@ Kitsu.define(
     rating: '',
     ratingTwenty: '',
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
       type: 'users',
     },
     anime: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
     manga: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
     drama: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
     review: {
       jsonApi: 'hasMany',
@@ -202,6 +202,27 @@ Kitsu.define(
     },
   },
   { collectionPath: 'characters' },
+);
+
+Kitsu.define(
+  'chapters',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    titles: '',
+    canonicalTitle: '',
+    volumeNumber: '',
+    number: '',
+    synopsis: '',
+    published: '',
+    length: '',
+    thumbnail: '',
+    manga: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'chapters' },
 );
 
 Kitsu.define(
@@ -272,6 +293,7 @@ Kitsu.define(
     youtubeVideoId: '',
     showType: '',
     nsfw: '',
+    tba: '',
     genres: {
       jsonApi: 'hasMany',
     },
@@ -341,6 +363,7 @@ Kitsu.define(
     volumeCount: '',
     serialization: '',
     mangaType: '',
+    tba: '',
     genres: {
       jsonApi: 'hasMany',
     },
@@ -451,6 +474,36 @@ Kitsu.define(
     },
   },
   { collectionPath: 'reviews' },
+);
+
+Kitsu.define(
+  'mediaReactions',
+  {
+    id: '',
+    reaction: '',
+    upVotesCount: '',
+    likesCount: '',
+    content: '',
+    contentFormatted: '',
+    blocked: '',
+    createdAt: '',
+    updatedAt: '',
+    editedAt: '',
+    deletedAt: '',
+    libraryEntry: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      jsonApi: 'hasOne',
+    },
+    anime: {
+      jsonApi: 'hasOne',
+    },
+    manga: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'media-reactions' },
 );
 
 Kitsu.define(
@@ -582,6 +635,7 @@ Kitsu.define(
     verb: '',
     time: '',
     rating: '',
+    targetInterest: '',
     actor: {
       jsonApi: 'hasMany',
     },
@@ -590,6 +644,12 @@ Kitsu.define(
     },
     target: {
       jsonApi: 'hasMany',
+    },
+    targetUser: {
+      jsonApi: 'hasMany',
+    },
+    media: {
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'feeds/media_aggr' },
@@ -619,6 +679,22 @@ Kitsu.define(
     },
   },
   { collectionPath: 'posts' },
+);
+
+Kitsu.define(
+  'postLikes',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    post: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'post-likes' },
 );
 
 Kitsu.define(

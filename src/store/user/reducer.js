@@ -32,8 +32,6 @@ export default (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
     case types.FETCH_NETWORK_FOLLOW:
-      console.log(state.ifollow);
-      console.log(action);
       return {
         ...state,
         ifollow: { ...state.ifollow, [action.payload]: true },

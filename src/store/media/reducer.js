@@ -4,7 +4,7 @@ import * as types from '../types';
 const INITIAL_STATE = {
   media: {},
   loading: false,
-  reviews: {},
+  reactions: {},
   loadingReviews: false,
   castings: {},
   loadingCastings: false,
@@ -31,24 +31,23 @@ export default(state = INITIAL_STATE, action) => {
         loading: false,
         error: action.payload,
       };
-    case types.FETCH_MEDIA_REVIEWS:
+    case types.FETCH_MEDIA_REACTIONS:
       return {
         ...state,
-        loadingReviews: true,
-        reviews: {},
+        loadingReactions: true,
         error: '',
       };
-    case types.FETCH_MEDIA_REVIEWS_SUCCESS:
+    case types.FETCH_MEDIA_REACTIONS_SUCCESS:
       return {
         ...state,
-        loadingReviews: false,
-        reviews: { [action.payload.mediaId]: action.payload.reviews },
+        loadingReactions: false,
+        reactions: { [action.payload.mediaId]: action.payload.reactions },
         error: '',
       };
-    case types.FETCH_MEDIA_REVIEWS_FAIL:
+    case types.FETCH_MEDIA_REACTIONS_FAIL:
       return {
         ...state,
-        loadingReviews: false,
+        loadingReactions: false,
         error: action.payload,
       };
     case types.FETCH_MEDIA_CASTINGS:

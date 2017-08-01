@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Button, Container, Content, Icon } from 'native-base';
+import { Button, Container, Icon } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,7 +24,8 @@ import CardActivity from '../../components/Card/CardActivity';
 import ProgressiveImage from '../../components/ProgressiveImage';
 import { defaultAvatar } from '../../constants/app';
 import getTitleField from '../../utils/getTitleField';
-import { fetchMedia, fetchMediaReviews, fetchMediaCastings } from '../../store/media/actions';
+import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from '../../store/media/actions';
+import { getMediaFeed } from '../../store/feed/actions';
 
 const { width } = Dimensions.get('window');
 
@@ -68,18 +69,16 @@ class MediaScreen extends Component {
     this.animatedValue = new Animated.Value(0);
     this.renderEpisodes = this.renderEpisodes.bind(this);
     this.renderCharacters = this.renderCharacters.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
   }
 
-  componentWillMount() {
-    const { state } = this.props.navigation;
-    const { mediaId, type } = state.params;
-    this.props.fetchMedia(mediaId, type);
-  }
   componentDidMount() {
     const { state } = this.props.navigation;
     const { mediaId, type } = state.params;
-    this.props.fetchMediaReviews(mediaId);
+    this.props.fetchMediaReactions(mediaId, type);
     this.props.fetchMediaCastings(mediaId);
+    this.props.getMediaFeed(mediaId, type);
+    this.props.fetchMedia(mediaId, type);
   }
   expand() {
     if (this.view) {
@@ -226,7 +225,8 @@ class MediaScreen extends Component {
                 >
                   Episode {index + 1}
                 </Text>
-                {item.titles.en_jp &&
+                {item.titles &&
+                  item.titles.en_jp &&
                   <Text
                     style={{
                       color: 'white',
@@ -305,7 +305,6 @@ class MediaScreen extends Component {
   }
 
   renderCharacters() {
-    console.log(this.props);
     const { media } = this.props;
     const characters = this.props.castings.map(item => ({
       image: item.character.image ? item.character.image.original : defaultAvatar,
@@ -347,8 +346,219 @@ class MediaScreen extends Component {
     );
   }
 
+  renderHeader() {
+    const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
+    console.log(reactions);
+    return (
+      <View>
+
+        <View
+          style={{
+            marginTop: 85,
+            margin: 10,
+            borderRadius: 5,
+          }}
+        >
+          {reactions[0] &&
+            <View style={{ marginTop: -30 }}>
+              <ProgressiveImage
+                source={{
+                  uri: reactions[0].user.avatar ? reactions[0].user.avatar.small : defaultAvatar,
+                }}
+                style={{ width: 30, height: 30, borderRadius: 15, marginBottom: 5 }}
+              />
+            </View>}
+          {reactions[0] && <Text
+            style={{
+              backgroundColor: 'transparent',
+              color: 'white',
+              fontSize: 10,
+              fontWeight: '600',
+              fontFamily: 'OpenSans',
+              width: width / 1.70,
+            }}
+            numberOfLines={3}
+          >
+            {reactions[0].reaction}
+          </Text> }
+        </View>
+        <View style={{ backgroundColor: '#F7F7F7', borderRadius: 0 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: 15,
+              paddingTop: 5,
+            }}
+          >
+            <View style={{ width: '66%' }}>
+              <Text
+                style={{
+                  color: '#333333',
+                  fontWeight: 'bold',
+                  fontSize: 14,
+                  fontFamily: 'OpenSans',
+                }}
+              >
+                {(media.titles && media.titles[getTitleField()]) || media.canonicalTitle}
+                {' '}
+                <Text style={{ color: '#929292', fontSize: 12 }}>
+                  {media.startDate && new Date(media.startDate).getFullYear()}
+                </Text>
+              </Text>
+              <Text style={{ color: '#929292', fontSize: 12, marginBottom: 5, marginTop: 3 }}>
+                {media.averageRating &&
+                  <Text>
+                    {media.averageRating}
+                    %
+                    {' '}
+                  </Text>}
+                <Text style={{ color: '#575757', fontWeight: 'bold' }}>
+                  {_.upperCase(media.subtype)}
+                </Text>
+              </Text>
+              {media.popularityRank &&
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <IconAwe
+                    name="heart"
+                    style={{ fontSize: 11, color: '#e74c3c', marginRight: 5 }}
+                  />
+                  <Text
+                    style={{
+                      color: '#464646',
+                      fontWeight: '500',
+                      fontFamily: 'OpenSans',
+                      fontSize: 12,
+                    }}
+                  >
+                    Rank #{media.popularityRank} (Most Popular)
+                  </Text>
+                </View>}
+              {media.ratingRank &&
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <IconAwe name="star" style={{ fontSize: 11, color: '#f39c12', marginRight: 5 }} />
+                  <Text
+                    style={{
+                      color: '#464646',
+                      fontWeight: '500',
+                      fontFamily: 'OpenSans',
+                      fontSize: 12,
+                    }}
+                  >
+                    Rank #{media.ratingRank} (Highest Rated Anime)
+                  </Text>
+                </View>}
+            </View>
+            <View style={{ marginTop: -100, flex: 3 }}>
+              <ProgressiveImage
+                source={{ uri: media.posterImage && media.posterImage.large }}
+                style={{ height: 167, width: 118, borderRadius: 3 }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              padding: 15,
+              paddingTop: 0,
+              paddingBottom: 5,
+              flexWrap: 'wrap',
+            }}
+          >
+            {media.categories &&
+              media.categories.map(item => (
+                <Button
+                  style={{
+                    height: 20,
+                    borderColor: '#eaeaea',
+                    backgroundColor: '#FFFFFF',
+                    marginRight: 5,
+                    marginBottom: 5,
+                  }}
+                  bordered
+                  key={item.id}
+                  light
+                >
+                  <Text style={{ fontSize: 12, fontFamily: 'OpenSans' }}>{item.title}</Text>
+                </Button>
+              ))}
+          </View>
+          <Animatable.View
+            style={{ padding: 15, paddingTop: 0, height: 70, overflow: 'hidden', zIndex: 2 }}
+            onPress={() => this.expand()}
+            ref={el => (this.view = el)}
+          >
+            {!this.state.expanded &&
+              <LinearGradient
+                colors={['rgba(247,247,247, 0.5)', '#f7f7f7']}
+                locations={[0.4, 1]}
+                onPress={() => this.expand()}
+                style={{ height: 30, width, position: 'absolute', bottom: 0, zIndex: 1 }}
+              />}
+            <Text
+              onPress={() => this.expand()}
+              style={{ fontSize: 11, color: '#333333', lineHeight: 15, fontFamily: 'OpenSans' }}
+            >
+              {media && media.synopsis}
+            </Text>
+          </Animatable.View>
+          <CardFull single heading="Theme / Plot">
+            <DoubleProgress left="SLOW" right="FAST" leftProgress={0.3} rightProgress={0} />
+            <DoubleProgress left="SIMPLE" right="COMPLEX" leftProgress={0} rightProgress={0.8} />
+            <DoubleProgress left="LIGHT" right="DARK" leftProgress={0.3} rightProgress={0} />
+            <View
+              style={{
+                height: '100%',
+                position: 'absolute',
+                borderLeftWidth: 1,
+                top: 10,
+                alignSelf: 'center',
+                borderColor: '#C0C0C0',
+              }}
+            />
+          </CardFull>
+          {this.renderEpisodes()}
+          {this.renderRelatedMedia()}
+          {this.renderCharacters()}
+          {/*
+            */}
+          <CardStatus
+            leftText="Write Post"
+            rightText="Share Photo"
+            user={currentUser}
+            toUser={media}
+          />
+          <Text
+            style={{
+              color: '#A8A8A8',
+              fontWeight: '500',
+              fontSize: 12,
+              padding: 10,
+              paddingBottom: 5,
+              paddingTop: 15,
+            }}
+          >
+            ACTIVITY
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
+  refresh(mediaId, type) {
+    this.props.getMediaFeed(mediaId, type);
+  }
+
+  loadMore(mediaId, type) {
+    const { loadingMediaFeed, mediaFeed } = this.props;
+
+    if (loadingMediaFeed) return;
+    this.props.getMediaFeed(mediaId, type, mediaFeed[mediaFeed.length - 1].id);
+  }
+
   render() {
-    const { media, reviews, navigation, currentUser } = this.props;
+    const { media, reactions, navigation, currentUser, mediaFeed, loadingMediaFeed } = this.props;
+    console.log(mediaFeed);
     return (
       <Container style={styles.container}>
         <CustomHeader
@@ -371,199 +581,18 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-        <Content style={{ width, marginTop: 65 }}>
-          <View
-            style={{
-              marginTop: 85,
-              margin: 10,
-              borderRadius: 5,
-            }}
-          >
-            {reviews[0] &&
-              <View style={{ marginTop: -30 }}>
-                <ProgressiveImage
-                  source={{
-                    uri: reviews[0].user.avatar ? reviews[0].user.avatar.small : defaultAvatar,
-                  }}
-                  style={{ width: 30, height: 30, borderRadius: 15, marginBottom: 5 }}
-                />
-              </View>}
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 10,
-                fontWeight: '600',
-                fontFamily: 'OpenSans',
-                width: width / 1.70,
-              }}
-              numberOfLines={3}
-            >
-              {reviews[0] && reviews[0].content}
-            </Text>
-          </View>
-          <View style={{ backgroundColor: '#F7F7F7', borderRadius: 0 }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                padding: 15,
-                paddingTop: 5,
-              }}
-            >
-              <View style={{ width: '66%' }}>
-                <Text
-                  style={{
-                    color: '#333333',
-                    fontWeight: 'bold',
-                    fontSize: 14,
-                    fontFamily: 'OpenSans',
-                  }}
-                >
-                  {(media.titles && media.titles[getTitleField()]) || media.canonicalTitle}
-                  {' '}
-                  <Text style={{ color: '#929292', fontSize: 12 }}>
-                    {media.startDate && new Date(media.startDate).getFullYear()}
-                  </Text>
-                </Text>
-                <Text style={{ color: '#929292', fontSize: 12, marginBottom: 5, marginTop: 3 }}>
-                  {media.averageRating &&
-                    <Text>
-                      {media.averageRating}
-                      %
-                      {' '}
-                    </Text>}
-                  <Text style={{ color: '#575757', fontWeight: 'bold' }}>
-                    {_.upperCase(media.subtype)}
-                  </Text>
-                </Text>
-                {media.popularityRank &&
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <IconAwe
-                      name="heart"
-                      style={{ fontSize: 11, color: '#e74c3c', marginRight: 5 }}
-                    />
-                    <Text
-                      style={{
-                        color: '#464646',
-                        fontWeight: '500',
-                        fontFamily: 'OpenSans',
-                        fontSize: 12,
-                      }}
-                    >
-                      Rank #{media.popularityRank} (Most Popular)
-                    </Text>
-                  </View>}
-                {media.ratingRank &&
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <IconAwe
-                      name="star"
-                      style={{ fontSize: 11, color: '#f39c12', marginRight: 5 }}
-                    />
-                    <Text
-                      style={{
-                        color: '#464646',
-                        fontWeight: '500',
-                        fontFamily: 'OpenSans',
-                        fontSize: 12,
-                      }}
-                    >
-                      Rank #{media.ratingRank} (Highest Rated Anime)
-                    </Text>
-                  </View>}
-              </View>
-              <View style={{ marginTop: -100, flex: 3 }}>
-                <ProgressiveImage
-                  source={{ uri: media.posterImage && media.posterImage.large }}
-                  style={{ height: 167, width: 118, borderRadius: 3 }}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                padding: 15,
-                paddingTop: 0,
-                paddingBottom: 5,
-                flexWrap: 'wrap',
-              }}
-            >
-              {media.categories &&
-                media.categories.map(item => (
-                  <Button
-                    style={{
-                      height: 20,
-                      borderColor: '#eaeaea',
-                      backgroundColor: '#FFFFFF',
-                      marginRight: 5,
-                      marginBottom: 5,
-                    }}
-                    bordered
-                    key={item.id}
-                    light
-                  >
-                    <Text style={{ fontSize: 12, fontFamily: 'OpenSans' }}>{item.title}</Text>
-                  </Button>
-                ))}
-            </View>
-            <Animatable.View
-              style={{ padding: 15, paddingTop: 0, height: 70, overflow: 'hidden', zIndex: 2 }}
-              onPress={() => this.expand()}
-              ref={el => (this.view = el)}
-            >
-              {!this.state.expanded &&
-                <LinearGradient
-                  colors={['rgba(247,247,247, 0.5)', '#f7f7f7']}
-                  locations={[0.4, 1]}
-                  onPress={() => this.expand()}
-                  style={{ height: 30, width, position: 'absolute', bottom: 0, zIndex: 1 }}
-                />}
-              <Text
-                onPress={() => this.expand()}
-                style={{ fontSize: 11, color: '#333333', lineHeight: 15, fontFamily: 'OpenSans' }}
-              >
-                {media && media.synopsis}
-              </Text>
-            </Animatable.View>
-            <CardFull single heading="Theme / Plot">
-              <DoubleProgress left="SLOW" right="FAST" leftProgress={0.3} rightProgress={0} />
-              <DoubleProgress left="SIMPLE" right="COMPLEX" leftProgress={0} rightProgress={0.8} />
-              <DoubleProgress left="LIGHT" right="DARK" leftProgress={0.3} rightProgress={0} />
-              <View
-                style={{
-                  height: '100%',
-                  position: 'absolute',
-                  borderLeftWidth: 1,
-                  top: 10,
-                  alignSelf: 'center',
-                  borderColor: '#C0C0C0',
-                }}
-              />
-            </CardFull>
-            {this.renderEpisodes()}
-            {this.renderRelatedMedia()}
-            {this.renderCharacters()}
-            {/*
-            */}
-            <CardStatus
-              leftText="Write Post"
-              rightText="Share Photo"
-              user={currentUser}
-              toUser={media}
-            />
-            <Text
-              style={{
-                color: '#A8A8A8',
-                fontWeight: '500',
-                fontSize: 12,
-                padding: 10,
-                paddingBottom: 5,
-                paddingTop: 15,
-              }}
-            >
-              ACTIVITY
-            </Text>
-          </View>
-        </Content>
+        <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
+          <FlatList
+            data={mediaFeed}
+            ListHeaderComponent={() => this.renderHeader()}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => <CardActivity {...item} />}
+            refreshing={loadingMediaFeed}
+            onRefresh={() => this.refresh(media.id, media.type)}
+            onEndReached={() => this.loadMore(media.id, media.type)}
+            onEndReachedThreshold={0.5}
+          />
+        </View>
       </Container>
     );
   }
@@ -571,13 +600,19 @@ class MediaScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { navigation: { state: { params: { mediaId } } } } = ownProps;
-  const { loading, media, reviews, castings } = state.media;
+  const { loading, media, reactions, castings } = state.media;
   const { currentUser } = state.user;
+  const { mediaFeed, loadingMediaFeed } = state.feed;
+  const filteredFeed = mediaFeed.filter(
+    ({ activities }) => !['comment', 'follow'].includes(activities[0].verb),
+  );
   return {
     loading,
     media: media[mediaId] || {},
-    reviews: reviews[mediaId] || [],
+    reactions: reactions[mediaId] || [],
     castings: castings[mediaId] || [],
+    mediaFeed: filteredFeed,
+    loadingMediaFeed,
     currentUser,
   };
 };
@@ -594,8 +629,18 @@ MediaScreen.propTypes = {
   loading: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
   media: PropTypes.object.isRequired,
+  fetchMediaCastings: PropTypes.func.isRequired,
+  fetchMediaReactions: PropTypes.func.isRequired,
+  fetchMedia: PropTypes.func.isRequired,
+  getMediaFeed: PropTypes.func.isRequired,
+  mediaFeed: PropTypes.array.isRequired,
+  loadingMediaFeed: PropTypes.bool.isRequired,
+  currentUser: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { fetchMedia, fetchMediaReviews, fetchMediaCastings })(
-  MediaScreen,
-);
+export default connect(mapStateToProps, {
+  fetchMedia,
+  fetchMediaReactions,
+  fetchMediaCastings,
+  getMediaFeed,
+})(MediaScreen);

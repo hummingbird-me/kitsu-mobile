@@ -7,8 +7,8 @@ import YouTube from 'react-native-youtube';
 import AutoSizedImage from './AutoSizedImage';
 
 const defaultOpts = {
-  lineBreak: '\n',
-  paragraphBreak: '\n\n',
+  lineBreak: '',
+  paragraphBreak: '\n',
   bullet: '\u2022 ',
   TextComponent: Text,
   textComponentProps: null,
@@ -24,6 +24,7 @@ const Img = (props) => {
   const imgStyle = {
     width,
     height,
+    marginLeft: -10,
   };
   const source = {
     uri: props.attribs.src,
@@ -31,6 +32,7 @@ const Img = (props) => {
     height,
   };
   return <AutoSizedImage source={source} style={imgStyle} />;
+  // return <Text>Image</Text>;
 };
 
 export default function htmlToElement(rawHtml, customOpts = {}, done) {
@@ -78,6 +80,7 @@ export default function htmlToElement(rawHtml, customOpts = {}, done) {
               loop={false} // control whether the video should loop when ended
               style={{
                 alignSelf: 'stretch',
+                marginLeft: -10,
                 height: 250,
                 width: screenWidth,
                 backgroundColor: 'black',
@@ -124,7 +127,6 @@ export default function htmlToElement(rawHtml, customOpts = {}, done) {
         }
 
         const { NodeComponent } = opts;
-        console.log(opts);
 
         return (
           <NodeComponent {...opts.nodeComponentProps} key={index} onPress={linkPressHandler}>

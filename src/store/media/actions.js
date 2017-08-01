@@ -49,37 +49,37 @@ export const fetchMediaCastings = (mediaId, limit = 20, pageIndex = 0) => async 
   }
 };
 
-export const fetchMediaReviews = (mediaId, limit = 20, pageIndex = 0) => async (
+export const fetchMediaReactions = (mediaId, mediaType, limit = 20, pageIndex = 0) => async (
   dispatch,
   getState,
 ) => {
-  dispatch({ type: types.FETCH_MEDIA_REVIEWS });
+  dispatch({ type: types.FETCH_MEDIA_REACTIONS });
   let data = [];
   if (pageIndex > 0) {
-    data = [...getState().media.reviews[mediaId]];
+    data = [...getState().media.reactions[mediaId]];
   }
   try {
-    const reviews = await Kitsu.findAll('reviews', {
+    const reactions = await Kitsu.findAll('mediaReactions', {
       filter: {
-        mediaId,
+        [`${mediaType}Id`]: mediaId,
       },
       include: 'user',
-      sort: '-likesCount',
+      sort: '-upVotesCount',
     });
-    data = [...data, ...reviews];
+    data = [...data, ...reactions];
     dispatch({
-      type: types.FETCH_MEDIA_REVIEWS_SUCCESS,
+      type: types.FETCH_MEDIA_REACTIONS_SUCCESS,
       payload: {
         mediaId,
-        reviews: data,
+        reactions: data,
       },
     });
   } catch (e) {
     console.log(e);
     dispatch({
-      type: types.FETCH_MEDIA_REVIEWS_FAIL,
+      type: types.FETCH_MEDIA_REACTIONS_FAIL,
       payload: {
-        error: 'Failed to load reviews',
+        error: 'Failed to load reactions',
       },
     });
   }

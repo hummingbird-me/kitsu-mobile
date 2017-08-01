@@ -12,7 +12,10 @@ export default function DismissableStackNavigator(routes, options) {
       console.log(state);
       const nav = {
         ...this.props.navigation,
-        dismiss: () => goBack(state.key),
+        dismiss: () => {
+          if (state.routes.length > 2) goBack(state.routes[state.routes.length-1].key);
+          else goBack(state.key);
+        },
       };
       return <StackNav navigation={nav} />;
     }

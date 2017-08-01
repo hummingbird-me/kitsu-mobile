@@ -12,6 +12,7 @@ const genKey = () => `key:${++i}`;
 class ProgressiveImage extends Component {
   constructor(props) {
     super(props);
+    // console.log(props);
     this.state = {
       thumbnailOpacity: new Animated.Value(0),
       key: genKey(),
@@ -21,16 +22,30 @@ class ProgressiveImage extends Component {
     };
   }
 
+  // componentDidMount() {
+  //   console.log('mounted');
+  // }
+
+  // componentWillUnmount() {
+  //   console.log('unmount');
+  // }
+
   onLoad = () => {
-    Animated.timing(this.state.thumbnailOpacity, {
-      toValue: 1,
-      duration: 300,
-    }).start();
+    // console.log(this.state);
+    if (!this.state.mainLoaded) {
+      Animated.timing(this.state.thumbnailOpacity, {
+        toValue: 1,
+        duration: 300,
+      }).start();
+      this.setState({ mainLoaded: true });
+      // console.log(this.state);
+    }
   };
 
   render() {
     const { key, thumbnailOpacity } = this.state;
     const { source, style, resizeMode, hasOverlay } = this.props;
+    // console.log(this.state);
     return (
       <View
         style={{ backgroundColor: colors.imageGrey, ...style }}
@@ -50,7 +65,8 @@ class ProgressiveImage extends Component {
             source={{ uri: source.uri ? source.uri : '' }}
             onLoad={this.onLoad}
           />}
-        {(hasOverlay && source.uri) &&
+        {hasOverlay &&
+          source.uri &&
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.6)']}
             style={{

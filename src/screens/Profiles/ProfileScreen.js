@@ -13,7 +13,6 @@ import { Container, Icon, Spinner } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
-import LinearGradient from 'react-native-linear-gradient';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -63,7 +62,7 @@ class ProfileScreen extends Component {
     this.props.fetchProfileFavorites(userId, 'character');
     this.props.fetchProfileFavorites(userId, 'manga');
     this.props.fetchProfileFavorites(userId, 'anime');
-    // this.props.getUserFeed(user);
+    this.props.getUserFeed(userId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -266,7 +265,7 @@ class ProfileScreen extends Component {
     const { loadingUserFeed, userFeed } = this.props;
 
     if (loadingUserFeed) return;
-    // this.props.getUserFeed(userId, userFeed[userFeed.length - 1].id);
+    this.props.getUserFeed(userId, userFeed[userFeed.length - 1].id);
   }
 
   getDataForList(main, index = 0, size = 1) {
@@ -560,7 +559,7 @@ const mapStateToProps = (state, ownProps) => {
   const filteredFeed = userFeed.filter(
     ({ activities }) => !['comment', 'follow'].includes(activities[0].verb),
   );
-
+  console.log(filteredFeed);
   return {
     loading,
     profile: profile[userId] || {},
@@ -592,9 +591,10 @@ ProfileScreen.propTypes = {
   fetchProfileFavorites: PropTypes.func.isRequired,
   fetchLibraryEntires: PropTypes.func.isRequired,
   fetchProfile: PropTypes.func.isRequired,
+  getUserFeed: PropTypes.func.isRequired,
 };
 
-const getInfo = (profile, navigate) => {
+const getInfo = (profile) => {
   const info = {};
   _.forOwn(profile, (value, key) => {
     if (value) {

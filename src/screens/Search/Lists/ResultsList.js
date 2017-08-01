@@ -84,16 +84,21 @@ const renderItem = ({ item }, imageSize, onPress) => {
 
 ResultsList.propTypes = {
   dataArray: PropTypes.array.isRequired,
+  onPress: PropTypes.func,
   loadMore: PropTypes.func,
   refresh: PropTypes.func,
   refreshing: PropTypes.bool,
+  scrollEnabled: PropTypes.bool,
+  imageSize: PropTypes.object,
 };
 
 ResultsList.defaultProps = {
   loadMore: () => {},
   refresh: () => {},
   onPress: () => {},
+  imageSize: {},
   refreshing: false,
+  scrollEnabled: true,
 };
 
 const styles = {

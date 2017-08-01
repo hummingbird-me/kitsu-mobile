@@ -3,9 +3,11 @@ import * as types from '../types';
 const INITIAL_STATE = {
   notifications: [],
   userFeed: [],
+  mediaFeed: [],
   notificationsUnseen: 0,
   loadingNotifications: false,
   loadingUserFeed: false,
+  loadingMediaFeed: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -91,6 +93,47 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         userFeed: [],
         loadingUserFeed: false,
+        error: action.payload,
+      };
+    case types.GET_MEDIA_FEED:
+      const emptyMedia = action.payload ? {} : { mediaFeed: [] };
+      return {
+        ...state,
+        ...emptyMedia,
+        loadingMediaFeed: true,
+      };
+    case types.GET_MEDIA_FEED_SUCCESS:
+      return {
+        ...state,
+        mediaFeed: action.payload,
+        loadingMediaFeed: false,
+        notificationsUnseen: action.meta.unseenCount,
+        error: '',
+      };
+    case types.GET_MEDIA_FEED_MORE:
+      filtered = state.mediaFeed.filter(value => value.group !== action.payload[0].group);
+      feed = [...action.payload, ...filtered];
+      return {
+        ...state,
+        mediaFeed: feed,
+        loadingMediaFeed: false,
+        mediaFeedUnseen: action.meta.unseenCount,
+        error: '',
+      };
+    case types.GET_MEDIA_FEED_LESS:
+      feed = state.mediaFeed.filter(value => value.id !== action.payload);
+      return {
+        ...state,
+        mediaFeed: feed,
+        loadingMediaFeed: false,
+        mediaFeedUnseen: action.meta.unseenCount,
+        error: '',
+      };
+    case types.GET_MEDIA_FEED_FAIL:
+      return {
+        ...state,
+        mediaFeed: [],
+        loadingMediaFeed: false,
         error: action.payload,
       };
     case types.LOGOUT_USER:

@@ -15,7 +15,7 @@ class HomeScreen extends Component {
     ),
   };
   componentWillMount() {
-    this.props.fetchCurrentUser();
+    // this.props.fetchCurrentUser();
   }
   render() {
     const { currentUser, navigation, loading } = this.props;
