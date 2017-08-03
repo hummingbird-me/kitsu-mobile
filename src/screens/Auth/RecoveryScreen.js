@@ -108,7 +108,6 @@ class RecoveryScreen extends Component {
               style={{
                 color: 'rgba(255,255,255,0.5)',
                 fontFamily: 'OpenSans',
-                fontWeight: '600',
                 lineHeight: 20,
                 fontSize: 12,
               }}

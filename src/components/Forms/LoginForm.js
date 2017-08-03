@@ -71,8 +71,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
           : <Text
             style={{
               color: colors.white,
-              fontWeight: '600',
-              fontFamily: 'OpenSans',
+              fontFamily: 'OpenSans-Semibold',
               lineHeight: 20,
               fontSize: 15,
             }}

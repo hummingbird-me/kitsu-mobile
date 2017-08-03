@@ -70,7 +70,6 @@ class LoginScreen extends Component {
               opacity: 0.6,
               lineHeight: 17,
               fontSize: 12,
-              fontWeight: '400',
               fontFamily: 'OpenSans',
               textAlign: 'center',
             }}
@@ -93,9 +92,8 @@ class LoginScreen extends Component {
           >
             <Text
               style={{
-                color: 'rgba(255,255,255,0.3)',
+                color: 'rgba(255,255,255,0.5)',
                 fontFamily: 'OpenSans',
-                fontWeight: '600',
                 lineHeight: 20,
                 fontSize: 12,
               }}
@@ -103,8 +101,7 @@ class LoginScreen extends Component {
               Need an account?
               <Text
                 style={{
-                  fontWeight: '700',
-                  color: 'rgba(255,255,255,0.5)',
+                  fontFamily: 'OpenSans-Bold',
                 }}
               >
                 {' '}Create one

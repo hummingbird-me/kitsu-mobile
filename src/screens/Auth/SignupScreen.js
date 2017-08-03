@@ -109,9 +109,8 @@ class SignupScreen extends Component {
           >
             <Text
               style={{
-                color: 'rgba(255,255,255,0.3)',
+                color: 'rgba(255,255,255,0.5)',
                 fontFamily: 'OpenSans',
-                fontWeight: '600',
                 lineHeight: 20,
                 fontSize: 12,
               }}
@@ -119,7 +118,7 @@ class SignupScreen extends Component {
               Already have an account?
               <Text
                 style={{
-                  fontWeight: '700',
+                  fontFamily: 'OpenSans-Bold',
                   color: 'rgba(255,255,255,0.5)',
                 }}
               >
