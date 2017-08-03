@@ -87,6 +87,7 @@ function textbox(locals) {
 const styles = {
   field: {
     fontSize: 15,
+    lineHeight: 20,
     height: 40.5,
     fontFamily: 'OpenSans',
     color: 'rgba(255,255,255,0.7)',

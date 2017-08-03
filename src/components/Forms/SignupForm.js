@@ -29,7 +29,7 @@ const SignupForm = ({ onSubmit, loading, data, errors }) => {
       username: {
         placeholderTextColor: 'rgba(255,255,254,0.5)',
         template: textbox,
-        label: 'mail-icon',
+        label: 'username-icon',
         autoCapitalize: 'none',
         hasError: Boolean(errors.name),
         error: errors.name || 'Field should not be empty',
@@ -75,8 +75,7 @@ const SignupForm = ({ onSubmit, loading, data, errors }) => {
             : <Text
               style={{
                 color: colors.white,
-                fontWeight: '600',
-                fontFamily: 'OpenSans',
+                fontFamily: 'OpenSans-Semibold',
                 lineHeight: 20,
                 fontSize: 15,
               }}
