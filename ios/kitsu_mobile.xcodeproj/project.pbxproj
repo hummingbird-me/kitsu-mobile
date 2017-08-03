@@ -121,6 +121,12 @@
 		FA020EA4BA5A4CDBB775CEE0 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FE98C127AC64512B5A00DBE /* Rubik-Light.ttf */; };
 		FD2D5EEC2CE94BD494A797F8 /* libRCTYouTube.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */; };
 		FFF738ABC088423B91E45FD7 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 694A904745DB4D368E2CB836 /* config.json */; };
+		3C3D6EFF65BA42B4BCAD8294 /* Asap-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4138ED52D35F41FA8AB2D1DF /* Asap-Bold.otf */; };
+		B9C7B97EF80B41BA8CDC880D /* Asap-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 634F22FABEBB4F819C75A26D /* Asap-BoldItalic.otf */; };
+		E84FCEB1EEB54240B43E1262 /* Asap-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA2968343D9642BFA40B5E70 /* Asap-Italic.otf */; };
+		288C7B16940D4F52A8F13835 /* Asap-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = FD61A198D0A948A68EDEFB8F /* Asap-Medium.otf */; };
+		BD13B2760710464A96D6B1ED /* Asap-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = D09185B7DA82492DB020FF6E /* Asap-MediumItalic.otf */; };
+		4B62A4963BFB4F8A90260E13 /* Asap-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF1612BF0E7648D38C63F6DF /* Asap-Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -546,6 +552,12 @@
 		F35081652EF845D0B45DB9EC /* Arial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Arial.ttf; path = "../node_modules/native-base/Fonts/Arial.ttf"; sourceTree = "<group>"; };
 		F51148AA22694F92AB484605 /* libLottie.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libLottie.a; sourceTree = "<group>"; };
 		FF0AD57CF1A14A05AB0F02EE /* libRNShimmer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShimmer.a; sourceTree = "<group>"; };
+		4138ED52D35F41FA8AB2D1DF /* Asap-Bold.otf */ = {isa = PBXFileReference; name = "Asap-Bold.otf"; path = "../src/assets/fonts/open-sans/Asap-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		634F22FABEBB4F819C75A26D /* Asap-BoldItalic.otf */ = {isa = PBXFileReference; name = "Asap-BoldItalic.otf"; path = "../src/assets/fonts/open-sans/Asap-BoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EA2968343D9642BFA40B5E70 /* Asap-Italic.otf */ = {isa = PBXFileReference; name = "Asap-Italic.otf"; path = "../src/assets/fonts/open-sans/Asap-Italic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FD61A198D0A948A68EDEFB8F /* Asap-Medium.otf */ = {isa = PBXFileReference; name = "Asap-Medium.otf"; path = "../src/assets/fonts/open-sans/Asap-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D09185B7DA82492DB020FF6E /* Asap-MediumItalic.otf */ = {isa = PBXFileReference; name = "Asap-MediumItalic.otf"; path = "../src/assets/fonts/open-sans/Asap-MediumItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AF1612BF0E7648D38C63F6DF /* Asap-Regular.otf */ = {isa = PBXFileReference; name = "Asap-Regular.otf"; path = "../src/assets/fonts/open-sans/Asap-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -979,6 +991,12 @@
 				BA356B4F7C7040CCA1CAFC3A /* Apache License.txt */,
 				31FC4458B30648D49B57D619 /* OFL.txt */,
 				989E5E4013234F90B41CF380 /* YTPlayerView-iframe-player.html */,
+				4138ED52D35F41FA8AB2D1DF /* Asap-Bold.otf */,
+				634F22FABEBB4F819C75A26D /* Asap-BoldItalic.otf */,
+				EA2968343D9642BFA40B5E70 /* Asap-Italic.otf */,
+				FD61A198D0A948A68EDEFB8F /* Asap-Medium.otf */,
+				D09185B7DA82492DB020FF6E /* Asap-MediumItalic.otf */,
+				AF1612BF0E7648D38C63F6DF /* Asap-Regular.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1554,6 +1572,12 @@
 				EADAA2DD66354B3790C9FC3E /* Apache License.txt in Resources */,
 				1E6B3818FE594CE5BFCD8724 /* OFL.txt in Resources */,
 				9041714829564E9D8BE28664 /* YTPlayerView-iframe-player.html in Resources */,
+				3C3D6EFF65BA42B4BCAD8294 /* Asap-Bold.otf in Resources */,
+				B9C7B97EF80B41BA8CDC880D /* Asap-BoldItalic.otf in Resources */,
+				E84FCEB1EEB54240B43E1262 /* Asap-Italic.otf in Resources */,
+				288C7B16940D4F52A8F13835 /* Asap-Medium.otf in Resources */,
+				BD13B2760710464A96D6B1ED /* Asap-MediumItalic.otf in Resources */,
+				4B62A4963BFB4F8A90260E13 /* Asap-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

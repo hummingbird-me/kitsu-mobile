@@ -120,7 +120,7 @@ class OnboardingScreen extends Component {
             style={btnStyle}
             onPress={() => navigate('Signup')}
           >
-            <Text style={{ color: colors.white, textAlign: 'center', fontSize: 17 }}>
+            <Text style={{ color: colors.white, textAlign: 'center', fontSize: 17, fontFamily: 'OpenSans' }}>
               Get Started
             </Text>
           </Button>
@@ -158,9 +158,10 @@ const styles = {
     height: 60,
   },
   footerButtonText: {
-    opacity: 0.61,
+    opacity: 0.51,
     fontSize: 16,
     color: colors.white,
+    fontFamily: 'OpenSans',
   },
   slide: {
     width: 265,
@@ -174,8 +175,7 @@ const styles = {
     color: '#333333',
     fontSize: 17,
     lineHeight: 21,
-    //fontWeight: 'bold',
-    fontFamily: 'Asap Bold',
+    fontFamily: 'Asap-Bold',
   },
   desc: {
     padding: 15,
@@ -184,7 +184,7 @@ const styles = {
     color: '#333333',
     fontSize: 17,
     lineHeight: 21,
-    fontFamily: 'Open Sans Regular',
+    fontFamily: 'OpenSans',
     textAlign: 'center',
   },
   button: {
