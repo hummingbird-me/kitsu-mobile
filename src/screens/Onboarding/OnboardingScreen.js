@@ -174,7 +174,8 @@ const styles = {
     color: '#333333',
     fontSize: 17,
     lineHeight: 21,
-    fontWeight: 'bold',
+    //fontWeight: 'bold',
+    fontFamily: 'Asap Bold',
   },
   desc: {
     padding: 15,
@@ -183,6 +184,7 @@ const styles = {
     color: '#333333',
     fontSize: 17,
     lineHeight: 21,
+    fontFamily: 'Open Sans Regular',
     textAlign: 'center',
   },
   button: {
