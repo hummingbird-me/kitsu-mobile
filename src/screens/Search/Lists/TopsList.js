@@ -90,7 +90,7 @@ class TopsList extends Component {
       }));
     }
     return (
-      <View style={{ paddingTop: 10 }}>
+      <View style={{ paddingTop: 10, backgroundColor: colors.listBackPurple }}>
         <View
           style={{
             flexDirection: 'row',

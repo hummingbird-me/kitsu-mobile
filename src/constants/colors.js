@@ -9,3 +9,4 @@ export const fbBlue = '#507CC0';
 export const tabRed = '#FF4027';
 export const activeRed = '#F87270';
 export const placeholderGrey = '#A1A1A1';
+export const listBackPurple = '#433342';
