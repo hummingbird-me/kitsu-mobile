@@ -39,6 +39,7 @@ class TopsList extends Component {
     const { active } = this.props;
     return (
       <FlatList
+        style={{ backgroundColor: colors.listBackPurple }}
         data={list}
         removeClippedSubviews={false}
         renderItem={({ item }) => (
@@ -176,7 +177,7 @@ class TopsList extends Component {
     const { active } = this.props;
     const data = this.props[active];
     return (
-      <View style={{ backgroundColor: '#FAFAFA' }}>
+      <View style={{ backgroundColor: colors.listBackPurple }}>
         {this.renderGallery(data.topAiring, `Top Airing ${_.upperFirst(active)}`, 'topAiring')}
         {this.renderGallery(
           data.topUpcoming,
