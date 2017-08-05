@@ -36,7 +36,26 @@ const SegmentTabBar = React.createClass({
     const blue = 152 + (204 - 152) * progress;
     return `rgb(${red}, ${green}, ${blue})`;
   },
-
+  textStyles(index) {
+    if (index === this.props.activeTab){
+      return {
+        color: colors.tabbarSelectedTextColor,
+        fontFamily: 'OpenSans',
+        fontWeight: '600',
+        opacity: 1,
+        fontSize: 12,
+      }
+    }
+    else {
+      return {
+      color: '#ffffff',
+      fontFamily: 'OpenSans',
+      fontWeight: '600',
+      opacity: 0.6,
+      fontSize: 12,
+      }
+    }
+  },
   render() {
     return (
       <StyleProvider style={getTheme(kitsuStyles)}>
@@ -70,11 +89,10 @@ const SegmentTabBar = React.createClass({
                 borderLeftWidth: 0,
                 borderRightWidth: 0,
               }}
-
               last={this.props.tabs.length - 1 === i}
               first={i === 0}
             >
-              <Text active={this.props.activeTab === i} style={[styles.tabbarText, styles.selectedText]}>{tab}</Text>
+              <Text style={this.textStyles(i)}>{tab}</Text>
             </Button>
           ))}
         </Segment>
@@ -92,16 +110,5 @@ const SegmentTabBar = React.createClass({
 //     }}
 //   />
 // </TouchableOpacity>
-const styles = {
-  tabbarText: {
-     color: '#ffffff',
-     fontFamily: 'OpenSans',
-     fontWeight: '600',
-     opacity: 0.6,
-     fontSize: 12,
-  },
-  selectedText: {
-    color: colors.tabbarSelectedTextColor,
-  }
-}
+
 export default SegmentTabBar;
