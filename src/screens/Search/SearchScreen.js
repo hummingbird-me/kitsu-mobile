@@ -100,10 +100,10 @@ class SearchScreen extends Component {
           onChangeText={this.handleSearchQuery}
           style={{
             fontSize: 13,
-            fontFamily: 'OpenSans',
-            fontWeight: '600',
+            fontFamily: 'OpenSans-Semibold',
             color: colors.placeholderGrey,
             alignSelf: 'center',
+            textAlign: 'center',
           }}
           placeholderTextColor={colors.placeholderGrey}
         />

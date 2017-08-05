@@ -23,7 +23,7 @@ const SegmentTabBar = React.createClass({
       const progress = Math.min(1, Math.abs(value - i));
       icon.setNativeProps({
         style: {
-          color: this.iconColor(progress),
+          color: colors.dark,
         },
       });
     });
@@ -42,8 +42,11 @@ const SegmentTabBar = React.createClass({
       <StyleProvider style={getTheme(kitsuStyles)}>
         <Segment
           style={{
-            backgroundColor: colors.darkPurple,
+            backgroundColor: colors.listBackPurple,
             borderTopWidth: 0,
+            borderBottomWidth: 0,
+            borderRightWidth: 0,
+            borderLeftWidth: 0,
             height: 40,
             paddingRight: 5,
             paddingLeft: 5,
@@ -53,7 +56,7 @@ const SegmentTabBar = React.createClass({
           }}
         >
           {this.props.tabs.map((tab, i) => (
-            <Button
+            <Button transparent
               key={tab}
               onPress={() => this.props.goToPage(i)}
               style={{
@@ -62,12 +65,16 @@ const SegmentTabBar = React.createClass({
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
+                borderBottomWidth: 0,
+                borderTopWidth: 0,
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
               }}
-              active={this.props.activeTab === i}
+
               last={this.props.tabs.length - 1 === i}
               first={i === 0}
             >
-              <Text>{tab}</Text>
+              <Text active={this.props.activeTab === i} style={[styles.tabbarText, styles.selectedText]}>{tab}</Text>
             </Button>
           ))}
         </Segment>
@@ -85,5 +92,16 @@ const SegmentTabBar = React.createClass({
 //     }}
 //   />
 // </TouchableOpacity>
-
+const styles = {
+  tabbarText: {
+     color: '#ffffff',
+     fontFamily: 'OpenSans',
+     fontWeight: '600',
+     opacity: 0.6,
+     fontSize: 12,
+  },
+  selectedText: {
+    color: colors.tabbarSelectedTextColor,
+  }
+}
 export default SegmentTabBar;

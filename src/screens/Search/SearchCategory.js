@@ -241,7 +241,7 @@ class SearchCategory extends Component {
     const { key } = this.props.navigation.state.params;
     return (
       <Container>
-        <Content style={{ backgroundColor: colors.darkPurple }}>
+        <Content style={{ backgroundColor: colors.listBackPurple }}>
           {key === 'release' && this.renderYears()}
           {key === 'categories' && this.renderGenreList('level0', 0)}
         </Content>

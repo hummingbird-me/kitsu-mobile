@@ -12,3 +12,4 @@ export const placeholderGrey = '#A1A1A1';
 export const listBackPurple = '#433342';
 export const listTitleWhite = '#b6b2b6';
 export const listSeparatorColor = '#261c25'
+export const tabbarSelectedTextColor = 'rgb(252, 117, 92)';
