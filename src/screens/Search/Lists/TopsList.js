@@ -51,27 +51,26 @@ class TopsList extends Component {
               flexDirection: 'row',
               paddingLeft: 10,
               paddingRight: 10,
-              borderTopWidth: StyleSheet.hairlineWidth,
+              borderTopWidth: 0,
               borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: '#EEEEEE',
+              borderColor: colors.listSeparatorColor,
             }}
             onPress={() => this.props.navigation.navigate('SearchCategory', { ...item, active })}
           >
             <Left>
               <Text
                 style={{
-                  color: colors.darkGrey,
-                  fontFamily: 'OpenSans',
+                  color: colors.white,
+                  fontFamily: 'OpenSans-Semibold',
                   fontSize: 13,
                   lineHeight: 18,
-                  fontWeight: '600',
                 }}
               >
                 {item.label}
               </Text>
             </Left>
             <Right>
-              <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+              <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.white }} />
             </Right>
           </Item>
         )}
@@ -104,9 +103,9 @@ class TopsList extends Component {
           <Text
             style={{
               fontSize: 12,
-              fontWeight: 'bold',
+              fontFamily: 'OpenSans-Bold',
               lineHeight: 17,
-              color: '#333333',
+              color: colors.listTitleWhite,
             }}
           >
             {title}
@@ -124,9 +123,8 @@ class TopsList extends Component {
             <Text
               style={{
                 fontSize: 12,
-                fontFamily: 'OpenSans',
-                fontWeight: 'bold',
-                color: '#969696',
+                fontFamily: 'OpenSans-Bold',
+                color: colors.white,
               }}
             >
               View All
@@ -137,7 +135,7 @@ class TopsList extends Component {
                 fontSize: 16,
                 fontFamily: 'OpenSans',
                 fontWeight: '600',
-                color: '#969696',
+                color: colors.white,
               }}
             />
           </Button>
@@ -191,8 +189,7 @@ class TopsList extends Component {
             style={{
               color: colors.lightGrey,
               fontSize: 10,
-              fontFamily: 'OpenSans',
-              fontWeight: '600',
+              fontFamily: 'OpenSans-Semibold',
             }}
           >
             BROWSE BY
