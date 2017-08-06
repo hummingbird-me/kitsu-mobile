@@ -2,7 +2,25 @@ import { TabNavigator, StackNavigator } from 'react-navigation';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
 import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
-import { SearchScreen, SearchCategory, SearchFilter, SearchResults, FilterSub } from './screens/Search';
+import {
+  SearchScreen,
+  SearchCategory,
+  SearchResults,
+  SearchFilter,
+  FilterSub,
+} from './screens/Search';
+import NotificationsScreen from './screens/Notifications/NotificationsScreen';
+import {
+  MediaScreen,
+  CustomLibScreen,
+  ProfileScreen,
+  FavoriteCharacters,
+  NetworkScreen,
+  FavoriteMedia,
+  LibraryScreen,
+} from './screens/Profiles';
+
+import DismissableStackNavigator from './components/DismissableStackNavigator';
 import * as colors from './constants/colors';
 
 const SearchStack = StackNavigator(
@@ -19,7 +37,65 @@ const SearchStack = StackNavigator(
   },
   {
     navigationOptions: {
-      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerStyle: { backgroundColor: colors.darkPurple, height: 64 },
+      headerTitleStyle: {
+        color: colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: 'bold',
+        fontSize: 15,
+        marginTop: 0,
+      },
+    },
+  },
+);
+
+const NotifStack = StackNavigator(
+  {
+    Notifications: {
+      screen: NotificationsScreen,
+    },
+  },
+  {
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.darkPurple, height: 83 },
+      headerTitleStyle: {
+        color: colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: 'bold',
+        fontSize: 15,
+        marginTop: -10,
+      },
+    },
+  },
+);
+
+const ProfileStack = DismissableStackNavigator(
+  {
+    UserProfile: {
+      screen: ProfileScreen,
+    },
+    Media: {
+      screen: MediaScreen,
+    },
+    Character: {
+      screen: MediaScreen,
+    },
+    Library: {
+      screen: CustomLibScreen,
+    },
+    Network: {
+      screen: NetworkScreen,
+    },
+    FavoriteCharacters: {
+      screen: FavoriteCharacters,
+    },
+    FavoriteMedia: {
+      screen: FavoriteMedia,
+    },
+  },
+  {
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.darkPurple, height: 50 },
       headerTitleStyle: {
         color: colors.white,
         fontFamily: 'OpenSans',
@@ -45,7 +121,7 @@ const FilterStack = StackNavigator(
   },
   {
     navigationOptions: {
-      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerStyle: { backgroundColor: colors.darkPurple, height: 64 },
       headerTitleStyle: {
         color: colors.white,
         fontFamily: 'OpenSans',
@@ -59,17 +135,27 @@ const FilterStack = StackNavigator(
 
 const Tabs = TabNavigator(
   {
+    // Home: {
+    //   screen: HomeScreen,
+    // },
+    Feed: {
+      screen: HomeScreen,
+    },
     Search: {
       screen: SearchStack,
     },
-    Feed: {
-      screen: HomeScreen,
+    // Profile: {
+    //   screen: ProfileStack,
+    // },
+    Notif: {
+      screen: NotifStack,
     },
   },
   {
     tabBarOptions: {
       activeTintColor: colors.tabRed,
       showLabel: false,
+      lazy: true,
       style: { height: 44 },
     },
   },
@@ -98,12 +184,15 @@ const Root = StackNavigator(
     SearchFilter: {
       screen: FilterStack,
     },
+    Profile: {
+      screen: ProfileStack,
+    },
   },
   {
     headerMode: 'none',
     mode: 'modal',
     navigationOptions: {
-      headerStyle: { backgroundColor: colors.darkPurple, height: 63 },
+      headerStyle: { backgroundColor: colors.darkPurple, height: 64 },
       headerTitleStyle: {
         color: colors.white,
         fontFamily: 'OpenSans',

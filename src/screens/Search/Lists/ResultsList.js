@@ -1,11 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, FlatList, Text } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import * as colors from '../../../constants/colors';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 
-const ResultsList = ({ dataArray, loadMore, refreshing = false, refresh }) => (
+const ResultsList = ({
+  dataArray,
+  loadMore,
+  refreshing = false,
+  onPress,
+  refresh,
+  scrollEnabled = true,
+  numColumns = 4,
+  imageSize = { h: 125, w: 91 },
+}) => (
   <View style={{ backgroundColor: '#FAFAFA' }}>
     <FlatList
       removeClippedSubviews={false}
@@ -13,66 +21,84 @@ const ResultsList = ({ dataArray, loadMore, refreshing = false, refresh }) => (
       onEndReached={() => loadMore()}
       onEndReachedThreshold={0.5}
       getItemLayout={(data, index) => ({
-        length: 125,
-        offset: 125 * index,
+        length: imageSize.h,
+        offset: imageSize.h * index,
         index,
       })}
       initialNumToRender={10}
-      numColumns={4}
+      numColumns={numColumns}
+      scrollEnabled={scrollEnabled}
       refreshing={refreshing}
       onRefresh={() => refresh()}
       contentContainerStyle={styles.list}
-      renderItem={renderItem}
+      renderItem={e => renderItem(e, imageSize, onPress)}
     />
   </View>
-  );
+);
 
-const renderItem = ({ item }) => {
+const renderItem = ({ item }, imageSize, onPress) => {
   let title = null;
   if (item.titles) {
     title = item.titles.en || item.titles.en_jp;
   }
+  const { h, w } = imageSize;
+  const m = imageSize.m || 1;
   return (
-    <View style={{ height: 125, width: 91, margin: 1 }}>
-      <ProgressiveImage
-        source={{ uri: item.image }}
-        containerStyle={{
-          height: 125,
-          width: 91,
-          backgroundColor: colors.imageGrey,
+    <TouchableOpacity onPress={() => onPress(item)}>
+      <View
+        style={{
+          height: h - (m * 2),
+          width: w - (m * 2),
+          margin: m,
         }}
-        style={{ height: 125, width: 91 }}
-      />
-      {title &&
-        <LinearGradient colors={['transparent', 'black']} style={styles.linearGradient}>
-          <Text
-            style={{
-              color: 'white',
-              backgroundColor: 'transparent',
-              fontSize: 12,
-              fontFamily: 'OpenSans',
-              fontWeight: '600',
-            }}
-            numberOfLines={2}
-          >
-            {title}
-          </Text>
-        </LinearGradient>}
-    </View>
+        onPress={() => onPress(item)}
+      >
+        <ProgressiveImage
+          onPress={() => onPress(item)}
+          source={{ uri: item.image }}
+          style={{
+            height: h - (m * 2),
+            width: w - (m * 2),
+          }}
+        />
+        {title &&
+          <LinearGradient colors={['transparent', 'black']} style={styles.linearGradient}>
+            <Text
+              style={{
+                color: 'white',
+                backgroundColor: 'transparent',
+                fontSize: 12,
+                fontFamily: 'OpenSans',
+                fontWeight: '600',
+                padding: 3,
+              }}
+              numberOfLines={2}
+            >
+              {title}
+            </Text>
+          </LinearGradient>}
+      </View>
+    </TouchableOpacity>
   );
 };
 
 ResultsList.propTypes = {
   dataArray: PropTypes.array.isRequired,
+  onPress: PropTypes.func,
   loadMore: PropTypes.func,
   refresh: PropTypes.func,
   refreshing: PropTypes.bool,
+  scrollEnabled: PropTypes.bool,
+  imageSize: PropTypes.object,
 };
 
 ResultsList.defaultProps = {
   loadMore: () => {},
   refresh: () => {},
+  onPress: () => {},
+  imageSize: {},
   refreshing: false,
+  scrollEnabled: true,
 };
 
 const styles = {
@@ -85,10 +111,10 @@ const styles = {
     flex: 1,
     position: 'absolute',
     bottom: 0,
+    left: 0,
     width: '100%',
     height: '40%',
     justifyContent: 'flex-end',
-    padding: 5,
   },
 };
 

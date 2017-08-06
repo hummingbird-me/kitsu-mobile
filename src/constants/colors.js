@@ -7,4 +7,5 @@ export const darkGrey = '#696969';
 export const imageGrey = '#D8D8D8';
 export const fbBlue = '#507CC0';
 export const tabRed = '#FF4027';
+export const activeRed = '#F87270';
 export const placeholderGrey = '#A1A1A1';

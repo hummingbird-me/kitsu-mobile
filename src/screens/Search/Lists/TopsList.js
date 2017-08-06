@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Left, Right, Button, Text, Item } from 'native-base';
 import PropTypes from 'prop-types';
@@ -85,6 +85,8 @@ class TopsList extends Component {
       data = array.map(item => ({
         image: item.posterImage ? item.posterImage.small : 'none',
         key: item.id,
+        id: item.id,
+        type: item.type,
       }));
     }
     return (
@@ -145,7 +147,15 @@ class TopsList extends Component {
             removeClippedSubviews={false}
             data={data}
             renderItem={({ item, index }) => (
-              <View style={{ paddingRight: 5, marginLeft: index === 0 ? 10 : 0 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('Media', {
+                    mediaId: item.id,
+                    type: item.type,
+                  });
+                }}
+                style={{ paddingRight: 5, marginLeft: index === 0 ? 10 : 0 }}
+              >
                 <ProgressiveImage
                   source={{ uri: item.image }}
                   containerStyle={{
@@ -155,7 +165,7 @@ class TopsList extends Component {
                   }}
                   style={{ height: 119, width: 80 }}
                 />
-              </View>
+              </TouchableOpacity>
             )}
           />}
       </View>

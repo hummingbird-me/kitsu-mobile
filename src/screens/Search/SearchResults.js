@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Dimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Icon, Button } from 'native-base';
@@ -25,7 +26,15 @@ class SearchResults extends Component {
             onApply: (data, state) => {
               navigation.goBack(null);
               setTimeout(
-                () => navigation.setParams({ filter: data.filter, sort: data.sort, default: null, label: 'Search', data: state, fade: data.fade }),
+                () =>
+                  navigation.setParams({
+                    filter: data.filter,
+                    sort: data.sort,
+                    default: null,
+                    label: 'Search',
+                    data: state,
+                    fade: data.fade,
+                  }),
                 10,
               );
             },
@@ -86,12 +95,24 @@ class SearchResults extends Component {
       ? this.props.results
       : Array(20).fill(1).map((item, index) => ({ key: index }));
     return (
-      <ResultsList
-        dataArray={data}
-        loadMore={this.loadMore}
-        refresh={this.refresh}
-        refreshing={this.state.refresh}
-      />
+      <View style={{ marginRight: 0, marginLeft: 0, backgroundColor: 'white' }}>
+        <ResultsList
+          dataArray={data}
+          loadMore={this.loadMore}
+          refresh={this.refresh}
+          refreshing={this.state.refresh}
+          imageSize={{
+            h: Dimensions.get('window').width / 4 * 1.25,
+            w: (Dimensions.get('window').width - 5) / 4,
+          }}
+          onPress={(media) => {
+            this.props.navigation.navigate('Media', {
+              mediaId: media.id,
+              type: media.type,
+            });
+          }}
+        />
+      </View>
     );
   }
 }
@@ -110,6 +131,8 @@ const mapStateToProps = ({ anime }, ownProps) => {
     image: item.posterImage ? item.posterImage.small : 'none',
     titles: item.titles ? item.titles : {},
     key: item.id,
+    type: item.type,
+    id: item.id,
   }));
   return { results: data, loading: resultsLoading };
 };

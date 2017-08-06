@@ -2,33 +2,39 @@ import { REHYDRATE } from 'redux-persist/constants';
 import * as types from '../types';
 
 const INITIAL_STATE = {
-  profile: {},
+  currentUser: {},
   loading: false,
   error: '',
   signingUp: false,
   signupError: {},
+  ifollow: {},
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case types.FETCH_USER:
+    case types.FETCH_CURRENT_USER:
       return {
         ...state,
         loading: true,
         error: '',
       };
-    case types.FETCH_USER_SUCCESS:
+    case types.FETCH_CURRENT_USER_SUCCESS:
       return {
         ...state,
         loading: false,
-        profile: action.payload,
+        currentUser: action.payload,
         error: '',
       };
-    case types.FETCH_USER_FAIL:
+    case types.FETCH_CURRENT_USER_FAIL:
       return {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case types.FETCH_NETWORK_FOLLOW:
+      return {
+        ...state,
+        ifollow: { ...state.ifollow, [action.payload]: true },
       };
     case types.CREATE_USER:
       return {
@@ -40,7 +46,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         signingUp: false,
-        profile: action.payload,
+        currentUser: action.payload,
         signupError: {},
       };
     case types.CREATE_USER_FAIL:
