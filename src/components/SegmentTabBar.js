@@ -111,4 +111,5 @@ const SegmentTabBar = React.createClass({
 //   />
 // </TouchableOpacity>
 
+
 export default SegmentTabBar;

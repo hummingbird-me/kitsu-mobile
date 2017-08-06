@@ -18,7 +18,7 @@ class SearchScreen extends Component {
     headerStyle: {
       backgroundColor: colors.darkPurple,
       shadowOpacity: 0,
-      height: 50,
+      height: 0,
     },
     tabBarIcon: ({ tintColor }) => (
       <Icon ios="ios-search" android="md-search" style={{ fontSize: 24, color: tintColor }} />
