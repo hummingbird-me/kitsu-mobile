@@ -26,7 +26,7 @@
     "react-native-code-push": "^2.0.3-beta",
     "react-native-elements": "^0.12.2",
     "react-native-fading-slides": "^0.1.4",
-    "react-native-fbsdk": "^0.5.0",
+    "react-native-fbsdk": "0.6.0",
     "react-native-htmlview": "^0.10.0",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-modal-picker": "^0.0.16",
