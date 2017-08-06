@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" npm start",
     "test": "jest"
   },
   "dependencies": {
@@ -61,6 +62,7 @@
     "eslint-plugin-react": "^7.0.1",
     "jest": "20.0.3",
     "prettier-eslint": "^6.2.2",
+    "react-native-debugger-open": "^0.3.12",
     "react-test-renderer": "16.0.0-alpha.6"
   },
   "jest": {
