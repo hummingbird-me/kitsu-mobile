@@ -26,7 +26,7 @@ import { defaultAvatar } from '../../constants/app';
 import getTitleField from '../../utils/getTitleField';
 import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from '../../store/media/actions';
 import { getMediaFeed } from '../../store/feed/actions';
-
+import * as colors from '../../constants/colors';
 const { width } = Dimensions.get('window');
 
 class MediaScreen extends Component {
@@ -350,7 +350,7 @@ class MediaScreen extends Component {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
     console.log(reactions);
     return (
-      <View>
+      <View style={{backgroundColor: colors.listBackPurple}}>
 
         <View
           style={{
@@ -581,7 +581,7 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-        <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
+        <View style={{ width: Dimensions.get('window').width, marginTop: 65, backgroundColor:colors.listBackPurple}}>
           <FlatList
             data={mediaFeed}
             ListHeaderComponent={() => this.renderHeader()}
@@ -619,7 +619,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const styles = {
   container: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: colors.darkPurple,
     justifyContent: 'center',
     alignItems: 'center',
   },
