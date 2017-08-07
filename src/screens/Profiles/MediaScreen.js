@@ -464,15 +464,12 @@ class MediaScreen extends Component {
                     backgroundColor: colors.transparent,
                     marginRight: 5,
                     marginBottom: 5,
-                    fontFamily: 'OpenSans',
-                    fontWeight: 600,
                   }}
-                  color = {colors.white}
                   bordered
                   key={item.id}
                   light
                 >
-                  <Text style={{ fontSize: 12, fontFamily: 'OpenSans' }}>{item.title}</Text>
+                  <Text style={{color: colors.white, fontSize: 12, fontFamily: 'OpenSans', fontWeight: '600'}}>{item.title}</Text>
                 </Button>
               ))}
           </View>
@@ -483,14 +480,14 @@ class MediaScreen extends Component {
           >
             {!this.state.expanded &&
               <LinearGradient
-                colors={['rgba(247,247,247, 0.5)', '#f7f7f7']}
+                colors={['rgba(66.3,51,66.3, 0)', 'rgba(66.3,51,66.3, 1)']}
                 locations={[0.4, 1]}
                 onPress={() => this.expand()}
                 style={{ height: 30, width, position: 'absolute', bottom: 0, zIndex: 1 }}
               />}
             <Text
               onPress={() => this.expand()}
-              style={{ fontSize: 11, color: '#333333', lineHeight: 15, fontFamily: 'OpenSans' }}
+              style={{ fontSize: 11, color: 'white', lineHeight: 15, fontFamily: 'OpenSans' }}
             >
               {media && media.synopsis}
             </Text>
