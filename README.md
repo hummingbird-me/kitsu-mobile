@@ -4,3 +4,7 @@
 
 Installation Notes: 
 - Download Facebook SDK and install it under ~/Documents/FacebookSDK
+
+Debugging:
+- Install [react-native-debugger](https://github.com/jhen0409/react-native-debugger/releases)
+- before running, `yarn run debug`
