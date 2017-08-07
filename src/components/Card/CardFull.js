@@ -90,7 +90,6 @@ const styles = {
     borderColor: '#EEEEEE',
     marginTop: 0,
     marginBottom: 5,
-    borderRadius: 5,
     backgroundColor: 'white',
   },
   footer: {

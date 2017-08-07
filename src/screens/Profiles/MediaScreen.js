@@ -517,6 +517,7 @@ class MediaScreen extends Component {
             rightText="Share Photo"
             user={currentUser}
             toUser={media}
+            style={{ marginLeft: 9, marginRight: 9, marginTop: 11 }}
           />
           <Text
             style={{
