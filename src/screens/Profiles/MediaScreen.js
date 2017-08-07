@@ -350,7 +350,7 @@ class MediaScreen extends Component {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
     console.log(reactions);
     return (
-      <View style={{ backgroundColor: colors.listBackPurple }}>
+      <View>
 
         <View
           style={{
@@ -382,7 +382,7 @@ class MediaScreen extends Component {
             {reactions[0].reaction}
           </Text> }
         </View>
-        <View style={{ backgroundColor: colors.transparent, borderRadius: 0 }}>
+        <View style={{ backgroundColor: colors.listBackPurple, borderRadius: 0 }}>
           <View
             style={{
               flexDirection: 'row',
@@ -394,7 +394,7 @@ class MediaScreen extends Component {
             <View style={{ width: '66%' }}>
               <Text
                 style={{
-                  color: '#333333',
+                  color: 'white',
                   fontWeight: 'bold',
                   fontSize: 14,
                   fontFamily: 'OpenSans',
@@ -402,21 +402,11 @@ class MediaScreen extends Component {
               >
                 {(media.titles && media.titles[getTitleField()]) || media.canonicalTitle}
                 {' '}
-                <Text style={{ color: '#929292', fontSize: 12 }}>
+                <Text style={{ color: 'white', fontSize: 12, opacity: 0.6 }}>
                   {media.startDate && new Date(media.startDate).getFullYear()}
                 </Text>
               </Text>
-              <Text style={{ color: '#929292', fontSize: 12, marginBottom: 5, marginTop: 3 }}>
-                {media.averageRating &&
-                  <Text>
-                    {media.averageRating}
-                    %
-                    {' '}
-                  </Text>}
-                <Text style={{ color: '#575757', fontWeight: 'bold' }}>
-                  {_.upperCase(media.subtype)}
-                </Text>
-              </Text>
+
               {media.popularityRank &&
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <IconAwe
@@ -425,8 +415,8 @@ class MediaScreen extends Component {
                   />
                   <Text
                     style={{
-                      color: '#464646',
-                      fontWeight: '500',
+                      color: 'white',
+                      opacity: 0.4,
                       fontFamily: 'OpenSans',
                       fontSize: 12,
                     }}
@@ -470,11 +460,14 @@ class MediaScreen extends Component {
                 <Button
                   style={{
                     height: 20,
-                    borderColor: '#eaeaea',
-                    backgroundColor: '#FFFFFF',
+                    borderColor: colors.white,
+                    backgroundColor: colors.transparent,
                     marginRight: 5,
                     marginBottom: 5,
+                    fontFamily: 'OpenSans',
+                    fontWeight: 600,
                   }}
+                  color = {colors.white}
                   bordered
                   key={item.id}
                   light
@@ -619,7 +612,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const styles = {
   container: {
-    backgroundColor: colors.darkPurple,
     justifyContent: 'center',
     alignItems: 'center',
   },
