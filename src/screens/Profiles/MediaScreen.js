@@ -191,7 +191,7 @@ class MediaScreen extends Component {
     const imageStyle = { height: 83, width: 148, borderRadius: 5 };
     if (series.length === 0) return;
     return (
-      <View style={{ margin: 10 }}>
+      <View style={{ margin: 10}}>
         <Text style={{ color: '#969696', fontSize: 10, marginLeft: 5 }}>
           EPISODES · {media.episodeCount}
         </Text>
@@ -350,7 +350,7 @@ class MediaScreen extends Component {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
     console.log(reactions);
     return (
-      <View style={{backgroundColor: colors.listBackPurple}}>
+      <View style={{ backgroundColor: colors.listBackPurple }}>
 
         <View
           style={{
@@ -382,7 +382,7 @@ class MediaScreen extends Component {
             {reactions[0].reaction}
           </Text> }
         </View>
-        <View style={{ backgroundColor: '#F7F7F7', borderRadius: 0 }}>
+        <View style={{ backgroundColor: colors.transparent, borderRadius: 0 }}>
           <View
             style={{
               flexDirection: 'row',
@@ -581,7 +581,7 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-        <View style={{ width: Dimensions.get('window').width, marginTop: 65, backgroundColor:colors.listBackPurple}}>
+        <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
           <FlatList
             data={mediaFeed}
             ListHeaderComponent={() => this.renderHeader()}
