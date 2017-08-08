@@ -229,7 +229,6 @@ const styles = {
     borderColor: '#EEEEEE',
     marginTop: 0,
     marginBottom: 5,
-
     backgroundColor: 'white',
   },
   footer: {

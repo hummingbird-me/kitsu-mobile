@@ -126,7 +126,7 @@ class MediaScreen extends Component {
                 type: item.media.type,
               })}
           >
-            <ProgressiveImage source={{ uri: item.image }} style={{ height: 118, width: 83 }} />
+            <ProgressiveImage source={{ uri: item.image }} style={{ height: 118, width: 83, borderRadius: 1 }} />
             <Text
               style={{
                 fontSize: 9,
@@ -188,7 +188,7 @@ class MediaScreen extends Component {
     const { type } = navigation.state.params;
     let series = type === 'anime' ? media.episodes || [] : media.chapters || [];
     series = series.sort((a, b) => a - b).slice(0, 12);
-    const imageStyle = { height: 83, width: 148, borderRadius: 5 };
+    const imageStyle = { height: 83, width: 148, borderRadius: 3 };
     if (series.length === 0) return;
     return (
       <View style={{ margin: 10}}>
@@ -233,7 +233,7 @@ class MediaScreen extends Component {
                       padding: 2,
                       paddingLeft: 0,
                       fontSize: 10,
-                      fontFamily: 'OpenSans',
+                      fontFamily: 'Asap',
                     }}
                     numberOfLines={1}
                   >
