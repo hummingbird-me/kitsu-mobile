@@ -11,13 +11,13 @@ const Card = props => (
     <View style={styles.footer}>
       <Left style={{ height: 35, borderRadius: 15 }}>
         <Button style={{ height: 35, borderRadius: 15 }} transparent block>
-          <Text>{props.leftText}</Text>
+          <Text style={{ fontFamily: "OpenSans", fontSize: 12, color: "#646464"}}>{props.leftText}</Text>
         </Button>
       </Left>
       <View style={styles.footerDivider} />
       <Right style={{ height: 35, borderRadius: 15 }}>
         <Button style={{ height: 35, borderRadius: 15 }} transparent rounded block>
-          <Text>{props.rightText}</Text>
+          <Text style={{ fontFamily: "OpenSans", fontSize: 12, color: "#646464"}}>{props.rightText}</Text>
         </Button>
       </Right>
     </View>
