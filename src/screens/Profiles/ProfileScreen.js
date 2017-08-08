@@ -295,7 +295,7 @@ class ProfileScreen extends Component {
       <View>
         <View
           style={{
-            backgroundColor: '#F7F7F7',
+            backgroundColor: colors.listBackPurple,
             marginTop: 80,
             margin: 10,
             marginBottom: 0,
@@ -307,12 +307,10 @@ class ProfileScreen extends Component {
               <ProgressiveImage
                 source={{ uri: profile.avatar && profile.avatar.medium }}
                 style={{
-                  width: 80,
-                  height: 80,
+                  width: 69.86,
+                  height: 69.86,
                   alignSelf: 'center',
-                  borderRadius: 40,
-                  borderWidth: 1,
-                  borderColor: 'white',
+                  borderRadius: 34.93,
                 }}
               />
             </View>

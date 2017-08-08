@@ -98,7 +98,7 @@ class CardActivity extends PureComponent {
               style={{ height: 120, width: 80 }}
             />
             <View style={{ flex: 1, alignSelf: 'center' }}>
-              <Text style={{ alignSelf: 'center' }}>{item.subject.reaction}</Text>
+              <Text style={{ alignSelf: 'center', fontFamily: "OpenSans", fontSize: 12 }}>{item.subject.reaction}</Text>
 
             </View>
           </View>

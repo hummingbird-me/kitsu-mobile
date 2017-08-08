@@ -315,7 +315,7 @@ class MediaScreen extends Component {
     return (
       <CardFull
         single
-        singleText="View All"
+        singleText="View All Characters"
         heading="Characters"
         onPress={() =>
           this.props.navigation.navigate('FavoriteCharacters', {
