@@ -232,7 +232,7 @@ class ProfileScreen extends Component {
                   paddingLeft: 5,
                   alignItems: 'center',
                   color: colors.white,
-
+                  opacity: 0.16,
                 }}
               />
             </View>
