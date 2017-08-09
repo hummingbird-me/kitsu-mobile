@@ -39,7 +39,7 @@ const SimpleTabBar = React.createClass({
     return (
       <View
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: colors.tabBarPuple,
           borderTopWidth: 0,
           borderBottomWidth: 1,
           borderColor: '#EEEEEE',

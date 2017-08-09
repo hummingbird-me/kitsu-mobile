@@ -61,7 +61,8 @@ class TopsList extends Component {
               <Text
                 style={{
                   color: colors.white,
-                  fontFamily: 'OpenSans-Semibold',
+                  fontFamily: 'OpenSans',
+                  fontWeight: '600',
                   fontSize: 13,
                   lineHeight: 18,
                 }}
@@ -103,9 +104,10 @@ class TopsList extends Component {
           <Text
             style={{
               fontSize: 12,
-              fontFamily: 'OpenSans-Bold',
+              fontFamily: 'OpenSans',
+              fontWeight: 'bold',
               lineHeight: 17,
-              color: colors.listTitleWhite,
+              color: colors.categoryTextColor,
             }}
           >
             {title}
@@ -123,7 +125,8 @@ class TopsList extends Component {
             <Text
               style={{
                 fontSize: 12,
-                fontFamily: 'OpenSans-Bold',
+                fontFamily: 'OpenSans',
+                fontWeight: 'bold',
                 color: colors.white,
               }}
             >
@@ -153,16 +156,16 @@ class TopsList extends Component {
                     type: item.type,
                   });
                 }}
-                style={{ paddingRight: 5, marginLeft: index === 0 ? 10 : 0 }}
+                style={{ paddingRight: 5.74, marginLeft: index === 0 ? 11 : 0 }}
               >
                 <ProgressiveImage
                   source={{ uri: item.image }}
                   containerStyle={{
-                    height: 119,
-                    width: 80,
-                    backgroundColor: colors.imageGrey,
+                    height: 118.6,
+                    width: 79.48,
+
                   }}
-                  style={{ height: 119, width: 80 }}
+                  style={{ height: 118.6, width: 79.48, borderRadius: 3, backgroundColor: colors.imageBackColor }}
                 />
               </TouchableOpacity>
             )}
@@ -187,9 +190,10 @@ class TopsList extends Component {
         <View style={{ padding: 10, marginTop: 17 }}>
           <Text
             style={{
-              color: colors.lightGrey,
+              color: colors.categoryTextColor,
               fontSize: 10,
-              fontFamily: 'OpenSans-Semibold',
+              fontFamily: 'OpenSans',
+              fontWeight: '600',
             }}
           >
             BROWSE BY

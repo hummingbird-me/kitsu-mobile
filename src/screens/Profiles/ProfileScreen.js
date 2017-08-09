@@ -341,7 +341,7 @@ class ProfileScreen extends Component {
             toUser={profile}
           />
         </View>
-        <View style={{ backgroundColor: '#F7F7F7', borderRadius: 5 }}>
+        <View style={{ backgroundColor: colors.listBackPurple, borderRadius: 5 }}>
           <CardFull single singleText="View Library" heading="Library Activity">
             {this.renderScrollableLibrary(entries.slice(0, 12), 110, true, 'entries')}
           </CardFull>
