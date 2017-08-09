@@ -355,7 +355,9 @@ class MediaScreen extends Component {
         <View
           style={{
             marginTop: 85,
-            margin: 10,
+            marginLeft: 14.8,
+            marginRight: 13,
+
             borderRadius: 5,
           }}
         >
@@ -365,7 +367,7 @@ class MediaScreen extends Component {
                 source={{
                   uri: reactions[0].user.avatar ? reactions[0].user.avatar.small : defaultAvatar,
                 }}
-                style={{ width: 30, height: 30, borderRadius: 15, marginBottom: 5 }}
+                style={{ width: 32.4, height: 32.4, borderRadius: 16.2, marginBottom: 6.2 }}
               />
             </View>}
           {reactions[0] && <Text
@@ -376,6 +378,7 @@ class MediaScreen extends Component {
               fontWeight: '600',
               fontFamily: 'OpenSans',
               width: width / 1.70,
+              marginBottom: 12,
             }}
             numberOfLines={3}
           >
@@ -398,17 +401,17 @@ class MediaScreen extends Component {
                   fontWeight: 'bold',
                   fontSize: 14,
                   fontFamily: 'OpenSans',
+                  marginTop: 8,
                 }}
               >
                 {(media.titles && media.titles[getTitleField()]) || media.canonicalTitle}
-                {' '}
-                <Text style={{ color: 'white', fontSize: 12, opacity: 0.6 }}>
-                  {media.startDate && new Date(media.startDate).getFullYear()}
-                </Text>
-              </Text>
 
+              </Text>
+              <Text style={{ color: 'white', fontSize: 12, opacity: 0.6 }}>
+                {media.startDate && new Date(media.startDate).getFullYear()}
+              </Text>
               {media.popularityRank &&
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
                   <IconAwe
                     name="heart"
                     style={{ fontSize: 11, color: '#e74c3c', marginRight: 5 }}
@@ -419,13 +422,14 @@ class MediaScreen extends Component {
                       opacity: 0.4,
                       fontFamily: 'OpenSans',
                       fontSize: 12,
+                      height: 17
                     }}
                   >
                     Rank #{media.popularityRank} (Most Popular)
                   </Text>
                 </View>}
               {media.ratingRank &&
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center',marginTop: 4 }}>
                   <IconAwe name="star" style={{ fontSize: 11, color: '#f39c12', marginRight: 5 }} />
                   <Text
                     style={{
@@ -460,16 +464,19 @@ class MediaScreen extends Component {
                 <Button
                   style={{
                     height: 20,
-                    borderColor: colors.white,
+                    borderColor: 'rgba(255,255,255,0.5)',
                     backgroundColor: colors.transparent,
                     marginRight: 5,
                     marginBottom: 5,
+                    borderRadius: 3,
+                    paddingTop: 3,
+                    paddingBottom: 3
                   }}
                   bordered
                   key={item.id}
                   light
                 >
-                  <Text style={{color: colors.white, fontSize: 12, fontFamily: 'OpenSans', fontWeight: '600'}}>{item.title}</Text>
+                  <Text style={{color: 'white', fontSize: 9, fontFamily: 'OpenSans', fontWeight: '600', height: 13, paddingTop: 0, paddingBottom: 0 }}>{item.title}</Text>
                 </Button>
               ))}
           </View>
@@ -481,9 +488,9 @@ class MediaScreen extends Component {
             {!this.state.expanded &&
               <LinearGradient
                 colors={['rgba(66.3,51,66.3, 0)', 'rgba(66.3,51,66.3, 1)']}
-                locations={[0.4, 1]}
+                locations={[0, 1]}
                 onPress={() => this.expand()}
-                style={{ height: 30, width, position: 'absolute', bottom: 0, zIndex: 1 }}
+                style={{ height: 30, width, position: 'absolute', bottom: 0, zIndex: 1, opacity: 0.95 }}
               />}
             <Text
               onPress={() => this.expand()}
@@ -568,7 +575,7 @@ class MediaScreen extends Component {
               transparent
               onPress={() => navigation.goBack()}
             >
-              <IconAwe style={{ color: 'white', fontSize: 18 }} name="ellipsis-h" />
+              <Text style={{ color: 'white', fontSize: 10, fontFamily: 'OpenSans', fontWeight: '600' }}>ooo</Text>
             </Button>
           }
         />

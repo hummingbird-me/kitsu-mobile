@@ -100,7 +100,7 @@ class TopsList extends Component {
             alignItems: 'center',
             marginBottom: 15.72,
             height: 17,
-            marginTop: 28.68,
+            marginTop: type === 'topAiring' ? 13 : 28.68,
           }}
         >
           <Text
