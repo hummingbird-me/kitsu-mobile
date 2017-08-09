@@ -585,7 +585,7 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-        <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
+        <View style={{ width: Dimensions.get('window').width, marginTop: 65}}>
           <FlatList
             data={mediaFeed}
             ListHeaderComponent={() => this.renderHeader()}
@@ -595,6 +595,7 @@ class MediaScreen extends Component {
             onRefresh={() => this.refresh(media.id, media.type)}
             onEndReached={() => this.loadMore(media.id, media.type)}
             onEndReachedThreshold={0.5}
+
           />
         </View>
       </Container>
@@ -625,6 +626,7 @@ const styles = {
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.listBackPurple,
   },
 };
 
