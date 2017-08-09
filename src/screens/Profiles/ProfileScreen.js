@@ -102,7 +102,7 @@ class ProfileScreen extends Component {
       });
     }
     return (
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         {data.map((item, index) => (
           <View key={index} style={{ flex: 1, paddingRight: index === data.length - 1 ? 0 : 5 }}>
             <ProgressiveImage
@@ -121,6 +121,7 @@ class ProfileScreen extends Component {
                   paddingTop: 3,
                   fontFamily: 'OpenSans',
                   textAlign: 'center',
+                  fontWeight: '600',
                 }}
               >
                 {item.caption}
@@ -227,16 +228,17 @@ class ProfileScreen extends Component {
                 name={item.icon}
                 style={{
                   fontSize: 11,
-                  paddingRight: 10,
+                  paddingRight: 15.36,
                   paddingLeft: 5,
                   alignItems: 'center',
-                  color: '#898989',
+                  color: colors.white,
+
                 }}
               />
             </View>
             <Text
               style={{
-                color: '#3A3A3A',
+                color: colors.white,
                 fontFamily: 'Open Sans',
                 fontSize: 11,
               }}
@@ -292,17 +294,17 @@ class ProfileScreen extends Component {
 
     const { userId } = this.state;
     return (
-      <View>
+      <View style={{ backgroundColor: colors.listBackPurple }}>
         <View
           style={{
-            backgroundColor: colors.listBackPurple,
+            backgroundColor: colors.transparent,
             marginTop: 80,
             margin: 10,
             marginBottom: 0,
             borderRadius: 5,
           }}
         >
-          <Card leftText="Library" rightText="Reactions">
+          <View style={{ backgroundColor: colors.transparent, borderWidth: 0 }}>
             <View style={{ marginTop: -50 }}>
               <ProgressiveImage
                 source={{ uri: profile.avatar && profile.avatar.medium }}
@@ -323,14 +325,15 @@ class ProfileScreen extends Component {
                 borderBottomWidth: 1,
                 borderColor: '#EEEEEE',
                 alignItems: 'center',
+                backgroundColor: colors.transparent,
               }}
             >
-              <Text style={{ color: '#525252', fontFamily: 'OpenSans', fontSize: 12 }}>
+              <Text style={{ color: colors.white, fontFamily: 'OpenSans', fontSize: 12 }}>
                 {profile.about}
               </Text>
             </View>
             {this.renderInfoBlock()}
-          </Card>
+          </View>
           <CardStatus
             leftText="Write Post"
             rightText="Share Photo"
@@ -339,7 +342,7 @@ class ProfileScreen extends Component {
           />
         </View>
         <View style={{ backgroundColor: '#F7F7F7', borderRadius: 5 }}>
-          <CardFull single singleText="View Library" heading="Recent Activity">
+          <CardFull single singleText="View Library" heading="Library Activity">
             {this.renderScrollableLibrary(entries.slice(0, 12), 110, true, 'entries')}
           </CardFull>
           <CardFull
@@ -529,6 +532,7 @@ class ProfileScreen extends Component {
         />
         <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
           <FlatList
+            style={{ backgroundColor: colors.listBackPurple }}
             data={this.props.userFeed}
             ListHeaderComponent={() => this.renderHeader()}
             keyExtractor={item => item.id}
