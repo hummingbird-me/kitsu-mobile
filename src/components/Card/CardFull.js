@@ -98,6 +98,8 @@ const styles = {
     justifyContent: 'center',
     borderColor: '#EEEEEE',
     alignItems: 'center',
+    marginRight: 12,
+    marginLeft: 12,
   },
   headerText: {
     fontSize: 12,

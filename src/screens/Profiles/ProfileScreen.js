@@ -231,7 +231,7 @@ class ProfileScreen extends Component {
                   paddingRight: 15.36,
                   paddingLeft: 5,
                   alignItems: 'center',
-                  color: colors.white,
+                  color: "#ffffff",
                   opacity: 0.16,
                 }}
               />

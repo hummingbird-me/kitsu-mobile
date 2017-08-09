@@ -23,13 +23,12 @@ const CustomHeader = ({
         backgroundColor: '#16A085',
         justifyContent: 'center',
         marginRight: 10,
+        borderRadius: 3,
         zIndex: 100,
       }}
-      small
-      success
       onPress={() => navigation.goBack()}
     >
-      <Text style={{ color: 'white', fontSize: 10 }}>Follow</Text>
+      <Text style={{ color: 'white', fontSize: 10, fontFamily: "OpenSans", fontWeight: "600" }}>Follow</Text>
     </Button>
   );
   const leftBtn = (
