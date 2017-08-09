@@ -32,6 +32,7 @@ class SearchScreen extends Component {
       active: 'anime',
       query: '',
       index: 0,
+      searchVisible: true,
     };
 
     this.segmentChange = this.segmentChange.bind(this);
@@ -73,9 +74,25 @@ class SearchScreen extends Component {
 
   handleSearchQuery(query) {
     this.setState({ query });
+    if(query.length >0 ) {
+      this.setState({ searchVisible: false });
+    }
+    else {
+      this.setState({ searchVisible: true });
+    }
     this.search(query, this.state.active);
   }
-
+  showSearchIcon = function(options) {
+    // if(this.searchVisible)
+    // {
+     return {
+       color: '#9D9D9D', fontSize: 17, alignItems: 'center', marginTop: 5,
+     };
+  //  }
+  //  else {
+  //    return {color: '#ffffff'};
+  //  }
+ }
   renderSearchBar(active) {
     const { query } = this.state;
 
@@ -94,7 +111,7 @@ class SearchScreen extends Component {
       >
         <Icon
           name="ios-search"
-          style={{ color: '#9D9D9D', fontSize: 17, alignItems: 'center', marginTop: 5 }}
+          style={this.showSearchIcon()}
         />
         <Input
           placeholder={`Search ${active}`}
@@ -106,7 +123,6 @@ class SearchScreen extends Component {
             color: colors.placeholderGrey,
             alignSelf: 'center',
             textAlign: 'center',
-
           }}
           placeholderTextColor={colors.placeholderGrey}
         />
@@ -118,10 +134,10 @@ class SearchScreen extends Component {
     const { query, selected } = this.state;
     const { resultsanime, resultsmanga, loading } = this.props;
     return (
-      <Container style={{ backgroundColor: '#FAFAFA' }}>
+      <Container style={{ backgroundColor: colors.listBackPurple }}>
 
         <ScrollableTabView
-          renderTabBar={() => <SegmentTabBar style={{ marginRight: 28, marginLeft: 28 }}/>}
+          renderTabBar={() => <SegmentTabBar />}
           prerenderingSiblingsNumber={1}
           onChangeTab={(e) => {
             this.setState({ selected: e.i, active: e.ref.props.id });

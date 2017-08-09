@@ -72,6 +72,8 @@ const SegmentTabBar = React.createClass({
             shadowColor: 'black',
             shadowOpacity: 0.1,
             shadowRadius: StyleSheet.hairlineWidth,
+            marginRight: 28,
+            marginLeft: 28,
           }}
         >
           {this.props.tabs.map((tab, i) => (
