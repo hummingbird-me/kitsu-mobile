@@ -49,10 +49,10 @@ class TopsList extends Component {
             style={{
               height: 35,
               flexDirection: 'row',
-              paddingLeft: 10,
-              paddingRight: 10,
-              borderTopWidth: 0,
-              borderBottomWidth: StyleSheet.hairlineWidth,
+              paddingLeft: 17,
+              paddingRight: 17,
+              borderTopWidth: StyleSheet.hairlineWidth,
+              borderBottomWidth: 0,
               borderColor: colors.listSeparatorColor,
             }}
             onPress={() => this.props.navigation.navigate('SearchCategory', { ...item, active })}
@@ -189,7 +189,7 @@ class TopsList extends Component {
         )}
         {this.renderGallery(data.highest, `Highest Rated ${_.upperFirst(active)}`, 'highest')}
         {this.renderGallery(data.popular, `Most Popular ${_.upperFirst(active)}`, 'popular')}
-        <View style={{ padding: 10, marginTop: 17 }}>
+        <View style={{ paddingLeft: 16, paddingRight: 16, marginTop: 31.68, marginBottom: 10.5 }}>
           <Text
             style={{
               color: colors.categoryTextColor,
