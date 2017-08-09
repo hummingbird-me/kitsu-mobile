@@ -156,7 +156,7 @@ class MediaScreen extends Component {
                 type: item.type,
               })}
           >
-            <ProgressiveImage source={{ uri: item.image }} style={{ height, width }} />
+            <ProgressiveImage source={{ uri: item.image }} style={{ height, width, borderRadius: 1 }} />
             {hasCaption &&
               <LinearGradient
                 colors={['transparent', 'rgba(0,0,0,0.5)']}
@@ -481,7 +481,7 @@ class MediaScreen extends Component {
               ))}
           </View>
           <Animatable.View
-            style={{ padding: 15, paddingTop: 0, height: 70, overflow: 'hidden', zIndex: 2 }}
+            style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 0, height: 70.67, overflow: 'hidden', zIndex: 2 }}
             onPress={() => this.expand()}
             ref={el => (this.view = el)}
           >
@@ -490,11 +490,11 @@ class MediaScreen extends Component {
                 colors={['rgba(66.3,51,66.3, 0)', 'rgba(66.3,51,66.3, 1)']}
                 locations={[0, 1]}
                 onPress={() => this.expand()}
-                style={{ height: 30, width, position: 'absolute', bottom: 0, zIndex: 1, opacity: 0.95 }}
+                style={{ height: 34, width, position: 'absolute', bottom: 0, zIndex: 1, opacity: 0.95 }}
               />}
             <Text
               onPress={() => this.expand()}
-              style={{ fontSize: 11, color: 'white', lineHeight: 15, fontFamily: 'OpenSans' }}
+              style={{ fontSize: 12, color: 'white', lineHeight: 17, fontFamily: 'OpenSans' }}
             >
               {media && media.synopsis}
             </Text>

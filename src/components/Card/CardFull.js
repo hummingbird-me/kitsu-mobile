@@ -43,9 +43,9 @@ const renderFooter = (props) => {
 };
 const CardFull = props => (
   <View style={{ ...styles.container, ...props.style }}>
-    <View style={{ padding: 12 }}>
+    <View style={{ paddingTop: 10, paddingLeft: 16, paddingBottom: 12, paddingRight: 16 }}>
       <View><Text style={styles.headerText}>{props.heading}</Text></View>
-      <View style={{ paddingTop: 10 }}>
+      <View style={{ paddingTop: 9 }}>
         {props.children}
       </View>
     </View>

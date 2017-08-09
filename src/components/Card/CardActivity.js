@@ -48,7 +48,7 @@ class CardActivity extends PureComponent {
                 source={{ uri: subject.media ? subject.media.posterImage.small : '' }}
                 style={{ height: 120, width: 80, position: 'absolute' }}
               />}
-            <Text style={{ marginLeft: 90 }}>
+            <Text style={styles.activityText}>
               {item.actor.name}
               {' '}
               {subject.status === 'planned'
@@ -98,7 +98,7 @@ class CardActivity extends PureComponent {
               style={{ height: 120, width: 80 }}
             />
             <View style={{ flex: 1, alignSelf: 'center' }}>
-              <Text style={{ alignSelf: 'center', fontFamily: "OpenSans", fontSize: 12 }}>{item.subject.reaction}</Text>
+              <Text style={{ alignSelf: 'center', fontFamily: 'OpenSans', fontSize: 12 }}>{item.subject.reaction}</Text>
 
             </View>
           </View>
@@ -250,6 +250,13 @@ const styles = {
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#EEEEEE',
   },
+  activityText: {
+    marginLeft: 90,
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    color: 'darkGrey',
+    lineHeight: 17,
+  }
 };
 
 export default CardActivity;
