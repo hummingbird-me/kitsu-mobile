@@ -83,11 +83,13 @@ class SearchScreen extends Component {
       <Item
         style={{
           height: 36,
-          backgroundColor: '#FAFAFA',
+          backgroundColor: colors.white,
           paddingLeft: 14,
           paddingRight: 14,
           borderColor: colors.imageGrey,
           borderBottomWidth: StyleSheet.hairlineWidth,
+          marginLeft: 9,
+          marginRight: 9,
         }}
       >
         <Icon
@@ -104,6 +106,7 @@ class SearchScreen extends Component {
             color: colors.placeholderGrey,
             alignSelf: 'center',
             textAlign: 'center',
+
           }}
           placeholderTextColor={colors.placeholderGrey}
         />
@@ -116,15 +119,16 @@ class SearchScreen extends Component {
     const { resultsanime, resultsmanga, loading } = this.props;
     return (
       <Container style={{ backgroundColor: '#FAFAFA' }}>
+
         <ScrollableTabView
-          renderTabBar={() => <SegmentTabBar />}
+          renderTabBar={() => <SegmentTabBar style={{ marginRight: 28, marginLeft: 28 }}/>}
           prerenderingSiblingsNumber={1}
           onChangeTab={(e) => {
             this.setState({ selected: e.i, active: e.ref.props.id });
             this.search(this.state.query, e.ref.props.id);
           }}
         >
-          <ScrollView key="Anime" tabLabel="Anime" id="anime">
+          <ScrollView key="Anime" tabLabel="Anime" id="anime" style={styles.scrollView}>
             {this.renderSearchBar('anime')}
             {query.length === 0
               ? <TopsList
@@ -139,7 +143,7 @@ class SearchScreen extends Component {
                 refresh={this.refresh}
               />}
           </ScrollView>
-          <ScrollView key="Manga" tabLabel="Manga" id="manga">
+          <ScrollView key="Manga" tabLabel="Manga" id="manga" style={styles.scrollView}>
             {this.renderSearchBar('manga')}
             {query.length === 0
               ? <TopsList
@@ -154,7 +158,7 @@ class SearchScreen extends Component {
                 refresh={this.refresh}
               />}
           </ScrollView>
-          <ScrollView key="Users" tabLabel="Users">
+          <ScrollView key="Users" tabLabel="Users" style={styles.scrollView}>
             {this.renderSearchBar('users')}
             <UsersList />
           </ScrollView>
@@ -189,6 +193,11 @@ const mapStateToProps = ({ anime }) => {
   return { resultsanime: animeR, resultsmanga: mangaR, loading: resultsLoading };
 };
 
+const styles = {
+  scrollView: {
+    backgroundColor: colors.listBackPurple,
+  },
+};
 SearchScreen.propTypes = {
   resultsanime: PropTypes.array.isRequired,
   resultsmanga: PropTypes.array.isRequired,
