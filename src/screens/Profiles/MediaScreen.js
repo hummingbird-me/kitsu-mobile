@@ -83,9 +83,9 @@ class MediaScreen extends Component {
   expand() {
     if (this.view) {
       if (this.state.expanded) {
-        this.view.transition({ height: 200 }, { height: 70 }, 100, 'ease-in');
+        this.view.transition({ height: 200 }, { height: 70.67 }, 100, 'ease-in');
       } else {
-        this.view.transition({ height: 70 }, { height: 200 }, 100, 'ease-in');
+        this.view.transition({ height: 70.67 }, { height: 200 }, 100, 'ease-in');
       }
       this.setState({ expanded: !this.state.expanded });
     }
@@ -346,6 +346,14 @@ class MediaScreen extends Component {
     );
   }
 
+  setTextHeightStyle = function() {
+    if(this.state.expanded){
+      return { paddingLeft: 14, paddingRight: 14, paddingTop: 0, flex: 1, paddingBottom: 14, overflow: 'hidden', zIndex: 2 };
+    }
+    else {
+      return { paddingLeft: 14, paddingRight: 14, paddingTop: 0, height: 70.67, overflow: 'hidden', zIndex: 2 };
+    }
+  }
   renderHeader() {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
     console.log(reactions);
@@ -407,7 +415,7 @@ class MediaScreen extends Component {
                 {(media.titles && media.titles[getTitleField()]) || media.canonicalTitle}
 
               </Text>
-              <Text style={{ color: 'white', fontSize: 12, opacity: 0.6 }}>
+              <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>
                 {media.startDate && new Date(media.startDate).getFullYear()}
               </Text>
               {media.popularityRank &&
@@ -418,8 +426,7 @@ class MediaScreen extends Component {
                   />
                   <Text
                     style={{
-                      color: 'white',
-                      opacity: 0.4,
+                      color: 'rgba(255,255,255,0.4)',
                       fontFamily: 'OpenSans',
                       fontSize: 12,
                       height: 17
@@ -433,10 +440,9 @@ class MediaScreen extends Component {
                   <IconAwe name="star" style={{ fontSize: 11, color: '#f39c12', marginRight: 5 }} />
                   <Text
                     style={{
-                      color: colors.white,
+                      color: 'rgba(255,255,255,0.4)',
                       fontFamily: 'OpenSans',
                       fontSize: 12,
-                      opacity: 0.4,
                     }}
                   >
                     Rank #{media.ratingRank} (Highest Rated Anime)
@@ -481,7 +487,7 @@ class MediaScreen extends Component {
               ))}
           </View>
           <Animatable.View
-            style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 0, height: 70.67, overflow: 'hidden', zIndex: 2 }}
+            style={this.setTextHeightStyle()}
             onPress={() => this.expand()}
             ref={el => (this.view = el)}
           >
