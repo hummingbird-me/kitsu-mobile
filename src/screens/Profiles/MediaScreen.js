@@ -429,10 +429,10 @@ class MediaScreen extends Component {
                   <IconAwe name="star" style={{ fontSize: 11, color: '#f39c12', marginRight: 5 }} />
                   <Text
                     style={{
-                      color: '#464646',
-                      fontWeight: '500',
+                      color: colors.white,
                       fontFamily: 'OpenSans',
                       fontSize: 12,
+                      opacity: 0.4,
                     }}
                   >
                     Rank #{media.ratingRank} (Highest Rated Anime)

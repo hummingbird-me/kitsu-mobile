@@ -107,6 +107,7 @@ class SearchScreen extends Component {
           borderBottomWidth: StyleSheet.hairlineWidth,
           marginLeft: 9,
           marginRight: 9,
+          borderRadius: 2,
         }}
       >
         <Icon
