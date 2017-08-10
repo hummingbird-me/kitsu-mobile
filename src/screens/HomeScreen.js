@@ -11,7 +11,8 @@ class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
     tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
+      // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
+      <Image source={require('../assets/img/tabbar_icons/feed.png')} style={{ tintColor: tintColor, width: 20, height: 21 }} />
     ),
   };
   componentWillMount() {

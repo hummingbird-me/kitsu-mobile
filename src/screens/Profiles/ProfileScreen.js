@@ -515,14 +515,11 @@ class ProfileScreen extends Component {
           contentBackgroundColor='#423342'
           parallaxHeaderHeight={210}
           data={this.props.userFeed}
-
-keyExtractor={item => item.id}
-
-refreshing={loadingUserFeed}
-onRefresh={() => this.refresh(media.id, media.type)}
-onEndReached={() => this.loadMore(media.id, media.type)}
-onEndReachedThreshold={0.5}
-
+          keyExtractor={item => item.id}
+          refreshing={loadingUserFeed}
+          onRefresh={() => this.refresh(media.id, media.type)}
+          onEndReached={() => this.loadMore(media.id, media.type)}
+          onEndReachedThreshold={0.5}
           renderBackground={() => (
             <ProgressiveImage
               style={{

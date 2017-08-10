@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Icon, Text, Item, Input } from 'native-base';
+import { Container, Icon, Text, Item, Input, Image } from 'native-base';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import _ from 'lodash';
@@ -22,6 +22,7 @@ class SearchScreen extends Component {
     },
     tabBarIcon: ({ tintColor }) => (
       <Icon ios="ios-search" android="md-search" style={{ fontSize: 24, color: tintColor }} />
+      //<Image source={require('../../assets/img/tabbar_icons/search.png')} style={{ tintColor: tintColor, width: 20, height: 20.44 }} />
     ),
   };
 
@@ -215,6 +216,7 @@ const styles = {
     backgroundColor: colors.listBackPurple,
   },
 };
+
 SearchScreen.propTypes = {
   resultsanime: PropTypes.array.isRequired,
   resultsmanga: PropTypes.array.isRequired,
