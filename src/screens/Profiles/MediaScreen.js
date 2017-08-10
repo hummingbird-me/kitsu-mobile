@@ -28,6 +28,7 @@ import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from '../../store
 import { getMediaFeed } from '../../store/feed/actions';
 import * as colors from '../../constants/colors';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import { defaultCover } from '../../constants/app';
 const { width } = Dimensions.get('window');
 
 class MediaScreen extends Component {
@@ -566,11 +567,6 @@ class MediaScreen extends Component {
     console.log(mediaFeed);
     return (
       <Container style={styles.container}>
-      <ParallaxScrollView
-      backgroundColor="blue"
-      contentBackgroundColor="pink"
-      parallaxHeaderHeight={300}
-      renderForeground={() => (
         <CustomHeader
           navigation={navigation}
           hasOverlay
@@ -591,22 +587,19 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-      )}>
+        <View style={{ width: Dimensions.get('window').width, marginTop: 65}}>
+          <FlatList
+            data={mediaFeed}
+            ListHeaderComponent={() => this.renderHeader()}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => <CardActivity {...item} />}
+            refreshing={loadingMediaFeed}
+            onRefresh={() => this.refresh(media.id, media.type)}
+            onEndReached={() => this.loadMore(media.id, media.type)}
+            onEndReachedThreshold={0.5}
 
-          <View style={{ width: Dimensions.get('window').width, marginTop: 65}}>
-            <FlatList
-              data={mediaFeed}
-              ListHeaderComponent={() => this.renderHeader()}
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => <CardActivity {...item} />}
-              refreshing={loadingMediaFeed}
-              onRefresh={() => this.refresh(media.id, media.type)}
-              onEndReached={() => this.loadMore(media.id, media.type)}
-              onEndReachedThreshold={0.5}
-
-            />
-          </View>
-        </ParallaxScrollView>
+          />
+        </View>
       </Container>
     );
   }

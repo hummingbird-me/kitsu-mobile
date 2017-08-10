@@ -27,7 +27,7 @@ import * as colors from '../../constants/colors';
 import { defaultAvatar } from '../../constants/app';
 import ResultsList from '../../screens/Search/Lists/ResultsList';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-
+import { defaultCover } from '../../constants/app';
 import {
   fetchProfile,
   fetchProfileFavorites,
@@ -506,31 +506,21 @@ class ProfileScreen extends Component {
     return (
       <Container style={styles.container}>
         <ParallaxScrollView
-        backgroundColor="blue"
-        contentBackgroundColor="pink"
-        parallaxHeaderHeight={300}
-        renderForeground={() => (
-          <CustomHeader
-            navigation={navigation}
-            headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
-            leftText={profile.name}
-          />
-        )}>
-
-          <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
-            <FlatList
-              style={{ backgroundColor: colors.listBackPurple }}
-              data={this.props.userFeed}
-              ListHeaderComponent={() => this.renderHeader()}
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => <CardActivity {...item} />}
-              refreshing={loadingUserFeed}
-              onRefresh={() => this.refresh(profile.id)}
-              onEndReached={() => this.loadMore(profile.id)}
-              onEndReachedThreshold={0.5}
+          backgroundColor='colors.listBackPurple'
+          contentBackgroundColor='colors.listBackPurple'
+          parallaxHeaderHeight={210}
+          renderForeground={() => (
+            <ProgressiveImage
+              style={{
+                width: Dimensions.get('window').width,
+                height: 210,
+              }}
+              resizeMode="cover"
+              source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
             />
-          </View>
-        </ParallaxScrollView>
+          )}>
+          {this.renderHeader()}
+          </ParallaxScrollView>
       </Container>
     );
   }
