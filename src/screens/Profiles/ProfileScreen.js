@@ -505,11 +505,16 @@ class ProfileScreen extends Component {
 
     return (
       <Container style={styles.container}>
+        <CustomHeader
+        navigation={navigation}
+        headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
+        leftText={profile.name}
+        />
         <ParallaxScrollView
-          backgroundColor='colors.listBackPurple'
-          contentBackgroundColor='colors.listBackPurple'
+          backgroundColor='#423342'
+          contentBackgroundColor='#423342'
           parallaxHeaderHeight={210}
-          renderForeground={() => (
+          renderBackground={() => (
             <ProgressiveImage
               style={{
                 width: Dimensions.get('window').width,
@@ -518,7 +523,8 @@ class ProfileScreen extends Component {
               resizeMode="cover"
               source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
             />
-          )}>
+          )}
+        >
           {this.renderHeader()}
           </ParallaxScrollView>
       </Container>
