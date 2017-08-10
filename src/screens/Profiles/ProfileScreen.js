@@ -102,47 +102,18 @@ class ProfileScreen extends Component {
       });
     }
     return (
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 }}>
         {data.map((item, index) => (
-          <View key={index} style={{ flex: 1, paddingRight: index === data.length - 1 ? 0 : 5 }}>
+          <View key={index} style={{ flex: 1, paddingRight: index === data.length - 1 ? 0 : 3 }}>
             <ProgressiveImage
               source={{ uri: item.image }}
               containerStyle={{
                 height,
                 backgroundColor: colors.imageGrey,
               }}
-              style={{ height }}
-              hasOverlay={type === 'characters'}
+              style={{ height, borderRadius: 1 }}
             />
-            {hasCaption &&
-              <Text
-                style={{
-                  fontSize: 9,
-                  paddingTop: 3,
-                  fontFamily: 'OpenSans',
-                  textAlign: 'center',
-                  fontWeight: '600',
-                }}
-              >
-                {item.caption}
-              </Text>}
-            {hasCaption &&
-              type === 'characters' &&
-              <Text
-                style={{
-                  color: 'white',
-                  zIndex: 100,
-                  fontWeight: '500',
-                  fontSize: 12,
-                  fontFamily: 'OpenSans',
-                  backgroundColor: 'transparent',
-                  alignSelf: 'center',
-                  marginTop: -40,
-                  marginBottom: 8,
-                }}
-              >
-                {item.name}
-              </Text>}
+
           </View>
         ))}
       </View>
@@ -177,20 +148,22 @@ class ProfileScreen extends Component {
         {data.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={{ margin: 2 }}
+            style={{ marginRight: 6, marginTop: 2 }}
             onPress={() =>
               this.props.navigation.navigate('Media', {
                 mediaId: item.media.id,
                 type: item.media.type,
               })}
           >
-            <ProgressiveImage source={{ uri: item.image }} style={{ height: 118, width: 83 }} />
+            <ProgressiveImage source={{ uri: item.image }} style={{ height: 113.54, width: 81.73, borderRadius: 1 }} />
             <Text
               style={{
                 fontSize: 9,
-                paddingTop: 3,
+                paddingTop: 2,
                 fontFamily: 'OpenSans',
                 textAlign: 'center',
+                fontWeight: '600',
+                lineHeight: 13,
               }}
             >
               {item.caption}
@@ -363,13 +336,13 @@ class ProfileScreen extends Component {
           >
             {this.renderImageRow(
               characters.slice(0, 2),
-              (Dimensions.get('window').width - 24) / 2,
+              (Dimensions.get('window').width - 28) / 2,
               true,
               'characters',
             )}
             {this.renderImageRow(
               characters.slice(2, 5),
-              (Dimensions.get('window').width - 24) / 2,
+              (Dimensions.get('window').width - 28) / 3,
               true,
               'characters',
             )}
@@ -400,13 +373,13 @@ class ProfileScreen extends Component {
           >
             {anime.length > 0
               ? <Grid tabLabel="Favorite Anime">
-                <Col size={45}>
+                <Col size={50}>
                   <ResultsList
                     dataArray={this.getDataForList(anime)}
                     numColumns={1}
                     imageSize={{
-                      h: 250,
-                      w: Dimensions.get('window').width * 0.5,
+                      h: 234.78,
+                      w: (Dimensions.get('window').width - 28)  * 0.5,
                     }}
                     scrollEnabled={false}
                     onPress={media =>
@@ -416,14 +389,14 @@ class ProfileScreen extends Component {
                         })}
                   />
                 </Col>
-                <Col size={55}>
+                <Col size={50}>
                   <View style={{ marginTop: -2, marginLeft: 4 }}>
                     <ResultsList
                       dataArray={this.getDataForList(anime, 1, 4)}
                       numColumns={2}
                       imageSize={{
-                        h: 127,
-                        w: Dimensions.get('window').width / 3,
+                        h: 115.51,
+                        w: Dimensions.get('window').width / 4,
                         m: 2,
                       }}
                       scrollEnabled={false}

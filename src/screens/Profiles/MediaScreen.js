@@ -119,14 +119,14 @@ class MediaScreen extends Component {
         {data.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={{ margin: 2 }}
+            style={{ marginRight: 6, marginTop: 2 }}
             onPress={media =>
               this.props.navigation.navigate('Media', {
                 mediaId: item.media.id,
                 type: item.media.type,
               })}
           >
-            <ProgressiveImage source={{ uri: item.image }} style={{ height: 118, width: 83, borderRadius: 1 }} />
+            <ProgressiveImage source={{ uri: item.image }} style={{ height: 113.54, width: 81.73, borderRadius: 1 }} />
             <Text
               style={{
                 fontSize: 9,

@@ -65,7 +65,7 @@ const styles = {
     fontFamily: "OpenSans",
     fontSize: 12,
     color: "#646464",
-    fontWeight: 600,
+    fontWeight: '600',
   },
   postButton: {
     height: 35,
