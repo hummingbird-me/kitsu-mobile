@@ -26,6 +26,7 @@ import ProgressiveImage from '../../components/ProgressiveImage';
 import * as colors from '../../constants/colors';
 import { defaultAvatar } from '../../constants/app';
 import ResultsList from '../../screens/Search/Lists/ResultsList';
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
 import {
   fetchProfile,
@@ -390,12 +391,12 @@ class ProfileScreen extends Component {
                   />
                 </Col>
                 <Col size={50}>
-                  <View style={{ marginTop: -2, marginLeft: 4 }}>
+                  <View style={{ marginLeft: 2 }}>
                     <ResultsList
                       dataArray={this.getDataForList(anime, 1, 4)}
                       numColumns={2}
                       imageSize={{
-                        h: 115.51,
+                        h: 117.39,
                         w: Dimensions.get('window').width / 4,
                         m: 2,
                       }}
@@ -504,24 +505,32 @@ class ProfileScreen extends Component {
 
     return (
       <Container style={styles.container}>
-        <CustomHeader
-          navigation={navigation}
-          headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
-          leftText={profile.name}
-        />
-        <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
-          <FlatList
-            style={{ backgroundColor: colors.listBackPurple }}
-            data={this.props.userFeed}
-            ListHeaderComponent={() => this.renderHeader()}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => <CardActivity {...item} />}
-            refreshing={loadingUserFeed}
-            onRefresh={() => this.refresh(profile.id)}
-            onEndReached={() => this.loadMore(profile.id)}
-            onEndReachedThreshold={0.5}
+        <ParallaxScrollView
+        backgroundColor="blue"
+        contentBackgroundColor="pink"
+        parallaxHeaderHeight={300}
+        renderForeground={() => (
+          <CustomHeader
+            navigation={navigation}
+            headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
+            leftText={profile.name}
           />
-        </View>
+        )}>
+
+          <View style={{ width: Dimensions.get('window').width, marginTop: 65 }}>
+            <FlatList
+              style={{ backgroundColor: colors.listBackPurple }}
+              data={this.props.userFeed}
+              ListHeaderComponent={() => this.renderHeader()}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <CardActivity {...item} />}
+              refreshing={loadingUserFeed}
+              onRefresh={() => this.refresh(profile.id)}
+              onEndReached={() => this.loadMore(profile.id)}
+              onEndReachedThreshold={0.5}
+            />
+          </View>
+        </ParallaxScrollView>
       </Container>
     );
   }

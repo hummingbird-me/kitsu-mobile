@@ -4463,6 +4463,10 @@ react-native-optimized-flatlist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-optimized-flatlist/-/react-native-optimized-flatlist-1.0.1.tgz#dbee82f208b48bef23c6cb26f1d5f3ac58e675b2"
 
+react-native-parallax-scroll-view@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/react-native-parallax-scroll-view/-/react-native-parallax-scroll-view-0.19.0.tgz#23b9af1f13249a610f4641e2582a58997df7d80a"
+
 react-native-progress-bar@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/react-native-progress-bar/-/react-native-progress-bar-0.1.2.tgz#2fbe32ed49d15e2a57a2b9d29b6d588a4fa1554e"
