@@ -9,15 +9,15 @@ const Card = props => (
       {props.children}
     </View>
     <View style={styles.footer}>
-      <Left style={{ height: 35, borderRadius: 15 }}>
-        <Button style={{ height: 35, borderRadius: 15 }} transparent block>
-          <Text style={{ fontFamily: "OpenSans", fontSize: 12, color: "#646464"}}>{props.leftText}</Text>
+      <Left>
+        <Button style={ styles.postButton } transparent block>
+          <Text style={ styles.postButtonText }>{props.leftText}</Text>
         </Button>
       </Left>
       <View style={styles.footerDivider} />
-      <Right style={{ height: 35, borderRadius: 15 }}>
-        <Button style={{ height: 35, borderRadius: 15 }} transparent rounded block>
-          <Text style={{ fontFamily: "OpenSans", fontSize: 12, color: "#646464"}}>{props.rightText}</Text>
+      <Right>
+        <Button style={ styles.postButton } transparent rounded block>
+          <Text style={ styles.postButtonText }>{props.rightText}</Text>
         </Button>
       </Right>
     </View>
@@ -60,6 +60,16 @@ const styles = {
     height: '60%',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#EEEEEE',
+  },
+  postButtonText: {
+    fontFamily: "OpenSans",
+    fontSize: 12,
+    color: "#646464",
+    fontWeight: 600,
+  },
+  postButton: {
+    height: 35,
+    borderRadius: 15,
   },
 };
 

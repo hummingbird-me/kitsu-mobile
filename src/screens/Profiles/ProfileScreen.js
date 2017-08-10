@@ -220,7 +220,7 @@ class ProfileScreen extends Component {
               flexDirection: 'row',
               alignItems: 'center',
               padding: 2,
-              paddingBottom: 20,
+              paddingBottom: 4,
             }}
           >
             <View style={{ width: 25, alignItems: 'center' }}>
@@ -229,7 +229,6 @@ class ProfileScreen extends Component {
                 style={{
                   fontSize: 11,
                   paddingRight: 15.36,
-                  paddingLeft: 5,
                   alignItems: 'center',
                   color: 'rgba(255,255,255,0.16)',
                 }}
@@ -299,12 +298,12 @@ class ProfileScreen extends Component {
             backgroundColor: colors.transparent,
             marginTop: 80,
             marginLeft: 23,
-            marginRight: 23, 
+            marginRight: 23,
             marginBottom: 0,
             borderRadius: 5,
           }}
         >
-          <View style={{ backgroundColor: colors.transparent, borderWidth: 0 }}>
+          <View style={{ backgroundColor: colors.transparent, borderWidth: 0, paddingBottom: 16 }}>
             <View style={{ marginTop: -50 }}>
               <ProgressiveImage
                 source={{ uri: profile.avatar && profile.avatar.medium }}
@@ -318,22 +317,29 @@ class ProfileScreen extends Component {
             </View>
             <View
               style={{
-                paddingTop: 5,
-                marginLeft: 15,
-                marginRight: 15,
-                padding: 10,
+                paddingTop: 10,
+                padding: 5,
+                paddingBottom: 10,
                 borderBottomWidth: 1,
-                borderColor: '#EEEEEE',
+                borderColor: 'rgba(255, 255, 255, 0.16)',
                 alignItems: 'center',
                 backgroundColor: colors.transparent,
               }}
             >
-              <Text style={{ color: colors.white, fontFamily: 'OpenSans', fontSize: 12 }}>
+              <Text style={{ color: colors.white, fontFamily: 'OpenSans', fontSize: 12, lineHeight: 17 }}>
                 {profile.about}
               </Text>
             </View>
             {this.renderInfoBlock()}
           </View>
+        </View>
+        <View
+          style={{
+            marginLeft: 9,
+            marginRight: 9,
+            marginBottom: 6,
+          }}
+        >
           <CardStatus
             leftText="Write Post"
             rightText="Share Photo"
@@ -341,7 +347,7 @@ class ProfileScreen extends Component {
             toUser={profile}
           />
         </View>
-        <View style={{ backgroundColor: colors.listBackPurple, borderRadius: 5 }}>
+        <View style={{ borderRadius: 5 }}>
           <CardFull single singleText="View Library" heading="Library Activity">
             {this.renderScrollableLibrary(entries.slice(0, 12), 110, true, 'entries')}
           </CardFull>

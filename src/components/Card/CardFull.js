@@ -105,6 +105,7 @@ const styles = {
     fontSize: 12,
     color: '#333333',
     fontFamily: 'OpenSans',
+    lineHeight: 17
   },
   footerDivider: {
     width: 0,
