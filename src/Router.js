@@ -135,21 +135,22 @@ const FilterStack = StackNavigator(
 
 const Tabs = TabNavigator(
   {
-    // Home: {
-    //   screen: HomeScreen,
-    // },
-    Feed: {
+    Home: {
       screen: HomeScreen,
     },
     Search: {
       screen: SearchStack,
     },
-    // Profile: {
-    //   screen: ProfileStack,
-    // },
+    Profile: {
+      screen: ProfileStack,
+    },
+    Feed: {
+      screen: HomeScreen,
+    },
     Notif: {
       screen: NotifStack,
     },
+
   },
   {
     tabBarOptions: {
@@ -157,6 +158,7 @@ const Tabs = TabNavigator(
       showLabel: false,
       lazy: true,
       style: { height: 44 },
+      backgroundColor: colors.listBackPurple
     },
   },
 );

@@ -220,7 +220,7 @@ class ProfileScreen extends Component {
               flexDirection: 'row',
               alignItems: 'center',
               padding: 2,
-              paddingBottom: 5,
+              paddingBottom: 20,
             }}
           >
             <View style={{ width: 25, alignItems: 'center' }}>
@@ -231,15 +231,14 @@ class ProfileScreen extends Component {
                   paddingRight: 15.36,
                   paddingLeft: 5,
                   alignItems: 'center',
-                  color: "#ffffff",
-                  opacity: 0.16,
+                  color: 'rgba(255,255,255,0.16)',
                 }}
               />
             </View>
             <Text
               style={{
-                color: colors.white,
-                fontFamily: 'Open Sans',
+                color: 'white',
+                fontFamily: 'OpenSans',
                 fontSize: 11,
               }}
             >
@@ -299,7 +298,8 @@ class ProfileScreen extends Component {
           style={{
             backgroundColor: colors.transparent,
             marginTop: 80,
-            margin: 10,
+            marginLeft: 23,
+            marginRight: 23, 
             marginBottom: 0,
             borderRadius: 5,
           }}
