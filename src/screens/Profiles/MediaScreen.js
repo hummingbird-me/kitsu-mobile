@@ -568,29 +568,32 @@ class MediaScreen extends Component {
     return (
       <Container style={styles.container}>
         <ParallaxScrollView
-          backgroundColor='#423342'
-          contentBackgroundColor='#423342'
+          backgroundColor='#fff0'
+          contentBackgroundColor='#fff0'
           parallaxHeaderHeight={210}
-          data={mediaFeed}
-          ListHeaderComponent={() => this.renderHeader()}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => <CardActivity {...item} />}
-          refreshing={loadingMediaFeed}
-          onRefresh={() => this.refresh(media.id, media.type)}
-          onEndReached={() => this.loadMore(media.id, media.type)}
-          onEndReachedThreshold={0.5}
           renderBackground={() => (
             <ProgressiveImage
               style={{
                 width: Dimensions.get('window').width,
                 height: 210,
+                backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri:  media.coverImage && media.coverImage.original || defaultCover }}
+              source={{ uri: media.coverImage && media.coverImage.original || defaultCover }}
             />
           )}
         >
-          {this.renderHeader()}
+          <View style={{ width: Dimensions.get('window').width }}>
+            <FlatList
+              data={mediaFeed}
+              ListHeaderComponent={() => this.renderHeader()}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <CardActivity {...item} />}
+
+              onEndReached={() => this.loadMore(media.id, media.type)}
+              onEndReachedThreshold={0.5}
+            />
+          </View>
         </ParallaxScrollView>
         <CustomHeader
           navigation={navigation}

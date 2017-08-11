@@ -267,7 +267,7 @@ class ProfileScreen extends Component {
 
     const { userId } = this.state;
     return (
-      <View style={{ backgroundColor: colors.listBackPurple }}>
+      <View>
         <View
           style={{
             backgroundColor: colors.transparent,
@@ -507,27 +507,31 @@ class ProfileScreen extends Component {
     return (
       <Container style={styles.container}>
         <ParallaxScrollView
-          backgroundColor='#423342'
-          contentBackgroundColor='#423342'
-          parallaxHeaderHeight={210}
-          data={this.props.userFeed}
-          keyExtractor={item => item.id}
-          refreshing={loadingUserFeed}
-          onRefresh={() => this.refresh(media.id, media.type)}
-          onEndReached={() => this.loadMore(media.id, media.type)}
-          onEndReachedThreshold={0.5}
+          backgroundColor='#fff0'
+          contentBackgroundColor='#fff0'
+          parallaxHeaderHeight={154}
           renderBackground={() => (
             <ProgressiveImage
               style={{
                 width: Dimensions.get('window').width,
                 height: 210,
+                backgroundColor: '#fff0',
               }}
               resizeMode="cover"
               source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
             />
           )}
         >
-          {this.renderHeader()}
+          <View style={{ width: Dimensions.get('window').width }}>
+            <FlatList
+              style={{ backgroundColor: colors.listBackPurple }}
+              data={this.props.userFeed}
+              ListHeaderComponent={() => this.renderHeader()}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <CardActivity {...item} />}
+              onEndReached={() => this.loadMore(profile.id)}
+              onEndReachedThreshold={0.5} />
+            </View>
         </ParallaxScrollView>
         <CustomHeader
           style={styles.customHeader}
@@ -572,7 +576,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const styles = {
   container: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: colors.listBackPurple,
     justifyContent: 'center',
     alignItems: 'center',
   },
