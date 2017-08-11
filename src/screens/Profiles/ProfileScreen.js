@@ -40,6 +40,7 @@ class ProfileScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     tabBarIcon: ({ tintColor }) => (
       <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
+      //<Image source={require('../../assets/img/tabbar_icons/menu.png')} style={{ tintColor: tintColor, width: 20, height: 20.44 }} />
     ),
     header: null,
   });
