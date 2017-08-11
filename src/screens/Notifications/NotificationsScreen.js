@@ -48,7 +48,7 @@ class NotificationsScreen extends Component {
               {screenProps.badge}
             </Text>
           </View>}
-        <Icon name="bell" style={{ fontSize: 24, color: tintColor }} />
+        <Image source={require('../../assets/img/tabbar_icons/notifications.png')} style={{ tintColor: tintColor, width: 20, height: 21 }} />
       </View>
     ),
   });

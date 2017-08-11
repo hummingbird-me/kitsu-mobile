@@ -521,6 +521,28 @@ class ProfileScreen extends Component {
           onRefresh={() => this.refresh(media.id, media.type)}
           onEndReached={() => this.loadMore(media.id, media.type)}
           onEndReachedThreshold={0.5}
+          renderStickyHeader={() => (
+            <CustomHeader
+              navigation={navigation}
+              hasOverlay
+              headerImage={{
+                uri: media.coverImage && media.coverImage.original,
+              }}
+              style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
+              right={
+                <Button
+                  style={{
+                    justifyContent: 'center',
+                    zIndex: 100,
+                  }}
+                  transparent
+                  onPress={() => navigation.goBack()}
+                >
+                  <Text style={{ color: 'white', fontSize: 10, fontFamily: 'OpenSans', fontWeight: '600' }}>ooo</Text>
+                </Button>
+              }
+            />
+          )}
           renderBackground={() => (
             <ProgressiveImage
               style={{
