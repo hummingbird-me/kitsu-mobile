@@ -39,6 +39,7 @@
     "react-native-scrollable-tab-view": "^0.6.6",
     "react-native-shimmer": "^0.2.1",
     "react-native-snap-carousel": "^2.1.4",
+    "react-native-svg-uri": "^1.2.0",
     "react-native-swipeable": "^0.4.0",
     "react-native-vector-icons": "^4.1.1",
     "react-native-youtube": "^1.0.0-alpha.4",

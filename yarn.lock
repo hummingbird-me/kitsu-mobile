@@ -1280,7 +1280,7 @@ color-string@^0.3.0:
   dependencies:
     color-name "^1.0.0"
 
-color@~0.11.1:
+color@^0.11.1, color@~0.11.1:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/color/-/color-0.11.4.tgz#6d7b5c74fb65e841cd48792ad1ed5e07b904d764"
   dependencies:
@@ -4503,6 +4503,20 @@ react-native-snap-carousel@^2.1.4:
   dependencies:
     react-addons-shallow-compare "15.5.2"
 
+react-native-svg-uri@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg-uri/-/react-native-svg-uri-1.2.0.tgz#2e03023a35b044b9a65c9ddb843d5a3b2f23cb70"
+  dependencies:
+    react-native-svg "^4.3.1"
+    xmldom "^0.1.22"
+
+react-native-svg@^4.3.1:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-4.6.1.tgz#08fbc57137e8d570a73c2d35c6b89abb239cd40b"
+  dependencies:
+    color "^0.11.1"
+    lodash "^4.0.0"
+
 react-native-swipeable@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-native-swipeable/-/react-native-swipeable-0.4.0.tgz#10ca127af1d206e857eb94c6bc49207ee21fa3e7"
@@ -5843,7 +5857,7 @@ xmldoc@^0.4.0:
   dependencies:
     sax "~1.1.1"
 
-xmldom@0.1.x:
+xmldom@0.1.x, xmldom@^0.1.22:
   version "0.1.27"
   resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
 
