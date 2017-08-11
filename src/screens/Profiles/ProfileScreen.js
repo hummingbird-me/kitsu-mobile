@@ -271,7 +271,6 @@ class ProfileScreen extends Component {
         <View
           style={{
             backgroundColor: colors.transparent,
-            marginTop: 80,
             marginLeft: 23,
             marginRight: 23,
             marginBottom: 0,
@@ -279,17 +278,6 @@ class ProfileScreen extends Component {
           }}
         >
           <View style={{ backgroundColor: colors.transparent, borderWidth: 0, paddingBottom: 16 }}>
-            <View style={{ marginTop: -50 }}>
-              <ProgressiveImage
-                source={{ uri: profile.avatar && profile.avatar.medium }}
-                style={{
-                  width: 69.86,
-                  height: 69.86,
-                  alignSelf: 'center',
-                  borderRadius: 34.93,
-                }}
-              />
-            </View>
             <View
               style={{
                 paddingTop: 10,
@@ -509,17 +497,29 @@ class ProfileScreen extends Component {
         <ParallaxScrollView
           backgroundColor='#fff0'
           contentBackgroundColor='#fff0'
-          parallaxHeaderHeight={154}
+          parallaxHeaderHeight={179}
           renderBackground={() => (
             <ProgressiveImage
               style={{
                 width: Dimensions.get('window').width,
-                height: 210,
-                backgroundColor: '#fff0',
+                height: 154,
               }}
               resizeMode="cover"
               source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
             />
+          )}
+          renderForeground={() => (
+            <View style={{ marginTop: 109.14 }}>
+              <ProgressiveImage
+                source={{ uri: profile.avatar && profile.avatar.medium }}
+                style={{
+                  width: 69.86,
+                  height: 69.86,
+                  alignSelf: 'center',
+                  borderRadius: 34.93,
+                }}
+              />
+            </View>
           )}
         >
           <View style={{ width: Dimensions.get('window').width }}>
