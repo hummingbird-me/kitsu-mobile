@@ -40,14 +40,6 @@ const CustomHeader = ({
   const colors = [hasOverlay ? 'transparent' : '#0E0805', 'transparent'];
   return (
     <View style={styles.absolute}>
-      <ProgressiveImage
-        style={{
-          width: Dimensions.get('window').width,
-          height: 210,
-        }}
-        resizeMode="cover"
-        source={{ uri: headerImage.uri || defaultCover }}
-      />
       <LinearGradient colors={colors} style={{ ...styles.absolute, ...styles.header }}>
         <Left>
           {left || leftBtn}

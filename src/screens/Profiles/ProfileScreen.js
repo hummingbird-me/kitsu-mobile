@@ -530,6 +530,7 @@ class ProfileScreen extends Component {
           {this.renderHeader()}
         </ParallaxScrollView>
         <CustomHeader
+          style={styles.customHeader}
           navigation={navigation}
           headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
           leftText={profile.name}
@@ -574,6 +575,14 @@ const styles = {
     backgroundColor: '#F7F7F7',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  customHeader: {
+    position: 'absolute',
+    top: 0,
+    flex: 1,
+    alignSelf: 'stretch',
+    right: 0,
+    left: 0,
   },
 };
 

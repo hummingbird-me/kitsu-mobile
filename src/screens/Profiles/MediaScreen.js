@@ -567,13 +567,36 @@ class MediaScreen extends Component {
     console.log(mediaFeed);
     return (
       <Container style={styles.container}>
+        <ParallaxScrollView
+          backgroundColor='#423342'
+          contentBackgroundColor='#423342'
+          parallaxHeaderHeight={210}
+          data={mediaFeed}
+          ListHeaderComponent={() => this.renderHeader()}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => <CardActivity {...item} />}
+          refreshing={loadingMediaFeed}
+          onRefresh={() => this.refresh(media.id, media.type)}
+          onEndReached={() => this.loadMore(media.id, media.type)}
+          onEndReachedThreshold={0.5}
+          renderBackground={() => (
+            <ProgressiveImage
+              style={{
+                width: Dimensions.get('window').width,
+                height: 210,
+              }}
+              resizeMode="cover"
+              source={{ uri:  media.coverImage && media.coverImage.original || defaultCover }}
+            />
+          )}
+        >
+          {this.renderHeader()}
+        </ParallaxScrollView>
         <CustomHeader
           navigation={navigation}
-          hasOverlay
           headerImage={{
             uri: media.coverImage && media.coverImage.original,
           }}
-          style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
           right={
             <Button
               style={{
@@ -587,19 +610,6 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-        <View style={{ width: Dimensions.get('window').width, marginTop: 65}}>
-          <FlatList
-            data={mediaFeed}
-            ListHeaderComponent={() => this.renderHeader()}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => <CardActivity {...item} />}
-            refreshing={loadingMediaFeed}
-            onRefresh={() => this.refresh(media.id, media.type)}
-            onEndReached={() => this.loadMore(media.id, media.type)}
-            onEndReachedThreshold={0.5}
-
-          />
-        </View>
       </Container>
     );
   }
@@ -629,6 +639,14 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.listBackPurple,
+  },
+  customHeader: {
+    position: 'absolute',
+    top: 0,
+    flex: 1,
+    alignSelf: 'stretch',
+    right: 0,
+    left: 0,
   },
 };
 
