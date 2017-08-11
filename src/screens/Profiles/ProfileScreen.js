@@ -503,6 +503,7 @@ class ProfileScreen extends Component {
               style={{
                 width: Dimensions.get('window').width,
                 height: 154,
+                backgroundColor: '#fff0',
               }}
               resizeMode="cover"
               source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
@@ -517,6 +518,7 @@ class ProfileScreen extends Component {
                   height: 69.86,
                   alignSelf: 'center',
                   borderRadius: 34.93,
+                  backgroundColor: '#fff0',
                 }}
               />
             </View>

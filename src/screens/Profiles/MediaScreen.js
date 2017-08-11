@@ -364,7 +364,7 @@ class MediaScreen extends Component {
 
         <View
           style={{
-            marginTop: 85,
+            marginTop: 40,
             marginLeft: 14.8,
             marginRight: 13,
 
@@ -575,7 +575,7 @@ class MediaScreen extends Component {
             <ProgressiveImage
               style={{
                 width: Dimensions.get('window').width,
-                height: 210,
+                height: 209,
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
@@ -583,7 +583,7 @@ class MediaScreen extends Component {
             />
           )}
         >
-          <View style={{ width: Dimensions.get('window').width }}>
+          <View style={{ width: Dimensions.get('window').width, marginTop: -92 }}>
             <FlatList
               data={mediaFeed}
               ListHeaderComponent={() => this.renderHeader()}
