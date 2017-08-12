@@ -757,6 +757,18 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'oneSignalPlayers',
+  {
+    playerId: '',
+    platform: '',
+    user: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'one-signal-players' },
+);
+
+Kitsu.define(
   'streamers',
   {
     siteName: '',
