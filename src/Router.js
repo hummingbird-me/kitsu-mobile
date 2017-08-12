@@ -2,13 +2,12 @@ import { TabNavigator, StackNavigator } from 'react-navigation';
 import { HomeScreen, MediaUploadScreen } from './screens/Activity';
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
 import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
-import {
-  SearchScreen,
-  SearchCategory,
-  SearchResults,
-  SearchFilter,
-  FilterSub,
-} from './screens/Search';
+
+import SearchScreen from './screens/Search/SearchScreen';
+import SearchCategory from './screens/Search/SearchCategory';
+import SearchResults from './screens/Search/SearchResults';
+import SearchFilter from './screens/Search/SearchFilter';
+import FilterSub from './screens/Search/FilterSub';
 import NotificationsScreen from './screens/Notifications/NotificationsScreen';
 import {
   MediaScreen,

@@ -267,11 +267,10 @@ class ProfileScreen extends Component {
 
     const { userId } = this.state;
     return (
-      <View style={{ backgroundColor: colors.listBackPurple }}>
+      <View>
         <View
           style={{
             backgroundColor: colors.transparent,
-            marginTop: 80,
             marginLeft: 23,
             marginRight: 23,
             marginBottom: 0,
@@ -279,17 +278,6 @@ class ProfileScreen extends Component {
           }}
         >
           <View style={{ backgroundColor: colors.transparent, borderWidth: 0, paddingBottom: 16 }}>
-            <View style={{ marginTop: -50 }}>
-              <ProgressiveImage
-                source={{ uri: profile.avatar && profile.avatar.medium }}
-                style={{
-                  width: 69.86,
-                  height: 69.86,
-                  alignSelf: 'center',
-                  borderRadius: 34.93,
-                }}
-              />
-            </View>
             <View
               style={{
                 paddingTop: 10,
@@ -506,34 +494,53 @@ class ProfileScreen extends Component {
 
     return (
       <Container style={styles.container}>
-        <CustomHeader
-        navigation={navigation}
-        headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
-        leftText={profile.name}
-        />
         <ParallaxScrollView
-          backgroundColor='#423342'
-          contentBackgroundColor='#423342'
-          parallaxHeaderHeight={210}
-          data={this.props.userFeed}
-          keyExtractor={item => item.id}
-          refreshing={loadingUserFeed}
-          onRefresh={() => this.refresh(media.id, media.type)}
-          onEndReached={() => this.loadMore(media.id, media.type)}
-          onEndReachedThreshold={0.5}
+          backgroundColor='#fff0'
+          contentBackgroundColor='#fff0'
+          parallaxHeaderHeight={179}
           renderBackground={() => (
             <ProgressiveImage
               style={{
                 width: Dimensions.get('window').width,
-                height: 210,
+                height: 154,
+                backgroundColor: '#fff0',
               }}
               resizeMode="cover"
               source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
             />
           )}
+          renderForeground={() => (
+            <View style={{ marginTop: 109.14 }}>
+              <ProgressiveImage
+                source={{ uri: profile.avatar && profile.avatar.medium }}
+                style={{
+                  width: 69.86,
+                  height: 69.86,
+                  alignSelf: 'center',
+                  borderRadius: 34.93,
+                  backgroundColor: '#fff0',
+                }}
+              />
+            </View>
+          )}
         >
-          {this.renderHeader()}
-          </ParallaxScrollView>
+          <View style={{ width: Dimensions.get('window').width }}>
+            <FlatList
+              style={{ backgroundColor: colors.listBackPurple }}
+              data={this.props.userFeed}
+              ListHeaderComponent={() => this.renderHeader()}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <CardActivity {...item} />}
+              onEndReached={() => this.loadMore(profile.id)}
+              onEndReachedThreshold={0.5} />
+            </View>
+        </ParallaxScrollView>
+        <CustomHeader
+          style={styles.customHeader}
+          navigation={navigation}
+          headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
+          leftText={profile.name}
+        />
       </Container>
     );
   }
@@ -571,9 +578,17 @@ const mapStateToProps = (state, ownProps) => {
 
 const styles = {
   container: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: colors.listBackPurple,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  customHeader: {
+    position: 'absolute',
+    top: 0,
+    flex: 1,
+    alignSelf: 'stretch',
+    right: 0,
+    left: 0,
   },
 };
 

@@ -22,7 +22,6 @@ class SearchScreen extends Component {
     },
     tabBarIcon: ({ tintColor }) => (
       <Icon ios="ios-search" android="md-search" style={{ fontSize: 24, color: tintColor }} />
-      //<Image source={require('../../assets/img/tabbar_icons/search.png')} style={{ tintColor: tintColor, width: 20, height: 20.44 }} />
     ),
   };
 

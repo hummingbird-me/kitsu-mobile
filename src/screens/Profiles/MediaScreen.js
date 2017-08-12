@@ -359,12 +359,18 @@ class MediaScreen extends Component {
   renderHeader() {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
     console.log(reactions);
+    var items = new Array();
+    if(media.categories) {
+      for (var i=0; i < Math.min(media.categories.length, 4); i++) {
+        items.push(media.categories[i]);
+      }
+    }
     return (
       <View>
 
         <View
           style={{
-            marginTop: 85,
+            marginTop: 30,
             marginLeft: 14.8,
             marginRight: 13,
 
@@ -451,10 +457,10 @@ class MediaScreen extends Component {
                   </Text>
                 </View>}
             </View>
-            <View style={{ marginTop: -100, flex: 3 }}>
+            <View style={{ marginTop: -88.5, flex: 3 }}>
               <ProgressiveImage
                 source={{ uri: media.posterImage && media.posterImage.large }}
-                style={{ height: 167, width: 118, borderRadius: 3 }}
+                style={{ height: 167, width: 118, borderRadius: 3, backgroundColor: colors.imageBackColor }}
               />
             </View>
           </View>
@@ -467,8 +473,9 @@ class MediaScreen extends Component {
               flexWrap: 'wrap',
             }}
           >
-            {media.categories &&
-              media.categories.map(item => (
+            {
+              items &&
+              items.map(item => (
                 <Button
                   style={{
                     height: 20,
@@ -486,7 +493,11 @@ class MediaScreen extends Component {
                 >
                   <Text style={{color: 'white', fontSize: 9, fontFamily: 'OpenSans', fontWeight: '600', height: 13, paddingTop: 0, paddingBottom: 0 }}>{item.title}</Text>
                 </Button>
-              ))}
+              ))
+            }
+            { media.categories && media.categories.length > 4 &&
+              <Text style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'OpenSans', fontWeight: '600', fontSize: 12 }} > +{media.categories.length - 4} </Text>
+            }
           </View>
           <Animatable.View
             style={this.setTextHeightStyle()}
@@ -567,13 +578,39 @@ class MediaScreen extends Component {
     console.log(mediaFeed);
     return (
       <Container style={styles.container}>
+        <ParallaxScrollView
+          backgroundColor='#fff0'
+          contentBackgroundColor='#fff0'
+          parallaxHeaderHeight={210}
+          renderBackground={() => (
+            <ProgressiveImage
+              style={{
+                width: Dimensions.get('window').width,
+                height: 209,
+                backgroundColor: '#fff0',
+              }}
+              resizeMode="cover"
+              source={{ uri: media.coverImage && media.coverImage.original || defaultCover }}
+            />
+          )}
+        >
+          <View style={{ width: Dimensions.get('window').width, marginTop: -92 }}>
+            <FlatList
+              data={mediaFeed}
+              ListHeaderComponent={() => this.renderHeader()}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <CardActivity {...item} />}
+
+              onEndReached={() => this.loadMore(media.id, media.type)}
+              onEndReachedThreshold={0.5}
+            />
+          </View>
+        </ParallaxScrollView>
         <CustomHeader
           navigation={navigation}
-          hasOverlay
           headerImage={{
             uri: media.coverImage && media.coverImage.original,
           }}
-          style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
           right={
             <Button
               style={{
@@ -587,19 +624,6 @@ class MediaScreen extends Component {
             </Button>
           }
         />
-        <View style={{ width: Dimensions.get('window').width, marginTop: 65}}>
-          <FlatList
-            data={mediaFeed}
-            ListHeaderComponent={() => this.renderHeader()}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => <CardActivity {...item} />}
-            refreshing={loadingMediaFeed}
-            onRefresh={() => this.refresh(media.id, media.type)}
-            onEndReached={() => this.loadMore(media.id, media.type)}
-            onEndReachedThreshold={0.5}
-
-          />
-        </View>
       </Container>
     );
   }
@@ -629,6 +653,14 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.listBackPurple,
+  },
+  customHeader: {
+    position: 'absolute',
+    top: 0,
+    flex: 1,
+    alignSelf: 'stretch',
+    right: 0,
+    left: 0,
   },
 };
 
