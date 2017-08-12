@@ -2,7 +2,7 @@ import * as types from '../types';
 import { Kitsu, setToken } from '../../config/api';
 import { loginUser } from '../auth/actions';
 
-export const fetchCurrentUser = () => async (dispatch, getState) => {
+export const fetchCurrentUser = (nav, loginAction) => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
   const token = getState().auth.tokens.access_token;
   setToken(token);
@@ -14,6 +14,9 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
       filter: { self: true },
     });
     dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
+    if (loginAction) {
+      nav.dispatch(loginAction);
+    }
   } catch (e) {
     console.log(e);
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });

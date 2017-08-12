@@ -4459,6 +4459,12 @@ react-native-multi-slider@^0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/react-native-multi-slider/-/react-native-multi-slider-0.3.5.tgz#eda1f7b7062c74578441d434678a78052e120673"
 
+react-native-onesignal@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-3.0.5.tgz#b048f4f77aa1f4166e0c9a88608cf2a8aa8c00da"
+  dependencies:
+    invariant "^2.2.2"
+
 react-native-optimized-flatlist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-optimized-flatlist/-/react-native-optimized-flatlist-1.0.1.tgz#dbee82f208b48bef23c6cb26f1d5f3ac58e675b2"
