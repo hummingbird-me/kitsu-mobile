@@ -496,7 +496,7 @@ class MediaScreen extends Component {
               ))
             }
             { media.categories && media.categories.length > 4 &&
-              <Text style={{ color: 'rgb(255,255,255,0.5)', fontFamily: 'OpenSans', fontWeight: '600', fontSize: 12 }} > +{media.categories.length - 4} </Text>
+              <Text style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'OpenSans', fontWeight: '600', fontSize: 12 }} > +{media.categories.length - 4} </Text>
             }
           </View>
           <Animatable.View
