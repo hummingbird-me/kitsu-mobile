@@ -359,12 +359,18 @@ class MediaScreen extends Component {
   renderHeader() {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
     console.log(reactions);
+    var items = new Array();
+    if(media.categories) {
+      for (var i=0; i < Math.min(media.categories.length, 4); i++) {
+        items.push(media.categories[i]);
+      }
+    }
     return (
       <View>
 
         <View
           style={{
-            marginTop: 40,
+            marginTop: 30,
             marginLeft: 14.8,
             marginRight: 13,
 
@@ -451,10 +457,10 @@ class MediaScreen extends Component {
                   </Text>
                 </View>}
             </View>
-            <View style={{ marginTop: -100, flex: 3 }}>
+            <View style={{ marginTop: -88.5, flex: 3 }}>
               <ProgressiveImage
                 source={{ uri: media.posterImage && media.posterImage.large }}
-                style={{ height: 167, width: 118, borderRadius: 3 }}
+                style={{ height: 167, width: 118, borderRadius: 3, backgroundColor: colors.imageBackColor }}
               />
             </View>
           </View>
@@ -467,8 +473,9 @@ class MediaScreen extends Component {
               flexWrap: 'wrap',
             }}
           >
-            {media.categories &&
-              media.categories.map(item => (
+            {
+              items &&
+              items.map(item => (
                 <Button
                   style={{
                     height: 20,
@@ -486,7 +493,11 @@ class MediaScreen extends Component {
                 >
                   <Text style={{color: 'white', fontSize: 9, fontFamily: 'OpenSans', fontWeight: '600', height: 13, paddingTop: 0, paddingBottom: 0 }}>{item.title}</Text>
                 </Button>
-              ))}
+              ))
+            }
+            { media.categories && media.categories.length > 4 &&
+              <Text style={{ color: 'rgb(255,255,255,0.5)', fontFamily: 'OpenSans', fontWeight: '600', fontSize: 12 }} > +{media.categories.length - 4} </Text>
+            }
           </View>
           <Animatable.View
             style={this.setTextHeightStyle()}
