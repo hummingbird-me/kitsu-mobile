@@ -10,6 +10,7 @@ import {
 import Thumbnail from './Thumbnail';
 
 let tileSize = 50;
+const MEDIA_PAGE_SIZE = 50;
 
 export default class MediaSelectionGrid extends Component {
   static propTypes = {
@@ -49,6 +50,11 @@ export default class MediaSelectionGrid extends Component {
     }
   }
 
+  // Force a re-render whenever the device rotates.
+  onLayout = () => {
+    this.setState({ dimensions: Dimensions.get('window') });
+  }
+
   onToggleTile = (uri) => {
     // Make a copy so we don't mutate state directly.
     const newSelected = this.state.selectedMedia.slice();
@@ -70,9 +76,9 @@ export default class MediaSelectionGrid extends Component {
   groupTypeForFilterContext = () => {
     switch (this.props.filterContext) {
       case 'All':
-        return 'All';
+        return 'All Photos';
       case 'Camera Roll':
-        return 'PhotoStream';
+        return 'SavedPhotos';
       default:
         throw new Error(`Unknown filter context: ${this.props.filterContext}`);
     }
@@ -86,7 +92,7 @@ export default class MediaSelectionGrid extends Component {
     const page = await CameraRoll.getPhotos({
       assetType: 'All',
       groupTypes,
-      first: 100,
+      first: MEDIA_PAGE_SIZE,
       after: this.state.nextPage || undefined, // Null can't be passed over the bridge.
     });
 
@@ -100,14 +106,17 @@ export default class MediaSelectionGrid extends Component {
   }
 
   renderItem = ({ item }) => {
-    const { uri } = item.node.image;
+    const { image, playableDuration, type } = item.node;
     const { selectedMedia } = this.state;
-    const selectedIndex = selectedMedia.indexOf(uri);
+
+    const selectedIndex = selectedMedia.indexOf(image.uri);
 
     return (
       <Thumbnail
         size={tileSize}
-        image={uri}
+        image={image.uri}
+        type={type}
+        playableDuration="1:00"
         selectedIndex={selectedIndex}
         onToggle={this.onToggleTile}
       />
@@ -146,10 +155,12 @@ export default class MediaSelectionGrid extends Component {
       <FlatList
         data={allMedia}
         extraData={selectedMedia}
+        key={columns} // Will force a completely new grid to come online if we rotate.
         keyExtractor={item => item.node.image.uri}
         numColumns={columns}
         onEndReached={this.loadMore}
         onEndThreshold={100}
+        onLayout={this.onLayout}
         renderItem={this.renderItem}
         style={styles.list}
       />
@@ -160,5 +171,6 @@ export default class MediaSelectionGrid extends Component {
 const styles = {
   list: {
     margin: 2,
+    minHeight: '100%',
   },
 };
