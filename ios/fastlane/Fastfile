@@ -1,0 +1,108 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.53.1"
+
+default_platform :ios
+
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+
+  desc "Runs all the tests"
+  lane :test do
+    scan
+  end
+
+  desc "Submit a new Beta Build to crashlytics"
+  desc "This will also make sure the profile is up to date"
+  lane :beta do |values|
+    # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
+    register_devices(
+      devices_file: "./fastlane/devices.txt",
+      username: "josh@kitsu.io"
+    )
+
+    # After registering the new devices, we'll make sure to update the provisioning profile if necessary
+    # options for type are "adhoc", "development", "appstore"
+    match(
+      app_identifier: "kitsu-san",
+      force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
+      type: "development",
+      # verbose: true,
+      # readonly: true  #readonly mode to be sure it won't create any new certificates or profiles.
+    )
+
+    # Change build number (requirement of Testflight).
+    #increment_build_number(
+    #  xcodeproj: "./kitsu_mobile.xcodeproj"
+    #)
+
+    # Build a release
+    gym(
+      scheme: "kitsu_mobile",
+      clean: true,
+      project: "./kitsu_mobile.xcodeproj",
+      export_method: "development"
+      # workspace: "./kitsu_mobile.xcworkspace" # if using pods
+    )
+
+    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io'] # You can list more emails here
+    groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
+
+    crashlytics(
+      api_token: 'b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00',
+      build_secret: '010015018557534a1a97465380fd280881f586eec24f45bcc511520a031d50d4',
+      emails: emails,
+      groups: groups,
+      debug: true,
+      notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
+      notifications: true  # Should this distribution notify your testers via email?
+    )
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here (run `fastlane actions`)
+  end
+
+  desc "Deploy a new version to the App Store"
+  lane :release do
+    # match(type: "appstore")
+    # snapshot
+    gym(scheme: "kitsu_mobile") # Build your app - more options available
+    deliver(force: true)
+    # frameit
+  end
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+
+
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+
+# fastlane reports which actions are used. No personal data is recorded.
+# Learn more at https://github.com/fastlane/fastlane#metrics
