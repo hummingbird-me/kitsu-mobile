@@ -367,26 +367,24 @@ class MediaScreen extends Component {
     }
     return (
       <View>
-
         <View
           style={{
             marginTop: 30,
             marginLeft: 14.8,
             marginRight: 13,
-
             borderRadius: 5,
           }}
         >
-          {reactions[0] &&
-            <View style={{ marginTop: -30 }}>
-              <ProgressiveImage
-                source={{
-                  uri: reactions[0].user.avatar ? reactions[0].user.avatar.small : defaultAvatar,
-                }}
-                style={{ width: 32.4, height: 32.4, borderRadius: 16.2, marginBottom: 6.2 }}
-              />
-            </View>}
-          {reactions[0] && <Text
+
+          <View style={{ marginTop: -30 }}>
+              {reactions[0] && <ProgressiveImage
+              source={{
+                uri: reactions[0].user.avatar ? reactions[0].user.avatar.small : defaultAvatar,
+              }}
+              style={{ width: 32.4, height: 32.4, borderRadius: 16.2, maginBottom: 6.2 }}
+            />}
+          </View>
+          <Text
             style={{
               backgroundColor: 'transparent',
               color: 'white',
@@ -395,11 +393,12 @@ class MediaScreen extends Component {
               fontFamily: 'OpenSans',
               width: width / 1.70,
               marginBottom: 12,
+              height: 42,
             }}
             numberOfLines={3}
           >
-            {reactions[0].reaction}
-          </Text> }
+            {reactions[0] && reactions[0].reaction}
+          </Text>
         </View>
         <View style={{ backgroundColor: colors.listBackPurple, borderRadius: 0 }}>
           <View
@@ -496,7 +495,7 @@ class MediaScreen extends Component {
               ))
             }
             { media.categories && media.categories.length > 4 &&
-              <Text style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'OpenSans', fontWeight: '600', fontSize: 12 }} > +{media.categories.length - 4} </Text>
+              <Text style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'OpenSans', fontWeight: '600', fontSize: 12, paddingTop: 2 }} > +{media.categories.length - 4} </Text>
             }
           </View>
           <Animatable.View

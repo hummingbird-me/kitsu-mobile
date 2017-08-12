@@ -11,7 +11,7 @@ class DoubleProgress extends Component {
     const { left, right, leftProgress, rightProgress, filledColor, unfilledColor } = this.props;
     const borderRadius = 6;
 
-    const textStyle = { color: '#565656', fontWeight: '600' };
+    const textStyle = { color: 'rgb(51, 51, 51)', fontFamily: 'OpenSans'};
 
     return (
       <View
@@ -25,11 +25,11 @@ class DoubleProgress extends Component {
           flex: 1,
         }}
       >
-        <View style={{ width: '20%' }}>
+        <View style={{ width: '15%' }}>
           <Text
             style={{
               ...textStyle,
-              color: leftProgress < rightProgress ? '#D1D1D1' : textStyle.color,
+              fontSize: 12
             }}
           >
             {left}
@@ -38,45 +38,42 @@ class DoubleProgress extends Component {
         <Body style={{ flexDirection: 'row', width: '60%', justifyContent: 'center' }}>
           <Progress.Bar
             progress={leftProgress}
-            width={width * 0.20}
+            width={width * 0.25}
             borderRadius={0}
-            height={10}
+            height={6}
             color={filledColor || '#00BEE0'}
             unfilledColor={unfilledColor || '#F0F0F0'}
             borderWidth={0}
             style={{
-              borderTopRightRadius: borderRadius,
-              borderBottomRightRadius: borderRadius,
               transform: [{ rotate: '180deg' }],
+              borderRadius: 0,
             }}
             innerStyle={{
-              borderTopRightRadius: borderRadius,
-              borderBottomRightRadius: borderRadius,
+              borderTopRightRadius: 3,
+              borderBottomRightRadius: 3,
             }}
           />
           <Progress.Bar
             progress={rightProgress}
-            width={width * 0.20}
-            height={10}
-            borderRadius={0}
+            width={width * 0.25}
+            height={6}
             color={filledColor || '#FF6300'}
             unfilledColor={unfilledColor || '#F0F0F0'}
             borderWidth={0}
             style={{
-              borderTopRightRadius: borderRadius,
-              borderBottomRightRadius: borderRadius,
+              borderRadius: 0,
             }}
             innerStyle={{
-              borderTopRightRadius: borderRadius,
-              borderBottomRightRadius: borderRadius,
+              borderTopLeftRadius: 3,
+              borderBottomLeftRadius: 3,
             }}
           />
         </Body>
-        <View style={{ width: '20%' }}>
+        <View style={{ width: '15%' }}>
           <Text
             style={{
               ...textStyle,
-              color: leftProgress > rightProgress ? '#D1D1D1' : textStyle.color,
+              fontSize: 10,
             }}
           >
             {right}
