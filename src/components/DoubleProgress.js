@@ -25,7 +25,7 @@ class DoubleProgress extends Component {
           flex: 1,
         }}
       >
-        <View style={{ width: '15%' }}>
+        <View style={{ width: '18%' }}>
           <Text
             style={{
               ...textStyle,
@@ -49,7 +49,7 @@ class DoubleProgress extends Component {
             incompleteStyle={{backgroundColor: unfilledColor || '#F0F0F0', height: 6, borderTopRightRadius: 3, borderBottomRightRadius: 3 }}
           />
         </Body>
-        <View style={{ width: '15%'}}>
+        <View style={{ width: '18%'}}>
           <Text
             style={{
               ...textStyle,

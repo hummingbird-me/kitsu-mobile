@@ -162,7 +162,7 @@ class MediaScreen extends Component {
             {hasCaption &&
               <LinearGradient
                 colors={['transparent', 'rgba(0,0,0,0.5)']}
-                style={[{ height, width }, { position: 'absolute', top: 0 }]}
+                style={[{ height, width }, { position: 'absolute', top: 0, borderRadius: 1}]}
               />}
             {hasCaption &&
               <Text
