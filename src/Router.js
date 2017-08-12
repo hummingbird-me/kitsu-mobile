@@ -158,8 +158,11 @@ const Tabs = TabNavigator(
       activeBackgroundColor: colors.listBackPurple,
       showLabel: false,
       lazy: true,
-      style: { height: 44.96 },
-      backgroundColor: colors.listBackPurple
+      style: {
+        height: 44.96,
+        borderTopWidth: 0,
+      },
+      backgroundColor: colors.listBackPurple,
     },
   },
 );
