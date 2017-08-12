@@ -111,6 +111,8 @@
 		C03FDF67EF934AE8A07159E6 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3983ACCD1BDE4C0D8F220D23 /* Rubik-Regular.ttf */; };
 		C097D63E6F7E491085912176 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 80BDB36AC10F4D1799DC4612 /* libz.tbd */; };
 		C161099CF8704538BD4B7890 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 15E8EFC0652B40E28898F62C /* MaterialIcons.ttf */; };
+		C6A9134E1F3DE0F400722EA9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A9134C1F3DE0F400722EA9 /* Fabric.framework */; };
+		C6A9134F1F3DE0F400722EA9 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A9134D1F3DE0F400722EA9 /* Crashlytics.framework */; };
 		C8481D4949CB4A0984D5F220 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F691A44F53140AC99AB194C /* Rubik-Medium.ttf */; };
 		CBA720C81251487A9E80009A /* Skia.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 872DB9DC2EBE466583426A2A /* Skia.ttf */; };
 		D2A6A83D9FCB459C9EA94856 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD74178E509640CBB7EEFA14 /* Rubik-BoldItalic.ttf */; };
@@ -419,7 +421,7 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		C6A914A71F3EA90900722EA9 /* PBXContainerItemProxy */ = {
+		C6A913491F3DD92800722EA9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CB61EDA81F354D15B0E798F8 /* RNSVG.xcodeproj */;
 			proxyType = 2;
@@ -550,6 +552,8 @@
 		BA356B4F7C7040CCA1CAFC3A /* Apache License.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Apache License.txt"; path = "../src/assets/fonts/open-sans/Apache License.txt"; sourceTree = "<group>"; };
 		C026A4D7D19045A39C13D46A /* Microsoft Sans Serif.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Microsoft Sans Serif.ttf"; path = "../node_modules/native-base/Fonts/Microsoft Sans Serif.ttf"; sourceTree = "<group>"; };
 		C32EBAAD5A644800A9DA64A6 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
+		C6A9134C1F3DE0F400722EA9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		C6A9134D1F3DE0F400722EA9 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		C851EC76177C431281E9E57E /* SanFranciscoThin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SanFranciscoThin.ttf; path = "../node_modules/native-base/Fonts/SanFranciscoThin.ttf"; sourceTree = "<group>"; };
 		CB61EDA81F354D15B0E798F8 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
 		CC04F02695AF447F94657E4D /* fontello.woff */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = fontello.woff; path = ../src/assets/fonts/icons/font/fontello.woff; sourceTree = "<group>"; };
@@ -600,11 +604,13 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				7B7FB7E31ED3507500A77791 /* FBSDKShareKit.framework in Frameworks */,
 				17B1C288A2D54CB79E53BF44 /* libCodePush.a in Frameworks */,
+				C6A9134F1F3DE0F400722EA9 /* Crashlytics.framework in Frameworks */,
 				7B7FB7E11ED3506600A77791 /* FBSDKLoginKit.framework in Frameworks */,
 				7B7FB7DD1ED3505400A77791 /* Bolts.framework in Frameworks */,
 				C097D63E6F7E491085912176 /* libz.tbd in Frameworks */,
 				7CA05E9BAD334870BC2108BB /* libRNVectorIcons.a in Frameworks */,
 				64E750CD371B49C386607EB4 /* libRCTFBSDK.a in Frameworks */,
+				C6A9134E1F3DE0F400722EA9 /* Fabric.framework in Frameworks */,
 				A6611F8309CE4334AFFB0723 /* libLottieReactNative.a in Frameworks */,
 				E13699F87EBB4163A4AD7EA3 /* libLottie.a in Frameworks */,
 				8D962F8E5AD84C4D8F4F621C /* libBVLinearGradient.a in Frameworks */,
@@ -915,6 +921,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				C6A9134C1F3DE0F400722EA9 /* Fabric.framework */,
+				C6A9134D1F3DE0F400722EA9 /* Crashlytics.framework */,
 				13B07FAE1A68108700A75B9A /* kitsu_mobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* kitsu_mobileTests */,
@@ -937,10 +945,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C6A914821F3EA90900722EA9 /* Products */ = {
+		C6A913461F3DD92800722EA9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C6A914A81F3EA90900722EA9 /* libRNSVG.a */,
+				C6A9134A1F3DD92800722EA9 /* libRNSVG.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1052,6 +1060,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				7B1311CF1ED52FF400875F67 /* Embed Frameworks */,
+				C6A9134B1F3DE0A800722EA9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1113,7 +1122,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = U4JZB5F55W;
+						DevelopmentTeam = 98KG27K553;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -1223,7 +1232,7 @@
 					ProjectRef = CEBFB53677FA4F4699F1F3FB /* RNShimmer.xcodeproj */;
 				},
 				{
-					ProductGroup = C6A914821F3EA90900722EA9 /* Products */;
+					ProductGroup = C6A913461F3DD92800722EA9 /* Products */;
 					ProjectRef = CB61EDA81F354D15B0E798F8 /* RNSVG.xcodeproj */;
 				},
 				{
@@ -1512,11 +1521,11 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C6A914A81F3EA90900722EA9 /* libRNSVG.a */ = {
+		C6A9134A1F3DD92800722EA9 /* libRNSVG.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNSVG.a;
-			remoteRef = C6A914A71F3EA90900722EA9 /* PBXContainerItemProxy */;
+			remoteRef = C6A913491F3DD92800722EA9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1658,6 +1667,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
+		};
+		C6A9134B1F3DE0A800722EA9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00 010015018557534a1a97465380fd280881f586eec24f45bcc511520a031d50d4";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1811,9 +1833,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 4;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = U4JZB5F55W;
+				DEVELOPMENT_TEAM = 98KG27K553;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1838,8 +1861,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.kitsu.kitsuMobile;
+				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
 				PRODUCT_NAME = kitsu_mobile;
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_kitsu-san_appstore)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1849,8 +1873,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = U4JZB5F55W;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 98KG27K553;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1875,8 +1900,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.kitsu.kitsuMobile;
+				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
 				PRODUCT_NAME = kitsu_mobile;
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_kitsu-san_appstore)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

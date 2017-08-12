@@ -30,9 +30,23 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>4</string>
 	<key>CodePushDeploymentKey</key>
 	<string>vHpLQFUfuH4hrSoZvao4c_IgvEAiNJyXT3z-z</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>FacebookAppID</key>
 	<string>325314560922421</string>
 	<key>FacebookDisplayName</key>
@@ -58,7 +72,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>fontello.ttf</string>

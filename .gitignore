@@ -55,6 +55,6 @@ fastlane/screenshots
 
 # editor
 .vscode
-ios/fastlane/report.xml
-
 ios/kitsu_mobile.app.dSYM.zip
+
+ios/fastlane/report.xml
