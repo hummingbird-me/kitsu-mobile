@@ -24,6 +24,7 @@
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
     "react-native-animatable": "^1.2.0",
+    "react-native-animated-progress-bar": "^1.1.0",
     "react-native-code-push": "^2.0.3-beta",
     "react-native-elements": "^0.12.2",
     "react-native-fading-slides": "^0.1.4",

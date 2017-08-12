@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Dimensions } from 'react-native';
-import * as Progress from 'react-native-progress';
+var ProgressBar = require('react-native-animated-progress-bar');
 import { Button, Container, Content, Icon, Left, Right, Body } from 'native-base';
 
 const { width } = Dimensions.get('window');
@@ -29,51 +29,32 @@ class DoubleProgress extends Component {
           <Text
             style={{
               ...textStyle,
-              fontSize: 12
+              fontSize: 10
             }}
           >
             {left}
           </Text>
         </View>
         <Body style={{ flexDirection: 'row', width: '60%', justifyContent: 'center' }}>
-          <Progress.Bar
+          <ProgressBar
             progress={leftProgress}
-            width={width * 0.25}
-            borderRadius={0}
-            height={6}
-            color={filledColor || '#00BEE0'}
-            unfilledColor={unfilledColor || '#F0F0F0'}
-            borderWidth={0}
-            style={{
-              transform: [{ rotate: '180deg' }],
-              borderRadius: 0,
-            }}
-            innerStyle={{
-              borderTopRightRadius: 3,
-              borderBottomRightRadius: 3,
-            }}
+            backgroundStyle={{backgroundColor:'#F0F0F0', borderTopRightRadius: 3, borderBottomRightRadius: 3, width: width*0.25, height: 6, padding: 0, transform: [{rotate: '180deg'}]}}
+            progressStyle={{borderTopLeftRadius: 3, borderBottomLeftRadius: 3, backgroundColor: filledColor || '#00BEE0', height: 6, transform: [{rotate: '180deg'}]}}
+            incompleteStyle={{backgroundColor: unfilledColor || '#F0F0F0', height: 6, borderTopLeftRadius: 3, borderBottomLeftRadius: 3, transform: [{rotate: '180deg'}]}}
           />
-          <Progress.Bar
+          <ProgressBar
             progress={rightProgress}
-            width={width * 0.25}
-            height={6}
-            color={filledColor || '#FF6300'}
-            unfilledColor={unfilledColor || '#F0F0F0'}
-            borderWidth={0}
-            style={{
-              borderRadius: 0,
-            }}
-            innerStyle={{
-              borderTopLeftRadius: 3,
-              borderBottomLeftRadius: 3,
-            }}
+            backgroundStyle={{backgroundColor:'#F0F0F0', borderTopRightRadius: 3, borderBottomRightRadius: 3, width: width*0.25, height: 6, padding: 0}}
+            progressStyle={{borderTopRightRadius: 3, borderBottomRightRadius: 3, backgroundColor: filledColor || '#FF6300', height: 6}}
+            incompleteStyle={{backgroundColor: unfilledColor || '#F0F0F0', height: 6, borderTopRightRadius: 3, borderBottomRightRadius: 3 }}
           />
         </Body>
-        <View style={{ width: '15%' }}>
+        <View style={{ width: '15%'}}>
           <Text
             style={{
               ...textStyle,
               fontSize: 10,
+              marginLeft: 9
             }}
           >
             {right}
