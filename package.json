@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" npm start",
+    "lint": "eslint ./src",
     "test": "jest"
   },
   "dependencies": {

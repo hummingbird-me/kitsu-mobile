@@ -4,16 +4,21 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 
-import { logoutUser } from '../store/auth/actions';
-import { fetchCurrentUser } from '../store/user/actions';
+import { logoutUser } from '../../store/auth/actions';
+import { fetchCurrentUser } from '../../store/user/actions';
 
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
     tabBarIcon: ({ tintColor }) => (
-      <Image source={require('../assets/img/tabbar_icons/feed.png')} style={{ tintColor: tintColor, width: 20, height: 21 }} />
+      <Image source={require('../../assets/img/tabbar_icons/feed.png')} style={{ tintColor: tintColor, width: 20, height: 21 }} />
     ),
   };
+
+  state = {
+    selectedImages: [],
+  }
+
   componentWillMount() {
     // this.props.fetchCurrentUser();
   }
@@ -53,6 +58,11 @@ class HomeScreen extends Component {
           <Button onPress={() => this.props.logoutUser(navigation)}>
             <Text>
               Logout
+            </Text>
+          </Button>
+          <Button onPress={() => navigation.navigate('MediaUpload')}>
+            <Text>
+              Upload Media
             </Text>
           </Button>
         </Content>
