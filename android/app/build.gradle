@@ -127,7 +127,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-svg')
     compile project(':react-native-youtube')
     compile project(':react-native-linear-gradient')
     compile project(':lottie-react-native')
