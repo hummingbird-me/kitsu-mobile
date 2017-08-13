@@ -72,6 +72,7 @@ class MediaScreen extends Component {
     this.renderEpisodes = this.renderEpisodes.bind(this);
     this.renderCharacters = this.renderCharacters.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
+    this.renderReactions = this.renderReactions.bind(this);
   }
 
   componentDidMount() {
@@ -307,13 +308,8 @@ class MediaScreen extends Component {
   }
 
   renderReactions() {
-    const { media } = this.props;
-    const characters = this.props.castings.map(item => ({
-      image: item.character.image ? item.character.image.original : defaultAvatar,
-      id: item.character.id,
-      name: item.character.name,
-      key: item.character.id,
-    }));
+    const { reactions } = this.props;
+    console.log(JSON.stringify(reactions));
     return (
       <CardFull
         single
@@ -321,11 +317,12 @@ class MediaScreen extends Component {
         heading="Reactions"
         onPress={() =>
           this.props.navigation.navigate('Reactions', {
-            label: 'Media Characters',
+            label: 'View all',
             mediaId: this.props.media.id,
           })}
       >
-        {characters.length === 0 &&
+        {
+          reactions && reactions.map(item => (
           <Text
             style={{
               fontFamily: 'OpenSans',
@@ -335,9 +332,11 @@ class MediaScreen extends Component {
               marginTop: 20,
             }}
           >
-
-          </Text>}
-
+            {item.reaction}
+          </Text>
+        )
+      )
+      }
       </CardFull>
     );
   }
