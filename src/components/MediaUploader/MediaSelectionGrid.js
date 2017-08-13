@@ -75,10 +75,10 @@ export default class MediaSelectionGrid extends Component {
 
   groupTypeForFilterContext = () => {
     switch (this.props.filterContext) {
-      case 'All':
-        return 'All Photos';
+      case 'Photo Stream':
+        return 'photo-stream';
       case 'Camera Roll':
-        return 'SavedPhotos';
+        return 'saved-photos';
       default:
         throw new Error(`Unknown filter context: ${this.props.filterContext}`);
     }

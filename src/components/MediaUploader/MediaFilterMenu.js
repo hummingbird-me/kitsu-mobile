@@ -33,7 +33,7 @@ export default class MediaFilterMenu extends Component {
           <Body>
             {this.renderMenuItem('Camera Roll')}
             <View style={styles.separator} />
-            {this.renderMenuItem('All')}
+            {this.renderMenuItem('Photo Stream')}
           </Body>
         </CardItem>
       </Card>
