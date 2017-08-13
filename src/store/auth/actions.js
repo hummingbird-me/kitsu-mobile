@@ -1,10 +1,11 @@
 import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import { NavigationActions } from 'react-navigation';
 import * as types from '../types';
-import { auth } from '../../config/api';
+import { Kitsu, auth } from '../../config/api';
 import { kitsuConfig } from '../../config/env';
+import { fetchCurrentUser } from '../user/actions';
 
-export const loginUser = (data, nav, screen) => async (dispatch) => {
+export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
   const loginAction = NavigationActions.reset({
@@ -26,7 +27,7 @@ export const loginUser = (data, nav, screen) => async (dispatch) => {
     }
     if (tokens) {
       dispatch({ type: types.LOGIN_USER_SUCCESS, payload: { data: tokens } });
-      nav.dispatch(loginAction);
+      fetchCurrentUser(nav, loginAction)(dispatch, getState);
     } else {
       dispatch({
         type: types.LOGIN_USER_FAIL,
@@ -85,4 +86,22 @@ export const logoutUser = nav => (dispatch) => {
   });
   nav.dispatch(loginAction);
   dispatch({ type: types.LOGOUT_USER });
+};
+
+export const createOneSignalPlayer = () => async (dispatch, getState) => {
+  const { auth: { playerId }, user: { currentUser, playerCreated } } = getState();
+  if (!playerCreated) {
+    dispatch({ type: types.CREATE_PLAYER });
+    try {
+      await Kitsu.create('oneSignalPlayers', {
+        playerId,
+        platform: 'mobile',
+        user: currentUser,
+      });
+      dispatch({ type: types.CREATE_PLAYER_SUCCESS });
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: types.CREATE_PLAYER_FAIL, payload: 'Failed to register notifications' });
+    }
+  }
 };
