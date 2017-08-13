@@ -1,5 +1,5 @@
 import { TabNavigator, StackNavigator } from 'react-navigation';
-import HomeScreen from './screens/HomeScreen';
+import { HomeScreen, MediaUploadScreen } from './screens/Activity';
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
 import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
 
@@ -21,6 +21,29 @@ import {
 
 import DismissableStackNavigator from './components/DismissableStackNavigator';
 import * as colors from './constants/colors';
+
+const HomeStack = StackNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+    },
+    MediaUpload: {
+      screen: MediaUploadScreen,
+    },
+  },
+  {
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.darkPurple, height: 64 },
+      headerTitleStyle: {
+        color: colors.white,
+        fontFamily: 'OpenSans',
+        fontWeight: 'bold',
+        fontSize: 15,
+        marginTop: 0,
+      },
+    },
+  },
+);
 
 const SearchStack = StackNavigator(
   {
@@ -135,7 +158,7 @@ const FilterStack = StackNavigator(
 const Tabs = TabNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: HomeStack,
     },
     Search: {
       screen: SearchStack,
