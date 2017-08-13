@@ -8,8 +8,8 @@ import * as colors from '../../constants/colors';
 export default class Thumbnail extends PureComponent {
   static propTypes = {
     size: PropTypes.number,
-    image: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    image: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    type: PropTypes.string,
     placeholder: PropTypes.bool,
     playableDuration: PropTypes.string,
     selectedIndex: PropTypes.number.isRequired,
@@ -20,6 +20,7 @@ export default class Thumbnail extends PureComponent {
     playableDuration: null,
     placeholder: false,
     size: 50,
+    type: 'ALAssetTypePhoto',
   }
 
   onPress = () => {

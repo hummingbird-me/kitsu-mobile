@@ -20,7 +20,7 @@ export default class MediaFilterMenu extends Component {
         style={styles.menuItem}
         onPress={() => this.props.onFilterContextChanged(text)}
       >
-        <Text>{text}</Text>
+        <Text style={styles.menuItemText}>{text}</Text>
         { selected && <Icon name="check" style={styles.selectedIcon} />}
       </TouchableOpacity>
     );
@@ -59,9 +59,11 @@ const styles = {
   menuItem: {
     alignContent: 'center',
     flexDirection: 'row',
-    fontFamily: 'OpenSans',
     justifyContent: 'space-between',
     width: '100%',
+  },
+  menuItemText: {
+    fontFamily: 'OpenSans',
   },
   selectedIcon: {
     color: colors.activeRed,

@@ -4,6 +4,7 @@ import {
   CameraRoll,
   Dimensions,
   FlatList,
+  Image,
   Text,
   View,
 } from 'react-native';
@@ -97,9 +98,9 @@ export default class MediaSelectionGrid extends Component {
   groupTypeForFilterContext = () => {
     switch (this.props.filterContext) {
       case 'Photo Stream':
-        return 'photo-stream';
+        return 'PhotoStream';
       case 'Camera Roll':
-        return 'saved-photos';
+        return 'SavedPhotos';
       default:
         throw new Error(`Unknown filter context: ${this.props.filterContext}`);
     }
@@ -111,7 +112,7 @@ export default class MediaSelectionGrid extends Component {
     const groupTypes = this.groupTypeForFilterContext();
 
     const page = await CameraRoll.getPhotos({
-      assetType: 'All',
+      assetType: 'Photos', // This is the default, but we'll change to video later, so left this here.
       groupTypes,
       first: MEDIA_PAGE_SIZE,
       after: this.state.nextPage || undefined, // Null can't be passed over the bridge.
@@ -160,11 +161,15 @@ export default class MediaSelectionGrid extends Component {
     const columns = Math.floor(availableWidth / this.props.minimumTileWidth);
     tileSize = availableWidth / columns;
 
-    const { filterContext } = this.props;
     const { allMedia, selectedMedia, initialLoad } = this.state;
 
     if (allMedia.length === 0) {
-      return <Text>No Media in your {filterContext}</Text>;
+      return (
+        <View style={styles.emptyWrapper}>
+          <Image source={require('../../assets/img/empty.png')} resizeMode="contain" style={styles.emptyImage} />
+          <Text style={styles.emptyText}>Oh... there&rsquo;s nothing here.</Text>
+        </View>
+      );
     }
 
     // Extra Data prop allows us to signal to the FlatList
@@ -196,5 +201,23 @@ const styles = {
   placeholder: {
     margin: 2,
     backgroundColor: colors.darkGrey,
+  },
+  emptyWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexGrow: 1,
+    minHeight: '95%',
+  },
+  emptyImage: {
+    width: 180,
+    height: 180,
+    margin: 25,
+  },
+  emptyText: {
+    color: colors.lightGrey,
+    fontFamily: 'OpenSans',
+    fontSize: 16,
+    fontWeight: '800',
+    textAlign: 'center',
   },
 };

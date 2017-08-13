@@ -8,11 +8,12 @@ import * as colors from '../../constants/colors';
 export default class MediaFilter extends Component {
   static propTypes = {
     filterContext: PropTypes.string,
-    onPress: PropTypes.func.isRequired,
+    onPress: PropTypes.func,
   }
 
   static defaultProps = {
     filterContext: 'Camera Roll',
+    onPress: () => {},
   }
 
   render() {
