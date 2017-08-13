@@ -7,10 +7,31 @@ import {
   Text,
   View,
 } from 'react-native';
+
+import * as colors from '../../constants/colors';
+
 import Thumbnail from './Thumbnail';
 
 let tileSize = 50;
 const MEDIA_PAGE_SIZE = 50;
+
+const generatePlaceholders = () => {
+  const placeholders = [];
+
+  // The item.node.image.uri shape is for our key extractor.
+  for (let i = 1; i < 50; i += 1) {
+    placeholders.push({
+      node: {
+        placeholder: true,
+        image: {
+          uri: i,
+        },
+      },
+    });
+  }
+
+  return placeholders;
+};
 
 export default class MediaSelectionGrid extends Component {
   static propTypes = {
@@ -25,7 +46,7 @@ export default class MediaSelectionGrid extends Component {
   }
 
   state = {
-    allMedia: [],
+    allMedia: generatePlaceholders(),
     selectedMedia: [],
 
     initialLoad: true,
@@ -96,7 +117,14 @@ export default class MediaSelectionGrid extends Component {
       after: this.state.nextPage || undefined, // Null can't be passed over the bridge.
     });
 
-    const newAllMedia = [...this.state.allMedia, ...page.edges];
+    let existing = this.state.allMedia;
+
+    // Our initial load is full of placeholders. Throw those away.
+    if (this.state.initialLoad) {
+      existing = [];
+    }
+
+    const newAllMedia = [...existing, ...page.edges];
     this.setState({
       allMedia: newAllMedia,
       hasNextPage: page.page_info.has_next_page,
@@ -106,7 +134,7 @@ export default class MediaSelectionGrid extends Component {
   }
 
   renderItem = ({ item }) => {
-    const { image, playableDuration, type } = item.node;
+    const { placeholder, image, playableDuration, type } = item.node;
     const { selectedMedia } = this.state;
 
     const selectedIndex = selectedMedia.indexOf(image.uri);
@@ -116,7 +144,8 @@ export default class MediaSelectionGrid extends Component {
         size={tileSize}
         image={image.uri}
         type={type}
-        playableDuration="1:00"
+        placeholder={placeholder}
+        playableDuration={playableDuration}
         selectedIndex={selectedIndex}
         onToggle={this.onToggleTile}
       />
@@ -134,17 +163,7 @@ export default class MediaSelectionGrid extends Component {
     const { filterContext } = this.props;
     const { allMedia, selectedMedia, initialLoad } = this.state;
 
-    if (initialLoad) {
-      return (
-        <View style={{ flexGrow: 1 }}>
-          <Text>Loading</Text>
-        </View>
-      );
-    }
-
-    if (allMedia.length === 0 && filterContext === 'All') {
-      return <Text>No Media in your Photo Library</Text>;
-    } else if (allMedia.length === 0) {
+    if (allMedia.length === 0) {
       return <Text>No Media in your {filterContext}</Text>;
     }
 
@@ -162,6 +181,7 @@ export default class MediaSelectionGrid extends Component {
         onEndThreshold={100}
         onLayout={this.onLayout}
         renderItem={this.renderItem}
+        scrollEnabled={!initialLoad}
         style={styles.list}
       />
     );
@@ -172,5 +192,9 @@ const styles = {
   list: {
     margin: 2,
     minHeight: '100%',
+  },
+  placeholder: {
+    margin: 2,
+    backgroundColor: colors.darkGrey,
   },
 };

@@ -10,6 +10,7 @@ export default class Thumbnail extends PureComponent {
     size: PropTypes.number,
     image: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
+    placeholder: PropTypes.bool,
     playableDuration: PropTypes.string,
     selectedIndex: PropTypes.number.isRequired,
     onToggle: PropTypes.func.isRequired,
@@ -17,6 +18,7 @@ export default class Thumbnail extends PureComponent {
 
   static defaultProps = {
     playableDuration: null,
+    placeholder: false,
     size: 50,
   }
 
@@ -38,15 +40,22 @@ export default class Thumbnail extends PureComponent {
   }
 
   render() {
-    const { image, selectedIndex, size, type } = this.props;
+    const { placeholder, image, selectedIndex, size, type } = this.props;
+    let source = { uri: image };
+
+    // Our placeholders sometimes come through with numbers as sources.
+    if (typeof image !== 'string') {
+      source = null;
+    }
 
     return (
       <TouchableOpacity
         onPress={this.onPress}
         style={styles.wrapper}
+        disabled={placeholder}
       >
         <Image
-          source={{ uri: image }}
+          source={source}
           style={{
             width: size - (styles.wrapper.margin * 2),
             height: size - (styles.wrapper.margin * 2),
@@ -64,6 +73,7 @@ export default class Thumbnail extends PureComponent {
 const styles = {
   wrapper: {
     margin: 2,
+    backgroundColor: colors.darkGrey,
   },
   selectionRectangle: {
     flex: 1,
