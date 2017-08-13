@@ -48,13 +48,11 @@ buck-out/
 # For more information about the recommended setup visit:
 # https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
 
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
+ios/kitsu_mobile.app.dSYM.zip
+ios/fastlane/report.xml
+android/fastlane/report.xml
 
 
 # editor
 .vscode
-ios/kitsu_mobile.app.dSYM.zip
 
-ios/fastlane/report.xml
