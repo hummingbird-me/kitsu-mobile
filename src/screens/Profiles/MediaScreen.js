@@ -306,6 +306,42 @@ class MediaScreen extends Component {
     );
   }
 
+  renderReactions() {
+    const { media } = this.props;
+    const characters = this.props.castings.map(item => ({
+      image: item.character.image ? item.character.image.original : defaultAvatar,
+      id: item.character.id,
+      name: item.character.name,
+      key: item.character.id,
+    }));
+    return (
+      <CardFull
+        single
+        singleText="Reactions"
+        heading="Reactions"
+        onPress={() =>
+          this.props.navigation.navigate('Reactions', {
+            label: 'Media Characters',
+            mediaId: this.props.media.id,
+          })}
+      >
+        {characters.length === 0 &&
+          <Text
+            style={{
+              fontFamily: 'OpenSans',
+              fontSize: 12,
+              alignSelf: 'center',
+              textAlign: 'center',
+              marginTop: 20,
+            }}
+          >
+
+          </Text>}
+
+      </CardFull>
+    );
+  }
+
   renderCharacters() {
     const { media } = this.props;
     const characters = this.props.castings.map(item => ({
@@ -535,6 +571,7 @@ class MediaScreen extends Component {
           {this.renderEpisodes()}
           {this.renderRelatedMedia()}
           {this.renderCharacters()}
+          {this.renderReactions()}
           {/*
             */}
           <CardStatus
