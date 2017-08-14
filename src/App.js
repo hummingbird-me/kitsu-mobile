@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, StatusBar } from 'react-native';
 import { Provider, connect } from 'react-redux';
+
 import codePush from 'react-native-code-push';
 import PropTypes from 'prop-types';
 import configureStore from './store/config';
@@ -9,7 +10,7 @@ import Root from './Router';
 const store = configureStore();
 class App extends Component {
   componentDidMount() {
-    console.disableYellowBox = true;
+    console.disableYellowBox = !__DEV__;
   }
 
   render() {

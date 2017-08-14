@@ -31,6 +31,9 @@ const Root = StackNavigator(
     Profile: {
       screen: Routes.ProfileStack,
     },
+    Post: {
+      screen: Routes.PostStack,
+    },
   },
   {
     headerMode: 'none',
