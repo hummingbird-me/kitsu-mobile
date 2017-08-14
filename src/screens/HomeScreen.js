@@ -10,10 +10,13 @@ import { fetchCurrentUser } from '../store/user/actions';
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
-    tabBarIcon: ({ tintColor }) => (
-      // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
-      <Image source={require('../assets/img/tabbar_icons/feed.png')} style={{ tintColor: tintColor, width: 20, height: 21 }} />
-
+    tabBarIcon: (
+      { tintColor }, // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
+    ) => (
+      <Image
+        source={require('../assets/img/tabbar_icons/feed.png')}
+        style={{ tintColor, width: 20, height: 21 }}
+      />
     ),
   };
   componentWillMount() {
@@ -47,6 +50,11 @@ class HomeScreen extends Component {
                 </View>
               </View>
             </View>}
+          <Button onPress={() => navigation.navigate('Post')}>
+            <Text>
+              Create Post
+            </Text>
+          </Button>
           <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
             <Text>
               Nuck

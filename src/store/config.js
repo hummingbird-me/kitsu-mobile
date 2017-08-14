@@ -10,7 +10,7 @@ import * as reducers from './reducers';
 
 const middlewares = [thunk, createActionBuffer(REHYDRATE)];
 if (__DEV__) {
-  //NativeModules.DevSettings.setIsDebuggingRemotely(true);
+  // NativeModules.DevSettings.setIsDebuggingRemotely(true);
   middlewares.push(createLogger({}));
 }
 
