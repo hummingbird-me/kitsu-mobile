@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   textInput: {
+    marginTop: 10,
     height: 100,
     fontSize: 18,
   },
@@ -36,14 +37,14 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingLeft: 16,
     paddingRight: 16,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#FAFAFA',
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderTopColor: 'lightblue',
     borderTopWidth: 1,
   },
   actionHeading: {
-    fontSize: 18,
+    fontSize: 17,
   },
   actions: {
     flexDirection: 'row',
@@ -56,10 +57,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   actionGIF: {
-    backgroundColor: 'red',
+    backgroundColor: '#F5166F',
     color: '#fff',
     borderRadius: 6,
     fontSize: 13,
+  },
+  actionImageIcon: {
+    color: '#89BF4C',
+    fontSize: 18,
   },
 });
 

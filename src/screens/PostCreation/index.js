@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, KeyboardAvoidingView, TextInput } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { View, KeyboardAvoidingView, TextInput } from 'react-native';
+
+import PostMeta from './postMeta';
 import styles from './styles';
 import NavButton from './navButton';
-import Avatar from './avatar';
-
-const style = {};
+import AddToPost from './addToPost';
 
 class PostCreationScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -40,23 +39,7 @@ class PostCreationScreen extends Component {
         keyboardVerticalOffset={100}
       >
         <View style={styles.statusContainer}>
-
-          <View style={styles.metaContainer}>
-            <Avatar source={require('../../assets/img/default_avatar.png')} />
-
-            <View
-              style={{
-                marginLeft: 10,
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={styles.authorText}>Bilal</Text>
-              <Text style={styles.feedSelector}>
-                Follower Feed
-                <FontAwesome name="angle-down" style={{ paddingRight: 6 }} />
-              </Text>
-            </View>
-          </View>
+          <PostMeta avatar={require('../../assets/img/default_avatar.png')} author="Bilal" />
 
           <TextInput
             multiline
@@ -72,13 +55,7 @@ class PostCreationScreen extends Component {
           />
         </View>
 
-        <View style={styles.actionsContainer}>
-          <Text style={styles.actionHeading}>Add to your post</Text>
-          <View style={styles.actions}>
-            <FontAwesome name="image" style={[styles.actionItem, styles.actionIcon]} />
-            <Text style={[styles.actionItem, styles.actionGIF]}>GIF</Text>
-          </View>
-        </View>
+        <AddToPost />
       </KeyboardAvoidingView>
     );
   }

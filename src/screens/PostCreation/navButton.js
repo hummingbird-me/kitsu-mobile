@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableHighlight, Text } from 'react-native';
-import { darkGrey } from '../../constants/colors';
+import { TouchableHighlight, Text, StyleSheet } from 'react-native';
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     paddingLeft: 10,
     paddingRight: 10,
   },
   text: {
     fontSize: 16,
-    color: darkGrey,
+    color: '#A0989F',
+    fontWeight: 'bold',
   },
-};
+});
 
 const NavButton = ({ children, ...props }) => (
   <TouchableHighlight style={styles.container} {...props}>
