@@ -1,26 +1,15 @@
+/* global __DEV__ */
 import React, { Component } from 'react';
 import { View, StatusBar } from 'react-native';
 import { Provider, connect } from 'react-redux';
+import { identity } from 'lodash';
 
 import codePush from 'react-native-code-push';
 import PropTypes from 'prop-types';
 import configureStore from './store/config';
 import Root from './Router';
 
-const store = configureStore();
-class App extends Component {
-  componentDidMount() {
-    console.disableYellowBox = !__DEV__;
-  }
-
-  render() {
-    return (
-      <Provider store={store}>
-        <ConnectedRoot />
-      </Provider>
-    );
-  }
-}
+console.disableYellowBox = !__DEV__;
 
 const RootContainer = ({ badge }) => (
   <View style={{ flex: 1 }}>
@@ -37,4 +26,15 @@ const ConnectedRoot = connect(({ feed }) => ({
   badge: feed.notificationsUnseen,
 }))(RootContainer);
 
-export default codePush(App);
+const store = configureStore();
+
+const App = () => (
+  <Provider store={store}>
+    <ConnectedRoot />
+  </Provider>
+);
+
+// Check for Codepush only in production mode (Saves compile time & network calls in development).
+const wrapper = __DEV__ ? identity : codePush;
+
+export default wrapper(App);
