@@ -38,8 +38,8 @@ platform :ios do
     # options for type are "adhoc", "development", "appstore"
     match(
       app_identifier: "kitsu-san",
-      force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
       type: "development",
+      force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
       # verbose: true,
       # readonly: true  #readonly mode to be sure it won't create any new certificates or profiles.
     )
@@ -58,7 +58,7 @@ platform :ios do
       # workspace: "./kitsu_mobile.xcworkspace" # if using pods
     )
 
-    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io'] # You can list more emails here
+    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     crashlytics(
