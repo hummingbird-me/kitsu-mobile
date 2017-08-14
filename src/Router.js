@@ -3,7 +3,7 @@ import Routes from './routes';
 
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
 import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
-import { darkPurple, white } from './constants/colors';
+import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(
   {
@@ -35,16 +35,7 @@ const Root = StackNavigator(
   {
     headerMode: 'none',
     mode: 'modal',
-    navigationOptions: {
-      headerStyle: { backgroundColor: darkPurple, height: 64 },
-      headerTitleStyle: {
-        color: white,
-        fontFamily: 'OpenSans',
-        fontWeight: 'bold',
-        fontSize: 15,
-        marginTop: -10,
-      },
-    },
+    navigationOptions: navigationOptions(undefined, -10),
   },
 );
 

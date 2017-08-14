@@ -2,7 +2,7 @@ import { StackNavigator } from 'react-navigation';
 import SearchScreen from '../screens/Search/SearchScreen';
 import SearchCategory from '../screens/Search/SearchCategory';
 import SearchResults from '../screens/Search/SearchResults';
-import { darkPurple, white } from '../constants/colors';
+import navigationOptions from './navigationOptions';
 
 const SearchStack = StackNavigator(
   {
@@ -17,16 +17,7 @@ const SearchStack = StackNavigator(
     },
   },
   {
-    navigationOptions: {
-      headerStyle: { backgroundColor: darkPurple, height: 64 },
-      headerTitleStyle: {
-        color: white,
-        fontFamily: 'OpenSans',
-        fontWeight: 'bold',
-        fontSize: 15,
-        marginTop: 0,
-      },
-    },
+    navigationOptions: navigationOptions(),
   },
 );
 

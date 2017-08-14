@@ -7,7 +7,7 @@ import {
   NetworkScreen,
   FavoriteMedia,
 } from '../screens/Profiles';
-import { darkPurple, white } from '../constants/colors';
+import navigationOptions from './navigationOptions';
 
 const ProfileStack = DismissableStackNavigator(
   {
@@ -34,16 +34,7 @@ const ProfileStack = DismissableStackNavigator(
     },
   },
   {
-    navigationOptions: {
-      headerStyle: { backgroundColor: darkPurple, height: 50 },
-      headerTitleStyle: {
-        color: white,
-        fontFamily: 'OpenSans',
-        fontWeight: 'bold',
-        fontSize: 15,
-        marginTop: -10,
-      },
-    },
+    navigationOptions: navigationOptions(50, -10),
   },
 );
 

@@ -1,7 +1,6 @@
 import { StackNavigator } from 'react-navigation';
 import NotificationsScreen from '../screens/Notifications/NotificationsScreen';
-
-import { darkPurple, white } from '../constants/colors';
+import navigationOptions from './navigationOptions';
 
 const NotifStack = StackNavigator(
   {
@@ -10,16 +9,7 @@ const NotifStack = StackNavigator(
     },
   },
   {
-    navigationOptions: {
-      headerStyle: { backgroundColor: darkPurple, height: 83 },
-      headerTitleStyle: {
-        color: white,
-        fontFamily: 'OpenSans',
-        fontWeight: 'bold',
-        fontSize: 15,
-        marginTop: -10,
-      },
-    },
+    navigationOptions: navigationOptions(83),
   },
 );
 
