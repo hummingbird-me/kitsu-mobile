@@ -40,8 +40,8 @@ install:
 script:
   - cd android && ./gradlew clean
   - ./gradlew assembleRelease --stacktrace --no-daemon -Pandroid.injected.signing.store.file=./app/$KITSU_RELEASE_STORE_FILE -Pandroid.injected.signing.store.password=$KITSU_RELEASE_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$KITSU_RELEASE_KEY_ALIAS -Pandroid.injected.signing.key.password=$KITSU_RELEASE_KEY_PASSWORD
-after_script:
-  - ./gradlew crashlyticsUploadDistributionRelease
+#after_script:
+#  - ./gradlew assembleRelease crashlyticsUploadDistributionRelease -Pandroid.injected.signing.store.file=./app/$KITSU_RELEASE_STORE_FILE -Pandroid.injected.signing.store.password=$KITSU_RELEASE_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$KITSU_RELEASE_KEY_ALIAS -Pandroid.injected.signing.key.password=$KITSU_RELEASE_KEY_PASSWORD
 branches:
   only:
   - master
