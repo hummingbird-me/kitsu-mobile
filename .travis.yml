@@ -1,0 +1,25 @@
+language: android
+jdk: oraclejdk8
+sudo: required
+dist: precise
+android:
+  components:
+  - platform-tools
+  - tools
+  - build-tools-25.0.2
+  - android-25
+  - extra-android-m2repository
+  - extra-google-google_play_services
+  - extra-google-m2repository
+licenses:
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+script
+  - ./android/gradlew assembleRelease --stacktrace --no-daemon
+after_script:
+  - ./android/gradlew crashlyticsUploadDistributionRelease
+before_install:
+  - chmod +x gradlew
+branches:
+  only:
+  - tjkang
