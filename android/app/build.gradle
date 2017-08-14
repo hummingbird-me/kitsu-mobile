@@ -1,4 +1,25 @@
+buildscript {
+  repositories {
+    maven { url 'https://maven.fabric.io/public' }
+  }
+
+  dependencies {
+    // These docs use an open ended version so that our plugin
+    // can be updated quickly in response to Android tooling updates
+
+    // We recommend changing it to the latest version from our changelog:
+    // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+    classpath 'io.fabric.tools:gradle:1.+'
+  }
+}
+
 apply plugin: "com.android.application"
+
+apply plugin: 'io.fabric'
+
+repositories {
+  maven { url 'https://maven.fabric.io/public' }
+}
 
 import com.android.build.OutputFile
 
@@ -105,10 +126,21 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            if (project.hasProperty('KITSU_RELEASE_STORE_FILE')) {
+                storeFile file(KITSU_RELEASE_STORE_FILE)
+                storePassword KITSU_RELEASE_STORE_PASSWORD
+                keyAlias KITSU_RELEASE_KEY_ALIAS
+                keyPassword KITSU_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -137,6 +169,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:25.1.1"
     compile "com.airbnb.android:lottie:1.5.3"
     compile "com.facebook.react:react-native:+"  // From node_modules
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }
 
 // Run this once to be able to run the application with BUCK
