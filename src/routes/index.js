@@ -3,6 +3,7 @@ import NotifStack from './notification';
 import ProfileStack from './profile';
 import FilterStack from './filter';
 import Tabs from './tabs';
+import PostStack from './post';
 
 export default {
   SearchStack,
@@ -10,4 +11,5 @@ export default {
   ProfileStack,
   FilterStack,
   Tabs,
+  PostStack,
 };
