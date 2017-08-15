@@ -8,6 +8,7 @@ cache:
 branches:
   only:
   - beta
+  - tjkang
 notifications:
   email:
     on_success: never
@@ -50,7 +51,8 @@ matrix:
         - yarn install
       script:
         - cd android && ./gradlew clean
-        - ./gradlew assembleRelease crashlyticsUploadDistributionRelease --stacktrace --no-daemon -Pandroid.injected.signing.store.file=./app/$KITSU_RELEASE_STORE_FILE -Pandroid.injected.signing.store.password=$KITSU_RELEASE_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$KITSU_RELEASE_KEY_ALIAS -Pandroid.injected.signing.key.password=$KITSU_RELEASE_KEY_PASSWORD
+        - ./gradlew assembleRelease
+        #- ./gradlew assembleRelease crashlyticsUploadDistributionRelease --stacktrace --no-daemon -Pandroid.injected.signing.store.file=./app/$KITSU_RELEASE_STORE_FILE -Pandroid.injected.signing.store.password=$KITSU_RELEASE_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$KITSU_RELEASE_KEY_ALIAS -Pandroid.injected.signing.key.password=$KITSU_RELEASE_KEY_PASSWORD
 
     - language: objective-c
       os: osx
