@@ -17,20 +17,20 @@ const Tabs = TabNavigator(
     Profile: {
       screen: ProfileStack,
     },
-    Feed: {
-      screen: HomeScreen,
-    },
+    // Feed: {
+    //   screen: HomeScreen,
+    // },
     Notif: {
       screen: NotifStack,
     },
   },
   {
+    lazy: true,
     tabBarOptions: {
       activeTintColor: tabRed,
       inactiveBackgroundColor: listBackPurple,
       activeBackgroundColor: listBackPurple,
       showLabel: false,
-      lazy: true,
       style: {
         height: 44.96,
         borderTopWidth: 0,

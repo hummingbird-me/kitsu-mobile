@@ -10,36 +10,35 @@ export const loginUser = (data, nav, screen) => async (dispatch) => {
   const loginAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-    key: null,
   });
-  try {
-    if (data) {
-      const user = await auth.owner.getToken(data.username, data.password);
-      tokens = user.data;
-    } else {
-      const userFb = await loginUserFb(dispatch);
-      if (userFb.status !== 401) {
-        tokens = await userFb.json();
-      } else if (screen !== 'signup') {
-        nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
-      }
+
+  if (data) {
+    const user = await auth.owner.getToken(data.username, data.password);
+    tokens = user.data;
+  } else {
+    const userFb = await loginUserFb(dispatch);
+    if (userFb.status !== 401) {
+      tokens = await userFb.json();
+    } else if (screen !== 'signup') {
+      nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
     }
-    if (tokens) {
-      dispatch({ type: types.LOGIN_USER_SUCCESS, payload: { data: tokens } });
-      nav.dispatch(loginAction);
-    } else {
-      dispatch({
-        type: types.LOGIN_USER_FAIL,
-        payload: null,
-      });
-    }
-  } catch (e) {
-    console.log(e);
+  }
+  if (tokens) {
+    dispatch({ type: types.LOGIN_USER_SUCCESS, payload: { data: tokens } });
+    nav.dispatch(loginAction);
+  } else {
     dispatch({
       type: types.LOGIN_USER_FAIL,
-      payload: 'Wrong credentials',
+      payload: null,
     });
   }
+  // } catch (e) {
+  //   console.log(e);
+  //   dispatch({
+  //     type: types.LOGIN_USER_FAIL,
+  //     payload: 'Wrong credentials',
+  //   });
+  // }
 };
 
 const loginUserFb = async (dispatch) => {

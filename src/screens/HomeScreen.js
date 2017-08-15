@@ -5,7 +5,7 @@ import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 
 import { logoutUser } from '../store/auth/actions';
-import { fetchCurrentUser } from '../store/user/actions';
+
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -24,9 +24,6 @@ class HomeScreen extends Component {
     selectedImages: [],
   }
 
-  componentWillMount() {
-    // this.props.fetchCurrentUser();
-  }
   render() {
     const { currentUser, navigation, loading } = this.props;
     return (
@@ -91,7 +88,6 @@ HomeScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  fetchCurrentUser: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { logoutUser, fetchCurrentUser })(HomeScreen);
+export default connect(mapStateToProps, { logoutUser })(HomeScreen);

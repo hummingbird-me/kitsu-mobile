@@ -6,7 +6,7 @@ import { identity } from 'lodash';
 
 import codePush from 'react-native-code-push';
 import PropTypes from 'prop-types';
-import configureStore from './store/config';
+import store from './store/config';
 import Root from './Router';
 
 console.disableYellowBox = !__DEV__;
@@ -25,8 +25,6 @@ RootContainer.propTypes = {
 const ConnectedRoot = connect(({ feed }) => ({
   badge: feed.notificationsUnseen,
 }))(RootContainer);
-
-const store = configureStore();
 
 const App = () => (
   <Provider store={store}>

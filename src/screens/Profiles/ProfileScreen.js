@@ -547,9 +547,11 @@ class ProfileScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log('ownProps', ownProps);
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
   const userId = ownProps.navigation.state.params
     && ownProps.navigation.state.params.userId;
+  console.log('userId', userId);
   const { currentUser } = state.user;
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
@@ -559,7 +561,7 @@ const mapStateToProps = (state, ownProps) => {
   const filteredFeed = userFeed.filter(
     ({ activities }) => !['comment', 'follow'].includes(activities[0].verb),
   );
-  console.log(filteredFeed);
+  console.log('map to state', filteredFeed, c, m, a, l, currentUser);
   return {
     loading,
     profile: profile[userId] || {},
