@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 
-import { logoutUser } from '../../store/auth/actions';
-import { fetchCurrentUser } from '../../store/user/actions';
+import { logoutUser } from '../store/auth/actions';
+import { fetchCurrentUser } from '../store/user/actions';
 
 class HomeScreen extends Component {
   static navigationOptions = {
