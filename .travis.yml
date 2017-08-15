@@ -1,0 +1,49 @@
+language: android
+jdk: oraclejdk8
+sudo: required
+dist: precise
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  yarn: true
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - node_modules
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-25.0.2
+    - android-25
+    - build-tools-23.0.1
+    - android-23
+    - extra-android-m2repository
+    - extra-google-google_play_services
+    - extra-google-m2repository
+licenses:
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+before_install:
+  - nvm install 7
+  - node --version
+  - travis_retry curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  - travis_retry sudo apt-get update -qq
+  - travis_retry sudo apt-get install -y -qq yarn
+  - chmod +x ./android/gradlew
+  - openssl aes-256-cbc -K $encrypted_68a856edd0d9_key -iv $encrypted_68a856edd0d9_iv -in ./android/app/kitsu-android-key.keystore.enc -out ./android/app/kitsu-android-key.keystore -d
+install:
+  - yarn install
+script:
+  - cd android && ./gradlew clean
+  - ./gradlew assembleRelease crashlyticsUploadDistributionRelease --stacktrace --no-daemon -Pandroid.injected.signing.store.file=./app/$KITSU_RELEASE_STORE_FILE -Pandroid.injected.signing.store.password=$KITSU_RELEASE_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$KITSU_RELEASE_KEY_ALIAS -Pandroid.injected.signing.key.password=$KITSU_RELEASE_KEY_PASSWORD
+branches:
+  only:
+  - beta
+notifications:
+  email:
+    on_success: never
+    on_failure: always
