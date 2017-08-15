@@ -29,10 +29,9 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :beta do |values|
     # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
-    register_devices(
-      devices_file: "./fastlane/devices.txt",
-      username: "josh@kitsu.io"
-    )
+    #register_devices(
+    #  devices_file: "./fastlane/devices.txt",
+    #)
 
     # After registering the new devices, we'll make sure to update the provisioning profile if necessary
     # options for type are "adhoc", "development", "appstore"
