@@ -138,6 +138,10 @@ android {
     }
     buildTypes {
         release {
+            // ext.betaDistributionReleaseNotesFilePath=”path/to/release_notes.txt”
+            ext.betaDistributionNotifications=true
+            ext.betaDistributionEmailsFilePath="../beta_distribution_emails.txt"
+
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
