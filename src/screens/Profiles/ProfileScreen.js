@@ -633,7 +633,7 @@ const getInfo = (profile) => {
         info['6'] = { label: `Followed by ${value} people`, icon: 'user' };
       }
       if (key === 'followingCount' && value > 0) {
-        debugger;
+
         const label = `Following ${value} people`;
         if (info['6'].label.length > 0) {
           info['6'].label = `${info['6'].label}, ${label.toLowerCase()}`;
