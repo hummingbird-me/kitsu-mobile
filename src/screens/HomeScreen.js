@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 import { logoutUser } from '../store/auth/actions';
 
-
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
@@ -22,7 +21,7 @@ class HomeScreen extends Component {
 
   state = {
     selectedImages: [],
-  }
+  };
 
   render() {
     const { currentUser, navigation, loading } = this.props;
