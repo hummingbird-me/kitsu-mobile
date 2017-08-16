@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import { logoutUser } from '../store/auth/actions';
 import { fetchCurrentUser } from '../store/user/actions';
 
+import Rating from '../components/Rating';
+
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
@@ -75,6 +77,10 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
+          <Rating rating={0} />
+          <Rating rating={4} />
+          <Rating rating={6} />
+          <Rating rating={8} />
         </Content>
       </Container>
     );
