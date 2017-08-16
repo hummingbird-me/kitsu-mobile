@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   manga: {},
   anime: {},
   library: {},
+  userLibrary: {},
   followed: {},
   follower: {},
   errorFav: {},
@@ -61,6 +62,28 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loadingLibrary: false,
         error: action.payload,
+      };
+    case types.FETCH_USER_LIBRARY:
+      return {
+        ...state,
+        loadingUserLibrary: true,
+        userLibrary: {},
+      };
+    case types.FETCH_USER_LIBRARY_SUCCESS:
+      return {
+        ...state,
+        loadingUserLibrary: false,
+        userLibrary: {
+          ...action.payload,
+        },
+      };
+    case types.FETCH_USER_LIBRARY_FAIL:
+      return {
+        ...state,
+        loadingUserLibrary: false,
+        userLibrary: {
+          error: action.error,
+        },
       };
     case types.FETCH_USER_FAVORITES:
       return {

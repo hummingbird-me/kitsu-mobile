@@ -22,7 +22,7 @@ export const fetchProfile = id => async (dispatch) => {
   }
 };
 
-export const fetchLibraryEntires = (userId, limit = 20) => async (dispatch, getState) => {
+export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
   dispatch({ type: types.FETCH_USER_LIB_ENTRIES });
   try {
     const results = await Kitsu.one('userFeed', userId).get({
@@ -95,11 +95,70 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
   }
 };
 
+const fetchUserLibraryByKindAndStatus = async (userId, kind, status) => {
+  const library = await Kitsu.findAll('libraryEntries', {
+    filter: {
+      userId,
+      status,
+      kind,
+    },
+    include: 'anime,manga',
+  });
+
+  return library;
+};
+
+export const fetchUserLibrary = userId => async (dispatch) => {
+  dispatch({ type: types.FETCH_USER_LIBRARY });
+
+  try {
+    const [
+      animeCompleted, animeCurrent, animeDropped, animeOnHold, animePlanned,
+      mangaCompleted, mangaCurrent, mangaDropped, mangaOnHold, mangaPlanned,
+    ] = await Promise.all([
+      fetchUserLibraryByKindAndStatus(userId, 'anime', 'completed'),
+      fetchUserLibraryByKindAndStatus(userId, 'anime', 'current'),
+      fetchUserLibraryByKindAndStatus(userId, 'anime', 'dropped'),
+      fetchUserLibraryByKindAndStatus(userId, 'anime', 'on_hold'),
+      fetchUserLibraryByKindAndStatus(userId, 'anime', 'planned'),
+      fetchUserLibraryByKindAndStatus(userId, 'manga', 'completed'),
+      fetchUserLibraryByKindAndStatus(userId, 'manga', 'current'),
+      fetchUserLibraryByKindAndStatus(userId, 'manga', 'dropped'),
+      fetchUserLibraryByKindAndStatus(userId, 'manga', 'on_hold'),
+      fetchUserLibraryByKindAndStatus(userId, 'manga', 'planned'),
+    ]);
+
+    dispatch({
+      type: types.FETCH_USER_LIBRARY_SUCCESS,
+      payload: {
+        anime: {
+          animeCompleted,
+          animeCurrent,
+          animeDropped,
+          animeOnHold,
+          animePlanned,
+        },
+        manga: {
+          mangaCompleted,
+          mangaCurrent,
+          mangaDropped,
+          mangaOnHold,
+          mangaPlanned,
+        },
+      },
+    });
+  } catch (e) {
+    dispatch({
+      type: types.FETCH_USER_LIBRARY_FAIL,
+      payload: 'Failed to load user library',
+    });
+  }
+};
+
 export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 0) => async (
   dispatch,
   getState,
 ) => {
-  console.log(dispatch);
   const networkType = {
     followed: 'follower',
     follower: 'followed',
