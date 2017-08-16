@@ -1,8 +1,13 @@
+import React from 'react';
 import { TabNavigator } from 'react-navigation';
+import { connect } from 'react-redux';
+
 import HomeScreen from '../screens/HomeScreen';
 import SearchStack from './search';
 import NotifStack from './notification';
 import ProfileStack from './profile';
+
+import { fetchCurrentUser } from '../store/user/actions';
 
 import { tabRed, listBackPurple } from '../constants/colors';
 
@@ -40,4 +45,16 @@ const Tabs = TabNavigator(
   },
 );
 
-export default Tabs;
+class TabsNav extends React.PureComponent {
+  componentWillMount() {
+    this.props.fetchCurrentUser();
+  }
+
+  render() {
+    return <Tabs />;
+  }
+}
+
+const mapper = () => ({});
+
+export default connect(mapper, { fetchCurrentUser })(TabsNav);

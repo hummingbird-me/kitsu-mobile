@@ -7,6 +7,7 @@ import { kitsuConfig } from '../../config/env';
 export const loginUser = (data, nav, screen) => async (dispatch) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
+
   const loginAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
@@ -24,7 +25,7 @@ export const loginUser = (data, nav, screen) => async (dispatch) => {
     }
   }
   if (tokens) {
-    dispatch({ type: types.LOGIN_USER_SUCCESS, payload: { data: tokens } });
+    dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     nav.dispatch(loginAction);
   } else {
     dispatch({
@@ -76,6 +77,7 @@ const loginUserFb = async (dispatch) => {
   new GraphRequestManager().addRequest(infoRequest).start();
   return result;
 };
+
 export const logoutUser = nav => (dispatch) => {
   const loginAction = NavigationActions.reset({
     index: 0,

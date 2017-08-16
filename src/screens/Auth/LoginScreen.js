@@ -14,20 +14,14 @@ class LoginScreen extends Component {
     header: null,
     gesturesEnabled: false,
   };
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      username: '',
-      password: '',
-      loading: false,
-    };
+  state = {
+    username: '',
+    password: '',
+    loading: false,
+  };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  onSubmit(isFb) {
+  onSubmit = (isFb) => {
     const { username, password } = this.state;
     const { navigation } = this.props;
     if (isFb) {
@@ -35,11 +29,11 @@ class LoginScreen extends Component {
     } else if (username.length > 0 && password.length > 0) {
       this.props.loginUser({ username, password }, navigation);
     }
-  }
+  };
 
-  handleChange(text, name) {
+  handleChange = (text, name) => {
     this.setState({ [name]: text });
-  }
+  };
 
   render() {
     const { navigate } = this.props.navigation;

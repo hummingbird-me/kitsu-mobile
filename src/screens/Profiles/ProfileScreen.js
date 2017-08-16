@@ -36,7 +36,9 @@ import {
 import { getUserFeed } from '../../store/feed/actions';
 
 const Loader = <Spinner size="small" color="grey" />;
+
 class ProfileScreen extends Component {
+  
   static navigationOptions = ({ navigation }) => ({
     tabBarIcon: ({ tintColor }) => (
       <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
@@ -45,20 +47,10 @@ class ProfileScreen extends Component {
     header: null,
   });
 
-  constructor(props) {
-    super(props);
-    const userId = props.navigation.state.params && props.navigation.state.params.userId;
-    this.state = {
-      page: 0,
-      userId,
-    };
-    this.renderInfoBlock = this.renderInfoBlock.bind(this);
-    this.loadMore = this.loadMore.bind(this);
-    this.refresh = this.refresh.bind(this);
-  }
+  state = { page: 0 };
 
   componentDidMount() {
-    const { userId } = this.state;
+    const { userId } = this.props;
     this.props.fetchProfile(userId);
     this.props.fetchLibraryEntires(userId, 12);
     this.props.fetchProfileFavorites(userId, 'character');
@@ -73,7 +65,7 @@ class ProfileScreen extends Component {
     }
   }
 
-  renderImageRow(items, height = 120, hasCaption, type) {
+  renderImageRow = (items, height = 120, hasCaption, type) => {
     let data = items;
     if (type === 'characters') {
       data = items.map((e) => {
@@ -122,7 +114,7 @@ class ProfileScreen extends Component {
     );
   }
 
-  renderScrollableLibrary(items) {
+  renderScrollableLibrary = (items) => {
     const data = items.map((e) => {
       let char = {
         image: defaultAvatar,
@@ -183,7 +175,7 @@ class ProfileScreen extends Component {
     return item;
   }
 
-  renderInfoBlock() {
+  renderInfoBlock = () => {
     const { profile, loading, navigation } = this.props;
     const infos = [];
     _.forOwn(getInfo(profile), (item, key) => {
@@ -232,15 +224,16 @@ class ProfileScreen extends Component {
     );
   }
 
-  refresh(userId) {
+  refresh = (userId) => {
     this.props.getUserFeed(userId);
   }
 
-  loadMore(userId) {
+  loadMore = (userId) => {
     const { loadingUserFeed, userFeed } = this.props;
 
-    if (loadingUserFeed) return;
-    this.props.getUserFeed(userId, userFeed[userFeed.length - 1].id);
+    if (!loadingUserFeed) {
+      this.props.getUserFeed(userId, userFeed[userFeed.length - 1].id);
+    }
   }
 
   getDataForList(main, index = 0, size = 1) {
@@ -253,7 +246,7 @@ class ProfileScreen extends Component {
     return result;
   }
 
-  renderHeader() {
+  renderHeader = () => {
     const {
       profile,
       navigation,
@@ -265,7 +258,7 @@ class ProfileScreen extends Component {
       entries,
     } = this.props;
 
-    const { userId } = this.state;
+    const { userId } = this.props;
     return (
       <View>
         <View
@@ -546,13 +539,10 @@ class ProfileScreen extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  console.log('ownProps', ownProps);
+const mapStateToProps = (state) => {
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
-  const userId = ownProps.navigation.state.params
-    && ownProps.navigation.state.params.userId;
-  console.log('userId', userId);
   const { currentUser } = state.user;
+  const userId = currentUser.id;
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
   const a = (anime[userId] && anime[userId].map(({ item }) => item)) || [];
@@ -561,8 +551,8 @@ const mapStateToProps = (state, ownProps) => {
   const filteredFeed = userFeed.filter(
     ({ activities }) => !['comment', 'follow'].includes(activities[0].verb),
   );
-  console.log('map to state', filteredFeed, c, m, a, l, currentUser);
   return {
+    userId,
     loading,
     profile: profile[userId] || {},
     currentUser,
@@ -643,6 +633,7 @@ const getInfo = (profile) => {
         info['6'] = { label: `Followed by ${value} people`, icon: 'user' };
       }
       if (key === 'followingCount' && value > 0) {
+        debugger;
         const label = `Following ${value} people`;
         if (info['6'].label.length > 0) {
           info['6'].label = `${info['6'].label}, ${label.toLowerCase()}`;

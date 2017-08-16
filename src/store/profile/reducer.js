@@ -18,7 +18,7 @@ const INITIAL_STATE = {
   signupError: {},
 };
 
-export default(state = INITIAL_STATE, action) => {
+export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.FETCH_USER:
       return {
@@ -32,7 +32,7 @@ export default(state = INITIAL_STATE, action) => {
         loading: false,
         profile: {
           ...state.profile,
-          [action.payload.userId]: action.payload.user,
+          [action.payload.id]: action.payload,
         },
         error: '',
       };
