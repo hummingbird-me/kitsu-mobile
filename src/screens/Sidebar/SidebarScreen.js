@@ -1,16 +1,28 @@
+/*
+  // TODO
+  - use svgs
+  - reorganize styles
+*/
+
 import React, { Component } from 'react';
 import { View, Image, SectionList, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Spinner, Button, Container, Content, Icon, Left, Right, Item } from 'native-base';
+import ProgressiveImage from '../../components/ProgressiveImage';
+import { Text, Button, Container, Icon, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 // import Icon from '../../components/Icon';
 import * as colors from '../../constants/colors';
+
 import menu from '../../assets/img/tabbar_icons/menu.png';
+import bugs from '../../assets/img/sidebar_icons/bugs.png';
+import contact from '../../assets/img/sidebar_icons/contact.png';
+import library from '../../assets/img/sidebar_icons/library.png';
+import suggest from '../../assets/img/sidebar_icons/suggest.png';
+import settings from '../../assets/img/sidebar_icons/settings.png';
 import defaultAvatar from '../../assets/img/default_avatar.png';
-import poster from '../../assets/img/posters/avatar.jpg';
 
 const shortcutsData = [
-  { title: 'View Library', icon: 'md-book', target: '' },
+  { title: 'View Library', image: library, target: '' },
 ];
 
 const groupsData = [
@@ -20,25 +32,25 @@ const groupsData = [
 ];
 
 const settingsData = [
-  { title: 'Settings & Preferences', icon: 'ios-settings', target: '' },
-  { title: 'Report Bug', icon: 'ios-bug', target: '' },
-  { title: 'Suggest Features', icon: 'ios-megaphone', target: '' },
-  { title: 'Contact Us', icon: 'md-mail-open', target: '' },
+  { title: 'Settings & Preferences', image: settings, target: '' },
+  { title: 'Report Bug', image: bugs, target: '' },
+  { title: 'Suggest Features', image: suggest, target: '' },
+  { title: 'Contact Us', image: contact, target: '' },
 ];
 
-const LeftIconWrapper = ({children}) => (
+const LeftIconWrapper = ({ children }) => (
   // have a standard width at all items.
   <View style={{ width: 25, alignItems: 'center' }}>
     {children}
   </View>
 );
 
-const SettingsItem = ({ icon, title, onPress }) => (
-  <Item button onPress={onPress} style={styles.settingsItem}>
+const SettingsItem = ({ image, title, onPress }) => (
+  <Item button onPress={onPress} style={styles.sectionListItem}>
     <Left>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <LeftIconWrapper>
-          <Icon name={icon} style={{ fontSize: 20 }} />
+          <Image source={image} style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }} />
         </LeftIconWrapper>
         <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>{title}</Text>
       </View>
@@ -50,7 +62,7 @@ const SettingsItem = ({ icon, title, onPress }) => (
 );
 
 const GroupsItem = ({ imageURL, title, onPress }) => (
-  <Item button onPress={onPress} style={styles.settingsItem}>
+  <Item button onPress={onPress} style={styles.sectionListItem}>
     <Left>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <LeftIconWrapper>
@@ -98,7 +110,7 @@ class SidebarScreen extends Component {
         key: 'shortcuts',
         data: shortcutsData,
         title: 'Shortcuts',
-        renderItem: ({ item }) => <SettingsItem onPress={()=>{}} title={item.title} icon={item.icon} />,
+        renderItem: ({ item }) => <SettingsItem onPress={()=>{}} title={item.title} image={item.image} />,
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
       {
@@ -112,22 +124,22 @@ class SidebarScreen extends Component {
         key: 'settings',
         data: settingsData,
         title: 'Account Settings',
-        renderItem: ({ item }) => <SettingsItem onPress={()=>{}} title={item.title} icon={item.icon} />,
+        renderItem: ({ item }) => <SettingsItem onPress={()=>{}} title={item.title} image={item.image} />,
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
     ];
     return (
       <Container style={styles.containerStyle}>
-        <View style={{ paddingTop: Platform.select({ ios: 20, android: 24 }) }} scrollEnabled={false}>
-          <Image style={{height: 80, justifyContent: 'center', padding: 20}} source={poster}>
-            <View style={{flexDirection: 'row'}}>
-              <Image style={{width:40, height: 40, borderRadius: 20}} source={defaultAvatar} />
-              <View style={{marginLeft: 12, backgroundColor: 'transparent' }}>
+        <View>
+          <ProgressiveImage hasOverlay style={{ height: 100, justifyContent: 'center' }} source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}>
+            <View style={{ flex: 1, flexDirection: 'row', paddingTop: Platform.select({ ios: 20, android: 24 }), alignItems: 'center', marginLeft: 20 }}>
+              <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={defaultAvatar} />
+              <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
                 <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 14, fontWeight: '600'}}>Dummy UI</Text>
-                <Text style={{ fontFamily: 'OpenSans', color: colors.imageGrey, fontSize: 10}}>view profile</Text>
+                <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>view profile</Text>
               </View>
             </View>
-          </Image>
+          </ProgressiveImage>
           <SectionList
             contentContainerStyle={{ paddingBottom: 100 }}
             sections={sectionListData}
@@ -160,13 +172,17 @@ class SidebarScreen extends Component {
 
 const styles = {
   containerStyle: { backgroundColor: colors.listBackPurple },
-  settingsItem: {
+  sectionListItem: {
     backgroundColor: colors.white,
     padding: 8,
+    borderRadius: 0,
+    borderColor: 'white',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 0,
+    marginLeft: 0 // FUCKING STUPID NATIVEBASE.
   },
 };
 

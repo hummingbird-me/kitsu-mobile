@@ -44,7 +44,7 @@ class ProgressiveImage extends Component {
 
   render() {
     const { key, thumbnailOpacity } = this.state;
-    const { source, style, resizeMode, hasOverlay } = this.props;
+    const { source, style, resizeMode, hasOverlay, children } = this.props;
     // console.log(this.state);
     return (
       <View
@@ -75,7 +75,7 @@ class ProgressiveImage extends Component {
               position: 'absolute',
               top: 0,
             }}
-          />}
+          >{children}</LinearGradient>}
       </View>
     );
   }
