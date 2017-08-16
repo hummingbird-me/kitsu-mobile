@@ -4,6 +4,8 @@ import SearchStack from './search';
 import NotifStack from './notification';
 import ProfileStack from './profile';
 
+import SidebarScreen from '../screens/Sidebar/SidebarScreen';
+
 import { tabRed, listBackPurple } from '../constants/colors';
 
 const Tabs = TabNavigator(
@@ -17,11 +19,11 @@ const Tabs = TabNavigator(
     Profile: {
       screen: ProfileStack,
     },
-    Feed: {
-      screen: HomeScreen,
-    },
     Notif: {
       screen: NotifStack,
+    },
+    Menu: {
+      screen: SidebarScreen,
     },
   },
   {
