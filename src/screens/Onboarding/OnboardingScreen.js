@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Image, Dimensions } from 'react-native';
+import { View, Text, Image, Dimensions, Platform } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
 import * as colors from '../../constants/colors';
@@ -93,7 +93,7 @@ class OnboardingScreen extends Component {
     }
     return (
       <Container style={styles.container}>
-        <Content scrollEnabled={false}>
+        <Content contentContainerStyle={styles.contentContainer} scrollEnabled={Platform.select({ ios: false, android: true })}>
           <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
             <Carousel
               ref={(carousel) => {
@@ -151,6 +151,11 @@ const styles = {
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  contentContainer: {
+    // only necessary for scrollview (android).
+    // pick a value close to dotContainer padding.
+    paddingBottom: Platform.select({ ios: 0, android: 30 }),
   },
   footer: {
     backgroundColor: colors.darkPurple,
