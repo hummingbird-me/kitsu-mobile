@@ -35,8 +35,11 @@ before_install:
   - travis_retry sudo apt-get install -y -qq yarn
   - chmod +x ./android/gradlew
   - openssl aes-256-cbc -K $encrypted_68a856edd0d9_key -iv $encrypted_68a856edd0d9_iv -in ./android/app/kitsu-android-key.keystore.enc -out ./android/app/kitsu-android-key.keystore -d
+  - openssl aes-256-cbc -K $encrypted_5a0bd94d6bee_key -iv $encrypted_5a0bd94d6bee_iv -in .deploy_key.enc -out ~/.ssh/deploy_key -d
+  - echo -e "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/deploy_key\n" >> ~/.ssh/config
 install:
   - yarn install
+  - git clone https://github.com/hummingbird-me/certificates
 script:
   - cd android && ./gradlew clean
   - ./gradlew assembleRelease crashlyticsUploadDistributionRelease --stacktrace --no-daemon -Pandroid.injected.signing.store.file=./app/$KITSU_RELEASE_STORE_FILE -Pandroid.injected.signing.store.password=$KITSU_RELEASE_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$KITSU_RELEASE_KEY_ALIAS -Pandroid.injected.signing.key.password=$KITSU_RELEASE_KEY_PASSWORD
