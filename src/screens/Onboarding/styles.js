@@ -41,6 +41,7 @@ export default StyleSheet.create({
     lineHeight: 21,
     fontFamily: 'OpenSans',
     textAlign: 'center',
+    backgroundColor: 'transparent',
   },
   dotContainer: {
     flexDirection: 'row',
