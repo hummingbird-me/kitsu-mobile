@@ -68,6 +68,7 @@ const AuthWrapper = ({ onSuccess, children, loading }) => {
     </Container>
   );
 };
+
 const styles = {
   container: {
     backgroundColor: colors.darkPurple,
