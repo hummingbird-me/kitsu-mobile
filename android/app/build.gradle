@@ -144,7 +144,7 @@ android {
 
             // ext.betaDistributionReleaseNotesFilePath=”path/to/release_notes.txt”
             // ext.betaDistributionEmailsFilePath="beta_distribution_emails.txt"
-            ext.betaDistributionEmails="mikunj@live.com.au, nuck@kitsu.io, daniel@rassiner.com"
+            ext.betaDistributionEmails="thomas@kitsu.io, mikunj@live.com.au, nuck@kitsu.io, daniel@rassiner.com"
             ext.betaDistributionNotifications=true
         }
     }
