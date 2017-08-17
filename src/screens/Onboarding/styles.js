@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as colors from '../../constants/colors';
 
 export default StyleSheet.create({
@@ -6,11 +6,6 @@ export default StyleSheet.create({
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  contentContainer: {
-    // only necessary for scrollview (android).
-    // pick a value close to dotContainer padding.
-    paddingBottom: Platform.select({ ios: 0, android: 30 }),
   },
   footerButtonText: {
     opacity: 0.51,
