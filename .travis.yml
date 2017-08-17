@@ -68,6 +68,7 @@ matrix:
         - echo -e "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/deploy_key\n" >> ~/.ssh/config
         - ssh-keyscan github.com >> ~/.ssh/known_hosts
         - chmod 600 ~/.ssh/deploy_key
+        #- security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MATCH_PASSWORD $MATCH_KEYCHAIN_NAME
         - security find-identity -v -p codesigning
         #- gem install bundler
         #- gem update fastlane --no-ri --no-rdoc --no-document
