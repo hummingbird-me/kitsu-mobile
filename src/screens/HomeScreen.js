@@ -19,6 +19,11 @@ class HomeScreen extends Component {
       />
     ),
   };
+
+  state = {
+    selectedImages: [],
+  }
+
   componentWillMount() {
     // this.props.fetchCurrentUser();
   }
@@ -63,6 +68,11 @@ class HomeScreen extends Component {
           <Button onPress={() => this.props.logoutUser(navigation)}>
             <Text>
               Logout
+            </Text>
+          </Button>
+          <Button onPress={() => navigation.navigate('MediaUpload')}>
+            <Text>
+              Upload Media
             </Text>
           </Button>
         </Content>
