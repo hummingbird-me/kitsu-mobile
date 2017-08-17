@@ -37,11 +37,17 @@ platform :ios do
     # options for type are "adhoc", "development", "appstore"
     match(
       app_identifier: "kitsu-san",
+      type: "development",
+      readonly: true  #readonly mode to be sure it won't create any new certificates or profiles.
+    )
+
+    match(
+      app_identifier: "kitsu-san",
       type: "appstore",
       force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
       # clone_branch_directly: true,
       verbose: true,
-      # readonly: true  #readonly mode to be sure it won't create any new certificates or profiles.
+      readonly: true  #readonly mode to be sure it won't create any new certificates or profiles.
     )
 
     # Change build number (requirement of Testflight).
