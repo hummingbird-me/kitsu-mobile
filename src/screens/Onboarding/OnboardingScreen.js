@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-<<<<<<< HEAD
-import { View, Text, Image, Dimensions, Platform } from 'react-native';
-=======
 import { View, Text, Dimensions } from 'react-native';
->>>>>>> 0c3c9550d5ab54eec68e22b6f1fa2a210166abf4
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
 import styles from './styles';
