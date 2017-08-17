@@ -29,6 +29,15 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :beta do |values|
     # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
+    create_keychain(
+      name: ENV["MATCH_KEYCHAIN_NAME"],
+      password: ENV["MATCH_PASSWORD"],
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      add_to_search_list: true
+    )
+
     #register_devices(
     #  devices_file: "./fastlane/devices.txt",
     #)
@@ -39,6 +48,8 @@ platform :ios do
       app_identifier: "kitsu-san",
       type: "development",
       readonly: true  #readonly mode to be sure it won't create any new certificates or profiles.
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_PASSWORD"]
     )
 
     match(
@@ -48,6 +59,8 @@ platform :ios do
       # clone_branch_directly: true,
       verbose: true,
       readonly: true  #readonly mode to be sure it won't create any new certificates or profiles.
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_PASSWORD"]
     )
 
     # Change build number (requirement of Testflight).
