@@ -2,6 +2,7 @@
   // TODO
   - use svgs
   - reorganize styles
+  - navigationoptions from router?
 */
 
 import React, { Component } from 'react';
@@ -25,7 +26,7 @@ import SidebarTitle from './common/SidebarTitle';
 import SidebarListItem from './common/SidebarListItem';
 
 const shortcutsData = [
-  { title: 'View Library', image: library, target: '' },
+  { title: 'View Library', image: library, target: 'Library' },
 ];
 
 const groupsData = [
@@ -117,7 +118,7 @@ class SidebarScreen extends Component {
             <View style={{ flex: 1, flexDirection: 'row', paddingTop: Platform.select({ ios: 20, android: 24 }), alignItems: 'center', marginLeft: 20 }}>
               <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={defaultAvatar} />
               <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
-                <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 14, fontWeight: '600'}}>Dummy UI</Text>
+                <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 14, fontWeight: '600' }}>Dummy UI</Text>
                 <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>view profile</Text>
               </View>
             </View>
@@ -132,6 +133,7 @@ class SidebarScreen extends Component {
             renderSectionFooter={({ section }) => {
               // THIS FUNCTION IS NOT BEING INVOKED !?
             }}
+            removeClippedSubviews={false}
             SectionSeparatorComponent={() => <View height={28} />}
             ListFooterComponent={() => <View style={{ marginTop: 40, padding: 12, backgroundColor: colors.white, alignItems: 'center'}} >
               <Text

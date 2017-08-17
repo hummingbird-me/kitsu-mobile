@@ -27,22 +27,26 @@ class SettingsScreen extends Component {
       />
     ),
   });
+
   render() {
-    return (
+    const { navigation } = this.props;
+    return ( // handle marginTop: 77
       <Container style={styles.containerStyle}>
-        <View style={{ flex: 1, marginTop: 77 }}>
+        <View style={{ marginTop: 77 }}>
           <SidebarTitle style={{ marginTop: 20 }} title={'Account Settings'} />
           <FlatList
             data={[
-              { title: 'General', image: settings, target: '' },
-              { title: 'Privacy', image: privacy, target: '' },
+              { title: 'General', image: settings, target: 'GeneralSettings' },
+              { title: 'Privacy', image: privacy, target: 'PrivacySettings' },
               { title: 'Linked Accounts', image: linked, target: '' },
-              { title: 'Library', image: library, target: '' },
-              { title: 'Blocking', image: blocking, target: '' },
+              { title: 'Library', image: library, target: 'Library' },
+              { title: 'Blocking', image: blocking, target: 'Blocking' },
             ]}
             keyExtractor={item => item.title}
-            renderItem={({ item }) => <SidebarListItem title={item.title} image={item.image} />}
+            renderItem={({ item }) => <SidebarListItem title={item.title} image={item.image} onPress={() => navigation.navigate(item.target)} />}
             ItemSeparatorComponent={() => <ItemSeparator />}
+            removeClippedSubviews={false}
+            scrollEnabled={false}
           />
         </View>
       </Container>
