@@ -37,7 +37,7 @@ platform :ios do
     # options for type are "adhoc", "development", "appstore"
     match(
       app_identifier: "kitsu-san",
-      type: "development",
+      type: "appstore",
       force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
       # clone_branch_directly: true,
       verbose: true,
