@@ -3,8 +3,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SearchStack from './search';
 import NotifStack from './notification';
 import ProfileStack from './profile';
-
-import SidebarScreen from '../screens/Sidebar/SidebarScreen';
+import SidebarStack from './sidebar';
 
 import { tabRed, listBackPurple } from '../constants/colors';
 
@@ -23,7 +22,7 @@ const Tabs = TabNavigator(
       screen: NotifStack,
     },
     Menu: {
-      screen: SidebarScreen,
+      screen: SidebarStack,
     },
   },
   {

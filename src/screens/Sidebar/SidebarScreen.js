@@ -21,6 +21,9 @@ import suggest from '../../assets/img/sidebar_icons/suggest.png';
 import settings from '../../assets/img/sidebar_icons/settings.png';
 import defaultAvatar from '../../assets/img/default_avatar.png';
 
+import SidebarTitle from './common/SidebarTitle';
+import SidebarListItem from './common/SidebarListItem';
+
 const shortcutsData = [
   { title: 'View Library', image: library, target: '' },
 ];
@@ -32,7 +35,7 @@ const groupsData = [
 ];
 
 const settingsData = [
-  { title: 'Settings & Preferences', image: settings, target: '' },
+  { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bug', image: bugs, target: '' },
   { title: 'Suggest Features', image: suggest, target: '' },
   { title: 'Contact Us', image: contact, target: '' },
@@ -45,21 +48,7 @@ const LeftIconWrapper = ({ children }) => (
   </View>
 );
 
-const SettingsItem = ({ image, title, onPress }) => (
-  <Item button onPress={onPress} style={styles.sectionListItem}>
-    <Left>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <LeftIconWrapper>
-          <Image source={image} style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }} />
-        </LeftIconWrapper>
-        <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>{title}</Text>
-      </View>
-    </Left>
-    <Right>
-      <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
-    </Right>
-  </Item>
-);
+const SettingsItem = ({ image, title, onPress }) => <SidebarListItem image={image} title={title} onPress={onPress} />
 
 const GroupsItem = ({ imageURL, title, onPress }) => (
   <Item button onPress={onPress} style={styles.sectionListItem}>
@@ -77,11 +66,7 @@ const GroupsItem = ({ imageURL, title, onPress }) => (
   </Item>
 );
 
-const SectionTitle = ({ title }) => (
-  <View style={{ paddingHorizontal: 2, paddingVertical: 8, backgroundColor: colors.listBackPurple }}>
-    <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 12, color: colors.white }}>{title}</Text>
-  </View>
-);
+const SectionTitle = ({ title }) => <SidebarTitle title={title} />;
 
 const ItemSeparator = () => (
   <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.imageGrey}} />
@@ -89,6 +74,7 @@ const ItemSeparator = () => (
 
 class SidebarScreen extends Component {
   static navigationOptions = {
+    header: null, // overlaps statusbar
     tabBarIcon: (
       { tintColor },
     ) => (
@@ -99,10 +85,6 @@ class SidebarScreen extends Component {
     ),
   };
 
-  state = {
-    selectedImages: [],
-  }
-
   render() {
     const { navigation } = this.props;
     const sectionListData = [
@@ -110,21 +92,21 @@ class SidebarScreen extends Component {
         key: 'shortcuts',
         data: shortcutsData,
         title: 'Shortcuts',
-        renderItem: ({ item }) => <SettingsItem onPress={()=>{}} title={item.title} image={item.image} />,
+        renderItem: ({ item }) => <SettingsItem onPress={() => { navigation.navigate(item.target); }} title={item.title} image={item.image} />,
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
       {
         key: 'groups',
         data: groupsData,
         title: 'Groups',
-        renderItem: ({ item }) => <GroupsItem onPress={()=>{}} title={item.title} imageURL={item.imageURL} />,
+        renderItem: ({ item }) => <GroupsItem onPress={() => { navigation.navigate(item.target); }} title={item.title} imageURL={item.imageURL} />,
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
       {
         key: 'settings',
         data: settingsData,
         title: 'Account Settings',
-        renderItem: ({ item }) => <SettingsItem onPress={()=>{}} title={item.title} image={item.image} />,
+        renderItem: ({ item }) => <SettingsItem onPress={() => { navigation.navigate(item.target); }} title={item.title} image={item.image} />,
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
     ];
