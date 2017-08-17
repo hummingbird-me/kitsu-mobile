@@ -1122,7 +1122,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 98KG27K553;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -1866,7 +1866,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_kitsu-san_appstore)";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development kitsu-san";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1877,7 +1877,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 98KG27K553;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1908,7 +1908,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_kitsu-san_appstore)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore kitsu-san";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

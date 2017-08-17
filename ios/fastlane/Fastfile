@@ -54,22 +54,22 @@ platform :ios do
       scheme: "kitsu_mobile",
       clean: true,
       project: "./kitsu_mobile.xcodeproj",
-      export_method: "development"
+      export_method: "app-store"
       # workspace: "./kitsu_mobile.xcworkspace" # if using pods
     )
 
     emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
-    crashlytics(
-      api_token: 'b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00',
-      build_secret: '010015018557534a1a97465380fd280881f586eec24f45bcc511520a031d50d4',
-      emails: emails,
-      groups: groups,
-      debug: true,
-      notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
-      notifications: true  # Should this distribution notify your testers via email?
-    )
+    #crashlytics(
+    #  api_token: 'b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00',
+    #  build_secret: '010015018557534a1a97465380fd280881f586eec24f45bcc511520a031d50d4',
+    #  emails: emails,
+    #  groups: groups,
+    #  debug: true,
+    #  notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
+    #  notifications: true  # Should this distribution notify your testers via email?
+    #)
 
     # sh "your_script.sh"
     # You can also use other beta testing services here (run `fastlane actions`)
