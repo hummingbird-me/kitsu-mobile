@@ -12,19 +12,11 @@ import * as colors from '../../constants/colors';
 import { defaultAvatar } from '../../constants/app';
 
 class CardActivity extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.renderMain = this.renderMain.bind(this);
-  }
-
-  componentDidMount() {
-    console.log('mount');
-  }
-
   shouldComponentUpdate() {
     return false;
   }
-  renderMain(activities) {
+
+  renderMain = (activities) => {
     const aaa = activities.map((item, index) => {
       const subject = item.subject || {};
       if (item.verb === 'post' && subject.content) {
@@ -98,7 +90,9 @@ class CardActivity extends PureComponent {
               style={{ height: 120, width: 80 }}
             />
             <View style={{ flex: 1, alignSelf: 'center' }}>
-              <Text style={{ alignSelf: 'center', fontFamily: 'OpenSans', fontSize: 12 }}>{item.subject.reaction}</Text>
+              <Text style={{ alignSelf: 'center', fontFamily: 'OpenSans', fontSize: 12 }}>
+                {item.subject.reaction}
+              </Text>
 
             </View>
           </View>
@@ -115,7 +109,7 @@ class CardActivity extends PureComponent {
         {aaa}
       </View>
     );
-  }
+  };
   render() {
     const { props } = this;
     const activities = (props.activities && props.activities[0]) || {};
@@ -254,9 +248,9 @@ const styles = {
     marginLeft: 90,
     fontFamily: 'OpenSans',
     fontSize: 12,
-    color: 'darkGrey',
+    color: colors.darkGrey,
     lineHeight: 17,
-  }
+  },
 };
 
 export default CardActivity;

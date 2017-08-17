@@ -1,152 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Image, Dimensions } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
+import styles from './styles';
+import Step from './Step';
+import Dot from './Dot';
 import * as colors from '../../constants/colors';
 
-const intros = [
-  {
-    title: 'More of what you love',
-    desc: 'Get recommendations to discover your next favorite anime or manga!',
-    img: require('../../assets/img/intro1.png'),
-  },
-  {
-    title: 'Track your progress',
-    desc: 'Log and rate what you’ve seen and read to build a library of your history.',
-    img: require('../../assets/img/intro2.png'),
-  },
-  {
-    title: 'Join the Community',
-    desc: 'Kitsu makes finding new like-minded friends easy with the global activity feed.',
-    img: require('../../assets/img/intro3.png'),
-  },
-  {
-    title: 'Share your Reactions',
-    desc: 'Check the media ratings and reviews from other users and leave your own!',
-    img: require('../../assets/img/intro4.png'),
-  },
-];
-
-class OnboardingScreen extends Component {
-  static navigationOptions = {
-    header: null,
-  };
-  constructor(props) {
-    super(props);
-    this.state = {
-      step: 0,
-    };
-
-    this.renderStep = this.renderStep.bind(this);
-    this.renderDots = this.renderDots.bind(this);
-  }
-  renderStep() {
-    return intros.map((item, index) => (
-      <View
-        key={index}
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          flex: 1,
-        }}
-      >
-        <View style={styles.slide}>
-          <Image
-            style={{
-              width: 210,
-              height: 230,
-              marginTop: 30,
-              resizeMode: 'contain',
-            }}
-            source={item.img}
-          />
-          <Text style={styles.text}>{item.title.toUpperCase()}</Text>
-          <Text style={styles.desc}>{item.desc}</Text>
-        </View>
-      </View>
-    ));
-  }
-  renderDots() {
-    return intros.map((item, index) => (
-      <View
-        key={index}
-        style={{
-          backgroundColor: index === this.state.step ? colors.white : colors.lightPink,
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          marginLeft: 3,
-          marginRight: 3,
-          marginTop: 3,
-          marginBottom: 3,
-        }}
-      />
-    ));
-  }
-  render() {
-    let btnStyle = styles.button;
-    const { navigate } = this.props.navigation;
-    const last = this.state.step === intros.length - 1;
-    if (last) {
-      btnStyle = { ...styles.button, ...styles.buttonLast };
-    }
-    return (
-      <Container style={styles.container}>
-        <Content scrollEnabled={false}>
-          <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
-            <Carousel
-              ref={(carousel) => {
-                this._carousel = carousel;
-              }}
-              inactiveSlideScale={0.90}
-              inactiveSlideOpacity={0.5}
-              enableMomentum={false}
-              onSnapToItem={slideIndex => this.setState({ step: slideIndex })}
-              sliderWidth={Dimensions.get('window').width}
-              itemWidth={265}
-            >
-              {this.renderStep()}
-            </Carousel>
-          </View>
-          <View style={styles.dotContainer}>
-            {this.renderDots()}
-          </View>
-          <Button
-            rounded
-            bordered={!last}
-            light
-            block
-            style={btnStyle}
-            onPress={() => navigate('Signup')}
-          >
-            <Text style={{ color: colors.white, textAlign: 'center', fontSize: 17, fontFamily: 'OpenSans' }}>
-              Get Started
-            </Text>
-          </Button>
-        </Content>
-        <Footer style={styles.footer}>
-          <FooterTab>
-            <Button full onPress={() => navigate('Login')}>
-              <Text style={styles.footerButtonText}>
-                Have an account? Sign in
-              </Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
-    );
-  }
-}
-
-OnboardingScreen.propTypes = {
-  navigation: PropTypes.object,
-};
-
-OnboardingScreen.defaultProps = {
-  navigation: {},
-};
-const styles = {
+const styleObj = {
   container: {
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
@@ -157,36 +19,6 @@ const styles = {
     borderTopColor: 'rgba(98,79,94,1)',
     height: 60,
   },
-  footerButtonText: {
-    opacity: 0.51,
-    fontSize: 16,
-    color: colors.white,
-    fontFamily: 'OpenSans',
-  },
-  slide: {
-    width: 265,
-    height: 390,
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 3,
-  },
-  text: {
-    marginTop: 5,
-    color: '#333333',
-    fontSize: 17,
-    lineHeight: 21,
-    fontFamily: 'Asap-Bold',
-  },
-  desc: {
-    padding: 15,
-    paddingRight: 25,
-    paddingLeft: 25,
-    color: '#333333',
-    fontSize: 17,
-    lineHeight: 21,
-    fontFamily: 'OpenSans',
-    textAlign: 'center',
-  },
   button: {
     width: 265,
     height: 50,
@@ -196,12 +28,104 @@ const styles = {
     backgroundColor: colors.lightGreen,
     borderWidth: 0,
   },
-  dotContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 25,
+};
+
+const INTROS = [
+  {
+    title: 'More of what you love',
+    desc: 'Get recommendations to discover your next favorite anime or manga!',
+    image: require('../../assets/img/intro1.png'),
   },
+  {
+    title: 'Track your progress',
+    desc: 'Log and rate what you’ve seen and read to build a library of your history.',
+    image: require('../../assets/img/intro2.png'),
+  },
+  {
+    title: 'Join the Community',
+    desc: 'Kitsu makes finding new like-minded friends easy with the global activity feed.',
+    image: require('../../assets/img/intro3.png'),
+  },
+  {
+    title: 'Share your Reactions',
+    desc: 'Check the media ratings and reviews from other users and leave your own!',
+    image: require('../../assets/img/intro4.png'),
+  },
+];
+
+class OnboardingScreen extends Component {
+  static navigationOptions = {
+    header: null,
+  };
+
+  state = {
+    step: 0,
+  };
+
+  renderStep = () => INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
+
+  renderDots = () =>
+    INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
+
+  render() {
+    const { navigate } = this.props.navigation;
+    let btnStyle = styleObj.button;
+    const last = this.state.step === INTROS.length - 1;
+    if (last) {
+      btnStyle = { ...styleObj.button, ...styleObj.buttonLast };
+    }
+
+    return (
+      <Container style={styleObj.container}>
+        <Content scrollEnabled={false}>
+          <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
+            <Carousel
+              inactiveSlideScale={0.90}
+              inactiveSlideOpacity={0.5}
+              enableMomentum={false}
+              onSnapToItem={step => this.setState({ step })}
+              sliderWidth={Dimensions.get('window').width}
+              itemWidth={265}
+            >
+              {this.renderStep()}
+            </Carousel>
+          </View>
+
+          <View style={styles.dotContainer}>
+            {this.renderDots()}
+          </View>
+
+          <Button
+            rounded
+            bordered={!last}
+            light
+            block
+            style={btnStyle}
+            onPress={() => navigate('Signup')}
+          >
+            <Text style={styles.getStartedBtn}>
+              Get Started
+            </Text>
+          </Button>
+        </Content>
+
+        <Footer style={styleObj.footer}>
+          <FooterTab>
+            <Button full onPress={() => navigate('Login')}>
+              <Text style={styles.footerButtonText}>
+                Have an account? Sign in
+              </Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+
+      </Container>
+    );
+  }
+}
+
+OnboardingScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
 };
 
 export default OnboardingScreen;
