@@ -76,7 +76,7 @@ class OnboardingScreen extends Component {
     }
 
     return (
-      <Container style={styles.container}>
+      <Container style={styleObj.container}>
         <Content contentContainerStyle={styles.contentContainer} scrollEnabled={Platform.select({ ios: false, android: true })}>
           <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
             <Carousel
