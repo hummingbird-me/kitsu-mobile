@@ -44,17 +44,6 @@ platform :android do
     emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
-    path = '../app/build.gradle'
-    re = /versionCode\s+(\d+)/
-
-    s = File.read(path)
-    versionCode = s[re, 1].to_i
-    s[re, 1] = (versionCode + 1).to_s
-
-    f = File.new(path, 'w')
-    f.write(s)
-    f.close
-
     bump_version_code
     gradle(
       task: "assembleRelease",
