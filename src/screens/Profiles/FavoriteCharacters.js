@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import { View, Text, Dimensions, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Button, Container } from 'native-base';
-
-import ProgressiveImage from '../../components/ProgressiveImage';
-import { defaultAvatar } from '../../constants/app';
-import { fetchProfileFavorites } from '../../store/profile/actions';
-import { fetchMediaCastings } from '../../store/media/actions';
+import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { defaultAvatar } from 'kitsu/constants/app';
+import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
+import { fetchMediaCastings } from 'kitsu/store/media/actions';
 
 class FavoriteCharacter extends Component {
   static navigationOptions = ({ navigation }) => ({

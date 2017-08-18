@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import { CheckBox } from 'react-native-elements';
-import { getCategories } from '../../store/anime/actions';
-import { genres } from '../../utils/genres';
-import * as colors from '../../constants/colors';
+import { getCategories } from 'kitsu/store/anime/actions';
+import { genres } from 'kitsu/utils/genres';
+import * as colors from 'kitsu/constants/colors';
 
 class SearchCategory extends Component {
   static navigationOptions = ({ navigation }) => ({

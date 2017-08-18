@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as colors from '../../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 
 export default class Thumbnail extends PureComponent {
   static propTypes = {

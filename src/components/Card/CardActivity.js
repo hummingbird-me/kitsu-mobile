@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Button, Left, Right, Thumbnail } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 // import HTMLView from 'react-native-htmlview';
 
-import ProgressiveImage from '../../components/ProgressiveImage';
-import HTMLView from '../../components/htmlView';
-import * as colors from '../../constants/colors';
-import { defaultAvatar } from '../../constants/app';
+import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import HTMLView from 'kitsu/components/htmlView';
+import * as colors from 'kitsu/constants/colors';
+import { defaultAvatar } from 'kitsu/constants/app';
 
 class CardActivity extends PureComponent {
   shouldComponentUpdate() {

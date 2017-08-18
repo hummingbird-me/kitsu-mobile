@@ -1,5 +1,5 @@
-import * as types from '../types';
-import { Kitsu } from '../../config/api';
+import { Kitsu } from 'kitsu/config/api';
+import * as types from 'kitsu/store/types';
 
 const defaults = {
   popular: {

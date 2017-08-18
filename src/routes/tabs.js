@@ -1,15 +1,12 @@
 import React from 'react';
 import { TabNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
-
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from 'kitsu/screens/HomeScreen';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { tabRed, listBackPurple } from 'kitsu/constants/colors';
 import SearchStack from './search';
 import NotifStack from './notification';
 import ProfileStack from './profile';
-
-import { fetchCurrentUser } from '../store/user/actions';
-
-import { tabRed, listBackPurple } from '../constants/colors';
 
 const Tabs = TabNavigator(
   {

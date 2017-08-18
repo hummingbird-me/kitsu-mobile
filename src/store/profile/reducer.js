@@ -1,5 +1,5 @@
 import { REHYDRATE } from 'redux-persist/constants';
-import * as types from '../types';
+import * as types from 'kitsu/store/types';
 
 const INITIAL_STATE = {
   profile: {},

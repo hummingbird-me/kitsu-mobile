@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import * as types from '../types';
-import { Kitsu, setToken } from '../../config/api';
+import * as types from 'kitsu/store/types';
+import { Kitsu } from 'kitsu/config/api';
 
 export const fetchMedia = (id, type) => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_MEDIA });

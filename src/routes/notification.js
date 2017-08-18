@@ -1,5 +1,5 @@
 import { StackNavigator } from 'react-navigation';
-import NotificationsScreen from '../screens/Notifications/NotificationsScreen';
+import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
 import navigationOptions from './navigationOptions';
 
 const NotifStack = StackNavigator(

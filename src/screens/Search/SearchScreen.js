@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Icon, Text, Item, Input, Image } from 'native-base';
+import { Container, Icon, Item, Input } from 'native-base';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import _ from 'lodash';
-
-import * as colors from '../../constants/colors';
-
-import { search } from '../../store/anime/actions';
+import * as colors from 'kitsu/constants/colors';
+import { search } from 'kitsu/store/anime/actions';
+import SegmentTabBar from 'kitsu/components/SegmentTabBar';
 import { ResultsList, TopsList, UsersList } from './Lists';
-import SegmentTabBar from '../../components/SegmentTabBar';
 
 class SearchScreen extends Component {
   static navigationOptions = {

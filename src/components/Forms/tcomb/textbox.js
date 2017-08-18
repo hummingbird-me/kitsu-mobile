@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Input, Item } from 'native-base';
-import CustomIcon from '../../Icon';
+import CustomIcon from 'kitsu/components/Icon';
 
 function textbox(locals) {
   if (locals.hidden) {

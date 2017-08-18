@@ -13,5 +13,10 @@
     "no-use-before-define": ["error", { "functions": false, "variables": false }],
     "react/forbid-prop-types": 0,
     "class-methods-use-this": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module-alias": {}
+    }
   }
 }

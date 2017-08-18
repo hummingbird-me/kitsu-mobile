@@ -1,8 +1,8 @@
 import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import { NavigationActions } from 'react-navigation';
-import * as types from '../types';
-import { auth } from '../../config/api';
-import { kitsuConfig } from '../../config/env';
+import { auth } from 'kitsu/config/api';
+import { kitsuConfig } from 'kitsu/config/env';
+import * as types from 'kitsu/store/types';
 
 export const loginUser = (data, nav, screen) => async (dispatch) => {
   dispatch({ type: types.LOGIN_USER });

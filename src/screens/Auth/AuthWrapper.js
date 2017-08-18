@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { Text, Image } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
-
-import * as colors from '../../constants/colors';
-import CustomIcon from '../../components/Icon';
-import AnimatedWrapper from '../../components/AnimatedWrapper';
+import * as colors from 'kitsu/constants/colors';
+import CustomIcon from 'kitsu/components/Icon';
+import AnimatedWrapper from 'kitsu/components/AnimatedWrapper';
 
 const AuthWrapper = ({ onSuccess, children, loading }) => {
   const loginFacebook = () => {

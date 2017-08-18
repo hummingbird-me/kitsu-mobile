@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { Button } from 'native-base';
 import PropTypes from 'prop-types';
 
-import { MediaFilter, MediaFilterMenu, MediaSelectionGrid } from '../../components/MediaUploader';
+import { MediaFilter, MediaFilterMenu, MediaSelectionGrid } from 'kitsu/components/MediaUploader';
 
 export default class MediaUploadScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
