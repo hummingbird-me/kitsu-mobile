@@ -68,6 +68,9 @@ class HomeScreen extends Component {
               coverImage: {
                 original: 'https://media.kitsu.io/users/cover_images/5554/original.png?1487275574',
               },
+              avatar: {
+                tiny: 'https://media.kitsu.io/users/avatars/160840/tiny.png?1502777221',
+              },
             },
           })}
           >

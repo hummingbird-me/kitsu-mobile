@@ -7,16 +7,27 @@ import { NavigationHeader } from '../NavigationHeader';
 import { styles } from './styles';
 
 export class UserLibraryScreenComponent extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    headerStyle: {
-      shadowColor: 'transparent',
-      elevation: 0,
-    },
-    header: () => <NavigationHeader {...navigation} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
-    ),
-  });
+  static navigationOptions = (props) => {
+    const { navigation } = props;
+    const { profile } = navigation.state.params;
+    const navHeaderProps = {
+      navigation,
+      avatar: profile.avatar,
+      coverImage: profile.coverImage,
+      title: profile.name,
+    };
+
+    return {
+      headerStyle: {
+        shadowColor: 'transparent',
+        elevation: 0,
+      },
+      header: () => <NavigationHeader {...navHeaderProps} />,
+      tabBarIcon: ({ tintColor }) => (
+        <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
+      ),
+    };
+  };
 
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
