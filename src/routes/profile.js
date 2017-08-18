@@ -1,7 +1,7 @@
 import DismissableStackNavigator from '../components/DismissableStackNavigator';
 import {
   MediaScreen,
-  CustomLibScreen,
+  UserLibraryScreen,
   ProfileScreen,
   FavoriteCharacters,
   NetworkScreen,
@@ -21,7 +21,7 @@ const ProfileStack = DismissableStackNavigator(
       screen: MediaScreen,
     },
     Library: {
-      screen: CustomLibScreen,
+      screen: UserLibraryScreen,
     },
     Network: {
       screen: NetworkScreen,

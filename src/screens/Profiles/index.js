@@ -1,7 +1,6 @@
 import FavoriteCharacters from './FavoriteCharacters';
 import FavoriteMedia from './FavoriteMedia';
-import LibraryScreen from './LibraryScreen';
-import CustomLibScreen from './CustomLibScreen';
+import { UserLibraryScreen } from './UserLibrary';
 import MediaScreen from './MediaScreen';
 import NetworkScreen from './NetworkScreen';
 import ProfileScreen from './ProfileScreen';
@@ -9,8 +8,7 @@ import ProfileScreen from './ProfileScreen';
 export {
   FavoriteCharacters,
   FavoriteMedia,
-  CustomLibScreen,
-  LibraryScreen,
+  UserLibraryScreen,
   MediaScreen,
   NetworkScreen,
   ProfileScreen,

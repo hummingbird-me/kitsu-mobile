@@ -61,6 +61,23 @@ class HomeScreen extends Component {
               Nuck
             </Text>
           </Button>
+          <Button onPress={() => navigation.navigate('Library', {
+            profile: {
+              id: 5554,
+              name: 'Nuck',
+              coverImage: {
+                original: 'https://media.kitsu.io/users/cover_images/5554/original.png?1487275574',
+              },
+              avatar: {
+                tiny: 'https://media.kitsu.io/users/avatars/160840/tiny.png?1502777221',
+              },
+            },
+          })}
+          >
+            <Text>
+              Nuck Library
+            </Text>
+          </Button>
           <Button onPress={() => this.props.logoutUser(navigation)}>
             <Text>
               Logout
