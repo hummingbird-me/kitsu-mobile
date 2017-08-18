@@ -5,9 +5,9 @@ import { Button } from 'native-base';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 
-import * as colors from '../../constants/colors';
-import RecoveryForm from '../../components/Forms/RecoveryForm';
-import { loginUser } from '../../store/auth/actions';
+import * as colors from 'kitsu/constants/colors';
+import RecoveryForm from 'kitsu/components/Forms/RecoveryForm';
+import { loginUser } from 'kitsu/store/auth/actions';
 import AuthWrapper from './AuthWrapper';
 
 class RecoveryScreen extends Component {

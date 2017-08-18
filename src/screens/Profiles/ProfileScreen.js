@@ -15,25 +15,23 @@ import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
 import _ from 'lodash';
 import moment from 'moment';
-
-import CustomHeader from '../../components/CustomHeader';
-import Card from '../../components/Card/Card';
-import CardStatus from '../../components/Card/CardStatus';
-import CardFull from '../../components/Card/CardFull';
-import CardTabs from '../../components/Card/CardTabs';
-import CardActivity from '../../components/Card/CardActivity';
-import ProgressiveImage from '../../components/ProgressiveImage';
-import * as colors from '../../constants/colors';
-import { defaultAvatar } from '../../constants/app';
-import ResultsList from '../../screens/Search/Lists/ResultsList';
+import CustomHeader from 'kitsu/components/CustomHeader';
+import CardStatus from 'kitsu/components/Card/CardStatus';
+import CardFull from 'kitsu/components/Card/CardFull';
+import CardTabs from 'kitsu/components/Card/CardTabs';
+import CardActivity from 'kitsu/components/Card/CardActivity';
+import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import * as colors from 'kitsu/constants/colors';
+import { defaultAvatar } from 'kitsu/constants/app';
+import ResultsList from 'kitsu/screens/Search/Lists/ResultsList';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import { defaultCover } from '../../constants/app';
+import { defaultCover } from 'kitsu/constants/app';
 import {
   fetchProfile,
   fetchProfileFavorites,
   fetchUserFeed,
-} from '../../store/profile/actions';
-import { getUserFeed } from '../../store/feed/actions';
+} from 'kitsu/store/profile/actions';
+import { getUserFeed } from 'kitsu/store/feed/actions';
 
 const Loader = <Spinner size="small" color="grey" />;
 

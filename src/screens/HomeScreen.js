@@ -3,8 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
-
-import { logoutUser } from '../store/auth/actions';
+import { logoutUser } from 'kitsu/store/auth/actions';
 
 class HomeScreen extends Component {
   static navigationOptions = {

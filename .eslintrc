@@ -14,5 +14,10 @@
     "react/forbid-prop-types": 0,
     "class-methods-use-this": 0,
     "import/prefer-default-export": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module-alias": {}
+    }
   }
 }

@@ -1,6 +1,6 @@
-import * as types from '../types';
-import { Kitsu, setToken } from '../../config/api';
-import { loginUser } from '../auth/actions';
+import * as types from 'kitsu/store/types';
+import { Kitsu, setToken } from 'kitsu/config/api';
+import { loginUser } from 'kitsu/store/auth/actions';
 
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });

@@ -1,5 +1,5 @@
-git_url "https://github.com/hummingbird-me/certificates.git"
-type "development" # The default type, can be: appstore, adhoc, enterprise or development
+git_url "git@github.com:hummingbird-me/certificates.git" # ssh key
+# git_url "https://github.com/hummingbird-me/certificates.git"
+
 app_identifier "kitsu-san"
 username "josh@kitsu.io" # Your Apple Developer Portal username
-# team_id "98KG27K553"

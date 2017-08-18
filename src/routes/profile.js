@@ -1,4 +1,4 @@
-import DismissableStackNavigator from '../components/DismissableStackNavigator';
+import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
 import {
   MediaScreen,
   UserLibraryScreen,
@@ -6,7 +6,7 @@ import {
   FavoriteCharacters,
   NetworkScreen,
   FavoriteMedia,
-} from '../screens/Profiles';
+} from 'kitsu/screens/Profiles';
 import navigationOptions from './navigationOptions';
 
 const ProfileStack = DismissableStackNavigator(

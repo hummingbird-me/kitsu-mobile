@@ -4,7 +4,7 @@ import { Body, Card, CardItem } from 'native-base';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as colors from '../../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 
 export default class MediaFilterMenu extends Component {
   static propTypes = {

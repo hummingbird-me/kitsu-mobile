@@ -1,5 +1,5 @@
+import { Kitsu } from 'kitsu/config/api';
 import types from './types';
-import { Kitsu } from '../config/api';
 
 const fetchUserFeed = () => async (dispatch, getState) => {
   // dispatch({

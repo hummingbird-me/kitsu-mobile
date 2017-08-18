@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import * as types from '../types';
-import { Kitsu, setToken } from '../../config/api';
+import * as types from 'kitsu/store/types';
+import { Kitsu } from 'kitsu/config/api';
 
 export const fetchProfile = id => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
