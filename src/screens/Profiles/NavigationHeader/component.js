@@ -16,11 +16,10 @@ CustomStatusBar.propTypes = {
   backgroundColor: PropTypes.string.isRequired,
 };
 
-export const NavigationHeader = ({ navigation, followButton, title }) => {
-  const { profile } = navigation.state.params;
+export const NavigationHeader = ({ profile, followButton, title, onClickBack }) => {
   const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
-  const goBack = () => navigation.goBack();
+  const goBack = () => onClickBack();
 
   return (
     <View style={styles.headerContainer}>
@@ -36,11 +35,13 @@ export const NavigationHeader = ({ navigation, followButton, title }) => {
           </Button>
         </Left>
 
+        {!followButton && (
         <Body>
           <View style={{ backgroundColor: 'transparent' }}>
-            {!followButton && <Text style={StyleSheet.flatten(styles.titleText)}>{title}</Text>}
+            <Text style={StyleSheet.flatten(styles.titleText)}>{title}</Text>
           </View>
         </Body>
+        )}
 
         <Right>
           {followButton && (
@@ -55,12 +56,14 @@ export const NavigationHeader = ({ navigation, followButton, title }) => {
 };
 
 NavigationHeader.propTypes = {
-  navigation: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
   followButton: PropTypes.bool,
+  onClickBack: PropTypes.func,
   title: PropTypes.string,
 };
 
 NavigationHeader.defaultProps = {
   followButton: true,
+  onClickBack: () => {},
   title: '',
 };
