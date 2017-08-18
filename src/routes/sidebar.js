@@ -8,6 +8,7 @@ import Library from '../screens/Sidebar/Library';
 import Blocking from '../screens/Sidebar/Blocking';
 import LinkedAccounts from '../screens/Sidebar/LinkedAccounts';
 import ImportLibrary from '../screens/Sidebar/ImportLibrary';
+import ImportDetail from '../screens/Sidebar/ImportDetail';
 
 const SidebarStack = StackNavigator(
   {
@@ -34,7 +35,10 @@ const SidebarStack = StackNavigator(
     },
     ImportLibrary: {
       screen: ImportLibrary,
-    }
+    },
+    ImportDetail: {
+      screen: ImportDetail,
+    },
   },
   {
     navigationOptions: navigationOptions(null),

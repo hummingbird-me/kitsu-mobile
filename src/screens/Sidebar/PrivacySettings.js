@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Image, TextInput, StyleSheet, Platform } from 'react-native';
+import { View, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Button, Container, Content, Spinner, Switch, Icon, Left, Right, Item } from 'native-base';
+import { Text, Button, Container, Content, Spinner, Switch } from 'native-base';
 import PropTypes from 'prop-types';
 import SidebarHeader from './common/SidebarHeader';
 import SidebarTitle from './common/SidebarTitle';
@@ -9,11 +9,6 @@ import SidebarListItem, { ItemSeparator } from './common/SidebarListItem';
 import * as colors from '../../constants/colors';
 
 import menu from '../../assets/img/tabbar_icons/menu.png';
-import library from '../../assets/img/sidebar_icons/library.png';
-import privacy from '../../assets/img/sidebar_icons/privacy.png';
-import linked from '../../assets/img/sidebar_icons/linked.png';
-import blocking from '../../assets/img/sidebar_icons/blocking.png';
-import settings from '../../assets/img/sidebar_icons/settings.png';
 
 class PrivacySettings extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -21,11 +16,11 @@ class PrivacySettings extends Component {
     tabBarIcon: (
       { tintColor },
     ) => (
-      <Image
-        source={menu}
-        style={{ tintColor, width: 20, height: 21 }}
-      />
-    ),
+        <Image
+          source={menu}
+          style={{ tintColor, width: 20, height: 21 }}
+        />
+      ),
   });
 
   render() {
@@ -48,7 +43,7 @@ class PrivacySettings extends Component {
               <Button
                 block
                 disabled={false && loading}
-                onPress={() => {}}
+                onPress={() => { }}
                 style={{
                   backgroundColor: colors.lightGreen,
                   height: 47,
@@ -65,7 +60,7 @@ class PrivacySettings extends Component {
                       fontSize: 14,
                     }}
                   >
-                      Save Privacy Settings
+                    Save Privacy Settings
                     </Text>}
               </Button>
             </View>
@@ -88,4 +83,4 @@ const mapStateToProps = ({ user }) => {
 PrivacySettings.propTypes = {
 };
 
-export default connect(mapStateToProps, { })(PrivacySettings);
+export default connect(mapStateToProps, {})(PrivacySettings);

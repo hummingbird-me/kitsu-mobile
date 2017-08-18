@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, Text, Image, Platform} from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { Button, Icon, Left, Right } from 'native-base';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 import PropTypes from 'prop-types';

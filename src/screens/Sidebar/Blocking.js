@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, Platform, FlatList, TextInput } from 'react-native';
+import React from 'react';
+import { View, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Button, Container, Content, Spinner, Switch, Icon, Left, Right, Item } from 'native-base';
+import { Text, Container, Content, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import SidebarHeader from './common/SidebarHeader';
 import SidebarTitle from './common/SidebarTitle';
@@ -16,18 +16,18 @@ class Blocking extends React.Component {
     tabBarIcon: (
       { tintColor },
     ) => (
-      <Image
-        source={menu}
-        style={{ tintColor, width: 20, height: 21 }}
-      />
-    ),
+        <Image
+          source={menu}
+          style={{ tintColor, width: 20, height: 21 }}
+        />
+      ),
   });
 
   onUnblockUser = (user) => {
 
   }
 
-  renderItem = ({item}) => (
+  renderItem = ({ item }) => (
     <Item style={styles.sectionListItem}>
       <Left>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -97,10 +97,9 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 0,
-    marginLeft: 0 // FUCKING STUPID NATIVEBASE.
+    marginLeft: 0 // NATIVEBASE.
   },
 };
-  
 
 const mapStateToProps = ({ user }) => {
   return {
@@ -110,4 +109,4 @@ const mapStateToProps = ({ user }) => {
 Blocking.propTypes = {
 };
 
-export default connect(mapStateToProps, { })(Blocking);
+export default connect(mapStateToProps, {})(Blocking);

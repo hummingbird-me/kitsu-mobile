@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Image, TextInput, StyleSheet, Platform } from 'react-native';
+import { View, Image, TextInput } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Button, Container, Content, Spinner, Icon, Left, Right, Item } from 'native-base';
+import { Text, Button, Container, Content, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import SidebarHeader from './common/SidebarHeader';
 import SidebarTitle from './common/SidebarTitle';
@@ -17,11 +17,11 @@ class GeneralSettings extends Component {
     tabBarIcon: (
       { tintColor },
     ) => (
-      <Image
-        source={menu}
-        style={{ tintColor, width: 20, height: 21 }}
-      />
-    ),
+        <Image
+          source={menu}
+          style={{ tintColor, width: 20, height: 21 }}
+        />
+      ),
   });
 
   state = {
@@ -76,13 +76,13 @@ class GeneralSettings extends Component {
                 { title: 'Show Adult Titles (O_O)' },
                 { title: 'Hide Adult Titles' },
               ]}
-              onSelectOption={(adult) => this.setState({adult})}
+              onSelectOption={(adult) => this.setState({ adult })}
             />
             <View style={{ marginTop: 20, padding: 10, paddingLeft: 25, paddingRight: 25 }}>
               <Button
                 block
                 disabled={false && loading}
-                onPress={() => {}}
+                onPress={() => { }}
                 style={{
                   backgroundColor: colors.lightGreen,
                   height: 47,
@@ -99,7 +99,7 @@ class GeneralSettings extends Component {
                       fontSize: 14,
                     }}
                   >
-                      Save General Settings
+                    Save General Settings
                     </Text>}
               </Button>
             </View>
@@ -122,4 +122,4 @@ const mapStateToProps = ({ user }) => {
 GeneralSettings.propTypes = {
 };
 
-export default connect(mapStateToProps, { })(GeneralSettings);
+export default connect(mapStateToProps, {})(GeneralSettings);

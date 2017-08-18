@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Image } from 'react-native';
 import { Text } from 'native-base';
 import PropTypes from 'prop-types';
 // import Icon from '../../components/Icon';

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { View, Image, StyleSheet, Animated, TouchableOpacity } from 'react-native';
-import { Text, Icon, Left, Right, Item } from 'native-base';
+import React from 'react';
+import { View, Animated, TouchableOpacity } from 'react-native';
+import { Text, Icon, Right } from 'native-base';
 import PropTypes from 'prop-types';
 import { ItemSeparator } from './SidebarListItem';
 import * as colors from '../../../constants/colors';
@@ -85,7 +85,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 0,
-    marginLeft: 0 // FUCKING STUPID NATIVEBASE.
+    marginLeft: 0 // NATIVEBASE.
   },
 };
 

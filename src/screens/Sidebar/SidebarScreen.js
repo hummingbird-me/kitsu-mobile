@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 import { View, Image, SectionList, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import ProgressiveImage from '../../components/ProgressiveImage';
-import { Text, Button, Container, Icon, Left, Right, Item } from 'native-base';
+import { Text, Container, Icon, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 // import Icon from '../../components/Icon';
 import * as colors from '../../constants/colors';
@@ -54,9 +54,9 @@ const SettingsItem = ({ image, title, onPress }) => <SidebarListItem image={imag
 const GroupsItem = ({ imageURL, title, onPress }) => (
   <Item button onPress={onPress} style={styles.sectionListItem}>
     <Left>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <LeftIconWrapper>
-          <Image source={{uri: imageURL}} resizeMode={'stretch'} style={{ width: 20, height: 20, borderRadius: 4 }} />
+          <Image source={{ uri: imageURL }} resizeMode={'stretch'} style={{ width: 20, height: 20, borderRadius: 4 }} />
         </LeftIconWrapper>
         <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>{title}</Text>
       </View>
@@ -70,7 +70,7 @@ const GroupsItem = ({ imageURL, title, onPress }) => (
 const SectionTitle = ({ title }) => <SidebarTitle title={title} />;
 
 const ItemSeparator = () => (
-  <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.imageGrey}} />
+  <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.imageGrey }} />
 );
 
 class SidebarScreen extends Component {
@@ -79,11 +79,11 @@ class SidebarScreen extends Component {
     tabBarIcon: (
       { tintColor },
     ) => (
-      <Image
-        source={menu}
-        style={{ tintColor, width: 20, height: 21 }}
-      />
-    ),
+        <Image
+          source={menu}
+          style={{ tintColor, width: 20, height: 21 }}
+        />
+      ),
   };
 
   render() {
@@ -135,7 +135,7 @@ class SidebarScreen extends Component {
             }}
             removeClippedSubviews={false}
             SectionSeparatorComponent={() => <View height={28} />}
-            ListFooterComponent={() => <View style={{ marginTop: 40, padding: 12, backgroundColor: colors.white, alignItems: 'center'}} >
+            ListFooterComponent={() => <View style={{ marginTop: 40, padding: 12, backgroundColor: colors.white, alignItems: 'center' }} >
               <Text
                 style={{
                   fontSize: 12,
@@ -178,4 +178,4 @@ const mapStateToProps = ({ user }) => {
 SidebarScreen.propTypes = {
 };
 
-export default connect(mapStateToProps, { })(SidebarScreen);
+export default connect(mapStateToProps, {})(SidebarScreen);
