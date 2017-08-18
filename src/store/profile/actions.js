@@ -132,18 +132,18 @@ export const fetchUserLibrary = userId => async (dispatch) => {
       type: types.FETCH_USER_LIBRARY_SUCCESS,
       payload: {
         anime: {
-          animeCompleted,
-          animeCurrent,
-          animeDropped,
-          animeOnHold,
-          animePlanned,
+          completed: animeCompleted,
+          current: animeCurrent,
+          dropped: animeDropped,
+          onHold: animeOnHold,
+          planned: animePlanned,
         },
         manga: {
-          mangaCompleted,
-          mangaCurrent,
-          mangaDropped,
-          mangaOnHold,
-          mangaPlanned,
+          completed: mangaCompleted,
+          current: mangaCurrent,
+          dropped: mangaDropped,
+          onHold: mangaOnHold,
+          planned: mangaPlanned,
         },
       },
     });
