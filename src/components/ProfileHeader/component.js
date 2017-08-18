@@ -3,8 +3,8 @@ import { Body, Button, Icon, Left, Right, Text } from 'native-base';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { styles } from './styles';
-import { defaultAvatar, defaultCover } from '../../../constants/app';
-import * as colors from '../../../constants/colors';
+import { defaultAvatar, defaultCover } from '../../constants/app';
+import * as colors from '../../constants/colors';
 
 const CustomStatusBar = ({ backgroundColor, ...props }) => (
   <View style={[styles.statusBar, { backgroundColor }]}>
@@ -16,7 +16,7 @@ CustomStatusBar.propTypes = {
   backgroundColor: PropTypes.string.isRequired,
 };
 
-export const NavigationHeader = ({ profile, followButton, title, onClickBack }) => {
+export const ProfileHeader = ({ profile, followButton, title, onClickBack }) => {
   const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
   const goBack = () => onClickBack();
@@ -55,14 +55,14 @@ export const NavigationHeader = ({ profile, followButton, title, onClickBack }) 
   );
 };
 
-NavigationHeader.propTypes = {
+ProfileHeader.propTypes = {
   profile: PropTypes.object.isRequired,
   followButton: PropTypes.bool,
   onClickBack: PropTypes.func,
   title: PropTypes.string,
 };
 
-NavigationHeader.defaultProps = {
+ProfileHeader.defaultProps = {
   followButton: true,
   onClickBack: () => {},
   title: '',

@@ -1,5 +1,5 @@
 import { Platform, StatusBar, StyleSheet } from 'react-native';
-import * as colors from '../../../constants/colors';
+import * as colors from '../../constants/colors';
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const HEADER_NAVIGATION_IMAGE_HEIGHT = 80;

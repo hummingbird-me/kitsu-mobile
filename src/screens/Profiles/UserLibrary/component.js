@@ -3,7 +3,7 @@ import { Container, Icon } from 'native-base';
 import { FlatList, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import { NavigationHeader } from '../NavigationHeader';
+import { ProfileHeader } from '../../../components/ProfileHeader';
 import { styles } from './styles';
 
 export class UserLibraryScreenComponent extends React.Component {
@@ -16,7 +16,7 @@ export class UserLibraryScreenComponent extends React.Component {
         elevation: 0,
       },
       header: () => (
-        <NavigationHeader
+        <ProfileHeader
           profile={profile}
           title={profile.name}
           onClickBack={props.navigation.goBack}
