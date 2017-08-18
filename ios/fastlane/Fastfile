@@ -79,8 +79,8 @@ platform :ios do
       scheme: "kitsu_mobile",
       clean: true,
       project: "./kitsu_mobile.xcodeproj",
-      export_method: "app-store"
       # workspace: "./kitsu_mobile.xcworkspace" # if using pods
+      export_method: "app-store"
     )
 
     emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io'] # You can list more emails here

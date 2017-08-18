@@ -141,11 +141,6 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
-
-            // ext.betaDistributionReleaseNotesFilePath=”path/to/release_notes.txt”
-            // ext.betaDistributionEmailsFilePath="beta_distribution_emails.txt"
-            // ext.betaDistributionEmails="thomas@kitsu.io, mikunj@live.com.au, nuck@kitsu.io, daniel@rassiner.com"
-            // ext.betaDistributionNotifications=true
         }
     }
     // applicationVariants are e.g. debug, release

@@ -8,7 +8,6 @@ cache:
 branches:
   only:
   - beta
-  - tjkang
 notifications:
   email:
     on_success: never
@@ -45,13 +44,13 @@ matrix:
         - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
         - travis_retry sudo apt-get update -qq
         - travis_retry sudo apt-get install -y -qq yarn
+        - gem install fastlane --no-rdoc --no-ri --no-document --quiet
         - chmod +x ./android/gradlew
         - openssl aes-256-cbc -K $encrypted_68a856edd0d9_key -iv $encrypted_68a856edd0d9_iv -in ./android/app/kitsu-android-key.keystore.enc -out ./android/app/kitsu-android-key.keystore -d
       install:
         - yarn install
       script:
         - cd android && ./gradlew clean
-        #- ./gradlew assembleRelease crashlyticsUploadDistributionRelease --stacktrace --no-daemon -Pandroid.injected.signing.store.file=./app/$KITSU_RELEASE_STORE_FILE -Pandroid.injected.signing.store.password=$KITSU_RELEASE_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$KITSU_RELEASE_KEY_ALIAS -Pandroid.injected.signing.key.password=$KITSU_RELEASE_KEY_PASSWORD
         - fastlane beta
 
     - language: objective-c
@@ -64,7 +63,6 @@ matrix:
         - travis_retry npm install -g yarn
         - yarn -version
         - gem install fastlane --no-rdoc --no-ri --no-document --quiet
-        #- gem update fastlane --no-ri --no-rdoc --no-document
         - openssl aes-256-cbc -K $encrypted_5a0bd94d6bee_key -iv $encrypted_5a0bd94d6bee_iv -in .deploy_key.enc -out ~/.ssh/deploy_key -d
         - echo -e "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/deploy_key\n" >> ~/.ssh/config
         - ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -73,4 +71,4 @@ matrix:
         - travis_retry yarn
       script:
         - cd ios
-        - fastlane beta --capture_output
+        - fastlane beta
