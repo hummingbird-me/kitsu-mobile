@@ -31,22 +31,22 @@ platform :ios do
     # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
     create_keychain(
       name: ENV["MATCH_KEYCHAIN_NAME"],
-      password: ENV["MATCH_PASSWORD"],
+      password: ENV["MATCH_KEYCHAIN_PASSWORD"],
       default_keychain: true,
       unlock: true,
       timeout: 3600,
       add_to_search_list: true
     )
 
-    #unlock_keychain(
-		#	path: "login.keychain",
-		#	add_to_search_list: :replace,
-    #  password: ENV['FASTLANE_PASSWORD']
-		#)
+    unlock_keychain(
+			path: ENV["MATCH_KEYCHAIN_NAME"],
+			add_to_search_list: :replace,
+      password: ENV['MATCH_KEYCHAIN_PASSWORD']
+		)
 
-    #register_devices(
-    #  devices_file: "./fastlane/devices.txt",
-    #)
+    register_devices(
+      devices_file: "./fastlane/devices.txt",
+    )
 
     # After registering the new devices, we'll make sure to update the provisioning profile if necessary
     # options for type are "adhoc", "development", "appstore"
@@ -55,7 +55,7 @@ platform :ios do
       type: "development",
       readonly: true,  #readonly mode to be sure it won't create any new certificates or profiles.
       keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_PASSWORD"]
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
     )
 
     match(
@@ -66,7 +66,7 @@ platform :ios do
       verbose: true,
       readonly: true,  #readonly mode to be sure it won't create any new certificates or profiles.
       keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_PASSWORD"]
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
     )
 
     # Change build number (requirement of Testflight).
