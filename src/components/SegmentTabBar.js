@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Segment, Button, Text, StyleProvider, View } from 'native-base';
+import { Segment, Button, Text, StyleProvider } from 'native-base';
+import * as colors from 'kitsu/constants/colors';
 import getTheme from '../../native-base-theme/components';
 import kitsuStyles from '../../native-base-theme/variables/kitsu';
-import * as colors from '../constants/colors';
 
 const SegmentTabBar = React.createClass({
   tabIcons: [],

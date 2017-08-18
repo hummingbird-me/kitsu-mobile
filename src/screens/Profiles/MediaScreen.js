@@ -15,20 +15,19 @@ import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import _ from 'lodash';
-
-import CustomHeader from '../../components/CustomHeader';
-import DoubleProgress from '../../components/DoubleProgress';
-import CardStatus from '../../components/Card/CardStatus';
-import CardFull from '../../components/Card/CardFull';
-import CardActivity from '../../components/Card/CardActivity';
-import ProgressiveImage from '../../components/ProgressiveImage';
-import { defaultAvatar } from '../../constants/app';
-import getTitleField from '../../utils/getTitleField';
-import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from '../../store/media/actions';
-import { getMediaFeed } from '../../store/feed/actions';
-import * as colors from '../../constants/colors';
+import CustomHeader from 'kitsu/components/CustomHeader';
+import DoubleProgress from 'kitsu/components/DoubleProgress';
+import CardStatus from 'kitsu/components/Card/CardStatus';
+import CardFull from 'kitsu/components/Card/CardFull';
+import CardActivity from 'kitsu/components/Card/CardActivity';
+import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import getTitleField from 'kitsu/utils/getTitleField';
+import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from 'kitsu/store/media/actions';
+import { getMediaFeed } from 'kitsu/store/feed/actions';
+import * as colors from 'kitsu/constants/colors';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import { defaultCover } from '../../constants/app';
+import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
+
 const { width } = Dimensions.get('window');
 
 class MediaScreen extends Component {

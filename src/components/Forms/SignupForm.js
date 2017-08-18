@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Button, Spinner } from 'native-base';
 import t from 'tcomb-form-native';
-import * as colors from '../../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 import textbox from './tcomb/textbox';
 
 const { Form } = t.form;

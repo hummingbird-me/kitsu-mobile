@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import * as colors from '../../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 
 import Thumbnail from './Thumbnail';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button, Text, View } from 'native-base';
-import * as colors from '../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 
 const SimpleTabBar = React.createClass({
   tabIcons: [],

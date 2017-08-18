@@ -13,10 +13,9 @@ import { connect } from 'react-redux';
 import { Icon, Button, Container, Spinner } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import AweIcon from 'react-native-vector-icons/FontAwesome';
-
-import SimpleTabBar from '../../components/SimpleTabBar';
-import { fetchNetwork } from '../../store/profile/actions';
-import { defaultAvatar } from '../../constants/app';
+import SimpleTabBar from 'kitsu/components/SimpleTabBar';
+import { fetchNetwork } from 'kitsu/store/profile/actions';
+import { defaultAvatar } from 'kitsu/constants/app';
 
 const { width } = Dimensions.get('window');
 class NetworkScreen extends Component {

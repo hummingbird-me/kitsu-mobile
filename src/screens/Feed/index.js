@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, FlatList, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchUserFeed } from '../../actions';
+import { fetchUserFeed } from 'kitsu/actions';
 
 class Feed extends React.Component {
   componentDidMount() {

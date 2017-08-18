@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { View, Text, Dimensions, Platform, Easing } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
+import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 import Step from './Step';
 import Dot from './Dot';
-import * as colors from '../../constants/colors';
+
 
 const styleObj = {
   container: {

@@ -1,3 +1,14 @@
 {
-  "presets": ["react-native"]
+  "presets": ["react-native"],
+  "plugins": [
+    [
+      "module-alias",
+      [
+        {
+          "src": "./src",
+          "expose": "kitsu"
+        },
+      ]
+    ]
+  ]
 }

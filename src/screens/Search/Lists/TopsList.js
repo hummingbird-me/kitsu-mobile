@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 import { Icon, Left, Right, Button, Text, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-
-import * as colors from '../../../constants/colors';
-import { getDefaults } from '../../../store/anime/actions';
-import ProgressiveImage from '../../../components/ProgressiveImage';
+import * as colors from 'kitsu/constants/colors';
+import { getDefaults } from 'kitsu/store/anime/actions';
+import ProgressiveImage from 'kitsu/components/ProgressiveImage';
 
 const list = [
   { label: 'Release date', key: 'release' },
