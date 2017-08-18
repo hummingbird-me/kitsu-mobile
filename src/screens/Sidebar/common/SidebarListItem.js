@@ -18,14 +18,12 @@ export const ItemSeparator = () => (
 
 const SidebarListItem = ({ image, title, onPress }) => (
   <Item button onPress={onPress} style={styles.sectionListItem}>
-    <Left>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <LeftIconWrapper>
-          <Image source={image} style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }} />
-        </LeftIconWrapper>
-        <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>{title}</Text>
-      </View>
-    </Left>
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <LeftIconWrapper>
+        <Image source={image} style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }} />
+      </LeftIconWrapper>
+      <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>{title}</Text>
+    </View>
     <Right>
       <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
     </Right>

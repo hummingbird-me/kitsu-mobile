@@ -22,11 +22,11 @@ class Library extends React.Component {
     tabBarIcon: (
       { tintColor },
     ) => (
-      <Image
-        source={menu}
-        style={{ tintColor, width: 20, height: 21 }}
-      />
-    ),
+        <Image
+          source={menu}
+          style={{ tintColor, width: 20, height: 21 }}
+        />
+      ),
   });
 
   state = {
@@ -49,7 +49,7 @@ class Library extends React.Component {
               { title: 'Option 2 also has a long text' },
               { title: 'Option 3' },
             ]}
-            onSelectOption={(titleDisplay) => this.setState({titleDisplay})}
+            onSelectOption={(titleDisplay) => this.setState({ titleDisplay })}
           />
           <ItemSeparator />
           <SidebarDropdown
@@ -60,12 +60,12 @@ class Library extends React.Component {
               { title: 'Option 2' },
               { title: 'Option 3 times 3 is Option 9 and we don\'t have it. Let\'s just say option 3 has the longest text we could imagine' },
             ]}
-            onSelectOption={(ratingVal) => this.setState({ratingVal})}
+            onSelectOption={(ratingVal) => this.setState({ ratingVal })}
           />
           <SidebarTitle style={{ marginTop: 20 }} title={'Account Settings'} />
           <FlatList
             data={[
-              { title: 'Import Library', image: library, target: '' },
+              { title: 'Import Library', image: library, target: 'ImportLibrary' },
               { title: 'Export Library', image: library, target: '' },
             ]}
             keyExtractor={item => item.title}
@@ -78,7 +78,7 @@ class Library extends React.Component {
             <Button
               block
               disabled={false && loading}
-              onPress={() => {}}
+              onPress={() => { }}
               style={{
                 backgroundColor: colors.lightGreen,
                 height: 47,
@@ -95,7 +95,7 @@ class Library extends React.Component {
                     fontSize: 14,
                   }}
                 >
-                    Save Library Settings
+                  Save Library Settings
                   </Text>}
             </Button>
           </View>
@@ -117,4 +117,4 @@ const mapStateToProps = ({ user }) => {
 Library.propTypes = {
 };
 
-export default connect(mapStateToProps, { })(Library);
+export default connect(mapStateToProps, {})(Library);

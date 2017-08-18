@@ -34,11 +34,13 @@ class Blocking extends React.Component {
           <View style={{ width: 25, alignItems: 'center' }}>
             <Image source={{ uri: item.user.photoURL }} style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }} />
           </View>
-          <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8 }}>{item.user.username}</Text>
+          <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8 }}>
+            {item.user.username}
+          </Text>
         </View>
       </Left>
       <Right>
-        <TouchableOpacity style={{ backgroundColor: colors.darkGrey, height: 24, justifyContent: 'center', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 6, borderRadius: 4, }}>
+        <TouchableOpacity onPress={() => this.onUnblockUser(item)} style={{ backgroundColor: colors.darkGrey, height: 24, justifyContent: 'center', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 6, borderRadius: 4, }}>
           <Text style={{ fontSize: 10, fontFamily: 'OpenSans', fontWeight: '600', color: colors.white }}>Unblock</Text>
         </TouchableOpacity>
       </Right>

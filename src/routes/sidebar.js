@@ -6,6 +6,8 @@ import GeneralSettings from '../screens/Sidebar/GeneralSettings';
 import PrivacySettings from '../screens/Sidebar/PrivacySettings';
 import Library from '../screens/Sidebar/Library';
 import Blocking from '../screens/Sidebar/Blocking';
+import LinkedAccounts from '../screens/Sidebar/LinkedAccounts';
+import ImportLibrary from '../screens/Sidebar/ImportLibrary';
 
 const SidebarStack = StackNavigator(
   {
@@ -26,6 +28,12 @@ const SidebarStack = StackNavigator(
     },
     Blocking: {
       screen: Blocking,
+    },
+    LinkedAccounts: {
+      screen: LinkedAccounts,
+    },
+    ImportLibrary: {
+      screen: ImportLibrary,
     }
   },
   {

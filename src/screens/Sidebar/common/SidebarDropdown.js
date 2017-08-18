@@ -28,7 +28,7 @@ class SidebarDropdown extends React.Component {
       this.height,
       {
         toValue: nextVal,
-      }).start(() => {});
+      }).start(() => { });
     this.setState({ active: !this.state.active });
   }
 
@@ -47,15 +47,15 @@ class SidebarDropdown extends React.Component {
         </TouchableOpacity>
         <Animated.View style={{ zIndex: 300, left: 0, right: 0, position: 'relative', backgroundColor: 'white', height: this.height }}>
           {this.state.active && options.map((v, i) => (
-            <View key={`${i}dd`} style={{height: 50}}>
+            <View key={`${i}dd`} style={{ height: 50 }}>
               <DropdownItem
                 onPress={(title) => {
                   onSelectOption(title);
                   this.toggle();
-                }} 
+                }}
                 title={v.title}
               />
-              { options.length - 1 !== +i ? <ItemSeparator /> : null }
+              {options.length - 1 !== +i ? <ItemSeparator /> : null}
             </View>
           ))}
         </Animated.View>

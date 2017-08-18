@@ -21,11 +21,11 @@ class SettingsScreen extends Component {
     tabBarIcon: (
       { tintColor },
     ) => (
-      <Image
-        source={menu}
-        style={{ tintColor, width: 20, height: 21 }}
-      />
-    ),
+        <Image
+          source={menu}
+          style={{ tintColor, width: 20, height: 21 }}
+        />
+      ),
   });
 
   render() {
@@ -38,7 +38,7 @@ class SettingsScreen extends Component {
             data={[
               { title: 'General', image: settings, target: 'GeneralSettings' },
               { title: 'Privacy', image: privacy, target: 'PrivacySettings' },
-              { title: 'Linked Accounts', image: linked, target: '' },
+              { title: 'Linked Accounts', image: linked, target: 'LinkedAccounts' },
               { title: 'Library', image: library, target: 'Library' },
               { title: 'Blocking', image: blocking, target: 'Blocking' },
             ]}
@@ -66,4 +66,4 @@ const mapStateToProps = ({ user }) => {
 SettingsScreen.propTypes = {
 };
 
-export default connect(mapStateToProps, { })(SettingsScreen);
+export default connect(mapStateToProps, {})(SettingsScreen);
