@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Container, Icon } from 'native-base';
-import { FlatList, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import { ProfileHeader } from '../../../components/ProfileHeader';
+import { ProfileHeader } from 'kitsu/components/ProfileHeader';
+import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { styles } from './styles';
 
 export class UserLibraryScreenComponent extends React.Component {
@@ -31,6 +32,7 @@ export class UserLibraryScreenComponent extends React.Component {
   constructor() {
     super();
     this.renderItem = this.renderItem.bind(this);
+    this.renderLists = this.renderLists.bind(this);
   }
 
   componentDidMount() {
@@ -58,11 +60,37 @@ export class UserLibraryScreenComponent extends React.Component {
     );
   }
 
-  render() {
-    const { navigation } = this.props;
-    const { coverImage, name } = navigation.state.params.profile;
+  renderLists(type) {
+    const { userLibrary } = this.props;
+    const listOrder = [
+      { status: 'current', anime: 'Watching', manga: 'Reading' },
+      { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
+      { status: 'completed', anime: 'Completed', manga: 'Completed' },
+      { status: 'onHold', anime: 'On Hold', manga: 'On Hold' },
+      { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
+    ];
 
-    if (this.props.userLibrary.loading) {
+    return listOrder.map(currentList => (
+      <View key={`${currentList.status}-${type}`} >
+        <LibraryHeader
+          data={userLibrary[type][currentList.status]}
+          status={currentList.status}
+          type={type}
+          title={currentList[type]}
+        />
+        <FlatList
+          horizontal
+          data={userLibrary[type][currentList.status]}
+          renderItem={this.renderItem}
+        />
+      </View>
+    ));
+  }
+
+  render() {
+    const { userLibrary } = this.props;
+
+    if (userLibrary.loading) {
       return (
         <Container style={styles.container}>
           <Text>Loading...</Text>
@@ -73,15 +101,11 @@ export class UserLibraryScreenComponent extends React.Component {
     return (
       <Container style={styles.container}>
         <ScrollableTabView>
-          <ScrollView key="Anime" tabLabel="Anime" id="anime" style={styles.scrollView}>
-            <FlatList
-              horizontal
-              data={this.props.userLibrary.anime.current}
-              renderItem={this.renderItem}
-            />
+          <ScrollView key="Anime" tabLabel="Anime" id="anime">
+            {this.renderLists('anime')}
           </ScrollView>
-          <ScrollView key="Manga" tabLabel="Manga" id="manga" style={styles.scrollView}>
-            <Text>Manga</Text>
+          <ScrollView key="Manga" tabLabel="Manga" id="manga">
+            {this.renderLists('manga')}
           </ScrollView>
         </ScrollableTabView>
       </Container>

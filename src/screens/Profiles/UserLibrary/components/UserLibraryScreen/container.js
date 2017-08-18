@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchUserLibrary } from '../../../store/profile/actions';
+import { fetchUserLibrary } from 'kitsu/store/profile/actions';
 import { UserLibraryScreenComponent } from './component';
 
 const mapStateToProps = ({ profile }) => {
