@@ -27,6 +27,10 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do |values|
+    increment_build_number(
+      build_number: ENV["TRAVIS_BUILD_NUMBER"]
+    )
+
     # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
 
     emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com'] # You can list more emails here

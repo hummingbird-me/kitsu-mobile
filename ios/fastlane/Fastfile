@@ -70,9 +70,9 @@ platform :ios do
     )
 
     # Change build number (requirement of Testflight).
-    #increment_build_number(
-    #  xcodeproj: "./kitsu_mobile.xcodeproj"
-    #)
+    increment_build_number(
+      build_number: ENV["TRAVIS_BUILD_NUMBER"]
+    )
 
     # Build a release
     gym(
