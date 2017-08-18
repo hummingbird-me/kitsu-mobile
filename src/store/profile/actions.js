@@ -2,7 +2,7 @@ import _ from 'lodash';
 import * as types from '../types';
 import { Kitsu, setToken } from '../../config/api';
 
-export const fetchProfile = id => async (dispatch, getState) => {
+export const fetchProfile = id => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
   try {
     const user = await Kitsu.findAll('users', {
@@ -15,7 +15,7 @@ export const fetchProfile = id => async (dispatch, getState) => {
       },
       include: 'waifu',
     });
-    dispatch({ type: types.FETCH_USER_SUCCESS, payload: { user: user[0], userId: id } });
+    dispatch({ type: types.FETCH_USER_SUCCESS, payload: user[0] });
   } catch (e) {
     console.log(e);
     dispatch({ type: types.FETCH_USER_FAIL, payload: 'Failed to load user' });

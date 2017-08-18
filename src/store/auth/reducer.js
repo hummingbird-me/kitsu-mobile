@@ -26,7 +26,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         signingIn: false,
         isAuthenticated: true,
-        tokens: action.payload.data,
+        tokens: action.payload,
       };
     case types.LOGIN_USER_FAIL:
       return {

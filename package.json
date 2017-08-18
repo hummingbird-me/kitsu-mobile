@@ -48,8 +48,6 @@
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "redux-action-buffer": "^1.0.1",
-    "redux-devtools-extension": "^2.13.2",
-    "redux-logger": "^3.0.6",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
     "tcomb-form-native": "^0.6.8",
@@ -67,14 +65,13 @@
     "jest": "20.0.3",
     "prettier-eslint": "^6.2.2",
     "react-native-debugger-open": "^0.3.12",
+    "redux-logger": "^3.0.6",
     "react-test-renderer": "16.0.0-alpha.6"
   },
   "jest": {
     "preset": "react-native"
   },
   "rnpm": {
-    "assets": [
-      "src/assets/fonts"
-    ]
+    "assets": ["src/assets/fonts"]
   }
 }

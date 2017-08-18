@@ -1,0 +1,3 @@
+export default {
+  FETCH_USER_FEED_REQUESTED: 'FETCH_USER_FEED_REQUESTED',
+};
