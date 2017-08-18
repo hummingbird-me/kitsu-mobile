@@ -28,6 +28,11 @@ export class UserLibraryScreenComponent extends React.Component {
     };
   };
 
+  constructor() {
+    super();
+    this.renderItem = this.renderItem.bind(this);
+  }
+
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
     this.props.fetchUserLibrary(profile.id);
