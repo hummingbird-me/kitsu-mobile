@@ -2,15 +2,11 @@ import React from 'react';
 import { View, Image, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Text, Button, Container, Spinner } from 'native-base';
-import PropTypes from 'prop-types';
-import SidebarHeader from './common/SidebarHeader';
-import SidebarTitle from './common/SidebarTitle';
-import SidebarDropdown from './common/SidebarDropdown';
-import SidebarListItem, { ItemSeparator } from './common/SidebarListItem';
 import * as colors from 'kitsu/constants/colors';
-
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import library from 'kitsu/assets/img/sidebar_icons/library.png';
+import PropTypes from 'prop-types';
+import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarDropdown } from './common/';
 
 class Library extends React.Component {
   static navigationOptions = ({ navigation }) => ({

@@ -22,8 +22,7 @@ import suggest from 'kitsu/assets/img/sidebar_icons/suggest.png';
 import settings from 'kitsu/assets/img/sidebar_icons/settings.png';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 
-import SidebarTitle from './common/SidebarTitle';
-import SidebarListItem from './common/SidebarListItem';
+import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
 
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 
@@ -87,10 +86,6 @@ const GroupsItem = ({ imageURL, title, onPress }) => (
 );
 
 const SectionTitle = ({ title }) => <SidebarTitle title={title} />;
-
-const ItemSeparator = () => (
-  <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.imageGrey }} />
-);
 
 class SidebarScreen extends Component {
   static navigationOptions = {

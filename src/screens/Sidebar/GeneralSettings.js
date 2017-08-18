@@ -6,10 +6,7 @@ import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 
-import SidebarHeader from './common/SidebarHeader';
-import SidebarTitle from './common/SidebarTitle';
-import SidebarDropdown from './common/SidebarDropdown';
-import { ItemSeparator } from './common/SidebarListItem';
+import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarDropdown } from './common/';
 
 class GeneralSettings extends Component {
   static navigationOptions = ({ navigation }) => ({

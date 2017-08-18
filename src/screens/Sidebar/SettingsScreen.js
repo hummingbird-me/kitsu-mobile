@@ -10,10 +10,7 @@ import privacy from 'kitsu/assets/img/sidebar_icons/privacy.png';
 import linked from 'kitsu/assets/img/sidebar_icons/linked.png';
 import blocking from 'kitsu/assets/img/sidebar_icons/blocking.png';
 import settings from 'kitsu/assets/img/sidebar_icons/settings.png';
-
-import SidebarHeader from './common/SidebarHeader';
-import SidebarTitle from './common/SidebarTitle';
-import SidebarListItem, { ItemSeparator } from './common/SidebarListItem';
+import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
 
 class SettingsScreen extends Component {
   static navigationOptions = ({ navigation }) => ({

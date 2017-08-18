@@ -5,10 +5,7 @@ import { Text, Container, Content, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import * as colors from 'kitsu/constants/colors';
-
-import SidebarHeader from './common/SidebarHeader';
-import SidebarTitle from './common/SidebarTitle';
-import { ItemSeparator } from './common/SidebarListItem';
+import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
 
 class LinkedAccounts extends React.Component {
   static navigationOptions = ({ navigation }) => ({

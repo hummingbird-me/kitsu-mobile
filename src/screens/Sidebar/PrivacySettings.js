@@ -5,10 +5,7 @@ import { Text, Button, Container, Content, Spinner, Switch } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-
-import SidebarHeader from './common/SidebarHeader';
-import SidebarTitle from './common/SidebarTitle';
-import { ItemSeparator } from './common/SidebarListItem';
+import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
 
 class PrivacySettings extends Component {
   static navigationOptions = ({ navigation }) => ({
