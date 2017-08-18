@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { Text, Icon, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
-import * as colors from '../../../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 
+// have a standard width at all items.
 export const LeftIconWrapper = ({ children }) => (
-  // have a standard width at all items.
   <View style={{ width: 25, alignItems: 'center' }}>
     {children}
   </View>
@@ -15,14 +15,18 @@ export const ItemSeparator = () => (
   <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.imageGrey }} />
 );
 
-
 const SidebarListItem = ({ image, title, onPress }) => (
   <Item button onPress={onPress} style={styles.sectionListItem}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <LeftIconWrapper>
-        <Image source={image} style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }} />
+        <Image
+          source={image}
+          style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }}
+        />
       </LeftIconWrapper>
-      <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>{title}</Text>
+      <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>
+        {title}
+      </Text>
     </View>
     <Right>
       <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
@@ -52,7 +56,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 0,
-    marginLeft: 0 // NATIVEBASE.
+    marginLeft: 0, // NATIVEBASE.
   },
 };
 

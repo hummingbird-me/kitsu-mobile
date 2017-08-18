@@ -1,14 +1,14 @@
 import { StackNavigator } from 'react-navigation';
+import SidebarScreen from 'kitsu/screens/Sidebar/SidebarScreen';
+import SettingsScreen from 'kitsu/screens/Sidebar/SettingsScreen';
+import GeneralSettings from 'kitsu/screens/Sidebar/GeneralSettings';
+import PrivacySettings from 'kitsu/screens/Sidebar/PrivacySettings';
+import Library from 'kitsu/screens/Sidebar/Library';
+import Blocking from 'kitsu/screens/Sidebar/Blocking';
+import LinkedAccounts from 'kitsu/screens/Sidebar/LinkedAccounts';
+import ImportLibrary from 'kitsu/screens/Sidebar/ImportLibrary';
+import ImportDetail from 'kitsu/screens/Sidebar/ImportDetail';
 import navigationOptions from './navigationOptions';
-import SidebarScreen from '../screens/Sidebar/SidebarScreen';
-import SettingsScreen from '../screens/Sidebar/SettingsScreen';
-import GeneralSettings from '../screens/Sidebar/GeneralSettings';
-import PrivacySettings from '../screens/Sidebar/PrivacySettings';
-import Library from '../screens/Sidebar/Library';
-import Blocking from '../screens/Sidebar/Blocking';
-import LinkedAccounts from '../screens/Sidebar/LinkedAccounts';
-import ImportLibrary from '../screens/Sidebar/ImportLibrary';
-import ImportDetail from '../screens/Sidebar/ImportDetail';
 
 const SidebarStack = StackNavigator(
   {

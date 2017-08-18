@@ -3,16 +3,20 @@ import { View, Image, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Text, Container, Icon, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
+import * as colors from 'kitsu/constants/colors';
+import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
+
 import SidebarHeader from './common/SidebarHeader';
 import SidebarTitle from './common/SidebarTitle';
-import SidebarListItem, { ItemSeparator } from './common/SidebarListItem';
-import * as colors from '../../constants/colors';
-import menu from '../../assets/img/tabbar_icons/menu.png';
+import { ItemSeparator } from './common/SidebarListItem';
 
 const MediaItem = ({ onPress, title, details, logoURL }) => (
   <Item onPress={onPress} button style={styles.sectionListItem}>
     <View style={{ justifyContent: 'center', marginLeft: 8 }}>
-      <Image source={{ uri: logoURL }} style={{ width: 100, height: 24, resizeMode: 'contain', borderRadius: 12 }} />
+      <Image
+        source={{ uri: logoURL }}
+        style={{ width: 100, height: 24, resizeMode: 'contain', borderRadius: 12 }}
+      />
       <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
         {details}
       </Text>
@@ -42,46 +46,79 @@ const ImportItem = ({ title, details, status, date }) => (
 class ImportLibrary extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: () => <SidebarHeader navigation={navigation} headerTitle={'Import Library'} />,
-    tabBarIcon: (
-      { tintColor },
-    ) => (
-        <Image
-          source={menu}
-          style={{ tintColor, width: 20, height: 21 }}
-        />
-      ),
+    tabBarIcon: ({ tintColor }) => (
+      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
+    ),
   });
 
   onMediaItemPressed = (item) => {
     const { navigation } = this.props;
-    console.log('navigating', item);
     navigation.navigate('ImportDetail', { item });
-  }
+  };
 
   render() {
-    return ( // handle marginTop: 77
+    return (
       <Container style={styles.containerStyle}>
         <View style={{ marginTop: 77 }}>
           <SidebarTitle style={{ marginTop: 20 }} title={'Import Media'} />
           <FlatList
             data={[
-              { title: 'MyAnimeList', details: 'Import anime & manga library', logoURL: 'https://i2.wp.com/www.otakutale.com/wp-content/uploads/2015/07/MyAnimeList-Logo.jpg?resize=800%2C136', target: '' },
-              { title: 'AniList', details: 'Import anime & manga library', logoURL: 'https://anilist.co/img/logo_anilist.png', target: '' },
+              {
+                title: 'MyAnimeList',
+                details: 'Import anime & manga library',
+                logoURL: 'https://i2.wp.com/www.otakutale.com/wp-content/uploads/2015/07/MyAnimeList-Logo.jpg?resize=800%2C136',
+                target: '',
+              },
+              {
+                title: 'AniList',
+                details: 'Import anime & manga library',
+                logoURL: 'https://anilist.co/img/logo_anilist.png',
+                target: '',
+              },
             ]}
             keyExtractor={(item, index) => index}
-            renderItem={({ item }) => <MediaItem onPress={() => this.onMediaItemPressed(item)} logoURL={item.logoURL} title={item.title} details={item.details} />}
+            renderItem={({ item }) => (
+              <MediaItem
+                onPress={() => this.onMediaItemPressed(item)}
+                logoURL={item.logoURL}
+                title={item.title}
+                details={item.details}
+              />
+            )}
             ItemSeparatorComponent={() => <ItemSeparator />}
             removeClippedSubviews={false}
           />
           <SidebarTitle style={{ marginTop: 20 }} title={'Previous Imports'} />
           <FlatList
             data={[
-              { title: 'MyAnimeList', details: 'Currently importing 231 titles', status: 'syncing', date: '' },
-              { title: 'MyAnimeList', details: 'Successfully imported 231 titles', status: 'success', date: '' },
-              { title: 'AniList', details: 'Failed to import 231 titles. Try again later.', status: 'fail', date: '' },
+              {
+                title: 'MyAnimeList',
+                details: 'Currently importing 231 titles',
+                status: 'syncing',
+                date: '',
+              },
+              {
+                title: 'MyAnimeList',
+                details: 'Successfully imported 231 titles',
+                status: 'success',
+                date: '',
+              },
+              {
+                title: 'AniList',
+                details: 'Failed to import 231 titles. Try again later.',
+                status: 'fail',
+                date: '',
+              },
             ]}
             keyExtractor={(item, index) => index}
-            renderItem={({ item }) => <ImportItem title={item.title} details={item.details} date={item.date} status={item.status} />}
+            renderItem={({ item }) => (
+              <ImportItem
+                title={item.title}
+                details={item.details}
+                date={item.date}
+                status={item.status}
+              />
+            )}
             ItemSeparatorComponent={() => <ItemSeparator />}
             removeClippedSubviews={false}
           />
@@ -104,16 +141,12 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 0,
-    marginLeft: 0 // NATIVEBASE.
+    marginLeft: 0, // NATIVEBASE.
   },
 };
 
-const mapStateToProps = ({ user }) => {
-  return {
-  };
-};
+const mapStateToProps = ({ user }) => ({});
 
-ImportLibrary.propTypes = {
-};
+ImportLibrary.propTypes = {};
 
 export default connect(mapStateToProps, {})(ImportLibrary);
