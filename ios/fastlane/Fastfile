@@ -92,7 +92,8 @@ platform :ios do
       emails: emails,
       groups: groups,
       debug: true,
-      notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
+      # there is a bug of crashlytics for notes (https://github.com/fastlane/fastlane/issues/6325)
+      # notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
       notifications: true  # Should this distribution notify your testers via email?
     )
 
