@@ -33,7 +33,7 @@ function textbox(locals) {
           borderBottomWidth: 0.5,
         }}
       >
-        <View style={{ width: 25 }}>
+        <View style={styles.iconWrapper}>
           <CustomIcon
             name={locals.label}
             size={locals.label === 'password-icon' ? 18 : 13}
@@ -85,6 +85,11 @@ function textbox(locals) {
 }
 
 const styles = {
+  iconWrapper: {
+    width: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   field: {
     fontSize: 15,
     lineHeight: 20,

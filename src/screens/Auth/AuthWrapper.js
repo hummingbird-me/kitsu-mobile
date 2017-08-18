@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, Image } from 'react-native';
+import { Text, Image, Platform } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import * as colors from 'kitsu/constants/colors';
@@ -23,7 +23,7 @@ const AuthWrapper = ({ onSuccess, children, loading }) => {
 
   return (
     <Container style={styles.container}>
-      <Content scrollEnabled={false}>
+      <Content enableOnAndroid scrollEnabled={Platform.select({ ios: false, android: true })}>
         <AnimatedWrapper />
         <Image
           style={{
