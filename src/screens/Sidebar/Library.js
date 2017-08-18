@@ -6,7 +6,13 @@ import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import library from 'kitsu/assets/img/sidebar_icons/library.png';
 import PropTypes from 'prop-types';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarDropdown } from './common/';
+import {
+  SidebarHeader,
+  SidebarListItem,
+  SidebarTitle,
+  ItemSeparator,
+  SidebarDropdown,
+} from './common/';
 
 class Library extends React.Component {
   static navigationOptions = ({ navigation }) => ({
