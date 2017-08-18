@@ -5,27 +5,6 @@ const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const HEADER_NAVIGATION_IMAGE_HEIGHT = 80;
 
 export const styles = StyleSheet.create({
-  alignCenter: {
-    borderWidth: 1,
-    borderColor: 'yellow',
-    flex: 1,
-    alignSelf: 'center',
-    alignItems: 'center',
-  },
-  alignLeft: {
-    borderWidth: 1,
-    borderColor: 'red',
-    flex: 1,
-    alignSelf: 'center',
-    alignItems: 'flex-start',
-  },
-  alignRight: {
-    borderWidth: 1,
-    borderColor: 'green',
-    flex: 1,
-    alignSelf: 'center',
-    alignItems: 'flex-end',
-  },
   backButton: {
     color: '#FFFFFF',
   },
@@ -67,6 +46,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     fontWeight: '500',
     marginLeft: 5,
+    fontSize: 14,
   },
   statusBar: {
     height: STATUS_BAR_HEIGHT,
