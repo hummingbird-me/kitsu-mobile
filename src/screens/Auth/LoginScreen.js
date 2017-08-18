@@ -4,9 +4,9 @@ import { View, Text } from 'react-native';
 import { Button } from 'native-base';
 import { connect } from 'react-redux';
 
-import * as colors from '../../constants/colors';
-import LoginForm from '../../components/Forms/LoginForm';
-import { loginUser } from '../../store/auth/actions';
+import * as colors from 'kitsu/constants/colors';
+import LoginForm from 'kitsu/components/Forms/LoginForm';
+import { loginUser } from 'kitsu/store/auth/actions';
 import AuthWrapper from './AuthWrapper';
 
 class LoginScreen extends Component {

@@ -6,8 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import * as colors from '../../constants/colors';
-import { getNotifications, seenNotifications } from '../../store/feed/actions';
+import * as colors from 'kitsu/constants/colors';
+import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 
 class NotificationsScreen extends Component {
   static navigationOptions = ({ screenProps }) => ({

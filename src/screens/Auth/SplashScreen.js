@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation';
 import Animation from 'lottie-react-native';
 
-import anim from '../../assets/animation/kitsu.json';
-import * as colors from '../../constants/colors';
+import anim from 'kitsu/assets/animation/kitsu.json';
+import * as colors from 'kitsu/constants/colors';
 
 class SplashScreen extends Component {
   static navigationOptions = {

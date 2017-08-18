@@ -5,9 +5,9 @@ import { Button } from 'native-base';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 
-import SignupForm from '../../components/Forms/SignupForm';
-import { loginUser } from '../../store/auth/actions';
-import { createUser } from '../../store/user/actions';
+import SignupForm from 'kitsu/components/Forms/SignupForm';
+import { loginUser } from 'kitsu/store/auth/actions';
+import { createUser } from 'kitsu/store/user/actions';
 import AuthWrapper from './AuthWrapper';
 
 class SignupScreen extends Component {

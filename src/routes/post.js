@@ -1,7 +1,7 @@
 import { StackNavigator } from 'react-navigation';
+import PostCreation from 'kitsu/screens/PostCreation';
+import MediaUploadScreen from 'kitsu/screens/PostCreation/MediaUploadScreen';
 import navigationOptions from './navigationOptions';
-import PostCreation from '../screens/PostCreation';
-import MediaUploadScreen from '../screens/PostCreation/MediaUploadScreen';
 
 const PostStack = StackNavigator(
   {

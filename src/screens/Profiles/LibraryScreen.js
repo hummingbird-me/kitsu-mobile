@@ -14,9 +14,7 @@ import { connect } from 'react-redux';
 import { Icon, Button, Container } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import AweIcon from 'react-native-vector-icons/FontAwesome';
-
-import SimpleTabBar from '../../components/SimpleTabBar';
-import ProgressiveImage from '../../components/ProgressiveImage';
+import SimpleTabBar from 'kitsu/components/SimpleTabBar';
 
 const { width } = Dimensions.get('window');
 class LibraryScreen extends Component {

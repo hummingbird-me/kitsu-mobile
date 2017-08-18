@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Icon, Button } from 'native-base';
 import AweIcon from 'react-native-vector-icons/FontAwesome';
-
-import { search } from '../../store/anime/actions';
+import { search } from 'kitsu/store/anime/actions';
 import { ResultsList } from './Lists';
 
 class SearchResults extends Component {

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import * as colors from '../../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 
 export default class MediaFilter extends Component {
   static propTypes = {

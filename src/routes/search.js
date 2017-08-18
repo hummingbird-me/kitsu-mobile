@@ -1,7 +1,7 @@
 import { StackNavigator } from 'react-navigation';
-import SearchScreen from '../screens/Search/SearchScreen';
-import SearchCategory from '../screens/Search/SearchCategory';
-import SearchResults from '../screens/Search/SearchResults';
+import SearchScreen from 'kitsu/screens/Search/SearchScreen';
+import SearchCategory from 'kitsu/screens/Search/SearchCategory';
+import SearchResults from 'kitsu/screens/Search/SearchResults';
 import navigationOptions from './navigationOptions';
 
 const SearchStack = StackNavigator(

@@ -1,6 +1,6 @@
-import * as types from '../types';
-import { Kitsu } from '../../config/api';
-import { getStream } from '../../config/stream';
+import * as types from 'kitsu/store/types';
+import { Kitsu } from 'kitsu/config/api';
+import { getStream } from 'kitsu/config/stream';
 
 const feedInclude =
   'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga';

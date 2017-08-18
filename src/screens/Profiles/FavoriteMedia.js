@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { Icon, Button, Container } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import SimpleTabBar from '../../components/SimpleTabBar';
-import ProgressiveImage from '../../components/ProgressiveImage';
-import { fetchProfileFavorites } from '../../store/profile/actions';
+import SimpleTabBar from 'kitsu/components/SimpleTabBar';
+import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
 
 class FavoriteMedia extends Component {
   static navigationOptions = ({ navigation }) => ({
