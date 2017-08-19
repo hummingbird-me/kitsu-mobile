@@ -4,8 +4,7 @@ import { View, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Button, Container } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-
-import SimpleTabBar from 'kitsu/components/SimpleTabBar';
+import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import ProgressiveImage from 'kitsu/components/ProgressiveImage';
 import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
 
@@ -109,7 +108,7 @@ class FavoriteMedia extends Component {
   render() {
     return (
       <Container>
-        <ScrollableTabView renderTabBar={() => <SimpleTabBar />}>
+        <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
           <View tabLabel="Anime" style={{ padding: 5, paddingTop: 0, backgroundColor: 'white' }}>
             {this.renderTab('anime')}
           </View>

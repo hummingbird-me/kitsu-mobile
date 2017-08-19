@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { Icon, Button, Container } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import AweIcon from 'react-native-vector-icons/FontAwesome';
-import SimpleTabBar from 'kitsu/components/SimpleTabBar';
+import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 
 const { width } = Dimensions.get('window');
 class LibraryScreen extends Component {
@@ -247,7 +247,7 @@ class LibraryScreen extends Component {
       : Array(20).fill(1).map((item, index) => ({ key: index }));
     return (
       <Container>
-        <ScrollableTabView locked renderTabBar={() => <SimpleTabBar />}>
+        <ScrollableTabView locked renderTabBar={() => <ScrollableTabBar />}>
           <View tabLabel={`Following · ${24}`} style={{ paddingTop: 0, backgroundColor: 'white' }}>
             {this.renderTab(
               [
