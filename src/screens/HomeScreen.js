@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { Modal, View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { Counter } from 'kitsu/components/Counter';
+
+import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -92,15 +94,20 @@ class HomeScreen extends Component {
               Logout
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('MediaUpload')}>
+          <Button onPress={() => this.setState({ quickUpdateModalVisible: true })}>
             <Text>
-              Upload Media
+              Quick Update
             </Text>
           </Button>
 
           <Counter initialValue={14} maxValue={20} progressCounter />
           <Counter initialValue={11} maxValue={20} />
         </Content>
+        <Modal
+          visible={this.state.quickUpdateModalVisible}
+        >
+          <QuickUpdateScreen />
+        </Modal>
       </Container>
     );
   }

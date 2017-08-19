@@ -2,6 +2,7 @@ import { StackNavigator } from 'react-navigation';
 import Routes from './routes';
 
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
+import QuickUpdateScreen from './screens/QuickUpdateScreen';
 import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
 import navigationOptions from './routes/navigationOptions';
 
@@ -33,6 +34,9 @@ const Root = StackNavigator(
     },
     Post: {
       screen: Routes.PostStack,
+    },
+    QuickUpdate: {
+      screen: QuickUpdateScreen,
     },
   },
   {
