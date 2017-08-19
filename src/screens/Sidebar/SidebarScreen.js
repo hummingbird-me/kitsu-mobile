@@ -97,6 +97,7 @@ class SidebarScreen extends Component {
 
   render() {
     const { navigation } = this.props;
+    const { name, avatar } = this.props.currentUser;
     const sectionListData = [
       {
         key: 'shortcuts',
@@ -161,7 +162,10 @@ class SidebarScreen extends Component {
                 marginLeft: 20,
               }}
             >
-              <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={defaultAvatar} />
+              <Image
+                style={{ width: 40, height: 40, borderRadius: 20 }}
+                source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+              />
               <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
                 <Text
                   style={{
@@ -171,7 +175,7 @@ class SidebarScreen extends Component {
                     fontWeight: '600',
                   }}
                 >
-                  Dummy UI
+                  {name}
                 </Text>
                 <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>
                   view profile
@@ -235,7 +239,12 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => ({});
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  return {
+    currentUser,
+  };
+};
 
 SidebarScreen.propTypes = {};
 

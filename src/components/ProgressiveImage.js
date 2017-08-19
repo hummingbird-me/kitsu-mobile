@@ -73,7 +73,9 @@ class ProgressiveImage extends Component {
               position: 'absolute',
               top: 0,
             }}
-          >{children}</LinearGradient>}
+          >
+            {children}
+          </LinearGradient>}
       </View>
     );
   }
