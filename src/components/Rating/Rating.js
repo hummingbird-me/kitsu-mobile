@@ -108,6 +108,8 @@ export default class Rating extends PureComponent {
                 maximumValue={10}
                 step={0.5}
                 value={this.state.rating}
+                minimumTrackTintColor={colors.tabRed}
+                maximumTrackTintColor={'rgb(43, 33, 32)'}
                 onValueChange={this.sliderValueChanged}
                 style={styles.modalSlider}
               />
