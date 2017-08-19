@@ -4,29 +4,27 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
-export const ScrollableTabBar = ({ goToPage, activeTab, tabs }) => {
-  return (
-    <View style={styles.tabBarContainer}>
-      {tabs.map((tab, i) => (
-        <TouchableOpacity
-          key={tab}
-          transparent
-          onPress={() => goToPage(i)}
-          style={styles.tab}
+export const ScrollableTabBar = ({ goToPage, activeTab, tabs }) => (
+  <View style={styles.tabBarContainer}>
+    {tabs.map((tab, i) => (
+      <TouchableOpacity
+        key={tab}
+        transparent
+        onPress={() => goToPage(i)}
+        style={styles.tab}
+      >
+        <Text
+          style={[
+            commonStyles.text,
+            (activeTab === i ? commonStyles.colorPeach : commonStyles.colorLightGrey),
+          ]}
         >
-          <Text
-            style={[
-              commonStyles.text,
-              (activeTab === i ? commonStyles.colorPeach : commonStyles.colorLightGrey),
-            ]}
-          >
-            {tab}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-};
+          {tab}
+        </Text>
+      </TouchableOpacity>
+    ))}
+  </View>
+);
 
 ScrollableTabBar.propTypes = {
   goToPage: PropTypes.func,
