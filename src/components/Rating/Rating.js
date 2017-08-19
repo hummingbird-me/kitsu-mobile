@@ -106,11 +106,11 @@ export default class Rating extends PureComponent {
             </View>
             <View style={styles.modalBody}>
               {/* Star, 4.5 */}
-              { rating ? 
+              { rating ?
                 <View style={styles.modalStarRow}>
                   <Icon name="star" size={65} color={colors.activeYellow} />
                   <Text style={styles.modalRatingText}>
-                    {this.state.rating}
+                    {rating >= 10 ? rating : rating.toFixed(1)}
                   </Text>
                 </View>
                 :
