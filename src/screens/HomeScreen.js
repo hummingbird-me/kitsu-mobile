@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { Modal, View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 
 import Rating from 'kitsu/components/Rating';
+
+import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -67,13 +69,18 @@ class HomeScreen extends Component {
               Logout
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('MediaUpload')}>
+          <Button onPress={() => this.setState({ quickUpdateModalVisible: true })}>
             <Text>
-              Upload Media
+              Quick Update
             </Text>
           </Button>
           <Rating rating={8} />
         </Content>
+        <Modal
+          visible={this.state.quickUpdateModalVisible}
+        >
+          <QuickUpdateScreen />
+        </Modal>
       </Container>
     );
   }
