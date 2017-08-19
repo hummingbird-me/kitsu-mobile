@@ -95,62 +95,126 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
   }
 };
 
-const fetchUserLibraryByKindAndStatus = async (userId, kind, status) => {
-  const library = await Kitsu.findAll('libraryEntries', {
-    filter: {
-      userId,
-      status,
-      kind,
-    },
-    include: 'anime,manga',
-  });
-
-  return library;
+const defaultFetchUserLibraryOptions = {
+  limit: 10,
+  fetchType: 'fetch',
+  searchText: '',
 };
 
-export const fetchUserLibrary = userId => async (dispatch) => {
+export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState) => {
+  const options = {
+    ...defaultFetchUserLibraryOptions,
+    ...fetchOptions,
+  };
+
+  const filter = {
+    userId: options.userId,
+    status: status === 'onHold' ? 'on_hold' : status,
+    kind: options.library,
+  };
+
+  const { userLibrary, userLibrarySearch } = getState().profile;
+  let { data } = userLibrary[options.library][status];
+  let fetchingAction = types.FETCH_USER_LIBRARY_TYPE;
+  let successAction = types.FETCH_USER_LIBRARY_TYPE;
+  let failAction = types.FETCH_USER_LIBRARY_TYPE;
+  if (options.fetchType === 'search') {
+    data = userLibrarySearch[options.library][status].data;
+    fetchingAction = types.SEARCH_USER_LIBRARY_TYPE;
+    successAction = types.SEARCH_USER_LIBRARY_TYPE;
+    failAction = types.SEARCH_USER_LIBRARY_TYPE;
+    filter.text = options.searchText;
+  }
+
+  dispatch({
+    type: fetchingAction,
+    library: options.library,
+    status,
+    fetchType: options.fetchType,
+  });
+
+  try {
+    const libraryEntries = await Kitsu.findAll('libraryEntries', {
+      filter,
+      page: {
+        limit: options.limit,
+        offset: data.length,
+      },
+      include: 'anime,manga',
+    });
+
+    dispatch({
+      type: successAction,
+      library: options.library,
+      status,
+      data: libraryEntries,
+    });
+  } catch (error) {
+    dispatch({
+      type: failAction,
+      error,
+    });
+  }
+};
+
+export const fetchUserLibrary = userId => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_USER_LIBRARY });
 
   try {
-    const [
-      animeCompleted, animeCurrent, animeDropped, animeOnHold, animePlanned,
-      mangaCompleted, mangaCurrent, mangaDropped, mangaOnHold, mangaPlanned,
-    ] = await Promise.all([
-      fetchUserLibraryByKindAndStatus(userId, 'anime', 'completed'),
-      fetchUserLibraryByKindAndStatus(userId, 'anime', 'current'),
-      fetchUserLibraryByKindAndStatus(userId, 'anime', 'dropped'),
-      fetchUserLibraryByKindAndStatus(userId, 'anime', 'on_hold'),
-      fetchUserLibraryByKindAndStatus(userId, 'anime', 'planned'),
-      fetchUserLibraryByKindAndStatus(userId, 'manga', 'completed'),
-      fetchUserLibraryByKindAndStatus(userId, 'manga', 'current'),
-      fetchUserLibraryByKindAndStatus(userId, 'manga', 'dropped'),
-      fetchUserLibraryByKindAndStatus(userId, 'manga', 'on_hold'),
-      fetchUserLibraryByKindAndStatus(userId, 'manga', 'planned'),
+    await Promise.all([
+      fetchUserLibraryByType({ userId, library: 'anime', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'anime', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'anime', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'anime', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'anime', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'manga', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'manga', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'manga', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, library: 'manga', status: 'planned' })(dispatch, getState),
     ]);
 
     dispatch({
       type: types.FETCH_USER_LIBRARY_SUCCESS,
-      payload: {
-        anime: {
-          completed: animeCompleted,
-          current: animeCurrent,
-          dropped: animeDropped,
-          onHold: animeOnHold,
-          planned: animePlanned,
-        },
-        manga: {
-          completed: mangaCompleted,
-          current: mangaCurrent,
-          dropped: mangaDropped,
-          onHold: mangaOnHold,
-          planned: mangaPlanned,
-        },
-      },
     });
-  } catch (e) {
+  } catch (error) {
     dispatch({
       type: types.FETCH_USER_LIBRARY_FAIL,
-      payload: 'Failed to load user library',
+      error,
+    });
+  }
+};
+
+export const searchUserLibrary = (userId, searchText) => async (dispatch, getState) => {
+  dispatch({ type: types.SEARCH_USER_LIBRARY });
+
+  const searchOptions = {
+    userId,
+    searchText,
+    fetchType: 'search',
+  };
+
+  try {
+    await Promise.all([
+      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'planned' })(dispatch, getState),
+    ]);
+
+    dispatch({
+      type: types.SEARCH_USER_LIBRARY_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      type: types.SEARCH_USER_LIBRARY_FAIL,
+      error,
     });
   }
 };

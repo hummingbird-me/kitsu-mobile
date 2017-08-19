@@ -1,6 +1,24 @@
 import { REHYDRATE } from 'redux-persist/constants';
 import * as types from 'kitsu/store/types';
 
+const userLibraryInitial = {
+  anime: {
+    completed: { data: [], loading: false },
+    current: { data: [], loading: false },
+    dropped: { data: [], loading: false },
+    onHold: { data: [], loading: false },
+    planned: { data: [], loading: false },
+  },
+  manga: {
+    completed: { data: [], loading: false },
+    current: { data: [], loading: false },
+    dropped: { data: [], loading: false },
+    onHold: { data: [], loading: false },
+    planned: { data: [], loading: false },
+  },
+  loading: false,
+};
+
 const INITIAL_STATE = {
   profile: {},
   favoritesLoading: {},
@@ -10,20 +28,11 @@ const INITIAL_STATE = {
   anime: {},
   library: {},
   userLibrary: {
-    anime: {
-      completed: [],
-      current: [],
-      dropped: [],
-      onHold: [],
-      planned: [],
-    },
-    manga: {
-      completed: [],
-      current: [],
-      dropped: [],
-      onHold: [],
-      planned: [],
-    },
+    ...userLibraryInitial,
+    loading: false,
+  },
+  userLibrarySearch: {
+    ...userLibraryInitial,
     loading: false,
   },
   followed: {},
@@ -83,6 +92,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userLibrary: {
+          ...userLibraryInitial,
           loading: true,
         },
       };
@@ -90,7 +100,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userLibrary: {
-          ...action.payload,
+          ...state.userLibrary,
           loading: false,
         },
       };
@@ -98,8 +108,118 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userLibrary: {
-          error: action.error,
+          ...state.userLibrary,
           loading: false,
+        },
+      };
+    case types.SEARCH_USER_LIBRARY:
+      return {
+        ...state,
+        userLibrarySearch: {
+          ...userLibraryInitial,
+          loading: true,
+        },
+      };
+    case types.SEARCH_USER_LIBRARY_SUCESS:
+      return {
+        ...state,
+        userLibrarySearch: {
+          ...state.userLibrarySearch,
+          loading: false,
+        },
+      };
+    case types.SEARCH_USER_LIBRARY_FAIL:
+      return {
+        ...state,
+        userLibrarySearch: {
+          ...state.userLibrarySearch,
+          loading: false,
+        },
+      };
+    case types.SEARCH_USER_LIBRARY_TYPE:
+      return {
+        ...state,
+        userLibrarySearch: {
+          ...state.userLibrarySearch,
+          [action.library]: {
+            ...state.userLibrarySearch[action.library],
+            [action.status]: {
+              ...state.userLibrarySearch[action.library][action.status],
+              loading: true,
+            },
+          },
+        },
+      };
+    case types.SEARCH_USER_LIBRARY_TYPE_SUCCESS:
+      return {
+        ...state,
+        userLibrarySearch: {
+          ...state.userLibrarySearch,
+          [action.library]: {
+            ...state.userLibrarySearch[action.library],
+            [action.status]: {
+              data: state.userLibrarySearch[action.library][action.status].data.concat(action.data),
+              meta: action.data.meta,
+              loading: false,
+            },
+          },
+        },
+      };
+    case types.SEARCH_USER_LIBRARY_TYPE_FAIL:
+      return {
+        ...state,
+        userLibrarySearch: {
+          ...state.userLibrarySearch,
+          [action.library]: {
+            ...state.userLibrarySearch[action.library],
+            [action.status]: {
+              ...state.userLibrarySearch[action.library][action.status],
+              loading: false,
+            },
+          },
+        },
+      };
+    case types.FETCH_USER_LIBRARY_TYPE:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.library]: {
+            ...state.userLibrary[action.library],
+            [action.status]: {
+              ...state.userLibrary[action.library][action.status],
+              loading: true,
+            },
+          },
+        },
+      };
+    case types.FETCH_USER_LIBRARY_TYPE_SUCCESS:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.library]: {
+            ...state.userLibrary[action.library],
+            [action.status]: {
+              data: state.userLibrary[action.library][action.status].data.concat(action.data),
+              meta: action.data.meta,
+              loading: false,
+            },
+          },
+        },
+      };
+    case types.FETCH_USER_LIBRARY_TYPE_FAIL:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.library]: {
+            ...state.userLibrary[action.library],
+            [action.status]: {
+              ...state.userLibrary[action.library][action.status],
+              loading: false,
+            },
+          },
         },
       };
     case types.FETCH_USER_FAVORITES:

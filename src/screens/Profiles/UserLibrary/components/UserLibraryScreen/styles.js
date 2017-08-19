@@ -16,4 +16,8 @@ export const styles = {
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
+  searchBar: {
+    marginLeft: 10,
+    marginRight: 10,
+  },
 };
