@@ -104,7 +104,7 @@ export default class Rating extends PureComponent {
               </View>
               {/* Slider */}
               <Slider
-                minimumValue={1}
+                minimumValue={0.5}
                 maximumValue={10}
                 step={0.5}
                 value={this.state.rating}
