@@ -4,9 +4,6 @@ import * as colors from '../../constants/colors';
 const HEADER_NAVIGATION_IMAGE_HEIGHT = 60;
 
 export const styles = StyleSheet.create({
-  backButton: {
-    color: '#FFFFFF',
-  },
   followButton: {
     backgroundColor: '#16A085',
     borderRadius: 3,
@@ -15,12 +12,6 @@ export const styles = StyleSheet.create({
     marginRight: 10,
     width: 95,
     margin: 'auto',
-  },
-  followText: {
-    color: 'white',
-    fontSize: 12,
-    fontFamily: 'OpenSans',
-    fontWeight: '600',
   },
   header: {
     flexDirection: 'row',
@@ -32,18 +23,13 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.darkPurple,
     height: HEADER_NAVIGATION_IMAGE_HEIGHT,
   },
-  headerImage: {
-    ...StyleSheet.absoluteFillObject,
-  },
   profileImage: {
     width: 30,
     height: 30,
     borderRadius: 15,
   },
   titleText: {
-    color: 'white',
-    fontFamily: 'OpenSans',
-    fontWeight: '500',
+    fontSize: 14,
     marginLeft: 5,
   },
 });

@@ -2,6 +2,9 @@ import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const commonStyles = StyleSheet.create({
+  absoluteFill: {
+    ...StyleSheet.absoluteFillObject,
+  },
   text: {
     fontFamily: 'OpenSans',
     fontSize: 12,
@@ -9,6 +12,9 @@ export const commonStyles = StyleSheet.create({
   },
   textHeavy: {
     fontWeight: '800',
+  },
+  colorWhite: {
+    color: colors.white,
   },
   colorPeach: {
     color: colors.peach,

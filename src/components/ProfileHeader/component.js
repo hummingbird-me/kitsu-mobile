@@ -1,9 +1,10 @@
-import { Image, StatusBar, StyleSheet, View } from 'react-native';
-import { Body, Button, Icon, Left, Right, Text } from 'native-base';
+import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { Body, Button, Icon, Left, Right } from 'native-base';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
+import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
 const CustomStatusBar = ({ backgroundColor, ...props }) => (
@@ -24,21 +25,21 @@ export const ProfileHeader = ({ profile, followButton, title, onClickBack }) => 
   return (
     <View style={styles.headerContainer}>
       <CustomStatusBar backgroundColor={colors.darkPurple} barStyle="light-content" />
-      <View style={StyleSheet.flatten(styles.header)}>
-        <Image style={styles.headerImage} source={{ uri: coverImageUri }} />
+      <View style={styles.header}>
+        <Image style={commonStyles.absoluteFill} source={{ uri: coverImageUri }} />
 
         <Left>
           <Button transparent onPress={goBack}>
-            <Icon name="arrow-back" style={StyleSheet.flatten(styles.backButton)} />
+            <Icon name="arrow-back" style={StyleSheet.flatten(commonStyles.colorWhite)} />
             <Image style={styles.profileImage} source={{ uri: profileImageUri }} />
-            {followButton && <Text style={StyleSheet.flatten(styles.titleText)}>{title}</Text>}
+            {followButton && <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>}
           </Button>
         </Left>
 
         {!followButton && (
         <Body>
           <View style={{ backgroundColor: 'transparent' }}>
-            <Text style={StyleSheet.flatten(styles.titleText)}>{title}</Text>
+            <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>
           </View>
         </Body>
         )}
@@ -46,7 +47,7 @@ export const ProfileHeader = ({ profile, followButton, title, onClickBack }) => 
         <Right>
           {followButton && (
           <Button transparent style={StyleSheet.flatten(styles.followButton)} onPress={goBack}>
-            <Text style={StyleSheet.flatten(styles.followText)}>Follow</Text>
+            <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
           </Button>
           )}
         </Right>

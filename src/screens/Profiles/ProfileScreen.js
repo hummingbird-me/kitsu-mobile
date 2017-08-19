@@ -358,6 +358,7 @@ class ProfileScreen extends Component {
               this.props.navigation.navigate('FavoriteMedia', {
                 label: 'Favorite Media',
                 userId,
+                profile,
               })}
           >
             {anime.length > 0

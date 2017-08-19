@@ -7,19 +7,29 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import ProgressiveImage from 'kitsu/components/ProgressiveImage';
 import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
+import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 
 class FavoriteMedia extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.label,
-    headerLeft: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" style={{ color: 'white' }} />
-      </Button>
-    ),
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
-    ),
-  });
+  static navigationOptions = (props) => {
+    const { profile } = props.navigation.state.params;
+
+    return {
+      headerStyle: {
+        shadowColor: 'transparent',
+        elevation: 0,
+      },
+      header: () => (
+        <ProfileHeader
+          profile={profile}
+          title={profile.name}
+          onClickBack={props.navigation.goBack}
+        />
+      ),
+      tabBarIcon: ({ tintColor }) => (
+        <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
+      ),
+    };
+  };
 
   constructor(props) {
     super(props);
@@ -59,26 +69,7 @@ class FavoriteMedia extends Component {
     }
     const image = item.posterImage ? item.posterImage.original : '';
     return (
-      <TouchableOpacity
-        style={{
-          height,
-          width,
-          margin: 2,
-        }}
-        onPress={() =>
-          this.props.navigation.navigate('Media', {
-            mediaId: item.id,
-            type: item.type,
-          })}
-      >
-        <ProgressiveImage
-          source={{ uri: image }}
-          style={{
-            height,
-            width,
-          }}
-        />
-      </TouchableOpacity>
+      null
     );
   }
 

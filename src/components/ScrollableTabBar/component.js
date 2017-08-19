@@ -29,7 +29,13 @@ export const ScrollableTabBar = ({ goToPage, activeTab, tabs }) => {
 };
 
 ScrollableTabBar.propTypes = {
-  goToPage: PropTypes.func.isRequired,
-  activeTab: PropTypes.number.isRequired,
-  tabs: PropTypes.array.isRequired,
+  goToPage: PropTypes.func,
+  activeTab: PropTypes.number,
+  tabs: PropTypes.array,
+};
+
+ScrollableTabBar.defaultProps = {
+  goToPage: () => {},
+  activeTab: 0,
+  tabs: [],
 };
