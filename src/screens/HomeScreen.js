@@ -5,7 +5,7 @@ import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 
-import Rating from '../components/Rating';
+import Rating from 'kitsu/components/Rating';
 
 class HomeScreen extends Component {
   static navigationOptions = {
