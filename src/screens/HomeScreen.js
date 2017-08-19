@@ -72,9 +72,6 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
-          <Rating rating={0} />
-          <Rating rating={4} />
-          <Rating rating={6} />
           <Rating rating={8} />
         </Content>
       </Container>
