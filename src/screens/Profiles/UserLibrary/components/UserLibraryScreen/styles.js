@@ -5,7 +5,6 @@ export const styles = {
     alignItems: 'center',
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
-    borderWidth: 0,
   },
   posterImageCard: {
     width: 105,
@@ -13,5 +12,8 @@ export const styles = {
     marginLeft: 4,
     marginRight: 4,
     borderRadius: 3,
+  },
+  posterImageCardFirstChild: {
+    marginLeft: 12,
   },
 };

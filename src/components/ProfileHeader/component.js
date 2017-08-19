@@ -2,12 +2,12 @@ import { Image, StatusBar, StyleSheet, View } from 'react-native';
 import { Body, Button, Icon, Left, Right, Text } from 'native-base';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
+import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
-import { defaultAvatar, defaultCover } from '../../constants/app';
-import * as colors from '../../constants/colors';
 
 const CustomStatusBar = ({ backgroundColor, ...props }) => (
-  <View style={[styles.statusBar, { backgroundColor }]}>
+  <View style={{ backgroundColor }}>
     <StatusBar translucent backgroundColor={backgroundColor} {...props} />
   </View>
 );

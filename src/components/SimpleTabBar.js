@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button, Text, View } from 'native-base';
 
-const SimpleTabBar = React.createClass({
+export const SimpleTabBar = React.createClass({
   tabIcons: [],
 
   propTypes: {
@@ -90,5 +90,3 @@ const styles = {
     borderColor: '#EEEEEE',
   },
 };
-
-export default SimpleTabBar;

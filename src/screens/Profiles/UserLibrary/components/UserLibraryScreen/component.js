@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
+import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { styles } from './styles';
 
 export class UserLibraryScreenComponent extends React.Component {
@@ -29,18 +30,12 @@ export class UserLibraryScreenComponent extends React.Component {
     };
   };
 
-  constructor() {
-    super();
-    this.renderItem = this.renderItem.bind(this);
-    this.renderLists = this.renderLists.bind(this);
-  }
-
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
     this.props.fetchUserLibrary(profile.id);
   }
 
-  renderItem({ item }) {
+  renderItem = ({ item, index }) => {
     const data = item.anime || item.manga;
 
     return (
@@ -54,13 +49,13 @@ export class UserLibraryScreenComponent extends React.Component {
       >
         <Image
           source={{ uri: data.posterImage.tiny }}
-          style={styles.posterImageCard}
+          style={[styles.posterImageCard, index === 0 && styles.posterImageCardFirstChild]}
         />
       </TouchableOpacity>
     );
   }
 
-  renderLists(type) {
+  renderLists = (type) => {
     const { userLibrary } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
@@ -71,7 +66,7 @@ export class UserLibraryScreenComponent extends React.Component {
     ];
 
     return listOrder.map(currentList => (
-      <View key={`${currentList.status}-${type}`} >
+      <View key={`${currentList.status}-${type}`}>
         <LibraryHeader
           data={userLibrary[type][currentList.status]}
           status={currentList.status}
@@ -100,7 +95,7 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return (
       <Container style={styles.container}>
-        <ScrollableTabView>
+        <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
             {this.renderLists('anime')}
           </ScrollView>
