@@ -15,7 +15,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
           borderBottomWidth: 0.5,
         }}
       >
-        <View style={{ width: 25 }}>
+        <View style={{ width: 25, justifyContent: 'center', alignItems: 'center' }}>
           <CustomIcon name="mail-icon" size={13} color="white" styles={{ opacity: 0.5 }} />
         </View>
         <Input
@@ -38,7 +38,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
           paddingTop: 10,
         }}
       >
-        <View style={{ width: 25 }}>
+        <View style={{ width: 25, justifyContent: 'center', alignItems: 'center' }}>
           <CustomIcon name="password-icon" size={18} color="white" styles={{ opacity: 0.5 }} />
         </View>
         <Input

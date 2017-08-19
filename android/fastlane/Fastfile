@@ -25,6 +25,18 @@ platform :android do
     gradle(task: "test")
   end
 
+  lane :bump_version_code do
+    path = '../app/build.gradle'
+    re = /versionCode\s+(\d+)/
+
+    s = File.read(path)
+    s[re, 1] = (ENV["TRAVIS_BUILD_NUMBER"]).to_s
+
+    f = File.new(path, 'w')
+    f.write(s)
+    f.close
+  end
+
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do |values|
     # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
@@ -32,11 +44,22 @@ platform :android do
     emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
+    path = '../app/build.gradle'
+    re = /versionCode\s+(\d+)/
+
+    s = File.read(path)
+    versionCode = s[re, 1].to_i
+    s[re, 1] = (versionCode + 1).to_s
+
+    f = File.new(path, 'w')
+    f.write(s)
+    f.close
+
+    bump_version_code
     gradle(
       task: "assembleRelease",
       # project_dir: "platforms/android/",
       properties: {
-        'versionCode' => ENV["TRAVIS_BUILD_NUMBER"],
         'android.useDeprecatedNdk' => true,
         'android.injected.signing.store.file' => 'app/kitsu-android-key.keystore',
         'android.injected.signing.store.password' => ENV["KITSU_RELEASE_STORE_PASSWORD"],

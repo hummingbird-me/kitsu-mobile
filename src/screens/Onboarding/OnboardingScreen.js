@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, Platform, Easing } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
 import * as colors from 'kitsu/constants/colors';
@@ -14,6 +14,11 @@ const styleObj = {
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  contentContainer: {
+    // only necessary for scrollview (android).
+    // pick a value close to dotContainer padding.
+    paddingBottom: Platform.select({ ios: 0, android: 30 }),
   },
   footer: {
     backgroundColor: colors.darkPurple,
@@ -78,7 +83,7 @@ class OnboardingScreen extends Component {
 
     return (
       <Container style={styleObj.container}>
-        <Content scrollEnabled={false}>
+        <Content contentContainerStyle={styleObj.contentContainer} scrollEnabled={Platform.select({ ios: false, android: true })}>
           <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
             <Carousel
               inactiveSlideScale={0.90}
@@ -87,6 +92,7 @@ class OnboardingScreen extends Component {
               onSnapToItem={step => this.setState({ step })}
               sliderWidth={Dimensions.get('window').width}
               itemWidth={265}
+              decelerationRate={'fast'}
             >
               {this.renderStep()}
             </Carousel>
@@ -127,6 +133,10 @@ class OnboardingScreen extends Component {
 
 OnboardingScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
+};
+
+OnboardingScreen.defaultProps = {
+  navigation: {},
 };
 
 export default OnboardingScreen;

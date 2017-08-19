@@ -7,6 +7,7 @@ import { tabRed, listBackPurple } from 'kitsu/constants/colors';
 import SearchStack from './search';
 import NotifStack from './notification';
 import ProfileStack from './profile';
+import SidebarStack from './sidebar';
 
 const Tabs = TabNavigator(
   {
@@ -24,6 +25,9 @@ const Tabs = TabNavigator(
     // },
     Notif: {
       screen: NotifStack,
+    },
+    Menu: {
+      screen: SidebarStack,
     },
   },
   {
