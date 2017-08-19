@@ -7,6 +7,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
 
 const styleForRating = (rating, image) => {
+  if (rating === null) {
+    return 'default';
+  }
+
   if (rating < 3) {
     return image === 'awful' ? 'selected' : 'default';
   } else if (rating < 5) {
@@ -25,7 +29,7 @@ export default class Rating extends PureComponent {
   }
 
   static defaultProps = {
-    rating: 10, // Let's be optimistic, shall we?
+    rating: null,
     onRatingChanged: () => { },
   }
 
@@ -62,7 +66,13 @@ export default class Rating extends PureComponent {
   }
 
   sliderValueChanged = (rating) => {
-    this.setState({ rating });
+    // We use the 0.5 rating to indicate 'no rating',
+    // but we don't want to deal with that in our actual state.
+    if (rating >= 1) {
+      this.setState({ rating });
+    } else {
+      this.setState({ rating: null });
+    }
   }
 
   render() {
@@ -96,12 +106,20 @@ export default class Rating extends PureComponent {
             </View>
             <View style={styles.modalBody}>
               {/* Star, 4.5 */}
-              <View style={styles.modalStarRow}>
-                <Icon name="star" size={65} color={colors.activeYellow} />
-                <Text style={styles.modalRatingText}>
-                  {this.state.rating}
-                </Text>
-              </View>
+              { rating ? 
+                <View style={styles.modalStarRow}>
+                  <Icon name="star" size={65} color={colors.activeYellow} />
+                  <Text style={styles.modalRatingText}>
+                    {this.state.rating}
+                  </Text>
+                </View>
+                :
+                <View style={styles.modalStarRow}>
+                  <Text style={styles.modalNoRatingText}>
+                    No Rating
+                  </Text>
+                </View>
+              }
               {/* Slider */}
               <Slider
                 minimumValue={0.5}
@@ -183,6 +201,13 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     fontWeight: '700',
     marginLeft: 12,
+  },
+  modalNoRatingText: {
+    color: colors.lightGrey,
+    fontSize: 30,
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    lineHeight: 82,
   },
   modalSlider: {
     marginHorizontal: 30,
