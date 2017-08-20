@@ -112,15 +112,15 @@ export default class Rating extends PureComponent {
 
 
     return (
-      <View>
+      <View {...this.props}>
         <TouchableOpacity onPress={this.toggleModal} style={styles.wrapper}>
           <View style={{ flexDirection: 'row', borderWidth: 1 }}>
             <Image source={require('kitsu/assets/img/ratings/awful.png')} style={this.styleForRating(rating, 'awful')} />
+            <Image source={require('kitsu/assets/img/ratings/meh.png')} style={this.styleForRating(rating, 'meh')} />
+            <Image source={require('kitsu/assets/img/ratings/good.png')} style={this.styleForRating(rating, 'good')} />
+            <Image source={require('kitsu/assets/img/ratings/great.png')} style={this.styleForRating(rating, 'great')} />
             <Text style={{ marginLeft: 15 }}>GREAT</Text>
           </View>
-          <Image source={require('kitsu/assets/img/ratings/meh.png')} style={this.styleForRating(rating, 'meh')} />
-          <Image source={require('kitsu/assets/img/ratings/good.png')} style={this.styleForRating(rating, 'good')} />
-          <Image source={require('kitsu/assets/img/ratings/great.png')} style={this.styleForRating(rating, 'great')} />
         </TouchableOpacity>
 
         <Modal
