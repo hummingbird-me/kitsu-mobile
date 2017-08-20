@@ -4385,6 +4385,10 @@ react-devtools-core@^2.0.8:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
+react-native-actionsheet@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.2.2.tgz#469075a7d1c8e5b5d0829294bf9a2c4d2eb7e34e"
+
 react-native-animatable@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.0.tgz#fd279c6ee4b49161c6cc3b951ed7765b35a73467"
