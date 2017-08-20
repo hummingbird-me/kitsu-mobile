@@ -17,11 +17,16 @@ class GeneralSettings extends Component {
   });
 
   state = {
-    adult: 'Show Adult Titles (O_O)',
+    username: this.props.currentUser.name,
+    email: this.props.currentUser.email,
+    password: '',
+    sfw: this.props.currentUser.sfwFilter,
   };
 
+  sfwOptions = [{ title: 'Show Adult Titles (O_O)' }, { title: 'Hide Adult Titles' }];
+
   render() {
-    const { navigation } = this.props;
+    const { navigation, currentUser } = this.props;
     const loading = false; // temporary.
     return (
       // handle marginTop: 77
@@ -36,7 +41,7 @@ class GeneralSettings extends Component {
                 </Text>
                 <TextInput
                   style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
-                  value={'Josh'}
+                  value={this.state.username}
                   autoCapitalize={'words'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
@@ -49,7 +54,7 @@ class GeneralSettings extends Component {
                 </Text>
                 <TextInput
                   style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
-                  value={'josh@kitsu.io'}
+                  value={this.state.email}
                   autoCapitalize={'none'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
@@ -62,7 +67,7 @@ class GeneralSettings extends Component {
                 </Text>
                 <TextInput
                   style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
-                  value={'josh@kitsu.io'}
+                  value={this.state.password}
                   secureTextEntry
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
@@ -71,9 +76,9 @@ class GeneralSettings extends Component {
               <SidebarTitle style={{ marginTop: 20 }} title={'Content on Kitsu'} />
               <SidebarDropdown
                 title={'R18+ titles in feed, libraries, or search?'}
-                value={this.state.adult}
-                options={[{ title: 'Show Adult Titles (O_O)' }, { title: 'Hide Adult Titles' }]}
-                onSelectOption={adult => this.setState({ adult })}
+                value={this.sfwOptions[Number(this.state.sfw)].title}
+                options={this.sfwOptions}
+                onSelectOption={sfw => this.setState({ sfw })}
               />
               <View style={{ marginTop: 20, padding: 10, paddingLeft: 25, paddingRight: 25 }}>
                 <Button
@@ -112,7 +117,12 @@ const styles = {
   containerStyle: { backgroundColor: colors.listBackPurple },
 };
 
-const mapStateToProps = ({ user }) => ({});
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  return {
+    currentUser,
+  };
+};
 
 GeneralSettings.propTypes = {};
 

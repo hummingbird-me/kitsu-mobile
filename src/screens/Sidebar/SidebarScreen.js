@@ -21,6 +21,7 @@ import library from 'kitsu/assets/img/sidebar_icons/library.png';
 import suggest from 'kitsu/assets/img/sidebar_icons/suggest.png';
 import settings from 'kitsu/assets/img/sidebar_icons/settings.png';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
+import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
 
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
 
@@ -94,6 +95,10 @@ class SidebarScreen extends Component {
       <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
     ),
   };
+
+  componentDidMount() {
+    this.props.fetchGroupMemberships();
+  }
 
   render() {
     const { navigation } = this.props;
@@ -248,4 +253,4 @@ const mapStateToProps = ({ user }) => {
 
 SidebarScreen.propTypes = {};
 
-export default connect(mapStateToProps, {})(SidebarScreen);
+export default connect(mapStateToProps, { fetchGroupMemberships })(SidebarScreen);

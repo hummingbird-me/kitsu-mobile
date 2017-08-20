@@ -722,6 +722,28 @@ Kitsu.define(
   { collectionPath: 'streamers' },
 );
 
+Kitsu.define(
+  'groupMembers',
+  {
+    rank: '',
+    createdAt: '',
+    unreadCount: '',
+    updatedAt: '',
+    hidden: '',
+    permissions: {
+      jsonApi: 'hasMany',
+    },
+    user: {
+      jsonApi: 'hasMany', // no idea?
+      type: 'users',
+    },
+    notes: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'group-members' },
+);
+
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
 };

@@ -10,10 +10,10 @@ import * as reducers from './reducers';
 
 const middlewares = [thunk, createActionBuffer(REHYDRATE)];
 
-// if (__DEV__) {
-//   const { createLogger } = require('redux-logger');
-//   middlewares.push(createLogger({}));
-// }
+if (__DEV__) {
+  const { createLogger } = require('redux-logger');
+  middlewares.push(createLogger({}));
+}
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
