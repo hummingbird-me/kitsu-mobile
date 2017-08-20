@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
+import { SearchBar } from 'kitsu/components/SearchBar';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -20,6 +21,7 @@ class HomeScreen extends Component {
 
   state = {
     selectedImages: [],
+    searchTerm: '',
   };
 
   render() {
@@ -57,7 +59,7 @@ class HomeScreen extends Component {
           </Button>
           <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
             <Text>
-              Nuck
+              Logged In Profile
             </Text>
           </Button>
           <Button onPress={() => navigation.navigate('Library', {
@@ -87,6 +89,16 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
+
+          <SearchBar
+            value={this.state.searchTerm}
+            onChangeText={(searchTerm) => { this.setState({ searchTerm }); }}
+          />
+
+          <SearchBar
+            value={this.state.searchTerm}
+            onChangeText={(searchTerm) => { this.setState({ searchTerm }); }}
+          />
         </Content>
       </Container>
     );

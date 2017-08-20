@@ -16,7 +16,6 @@ const userLibraryInitial = {
     onHold: { data: [], loading: false },
     planned: { data: [], loading: false },
   },
-  loading: false,
 };
 
 const INITIAL_STATE = {
@@ -30,10 +29,7 @@ const INITIAL_STATE = {
   userLibrary: {
     ...userLibraryInitial,
     loading: false,
-  },
-  userLibrarySearch: {
-    ...userLibraryInitial,
-    loading: false,
+    searchTerm: '',
   },
   followed: {},
   follower: {},
@@ -94,6 +90,7 @@ export default (state = INITIAL_STATE, action) => {
         userLibrary: {
           ...userLibraryInitial,
           loading: true,
+          searchTerm: action.searchTerm,
         },
       };
     case types.FETCH_USER_LIBRARY_SUCCESS:
@@ -112,73 +109,6 @@ export default (state = INITIAL_STATE, action) => {
           loading: false,
         },
       };
-    case types.SEARCH_USER_LIBRARY:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...userLibraryInitial,
-          loading: true,
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_SUCESS:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          loading: false,
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_FAIL:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          loading: false,
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_TYPE:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.library]: {
-            ...state.userLibrarySearch[action.library],
-            [action.status]: {
-              ...state.userLibrarySearch[action.library][action.status],
-              loading: true,
-            },
-          },
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_TYPE_SUCCESS:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.library]: {
-            ...state.userLibrarySearch[action.library],
-            [action.status]: {
-              data: state.userLibrarySearch[action.library][action.status].data.concat(action.data),
-              meta: action.data.meta,
-              loading: false,
-            },
-          },
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_TYPE_FAIL:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.library]: {
-            ...state.userLibrarySearch[action.library],
-            [action.status]: {
-              ...state.userLibrarySearch[action.library][action.status],
-              loading: false,
-            },
-          },
-        },
-      };
     case types.FETCH_USER_LIBRARY_TYPE:
       return {
         ...state,
@@ -191,6 +121,7 @@ export default (state = INITIAL_STATE, action) => {
               loading: true,
             },
           },
+          searchTerm: action.searchTerm,
         },
       };
     case types.FETCH_USER_LIBRARY_TYPE_SUCCESS:
@@ -201,7 +132,7 @@ export default (state = INITIAL_STATE, action) => {
           [action.library]: {
             ...state.userLibrary[action.library],
             [action.status]: {
-              data: state.userLibrary[action.library][action.status].data.concat(action.data),
+              data: action.data,
               meta: action.data.meta,
               loading: false,
             },

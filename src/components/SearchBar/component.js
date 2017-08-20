@@ -12,8 +12,6 @@ export class SearchBar extends React.Component {
       hasFocus: false,
       value: props.defaultValue,
     };
-
-    console.log(props);
   }
 
   onChangeText = (value) => {
@@ -29,17 +27,20 @@ export class SearchBar extends React.Component {
           style={[
             styles.searchIcon,
             commonStyles.colorLightGrey,
-            (this.state.value && styles.searchIconFocus),
+            { paddingRight: this.props.searchIconOffset },
+            ((this.props.value || this.state.value) && styles.searchIconFocus),
           ]}
         />
         <TextInput
           {...this.props}
           onChangeText={this.onChangeText}
+          placeholder={this.props.placeholder}
           style={[
             commonStyles.text,
             commonStyles.colorLightGrey,
             styles.input,
           ]}
+          value={this.props.value || this.state.value}
         />
       </View>
     );
@@ -47,16 +48,19 @@ export class SearchBar extends React.Component {
 }
 
 SearchBar.propTypes = {
+  containerStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   defaultValue: PropTypes.string,
   onChangeText: PropTypes.func,
-  containerStyle: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.object,
-  ]),
+  placeholder: PropTypes.string,
+  searchIconOffset: PropTypes.number,
+  value: PropTypes.string,
 };
 
 SearchBar.defaultProps = {
+  containerStyle: {},
   defaultValue: '',
   onChangeText: () => {},
-  containerStyle: {},
+  placeholder: 'Search',
+  searchIconOffset: 80,
+  value: '',
 };

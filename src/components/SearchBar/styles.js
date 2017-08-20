@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'transparent',
     padding: 10,
-    paddingRight: 120,
   },
   searchIconFocus: {
     left: 0,

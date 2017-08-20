@@ -35,6 +35,7 @@ export class UserLibraryScreenComponent extends React.Component {
 
   constructor() {
     super();
+
     this.state = {
       searchTerm: '',
     };
@@ -46,18 +47,31 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   onSearchTermChanged = (searchTerm) => {
-    if (searchTerm.length >= MINIMUM_SEARCH_TERM_LENGTH) {
-      this.props.searchUserLibrary(profile.id, searchTerm);
+    debugger;
+    this.setState({ searchTerm });
+    const { profile } = this.props.navigation.state.params;
+    const { userLibrary } = this.props;
+    const isSearching = userLibrary.searchTerm.length !== 0;
+
+    if (searchTerm.length >= MINIMUM_SEARCH_TERM_LENGTH && !isSearching) {
+      this.props.fetchUserLibrary(profile.id, searchTerm);
+    } else if (isSearching && searchTerm.length === 0) {
+      this.props.fetchUserLibrary(profile.id);
     }
   }
 
   fetchMore = (type, status) => {
-    const { navigation, userLibrary } = this.props;
+    const { userLibrary } = this.props;
     const { data, meta } = userLibrary[type][status];
+    const { navigation } = this.props;
     const { profile } = navigation.state.params;
 
     if (data.length < meta.count) {
-      this.props.fetchUserLibraryByType(profile.id, type, status);
+      this.props.fetchUserLibraryByType({
+        userId: profile.id,
+        library: type,
+        status,
+      });
     }
   }
 
@@ -119,22 +133,15 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   render() {
-    const { userLibrary } = this.props;
     const searchBar = (
       <SearchBar
-        placeholder="Search Library"
         containerStyle={styles.searchBar}
         onChangeText={this.onSearchTermChanged}
+        placeholder="Search Library"
+        searchIconOffset={120}
+        value={this.state.searchTerm}
       />
     );
-
-    if (userLibrary.loading) {
-      return (
-        <Container style={styles.container}>
-          <Text>Loading...</Text>
-        </Container>
-      );
-    }
 
     return (
       <Container style={styles.container}>
@@ -157,8 +164,6 @@ UserLibraryScreenComponent.propTypes = {
   navigation: PropTypes.object.isRequired,
   fetchUserLibrary: PropTypes.func.isRequired,
   fetchUserLibraryByType: PropTypes.func.isRequired,
-  searchUserLibrary: PropTypes.func.isRequired,
-  searchUserLibraryByType: PropTypes.func.isRequired,
   userLibrary: PropTypes.object,
 };
 

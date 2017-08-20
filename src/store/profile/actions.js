@@ -97,8 +97,7 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
 
 const defaultFetchUserLibraryOptions = {
   limit: 10,
-  fetchType: 'fetch',
-  searchText: '',
+  searchTerm: '',
 };
 
 export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState) => {
@@ -109,27 +108,22 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
   const filter = {
     userId: options.userId,
-    status: status === 'onHold' ? 'on_hold' : status,
+    status: options.status === 'onHold' ? 'on_hold' : options.status,
     kind: options.library,
   };
 
-  const { userLibrary, userLibrarySearch } = getState().profile;
-  let { data } = userLibrary[options.library][status];
-  let fetchingAction = types.FETCH_USER_LIBRARY_TYPE;
-  let successAction = types.FETCH_USER_LIBRARY_TYPE;
-  let failAction = types.FETCH_USER_LIBRARY_TYPE;
-  if (options.fetchType === 'search') {
-    data = userLibrarySearch[options.library][status].data;
-    fetchingAction = types.SEARCH_USER_LIBRARY_TYPE;
-    successAction = types.SEARCH_USER_LIBRARY_TYPE;
-    failAction = types.SEARCH_USER_LIBRARY_TYPE;
-    filter.text = options.searchText;
+  const { userLibrary } = getState().profile;
+  let { data } = userLibrary[options.library][options.status];
+  const searchTerm = options.searchTerm || userLibrary.searchTerm;
+  if (options.searchTerm) {
+    filter.title = searchTerm;
   }
 
   dispatch({
-    type: fetchingAction,
+    searchTerm,
+    type: types.FETCH_USER_LIBRARY_TYPE,
     library: options.library,
-    status,
+    status: options.status,
     fetchType: options.fetchType,
   });
 
@@ -143,77 +137,57 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       include: 'anime,manga',
     });
 
+    if (options.searchTerm) {
+      data = libraryEntries;
+    } else {
+      data = data.concat(libraryEntries);
+      data.meta = libraryEntries.meta;
+    }
+
     dispatch({
-      type: successAction,
+      data,
+      type: types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
       library: options.library,
-      status,
-      data: libraryEntries,
+      status: options.status,
     });
   } catch (error) {
+    console.log(error);
+    debugger;
     dispatch({
-      type: failAction,
+      type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
       error,
     });
   }
 };
 
-export const fetchUserLibrary = userId => async (dispatch, getState) => {
-  dispatch({ type: types.FETCH_USER_LIBRARY });
+export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, getState) => {
+  dispatch({
+    searchTerm,
+    type: types.FETCH_USER_LIBRARY,
+  });
 
   try {
     await Promise.all([
-      fetchUserLibraryByType({ userId, library: 'anime', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'anime', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'anime', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'anime', status: 'onHold' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'anime', status: 'planned' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'manga', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'manga', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'manga', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'manga', status: 'onHold' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, library: 'manga', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'planned' })(dispatch, getState),
     ]);
 
     dispatch({
       type: types.FETCH_USER_LIBRARY_SUCCESS,
     });
   } catch (error) {
+    console.log(error);
+    debugger;
     dispatch({
       type: types.FETCH_USER_LIBRARY_FAIL,
-      error,
-    });
-  }
-};
-
-export const searchUserLibrary = (userId, searchText) => async (dispatch, getState) => {
-  dispatch({ type: types.SEARCH_USER_LIBRARY });
-
-  const searchOptions = {
-    userId,
-    searchText,
-    fetchType: 'search',
-  };
-
-  try {
-    await Promise.all([
-      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'onHold' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'anime', status: 'planned' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'onHold' })(dispatch, getState),
-      fetchUserLibraryByType({ ...searchOptions, library: 'manga', status: 'planned' })(dispatch, getState),
-    ]);
-
-    dispatch({
-      type: types.SEARCH_USER_LIBRARY_SUCCESS,
-    });
-  } catch (error) {
-    dispatch({
-      type: types.SEARCH_USER_LIBRARY_FAIL,
       error,
     });
   }

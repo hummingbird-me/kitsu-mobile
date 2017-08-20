@@ -3,15 +3,15 @@ import {
   fetchUserLibrary,
   fetchUserLibraryByType,
   searchUserLibrary,
-  searchUserLibraryByType,
 } from 'kitsu/store/profile/actions';
 import { UserLibraryScreenComponent } from './component';
 
 const mapStateToProps = ({ profile }) => {
-  const { userLibrary } = profile;
+  const { userLibrary, userLibrarySearch } = profile;
 
   return {
     userLibrary,
+    userLibrarySearch,
   };
 };
 
@@ -19,5 +19,4 @@ export const UserLibraryScreen = connect(mapStateToProps, {
   fetchUserLibrary,
   fetchUserLibraryByType,
   searchUserLibrary,
-  searchUserLibraryByType,
 })(UserLibraryScreenComponent);
