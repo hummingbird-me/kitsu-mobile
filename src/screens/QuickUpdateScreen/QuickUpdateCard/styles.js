@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'OpenSans',
     margin: 10,
-    color: colors.lightGrey,
   },
   actionRow: {
     flexDirection: 'row',
