@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
+import { Rating } from 'kitsu/components/Rating';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -12,7 +13,7 @@ class HomeScreen extends Component {
       { tintColor }, // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
     ) => (
       <Image
-        source={require('../assets/img/tabbar_icons/feed.png')}
+        source={require('kitsu/assets/img/tabbar_icons/feed.png')}
         style={{ tintColor, width: 20, height: 21 }}
       />
     ),
@@ -70,6 +71,20 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
+
+          <View>
+            <Rating rating={8} size="tiny" viewType="single" ratingSystem="regular" showNotRated={false} />
+          </View>
+
+          <View>
+            <Rating rating={8} size="large" viewType="single" ratingSystem="regular" />
+          </View>
+
+          <View>
+            <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
+          </View>
+          {/* <Rating rating={8} size="small" viewType="single" style={{ height: 10, borderWidth: 1 }} /> */}
+          {/* <Rating rating={8} size="normal" viewType="single" style={{ height: 10, borderWidth: 1 }} /> */}
         </Content>
       </Container>
     );
