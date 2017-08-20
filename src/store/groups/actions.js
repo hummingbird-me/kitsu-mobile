@@ -8,8 +8,7 @@ export const fetchGroupMemberships = () => async (dispatch, getState) => {
       include: 'group',
       filter: { user: getState().user.currentUser.id },
     });
-    console.log(groups);
-    dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS_SUCCESS, payload: groups[0] });
+    dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS_SUCCESS, payload: groups });
   } catch (e) {
     console.log(e);
     dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS_FAIL, payload: 'Failed to load groups' });

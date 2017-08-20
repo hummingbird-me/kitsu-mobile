@@ -105,9 +105,11 @@ Kitsu.define(
     },
     blocks: {
       jsonApi: 'hasMany',
+      type: 'blocks',
     },
     linkedAccounts: {
       jsonApi: 'hasMany',
+      type: 'linkedAccounts',
     },
     profileLinks: {
       jsonApi: 'hasMany',
@@ -226,6 +228,23 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'blocks',
+  {
+    createdAt: '',
+    updatedAt: '',
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+    blocked: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'blocks' },
+);
+
+Kitsu.define(
   'castings',
   {
     createdAt: '',
@@ -261,6 +280,20 @@ Kitsu.define(
     },
   },
   { collectionPath: 'follows' },
+);
+
+Kitsu.define(
+  'linkedAccounts',
+  {
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+    libraryEntryLogs: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'linked-accounts' },
 );
 
 Kitsu.define(
@@ -723,6 +756,58 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'groups',
+  {
+    slug: '',
+    about: '',
+    locale: '',
+    membersCount: '',
+    name: '',
+    nsfw: '',
+    privacy: '',
+    rules: '',
+    rulesFormatted: '',
+    leadersCount: '',
+    neighborsCount: '',
+    featured: '',
+    tagline: '',
+    lastActivityAt: '',
+    avatar: '',
+    coverImage: '',
+    createdAt: '',
+    updatedAt: '',
+    pinnedPost: {
+      jsonApi: 'hasOne',
+    },
+    members: {
+      jsonApi: 'hasMany',
+    },
+    neighbors: {
+      jsonApi: 'hasMany',
+    },
+    tickets: {
+      jsonApi: 'hasMany',
+    },
+    invites: {
+      jsonApi: 'hasMany',
+    },
+    reports: {
+      jsonApi: 'hasMany',
+    },
+    leaderChatMessages: {
+      jsonApi: 'hasMany',
+    },
+    actionLogs: {
+      jsonApi: 'hasMany',
+    },
+    category: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'groups' },
+);
+
+Kitsu.define(
   'groupMembers',
   {
     rank: '',
@@ -733,9 +818,11 @@ Kitsu.define(
     permissions: {
       jsonApi: 'hasMany',
     },
+    group: {
+      jsonApi: 'hasOne',
+    },
     user: {
-      jsonApi: 'hasMany', // no idea?
-      type: 'users',
+      jsonApi: 'hasOne',
     },
     notes: {
       jsonApi: 'hasMany',

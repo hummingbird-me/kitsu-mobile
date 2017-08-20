@@ -27,24 +27,6 @@ import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
 
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 
-const groupsData = [
-  {
-    title: 'Weekly Shonen Jump',
-    imageURL: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg',
-    target: '',
-  },
-  {
-    title: 'Kitsu News Network',
-    imageURL: 'https://media.kitsu.io/groups/avatars/596/large.png?1490733214',
-    target: '',
-  },
-  {
-    title: 'Food Fighters! (Cooking Club)',
-    imageURL: 'https://media.kitsu.io/groups/avatars/91/large.gif?1424396944',
-    target: '',
-  },
-];
-
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bug', image: bugs, target: '' },
@@ -101,8 +83,10 @@ class SidebarScreen extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
-    const { name, avatar } = this.props.currentUser;
+    const { navigation, currentUser, groupMemberships } = this.props;
+    const { name, avatar } = currentUser;
+    const groupsData = groupMemberships || [];
+
     const sectionListData = [
       {
         key: 'shortcuts',
@@ -126,12 +110,13 @@ class SidebarScreen extends Component {
         renderItem: ({ item }) => (
           <GroupsItem
             onPress={() => {
-              navigation.navigate(item.target);
+              navigation.navigate('');
             }}
-            title={item.title}
-            imageURL={item.imageURL}
+            title={item.group.name}
+            imageURL={item.group.avatar.small}
           />
         ),
+        ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
       {
@@ -191,7 +176,7 @@ class SidebarScreen extends Component {
           <SectionList
             contentContainerStyle={{ paddingBottom: 100 }}
             sections={sectionListData}
-            keyExtractor={item => item.title}
+            keyExtractor={(item, index) => index}
             ListHeaderComponent={() => <View height={20} />}
             renderItem={() => <SettingsItem />}
             renderSectionHeader={({ section }) => <SectionTitle title={section.title} />}
@@ -244,10 +229,12 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, groups }) => {
   const { currentUser } = user;
+  const { groupMemberships } = groups;
   return {
     currentUser,
+    groupMemberships,
   };
 };
 

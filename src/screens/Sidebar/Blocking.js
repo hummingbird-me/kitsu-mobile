@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Container, Content, Left, Right, Item } from 'native-base';
+import { Text, Container, Content, Left, Right, Item, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
+import { fetchUserBlocks } from 'kitsu/store/user/actions';
 
 import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
 
@@ -16,6 +17,10 @@ class Blocking extends React.Component {
     ),
   });
 
+  componentDidMount() {
+    this.props.fetchUserBlocks();
+  }
+
   onUnblockUser = (user) => {
     // TODO: handle button press.
   };
@@ -26,12 +31,12 @@ class Blocking extends React.Component {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
             <Image
-              source={{ uri: item.user.photoURL }}
+              source={{ uri: item.blocked.avatar.small }}
               style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
             />
           </View>
           <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8 }}>
-            {item.user.username}
+            {item.blocked.name}
           </Text>
         </View>
       </Left>
@@ -59,6 +64,7 @@ class Blocking extends React.Component {
   );
 
   render() {
+    const blocks = this.props.blocks;
     return (
       <Container style={styles.containerStyle}>
         <Content scrollEnabled={false}>
@@ -83,28 +89,10 @@ class Blocking extends React.Component {
             </View>
             <SidebarTitle style={{ marginTop: 20 }} title={'Blocked Users'} />
             <FlatList
-              data={[
-                {
-                  user: {
-                    photoURL: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg',
-                    username: 'Nuck',
-                  },
-                },
-                {
-                  user: {
-                    photoURL: 'https://media.kitsu.io/groups/avatars/596/large.png?1490733214',
-                    username: 'MatthewDias',
-                  },
-                },
-                {
-                  user: {
-                    photoURL: 'https://media.kitsu.io/groups/avatars/91/large.gif?1424396944',
-                    username: 'Vevix',
-                  },
-                },
-              ]}
-              keyExtractor={item => item.user.username}
+              data={blocks}
+              keyExtractor={item => item.blocked.id}
               renderItem={this.renderItem}
+              ListEmptyComponent={() => <Spinner />}
               ItemSeparatorComponent={() => <ItemSeparator />}
               removeClippedSubviews={false}
             />
@@ -132,8 +120,10 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => ({});
+const mapStateToProps = ({ user }) => ({
+  blocks: user.currentUser.blocks || [],
+});
 
 Blocking.propTypes = {};
 
-export default connect(mapStateToProps, {})(Blocking);
+export default connect(mapStateToProps, { fetchUserBlocks })(Blocking);

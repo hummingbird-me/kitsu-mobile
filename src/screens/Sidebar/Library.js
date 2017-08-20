@@ -42,7 +42,7 @@ class Library extends React.Component {
               { title: 'Option 2 also has a long text' },
               { title: 'Option 3' },
             ]}
-            onSelectOption={titleDisplay => this.setState({ titleDisplay })}
+            onSelectOption={option => this.setState({ titleDisplay: option.title })}
           />
           <ItemSeparator />
           <SidebarDropdown
@@ -55,7 +55,7 @@ class Library extends React.Component {
                 title: "Option 3 times 3 is Option 9 and we don't have it. Let's just say option 3 has the longest text we could imagine",
               },
             ]}
-            onSelectOption={ratingVal => this.setState({ ratingVal })}
+            onSelectOption={option => this.setState({ ratingVal: option.title })}
           />
           <SidebarTitle style={{ marginTop: 20 }} title={'Account Settings'} />
           <FlatList

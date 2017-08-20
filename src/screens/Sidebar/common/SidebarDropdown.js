@@ -87,8 +87,8 @@ class SidebarDropdown extends React.Component {
             options.map((v, i) => (
               <View key={`${i}dd`} style={{ height: 50 }}>
                 <DropdownItem
-                  onPress={(title) => {
-                    onSelectOption(title);
+                  onPress={() => {
+                    onSelectOption(v);
                     this.toggle();
                   }}
                   title={v.title}

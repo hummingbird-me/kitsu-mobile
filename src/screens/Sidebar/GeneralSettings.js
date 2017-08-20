@@ -20,7 +20,7 @@ class GeneralSettings extends Component {
     username: this.props.currentUser.name,
     email: this.props.currentUser.email,
     password: '',
-    sfw: this.props.currentUser.sfwFilter,
+    sfwFilter: this.props.currentUser.sfwFilter,
   };
 
   sfwOptions = [{ title: 'Show Adult Titles (O_O)' }, { title: 'Hide Adult Titles' }];
@@ -76,9 +76,10 @@ class GeneralSettings extends Component {
               <SidebarTitle style={{ marginTop: 20 }} title={'Content on Kitsu'} />
               <SidebarDropdown
                 title={'R18+ titles in feed, libraries, or search?'}
-                value={this.sfwOptions[Number(this.state.sfw)].title}
+                value={this.sfwOptions[Number(this.state.sfwFilter)].title}
                 options={this.sfwOptions}
-                onSelectOption={sfw => this.setState({ sfw })}
+                onSelectOption={option =>
+                  this.setState({ sfwFilter: option.title === this.sfwOptions[1].title })}
               />
               <View style={{ marginTop: 20, padding: 10, paddingLeft: 25, paddingRight: 25 }}>
                 <Button

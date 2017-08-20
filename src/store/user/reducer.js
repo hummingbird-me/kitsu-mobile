@@ -55,6 +55,22 @@ export default (state = INITIAL_STATE, action) => {
         signingUp: false,
         signupError: action.payload,
       };
+    case types.FETCH_USER_BLOCKS_SUCCESS:
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          blocks: action.payload,
+        },
+      };
+    case types.FETCH_USER_LINKED_ACCOUNTS:
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          linkedAccounts: action.payload,
+        },
+      };
     case types.LOGOUT_USER:
       return INITIAL_STATE;
     case REHYDRATE:
