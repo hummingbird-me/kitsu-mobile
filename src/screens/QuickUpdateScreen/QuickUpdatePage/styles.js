@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     right: 10,
     height: 200,
     borderRadius: 10,
-    
+
     zIndex: 4,
   },
   posterImage: {
