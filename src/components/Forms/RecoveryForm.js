@@ -33,7 +33,7 @@ const RecoveryForm = ({ handleChange, data, onSubmit, loading }) => (
         disabled={loading}
         onPress={onSubmit}
         style={{
-          backgroundColor: colors.lightGreen,
+          backgroundColor: colors.green,
           height: 47,
           borderRadius: 3,
         }}

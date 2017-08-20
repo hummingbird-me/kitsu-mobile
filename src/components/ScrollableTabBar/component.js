@@ -16,7 +16,7 @@ export const ScrollableTabBar = ({ goToPage, activeTab, tabs }) => (
         <Text
           style={[
             commonStyles.text,
-            (activeTab === i ? commonStyles.colorPeach : commonStyles.colorLightGrey),
+            (activeTab === i ? commonStyles.colorActiveRed : commonStyles.colorLightGrey),
           ]}
         >
           {tab}

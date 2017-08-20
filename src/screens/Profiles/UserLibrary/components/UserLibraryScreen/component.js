@@ -8,6 +8,7 @@ import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { SearchBar } from 'kitsu/components/SearchBar';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
+import { Rating } from 'kitsu/components/Rating';
 import { styles } from './styles';
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
@@ -113,6 +114,7 @@ export class UserLibraryScreenComponent extends React.Component {
             style={styles.posterImageCard}
           />
           <ProgressBar fillPercentage={progress} height={3} />
+          <Rating rating={10} size="tiny" viewType="single" disabled style={{ marginLeft: 0, borderWidth: 1 }} />
         </View>
       </TouchableOpacity>
     );

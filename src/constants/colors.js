@@ -1,21 +1,36 @@
+/* reds/pinks */
+export const red = '#DA5E51';
 export const activeRed = '#F87270';
-export const activeYellow = 'rgb(248, 169, 66)';
-export const categoryTextColor = '#C7C2C7';
-export const darkGrey = '#696969';
-export const darkPurple = '#402F3F';
-export const fbBlue = '#507CC0';
-export const green = '#16A085';
-export const imageBackColor = 'rgb(153, 130, 153)';
-export const imageGrey = '#D8D8D8';
-export const lightGreen = '#16A085';
-export const lightGrey = '#B6B0B6';
 export const lightPink = '#B7A7B6';
-export const listBackPurple = '#443443';
-export const listSeparatorColor = '#261C25';
-export const offBlack = '#2B212B';
-export const peach = '#F8735B';
-export const placeholderGrey = 'rgb(153, 153, 153)';
-export const tabBarPuple = '#453342';
-export const tabbarSelectedTextColor = 'rgb(252, 117, 92)';
 export const tabRed = 'rgb(252, 117, 92)';
+
+/* blues */
+export const blue = '#43ABF1';
+export const fbBlue = '#507CC0';
+
+/* purples */
+export const darkPurple = '#402F3F';
+export const listBackPurple = '#443443';
+export const tabBarPuple = '#453342';
+
+/* greens */
+export const green = '#16A085';
+export const lightGreen = '#84E06F';
+
+/* whites/greys */
 export const white = '#FFFFFF';
+export const imageGrey = '#D8D8D8';
+export const lightGrey = '#B6B0B6';
+export const darkGrey = '#696969';
+
+/* yellows */
+export const yellow = '#F0AD4E';
+
+/* blacks */
+export const offBlack = '#2B212B';
+
+/* misc */
+export const imageBackColor = 'rgb(153, 130, 153)';
+export const listSeparatorColor = '#261C25';
+export const categoryTextColor = '#C7C2C7';
+export const tabbarSelectedTextColor = 'rgb(252, 117, 92)';

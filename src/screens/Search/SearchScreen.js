@@ -118,11 +118,11 @@ class SearchScreen extends Component {
           style={{
             fontSize: 13,
             fontFamily: 'OpenSans',
-            color: colors.placeholderGrey,
+            color: colors.lightGrey,
             alignSelf: 'center',
             textAlign: 'center',
           }}
-          placeholderTextColor={colors.placeholderGrey}
+          placeholderTextColor={colors.lightGrey}
         />
       </Item>
     );

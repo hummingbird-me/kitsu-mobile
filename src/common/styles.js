@@ -16,8 +16,8 @@ export const commonStyles = StyleSheet.create({
   colorWhite: {
     color: colors.white,
   },
-  colorPeach: {
-    color: colors.peach,
+  colorActiveRed: {
+    color: colors.activeRed,
   },
   colorLightGrey: {
     color: colors.lightGrey,

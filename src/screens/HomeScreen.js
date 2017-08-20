@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
-import { SearchBar } from 'kitsu/components/SearchBar';
-import { ProgressBar } from 'kitsu/components/ProgressBar';
-
-import Rating from 'kitsu/components/Rating';
+import { Rating } from 'kitsu/components/Rating';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -93,18 +90,17 @@ class HomeScreen extends Component {
             </Text>
           </Button>
 
-          <SearchBar
-            value={this.state.searchTerm}
-            onChangeText={(searchTerm) => { this.setState({ searchTerm }); }}
-          />
+          <View>
+            <Rating rating={8} size="tiny" viewType="single" ratingSystem="regular" showNotRated={false} />
+          </View>
 
-          <SearchBar
-            value={this.state.searchTerm}
-            onChangeText={(searchTerm) => { this.setState({ searchTerm }); }}
-          />
+          <View>
+            <Rating rating={8} size="large" viewType="single" ratingSystem="regular" />
+          </View>
 
-          <ProgressBar fillPercentage={50} height={10} />
-          <Rating rating={8} />
+          <View>
+            <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
+          </View>
         </Content>
       </Container>
     );
