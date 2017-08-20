@@ -44,9 +44,20 @@ class QuickUpdate extends Component {
 
     const { filterMode } = this.state;
 
+    const LIBRARY_ENTRIES_FIELDS = [
+      'progress',
+      'status',
+      'rating',
+      'unit',
+      'updatedAt',
+      'anime',
+      'manga',
+    ];
+
     const ANIME_FIELDS = [
       'slug',
       'posterImage',
+      'episodeCount',
       'canonicalTitle',
       'titles',
       'synopsis',
@@ -60,21 +71,21 @@ class QuickUpdate extends Component {
     const INCLUDE = [
       'anime',
       'manga',
-      'user',
-      'mediaReaction',
+      'unit',
     ];
 
     try {
       const library = await Kitsu.findAll('libraryEntries', {
+        'fields[libraryEntries]': LIBRARY_ENTRIES_FIELDS.join(),
         'fields[anime]': ANIME_FIELDS.join(),
         'fields[user]': USER_FIELDS.join(),
-        // 'filter[status]': 'current',
+        'filter[status]': 'current,planned',
         'filter[user_id]': this.props.currentUser.id,
         'filter[kind]': 'anime',
         include: INCLUDE.join(),
         'page[offset]': 0,
         'page[limit]': 40,
-        sort: 'status,-progressed_at',
+        sort: 'status,-progressed_at,-updated_at',
       });
 
       this.setState({
@@ -176,7 +187,7 @@ class QuickUpdate extends Component {
 
         {/* Close Button */}
         <TouchableOpacity style={styles.closeButton}>
-          <Icon name="ios-close" size={100} color="white" />
+          <Icon name="ios-close" size={70} color="white" />
         </TouchableOpacity>
       </View>
     );

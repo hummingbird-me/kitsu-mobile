@@ -1,11 +1,14 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import ProgressBar from 'kitsu/components/ProgressBar';
+
 import PropTypes from 'prop-types';
 
 import styles from './styles';
 
 const QuickUpdateCard = ({ data }) => {
-  const { anime } = data.item;
+  const { anime, unit } = data.item;
 
   return (
     <View key={data.item.id} style={styles.wrapper}>
@@ -14,12 +17,25 @@ const QuickUpdateCard = ({ data }) => {
         <Image
           source={{ uri: anime.posterImage.large }}
           style={styles.posterImage}
-        />
+        >
+          <LinearGradient colors={['transparent', 'rgba(0, 0, 0, 0.8)']} style={styles.posterImageGradient} />
+          <View style={styles.episodeRow}>
+            <Text style={styles.currentEpisodeText}>Ep. {data.item.progress}</Text>
+            <Text style={styles.totalEpisodesText}> of {anime.episodeCount}</Text>
+          </View>
+          <Text style={styles.episodeName}>{unit[0].canonicalTitle}</Text>
+        </Image>
       </View>
+
       {/* Card */}
       <View style={[styles.cardWrapper, styles.shadow]}>
-        <View style={styles.cardContent}>
-          <Text>{anime.canonicalTitle}</Text>
+        <View style={styles.cardHeaderArea}>
+          <View style={styles.cardContent}>
+            <ProgressBar
+              progress={data.item.progress / anime.episodeCount}
+              style={styles.progressBar}
+            />
+          </View>
         </View>
       </View>
     </View>
