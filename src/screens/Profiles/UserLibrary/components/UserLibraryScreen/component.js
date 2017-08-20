@@ -19,10 +19,12 @@ export class UserLibraryScreenComponent extends React.Component {
     navigation: PropTypes.object.isRequired,
     fetchUserLibrary: PropTypes.func.isRequired,
     fetchUserLibraryByType: PropTypes.func.isRequired,
+    currentUser: PropTypes.object,
     userLibrary: PropTypes.object,
   };
 
   static defaultProps = {
+    currentUser: {},
     userLibrary: {
       loading: true,
     },
@@ -98,6 +100,7 @@ export class UserLibraryScreenComponent extends React.Component {
 
   renderItem = ({ item, index }) => {
     const data = item.anime || item.manga;
+    const { currentUser } = this.props;
 
     let progress = 0;
     if (data.type === 'anime') {
@@ -122,10 +125,11 @@ export class UserLibraryScreenComponent extends React.Component {
             source={{ uri: data.posterImage.tiny }}
             style={styles.posterImageCard}
           />
-          <ProgressBar fillPercentage={progress} height={3} />
+          {progress > 0 && <ProgressBar fillPercentage={progress} height={3} />}
           <Rating
             disabled
             rating={rating}
+            ratingSystem={currentUser.ratingSystem}
             size="tiny"
             viewType="single"
             showNotRated={false}

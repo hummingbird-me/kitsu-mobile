@@ -6,10 +6,11 @@ import {
 } from 'kitsu/store/profile/actions';
 import { UserLibraryScreenComponent } from './component';
 
-const mapStateToProps = ({ profile }) => {
+const mapStateToProps = ({ user, profile }) => {
   const { userLibrary, userLibrarySearch } = profile;
 
   return {
+    currentUser: user.currentUser,
     userLibrary,
     userLibrarySearch,
   };

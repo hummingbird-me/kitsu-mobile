@@ -17,6 +17,42 @@ const ImageSize = {
   Normal: 50,
 };
 
+function getRatingProperties(ratingTwenty, type) {
+  const advancedRating = ratingTwenty / 2;
+  const regularRating = Math.floor((ratingTwenty / 4) * 2) / 2;
+
+  const ratingProperties = {};
+
+  switch (type) {
+    case 'advanced':
+      ratingProperties.text = advancedRating >= 10 ? advancedRating : advancedRating.toFixed(1);
+      ratingProperties.textStyle = styles.textStar;
+      break;
+    case 'regular':
+      ratingProperties.text = regularRating >= 5 ? regularRating : regularRating.toFixed(1);
+      ratingProperties.textStyle = styles.textStar;
+      break;
+    case 'simple':
+    default:
+      if (advancedRating < 3) {
+        ratingProperties.text = 'AWFUL';
+        ratingProperties.textStyle = styles.textAwful;
+      } else if (advancedRating < 5) {
+        ratingProperties.text = 'MEH';
+        ratingProperties.textStyle = styles.textMeh;
+      } else if (advancedRating < 8) {
+        ratingProperties.text = 'GOOD';
+        ratingProperties.textStyle = styles.textGood;
+      } else {
+        ratingProperties.text = 'GREAT';
+        ratingProperties.textStyle = styles.textGreat;
+      }
+      break;
+  }
+
+  return ratingProperties;
+}
+
 export class Rating extends PureComponent {
   static propTypes = {
     disabled: PropTypes.bool,
@@ -102,7 +138,7 @@ export class Rating extends PureComponent {
         break;
     }
 
-    if (viewType === 'single' || ratingSystem === 'regular') {
+    if (viewType === 'single' || ratingSystem !== 'simple') {
       defaultStyle.push({ display: 'none' });
     }
 
@@ -110,12 +146,12 @@ export class Rating extends PureComponent {
     defaultStyle = StyleSheet.flatten(defaultStyle);
 
     if (rating === null) {
-      if (ratingSystem === 'regular') {
-        return image === 'star' && showNotRated ? selectedStyle : defaultStyle;
+      if (ratingSystem !== 'simple') {
+        return image === 'no-rating-star' && showNotRated ? selectedStyle : defaultStyle;
       }
 
       return image === 'no-rating' && showNotRated ? selectedStyle : defaultStyle;
-    } else if (image === 'no-rating') {
+    } else if (image === 'no-rating' || image === 'no-rating-star') {
       return { display: 'none' };
     }
 
@@ -155,28 +191,7 @@ export class Rating extends PureComponent {
         : null;
     }
 
-    const ratingProperties = {
-      text: rating.toFixed(1),
-      textStyle: styles.textStar,
-    };
-
-    if (ratingSystem === 'simple') {
-      if (rating < 3) {
-        ratingProperties.text = 'AWFUL';
-        ratingProperties.textStyle = styles.textAwful;
-      } else if (rating < 5) {
-        ratingProperties.text = 'MEH';
-        ratingProperties.textStyle = styles.textMeh;
-      } else if (rating < 8) {
-        ratingProperties.text = 'GOOD';
-        ratingProperties.textStyle = styles.textGood;
-      } else {
-        ratingProperties.text = 'GREAT';
-        ratingProperties.textStyle = styles.textGreat;
-      }
-    }
-
-    const { text, textStyle } = ratingProperties;
+    const { text, textStyle } = getRatingProperties(rating * 2, ratingSystem);
     return <Text style={[textStyle, { fontSize }]}>{text}</Text>;
   }
 
@@ -192,6 +207,7 @@ export class Rating extends PureComponent {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={require('kitsu/assets/img/ratings/no-rating.png')} style={this.styleForRating(rating, 'no-rating')} />
+            <Image source={require('kitsu/assets/img/ratings/no-rating-star.png')} style={this.styleForRating(rating, 'no-rating-star')} />
             <Image source={require('kitsu/assets/img/ratings/awful.png')} style={this.styleForRating(rating, 'awful')} />
             <Image source={require('kitsu/assets/img/ratings/meh.png')} style={this.styleForRating(rating, 'meh')} />
             <Image source={require('kitsu/assets/img/ratings/good.png')} style={this.styleForRating(rating, 'good')} />
