@@ -1,4 +1,5 @@
 export const activeRed = '#F87270';
+export const activeYellow = 'rgb(248, 169, 66)';
 export const categoryTextColor = '#C7C2C7';
 export const darkGrey = '#696969';
 export const darkPurple = '#402F3F';
@@ -10,7 +11,7 @@ export const lightGreen = '#16A085';
 export const lightGrey = '#B6B0B6';
 export const lightPink = '#B7A7B6';
 export const listBackPurple = '#443443';
-export const listSeparatorColor = '#261c25';
+export const listSeparatorColor = '#261C25';
 export const offBlack = '#2B212B';
 export const peach = '#F8735B';
 export const placeholderGrey = 'rgb(153, 153, 153)';

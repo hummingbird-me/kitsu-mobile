@@ -7,6 +7,8 @@ import { logoutUser } from 'kitsu/store/auth/actions';
 import { SearchBar } from 'kitsu/components/SearchBar';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 
+import Rating from 'kitsu/components/Rating';
+
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
@@ -14,7 +16,7 @@ class HomeScreen extends Component {
       { tintColor }, // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
     ) => (
       <Image
-        source={require('../assets/img/tabbar_icons/feed.png')}
+        source={require('kitsu/assets/img/tabbar_icons/feed.png')}
         style={{ tintColor, width: 20, height: 21 }}
       />
     ),
@@ -102,6 +104,7 @@ class HomeScreen extends Component {
           />
 
           <ProgressBar fillPercentage={50} height={10} />
+          <Rating rating={8} />
         </Content>
       </Container>
     );
