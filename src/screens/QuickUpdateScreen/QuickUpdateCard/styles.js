@@ -1,11 +1,13 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
+import * as colors from 'kitsu/constants/colors';
+
 const styles = StyleSheet.create({
   wrapper: {
     flexGrow: 1,
     alignItems: 'center',
     minWidth: Dimensions.get('window').width * 0.85,
-    marginBottom: 60,
+    marginBottom: 70,
   },
   shadow: {
     // Android
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 10,
     right: 10,
-    height: 200,
+    height: 180,
     borderRadius: 10,
 
     zIndex: 4,
@@ -33,19 +35,62 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     resizeMode: 'cover',
     borderRadius: 10,
+    justifyContent: 'flex-end',
+    padding: 10,
+  },
+  posterImageGradient: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  episodeRow: {
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+  },
+  currentEpisodeText: {
+    backgroundColor: 'transparent',
+    color: colors.white,
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    fontSize: 12,
+  },
+  totalEpisodesText: {
+    backgroundColor: 'transparent',
+    color: colors.white,
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+  },
+  episodeName: {
+    backgroundColor: 'transparent',
+    color: colors.white,
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    fontSize: 16,
   },
   cardWrapper: {
     position: 'absolute',
-    top: 100,
+    top: 80,
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 30,
     borderRadius: 10,
+    overflow: 'hidden',
 
     zIndex: 3,
   },
   cardContent: {
     marginTop: 100,
+  },
+  cardHeaderArea: {
+    backgroundColor: 'rgb(250, 250, 250)',
+    borderBottomWidth: 1,
+    borderColor: 'rgb(236, 236, 236)',
+  },
+  progressBar: {
+    marginHorizontal: 12,
+    marginVertical: 10,
   },
 });
 

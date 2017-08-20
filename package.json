@@ -38,8 +38,6 @@
     "react-native-multi-slider": "^0.3.5",
     "react-native-optimized-flatlist": "^1.0.1",
     "react-native-parallax-scroll-view": "^0.19.0",
-    "react-native-progress": "^3.2.1",
-    "react-native-progress-bar": "^0.1.2",
     "react-native-scrollable-tab-view": "^0.6.6",
     "react-native-shimmer": "^0.2.1",
     "react-native-snap-carousel": "https://github.com/archriss/react-native-snap-carousel.git#flatlist",
