@@ -1,15 +1,26 @@
 import React, { PureComponent } from 'react';
 import { Image, Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import * as colors from 'kitsu/constants/colors';
+
+const TextSize = {
+  Tiny: 10,
+  Small: 12,
+  Normal: 18,
+};
+
+const ImageSize = {
+  Tiny: 10,
+  Small: 20,
+  Normal: 50,
+};
 
 export default class Rating extends PureComponent {
   static propTypes = {
     onRatingChanged: PropTypes.func,
     rating: PropTypes.number,
+    showNotRated: PropTypes.bool,
     size: PropTypes.string,
     viewType: PropTypes.string,
   }
@@ -17,6 +28,7 @@ export default class Rating extends PureComponent {
   static defaultProps = {
     onRatingChanged: () => { },
     rating: null,
+    showNotRated: true,
     size: 'normal',
     viewType: 'select',
   }
@@ -71,17 +83,17 @@ export default class Rating extends PureComponent {
 
     switch (size) {
       case 'tiny':
-        defaultStyle.push({ width: 12, height: 12 });
-        selectedStyle.push({ width: 12, height: 12 });
+        defaultStyle.push({ width: ImageSize.Tiny, height: ImageSize.Tiny });
+        selectedStyle.push({ width: ImageSize.Tiny, height: ImageSize.Tiny });
         break;
       case 'small':
-        defaultStyle.push({ width: 20, height: 20 });
-        selectedStyle.push({ width: 20, height: 20 });
+        defaultStyle.push({ width: ImageSize.Small, height: ImageSize.Small });
+        selectedStyle.push({ width: ImageSize.Small, height: ImageSize.Small });
         break;
       case 'normal':
       default:
-        defaultStyle.push({ width: 50, height: 50 });
-        selectedStyle.push({ width: 50, height: 50 });
+        defaultStyle.push({ width: ImageSize.Normal, height: ImageSize.Normal });
+        selectedStyle.push({ width: ImageSize.Normal, height: ImageSize.Normal });
         break;
     }
 
@@ -107,19 +119,42 @@ export default class Rating extends PureComponent {
     return image === 'great' ? selectedStyle : defaultStyle;
   }
 
+  textForRating(rating) {
+    const { size } = this.props;
+    let fontSize;
+    switch (size) {
+      case 'tiny': fontSize = TextSize.Tiny; break;
+      case 'small': fontSize = TextSize.Small; break;
+      case 'normal': default: fontSize = TextSize.Normal; break;
+    }
+
+    if (rating === null) {
+      return this.props.showNotRated ? <Text style={[styles.textNotRated, { fontSize }]}>Not Rated</Text> : null;
+    }
+
+    if (rating < 3) {
+      return <Text style={[styles.textAwful, { fontSize }]}>AWFUL</Text>;
+    } else if (rating < 5) {
+      return <Text style={[styles.textMeh, { fontSize }]}>MEH</Text>;
+    } else if (rating < 8) {
+      return <Text style={[styles.textGood, { fontSize }]}>GOOD</Text>;
+    }
+
+    return <Text style={[styles.textGreat, { fontSize }]}>GREAT</Text>;
+  }
+
   render() {
     const { rating } = this.state;
 
-
     return (
       <View {...this.props}>
-        <TouchableOpacity onPress={this.toggleModal} style={styles.wrapper}>
-          <View style={{ flexDirection: 'row', borderWidth: 1 }}>
+        <TouchableOpacity onPress={this.toggleModal} style={styles.wrapper} disabled={this.props.disabled}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={require('kitsu/assets/img/ratings/awful.png')} style={this.styleForRating(rating, 'awful')} />
             <Image source={require('kitsu/assets/img/ratings/meh.png')} style={this.styleForRating(rating, 'meh')} />
             <Image source={require('kitsu/assets/img/ratings/good.png')} style={this.styleForRating(rating, 'good')} />
             <Image source={require('kitsu/assets/img/ratings/great.png')} style={this.styleForRating(rating, 'great')} />
-            <Text style={{ marginLeft: 15 }}>GREAT</Text>
+            {this.textForRating(rating)}
           </View>
         </TouchableOpacity>
 
@@ -246,5 +281,25 @@ const styles = StyleSheet.create({
   },
   modalSlider: {
     marginHorizontal: 30,
+  },
+  textNotRated: {
+    color: colors.darkGrey,
+    fontWeight: '700',
+  },
+  textAwful: {
+    color: colors.red,
+    fontWeight: '700',
+  },
+  textMeh: {
+    color: colors.orange,
+    fontWeight: '700',
+  },
+  textGood: {
+    color: colors.green,
+    fontWeight: '700',
+  },
+  textGreat: {
+    color: colors.blue,
+    fontWeight: '700',
   },
 });
