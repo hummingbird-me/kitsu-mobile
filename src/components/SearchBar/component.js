@@ -6,6 +6,24 @@ import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
 export class SearchBar extends React.Component {
+  static propTypes = {
+    containerStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+    defaultValue: PropTypes.string,
+    onChangeText: PropTypes.func,
+    placeholder: PropTypes.string,
+    searchIconOffset: PropTypes.number,
+    value: PropTypes.string,
+  };
+
+  static defaultProps = {
+    containerStyle: {},
+    defaultValue: '',
+    onChangeText: () => { },
+    placeholder: 'Search',
+    searchIconOffset: 80,
+    value: '',
+  };
+
   constructor(props) {
     super();
     this.state = {
@@ -46,21 +64,3 @@ export class SearchBar extends React.Component {
     );
   }
 }
-
-SearchBar.propTypes = {
-  containerStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  defaultValue: PropTypes.string,
-  onChangeText: PropTypes.func,
-  placeholder: PropTypes.string,
-  searchIconOffset: PropTypes.number,
-  value: PropTypes.string,
-};
-
-SearchBar.defaultProps = {
-  containerStyle: {},
-  defaultValue: '',
-  onChangeText: () => {},
-  placeholder: 'Search',
-  searchIconOffset: 80,
-  value: '',
-};

@@ -13,6 +13,19 @@ import { styles } from './styles';
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
 
 export class UserLibraryScreenComponent extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    fetchUserLibrary: PropTypes.func.isRequired,
+    fetchUserLibraryByType: PropTypes.func.isRequired,
+    userLibrary: PropTypes.object,
+  };
+
+  static defaultProps = {
+    userLibrary: {
+      loading: true,
+    },
+  };
+
   static navigationOptions = (props) => {
     const { profile } = props.navigation.state.params;
 
@@ -169,16 +182,3 @@ export class UserLibraryScreenComponent extends React.Component {
     );
   }
 }
-
-UserLibraryScreenComponent.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  fetchUserLibrary: PropTypes.func.isRequired,
-  fetchUserLibraryByType: PropTypes.func.isRequired,
-  userLibrary: PropTypes.object,
-};
-
-UserLibraryScreenComponent.defaultProps = {
-  userLibrary: {
-    loading: true,
-  },
-};
