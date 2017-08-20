@@ -3,7 +3,7 @@ import { Image, Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from '
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
-import styles from './styles';
+import { styles } from './styles';
 
 const TextSize = {
   Tiny: 10,
@@ -17,7 +17,7 @@ const ImageSize = {
   Normal: 50,
 };
 
-export default class Rating extends PureComponent {
+export class Rating extends PureComponent {
   static propTypes = {
     disabled: PropTypes.bool,
     onRatingChanged: PropTypes.func,
