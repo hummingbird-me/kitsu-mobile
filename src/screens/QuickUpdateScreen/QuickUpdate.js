@@ -6,7 +6,7 @@ import Carousel from 'react-native-snap-carousel';
 
 import { Kitsu } from 'kitsu/config/api';
 
-import QuickUpdatePage from './QuickUpdatePage';
+import QuickUpdateCard from './QuickUpdateCard';
 import styles from './styles';
 
 
@@ -69,7 +69,7 @@ class QuickUpdate extends Component {
     };
   }
 
-  renderItem = data => <QuickUpdatePage data={data} />;
+  renderItem = data => <QuickUpdateCard data={data} />;
 
   render() {
     const { library } = this.state;
