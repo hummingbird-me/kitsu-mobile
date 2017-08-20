@@ -74,8 +74,12 @@ const styles = StyleSheet.create({
   modalSlider: {
     marginHorizontal: 30,
   },
+  textStar: {
+    color: colors.orange,
+    fontWeight: '700',
+  },
   textNotRated: {
-    color: colors.darkGrey,
+    color: colors.lightGrey,
     fontWeight: '700',
   },
   textAwful: {

@@ -22,6 +22,7 @@ export default class Rating extends PureComponent {
     disabled: PropTypes.bool,
     onRatingChanged: PropTypes.func,
     rating: PropTypes.number,
+    ratingSystem: PropTypes.string,
     showNotRated: PropTypes.bool,
     size: PropTypes.string,
     viewType: PropTypes.string,
@@ -31,6 +32,7 @@ export default class Rating extends PureComponent {
     disabled: false,
     onRatingChanged: () => { },
     rating: null,
+    ratingSystem: 'simple',
     showNotRated: true,
     size: 'normal',
     viewType: 'select',
@@ -79,7 +81,7 @@ export default class Rating extends PureComponent {
   }
 
   styleForRating(rating, image) {
-    const { size, viewType } = this.props;
+    const { ratingSystem, showNotRated, size, viewType } = this.props;
 
     let defaultStyle = [styles.default];
     let selectedStyle = [styles.selected];
@@ -100,7 +102,7 @@ export default class Rating extends PureComponent {
         break;
     }
 
-    if (viewType === 'single') {
+    if (viewType === 'single' || ratingSystem === 'regular') {
       defaultStyle.push({ display: 'none' });
     }
 
@@ -108,7 +110,15 @@ export default class Rating extends PureComponent {
     defaultStyle = StyleSheet.flatten(defaultStyle);
 
     if (rating === null) {
-      return defaultStyle;
+      if (ratingSystem === 'regular') {
+        return image === 'star' && showNotRated ? selectedStyle : defaultStyle;
+      }
+
+      return image === 'no-rating' && showNotRated ? selectedStyle : defaultStyle;
+    }
+
+    if (ratingSystem === 'regular') {
+      return image === 'star' ? selectedStyle : defaultStyle;
     }
 
     if (rating < 3) {
@@ -123,7 +133,11 @@ export default class Rating extends PureComponent {
   }
 
   textForRating(rating) {
-    const { size } = this.props;
+    const { ratingSystem, size, viewType } = this.props;
+    if (viewType !== 'single') {
+      return null;
+    }
+
     let fontSize;
     switch (size) {
       case 'tiny': fontSize = TextSize.Tiny; break;
@@ -137,15 +151,29 @@ export default class Rating extends PureComponent {
         : null;
     }
 
-    if (rating < 3) {
-      return <Text style={[styles.textAwful, { fontSize }]}>AWFUL</Text>;
-    } else if (rating < 5) {
-      return <Text style={[styles.textMeh, { fontSize }]}>MEH</Text>;
-    } else if (rating < 8) {
-      return <Text style={[styles.textGood, { fontSize }]}>GOOD</Text>;
+    const ratingProperties = {
+      text: rating.toFixed(1),
+      textStyle: styles.textStar,
+    };
+
+    if (ratingSystem === 'simple') {
+      if (rating < 3) {
+        ratingProperties.text = 'AWFUL';
+        ratingProperties.textStyle = styles.textAwful;
+      } else if (rating < 5) {
+        ratingProperties.text = 'MEH';
+        ratingProperties.textStyle = styles.textMeh;
+      } else if (rating < 8) {
+        ratingProperties.text = 'GOOD';
+        ratingProperties.textStyle = styles.textGood;
+      } else {
+        ratingProperties.text = 'GREAT';
+        ratingProperties.textStyle = styles.textGreat;
+      }
     }
 
-    return <Text style={[styles.textGreat, { fontSize }]}>GREAT</Text>;
+    const { text, textStyle } = ratingProperties;
+    return <Text style={[textStyle, { fontSize }]}>{text}</Text>;
   }
 
   render() {
@@ -159,10 +187,12 @@ export default class Rating extends PureComponent {
           disabled={this.props.disabled}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image source={require('kitsu/assets/img/ratings/no-rating.png')} style={this.styleForRating(rating, 'no-rating')} />
             <Image source={require('kitsu/assets/img/ratings/awful.png')} style={this.styleForRating(rating, 'awful')} />
             <Image source={require('kitsu/assets/img/ratings/meh.png')} style={this.styleForRating(rating, 'meh')} />
             <Image source={require('kitsu/assets/img/ratings/good.png')} style={this.styleForRating(rating, 'good')} />
             <Image source={require('kitsu/assets/img/ratings/great.png')} style={this.styleForRating(rating, 'great')} />
+            <Image source={require('kitsu/assets/img/ratings/star.png')} style={this.styleForRating(rating, 'star')} />
             {this.textForRating(rating)}
           </View>
         </TouchableOpacity>
