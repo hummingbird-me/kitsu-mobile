@@ -6,11 +6,15 @@ export const styles = {
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
   },
+  posterImageContainer: {
+    width: 105,
+    marginLeft: 4,
+    marginRight: 4,
+  },
   posterImageCard: {
     width: 105,
     height: 155,
-    marginLeft: 4,
-    marginRight: 4,
+    marginBottom: 2,
     borderRadius: 3,
   },
   posterImageCardFirstChild: {

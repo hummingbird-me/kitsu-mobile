@@ -5,6 +5,7 @@ import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { SearchBar } from 'kitsu/components/SearchBar';
+import { ProgressBar } from 'kitsu/components/ProgressBar';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -99,6 +100,8 @@ class HomeScreen extends Component {
             value={this.state.searchTerm}
             onChangeText={(searchTerm) => { this.setState({ searchTerm }); }}
           />
+
+          <ProgressBar fillPercentage={50} height={10} />
         </Content>
       </Container>
     );

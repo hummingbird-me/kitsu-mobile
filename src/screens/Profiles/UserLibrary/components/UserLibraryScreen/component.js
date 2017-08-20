@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Container, Icon } from 'native-base';
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { SearchBar } from 'kitsu/components/SearchBar';
+import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { styles } from './styles';
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
@@ -47,7 +48,6 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   onSearchTermChanged = (searchTerm) => {
-    debugger;
     this.setState({ searchTerm });
     const { profile } = this.props.navigation.state.params;
     const { userLibrary } = this.props;
@@ -78,6 +78,13 @@ export class UserLibraryScreenComponent extends React.Component {
   renderItem = ({ item, index }) => {
     const data = item.anime || item.manga;
 
+    let progress = 0;
+    if (data.type === 'anime') {
+      progress = Math.floor((item.progress / data.episodeCount) * 100);
+    } else {
+      progress = Math.floor((item.progress / data.chapterCount) * 100);
+    }
+
     return (
       <TouchableOpacity
         onPress={() => {
@@ -87,10 +94,13 @@ export class UserLibraryScreenComponent extends React.Component {
           });
         }}
       >
-        <Image
-          source={{ uri: data.posterImage.tiny }}
-          style={[styles.posterImageCard, index === 0 && styles.posterImageCardFirstChild]}
-        />
+        <View style={[styles.posterImageContainer, index === 0 && styles.posterImageCardFirstChild]}>
+          <Image
+            source={{ uri: data.posterImage.tiny }}
+            style={styles.posterImageCard}
+          />
+          <ProgressBar fillPercentage={progress} height={3} />
+        </View>
       </TouchableOpacity>
     );
   }

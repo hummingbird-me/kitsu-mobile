@@ -5,7 +5,7 @@ const HEADER_NAVIGATION_IMAGE_HEIGHT = 60;
 
 export const styles = StyleSheet.create({
   followButton: {
-    backgroundColor: '#16A085',
+    backgroundColor: colors.green,
     borderRadius: 3,
     height: 20,
     justifyContent: 'center',
