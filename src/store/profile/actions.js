@@ -110,6 +110,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     userId: options.userId,
     status: options.status === 'onHold' ? 'on_hold' : options.status,
     kind: options.library,
+
   };
 
   const { userLibrary } = getState().profile;
@@ -130,11 +131,12 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
   try {
     const libraryEntries = await Kitsu.findAll('libraryEntries', {
       filter,
+      include: 'anime,manga',
       page: {
         limit: options.limit,
         offset: data.length,
       },
-      include: 'anime,manga',
+      sort: '-updatedAt',
     });
 
     if (options.searchTerm) {
@@ -152,7 +154,6 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     });
   } catch (error) {
     console.log(error);
-    debugger;
     dispatch({
       type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
       error,
@@ -185,7 +186,6 @@ export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, ge
     });
   } catch (error) {
     console.log(error);
-    debugger;
     dispatch({
       type: types.FETCH_USER_LIBRARY_FAIL,
       error,
