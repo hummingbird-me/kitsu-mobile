@@ -9,10 +9,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   selected: {
-    margin: 3,
+    marginRight: 4,
   },
   default: {
-    margin: 3,
+    marginRight: 4,
     opacity: 0.4,
   },
   modalContent: {

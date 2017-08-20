@@ -115,10 +115,14 @@ export class Rating extends PureComponent {
       }
 
       return image === 'no-rating' && showNotRated ? selectedStyle : defaultStyle;
+    } else if (image === 'no-rating') {
+      return { display: 'none' };
     }
 
     if (ratingSystem === 'regular') {
       return image === 'star' ? selectedStyle : defaultStyle;
+    } else if (image === 'star') {
+      return { display: 'none' };
     }
 
     if (rating < 3) {

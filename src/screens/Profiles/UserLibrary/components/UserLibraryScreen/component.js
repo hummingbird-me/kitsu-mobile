@@ -114,7 +114,7 @@ export class UserLibraryScreenComponent extends React.Component {
             style={styles.posterImageCard}
           />
           <ProgressBar fillPercentage={progress} height={3} />
-          <Rating rating={10} size="tiny" viewType="single" disabled style={{ marginLeft: 0, borderWidth: 1 }} />
+          <Rating rating={10} size="tiny" viewType="single" disabled style={{ marginTop: 2 }} />
         </View>
       </TouchableOpacity>
     );
