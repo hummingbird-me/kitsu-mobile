@@ -3,6 +3,7 @@ import { Image, Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from '
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
+import styles from './styles';
 
 const TextSize = {
   Tiny: 10,
@@ -18,6 +19,7 @@ const ImageSize = {
 
 export default class Rating extends PureComponent {
   static propTypes = {
+    disabled: PropTypes.bool,
     onRatingChanged: PropTypes.func,
     rating: PropTypes.number,
     showNotRated: PropTypes.bool,
@@ -26,6 +28,7 @@ export default class Rating extends PureComponent {
   }
 
   static defaultProps = {
+    disabled: false,
     onRatingChanged: () => { },
     rating: null,
     showNotRated: true,
@@ -129,7 +132,9 @@ export default class Rating extends PureComponent {
     }
 
     if (rating === null) {
-      return this.props.showNotRated ? <Text style={[styles.textNotRated, { fontSize }]}>Not Rated</Text> : null;
+      return this.props.showNotRated
+        ? <Text style={[styles.textNotRated, { fontSize }]}>Not Rated</Text>
+        : null;
     }
 
     if (rating < 3) {
@@ -148,7 +153,11 @@ export default class Rating extends PureComponent {
 
     return (
       <View {...this.props}>
-        <TouchableOpacity onPress={this.toggleModal} style={styles.wrapper} disabled={this.props.disabled}>
+        <TouchableOpacity
+          onPress={this.toggleModal}
+          style={styles.wrapper}
+          disabled={this.props.disabled}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={require('kitsu/assets/img/ratings/awful.png')} style={this.styleForRating(rating, 'awful')} />
             <Image source={require('kitsu/assets/img/ratings/meh.png')} style={this.styleForRating(rating, 'meh')} />
@@ -209,97 +218,3 @@ export default class Rating extends PureComponent {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  hide: {
-    display: 'none',
-  },
-  wrapper: {
-    flexDirection: 'row',
-  },
-  selected: {
-    margin: 3,
-  },
-  default: {
-    margin: 3,
-    opacity: 0.4,
-  },
-  modalContent: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 250,
-  },
-  modalHeader: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    maxHeight: 46,
-    minHeight: 46,
-    backgroundColor: colors.listBackPurple,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgb(46, 34, 45)',
-  },
-  modalHeaderText: {
-    color: colors.white,
-    fontWeight: '700',
-    fontFamily: 'OpenSans',
-    fontSize: 18,
-    margin: 10,
-  },
-  modalCancelButton: {
-    color: colors.lightGrey,
-  },
-  modalDoneButton: {
-    color: colors.activeYellow,
-  },
-  modalBody: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    backgroundColor: colors.listBackPurple,
-  },
-  modalStarRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: '32%',
-  },
-  modalRatingText: {
-    color: 'rgb(255, 218, 168)',
-    fontSize: 60,
-    fontFamily: 'OpenSans',
-    fontWeight: '700',
-    marginLeft: 12,
-  },
-  modalNoRatingText: {
-    color: colors.lightGrey,
-    fontSize: 30,
-    fontFamily: 'OpenSans',
-    fontWeight: '700',
-    lineHeight: 82,
-  },
-  modalSlider: {
-    marginHorizontal: 30,
-  },
-  textNotRated: {
-    color: colors.darkGrey,
-    fontWeight: '700',
-  },
-  textAwful: {
-    color: colors.red,
-    fontWeight: '700',
-  },
-  textMeh: {
-    color: colors.orange,
-    fontWeight: '700',
-  },
-  textGood: {
-    color: colors.green,
-    fontWeight: '700',
-  },
-  textGreat: {
-    color: colors.blue,
-    fontWeight: '700',
-  },
-});
