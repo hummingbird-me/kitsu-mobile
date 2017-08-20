@@ -62,6 +62,7 @@ class QuickUpdate extends Component {
       'titles',
       'synopsis',
       'status',
+      'startDate',
     ];
 
     const USER_FIELDS = [

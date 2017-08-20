@@ -92,6 +92,32 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     marginVertical: 10,
   },
+  seriesDescriptionRow: {
+    flexDirection: 'row',
+  },
+  avatarImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  descriptionRow: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  seriesTitle: {
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    marginRight: 5,
+  },
+  seriesExtraInfo: {
+    fontFamily: 'OpenSans',
+    color: colors.lightGrey,
+  },
 });
 
 export default styles;
