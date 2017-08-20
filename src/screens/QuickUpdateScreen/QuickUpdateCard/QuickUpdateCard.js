@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import styles from './styles';
 
-const QuickUpdatePage = ({ data }) => {
+const QuickUpdateCard = ({ data }) => {
   const { anime } = data.item;
 
   return (
@@ -26,7 +26,7 @@ const QuickUpdatePage = ({ data }) => {
   );
 };
 
-QuickUpdatePage.propTypes = {
+QuickUpdateCard.propTypes = {
   data: PropTypes.shape({
     item: PropTypes.shape({
       anime: {
@@ -40,4 +40,4 @@ QuickUpdatePage.propTypes = {
   }).isRequired,
 };
 
-export default QuickUpdatePage;
+export default QuickUpdateCard;
