@@ -8,6 +8,10 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 
 const QuickUpdateCard = ({ data }) => {
+  if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
+    return null;
+  }
+
   const { anime, unit } = data.item;
 
   return (
@@ -23,7 +27,7 @@ const QuickUpdateCard = ({ data }) => {
             <Text style={styles.currentEpisodeText}>Ep. {data.item.progress}</Text>
             <Text style={styles.totalEpisodesText}> of {anime.episodeCount}</Text>
           </View>
-          <Text style={styles.episodeName}>{unit[0].canonicalTitle}</Text>
+          <Text style={styles.episodeName} numberOfLines={1}>{unit[0].canonicalTitle}</Text>
         </Image>
       </View>
 
@@ -31,10 +35,19 @@ const QuickUpdateCard = ({ data }) => {
       <View style={[styles.cardWrapper, styles.shadow]}>
         <View style={styles.cardHeaderArea}>
           <View style={styles.cardContent}>
+            {/* Progress Bar */}
             <ProgressBar
               progress={data.item.progress / anime.episodeCount}
               style={styles.progressBar}
             />
+            {/* Series Description */}
+            <View style={styles.seriesDescriptionRow}>
+              <Image style={styles.avatarImage} />
+              <View style={styles.descriptionRow}>
+                <Text style={styles.seriesTitle} numberOfLines={1}>{anime.canonicalTitle}</Text>
+                <Text style={styles.seriesExtraInfo}>Anime • {anime.startDate.split('-')[0]}</Text>
+              </View>
+            </View>
           </View>
         </View>
       </View>
