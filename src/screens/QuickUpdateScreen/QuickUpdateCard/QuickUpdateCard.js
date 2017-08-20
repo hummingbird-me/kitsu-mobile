@@ -1,9 +1,10 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from 'kitsu/components/ProgressBar';
-
 import PropTypes from 'prop-types';
+
+import * as colors from 'kitsu/constants/colors';
 
 import styles from './styles';
 
@@ -49,6 +50,23 @@ const QuickUpdateCard = ({ data }) => {
               </View>
             </View>
           </View>
+        </View>
+        <TextInput
+          multiline
+          placeholder={`(Optional) Share your thoughts on Episode ${data.item.progress}`}
+          placeholderTextColor={colors.lightGrey}
+          style={styles.textInput}
+        />
+        {/* Action Row */}
+        <View style={styles.actionRow}>
+          <TouchableOpacity style={[styles.button, styles.discussionButton]}>
+            <Text style={styles.buttonText}>View Discussion</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.button, styles.markWatchedButton]}>
+            <Text style={styles.buttonText}>Mark </Text>
+            <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Episode {data.item.progress}</Text>
+            <Text style={styles.buttonText}> Watched</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

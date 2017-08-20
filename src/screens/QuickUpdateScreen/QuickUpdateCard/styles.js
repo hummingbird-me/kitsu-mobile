@@ -118,6 +118,40 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     color: colors.lightGrey,
   },
+  textInput: {
+    flex: 1,
+    fontSize: 12,
+    fontFamily: 'OpenSans',
+    margin: 10,
+    color: colors.lightGrey,
+  },
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 14,
+    marginHorizontal: 5,
+  },
+  button: {
+    marginHorizontal: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: colors.white,
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+  },
+  discussionButton: {
+    flex: 3,
+    backgroundColor: colors.lightGrey,
+  },
+  markWatchedButton: {
+    flex: 5,
+    backgroundColor: colors.lightGreen,
+  },
 });
 
 export default styles;
