@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { debounce } from 'lodash';
 
 import { Kitsu } from 'kitsu/config/api';
 
@@ -106,7 +107,7 @@ class QuickUpdate extends Component {
     });
   }
 
-  carouselItemChanged = (index) => {
+  carouselItemChanged = debounce((index) => {
     const { backgroundImageUri, faderOpacity } = this.state;
 
     // On first load we don't really need to do the fader business.
@@ -140,7 +141,7 @@ class QuickUpdate extends Component {
         useNativeDriver: true,
       }).start();
     });
-  }
+  }, 500)
 
   renderItem = data => <QuickUpdateCard data={data} />;
 
