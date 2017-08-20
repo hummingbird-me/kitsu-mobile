@@ -20,6 +20,9 @@ export const styles = {
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
+  rating: {
+    marginTop: 2
+  },
   searchBar: {
     marginLeft: 10,
     marginRight: 10,

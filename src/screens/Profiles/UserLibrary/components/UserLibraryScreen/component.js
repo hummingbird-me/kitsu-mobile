@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Container, Icon } from 'native-base';
 import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
+import { debounce } from 'lodash';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
@@ -48,13 +49,9 @@ export class UserLibraryScreenComponent extends React.Component {
     };
   };
 
-  constructor() {
-    super();
-
-    this.state = {
-      searchTerm: '',
-    };
-  }
+  state = {
+    searchTerm: '',
+  };
 
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
@@ -63,16 +60,26 @@ export class UserLibraryScreenComponent extends React.Component {
 
   onSearchTermChanged = (searchTerm) => {
     this.setState({ searchTerm });
-    const { profile } = this.props.navigation.state.params;
     const { userLibrary } = this.props;
     const isSearching = userLibrary.searchTerm.length !== 0;
 
     if (searchTerm.length >= MINIMUM_SEARCH_TERM_LENGTH && !isSearching) {
-      this.props.fetchUserLibrary(profile.id, searchTerm);
+      this.debouncedSearch();
     } else if (isSearching && searchTerm.length === 0) {
-      this.props.fetchUserLibrary(profile.id);
+      this.debouncedFetch();
     }
   }
+
+  debouncedFetch = debounce(() => {
+    const { profile } = this.props.navigation.state.params;
+    this.props.fetchUserLibrary(profile.id);
+  }, 100);
+
+  debouncedSearch = debounce(() => {
+    const { profile } = this.props.navigation.state.params;
+    const { searchTerm } = this.state;
+    this.props.fetchUserLibrary(profile.id, searchTerm);
+  }, 100);
 
   fetchMore = (type, status) => {
     const { userLibrary } = this.props;
@@ -99,6 +106,8 @@ export class UserLibraryScreenComponent extends React.Component {
       progress = Math.floor((item.progress / data.chapterCount) * 100);
     }
 
+    const rating = item.ratingTwenty === null ? null : item.ratingTwenty / 2;
+
     return (
       <TouchableOpacity
         onPress={() => {
@@ -114,7 +123,14 @@ export class UserLibraryScreenComponent extends React.Component {
             style={styles.posterImageCard}
           />
           <ProgressBar fillPercentage={progress} height={3} />
-          <Rating rating={10} size="tiny" viewType="single" disabled style={{ marginTop: 2 }} />
+          <Rating
+            disabled
+            rating={rating}
+            size="tiny"
+            viewType="single"
+            showNotRated={false}
+            style={styles.rating}
+          />
         </View>
       </TouchableOpacity>
     );

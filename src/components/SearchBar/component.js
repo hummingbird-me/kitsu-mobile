@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
-export class SearchBar extends React.Component {
+export class SearchBar extends React.PureComponent {
   static propTypes = {
     containerStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
     defaultValue: PropTypes.string,
@@ -25,7 +25,7 @@ export class SearchBar extends React.Component {
   };
 
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       hasFocus: false,
       value: props.defaultValue,

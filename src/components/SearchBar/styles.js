@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     borderRadius: 3,
-    borderWidth: 0,
   },
   searchIcon: {
     position: 'absolute',
@@ -24,9 +23,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     height: 30,
     textAlign: 'center',
-    paddingTop: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    paddingLeft: 0,
+    paddingVertical: 10,
   },
 });
