@@ -9,13 +9,12 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
   try {
     const user = await Kitsu.findAll('users', {
       fields: {
-        users: 'id,name,createdAt,email,avatar,about,bio,sfwFilter,blocks',
+        users: 'id,name,createdAt,email,avatar,about,bio,ratingSystem,sfwFilter,blocks',
       },
       filter: { self: true },
     });
     dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
   } catch (e) {
-    console.log(e);
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
   }
 };
