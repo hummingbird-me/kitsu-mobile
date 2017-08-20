@@ -6,31 +6,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as colors from 'kitsu/constants/colors';
 
-const styleForRating = (rating, image) => {
-  if (rating === null) {
-    return 'default';
-  }
-
-  if (rating < 3) {
-    return image === 'awful' ? 'selected' : 'default';
-  } else if (rating < 5) {
-    return image === 'meh' ? 'selected' : 'default';
-  } else if (rating < 8) {
-    return image === 'good' ? 'selected' : 'default';
-  }
-
-  return image === 'great' ? 'selected' : 'default';
-};
-
 export default class Rating extends PureComponent {
   static propTypes = {
-    rating: PropTypes.number,
     onRatingChanged: PropTypes.func,
+    rating: PropTypes.number,
+    size: PropTypes.string,
+    viewType: PropTypes.string,
   }
 
   static defaultProps = {
-    rating: null,
     onRatingChanged: () => { },
+    rating: null,
+    size: 'normal',
+    viewType: 'select',
   }
 
   constructor(props) {
@@ -75,16 +63,64 @@ export default class Rating extends PureComponent {
     }
   }
 
+  styleForRating(rating, image) {
+    const { size, viewType } = this.props;
+
+    let defaultStyle = [styles.default];
+    let selectedStyle = [styles.selected];
+
+    switch (size) {
+      case 'tiny':
+        defaultStyle.push({ width: 12, height: 12 });
+        selectedStyle.push({ width: 12, height: 12 });
+        break;
+      case 'small':
+        defaultStyle.push({ width: 20, height: 20 });
+        selectedStyle.push({ width: 20, height: 20 });
+        break;
+      case 'normal':
+      default:
+        defaultStyle.push({ width: 50, height: 50 });
+        selectedStyle.push({ width: 50, height: 50 });
+        break;
+    }
+
+    if (viewType === 'single') {
+      defaultStyle.push({ display: 'none' });
+    }
+
+    selectedStyle = StyleSheet.flatten(selectedStyle);
+    defaultStyle = StyleSheet.flatten(defaultStyle);
+
+    if (rating === null) {
+      return defaultStyle;
+    }
+
+    if (rating < 3) {
+      return image === 'awful' ? selectedStyle : defaultStyle;
+    } else if (rating < 5) {
+      return image === 'meh' ? selectedStyle : defaultStyle;
+    } else if (rating < 8) {
+      return image === 'good' ? selectedStyle : defaultStyle;
+    }
+
+    return image === 'great' ? selectedStyle : defaultStyle;
+  }
+
   render() {
     const { rating } = this.state;
+
 
     return (
       <View>
         <TouchableOpacity onPress={this.toggleModal} style={styles.wrapper}>
-          <Image source={require('kitsu/assets/img/ratings/awful.png')} style={styles[styleForRating(rating, 'awful')]} />
-          <Image source={require('kitsu/assets/img/ratings/meh.png')} style={styles[styleForRating(rating, 'meh')]} />
-          <Image source={require('kitsu/assets/img/ratings/good.png')} style={styles[styleForRating(rating, 'good')]} />
-          <Image source={require('kitsu/assets/img/ratings/great.png')} style={styles[styleForRating(rating, 'great')]} />
+          <View style={{ flexDirection: 'row', borderWidth: 1 }}>
+            <Image source={require('kitsu/assets/img/ratings/awful.png')} style={this.styleForRating(rating, 'awful')} />
+            <Text style={{ marginLeft: 15 }}>GREAT</Text>
+          </View>
+          <Image source={require('kitsu/assets/img/ratings/meh.png')} style={this.styleForRating(rating, 'meh')} />
+          <Image source={require('kitsu/assets/img/ratings/good.png')} style={this.styleForRating(rating, 'good')} />
+          <Image source={require('kitsu/assets/img/ratings/great.png')} style={this.styleForRating(rating, 'great')} />
         </TouchableOpacity>
 
         <Modal
@@ -140,17 +176,16 @@ export default class Rating extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+  hide: {
+    display: 'none',
+  },
   wrapper: {
     flexDirection: 'row',
   },
   selected: {
-    width: 50,
-    height: 50,
     margin: 3,
   },
   default: {
-    width: 50,
-    height: 50,
     margin: 3,
     opacity: 0.4,
   },

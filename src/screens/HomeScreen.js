@@ -72,7 +72,8 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
-          <Rating rating={8} />
+
+          <Rating rating={8} size="tiny" viewType="single" style={{ height: 10, borderWidth: 1 }} />
         </Content>
       </Container>
     );
