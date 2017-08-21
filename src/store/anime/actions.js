@@ -1,3 +1,4 @@
+import AlgoliaSearchHelper from 'algoliasearch-helper';
 import { Kitsu } from 'kitsu/config/api';
 import * as types from 'kitsu/store/types';
 
@@ -51,6 +52,16 @@ export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime')
     console.log(e);
   }
 };
+
+export const algoliaSearch = () => (dispatch, getState) => {
+  const algoliasearch = require('algoliasearch/reactnative')(
+    'AWQO5J657S',
+    'MTc1MWYzYzNiMjVjZjM5OWFiMDc1YWE4NTNkYWMyZjE4NTk2YjkyNjM1YWJkOWIwZTEwM2U1YmUyMjgyODIwY3Jlc3RyaWN0SW5kaWNlcz1wcm9kdWN0aW9uX21lZGlhJmZpbHRlcnM9',
+  );
+  const searchHelper = AlgoliaSearchHelper(algoliaSearch, 'production_media');
+  console.log('search', searchHelper.addTag('dragon').search());
+};
+
 export const getDefaults = (field, type = 'anime') => async (dispatch) => {
   dispatch({ type: types.SEARCH, field });
   try {

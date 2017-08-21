@@ -5,36 +5,40 @@ import LinearGradient from 'react-native-linear-gradient';
 import ProgressiveImage from 'kitsu/components/ProgressiveImage';
 
 const ResultsList = ({
-  dataArray,
-  loadMore,
-  refreshing = false,
+  hits,
+  hasMore,
+  refine,
   onPress,
-  refresh,
   scrollEnabled = true,
   numColumns = 4,
   imageSize = { h: 125, w: 91 },
-}) => (
-  <View style={{ backgroundColor: '#FAFAFA' }}>
-    <FlatList
-      removeClippedSubviews={false}
-      data={dataArray}
-      onEndReached={() => loadMore()}
-      onEndReachedThreshold={0.5}
-      getItemLayout={(data, index) => ({
-        length: imageSize.h,
-        offset: imageSize.h * index,
-        index,
-      })}
-      initialNumToRender={10}
-      numColumns={numColumns}
-      scrollEnabled={scrollEnabled}
-      refreshing={refreshing}
-      onRefresh={() => refresh()}
-      contentContainerStyle={styles.list}
-      renderItem={e => renderItem(e, imageSize, onPress)}
-    />
-  </View>
-);
+}) => {
+  const onEndReached = () => {
+    if (hasMore) {
+      refine();
+    }
+  };
+  return (
+    <View style={{ backgroundColor: '#FAFAFA' }}>
+      <FlatList
+        removeClippedSubviews={false}
+        data={hits}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
+        getItemLayout={(data, index) => ({
+          length: imageSize.h,
+          offset: imageSize.h * index,
+          index,
+        })}
+        initialNumToRender={10}
+        numColumns={numColumns}
+        scrollEnabled={scrollEnabled}
+        contentContainerStyle={styles.list}
+        renderItem={e => renderItem(e, imageSize, onPress)}
+      />
+    </View>
+  );
+};
 
 const renderItem = ({ item }, imageSize, onPress) => {
   let title = null;
@@ -43,6 +47,7 @@ const renderItem = ({ item }, imageSize, onPress) => {
   }
   const { h, w } = imageSize;
   const m = imageSize.m || 1;
+  console.log('item', item);
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
       <View
@@ -55,7 +60,7 @@ const renderItem = ({ item }, imageSize, onPress) => {
       >
         <ProgressiveImage
           onPress={() => onPress(item)}
-          source={{ uri: item.image }}
+          source={{ uri: (item.posterImage || {}).small }}
           style={{
             height: h - m * 2,
             width: w - m * 2,
@@ -80,25 +85,6 @@ const renderItem = ({ item }, imageSize, onPress) => {
       </View>
     </TouchableOpacity>
   );
-};
-
-ResultsList.propTypes = {
-  dataArray: PropTypes.array.isRequired,
-  onPress: PropTypes.func,
-  loadMore: PropTypes.func,
-  refresh: PropTypes.func,
-  refreshing: PropTypes.bool,
-  scrollEnabled: PropTypes.bool,
-  imageSize: PropTypes.object,
-};
-
-ResultsList.defaultProps = {
-  loadMore: () => {},
-  refresh: () => {},
-  onPress: () => {},
-  imageSize: {},
-  refreshing: false,
-  scrollEnabled: true,
 };
 
 const styles = {
