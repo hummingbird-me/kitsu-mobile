@@ -55,20 +55,12 @@ export default (state = INITIAL_STATE, action) => {
         signingUp: false,
         signupError: action.payload,
       };
-    case types.FETCH_USER_BLOCKS_SUCCESS:
+    case types.UPDATE_DISCOVERABILITY_SUCCESS:
       return {
         ...state,
         currentUser: {
           ...state.currentUser,
-          blocks: action.payload,
-        },
-      };
-    case types.FETCH_USER_LINKED_ACCOUNTS:
-      return {
-        ...state,
-        currentUser: {
-          ...state.currentUser,
-          linkedAccounts: action.payload,
+          shareToGlobal: action.payload,
         },
       };
     case types.LOGOUT_USER:

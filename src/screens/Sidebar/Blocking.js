@@ -5,8 +5,8 @@ import { Text, Container, Content, Left, Right, Item, Spinner } from 'native-bas
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-import { fetchUserBlocks } from 'kitsu/store/user/actions';
-
+import { Kitsu, setToken } from 'kitsu/config/api';
+import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
 
 class Blocking extends React.Component {
@@ -17,12 +17,55 @@ class Blocking extends React.Component {
     ),
   });
 
+  state = {
+    loading: true,
+    blocks: [],
+    error: '',
+  };
+
   componentDidMount() {
-    this.props.fetchUserBlocks();
+    this.fetchUserBlocks();
   }
 
-  onUnblockUser = (user) => {
-    // TODO: handle button press.
+  async onUnblockUser(user) {
+    const token = this.props.accessToken;
+    const { blocks } = this.state;
+    const { id } = user;
+    setToken(token);
+    this.setState({ loading: true });
+    try {
+      await Kitsu.destroy('blocks', id);
+      this.setState({
+        blocks: blocks.filter(v => v.id !== id),
+        loading: false,
+      });
+    } catch (e) {
+      this.setState({
+        error: e,
+        loading: false,
+      });
+    }
+  }
+
+  fetchUserBlocks = async () => {
+    const token = this.props.accessToken;
+    const { id } = this.props.currentUser;
+    setToken(token);
+    try {
+      const blocks = await Kitsu.findAll('blocks', {
+        filter: { user: id },
+        include: 'blocked',
+      });
+      this.setState({
+        blocks,
+        loading: false,
+      });
+    } catch (e) {
+      this.setState({
+        error: e,
+        loading: false,
+      });
+    }
   };
 
   renderItem = ({ item }) => (
@@ -31,7 +74,7 @@ class Blocking extends React.Component {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
             <Image
-              source={{ uri: item.blocked.avatar.small }}
+              source={(item.blocked.avatar && { uri: item.blocked.avatar.small }) || defaultAvatar}
               style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
             />
           </View>
@@ -64,7 +107,7 @@ class Blocking extends React.Component {
   );
 
   render() {
-    const blocks = this.props.blocks;
+    const blocks = this.state.blocks;
     return (
       <Container style={styles.containerStyle}>
         <Content scrollEnabled={false}>
@@ -120,10 +163,17 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => ({
-  blocks: user.currentUser.blocks || [],
+const mapStateToProps = ({ auth, user }) => ({
+  accessToken: auth.tokens.access_token,
+  currentUser: user.currentUser,
 });
 
-Blocking.propTypes = {};
+Blocking.propTypes = {
+  accessToken: PropTypes.string,
+};
 
-export default connect(mapStateToProps, { fetchUserBlocks })(Blocking);
+Blocking.defaultProps = {
+  accessToken: null,
+};
+
+export default connect(mapStateToProps, {})(Blocking);

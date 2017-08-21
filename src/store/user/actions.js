@@ -9,10 +9,10 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
   try {
     const user = await Kitsu.findAll('users', {
       fields: {
-        users: 'id,name,createdAt,email,avatar,about,bio,ratingSystem,sfwFilter,linkedAccounts',
+        users: 'id,name,createdAt,email,avatar,about,bio,ratingSystem,shareToGlobal,sfwFilter,linkedAccounts',
       },
-      filter: { self: true },
       include: 'linkedAccounts',
+      filter: { self: true },
     });
     dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
   } catch (e) {
@@ -46,17 +46,17 @@ export const createUser = (data, nav) => async (dispatch, getState) => {
   }
 };
 
-export const fetchUserBlocks = () => async (dispatch, getState) => {
-  dispatch({ type: types.FETCH_USER_BLOCKS });
-  const token = getState().auth.tokens.access_token;
+export const updatePersonalSettings = data => async (dispatch, getState) => {
+  dispatch({ type: types.UPDATE_PERSONAL_SETTINGS });
+  const { user, auth } = getState();
+  const { id } = user.currentUser.id;
+  const token = auth.tokens.access_token;
   setToken(token);
   try {
-    const blocks = await Kitsu.findAll('blocks', {
-      filter: { user: getState().user.currentUser.id },
-      include: 'blocked',
-    });
-    dispatch({ type: types.FETCH_USER_BLOCKS_SUCCESS, payload: blocks });
+    const { name, password } = data;
+    await Kitsu.update('users', { id, name, password });
+    dispatch({ type: types.UPDATE_PERSONAL_SETTINGS_SUCCESS });
   } catch (e) {
-    dispatch({ type: types.FETCH_USER_BLOCKS_FAIL, payload: 'Failed to load blocks' });
+    dispatch({ type: types.UPDATE_PERSONAL_SETTINGS_FAIL });
   }
 };

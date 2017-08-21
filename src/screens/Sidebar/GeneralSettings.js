@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Image, TextInput } from 'react-native';
+import { View, Image, TextInput, LayoutAnimation } from 'react-native';
 import { connect } from 'react-redux';
 import { Text, Button, Container, Content, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
+import { updatePersonalSettings } from 'kitsu/store/user/actions';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarDropdown } from './common/';
@@ -16,20 +17,44 @@ class GeneralSettings extends Component {
     ),
   });
 
-  state = {
-    username: this.props.currentUser.name,
-    email: this.props.currentUser.email,
-    password: '',
-    sfwFilter: this.props.currentUser.sfwFilter,
+  constructor(props) {
+    super(props);
+
+    this.sfwOptions = [{ title: 'Show Adult Titles (O_O)' }, { title: 'Hide Adult Titles' }];
+    const { name, email, sfwFilter } = props.currentUser;
+    this.state = {
+      name,
+      email,
+      sfwFilter,
+      password: '',
+      shouldShowValidationInput: false,
+    };
+  }
+
+  toggle = (nextText) => {
+    LayoutAnimation.configureNext({
+      duration: 120,
+      create: {
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity,
+      },
+      update: {
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity,
+      },
+    });
+    if (nextText === '') {
+      // this means user clears the input.
+      this.setState({ shouldShowValidationInput: false });
+    } else if (this.state.password.length > 6) {
+      this.setState({ shouldShowValidationInput: true });
+    }
   };
 
-  sfwOptions = [{ title: 'Show Adult Titles (O_O)' }, { title: 'Hide Adult Titles' }];
-
   render() {
-    const { navigation, currentUser } = this.props;
-    const loading = false; // temporary.
+    const { loading, updatePersonalSettings } = this.props;
     return (
-      // handle marginTop: 77
+      // TODO: handle marginTop: 77 for all other sidebar screens.
       (
         <Container style={styles.containerStyle}>
           <Content>
@@ -41,7 +66,8 @@ class GeneralSettings extends Component {
                 </Text>
                 <TextInput
                   style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
-                  value={this.state.username}
+                  value={this.state.name}
+                  onChangeText={t => this.setState({ name: t })}
                   autoCapitalize={'words'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
@@ -55,6 +81,7 @@ class GeneralSettings extends Component {
                 <TextInput
                   style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
                   value={this.state.email}
+                  onChangeText={t => this.setState({ email: t })}
                   autoCapitalize={'none'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
@@ -68,11 +95,33 @@ class GeneralSettings extends Component {
                 <TextInput
                   style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
                   value={this.state.password}
+                  onChangeText={(t) => {
+                    this.toggle(t);
+                    this.setState({ password: t });
+                  }}
                   secureTextEntry
+                  placeholder={'Start typing to set a new password.'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
                 />
               </View>
+              {this.state.shouldShowValidationInput &&
+                <View
+                  style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}
+                >
+                  <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+                    Current Password
+                  </Text>
+                  <TextInput
+                    style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
+                    value={this.state.currentPassword}
+                    onChangeText={t => this.setState({ currentPassword: t })}
+                    secureTextEntry
+                    placeholder={'Current Password'}
+                    autoCorrect={false}
+                    underlineColorAndroid={'transparent'}
+                  />
+                </View>}
               <SidebarTitle style={{ marginTop: 20 }} title={'Content on Kitsu'} />
               <SidebarDropdown
                 title={'R18+ titles in feed, libraries, or search?'}
@@ -85,7 +134,7 @@ class GeneralSettings extends Component {
                 <Button
                   block
                   disabled={false && loading}
-                  onPress={() => {}}
+                  onPress={() => updatePersonalSettings()}
                   style={{
                     backgroundColor: colors.lightGreen,
                     height: 47,
@@ -119,12 +168,13 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { currentUser } = user;
+  const { currentUser, loading } = user;
   return {
     currentUser,
+    loading,
   };
 };
 
 GeneralSettings.propTypes = {};
 
-export default connect(mapStateToProps, {})(GeneralSettings);
+export default connect(mapStateToProps, { updatePersonalSettings })(GeneralSettings);

@@ -109,7 +109,6 @@ Kitsu.define(
     },
     linkedAccounts: {
       jsonApi: 'hasMany',
-      type: 'linkedAccounts',
     },
     profileLinks: {
       jsonApi: 'hasMany',
@@ -280,20 +279,6 @@ Kitsu.define(
     },
   },
   { collectionPath: 'follows' },
-);
-
-Kitsu.define(
-  'linkedAccounts',
-  {
-    user: {
-      jsonApi: 'hasOne',
-      type: 'users',
-    },
-    libraryEntryLogs: {
-      jsonApi: 'hasMany',
-    },
-  },
-  { collectionPath: 'linked-accounts' },
 );
 
 Kitsu.define(
