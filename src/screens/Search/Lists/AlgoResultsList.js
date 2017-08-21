@@ -47,7 +47,6 @@ const renderItem = ({ item }, imageSize, onPress) => {
   }
   const { h, w } = imageSize;
   const m = imageSize.m || 1;
-  console.log('item', item);
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
       <View

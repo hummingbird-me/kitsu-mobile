@@ -71,25 +71,27 @@ class SearchScreen extends Component {
 
   handleSearchQuery(query) {
     this.setState({ query });
-    if(query.length >0 ) {
+    if (query.length > 0) {
       this.setState({ searchVisible: false });
-    }
-    else {
+    } else {
       this.setState({ searchVisible: true });
     }
     this.search(query, this.state.active);
   }
-  showSearchIcon = function(options) {
+  showSearchIcon = function (options) {
     // if(this.searchVisible)
     // {
-     return {
-       color: '#9D9D9D', fontSize: 17, alignItems: 'center', marginTop: 5,
-     };
-  //  }
-  //  else {
-  //    return {color: '#ffffff'};
-  //  }
- }
+    return {
+      color: '#9D9D9D',
+      fontSize: 17,
+      alignItems: 'center',
+      marginTop: 5,
+    };
+    //  }
+    //  else {
+    //    return {color: '#ffffff'};
+    //  }
+  };
   renderSearchBar(active) {
     const { query } = this.state;
 
@@ -107,10 +109,7 @@ class SearchScreen extends Component {
           borderRadius: 2,
         }}
       >
-        <Icon
-          name="ios-search"
-          style={this.showSearchIcon()}
-        />
+        <Icon name="ios-search" style={this.showSearchIcon()} />
         <Input
           placeholder={`Search ${active}`}
           value={query}
