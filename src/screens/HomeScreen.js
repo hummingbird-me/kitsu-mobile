@@ -91,17 +91,10 @@ class HomeScreen extends Component {
           </Button>
 
 
-          <View>
-            <Rating rating={8} size="large" viewType="single" ratingSystem="regular" showNotRated={false} />
-          </View>
-
-          <View>
-            <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
-          </View>
-
-          <View>
-            <Rating rating={8} size="large" />
-          </View>
+          <Rating rating={8} size="large" viewType="single" ratingSystem="regular" showNotRated={false} />
+          <Rating rating={8} size="large" viewType="single" ratingSystem="advanced" showNotRated={false} />
+          <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
+          <Rating rating={8} size="large" />
         </Content>
       </Container>
     );
