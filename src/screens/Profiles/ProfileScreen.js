@@ -100,7 +100,7 @@ class ProfileScreen extends Component {
               source={{ uri: item.image }}
               containerStyle={{
                 height,
-                backgroundColor: colors.imageGrey,
+                backgroundColor: colors.lightGrey,
               }}
               style={{ height, borderRadius: 1 }}
             />

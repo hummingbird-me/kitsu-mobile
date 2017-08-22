@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Container, Icon } from 'native-base';
-import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -10,6 +10,8 @@ import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { SearchBar } from 'kitsu/components/SearchBar';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
@@ -120,8 +122,12 @@ export class UserLibraryScreenComponent extends React.Component {
           });
         }}
       >
-        <View style={[styles.posterImageContainer, index === 0 && styles.posterImageCardFirstChild]}>
-          <Image
+        <View style={[
+          styles.posterImageContainer,
+          index === 0 && styles.posterImageCardFirstChild,
+        ]}
+        >
+          <ProgressiveImage
             source={{ uri: data.posterImage.tiny }}
             style={styles.posterImageCard}
           />
@@ -140,6 +146,62 @@ export class UserLibraryScreenComponent extends React.Component {
     );
   }
 
+  renderLoadingList = () => {
+    const data = Array(8).fill(1).map((_, index) => ({ id: index }));
+    const { length } = StyleSheet.flatten(styles.posterImageCard);
+
+    return (
+      <FlatList
+        horizontal
+        data={data}
+        initialNumToRender={8}
+        initialScrollIndex={0}
+        keyExtractor={item => item.id}
+        getItemLayout={(_data, index) => (
+          { length, offset: length * index, index }
+        )}
+        renderItem={({ index }) => (
+          <View style={[
+            styles.posterImageCard,
+            styles.posterImageContainer,
+            styles.posterImageLoading,
+            (index === 0 && styles.posterImageCardFirstChild),
+          ]}
+          />
+        )}
+        scrollEnabled={false}
+      />
+    );
+  }
+
+  renderEmptyList = (type, status) => {
+    const messageMapping = {
+      current: { anime: 'watching', manga: 'reading' },
+      planned: { anime: 'planned', manga: 'planned' },
+      completed: { anime: 'complete', manga: 'complete' },
+      onHold: { anime: 'on hold', manga: 'on hold' },
+      dropped: { anime: 'dropped', manga: 'dropped' },
+    };
+
+    return (
+      <View style={styles.emptyList}>
+        <Text style={[
+          commonStyles.text,
+          commonStyles.colorWhite,
+          styles.browseText,
+        ]}
+        >
+          {`You haven't marked any ${type} as ${messageMapping[status][type]} yet!`}
+        </Text>
+        <TouchableOpacity style={styles.browseButton}>
+          <Text style={[commonStyles.text, commonStyles.colorWhite]}>
+            Browse {type === 'anime' ? 'Anime' : 'Manga'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   renderLists = (type) => {
     const { userLibrary } = this.props;
     const listOrder = [
@@ -151,30 +213,42 @@ export class UserLibraryScreenComponent extends React.Component {
     ];
 
     const { length } = StyleSheet.flatten(styles.posterImageCard);
-    return listOrder.map(currentList => (
-      <View key={`${currentList.status}-${type}`}>
-        <LibraryHeader
-          data={userLibrary[type][currentList.status].data}
-          status={currentList.status}
-          type={type}
-          title={currentList[type]}
-        />
-        <FlatList
-          horizontal
-          data={userLibrary[type][currentList.status].data}
-          initialNumToRender={5}
-          initialScrollIndex={0}
-          keyExtractor={item => item.id}
-          onEndReached={() => this.fetchMore(type, currentList.status)}
-          onEndReachedThreshold={0.50}
-          refreshing={userLibrary[type][currentList.status].loading}
-          renderItem={this.renderItem}
-          getItemLayout={(data, index) => (
-            { length, offset: length * index, index }
-          )}
-        />
-      </View>
-    ));
+    return listOrder.map((currentList) => {
+      const { status } = currentList;
+      const { data, loading } = userLibrary[type][status];
+
+      return (
+        <View key={`${status}-${type}`}>
+          <LibraryHeader
+            data={data}
+            status={status}
+            type={type}
+            title={currentList[type]}
+          />
+
+          {loading && this.renderLoadingList()}
+
+          {!loading && !data.length ?
+            this.renderEmptyList(type, status)
+            :
+            <FlatList
+              horizontal
+              data={data}
+              initialNumToRender={8}
+              initialScrollIndex={0}
+              getItemLayout={(_data, index) => (
+                { length, offset: length * index, index }
+              )}
+              keyExtractor={item => item.id}
+              onEndReached={() => this.fetchMore(type, status)}
+              onEndReachedThreshold={0.50}
+              refreshing={loading}
+              renderItem={this.renderItem}
+            />
+          }
+        </View>
+      );
+    });
   }
 
   render() {

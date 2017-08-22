@@ -1,27 +1,52 @@
 import * as colors from 'kitsu/constants/colors';
+import * as constants from './constants';
 
 export const styles = {
+  browseText: {
+    paddingBottom: 10,
+  },
+  browseButton: {
+    width: 125,
+    height: 30,
+    borderRadius: 4,
+    backgroundColor: colors.green,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     alignItems: 'center',
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
   },
+  emptyList: {
+    alignItems: 'center',
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderColor: colors.lightGrey,
+    flex: 1,
+    height: constants.EMPTY_LIST_HEIGHT,
+    justifyContent: 'center',
+    marginHorizontal: 15,
+  },
   posterImageContainer: {
-    width: 105,
+    width: constants.POSTER_CARD_WIDTH,
     marginLeft: 4,
     marginRight: 4,
   },
   posterImageCard: {
-    width: 105,
-    height: 155,
+    width: constants.POSTER_CARD_WIDTH,
+    height: constants.POSTER_CARD_HEIGHT,
     marginBottom: 2,
     borderRadius: 3,
   },
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
+  posterImageLoading: {
+    backgroundColor: colors.lightGrey,
+  },
   rating: {
-    marginTop: 2
+    marginTop: 2,
   },
   searchBar: {
     marginLeft: 10,
