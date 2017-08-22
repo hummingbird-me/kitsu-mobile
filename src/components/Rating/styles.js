@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
   },
   modalContent: {
     position: 'absolute',
+    backgroundColor: colors.listBackPurple,
     left: 0,
     right: 0,
     bottom: 0,
