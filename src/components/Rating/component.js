@@ -319,7 +319,7 @@ export class Rating extends PureComponent {
                     <View style={styles.modalStarRow}>
                       <Text style={styles.modalNoRatingText}>
                         No Rating
-                </Text>
+                      </Text>
                     </View>
                 }
                 {/* Slider */}

@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
   },
   modalContent: {
     position: 'absolute',
+    backgroundColor: colors.listBackPurple,
     left: 0,
     right: 0,
     bottom: 0,
@@ -68,7 +69,8 @@ export const styles = StyleSheet.create({
     fontSize: 30,
     fontFamily: 'OpenSans',
     fontWeight: '700',
-    lineHeight: 82,
+    minHeight: 82,
+    textAlignVertical: 'center',
   },
   modalSlider: {
     marginHorizontal: 30,
