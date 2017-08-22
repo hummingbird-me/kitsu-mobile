@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
+import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { Rating } from 'kitsu/components/Rating';
 
 class HomeScreen extends Component {
@@ -23,6 +24,10 @@ class HomeScreen extends Component {
     selectedImages: [],
     searchTerm: '',
   };
+
+  componentWillMount() {
+    this.props.fetchAlgoliaKeys();
+  }
 
   render() {
     const { currentUser, navigation, loading } = this.props;
@@ -90,7 +95,6 @@ class HomeScreen extends Component {
             </Text>
           </Button>
 
-
           <Rating rating={8} size="large" viewType="single" ratingSystem="regular" showNotRated={false} />
           <Rating rating={8} size="large" viewType="single" ratingSystem="advanced" showNotRated={false} />
           <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
@@ -113,4 +117,4 @@ HomeScreen.propTypes = {
   logoutUser: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { logoutUser })(HomeScreen);
+export default connect(mapStateToProps, { logoutUser, fetchAlgoliaKeys })(HomeScreen);

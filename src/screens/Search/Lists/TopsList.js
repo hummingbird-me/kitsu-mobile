@@ -164,9 +164,13 @@ class TopsList extends Component {
                   containerStyle={{
                     height: 118.6,
                     width: 79.48,
-
                   }}
-                  style={{ height: 118.6, width: 79.48, borderRadius: 3, backgroundColor: colors.imageBackColor }}
+                  style={{
+                    height: 118.6,
+                    width: 79.48,
+                    borderRadius: 3,
+                    backgroundColor: colors.imageBackColor,
+                  }}
                 />
               </TouchableOpacity>
             )}
