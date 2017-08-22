@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import { View, Image, TouchableOpacity, FlatList, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Container, Content, Left, Right, Item, Spinner } from 'native-base';
+import { Text, Container, Left, Right, Item, Spinner } from 'native-base';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
@@ -14,7 +14,6 @@ import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
 
 const RowItem = ({ type, item, onPress }) => {
-  const data = type === 'search' ? item : item.blocked;
   const buttonText = type === 'search' ? 'Block' : 'Unblock';
   return (
     <Item style={styles.sectionListItem}>
@@ -22,18 +21,18 @@ const RowItem = ({ type, item, onPress }) => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
             <Image
-              source={(data.avatar && { uri: data.avatar.small }) || defaultAvatar}
+              source={(item.avatar && { uri: item.avatar.small }) || defaultAvatar}
               style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
             />
           </View>
           <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8 }}>
-            {data.name}
+            {item.name}
           </Text>
         </View>
       </Left>
       <Right>
         <TouchableOpacity
-          onPress={() => onPress(data)}
+          onPress={() => onPress(item)}
           style={{
             backgroundColor: colors.darkGrey,
             height: 24,
@@ -63,6 +62,7 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
   };
   return (
     <FlatList
+      keyboardShouldPersistTaps={'handled'}
       removeClippedSubviews={false}
       data={hits}
       onEndReached={onEndReached}
@@ -70,7 +70,7 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
       initialNumToRender={10}
       contentContainerStyle={styles.list}
       renderItem={({ item }) => <RowItem type={'search'} item={item} onPress={onPress} />}
-      style={{ flex: 1, maxHeight: 200 }}
+      style={{ maxHeight: 200 }}
     />
   );
 };
@@ -90,7 +90,7 @@ class Blocking extends React.Component {
   state = {
     loading: true,
     blocks: [],
-    query: null,
+    searchState: {},
     error: '',
   };
 
@@ -99,17 +99,18 @@ class Blocking extends React.Component {
   }
 
   onBlockUser = async (user) => {
-    console.log('on block user called', user);
-    const token = this.props.accessToken;
+    const { currentUser, accessToken } = this.props;
     const { id } = user;
-    setToken(token);
-    this.setState({ loading: true });
+    setToken(accessToken);
+    Keyboard.dismiss();
+    this.setState({ loading: true, searchState: {} });
     try {
-      console.log('blocking');
-      await Kitsu.post('blocks', { id });
+      await Kitsu.create('blocks', {
+        blocked: { id },
+        user: { id: currentUser.id },
+      });
       this.fetchUserBlocks();
     } catch (e) {
-      console.log('failed');
       this.setState({
         error: e,
         loading: false,
@@ -122,9 +123,11 @@ class Blocking extends React.Component {
     const { blocks } = this.state;
     const { id } = user;
     setToken(token);
-    this.setState({ loading: true, query: null });
+    this.setState({ loading: true });
     try {
+      console.log('removing block of', user, ' with id ', id);
       await Kitsu.destroy('blocks', id);
+      console.log('done');
       this.setState({
         blocks: blocks.filter(v => v.id !== id),
         loading: false,
@@ -146,6 +149,7 @@ class Blocking extends React.Component {
         filter: { user: id },
         include: 'blocked',
       });
+      console.log('success', blocks);
       this.setState({
         blocks,
         loading: false,
@@ -159,12 +163,11 @@ class Blocking extends React.Component {
   };
 
   handleSearchStateChange = (searchState) => {
-    const { query } = searchState;
-    this.setState({ query: query !== '' ? query : undefined });
+    this.setState({ searchState });
   };
 
   renderResults = () => {
-    const { query } = this.state;
+    const { query } = this.state.searchState;
     return (
       <View>
         {query && <Hits onPress={this.onBlockUser} />}
@@ -173,41 +176,44 @@ class Blocking extends React.Component {
   };
 
   render() {
-    const blocks = this.state.blocks;
+    const { blocks, loading } = this.state;
     return (
       <Container style={styles.containerStyle}>
-        <Content scrollEnabled={false}>
-          <View style={{ flex: 1, marginTop: 77 }}>
-            <View
-              style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}
+        <View style={{ flex: 1, marginTop: 77 }}>
+          <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
+            <Text style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12 }}>
+              Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
+            </Text>
+            <ItemSeparator />
+            <InstantSearch
+              appId={kitsuConfig.algoliaAppId}
+              apiKey={this.props.algoliaKeys.users.key}
+              indexName={this.props.algoliaKeys.users.index}
+              searchState={this.state.searchState}
+              onSearchStateChange={this.handleSearchStateChange}
             >
-              <Text style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12 }}>
-                Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
-              </Text>
-              <ItemSeparator />
-              <InstantSearch
-                appId={kitsuConfig.algoliaAppId}
-                apiKey={this.props.algoliaKeys.users.key}
-                indexName={this.props.algoliaKeys.users.index}
-                onSearchStateChange={this.handleSearchStateChange}
-              >
-                <SearchBox placeholder={'Search Users to Block'} />
-                {this.renderResults()}
-              </InstantSearch>
-            </View>
-            <SidebarTitle style={{ marginTop: 20 }} title={'Blocked Users'} />
-            <FlatList
+              <SearchBox placeholder={'Search Users to Block'} />
+              {this.renderResults()}
+            </InstantSearch>
+          </View>
+          <SidebarTitle style={{ marginTop: 20 }} title={'Blocked Users'} />
+          {!loading
+            ? <FlatList
               data={blocks}
               keyExtractor={item => item.blocked.id}
               renderItem={({ item }) => (
-                <RowItem type={'flatlist'} item={item} onPress={this.onUnblockUser} />
-              )}
+                <RowItem
+                  type={'flatlist'}
+                  item={item.blocked}
+                  onPress={() => this.onUnblockUser(item)}
+                />
+                )}
               ListEmptyComponent={() => <Spinner />}
               ItemSeparatorComponent={() => <ItemSeparator />}
               removeClippedSubviews={false}
             />
-          </View>
-        </Content>
+            : <Spinner color={'white'} />}
+        </View>
       </Container>
     );
   }

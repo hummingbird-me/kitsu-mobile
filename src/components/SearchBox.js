@@ -13,6 +13,7 @@ export default connectSearchBox(({ refine, currentRefinement, placeholder }) => 
       onChangeText={t => refine(t)}
       style={styles.searchBoxInput}
       autoCapitalize={'none'}
+      autoCorrect={false}
       underlineColorAndroid={'transparent'}
       placeholderTextColor={colors.placeholderGrey}
     />
