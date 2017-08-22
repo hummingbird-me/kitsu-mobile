@@ -4,8 +4,12 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
+<<<<<<< 378cf38671a4e0a6bd899425e1c8843735580d74
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { Rating } from 'kitsu/components/Rating';
+=======
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+>>>>>>> cleaning up ProgressiveImage component
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -62,7 +66,10 @@ class HomeScreen extends Component {
               Create Post
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
+          <Button onPress={() => navigation.navigate('UserProfile', {
+            userId: 5554,
+          })}
+          >
             <Text>
               Logged In Profile
             </Text>
@@ -94,11 +101,6 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
-
-          <Rating rating={8} size="large" viewType="single" ratingSystem="regular" showNotRated={false} />
-          <Rating rating={8} size="large" viewType="single" ratingSystem="advanced" showNotRated={false} />
-          <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
-          <Rating rating={8} size="large" />
         </Content>
       </Container>
     );

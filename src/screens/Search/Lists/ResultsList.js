@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 
 const IMAGE_SIZE = { height: 125, width: 91 };
 

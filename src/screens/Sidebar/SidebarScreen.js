@@ -8,7 +8,7 @@
 import React, { Component } from 'react';
 import { View, Image, SectionList, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Text, Container, Icon, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 // import Icon from '../../components/Icon';

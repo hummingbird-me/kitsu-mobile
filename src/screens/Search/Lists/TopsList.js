@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import * as colors from 'kitsu/constants/colors';
 import { getDefaults } from 'kitsu/store/anime/actions';
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 
 const list = [
   { label: 'Release date', key: 'release' },
