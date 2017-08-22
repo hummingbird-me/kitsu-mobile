@@ -1,7 +1,7 @@
 import { StackNavigator } from 'react-navigation';
-import SearchFilter from '../screens/Search/SearchFilter';
-import FilterSub from '../screens/Search/FilterSub';
-import SearchCategory from '../screens/Search/SearchCategory';
+import SearchFilter from 'kitsu/screens/Search/SearchFilter';
+import FilterSub from 'kitsu/screens/Search/FilterSub';
+import SearchCategory from 'kitsu/screens/Search/SearchCategory';
 import navigationOptions from './navigationOptions';
 
 const FilterStack = StackNavigator(

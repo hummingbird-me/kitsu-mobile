@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
-import * as colors from '../constants/colors';
-import { defaultAvatar } from '../constants/app';
+import * as colors from 'kitsu/constants/colors';
 
 let i = 0;
 const genKey = () => `key:${++i}`;
@@ -44,7 +42,7 @@ class ProgressiveImage extends Component {
 
   render() {
     const { key, thumbnailOpacity } = this.state;
-    const { source, style, resizeMode, hasOverlay } = this.props;
+    const { source, style, resizeMode, hasOverlay, children } = this.props;
     // console.log(this.state);
     return (
       <View
@@ -75,7 +73,7 @@ class ProgressiveImage extends Component {
               position: 'absolute',
               top: 0,
             }}
-          />}
+          >{children}</LinearGradient>}
       </View>
     );
   }

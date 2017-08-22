@@ -1,6 +1,6 @@
-import * as types from '../types';
-import { Kitsu, setToken } from '../../config/api';
-import { loginUser } from '../auth/actions';
+import * as types from 'kitsu/store/types';
+import { Kitsu, setToken } from 'kitsu/config/api';
+import { loginUser } from 'kitsu/store/auth/actions';
 
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
@@ -9,13 +9,12 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
   try {
     const user = await Kitsu.findAll('users', {
       fields: {
-        users: 'id,name,createdAt,email,avatar,about,bio',
+        users: 'id,name,createdAt,email,avatar,about,bio,ratingSystem',
       },
       filter: { self: true },
     });
     dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
   } catch (e) {
-    console.log(e);
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
   }
 };

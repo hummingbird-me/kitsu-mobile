@@ -1,10 +1,7 @@
 import React from 'react';
-import { View, Dimensions, Text, Image } from 'react-native';
+import { View, Dimensions, Text } from 'react-native';
 import { Button, Icon, Left, Right } from 'native-base';
-
 import LinearGradient from 'react-native-linear-gradient';
-import ProgressiveImage from './ProgressiveImage';
-import { defaultCover } from '../constants/app';
 
 const CustomHeader = ({
   navigation,

@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { Button, Left, Right, Thumbnail } from 'native-base';
+import { View, TextInput } from 'react-native';
+import { Thumbnail } from 'native-base';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { defaultAvatar } from '../../constants/app';
+import { defaultAvatar } from 'kitsu/constants/app';
 
 import Card from './Card';
 

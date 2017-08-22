@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import * as colors from '../../constants/colors';
+import * as colors from 'kitsu/constants/colors';
 
 export default StyleSheet.create({
   container: {
@@ -36,6 +36,7 @@ export default StyleSheet.create({
     lineHeight: 21,
     fontFamily: 'OpenSans',
     textAlign: 'center',
+    backgroundColor: 'transparent',
   },
   dotContainer: {
     flexDirection: 'row',

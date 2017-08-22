@@ -5,8 +5,8 @@ import { Button, Container, Content, Icon, Left, Right, Footer } from 'native-ba
 import PropTypes from 'prop-types';
 import ModalPicker from 'react-native-modal-picker';
 import _ from 'lodash';
-import { getStreamers } from '../../store/anime/actions';
-import * as colors from '../../constants/colors';
+import { getStreamers } from 'kitsu/store/anime/actions';
+import * as colors from 'kitsu/constants/colors';
 
 class SearchFilter extends Component {
   static navigationOptions = () => ({

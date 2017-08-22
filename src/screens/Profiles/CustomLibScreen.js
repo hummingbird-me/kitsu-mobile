@@ -8,20 +8,14 @@ import {
   Text,
   TextInput,
   Image,
-  Easing,
   Animated,
-  TouchableHighlight,
 } from 'react-native';
 import Swipeable from 'react-native-swipeable';
 import { connect } from 'react-redux';
 import { Icon, Button, Container } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import AweIcon from 'react-native-vector-icons/FontAwesome';
-import { OptimizedFlatList } from 'react-native-optimized-flatlist';
-
-import SimpleTabBar from '../../components/SimpleTabBar';
-import ProgressiveImage from '../../components/ProgressiveImage';
-import Swiper from '../../components/Swiper';
+import SimpleTabBar from 'kitsu/components/SimpleTabBar';
 
 const { width } = Dimensions.get('window');
 

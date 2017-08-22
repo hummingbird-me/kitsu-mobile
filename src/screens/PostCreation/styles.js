@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { white, darkPurple } from '../../constants/colors';
+import { white } from 'kitsu/constants/colors';
 
 const styles = StyleSheet.create({
   container: {

@@ -5,8 +5,8 @@ import { Button, Container, Content, Icon, Left, Right, Footer } from 'native-ba
 import PropTypes from 'prop-types';
 import MultiSlider from 'react-native-multi-slider';
 
-import { getCategories } from '../../store/anime/actions';
-import * as colors from '../../constants/colors';
+import { getCategories } from 'kitsu/store/anime/actions';
+import * as colors from 'kitsu/constants/colors';
 
 const width = Dimensions.get('screen').width - 40;
 
