@@ -61,7 +61,7 @@ class PrivacySettings extends Component {
         loading: false,
       });
     }
-  }
+  };
 
   render() {
     const loading = this.state.loading;
@@ -134,6 +134,14 @@ const mapStateToProps = ({ auth, user }) => ({
   currentUser: user.currentUser,
 });
 
-PrivacySettings.propTypes = {};
+PrivacySettings.propTypes = {
+  accessToken: PropTypes.string,
+  currentUser: PropTypes.object,
+};
+
+PrivacySettings.defaultProps = {
+  accessToken: null,
+  currentUser: {},
+};
 
 export default connect(mapStateToProps, {})(PrivacySettings);

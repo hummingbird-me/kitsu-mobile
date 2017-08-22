@@ -55,13 +55,25 @@ export default (state = INITIAL_STATE, action) => {
         signingUp: false,
         signupError: action.payload,
       };
-    case types.UPDATE_DISCOVERABILITY_SUCCESS:
+    case types.UPDATE_GENERAL_SETTINGS:
       return {
         ...state,
+        loading: true,
+      };
+    case types.UPDATE_GENERAL_SETTINGS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
         currentUser: {
           ...state.currentUser,
-          shareToGlobal: action.payload,
+          ...action.payload,
         },
+      };
+    case types.UPDATE_GENERAL_SETTINGS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: '', //TODO: handle the error ~ Toast?
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;

@@ -46,17 +46,17 @@ export const createUser = (data, nav) => async (dispatch, getState) => {
   }
 };
 
-export const updatePersonalSettings = data => async (dispatch, getState) => {
-  dispatch({ type: types.UPDATE_PERSONAL_SETTINGS });
+export const updateGeneralSettings = data => async (dispatch, getState) => {
+  dispatch({ type: types.UPDATE_GENERAL_SETTINGS });
   const { user, auth } = getState();
-  const { id } = user.currentUser.id;
+  const { id } = user.currentUser;
   const token = auth.tokens.access_token;
   setToken(token);
   try {
-    const { name, password } = data;
-    await Kitsu.update('users', { id, name, password });
-    dispatch({ type: types.UPDATE_PERSONAL_SETTINGS_SUCCESS });
+    // TODO: instructions pending: implement a way to update password.
+    await Kitsu.update('users', { id, ...data });
+    dispatch({ type: types.UPDATE_GENERAL_SETTINGS_SUCCESS, payload: data });
   } catch (e) {
-    dispatch({ type: types.UPDATE_PERSONAL_SETTINGS_FAIL });
+    dispatch({ type: types.UPDATE_GENERAL_SETTINGS_FAIL });
   }
 };

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { Container, Icon, Item, Input } from 'native-base';
+import { Container, Icon } from 'native-base';
 import { InstantSearch } from 'react-instantsearch/native';
-import { connectInfiniteHits, connectSearchBox } from 'react-instantsearch/connectors';
+import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
-
-import { ResultsList, TopsList } from './Lists';
+import SearchBox from 'kitsu/components/SearchBox';
 import { kitsuConfig } from 'kitsu/config/env';
 import * as colors from 'kitsu/constants/colors';
+import { ResultsList, TopsList } from './Lists';
 
 const styles = {
   container: {
@@ -17,30 +17,6 @@ const styles = {
   },
   scrollView: {
     backgroundColor: colors.listBackPurple,
-  },
-  searchBoxContainer: {
-    height: 36,
-    backgroundColor: colors.white,
-    paddingLeft: 14,
-    paddingRight: 14,
-    borderColor: colors.imageGrey,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginLeft: 9,
-    marginRight: 9,
-    borderRadius: 2,
-  },
-  searchBoxInput: {
-    fontSize: 13,
-    fontFamily: 'OpenSans',
-    color: colors.placeholderGrey,
-    alignSelf: 'center',
-    textAlign: 'center',
-  },
-  searchBoxIcon: {
-    color: '#9D9D9D',
-    fontSize: 17,
-    alignItems: 'center',
-    marginTop: 5,
   },
   tabBar: {
     backgroundColor: colors.listBackPurple,
@@ -83,19 +59,6 @@ const styles = {
     fontSize: 12,
   },
 };
-
-const SearchBox = connectSearchBox(({ refine, currentRefinement, placeholder }) => (
-  <Item style={styles.searchBoxContainer}>
-    <Icon name="ios-search" style={styles.searchBoxIcon} />
-    <Input
-      placeholder={placeholder}
-      value={currentRefinement}
-      onChangeText={t => refine(t)}
-      style={styles.searchBoxInput}
-      placeholderTextColor={colors.placeholderGrey}
-    />
-  </Item>
-));
 
 const Hits = connectInfiniteHits(ResultsList);
 
@@ -182,7 +145,7 @@ class SearchScreen extends Component {
 
   renderLabel = ({ route }) => {
     let labelTextStyle = styles.tabBarText;
-    if (parseInt(route.key) === this.state.index + 1) {
+    if (parseInt(route.key, 10) === this.state.index + 1) {
       labelTextStyle = { ...styles.tabBarText, ...styles.tabBarTextActive };
     }
 

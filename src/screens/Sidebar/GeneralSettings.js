@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { Text, Button, Container, Content, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import { updatePersonalSettings } from 'kitsu/store/user/actions';
+import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
+import _ from 'lodash';
 
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarDropdown } from './common/';
 
@@ -31,6 +32,20 @@ class GeneralSettings extends Component {
     };
   }
 
+  onSavePersonalSettings = () => {
+    // TODO: HANDLE INPUT VALIDATION.
+    const { name, email, password, sfwFilter } = this.state;
+    const { currentUser } = this.props;
+    const valuesToUpdate = {
+      ...((name !== currentUser.name && { name }) || {}),
+      ...((email !== currentUser.email && { email }) || {}),
+      ...((sfwFilter !== currentUser.sfwFilter && { sfwFilter }) || {}),
+    };
+    if (!_.isEmpty(valuesToUpdate)) {
+      this.props.updateGeneralSettings(valuesToUpdate);
+    }
+  };
+
   toggle = (nextText) => {
     LayoutAnimation.configureNext({
       duration: 120,
@@ -47,12 +62,13 @@ class GeneralSettings extends Component {
       // this means user clears the input.
       this.setState({ shouldShowValidationInput: false });
     } else if (this.state.password.length > 6) {
+      // only show after 8 chars
       this.setState({ shouldShowValidationInput: true });
     }
   };
 
   render() {
-    const { loading, updatePersonalSettings } = this.props;
+    const { loading } = this.props;
     return (
       // TODO: handle marginTop: 77 for all other sidebar screens.
       (
@@ -134,7 +150,7 @@ class GeneralSettings extends Component {
                 <Button
                   block
                   disabled={false && loading}
-                  onPress={() => updatePersonalSettings()}
+                  onPress={this.onSavePersonalSettings}
                   style={{
                     backgroundColor: colors.green,
                     height: 47,
@@ -175,6 +191,16 @@ const mapStateToProps = ({ user }) => {
   };
 };
 
-GeneralSettings.propTypes = {};
+GeneralSettings.propTypes = {
+  updateGeneralSettings: PropTypes.func,
+  currentUser: PropTypes.object,
+  loading: PropTypes.bool,
+};
 
-export default connect(mapStateToProps, { updatePersonalSettings })(GeneralSettings);
+GeneralSettings.defaultProps = {
+  updateGeneralSettings: () => {},
+  currentUser: {},
+  loading: true,
+};
+
+export default connect(mapStateToProps, { updateGeneralSettings })(GeneralSettings);
