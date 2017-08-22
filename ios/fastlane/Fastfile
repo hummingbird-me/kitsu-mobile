@@ -25,6 +25,26 @@ platform :ios do
     scan
   end
 
+  desc "Deploy a new version to the App Store"
+  lane :update_match do
+    register_devices(
+      devices_file: "./fastlane/devices.txt"
+    )
+
+    match(
+      app_identifier: "kitsu-san",
+      type: "development",
+      force_for_new_devices: true
+    )
+
+    match(
+      app_identifier: "kitsu-san",
+      type: "adhoc",
+      force_for_new_devices: true
+    )
+
+  end
+
   desc "Submit a new Beta Build to crashlytics"
   desc "This will also make sure the profile is up to date"
   lane :beta do |values|
@@ -86,7 +106,7 @@ platform :ios do
       xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AdHoc kitsu-san'"
     )
 
-    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io'] # You can list more emails here
+    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io', 'edencakir@gmail.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     crashlytics(
