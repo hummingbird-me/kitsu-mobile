@@ -25,6 +25,26 @@ platform :ios do
     scan
   end
 
+  desc "Deploy a new version to the App Store"
+  lane :update_match do
+    register_devices(
+      devices_file: "./fastlane/devices.txt"
+    )
+
+    match(
+      app_identifier: "kitsu-san",
+      type: "development",
+      force_for_new_devices: true
+    )
+
+    match(
+      app_identifier: "kitsu-san",
+      type: "adhoc",
+      force_for_new_devices: true
+    )
+
+  end
+
   desc "Submit a new Beta Build to crashlytics"
   desc "This will also make sure the profile is up to date"
   lane :beta do |values|
@@ -45,7 +65,7 @@ platform :ios do
 		)
 
     register_devices(
-      devices_file: "./fastlane/devices.txt",
+      devices_file: "./fastlane/devices.txt"
     )
 
     # After registering the new devices, we'll make sure to update the provisioning profile if necessary
@@ -53,6 +73,7 @@ platform :ios do
     match(
       app_identifier: "kitsu-san",
       type: "development",
+      force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
       readonly: true,  #readonly mode to be sure it won't create any new certificates or profiles.
       keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
       keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
@@ -60,13 +81,13 @@ platform :ios do
 
     match(
       app_identifier: "kitsu-san",
-      type: "appstore",
+      type: "adhoc",
       force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
       # clone_branch_directly: true,
-      verbose: true,
       readonly: true,  #readonly mode to be sure it won't create any new certificates or profiles.
       keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"],
+      verbose: true
     )
 
     # Change build number (requirement of Testflight).
@@ -78,12 +99,14 @@ platform :ios do
     gym(
       scheme: "kitsu_mobile",
       clean: true,
+      configuration: "Release",
       project: "./kitsu_mobile.xcodeproj",
       # workspace: "./kitsu_mobile.xcworkspace" # if using pods
-      export_method: "app-store"
+      export_method: "ad-hoc",
+      xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AdHoc kitsu-san'"
     )
 
-    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io'] # You can list more emails here
+    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io', 'edencakir@gmail.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     crashlytics(
@@ -92,7 +115,8 @@ platform :ios do
       emails: emails,
       groups: groups,
       debug: true,
-      notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
+      # there is a bug of crashlytics for notes (https://github.com/fastlane/fastlane/issues/6325)
+      # notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
       notifications: true  # Should this distribution notify your testers via email?
     )
 
@@ -102,9 +126,43 @@ platform :ios do
 
   desc "Deploy a new version to the App Store"
   lane :release do
-    # match(type: "appstore")
+    # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
+    create_keychain(
+      name: ENV["MATCH_KEYCHAIN_NAME"],
+      password: ENV["MATCH_KEYCHAIN_PASSWORD"],
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      add_to_search_list: true
+    )
+
+    unlock_keychain(
+			path: ENV["MATCH_KEYCHAIN_NAME"],
+			add_to_search_list: :replace,
+      password: ENV['MATCH_KEYCHAIN_PASSWORD']
+		)
+
+    match(
+      app_identifier: "kitsu-san",
+      type: "appstore",
+      # clone_branch_directly: true,
+      readonly: true,  #readonly mode to be sure it won't create any new certificates or profiles.
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
+    )
+
     # snapshot
-    gym(scheme: "kitsu_mobile") # Build your app - more options available
+
+    # Build a release
+    gym(
+      scheme: "kitsu_mobile",
+      clean: true,
+      configuration: "Release",
+      project: "./kitsu_mobile.xcodeproj",
+      # workspace: "./kitsu_mobile.xcworkspace" # if using pods
+      export_method: "app-store",
+      xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AppStore kitsu-san'"
+    )
     deliver(force: true)
     # frameit
   end

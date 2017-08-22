@@ -41,19 +41,8 @@ platform :android do
   lane :beta do |values|
     # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
 
-    emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com'] # You can list more emails here
+    emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com', 'josh.madewell@gmail.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
-
-    path = '../app/build.gradle'
-    re = /versionCode\s+(\d+)/
-
-    s = File.read(path)
-    versionCode = s[re, 1].to_i
-    s[re, 1] = (versionCode + 1).to_s
-
-    f = File.new(path, 'w')
-    f.write(s)
-    f.close
 
     bump_version_code
     gradle(
@@ -76,7 +65,8 @@ platform :android do
       emails: emails,
       groups: groups,
       debug: true,
-      notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
+      # there is a bug of crashlytics for notes (https://github.com/fastlane/fastlane/issues/6325)
+      # notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
       notifications: true  # Should this distribution notify your testers via email?
     )
 

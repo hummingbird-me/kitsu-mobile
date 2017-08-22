@@ -136,7 +136,7 @@ class GeneralSettings extends Component {
                   disabled={false && loading}
                   onPress={() => updatePersonalSettings()}
                   style={{
-                    backgroundColor: colors.lightGreen,
+                    backgroundColor: colors.green,
                     height: 47,
                     borderRadius: 3,
                   }}

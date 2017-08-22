@@ -99,7 +99,7 @@ class PrivacySettings extends Component {
                 disabled={false && loading}
                 onPress={this.onSavePrivacySettings}
                 style={{
-                  backgroundColor: colors.lightGreen,
+                  backgroundColor: colors.green,
                   height: 47,
                   borderRadius: 3,
                 }}

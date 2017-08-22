@@ -29,7 +29,7 @@ import { defaultCover } from 'kitsu/constants/app';
 import {
   fetchProfile,
   fetchProfileFavorites,
-  fetchLibraryEntires,
+  fetchUserFeed,
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
@@ -40,7 +40,6 @@ class ProfileScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     tabBarIcon: ({ tintColor }) => (
       <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
-      //<Image source={require('../../assets/img/tabbar_icons/menu.png')} style={{ tintColor: tintColor, width: 20, height: 20.44 }} />
     ),
     header: null,
   });
@@ -50,7 +49,7 @@ class ProfileScreen extends Component {
   componentDidMount() {
     const { userId } = this.props;
     this.props.fetchProfile(userId);
-    this.props.fetchLibraryEntires(userId, 12);
+    this.props.fetchUserFeed(userId, 12);
     this.props.fetchProfileFavorites(userId, 'character');
     this.props.fetchProfileFavorites(userId, 'manga');
     this.props.fetchProfileFavorites(userId, 'anime');
@@ -256,7 +255,9 @@ class ProfileScreen extends Component {
       entries,
     } = this.props;
 
-    const { userId } = this.props;
+    const { userId } = this.state;
+    const libraryActivity = entries.slice(0, 12);
+
     return (
       <View>
         <View
@@ -302,8 +303,15 @@ class ProfileScreen extends Component {
           />
         </View>
         <View style={{ borderRadius: 5 }}>
-          <CardFull single singleText="View Library" heading="Library Activity">
-            {this.renderScrollableLibrary(entries.slice(0, 12), 110, true, 'entries')}
+          <CardFull
+            single
+            singleText="View Library"
+            heading="Library Activity"
+            onPress={() => this.props.navigation.navigate('Library', {
+              profile,
+            })}
+          >
+            {this.renderScrollableLibrary(libraryActivity)}
           </CardFull>
           <CardFull
             single
@@ -350,6 +358,7 @@ class ProfileScreen extends Component {
               this.props.navigation.navigate('FavoriteMedia', {
                 label: 'Favorite Media',
                 userId,
+                profile,
               })}
           >
             {anime.length > 0
@@ -587,7 +596,7 @@ ProfileScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   fetchProfileFavorites: PropTypes.func.isRequired,
-  fetchLibraryEntires: PropTypes.func.isRequired,
+  fetchUserFeed: PropTypes.func.isRequired,
   fetchProfile: PropTypes.func.isRequired,
   getUserFeed: PropTypes.func.isRequired,
 };
@@ -646,6 +655,6 @@ const getInfo = (profile) => {
 export default connect(mapStateToProps, {
   fetchProfile,
   fetchProfileFavorites,
-  fetchLibraryEntires,
+  fetchUserFeed,
   getUserFeed,
 })(ProfileScreen);
