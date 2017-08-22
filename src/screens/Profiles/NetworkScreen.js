@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { Icon, Button, Container, Spinner } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import AweIcon from 'react-native-vector-icons/FontAwesome';
-import SimpleTabBar from 'kitsu/components/SimpleTabBar';
+import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { fetchNetwork } from 'kitsu/store/profile/actions';
 import { defaultAvatar } from 'kitsu/constants/app';
 
@@ -189,7 +189,7 @@ class NetworkScreen extends Component {
     const { followed, follower, profile, networkLoading } = this.props;
     return (
       <Container>
-        <ScrollableTabView renderTabBar={() => <SimpleTabBar />}>
+        <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
           <View
             tabLabel={`Following · ${profile.followingCount}`}
             style={{ paddingTop: 0, backgroundColor: 'white' }}

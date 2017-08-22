@@ -81,7 +81,7 @@ class Library extends React.Component {
               disabled={false && loading}
               onPress={() => {}}
               style={{
-                backgroundColor: colors.lightGreen,
+                backgroundColor: colors.green,
                 height: 47,
                 borderRadius: 3,
               }}

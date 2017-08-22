@@ -1,6 +1,23 @@
 import { REHYDRATE } from 'redux-persist/constants';
 import * as types from 'kitsu/store/types';
 
+const userLibraryInitial = {
+  anime: {
+    completed: { data: [], loading: false },
+    current: { data: [], loading: false },
+    dropped: { data: [], loading: false },
+    onHold: { data: [], loading: false },
+    planned: { data: [], loading: false },
+  },
+  manga: {
+    completed: { data: [], loading: false },
+    current: { data: [], loading: false },
+    dropped: { data: [], loading: false },
+    onHold: { data: [], loading: false },
+    planned: { data: [], loading: false },
+  },
+};
+
 const INITIAL_STATE = {
   profile: {},
   favoritesLoading: {},
@@ -9,6 +26,11 @@ const INITIAL_STATE = {
   manga: {},
   anime: {},
   library: {},
+  userLibrary: {
+    ...userLibraryInitial,
+    loading: false,
+    searchTerm: '',
+  },
   followed: {},
   follower: {},
   errorFav: {},
@@ -61,6 +83,75 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loadingLibrary: false,
         error: action.payload,
+      };
+    case types.FETCH_USER_LIBRARY:
+      return {
+        ...state,
+        userLibrary: {
+          ...userLibraryInitial,
+          loading: true,
+          searchTerm: action.searchTerm,
+        },
+      };
+    case types.FETCH_USER_LIBRARY_SUCCESS:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          loading: false,
+        },
+      };
+    case types.FETCH_USER_LIBRARY_FAIL:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          loading: false,
+        },
+      };
+    case types.FETCH_USER_LIBRARY_TYPE:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.library]: {
+            ...state.userLibrary[action.library],
+            [action.status]: {
+              ...state.userLibrary[action.library][action.status],
+              loading: true,
+            },
+          },
+          searchTerm: action.searchTerm,
+        },
+      };
+    case types.FETCH_USER_LIBRARY_TYPE_SUCCESS:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.library]: {
+            ...state.userLibrary[action.library],
+            [action.status]: {
+              data: action.data,
+              meta: action.data.meta,
+              loading: false,
+            },
+          },
+        },
+      };
+    case types.FETCH_USER_LIBRARY_TYPE_FAIL:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.library]: {
+            ...state.userLibrary[action.library],
+            [action.status]: {
+              ...state.userLibrary[action.library][action.status],
+              loading: false,
+            },
+          },
+        },
       };
     case types.FETCH_USER_FAVORITES:
       return {

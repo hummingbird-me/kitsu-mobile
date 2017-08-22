@@ -65,7 +65,7 @@ const SignupForm = ({ onSubmit, loading, data, errors }) => {
           disabled={loading}
           onPress={() => onPress(onSubmit)}
           style={{
-            backgroundColor: colors.lightGreen,
+            backgroundColor: colors.green,
             height: 47,
             borderRadius: 3,
           }}

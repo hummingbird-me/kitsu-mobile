@@ -31,7 +31,7 @@ const styleObj = {
     alignSelf: 'center',
   },
   buttonLast: {
-    backgroundColor: colors.lightGreen,
+    backgroundColor: colors.green,
     borderWidth: 0,
   },
 };

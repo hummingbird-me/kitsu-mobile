@@ -21,6 +21,7 @@ class HomeScreen extends Component {
 
   state = {
     selectedImages: [],
+    searchTerm: '',
   };
 
   render() {
@@ -58,7 +59,24 @@ class HomeScreen extends Component {
           </Button>
           <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
             <Text>
-              Nuck
+              Logged In Profile
+            </Text>
+          </Button>
+          <Button onPress={() => navigation.navigate('Library', {
+            profile: {
+              id: 5554,
+              name: 'Nuck',
+              coverImage: {
+                original: 'https://media.kitsu.io/users/cover_images/5554/original.png?1487275574',
+              },
+              avatar: {
+                tiny: 'https://media.kitsu.io/users/avatars/5554/tiny.png?1502777221',
+              },
+            },
+          })}
+          >
+            <Text>
+              Nuck Library
             </Text>
           </Button>
           <Button onPress={() => this.props.logoutUser(navigation)}>
@@ -72,19 +90,11 @@ class HomeScreen extends Component {
             </Text>
           </Button>
 
-          <View>
-            <Rating rating={8} size="tiny" viewType="single" ratingSystem="regular" showNotRated={false} />
-          </View>
 
-          <View>
-            <Rating rating={8} size="large" viewType="single" ratingSystem="regular" />
-          </View>
-
-          <View>
-            <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
-          </View>
-          {/* <Rating rating={8} size="small" viewType="single" style={{ height: 10, borderWidth: 1 }} /> */}
-          {/* <Rating rating={8} size="normal" viewType="single" style={{ height: 10, borderWidth: 1 }} /> */}
+          <Rating rating={8} size="large" viewType="single" ratingSystem="regular" showNotRated={false} />
+          <Rating rating={8} size="large" viewType="single" ratingSystem="advanced" showNotRated={false} />
+          <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
+          <Rating rating={8} size="large" />
         </Content>
       </Container>
     );

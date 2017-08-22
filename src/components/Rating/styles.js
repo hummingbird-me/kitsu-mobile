@@ -9,10 +9,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   selected: {
-    margin: 3,
+    marginRight: 4,
   },
   default: {
-    margin: 3,
+    marginRight: 4,
     opacity: 0.4,
   },
   modalContent: {
@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     color: colors.lightGrey,
   },
   modalDoneButton: {
-    color: colors.activeYellow,
+    color: colors.yellow,
   },
   modalBody: {
     flexGrow: 1,
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   textStar: {
-    color: colors.orange,
+    color: colors.yellow,
     fontWeight: '700',
   },
   textNotRated: {
@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
   },
   textMeh: {
-    color: colors.orange,
+    color: colors.yellow,
     fontWeight: '700',
   },
   textGood: {

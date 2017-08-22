@@ -22,7 +22,7 @@ export const fetchProfile = id => async (dispatch) => {
   }
 };
 
-export const fetchLibraryEntires = (userId, limit = 20) => async (dispatch, getState) => {
+export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
   dispatch({ type: types.FETCH_USER_LIB_ENTRIES });
   try {
     const results = await Kitsu.one('userFeed', userId).get({
@@ -95,11 +95,108 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
   }
 };
 
+const defaultFetchUserLibraryOptions = {
+  limit: 10,
+  searchTerm: '',
+};
+
+export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState) => {
+  const options = {
+    ...defaultFetchUserLibraryOptions,
+    ...fetchOptions,
+  };
+
+  const filter = {
+    userId: options.userId,
+    status: options.status === 'onHold' ? 'on_hold' : options.status,
+    kind: options.library,
+
+  };
+
+  const { userLibrary } = getState().profile;
+  let { data } = userLibrary[options.library][options.status];
+  const searchTerm = options.searchTerm || userLibrary.searchTerm;
+  if (options.searchTerm) {
+    filter.title = searchTerm;
+  }
+
+  dispatch({
+    searchTerm,
+    type: types.FETCH_USER_LIBRARY_TYPE,
+    library: options.library,
+    status: options.status,
+    fetchType: options.fetchType,
+  });
+
+  try {
+    const libraryEntries = await Kitsu.findAll('libraryEntries', {
+      filter,
+      include: 'anime,manga',
+      page: {
+        limit: options.limit,
+        offset: data.length,
+      },
+      sort: '-updatedAt',
+    });
+
+    if (options.searchTerm) {
+      data = libraryEntries;
+    } else {
+      data = data.concat(libraryEntries);
+      data.meta = libraryEntries.meta;
+    }
+
+    dispatch({
+      data,
+      type: types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
+      library: options.library,
+      status: options.status,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
+      error,
+    });
+  }
+};
+
+export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, getState) => {
+  dispatch({
+    searchTerm,
+    type: types.FETCH_USER_LIBRARY,
+  });
+
+  try {
+    await Promise.all([
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'planned' })(dispatch, getState),
+    ]);
+
+    dispatch({
+      type: types.FETCH_USER_LIBRARY_SUCCESS,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: types.FETCH_USER_LIBRARY_FAIL,
+      error,
+    });
+  }
+};
+
 export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 0) => async (
   dispatch,
   getState,
 ) => {
-  console.log(dispatch);
   const networkType = {
     followed: 'follower',
     follower: 'followed',

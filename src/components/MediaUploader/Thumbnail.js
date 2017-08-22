@@ -79,7 +79,7 @@ const styles = {
   selectionRectangle: {
     flex: 1,
     borderWidth: 4,
-    borderColor: colors.lightGreen,
+    borderColor: colors.green,
   },
   selectionNumber: {
     position: 'absolute',
@@ -88,7 +88,7 @@ const styles = {
     width: 25,
     height: 25,
 
-    backgroundColor: colors.lightGreen,
+    backgroundColor: colors.green,
     color: colors.white,
 
     textAlign: 'center',
