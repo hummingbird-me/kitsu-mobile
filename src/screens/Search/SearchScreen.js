@@ -1,13 +1,103 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Container, Icon, Item, Input } from 'native-base';
-import PropTypes from 'prop-types';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
+import { InstantSearch } from 'react-instantsearch/native';
+import { connectInfiniteHits, connectSearchBox } from 'react-instantsearch/connectors';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
+import { connect } from 'react-redux';
+
+import { ResultsList, TopsList } from './Lists';
+import { kitsuConfig } from 'kitsu/config/env';
 import * as colors from 'kitsu/constants/colors';
-import { search } from 'kitsu/store/anime/actions';
-import SegmentTabBar from 'kitsu/components/SegmentTabBar';
-import { ResultsList, TopsList, UsersList } from './Lists';
+
+const styles = {
+  container: {
+    backgroundColor: colors.listBackPurple,
+    flex: 1,
+  },
+  scrollView: {
+    backgroundColor: colors.listBackPurple,
+  },
+  searchBoxContainer: {
+    height: 36,
+    backgroundColor: colors.white,
+    paddingLeft: 14,
+    paddingRight: 14,
+    borderColor: colors.imageGrey,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginLeft: 9,
+    marginRight: 9,
+    borderRadius: 2,
+  },
+  searchBoxInput: {
+    fontSize: 13,
+    fontFamily: 'OpenSans',
+    color: colors.placeholderGrey,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  searchBoxIcon: {
+    color: '#9D9D9D',
+    fontSize: 17,
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  tabBar: {
+    backgroundColor: colors.listBackPurple,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+    height: 40,
+    paddingRight: 5,
+    paddingLeft: 5,
+    shadowColor: 'black',
+    shadowOpacity: 0.1,
+    shadowRadius: StyleSheet.hairlineWidth,
+    marginRight: 28,
+    marginLeft: 28,
+  },
+  tabBarItem: {
+    height: 27,
+    marginTop: 0,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 0,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+  },
+  tabBarTextActive: {
+    color: colors.tabbarSelectedTextColor,
+    fontFamily: 'OpenSans',
+    fontWeight: '600',
+    opacity: 1,
+    fontSize: 12,
+  },
+  tabBarText: {
+    color: '#ffffff',
+    fontFamily: 'OpenSans',
+    fontWeight: '600',
+    opacity: 0.6,
+    fontSize: 12,
+  },
+};
+
+const SearchBox = connectSearchBox(({ refine, currentRefinement, placeholder }) => (
+  <Item style={styles.searchBoxContainer}>
+    <Icon name="ios-search" style={styles.searchBoxIcon} />
+    <Input
+      placeholder={placeholder}
+      value={currentRefinement}
+      onChangeText={t => refine(t)}
+      style={styles.searchBoxInput}
+      placeholderTextColor={colors.placeholderGrey}
+    />
+  </Item>
+));
+
+const Hits = connectInfiniteHits(ResultsList);
 
 class SearchScreen extends Component {
   static navigationOptions = {
@@ -22,201 +112,116 @@ class SearchScreen extends Component {
     ),
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      active: 'anime',
-      query: '',
-      index: 0,
-      searchVisible: true,
-    };
-
-    this.segmentChange = this.segmentChange.bind(this);
-    this.search = this.search.bind(this);
-    this.handleSearchQuery = this.handleSearchQuery.bind(this);
-    this.renderSearchBar = this.renderSearchBar.bind(this);
-    this.loadMore = this.loadMore.bind(this);
-    this.refresh = this.refresh.bind(this);
-  }
-
-  segmentChange(e, active) {
-    this.setState({ active });
-    this.search(this.state.query, active);
-  }
-
-  search(query, active, index = 0) {
-    if (query.length > 0) {
-      this.props.search({ text: query }, {}, index, null, active);
-      // _.debounce(() => this.props.search({ text: query }, {}, index, null, active), 1000);
-    }
-  }
-
-  loadMore() {
-    const { query, active } = this.state;
-    if (!this.props.loading) {
-      const index = this.state.index + 1;
-      this.search(query, active, index);
-      this.setState({ index });
-    }
-  }
-
-  refresh() {
-    this.setState({ loading: true, index: 0 });
-    const { query, active } = this.state;
-    if (query.length > 0) {
-      this.search(query, active);
-    }
-  }
-
-  handleSearchQuery(query) {
-    this.setState({ query });
-    if (query.length > 0) {
-      this.setState({ searchVisible: false });
-    } else {
-      this.setState({ searchVisible: true });
-    }
-    this.search(query, this.state.active);
-  }
-  showSearchIcon = function (options) {
-    // if(this.searchVisible)
-    // {
-    return {
-      color: '#9D9D9D',
-      fontSize: 17,
-      alignItems: 'center',
-      marginTop: 5,
-    };
-    //  }
-    //  else {
-    //    return {color: '#ffffff'};
-    //  }
+  state = {
+    query: undefined,
+    index: 0,
+    routes: [
+      {
+        key: 'anime',
+        title: 'Anime',
+        apiKey: this.props.algoliaKeys.media.key,
+        indexName: this.props.algoliaKeys.media.index,
+      },
+      {
+        key: 'manga',
+        title: 'Manga',
+        apiKey: this.props.algoliaKeys.posts.key,
+        indexName: this.props.algoliaKeys.posts.index,
+      },
+      {
+        key: 'users',
+        title: 'Users',
+        apiKey: this.props.algoliaKeys.users.key,
+        indexName: this.props.algoliaKeys.users.index,
+      },
+    ],
   };
-  renderSearchBar(active) {
+
+  renderScene = ({ route }) => (
+    <InstantSearch
+      appId={kitsuConfig.algoliaAppId}
+      apiKey={route.apiKey}
+      indexName={route.indexName}
+      onSearchStateChange={this.handleSearchStateChange}
+    >
+      <SearchBox placeholder={`Search ${route.title}`} />
+      {this.renderSubScene(route)}
+    </InstantSearch>
+  );
+
+  renderSubScene = (route) => {
     const { query } = this.state;
+    const { navigation } = this.props;
+
+    switch (route.key) {
+      case 'users':
+        return (
+          <View>
+            {query && <Hits />}
+          </View>
+        );
+      default: {
+        return (
+          <ScrollView style={styles.scrollView}>
+            {!query && <TopsList active={route.key} mounted navigation={navigation} />}
+            {query && <Hits />}
+          </ScrollView>
+        );
+      }
+    }
+  };
+
+  handleSearchStateChange = (searchState) => {
+    const { query } = searchState;
+    this.setState({ query: query !== '' ? query : undefined });
+  };
+
+  handleIndexChange = index => this.setState({ index });
+
+  renderIndicator = () => <View />;
+
+  renderLabel = ({ route }) => {
+    let labelTextStyle = styles.tabBarText;
+    if (parseInt(route.key) === this.state.index + 1) {
+      labelTextStyle = { ...styles.tabBarText, ...styles.tabBarTextActive };
+    }
 
     return (
-      <Item
-        style={{
-          height: 36,
-          backgroundColor: colors.white,
-          paddingLeft: 14,
-          paddingRight: 14,
-          borderColor: colors.imageGrey,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          marginLeft: 9,
-          marginRight: 9,
-          borderRadius: 2,
-        }}
-      >
-        <Icon name="ios-search" style={this.showSearchIcon()} />
-        <Input
-          placeholder={`Search ${active}`}
-          value={query}
-          onChangeText={this.handleSearchQuery}
-          style={{
-            fontSize: 13,
-            fontFamily: 'OpenSans',
-            color: colors.lightGrey,
-            alignSelf: 'center',
-            textAlign: 'center',
-          }}
-          placeholderTextColor={colors.lightGrey}
-        />
-      </Item>
+      <View style={styles.tabBarItem}>
+        <Text style={labelTextStyle}>{route.title}</Text>
+      </View>
     );
-  }
+  };
+
+  renderHeader = props => (
+    <TabBar
+      {...props}
+      style={styles.tabBar}
+      renderIndicator={this.renderIndicator}
+      renderLabel={this.renderLabel}
+    />
+  );
 
   render() {
-    const { query, selected } = this.state;
-    const { resultsanime, resultsmanga, loading } = this.props;
     return (
-      <Container style={{ backgroundColor: colors.listBackPurple }}>
-
-        <ScrollableTabView
-          renderTabBar={() => <SegmentTabBar />}
-          prerenderingSiblingsNumber={1}
-          onChangeTab={(e) => {
-            this.setState({ selected: e.i, active: e.ref.props.id });
-            this.search(this.state.query, e.ref.props.id);
-          }}
-        >
-          <ScrollView key="Anime" tabLabel="Anime" id="anime" style={styles.scrollView}>
-            {this.renderSearchBar('anime')}
-            {query.length === 0
-              ? <TopsList
-                active="anime"
-                mounted={selected === 0}
-                navigation={this.props.navigation}
-              />
-              : <ResultsList
-                dataArray={resultsanime}
-                loading={loading}
-                loadMore={this.loadMore}
-                refresh={this.refresh}
-              />}
-          </ScrollView>
-          <ScrollView key="Manga" tabLabel="Manga" id="manga" style={styles.scrollView}>
-            {this.renderSearchBar('manga')}
-            {query.length === 0
-              ? <TopsList
-                active="manga"
-                mounted={selected === 1}
-                navigation={this.props.navigation}
-              />
-              : <ResultsList
-                dataArray={resultsmanga}
-                loading={loading}
-                loadMore={this.loadMore}
-                refresh={this.refresh}
-              />}
-          </ScrollView>
-          <ScrollView key="Users" tabLabel="Users" style={styles.scrollView}>
-            {this.renderSearchBar('users')}
-            <UsersList />
-          </ScrollView>
-        </ScrollableTabView>
+      <Container style={styles.container}>
+        <TabViewAnimated
+          style={{ flex: 1 }}
+          navigationState={this.state}
+          renderScene={this.renderScene}
+          renderHeader={this.renderHeader}
+          onIndexChange={this.handleIndexChange}
+        />
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ anime }) => {
-  const { resultsanime, resultsmanga, resultsLoading } = anime;
-  let animeR = [];
-  let mangaR = [];
-  if (resultsanime.length > 0) {
-    animeR = resultsanime.map(item => ({
-      image: item.posterImage ? item.posterImage.small : 'none',
-      titles: item.titles ? item.titles : {},
-      key: item.id,
-    }));
-  } else {
-    animeR = Array(20).fill(1).map((item, index) => ({ key: index }));
-  }
-  if (resultsmanga.length > 0) {
-    mangaR = resultsmanga.map(item => ({
-      image: item.posterImage ? item.posterImage.small : 'none',
-      titles: item.titles ? item.titles : {},
-      key: item.id,
-    }));
-  } else {
-    mangaR = Array(20).fill(1).map((item, index) => ({ key: index }));
-  }
-  return { resultsanime: animeR, resultsmanga: mangaR, loading: resultsLoading };
+const mapper = (state) => {
+  const { algoliaKeys } = state.app;
+  return {
+    algoliaKeys,
+  };
 };
 
-const styles = {
-  scrollView: {
-    backgroundColor: colors.listBackPurple,
-  },
-};
-
-SearchScreen.propTypes = {
-  resultsanime: PropTypes.array.isRequired,
-  resultsmanga: PropTypes.array.isRequired,
-  navigation: PropTypes.object.isRequired,
-  loading: PropTypes.bool.isRequired,
-  search: PropTypes.func.isRequired,
-};
-export default connect(mapStateToProps, { search })(SearchScreen);
+export default connect(mapper, {})(SearchScreen);

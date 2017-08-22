@@ -4,10 +4,4 @@ import SearchFilter from './SearchFilter';
 import SearchResults from './SearchResults';
 import FilterSub from './FilterSub';
 
-export {
-  SearchScreen,
-  SearchCategory,
-  SearchFilter,
-  SearchResults,
-  FilterSub,
-};
+export { SearchScreen, SearchCategory, SearchFilter, SearchResults, FilterSub };
