@@ -5,8 +5,8 @@ import { Text, Container, Icon, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
+import { success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
+import { SidebarHeader, SidebarTitle, ItemSeparator, LeftIconWrapper } from './common/';
 
 const MediaItem = ({ onPress, title, details, logoURL }) => (
   <Item onPress={onPress} button style={styles.sectionListItem}>
@@ -25,21 +25,42 @@ const MediaItem = ({ onPress, title, details, logoURL }) => (
   </Item>
 );
 
-const ImportItem = ({ title, details, status, date }) => (
-  <Item button style={styles.sectionListItem}>
-    <View style={{ justifyContent: 'center', marginLeft: 8 }}>
-      <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
-        {title}
-      </Text>
-      <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
-        {details}
-      </Text>
-    </View>
-    <Right>
-      <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
-    </Right>
-  </Item>
-);
+const ImportItem = ({ title, details, status, date }) => {
+  let icon = null;
+  switch (status) {
+    case 'pending':
+      icon = pending;
+      break;
+    case 'success':
+      icon = success;
+      break;
+    case 'failed':
+      icon = failed;
+      break;
+    default:
+      icon = 'pending';
+  }
+  return (
+    <Item button style={styles.sectionListItem}>
+      <View style={{ justifyContent: 'center', marginLeft: 8 }}>
+        <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
+          {title}
+        </Text>
+        <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
+          {details}
+        </Text>
+      </View>
+      <Right>
+        <LeftIconWrapper>
+          <Image
+            source={icon}
+            style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }}
+          />
+        </LeftIconWrapper>
+      </Right>
+    </Item>
+  );
+};
 
 class ImportLibrary extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -92,7 +113,7 @@ class ImportLibrary extends React.Component {
               {
                 title: 'MyAnimeList',
                 details: 'Currently importing 231 titles',
-                status: 'syncing',
+                status: 'pending',
                 date: '',
               },
               {
@@ -104,7 +125,7 @@ class ImportLibrary extends React.Component {
               {
                 title: 'AniList',
                 details: 'Failed to import 231 titles. Try again later.',
-                status: 'fail',
+                status: 'failed',
                 date: '',
               },
             ]}

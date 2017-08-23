@@ -1,6 +1,5 @@
 /*
   // TODO
-  - use svgs
   - reorganize styles
   - navigationoptions from router?
 */
@@ -11,29 +10,20 @@ import { connect } from 'react-redux';
 import ProgressiveImage from 'kitsu/components/ProgressiveImage';
 import { Text, Container, Icon, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
-// import Icon from '../../components/Icon';
 import * as colors from 'kitsu/constants/colors';
-
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-import bugs from 'kitsu/assets/img/sidebar_icons/bugs.png';
-import contact from 'kitsu/assets/img/sidebar_icons/contact.png';
-import library from 'kitsu/assets/img/sidebar_icons/library.png';
-import suggest from 'kitsu/assets/img/sidebar_icons/suggest.png';
-import settings from 'kitsu/assets/img/sidebar_icons/settings.png';
+import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
-
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
 
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
-
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bug', image: bugs, target: '' },
   { title: 'Suggest Features', image: suggest, target: '' },
   { title: 'Contact Us', image: contact, target: '' },
 ];
-
 const LeftIconWrapper = (
   { children }, // have a standard width at all items.
 ) => (
@@ -41,11 +31,9 @@ const LeftIconWrapper = (
     {children}
   </View>
 );
-
 const SettingsItem = ({ image, title, onPress }) => (
   <SidebarListItem image={image} title={title} onPress={onPress} />
 );
-
 const GroupsItem = ({ imageURL, title, onPress }) => (
   <Item button onPress={onPress} style={styles.sectionListItem}>
     <Left>

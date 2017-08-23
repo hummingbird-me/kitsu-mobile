@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Text, Button, Container, Spinner } from 'native-base';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-import library from 'kitsu/assets/img/sidebar_icons/library.png';
+import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import PropTypes from 'prop-types';
 import {
   SidebarHeader,
@@ -61,8 +61,8 @@ class Library extends React.Component {
           <SidebarTitle style={{ marginTop: 20 }} title={'Account Settings'} />
           <FlatList
             data={[
-              { title: 'Import Library', image: library, target: 'ImportLibrary' },
-              { title: 'Export Library', image: library, target: '' },
+              { title: 'Import Library', image: libraryImport, target: 'ImportLibrary' },
+              { title: 'Export Library', image: libraryExport, target: '' },
             ]}
             keyExtractor={item => item.title}
             renderItem={({ item }) => (

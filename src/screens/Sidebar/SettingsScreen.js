@@ -5,11 +5,7 @@ import { Container } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-import library from 'kitsu/assets/img/sidebar_icons/library.png';
-import privacy from 'kitsu/assets/img/sidebar_icons/privacy.png';
-import linked from 'kitsu/assets/img/sidebar_icons/linked.png';
-import blocking from 'kitsu/assets/img/sidebar_icons/blocking.png';
-import settings from 'kitsu/assets/img/sidebar_icons/settings.png';
+import { blocking, library, privacy, settings, linked } from 'kitsu/assets/img/sidebar_icons/';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
 
 class SettingsScreen extends Component {
