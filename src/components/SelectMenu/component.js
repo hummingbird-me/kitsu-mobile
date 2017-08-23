@@ -3,7 +3,6 @@ import { TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import ActionSheet from 'react-native-actionsheet';
 import * as colors from 'kitsu/constants/colors';
-import { styles } from './styles';
 
 export class SelectMenu extends PureComponent {
   static propTypes = {
@@ -63,21 +62,16 @@ export class SelectMenu extends PureComponent {
 
   render() {
     return (
-      <View
-        {...this.props}
-        style={[styles.wrapper, this.props.style]}
-      >
-        <TouchableOpacity onPress={this.showActionSheet}>
-          {this.props.children}
-          <ActionSheet
-            cancelButtonIndex={this.getCancelButtonIndex()}
-            onPress={this.handleFilterChange}
-            options={this.displayOptions}
-            ref={(component) => { this.ActionSheet = component; }}
-            tintColor={this.props.tintColor}
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={this.showActionSheet} style={this.props.style}>
+        {this.props.children}
+        <ActionSheet
+          cancelButtonIndex={this.getCancelButtonIndex()}
+          onPress={this.handleFilterChange}
+          options={this.displayOptions}
+          ref={(component) => { this.ActionSheet = component; }}
+          tintColor={this.props.tintColor}
+        />
+      </TouchableOpacity>
     );
   }
 }

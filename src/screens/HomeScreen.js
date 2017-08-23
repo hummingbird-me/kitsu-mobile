@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
+import * as colors from 'kitsu/constants/colors';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -96,28 +97,23 @@ class HomeScreen extends Component {
           </Button>
 
           <SelectMenu
-            style={{ width: 50, height: 50, backgroundColor: 'red' }}
+            style={{ width: 50, height: 50, backgroundColor: 'transparent', borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}
             onOptionSelected={(...args) => { console.log(args); }}
-            options={[
-              {
-                text: 'All',
-                value: 'all',
-              },
-              {
-                text: 'Anime',
-                value: 'anime',
-              },
-              {
-                text: 'Manga',
-                value: 'manga',
-              },
-              {
-                text: 'Cancel',
-                value: 'cancel',
-              },
-            ]}
+            options={[{ value: 'anime', text: 'Fancy Anime' }, { value: 'all', text: 'All The Things' }, { value: 'cancel', text: 'Haha JK' }]}
           >
             <Text>Josh</Text>
+          </SelectMenu>
+
+          <SelectMenu
+            style={{ width: 50, height: 50, backgroundColor: colors.lightGrey, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}
+            onOptionSelected={(...args) => { console.log(args); }}
+            options={['anime', 'all', 'cancel']}
+          >
+            <Image
+              source={require('kitsu/assets/img/menus/three-dot-horizontal-grey.png')}
+              style={{ width: 20 }}
+              resizeMode="contain"
+            />
           </SelectMenu>
         </Content>
       </Container>
