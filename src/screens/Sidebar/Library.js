@@ -57,8 +57,7 @@ class Library extends React.Component {
   };
 
   render() {
-    const { navigation } = this.props;
-    const loading = false; // TODO: make this work.
+    const { navigation, loading } = this.props;
     return (
       <View style={styles.containerStyle}>
         <SidebarTitle title={'Media Preferences'} />
@@ -126,18 +125,21 @@ class Library extends React.Component {
 const mapStateToProps = ({ user }) => ({
   titleLanguagePreference: user.currentUser.titleLanguagePreference,
   ratingSystem: user.currentUser.ratingSystem,
+  loading: user.loading,
 });
 
 Library.propTypes = {
   ratingSystem: PropTypes.string,
   titleLanguagePreference: PropTypes.string,
   updateLibrarySettings: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 Library.defaultProps = {
   ratingSystem: 'Simple',
   titleLanguagePreference: 'Canonical',
   updateLibrarySettings: null,
+  loading: false,
 };
 
 export default connect(mapStateToProps, { updateLibrarySettings })(Library);
