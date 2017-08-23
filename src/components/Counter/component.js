@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
 export class Counter extends React.PureComponent {
@@ -18,7 +16,7 @@ export class Counter extends React.PureComponent {
     maxValue: undefined,
     minValue: 0,
     onValueChanged: () => {},
-    progressCounter: true,
+    progressCounter: false,
   }
 
   constructor(props) {

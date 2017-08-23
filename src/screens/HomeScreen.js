@@ -5,7 +5,7 @@ import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { Rating } from 'kitsu/components/Rating';
+import { Counter } from 'kitsu/components/Counter';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -32,7 +32,7 @@ class HomeScreen extends Component {
   render() {
     const { currentUser, navigation, loading } = this.props;
     return (
-      <Container>
+      <Container style={{ backgroundColor: 'white' }}>
         <Content style={{ padding: 50 }}>
           {loading
             ? <Spinner size="large" />
@@ -95,10 +95,8 @@ class HomeScreen extends Component {
             </Text>
           </Button>
 
-          <Rating rating={8} size="large" viewType="single" ratingSystem="regular" showNotRated={false} />
-          <Rating rating={8} size="large" viewType="single" ratingSystem="advanced" showNotRated={false} />
-          <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
-          <Rating rating={8} size="large" />
+          <Counter initialValue={14} maxValue={20} progressCounter />
+          <Counter initialValue={11} maxValue={20} />
         </Content>
       </Container>
     );
