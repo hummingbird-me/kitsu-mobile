@@ -5,7 +5,7 @@ import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { Rating } from 'kitsu/components/Rating';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -95,10 +95,30 @@ class HomeScreen extends Component {
             </Text>
           </Button>
 
-          <Rating rating={8} size="large" viewType="single" ratingSystem="regular" showNotRated={false} />
-          <Rating rating={8} size="large" viewType="single" ratingSystem="advanced" showNotRated={false} />
-          <Rating rating={8} size="large" viewType="single" ratingSystem="simple" />
-          <Rating rating={8} size="large" />
+          <SelectMenu
+            style={{ width: 50, height: 50, backgroundColor: 'red' }}
+            onOptionSelected={(...args) => { console.log(args); }}
+            options={[
+              {
+                text: 'All',
+                value: 'all',
+              },
+              {
+                text: 'Anime',
+                value: 'anime',
+              },
+              {
+                text: 'Manga',
+                value: 'manga',
+              },
+              {
+                text: 'Cancel',
+                value: 'cancel',
+              },
+            ]}
+          >
+            <Text>Josh</Text>
+          </SelectMenu>
         </Content>
       </Container>
     );

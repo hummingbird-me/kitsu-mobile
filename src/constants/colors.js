@@ -27,6 +27,7 @@ export const darkGrey = '#696969';
 export const yellow = '#F0AD4E';
 
 /* blacks */
+export const black = '#000000';
 export const offBlack = '#2B212B';
 
 /* misc */
