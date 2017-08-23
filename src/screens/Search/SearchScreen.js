@@ -6,6 +6,7 @@ import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
 import { InstantSearchBox } from 'kitsu/components/SearchBox';
+import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 import * as colors from 'kitsu/constants/colors';
 import { ResultsList, TopsList } from './Lists';
@@ -79,8 +80,12 @@ class SearchScreen extends Component {
   };
 
   state = {
-    query: undefined,
-    index: 0,
+    query: {
+      anime: undefined,
+      manga: undefined,
+      users: undefined,
+    },
+    index: 2,
     routes: [
       {
         key: 'anime',
@@ -108,7 +113,7 @@ class SearchScreen extends Component {
       appId={kitsuConfig.algoliaAppId}
       apiKey={route.apiKey}
       indexName={route.indexName}
-      onSearchStateChange={this.handleSearchStateChange}
+      onSearchStateChange={s => this.handleSearchStateChange(route, s)}
     >
       <InstantSearchBox
         placeholder={`Search ${route.title}`}
@@ -122,28 +127,31 @@ class SearchScreen extends Component {
   renderSubScene = (route) => {
     const { query } = this.state;
     const { navigation } = this.props;
-
+    const activeQuery = query[route.key];
     switch (route.key) {
-      case 'users':
+      case 'users': {
+        const UserHits = connectInfiniteHits(UsersList);
         return (
-          <View>
-            {query && <Hits />}
-          </View>
+          <ScrollView style={styles.scrollView}>
+            <UserHits />
+          </ScrollView>
         );
+      }
       default: {
         return (
           <ScrollView style={styles.scrollView}>
-            {!query && <TopsList active={route.key} mounted navigation={navigation} />}
-            {query && <Hits />}
+            {!activeQuery && <TopsList active={route.key} mounted navigation={navigation} />}
+            {activeQuery && <Hits />}
           </ScrollView>
         );
       }
     }
   };
 
-  handleSearchStateChange = (searchState) => {
+  handleSearchStateChange = (route, searchState) => {
     const { query } = searchState;
-    this.setState({ query: query !== '' ? query : undefined });
+    const nextQueryState = { ...this.state.query, [route.key]: query !== '' ? query : undefined };
+    this.setState({ query: nextQueryState });
   };
 
   handleIndexChange = index => this.setState({ index });
