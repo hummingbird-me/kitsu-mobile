@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, FlatList, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Container, Left, Right, Item, Spinner } from 'native-base';
+import { Text, Left, Right, Item, Spinner } from 'native-base';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
@@ -12,11 +12,12 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
+import styles from './styles';
 
 const RowItem = ({ type, item, onPress }) => {
   const buttonText = type === 'search' ? 'Block' : 'Unblock';
   return (
-    <Item style={styles.sectionListItem}>
+    <Item style={nativebaseStyles.sectionListItem}>
       <Left>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
@@ -128,9 +129,7 @@ class Blocking extends React.Component {
     setToken(token);
     this.setState({ loading: true });
     try {
-      console.log('removing block of', user, ' with id ', id);
       await Kitsu.destroy('blocks', id);
-      console.log('done');
       this.setState({
         blocks: blocks.filter(v => v.id !== id),
         loading: false,
@@ -152,7 +151,6 @@ class Blocking extends React.Component {
         filter: { user: id },
         include: 'blocked',
       });
-      console.log('success', blocks);
       this.setState({
         blocks,
         loading: false,
@@ -166,7 +164,11 @@ class Blocking extends React.Component {
   };
 
   handleSearchStateChange = (searchState) => {
-    this.setState({ searchState });
+    if (searchState.query === '') {
+      this.setState({ searchState: {} });
+    } else {
+      this.setState({ searchState });
+    }
   };
 
   renderResults = () => {
@@ -181,49 +183,46 @@ class Blocking extends React.Component {
   render() {
     const { blocks, loading } = this.state;
     return (
-      <Container style={styles.containerStyle}>
-        <View style={{ flex: 1, marginTop: 77 }}>
-          <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
-            <Text style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12 }}>
-              Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
-            </Text>
-            <ItemSeparator />
-            <InstantSearch
-              appId={kitsuConfig.algoliaAppId}
-              apiKey={this.props.algoliaKeys.users.key}
-              indexName={this.props.algoliaKeys.users.index}
-              searchState={this.state.searchState}
-              onSearchStateChange={this.handleSearchStateChange}
-            >
-              <SearchBox placeholder={'Search Users to Block'} />
-              {this.renderResults()}
-            </InstantSearch>
-          </View>
-          <SidebarTitle style={{ marginTop: 20 }} title={'Blocked Users'} />
-          {!loading
-            ? <FlatList
-              data={blocks}
-              keyExtractor={item => item.blocked.id}
-              renderItem={({ item }) => (
-                <RowItem
-                  type={'flatlist'}
-                  item={item.blocked}
-                  onPress={() => this.onUnblockUser(item)}
-                />
-                )}
-              ListEmptyComponent={() => <Spinner />}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              removeClippedSubviews={false}
-            />
-            : <Spinner color={'white'} />}
+      <View style={styles.containerStyle}>
+        <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
+          <Text style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12 }}>
+            Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
+          </Text>
+          <ItemSeparator />
+          <InstantSearch
+            appId={kitsuConfig.algoliaAppId}
+            apiKey={this.props.algoliaKeys.users.key}
+            indexName={this.props.algoliaKeys.users.index}
+            searchState={this.state.searchState}
+            onSearchStateChange={this.handleSearchStateChange}
+          >
+            <SearchBox placeholder={'Search Users to Block'} />
+            {this.renderResults()}
+          </InstantSearch>
         </View>
-      </Container>
+        <SidebarTitle title={'Blocked Users'} />
+        {!loading
+          ? <FlatList
+            data={blocks}
+            keyExtractor={item => item.blocked.id}
+            renderItem={({ item }) => (
+              <RowItem
+                type={'flatlist'}
+                item={item.blocked}
+                onPress={() => this.onUnblockUser(item)}
+              />
+              )}
+            ListEmptyComponent={() => <Spinner />}
+            ItemSeparatorComponent={() => <ItemSeparator />}
+            removeClippedSubviews={false}
+          />
+          : <Spinner color={'white'} />}
+      </View>
     );
   }
 }
 
-const styles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
+const nativebaseStyles = {
   sectionListItem: {
     backgroundColor: colors.white,
     paddingHorizontal: 10,

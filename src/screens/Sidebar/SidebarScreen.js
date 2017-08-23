@@ -51,8 +51,6 @@ const GroupsItem = ({ imageURL, title, onPress }) => (
   </Item>
 );
 
-const SectionTitle = ({ title }) => <SidebarTitle title={title} />;
-
 class SidebarScreen extends React.Component {
   static navigationOptions = {
     header: null, // overlaps statusbar
@@ -166,7 +164,9 @@ class SidebarScreen extends React.Component {
             keyExtractor={(item, index) => index}
             ListHeaderComponent={() => <View height={20} />}
             renderItem={() => <SettingsItem />}
-            renderSectionHeader={({ section }) => <SectionTitle title={section.title} />}
+            renderSectionHeader={({ section }) => (
+              <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
+            )}
             renderSectionFooter={({ section }) => {
               // THIS FUNCTION IS NOT BEING INVOKED !?
             }}

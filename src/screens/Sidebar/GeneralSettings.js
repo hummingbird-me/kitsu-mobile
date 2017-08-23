@@ -7,13 +7,9 @@ import * as colors from 'kitsu/constants/colors';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { isEmpty } from 'lodash';
-import {
-  SidebarHeader,
-  SidebarTitle,
-  ItemSeparator,
-  SidebarDropdown,
-  SidebarButton,
-} from './common/';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import styles from './styles';
 
 class GeneralSettings extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -25,8 +21,11 @@ class GeneralSettings extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.sfwOptions = [{ title: 'Show Adult Titles (O_O)' }, { title: 'Hide Adult Titles' }];
+    this.filterOptions = [
+      { text: 'Hide Adult Titles', value: 'on' },
+      { text: 'Show Adult Titles O_O', value: 'off' },
+      { text: 'Cancel', value: null },
+    ];
     const { name, email, sfwFilter } = props.currentUser;
     this.state = {
       name,
@@ -34,6 +33,7 @@ class GeneralSettings extends React.Component {
       sfwFilter,
       password: '',
       shouldShowValidationInput: false,
+      selectMenuText: sfwFilter ? this.filterOptions[0].text : this.filterOptions[1].text,
     };
   }
 
@@ -41,13 +41,28 @@ class GeneralSettings extends React.Component {
     // TODO: HANDLE INPUT VALIDATION.
     const { name, email, password, sfwFilter } = this.state;
     const { currentUser } = this.props;
+    console.log(sfwFilter, currentUser.sfwFilter);
     const valuesToUpdate = {
       ...((name !== currentUser.name && { name }) || {}),
       ...((email !== currentUser.email && { email }) || {}),
       ...((sfwFilter !== currentUser.sfwFilter && { sfwFilter }) || {}),
     };
-    if (isEmpty(valuesToUpdate)) {
+    if (!isEmpty(valuesToUpdate)) {
       this.props.updateGeneralSettings(valuesToUpdate);
+    }
+  };
+
+  onSelectFilterOption = (value, option) => {
+    switch (value) {
+      case 'on':
+        this.setState({ sfwFilter: true, selectMenuText: option.text });
+        break;
+      case 'off':
+        this.setState({ sfwFilter: false, selectMenuText: option.text });
+        break;
+      default:
+        // cancel button pressed.
+        break;
     }
   };
 
@@ -80,7 +95,7 @@ class GeneralSettings extends React.Component {
         <Container style={nativeBaseStyles.containerStyle}>
           <Content>
             <View style={{ flex: 1, marginTop: 77 }}>
-              <SidebarTitle style={{ marginTop: 20 }} title={'Personal Settings'} />
+              <SidebarTitle title={'Personal Settings'} />
               <View style={styles.fieldWrapper}>
                 <Text style={styles.fieldText}>
                   Username
@@ -141,14 +156,25 @@ class GeneralSettings extends React.Component {
                     underlineColorAndroid={'transparent'}
                   />
                 </View>}
-              <SidebarTitle style={{ marginTop: 20 }} title={'Content on Kitsu'} />
-              <SidebarDropdown
-                title={'R18+ titles in feed, libraries, or search?'}
-                value={this.sfwOptions[Number(this.state.sfwFilter)].title}
-                options={this.sfwOptions}
-                onSelectOption={option =>
-                  this.setState({ sfwFilter: option.title === this.sfwOptions[1].title })}
-              />
+              <SidebarTitle title={'Content on Kitsu'} />
+              <SelectMenu
+                style={{
+                  backgroundColor: colors.white,
+                  padding: 8,
+                }}
+                onOptionSelected={this.onSelectFilterOption}
+                cancelButtonIndex={2}
+                options={this.filterOptions}
+              >
+                <View>
+                  <Text style={styles.hintText}>
+                    R18+ titles in feed, libraries, or search?
+                  </Text>
+                  <Text style={styles.valueText}>
+                    {this.state.selectMenuText}
+                  </Text>
+                </View>
+              </SelectMenu>
               <SidebarButton
                 loading={loading}
                 onPress={this.onSavePersonalSettings}
@@ -165,25 +191,6 @@ class GeneralSettings extends React.Component {
 const nativeBaseStyles = {
   containerStyle: { backgroundColor: colors.listBackPurple },
 };
-
-const styles = StyleSheet.create({
-  fieldWrapper: {
-    backgroundColor: 'white',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  fieldText: {
-    fontSize: 10,
-    color: 'grey',
-    fontFamily: 'OpenSans',
-  },
-  fieldInput: {
-    marginTop: 4,
-    height: 30,
-    fontFamily: 'OpenSans',
-    fontSize: 14,
-  },
-});
 
 const mapStateToProps = ({ user }) => {
   const { currentUser, loading } = user;

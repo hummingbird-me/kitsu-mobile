@@ -7,9 +7,10 @@ import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import { SidebarHeader, SidebarTitle, ItemSeparator, WidthFixer } from './common/';
+import styles from './styles';
 
 const MediaItem = ({ onPress, title, details, logoURL }) => (
-  <Item onPress={onPress} button style={styles.sectionListItem}>
+  <Item onPress={onPress} button style={nativebaseStyles.sectionListItem}>
     <View style={{ justifyContent: 'center', marginLeft: 8 }}>
       <Image
         source={{ uri: logoURL }}
@@ -41,7 +42,7 @@ const ImportItem = ({ title, details, status, date }) => {
       icon = 'pending';
   }
   return (
-    <Item button style={styles.sectionListItem}>
+    <Item button style={nativebaseStyles.sectionListItem}>
       <View style={{ justifyContent: 'center', marginLeft: 8 }}>
         <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
           {title}
@@ -77,9 +78,9 @@ class ImportLibrary extends React.Component {
 
   render() {
     return (
-      <Container style={styles.containerStyle}>
-        <View style={{ marginTop: 77 }}>
-          <SidebarTitle style={{ marginTop: 20 }} title={'Import Media'} />
+      <View style={styles.containerStyle}>
+        <View>
+          <SidebarTitle title={'Import Media'} />
           <FlatList
             data={[
               {
@@ -107,7 +108,9 @@ class ImportLibrary extends React.Component {
             ItemSeparatorComponent={() => <ItemSeparator />}
             removeClippedSubviews={false}
           />
-          <SidebarTitle style={{ marginTop: 20 }} title={'Previous Imports'} />
+        </View>
+        <View>
+          <SidebarTitle title={'Previous Imports'} />
           <FlatList
             data={[
               {
@@ -142,13 +145,12 @@ class ImportLibrary extends React.Component {
             removeClippedSubviews={false}
           />
         </View>
-      </Container>
+      </View>
     );
   }
 }
 
-const styles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
+const nativebaseStyles = {
   sectionListItem: {
     backgroundColor: colors.white,
     paddingHorizontal: 8,

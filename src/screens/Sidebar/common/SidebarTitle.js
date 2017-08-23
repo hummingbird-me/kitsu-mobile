@@ -2,13 +2,17 @@ import React from 'react';
 import { View } from 'react-native';
 import { Text } from 'native-base';
 import PropTypes from 'prop-types';
-// import Icon from '../../components/Icon';
 import * as colors from 'kitsu/constants/colors';
 
 const SidebarTitle = ({ title, style }) => (
   <View
     style={[
-      { paddingHorizontal: 2, paddingVertical: 8, backgroundColor: colors.listBackPurple },
+      {
+        marginTop: 20,
+        paddingHorizontal: 2,
+        paddingVertical: 8,
+        backgroundColor: colors.listBackPurple,
+      },
       style,
     ]}
   >

@@ -26,13 +26,14 @@ class PrivacySettings extends React.Component {
   }
 
   onSavePrivacySettings = async () => {
+    const { shareToGlobal } = this.state;
     const { accessToken, currentUser } = this.props;
-    setToken(accessToken.token);
+    setToken(accessToken);
     this.setState({ loading: true });
     try {
-      await Kitsu.update('users', { id: currentUser.id, shareToGlobal: this.state.shareToGlobal });
+      await Kitsu.update('users', { id: currentUser.id, shareToGlobal });
       this.setState({
-        shareToGlobal: this.state.shareToGlobal,
+        shareToGlobal,
         loading: false,
       });
     } catch (e) {
@@ -70,7 +71,7 @@ class PrivacySettings extends React.Component {
       <Container style={styles.containerStyle}>
         <Content scrollEnabled={false}>
           <View style={{ flex: 1, marginTop: 77 }}>
-            <SidebarTitle style={{ marginTop: 20 }} title={'Personal Settings'} />
+            <SidebarTitle title={'Personal Settings'} />
             <View
               style={{
                 flexDirection: 'row',

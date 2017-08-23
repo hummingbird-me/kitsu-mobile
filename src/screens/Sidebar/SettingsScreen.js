@@ -23,7 +23,7 @@ class SettingsScreen extends React.Component {
       (
         <Container style={styles.containerStyle}>
           <View style={{ marginTop: 77 }}>
-            <SidebarTitle style={{ marginTop: 20 }} title={'Account Settings'} />
+            <SidebarTitle title={'Account Settings'} />
             <FlatList
               data={[
                 { title: 'General', image: settings, target: 'GeneralSettings' },

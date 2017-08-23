@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, Image, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Container } from 'native-base';
 import * as colors from 'kitsu/constants/colors';
@@ -7,14 +7,16 @@ import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import PropTypes from 'prop-types';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { startCase } from 'lodash';
 import {
   SidebarHeader,
   SidebarListItem,
   SidebarTitle,
   ItemSeparator,
-  SidebarDropdown,
   SidebarButton,
 } from './common/';
+import styles from './styles';
 
 class Library extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -29,6 +31,23 @@ class Library extends React.Component {
     ratingSystem: this.props.ratingSystem,
   };
 
+  titleLanguagePreference = ['romanized', 'canonical', 'english', 'cancel'];
+  ratingSystem = ['simple', 'regular', 'advanced', 'cancel'];
+
+  onUpdateTitlePreference = (value, option) => {
+    switch (value) {
+      case 'on':
+        this.setState({ sfwFilter: false, selectMenuText: option.text });
+        break;
+      case 'off':
+        this.setState({ sfwFilter: true, selectMenuText: option.text });
+        break;
+      default:
+        // cancel button pressed.
+        break;
+    }
+  };
+
   onUpdateLibrarySettings = () => {
     const { titleLanguagePreference, ratingSystem } = this.state;
     this.props.updateLibrarySettings({
@@ -41,33 +60,41 @@ class Library extends React.Component {
     const { navigation } = this.props;
     const loading = false; // TODO: make this work.
     return (
-      <Container style={styles.containerStyle}>
-        <View style={{ marginTop: 77 }}>
-          <SidebarTitle style={{ marginTop: 20 }} title={'Media Preferences'} />
-          <SidebarDropdown
-            title={'Title Display'}
-            value={this.state.titleLanguagePreference}
-            options={[
-              { title: 'Option 1 has a long text' },
-              { title: 'Option 2 also has a long text' },
-              { title: 'Option 3' },
-            ]}
-            onSelectOption={option => this.setState({ titleLanguagePreference: option.title })}
-          />
-          <ItemSeparator />
-          <SidebarDropdown
-            title={'Rating Value'}
-            value={this.state.ratingSystem}
-            options={[
-              { title: 'Option 1 has a long text' },
-              { title: 'Option 2' },
-              {
-                title: "Option 3 times 3 is Option 9 and we don't have it. Let's just say option 3 has the longest text we could imagine",
-              },
-            ]}
-            onSelectOption={option => this.setState({ ratingSystem: option.title })}
-          />
-          <SidebarTitle style={{ marginTop: 20 }} title={'Account Settings'} />
+      <View style={styles.containerStyle}>
+        <SidebarTitle title={'Media Preferences'} />
+        <SelectMenu
+          style={styles.selectMenu}
+          onOptionSelected={t => this.setState({ titleLanguagePreference: t })}
+          cancelButtonIndex={this.titleLanguagePreference.length - 1}
+          options={this.titleLanguagePreference}
+        >
+          <View>
+            <Text style={styles.hintText}>
+              Title Display
+            </Text>
+            <Text style={styles.valueText}>
+              {startCase(this.state.titleLanguagePreference)}
+            </Text>
+          </View>
+        </SelectMenu>
+        <ItemSeparator />
+        <SelectMenu
+          style={styles.selectMenu}
+          onOptionSelected={t => this.setState({ ratingSystem: t })}
+          cancelButtonIndex={this.ratingSystem.length - 1}
+          options={this.ratingSystem}
+        >
+          <View>
+            <Text style={styles.hintText}>
+              Title Display
+            </Text>
+            <Text style={styles.valueText}>
+              {startCase(this.state.ratingSystem)}
+            </Text>
+          </View>
+        </SelectMenu>
+        <View>
+          <SidebarTitle title={'Account Settings'} />
           <FlatList
             data={[
               { title: 'Import Library', image: libraryImport, target: 'ImportLibrary' },
@@ -85,20 +112,16 @@ class Library extends React.Component {
             removeClippedSubviews={false}
             scrollEnabled={false}
           />
-          <SidebarButton
-            title={'Save Library Settings'}
-            onPress={this.onUpdateLibrarySettings}
-            loading={loading}
-          />
         </View>
-      </Container>
+        <SidebarButton
+          title={'Save Library Settings'}
+          onPress={this.onUpdateLibrarySettings}
+          loading={loading}
+        />
+      </View>
     );
   }
 }
-
-const styles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
-};
 
 const mapStateToProps = ({ user }) => ({
   titleLanguagePreference: user.currentUser.titleLanguagePreference,

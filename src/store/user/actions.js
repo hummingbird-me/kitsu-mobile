@@ -53,7 +53,7 @@ export const updateGeneralSettings = data => async (dispatch, getState) => {
   const token = auth.tokens.access_token;
   setToken(token);
   try {
-    // TODO: instructions pending: implement a way to update password.
+    // Update everything we have.
     await Kitsu.update('users', { id, ...data });
     dispatch({ type: types.UPDATE_GENERAL_SETTINGS_SUCCESS, payload: data });
   } catch (e) {
@@ -69,7 +69,6 @@ export const updateLibrarySettings = data => async (dispatch, getState) => {
   const token = auth.tokens.access_token;
   setToken(token);
   try {
-    // TODO: instructions pending: implement a way to update password.
     await Kitsu.update('users', { id, ratingSystem, titleLanguagePreference });
     dispatch({ type: types.UPDATE_LIBRARY_SETTINGS_SUCCESS, payload: data });
   } catch (e) {

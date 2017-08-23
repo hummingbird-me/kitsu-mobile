@@ -60,7 +60,7 @@ class LinkedAccounts extends React.Component {
         <Container style={styles.containerStyle}>
           <Content scrollEnabled={false}>
             <View style={{ flex: 1, marginTop: 77 }}>
-              <SidebarTitle style={{ marginTop: 20 }} title={'Social Accounts'} />
+              <SidebarTitle title={'Social Accounts'} />
               <FlatList
                 data={[
                   { logoURL: 'https://www.famouslogos.us/images/facebook-logo.jpg' },
