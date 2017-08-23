@@ -86,7 +86,7 @@ class Library extends React.Component {
         >
           <View>
             <Text style={styles.hintText}>
-              Title Display
+              Rating Type
             </Text>
             <Text style={styles.valueText}>
               {startCase(this.state.ratingSystem)}
