@@ -5,8 +5,7 @@ import { Text, Container, Button } from 'native-base';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import PropTypes from 'prop-types';
-
-import { SidebarHeader, ItemSeparator } from './common/';
+import { SidebarHeader, ItemSeparator, SidebarButton } from './common/';
 
 class ImportDetail extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -59,29 +58,7 @@ class ImportDetail extends React.Component {
                 />
               </View>
             </View>
-            <View style={{ marginTop: 10, padding: 10, paddingLeft: 12, paddingRight: 12 }}>
-              <Button
-                block
-                disabled={false}
-                onPress={() => {}}
-                style={{
-                  backgroundColor: colors.lightGrey,
-                  height: 47,
-                  borderRadius: 3,
-                }}
-              >
-                <Text
-                  style={{
-                    color: colors.white,
-                    fontFamily: 'OpenSans-Semibold',
-                    lineHeight: 20,
-                    fontSize: 14,
-                  }}
-                >
-                  Save Privacy Settings
-                </Text>
-              </Button>
-            </View>
+            <SidebarButton onPress={() => {}} title={'Save Privacy Settings'} loading={false} />
           </View>
         </Container>
       )

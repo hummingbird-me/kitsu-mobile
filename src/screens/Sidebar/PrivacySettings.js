@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
+import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 
 class PrivacySettings extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -93,31 +93,11 @@ class PrivacySettings extends Component {
                 If disabled, your posts will only be shared to your followers and guests to your profile.
               </Text>
             </View>
-            <View style={{ marginTop: 20, padding: 10, paddingLeft: 25, paddingRight: 25 }}>
-              <Button
-                block
-                disabled={false && loading}
-                onPress={this.onSavePrivacySettings}
-                style={{
-                  backgroundColor: colors.green,
-                  height: 47,
-                  borderRadius: 3,
-                }}
-              >
-                {loading
-                  ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
-                  : <Text
-                    style={{
-                      color: colors.white,
-                      fontFamily: 'OpenSans-Semibold',
-                      lineHeight: 20,
-                      fontSize: 14,
-                    }}
-                  >
-                      Save Privacy Settings
-                    </Text>}
-              </Button>
-            </View>
+            <SidebarButton
+              title={'Save Privacy Settings'}
+              onPress={this.onSavePrivacySettings}
+              loading={loading}
+            />
           </View>
         </Content>
       </Container>

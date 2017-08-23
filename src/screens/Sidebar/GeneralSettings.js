@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
-import { View, Image, TextInput, LayoutAnimation } from 'react-native';
+import { View, Image, Text, TextInput, LayoutAnimation, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Button, Container, Content, Spinner } from 'native-base';
+import { Button, Container, Content, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-import _ from 'lodash';
-
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarDropdown } from './common/';
+import { isEmpty } from 'lodash';
+import {
+  SidebarHeader,
+  SidebarTitle,
+  ItemSeparator,
+  SidebarDropdown,
+  SidebarButton,
+} from './common/';
 
 class GeneralSettings extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -41,7 +46,7 @@ class GeneralSettings extends Component {
       ...((email !== currentUser.email && { email }) || {}),
       ...((sfwFilter !== currentUser.sfwFilter && { sfwFilter }) || {}),
     };
-    if (!_.isEmpty(valuesToUpdate)) {
+    if (isEmpty(valuesToUpdate)) {
       this.props.updateGeneralSettings(valuesToUpdate);
     }
   };
@@ -72,16 +77,16 @@ class GeneralSettings extends Component {
     return (
       // TODO: handle marginTop: 77 for all other sidebar screens.
       (
-        <Container style={styles.containerStyle}>
+        <Container style={nativeBaseStyles.containerStyle}>
           <Content>
             <View style={{ flex: 1, marginTop: 77 }}>
               <SidebarTitle style={{ marginTop: 20 }} title={'Personal Settings'} />
-              <View style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}>
-                <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+              <View style={styles.fieldWrapper}>
+                <Text style={styles.fieldText}>
                   Username
                 </Text>
                 <TextInput
-                  style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
+                  style={styles.fieldInput}
                   value={this.state.name}
                   onChangeText={t => this.setState({ name: t })}
                   autoCapitalize={'words'}
@@ -90,12 +95,12 @@ class GeneralSettings extends Component {
                 />
               </View>
               <ItemSeparator />
-              <View style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}>
-                <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+              <View style={styles.fieldWrapper}>
+                <Text style={styles.fieldText}>
                   Email Address
                 </Text>
                 <TextInput
-                  style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
+                  style={styles.fieldInput}
                   value={this.state.email}
                   onChangeText={t => this.setState({ email: t })}
                   autoCapitalize={'none'}
@@ -104,12 +109,12 @@ class GeneralSettings extends Component {
                 />
               </View>
               <ItemSeparator />
-              <View style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}>
-                <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+              <View style={styles.fieldWrapper}>
+                <Text style={styles.fieldText}>
                   Password
                 </Text>
                 <TextInput
-                  style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
+                  style={styles.fieldInput}
                   value={this.state.password}
                   onChangeText={(t) => {
                     this.toggle(t);
@@ -122,14 +127,12 @@ class GeneralSettings extends Component {
                 />
               </View>
               {this.state.shouldShowValidationInput &&
-                <View
-                  style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}
-                >
-                  <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+                <View style={styles.fieldWrapper}>
+                  <Text style={styles.fieldText}>
                     Current Password
                   </Text>
                   <TextInput
-                    style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
+                    style={styles.fieldInput}
                     value={this.state.currentPassword}
                     onChangeText={t => this.setState({ currentPassword: t })}
                     secureTextEntry
@@ -146,31 +149,11 @@ class GeneralSettings extends Component {
                 onSelectOption={option =>
                   this.setState({ sfwFilter: option.title === this.sfwOptions[1].title })}
               />
-              <View style={{ marginTop: 20, padding: 10, paddingLeft: 25, paddingRight: 25 }}>
-                <Button
-                  block
-                  disabled={false && loading}
-                  onPress={this.onSavePersonalSettings}
-                  style={{
-                    backgroundColor: colors.green,
-                    height: 47,
-                    borderRadius: 3,
-                  }}
-                >
-                  {loading
-                    ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
-                    : <Text
-                      style={{
-                        color: colors.white,
-                        fontFamily: 'OpenSans-Semibold',
-                        lineHeight: 20,
-                        fontSize: 14,
-                      }}
-                    >
-                        Save General Settings
-                      </Text>}
-                </Button>
-              </View>
+              <SidebarButton
+                loading={loading}
+                onPress={this.onSavePersonalSettings}
+                title={'Save General Settings'}
+              />
             </View>
           </Content>
         </Container>
@@ -179,9 +162,28 @@ class GeneralSettings extends Component {
   }
 }
 
-const styles = {
+const nativeBaseStyles = {
   containerStyle: { backgroundColor: colors.listBackPurple },
 };
+
+const styles = StyleSheet.create({
+  fieldWrapper: {
+    backgroundColor: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  fieldText: {
+    fontSize: 10,
+    color: 'grey',
+    fontFamily: 'OpenSans',
+  },
+  fieldInput: {
+    marginTop: 4,
+    height: 30,
+    fontFamily: 'OpenSans',
+    fontSize: 14,
+  },
+});
 
 const mapStateToProps = ({ user }) => {
   const { currentUser, loading } = user;

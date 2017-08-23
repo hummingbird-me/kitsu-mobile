@@ -12,6 +12,7 @@ import {
   SidebarTitle,
   ItemSeparator,
   SidebarDropdown,
+  SidebarButton,
 } from './common/';
 
 class Library extends React.Component {
@@ -75,31 +76,7 @@ class Library extends React.Component {
             removeClippedSubviews={false}
             scrollEnabled={false}
           />
-          <View style={{ marginTop: 20, padding: 10, paddingLeft: 25, paddingRight: 25 }}>
-            <Button
-              block
-              disabled={false && loading}
-              onPress={() => {}}
-              style={{
-                backgroundColor: colors.green,
-                height: 47,
-                borderRadius: 3,
-              }}
-            >
-              {loading
-                ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
-                : <Text
-                  style={{
-                    color: colors.white,
-                    fontFamily: 'OpenSans-Semibold',
-                    lineHeight: 20,
-                    fontSize: 14,
-                  }}
-                >
-                    Save Library Settings
-                  </Text>}
-            </Button>
-          </View>
+          <SidebarButton title={'Save Library Settings'} onPress={() => {}} loading={loading} />
         </View>
       </Container>
     );
