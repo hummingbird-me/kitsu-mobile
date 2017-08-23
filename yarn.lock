@@ -4395,13 +4395,9 @@ qs@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-4.0.0.tgz#c31d9b74ec27df75e543a86c78728ed8d4623607"
 
-qs@>=6.2.0, qs@^6.1.0, qs@~6.4.0:
+qs@>=6.2.0, qs@^6.1.0, qs@^6.2.1, qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
-
-qs@^6.2.1:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.0.tgz#8d04954d364def3efc55b5a0793e1e2c8b1e6e49"
 
 querystring-es3@^0.2.1:
   version "0.2.1"
@@ -4471,6 +4467,10 @@ react-instantsearch@^4.0.10:
     classnames "^2.2.5"
     lodash "^4.17.4"
     prop-types "^15.5.8"
+
+react-native-actionsheet@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.2.2.tgz#469075a7d1c8e5b5d0829294bf9a2c4d2eb7e34e"
 
 react-native-animatable@^1.2.0:
   version "1.2.0"
