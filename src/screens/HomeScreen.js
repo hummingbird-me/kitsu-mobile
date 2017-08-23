@@ -4,12 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
-<<<<<<< 378cf38671a4e0a6bd899425e1c8843735580d74
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { Rating } from 'kitsu/components/Rating';
-=======
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
->>>>>>> cleaning up ProgressiveImage component
 
 class HomeScreen extends Component {
   static navigationOptions = {
