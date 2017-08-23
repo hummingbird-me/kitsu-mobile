@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Container, Icon } from 'native-base';
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -13,8 +13,15 @@ import { Rating } from 'kitsu/components/Rating';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
+import * as constants from './constants';
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
+
+const getMinimumCardCount = () => {
+  const { height, width } = Dimensions.get('screen');
+  const maxHeight = height > width ? height : width;
+  return Math.ceil(maxHeight / constants.POSTER_CARD_WIDTH);
+};
 
 export class UserLibraryScreenComponent extends React.Component {
   static propTypes = {
@@ -59,7 +66,10 @@ export class UserLibraryScreenComponent extends React.Component {
 
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
-    this.props.fetchUserLibrary(profile.id);
+
+    if (this.props.userLibrary.userId !== profile.id) {
+      this.props.fetchUserLibrary(profile.id);
+    }
   }
 
   onSearchTermChanged = (searchTerm) => {
@@ -100,7 +110,15 @@ export class UserLibraryScreenComponent extends React.Component {
     }
   }
 
+  renderEmptyItem() {
+    return <View style={styles.emptyPosterImageCard} />;
+  }
+
   renderItem = ({ item, index }) => {
+    if (item.type === 'empty-item') {
+      return this.renderEmptyItem();
+    }
+
     const data = item.anime || item.manga;
     const { currentUser } = this.props;
 
@@ -147,8 +165,9 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   renderLoadingList = () => {
-    const data = Array(8).fill(1).map((_, index) => ({ id: index }));
-    const { length } = StyleSheet.flatten(styles.posterImageCard);
+    const minimumCardCount = getMinimumCardCount();
+    const data = Array(minimumCardCount).fill(1).map((_, index) => ({ id: index }));
+    const width = constants.POSTER_CARD_WIDTH;
 
     return (
       <FlatList
@@ -158,8 +177,9 @@ export class UserLibraryScreenComponent extends React.Component {
         initialScrollIndex={0}
         keyExtractor={item => item.id}
         getItemLayout={(_data, index) => (
-          { length, offset: length * index, index }
+          { width, offset: width * index, index }
         )}
+        removeClippedSubviews={false}
         renderItem={({ index }) => (
           <View style={[
             styles.posterImageCard,
@@ -206,7 +226,7 @@ export class UserLibraryScreenComponent extends React.Component {
   renderLists = (type) => {
     const { userLibrary } = this.props;
     const isUserLibraryLoading = userLibrary.loading;
-
+    const width = constants.POSTER_CARD_WIDTH;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
@@ -215,10 +235,19 @@ export class UserLibraryScreenComponent extends React.Component {
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 
-    const { length } = StyleSheet.flatten(styles.posterImageCard);
+
     return listOrder.map((currentList) => {
       const { status } = currentList;
       const { data, loading: listLoading } = userLibrary[type][status];
+
+      const minimumCardCount = getMinimumCardCount();
+      const emptyItemsToAdd = minimumCardCount - data.length;
+      const renderData = data.slice();
+      if (!listLoading && emptyItemsToAdd > 0) {
+        for (let x = 0; x < emptyItemsToAdd; x += 1) {
+          renderData.push({ type: 'empty-item' });
+        }
+      }
 
       return (
         <View key={`${status}-${type}`}>
@@ -236,17 +265,19 @@ export class UserLibraryScreenComponent extends React.Component {
             :
             <FlatList
               horizontal
-              data={data}
+              data={renderData}
               initialNumToRender={8}
               initialScrollIndex={0}
               getItemLayout={(_data, index) => (
-                { length, offset: length * index, index }
+                { width, offset: width * index, index }
               )}
               keyExtractor={item => item.id}
               onEndReached={() => this.fetchMore(type, status)}
               onEndReachedThreshold={0.50}
               refreshing={listLoading}
+              removeClippedSubviews={false}
               renderItem={this.renderItem}
+              scrollEnabled={emptyItemsToAdd <= 0}
               showsHorizontalScrollIndicator={false}
             />
           }

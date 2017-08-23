@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import * as constants from './constants';
 
@@ -28,10 +29,17 @@ export const styles = {
     justifyContent: 'center',
     marginHorizontal: 15,
   },
+  emptyPosterImageCard: {
+    borderColor: colors.lightGrey,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    height: constants.POSTER_CARD_HEIGHT,
+    marginHorizontal: 4,
+    width: constants.POSTER_CARD_WIDTH,
+  },
   posterImageContainer: {
     width: constants.POSTER_CARD_WIDTH,
-    marginLeft: 4,
-    marginRight: 4,
+    marginHorizontal: 4,
   },
   posterImageCard: {
     backgroundColor: colors.lightPurple,
@@ -50,7 +58,6 @@ export const styles = {
     marginTop: 2,
   },
   searchBar: {
-    marginLeft: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
   },
 };
