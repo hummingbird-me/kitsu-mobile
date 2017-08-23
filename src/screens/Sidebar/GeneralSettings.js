@@ -32,6 +32,7 @@ class GeneralSettings extends React.Component {
       email,
       sfwFilter,
       password: '',
+      confirmPassword: '',
       shouldShowValidationInput: false,
       selectMenuText: sfwFilter ? this.filterOptions[0].text : this.filterOptions[1].text,
     };
@@ -39,16 +40,17 @@ class GeneralSettings extends React.Component {
 
   onSavePersonalSettings = () => {
     // TODO: HANDLE INPUT VALIDATION.
-    const { name, email, password, sfwFilter } = this.state;
+    const { name, email, password, confirmPassword, sfwFilter } = this.state;
     const { currentUser } = this.props;
-    console.log(sfwFilter, currentUser.sfwFilter);
     const valuesToUpdate = {
       ...((name !== currentUser.name && { name }) || {}),
       ...((email !== currentUser.email && { email }) || {}),
       ...((sfwFilter !== currentUser.sfwFilter && { sfwFilter }) || {}),
+      ...((password === confirmPassword && { password }) || {}),
     };
     if (!isEmpty(valuesToUpdate)) {
       this.props.updateGeneralSettings(valuesToUpdate);
+      this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
     }
   };
 
@@ -144,14 +146,14 @@ class GeneralSettings extends React.Component {
               {this.state.shouldShowValidationInput &&
                 <View style={styles.fieldWrapper}>
                   <Text style={styles.fieldText}>
-                    Current Password
+                    Confirm Password
                   </Text>
                   <TextInput
                     style={styles.fieldInput}
-                    value={this.state.currentPassword}
-                    onChangeText={t => this.setState({ currentPassword: t })}
+                    value={this.state.confirmPassword}
+                    onChangeText={t => this.setState({ confirmPassword: t })}
                     secureTextEntry
-                    placeholder={'Current Password'}
+                    placeholder={'Confirm password'}
                     autoCorrect={false}
                     underlineColorAndroid={'transparent'}
                   />
