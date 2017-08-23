@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Container, Icon } from 'native-base';
-import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Icon } from 'native-base';
+import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -17,10 +17,13 @@ import * as constants from './constants';
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
 
-const getMinimumCardCount = () => {
+const getCardVisibilityCounts = () => {
   const { height, width } = Dimensions.get('screen');
-  const maxHeight = height > width ? height : width;
-  return Math.ceil(maxHeight / constants.POSTER_CARD_WIDTH);
+  const maxWidth = height > width ? height : width;
+  return {
+    maximumWidth: Math.ceil(maxWidth / constants.POSTER_CARD_WIDTH),
+    currentWidth: Math.ceil(width / constants.POSTER_CARD_WIDTH),
+  };
 };
 
 export class UserLibraryScreenComponent extends React.Component {
@@ -165,8 +168,8 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   renderLoadingList = () => {
-    const minimumCardCount = getMinimumCardCount();
-    const data = Array(minimumCardCount).fill(1).map((_, index) => ({ id: index }));
+    const { maximumWidth } = getCardVisibilityCounts();
+    const data = Array(maximumWidth).fill(1).map((_, index) => ({ id: index }));
     const width = constants.POSTER_CARD_WIDTH;
 
     return (
@@ -240,8 +243,8 @@ export class UserLibraryScreenComponent extends React.Component {
       const { status } = currentList;
       const { data, loading: listLoading } = userLibrary[type][status];
 
-      const minimumCardCount = getMinimumCardCount();
-      const emptyItemsToAdd = minimumCardCount - data.length;
+      const { currentWidth, maximumWidth } = getCardVisibilityCounts();
+      const emptyItemsToAdd = maximumWidth - data.length;
       const renderData = data.slice();
       if (!listLoading && emptyItemsToAdd > 0) {
         for (let x = 0; x < emptyItemsToAdd; x += 1) {
@@ -277,7 +280,7 @@ export class UserLibraryScreenComponent extends React.Component {
               refreshing={listLoading}
               removeClippedSubviews={false}
               renderItem={this.renderItem}
-              scrollEnabled={emptyItemsToAdd <= 0}
+              scrollEnabled={data.length >= currentWidth}
               showsHorizontalScrollIndicator={false}
             />
           }
@@ -298,7 +301,7 @@ export class UserLibraryScreenComponent extends React.Component {
     );
 
     return (
-      <Container style={styles.container}>
+      <View style={styles.container}>
         <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
             {searchBar}
@@ -309,7 +312,7 @@ export class UserLibraryScreenComponent extends React.Component {
             {this.renderLists('manga')}
           </ScrollView>
         </ScrollableTabView>
-      </Container>
+      </View>
     );
   }
 }

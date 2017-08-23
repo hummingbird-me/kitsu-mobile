@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import * as constants from './constants';
 
-export const styles = {
+export const styles = StyleSheet.create({
   browseText: {
     paddingBottom: 10,
   },
@@ -15,6 +15,7 @@ export const styles = {
     justifyContent: 'center',
   },
   container: {
+    flex: 1,
     alignItems: 'center',
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
@@ -60,4 +61,4 @@ export const styles = {
   searchBar: {
     marginHorizontal: 10,
   },
-};
+});
