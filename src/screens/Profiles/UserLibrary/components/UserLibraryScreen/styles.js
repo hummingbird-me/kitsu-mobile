@@ -34,6 +34,7 @@ export const styles = {
     marginRight: 4,
   },
   posterImageCard: {
+    backgroundColor: colors.lightPurple,
     width: constants.POSTER_CARD_WIDTH,
     height: constants.POSTER_CARD_HEIGHT,
     marginBottom: 2,
@@ -43,7 +44,7 @@ export const styles = {
     marginLeft: 12,
   },
   posterImageLoading: {
-    backgroundColor: colors.lightGrey,
+    backgroundColor: colors.lightPurple,
   },
   rating: {
     marginTop: 2,

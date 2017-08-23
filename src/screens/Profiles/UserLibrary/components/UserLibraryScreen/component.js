@@ -170,6 +170,7 @@ export class UserLibraryScreenComponent extends React.Component {
           />
         )}
         scrollEnabled={false}
+        showsHorizontalScrollIndicator={false}
       />
     );
   }
@@ -204,6 +205,8 @@ export class UserLibraryScreenComponent extends React.Component {
 
   renderLists = (type) => {
     const { userLibrary } = this.props;
+    const isUserLibraryLoading = userLibrary.loading;
+
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
@@ -215,7 +218,7 @@ export class UserLibraryScreenComponent extends React.Component {
     const { length } = StyleSheet.flatten(styles.posterImageCard);
     return listOrder.map((currentList) => {
       const { status } = currentList;
-      const { data, loading } = userLibrary[type][status];
+      const { data, loading: listLoading } = userLibrary[type][status];
 
       return (
         <View key={`${status}-${type}`}>
@@ -226,9 +229,9 @@ export class UserLibraryScreenComponent extends React.Component {
             title={currentList[type]}
           />
 
-          {loading && this.renderLoadingList()}
+          {isUserLibraryLoading && listLoading && this.renderLoadingList()}
 
-          {!loading && !data.length ?
+          {!isUserLibraryLoading && !data.length ?
             this.renderEmptyList(type, status)
             :
             <FlatList
@@ -242,8 +245,9 @@ export class UserLibraryScreenComponent extends React.Component {
               keyExtractor={item => item.id}
               onEndReached={() => this.fetchMore(type, status)}
               onEndReachedThreshold={0.50}
-              refreshing={loading}
+              refreshing={listLoading}
               renderItem={this.renderItem}
+              showsHorizontalScrollIndicator={false}
             />
           }
         </View>
