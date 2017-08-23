@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Image, Switch } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Button, Container, Content, Spinner } from 'native-base';
+import { Text, Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 
-class PrivacySettings extends Component {
+class PrivacySettings extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: () => <SidebarHeader navigation={navigation} headerTitle={'Privacy'} />,
     tabBarIcon: ({ tintColor }) => (

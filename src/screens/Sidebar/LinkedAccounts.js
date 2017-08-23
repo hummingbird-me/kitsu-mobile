@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Image, TouchableOpacity, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Text, Container, Content, Left, Right, Item } from 'native-base';

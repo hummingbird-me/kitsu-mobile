@@ -75,6 +75,27 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         error: '', //TODO: handle the error ~ Toast?
       };
+    case types.UPDATE_LIBRARY_SETTINGS:
+      return {
+        ...state,
+        loading: true,
+      };
+    case types.UPDATE_LIBRARY_SETTINGS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentUser: {
+          ...state.currentUser,
+          ratingSystem: action.payload.ratingSystem,
+          titleLanguagePreference: action.payload.titleLanguagePreference,
+        },
+      };
+    case types.UPDATE_LIBRARY_SETTINGS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: '', //TODO: handle the error ~ Toast?
+      };
     case types.LOGOUT_USER:
       return INITIAL_STATE;
     case REHYDRATE:

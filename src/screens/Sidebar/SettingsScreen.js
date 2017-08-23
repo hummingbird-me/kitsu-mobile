@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Image, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Container } from 'native-base';
@@ -8,7 +8,7 @@ import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { blocking, library, privacy, settings, linked } from 'kitsu/assets/img/sidebar_icons/';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
 
-class SettingsScreen extends Component {
+class SettingsScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: () => <SidebarHeader navigation={navigation} headerTitle={'Settings'} />,
     tabBarIcon: ({ tintColor }) => (

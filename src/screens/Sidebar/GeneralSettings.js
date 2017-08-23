@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Image, Text, TextInput, LayoutAnimation, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { Button, Container, Content, Spinner } from 'native-base';
+import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
@@ -15,7 +15,7 @@ import {
   SidebarButton,
 } from './common/';
 
-class GeneralSettings extends Component {
+class GeneralSettings extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: () => <SidebarHeader navigation={navigation} headerTitle={'General'} />,
     tabBarIcon: ({ tintColor }) => (
