@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
-import { SidebarHeader, SidebarTitle, ItemSeparator, LeftIconWrapper } from './common/';
+import { SidebarHeader, SidebarTitle, ItemSeparator, WidthFixer } from './common/';
 
 const MediaItem = ({ onPress, title, details, logoURL }) => (
   <Item onPress={onPress} button style={styles.sectionListItem}>
@@ -51,12 +51,12 @@ const ImportItem = ({ title, details, status, date }) => {
         </Text>
       </View>
       <Right>
-        <LeftIconWrapper>
+        <WidthFixer>
           <Image
             source={icon}
             style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }}
           />
-        </LeftIconWrapper>
+        </WidthFixer>
       </Right>
     </Item>
   );

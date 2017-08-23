@@ -36,6 +36,7 @@ const RowItem = ({ type, item, onPress }) => {
           style={{
             backgroundColor: colors.darkGrey,
             height: 24,
+            minWidth: 60,
             justifyContent: 'center',
             alignItems: 'center',
             paddingVertical: 8,
@@ -69,7 +70,9 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
       onEndReachedThreshold={0.5}
       initialNumToRender={10}
       contentContainerStyle={styles.list}
+      keyExtractor={item => item.id}
       renderItem={({ item }) => <RowItem type={'search'} item={item} onPress={onPress} />}
+      ItemSeparatorComponent={() => <ItemSeparator />}
       style={{ maxHeight: 200 }}
     />
   );

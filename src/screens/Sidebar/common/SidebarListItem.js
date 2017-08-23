@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
 // have a standard width at all items.
-export const LeftIconWrapper = ({ children }) => (
+export const WidthFixer = ({ children }) => (
   <View style={{ width: 25, alignItems: 'center' }}>
     {children}
   </View>
@@ -18,12 +18,12 @@ export const ItemSeparator = () => (
 const SidebarListItem = ({ image, title, onPress }) => (
   <Item button onPress={onPress} style={styles.sectionListItem}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <LeftIconWrapper>
+      <WidthFixer>
         <Image
           source={image}
           style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }}
         />
-      </LeftIconWrapper>
+      </WidthFixer>
       <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>
         {title}
       </Text>

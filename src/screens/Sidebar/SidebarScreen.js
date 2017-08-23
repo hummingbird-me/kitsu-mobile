@@ -15,7 +15,7 @@ import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
-import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
+import { SidebarListItem, SidebarTitle, ItemSeparator, WidthFixer } from './common/';
 
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 const settingsData = [
@@ -24,13 +24,7 @@ const settingsData = [
   { title: 'Suggest Features', image: suggest, target: '' },
   { title: 'Contact Us', image: contact, target: '' },
 ];
-const LeftIconWrapper = (
-  { children }, // have a standard width at all items.
-) => (
-  <View style={{ width: 25, alignItems: 'center' }}>
-    {children}
-  </View>
-);
+
 const SettingsItem = ({ image, title, onPress }) => (
   <SidebarListItem image={image} title={title} onPress={onPress} />
 );
@@ -38,13 +32,13 @@ const GroupsItem = ({ imageURL, title, onPress }) => (
   <Item button onPress={onPress} style={styles.sectionListItem}>
     <Left>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <LeftIconWrapper>
+        <WidthFixer>
           <Image
             source={{ uri: imageURL }}
             resizeMode={'stretch'}
             style={{ width: 20, height: 20, borderRadius: 4 }}
           />
-        </LeftIconWrapper>
+        </WidthFixer>
         <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>
           {title}
         </Text>
