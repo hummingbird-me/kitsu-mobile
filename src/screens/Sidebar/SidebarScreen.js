@@ -176,7 +176,7 @@ class SidebarScreen extends React.Component {
               <TouchableOpacity
                 onPress={this.onLogoutButtonPressed}
                 style={{
-                  marginTop: 40,
+                  marginVertical: 40,
                   padding: 12,
                   backgroundColor: colors.white,
                   alignItems: 'center',
