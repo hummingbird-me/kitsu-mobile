@@ -4,8 +4,8 @@ import { Button, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
-const SidebarButton = ({ loading, onPress, title }) => (
-  <View style={styles.wrapper}>
+const SidebarButton = ({ loading, onPress, title, style }) => (
+  <View style={[styles.wrapper, style]}>
     <Button block disabled={false && loading} onPress={onPress} style={nativeBaseStyles.button}>
       {loading
         ? <Spinner size="small" color="rgba(255,255,255,0.4)" />

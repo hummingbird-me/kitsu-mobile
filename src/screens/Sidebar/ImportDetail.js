@@ -20,7 +20,13 @@ class ImportDetail extends React.Component {
         <Container style={styles.containerStyle}>
           <View style={{ marginTop: 77 }}>
             <View
-              style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}
+              style={{
+                backgroundColor: colors.white,
+                padding: 2,
+                borderRadius: 4,
+                marginHorizontal: 12,
+                marginVertical: 20,
+              }}
             >
               <View style={{ padding: 8 }}>
                 <View style={{ alignItems: 'center' }}>
@@ -53,6 +59,7 @@ class ImportDetail extends React.Component {
               </View>
             </View>
             <SidebarButton
+              style={{ marginTop: 0 }}
               onPress={() => {}}
               title={`Start ${item.title} Import`}
               loading={false}
