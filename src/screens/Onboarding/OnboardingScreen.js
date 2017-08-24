@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Dimensions, Platform, Easing } from 'react-native';
+import { View, Text, Dimensions, Platform } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
 import * as colors from 'kitsu/constants/colors';
@@ -68,7 +68,7 @@ class OnboardingScreen extends Component {
     step: 0,
   };
 
-  renderStep = () => INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
+  renderStep = ({ item, index }) => <Step key={`step-${index}`} {...item} />;
 
   renderDots = () =>
     INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
@@ -83,9 +83,14 @@ class OnboardingScreen extends Component {
 
     return (
       <Container style={styleObj.container}>
-        <Content contentContainerStyle={styleObj.contentContainer} scrollEnabled={Platform.select({ ios: false, android: true })}>
+        <Content
+          contentContainerStyle={styleObj.contentContainer}
+          scrollEnabled={Platform.select({ ios: false, android: true })}
+        >
           <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
             <Carousel
+              data={INTROS}
+              renderItem={this.renderStep}
               inactiveSlideScale={0.90}
               inactiveSlideOpacity={0.5}
               enableMomentum={false}
@@ -93,9 +98,7 @@ class OnboardingScreen extends Component {
               sliderWidth={Dimensions.get('window').width}
               itemWidth={265}
               decelerationRate={'fast'}
-            >
-              {this.renderStep()}
-            </Carousel>
+            />
           </View>
 
           <View style={styles.dotContainer}>

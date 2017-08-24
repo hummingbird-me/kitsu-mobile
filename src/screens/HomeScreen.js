@@ -9,8 +9,6 @@ import { Counter } from 'kitsu/components/Counter';
 
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 
-import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
-
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
