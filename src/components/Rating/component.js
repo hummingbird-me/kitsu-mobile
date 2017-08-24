@@ -90,7 +90,7 @@ export class Rating extends PureComponent {
     ratingSystem: PropTypes.oneOf(['simple', 'regular', 'advanced']),
     showNotRated: PropTypes.bool,
     size: PropTypes.string,
-    style: PropTypes.object,
+    style: PropTypes.any,
     viewType: PropTypes.oneOf(['single', 'select']),
   }
 

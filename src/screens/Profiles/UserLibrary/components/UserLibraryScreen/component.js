@@ -21,8 +21,8 @@ const getCardVisibilityCounts = () => {
   const { height, width } = Dimensions.get('screen');
   const maxWidth = height > width ? height : width;
   return {
-    maximumWidth: Math.ceil(maxWidth / constants.POSTER_CARD_WIDTH),
-    currentWidth: Math.ceil(width / constants.POSTER_CARD_WIDTH),
+    countForMaxWidth: Math.ceil(maxWidth / constants.POSTER_CARD_WIDTH),
+    countForCurrentWidth: Math.ceil(width / constants.POSTER_CARD_WIDTH),
   };
 };
 
@@ -168,15 +168,15 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   renderLoadingList = () => {
-    const { maximumWidth } = getCardVisibilityCounts();
-    const data = Array(maximumWidth).fill(1).map((_, index) => ({ id: index }));
+    const { countForMaxWidth } = getCardVisibilityCounts();
+    const data = Array(countForMaxWidth).fill(1).map((_, index) => ({ id: index }));
     const width = constants.POSTER_CARD_WIDTH;
 
     return (
       <FlatList
         horizontal
         data={data}
-        initialNumToRender={8}
+        initialNumToRender={countForMaxWidth}
         initialScrollIndex={0}
         keyExtractor={item => item.id}
         getItemLayout={(_data, index) => (
@@ -243,14 +243,17 @@ export class UserLibraryScreenComponent extends React.Component {
       const { status } = currentList;
       const { data, loading: listLoading } = userLibrary[type][status];
 
-      const { currentWidth, maximumWidth } = getCardVisibilityCounts();
-      const emptyItemsToAdd = maximumWidth - data.length;
-      const renderData = data.slice();
+      const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
+      const emptyItemsToAdd = countForMaxWidth - data.length;
+      const dataFilled = data.slice();
+
       if (!listLoading && emptyItemsToAdd > 0) {
         for (let x = 0; x < emptyItemsToAdd; x += 1) {
-          renderData.push({ type: 'empty-item' });
+          dataFilled.push({ id: x, type: 'empty-item' });
         }
       }
+
+      const renderData = emptyItemsToAdd > 0 ? dataFilled : data;
 
       return (
         <View key={`${status}-${type}`}>
@@ -269,18 +272,17 @@ export class UserLibraryScreenComponent extends React.Component {
             <FlatList
               horizontal
               data={renderData}
-              initialNumToRender={8}
+              initialNumToRender={countForMaxWidth}
               initialScrollIndex={0}
               getItemLayout={(_data, index) => (
                 { width, offset: width * index, index }
               )}
               keyExtractor={item => item.id}
               onEndReached={() => this.fetchMore(type, status)}
-              onEndReachedThreshold={0.50}
-              refreshing={listLoading}
+              onEndReachedThreshold={0.5}
               removeClippedSubviews={false}
               renderItem={this.renderItem}
-              scrollEnabled={data.length >= currentWidth}
+              scrollEnabled={data.length >= countForCurrentWidth}
               showsHorizontalScrollIndicator={false}
             />
           }

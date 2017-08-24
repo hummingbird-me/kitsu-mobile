@@ -9,7 +9,7 @@ export class ProgressiveImage extends React.Component {
   static propTypes = {
     backgroundStyle: PropTypes.object,
     children: PropTypes.object,
-    style: PropTypes.object,
+    style: PropTypes.any,
     resizeMode: PropTypes.string,
     source: PropTypes.object.isRequired,
   };
