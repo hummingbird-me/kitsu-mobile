@@ -186,6 +186,7 @@ class QuickUpdate extends Component {
           itemHeight={900}
           style={styles.carousel}
           onSnapToItem={this.carouselItemChanged}
+          decelerationRate="fast"
         />
 
         {/* Close Button */}

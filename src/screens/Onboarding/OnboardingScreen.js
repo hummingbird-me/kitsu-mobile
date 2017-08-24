@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Dimensions, Platform } from 'react-native';
+import { View, Text, Dimensions, Platform, StyleSheet } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
 import * as colors from 'kitsu/constants/colors';
@@ -9,7 +9,7 @@ import Step from './Step';
 import Dot from './Dot';
 
 
-const styleObj = {
+const styleObj = StyleSheet.create({
   container: {
     backgroundColor: colors.darkPurple,
     justifyContent: 'center',
@@ -34,7 +34,7 @@ const styleObj = {
     backgroundColor: colors.green,
     borderWidth: 0,
   },
-};
+});
 
 const INTROS = [
   {
