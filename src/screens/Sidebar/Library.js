@@ -1,8 +1,6 @@
 import React from 'react';
-import { View, Image, FlatList, Text } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Container } from 'native-base';
-import * as colors from 'kitsu/constants/colors';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import PropTypes from 'prop-types';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';

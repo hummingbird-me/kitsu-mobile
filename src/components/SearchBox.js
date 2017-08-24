@@ -16,6 +16,7 @@ export default connectSearchBox(({ refine, currentRefinement, placeholder }) => 
       autoCorrect={false}
       underlineColorAndroid={'transparent'}
       placeholderTextColor={colors.placeholderGrey}
+      keyboardAppearance={'dark'}
     />
   </Item>
 ));

@@ -282,6 +282,28 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'listImports',
+  {
+    inputText: '',
+    strategy: '',
+    kind: '',
+    inputFile: '',
+    progress: '',
+    status: '',
+    total: '',
+    errorMessage: '',
+    errorTrace: '',
+    createdAt: '',
+    updatedAt: '',
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'list-imports' },
+);
+
+Kitsu.define(
   'anime',
   {
     slug: '',

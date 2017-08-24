@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Image, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Container, Icon, Right, Item } from 'native-base';
+import { Text, Icon, Right, Item, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
+import { Kitsu, setToken } from 'kitsu/config/api';
 import { success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import { SidebarTitle, ItemSeparator, WidthFixer } from './common/';
 import styles from './styles';
@@ -25,13 +26,14 @@ const MediaItem = ({ onPress, title, details, logoURL }) => (
   </Item>
 );
 
-const ImportItem = ({ title, details, status, date }) => {
+const ImportItem = ({ kind, details, status, date }) => {
   let icon = null;
+  const title = kind === 'my-anime-list' ? 'MyAnimeList' : 'AniList';
   switch (status) {
-    case 'pending':
+    case 'queued':
       icon = pending;
       break;
-    case 'success':
+    case 'completed':
       icon = success;
       break;
     case 'failed':
@@ -67,12 +69,42 @@ class ImportLibrary extends React.Component {
     title: 'Import Library',
   };
 
+  state = {
+    imports: [],
+    loading: true,
+  };
+
+  componentDidMount() {
+    this.fetchLibraryImports();
+  }
+
   onMediaItemPressed = (item) => {
     const { navigation } = this.props;
     navigation.navigate('ImportDetail', { item });
   };
 
+  fetchLibraryImports = async () => {
+    const { accessToken, currentUser } = this.props;
+    const { id } = currentUser;
+    setToken(accessToken);
+    try {
+      const imports = await Kitsu.findAll('listImports', {
+        filter: { user_id: id },
+      });
+      this.setState({
+        imports,
+        loading: false,
+      });
+    } catch (e) {
+      this.setState({
+        error: e,
+        loading: false,
+      });
+    }
+  };
+
   render() {
+    const { imports } = this.state;
     return (
       <View style={styles.containerStyle}>
         <View>
@@ -105,42 +137,22 @@ class ImportLibrary extends React.Component {
             removeClippedSubviews={false}
           />
         </View>
-        <View>
-          <SidebarTitle title={'Previous Imports'} />
-          <FlatList
-            data={[
-              {
-                title: 'MyAnimeList',
-                details: 'Currently importing 231 titles',
-                status: 'pending',
-                date: '',
-              },
-              {
-                title: 'MyAnimeList',
-                details: 'Successfully imported 231 titles',
-                status: 'success',
-                date: '',
-              },
-              {
-                title: 'AniList',
-                details: 'Failed to import 231 titles. Try again later.',
-                status: 'failed',
-                date: '',
-              },
-            ]}
-            keyExtractor={(item, index) => index}
-            renderItem={({ item }) => (
-              <ImportItem
-                title={item.title}
-                details={item.details}
-                date={item.date}
-                status={item.status}
-              />
-            )}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            removeClippedSubviews={false}
-          />
-        </View>
+        <SidebarTitle title={'Previous Imports'} />
+        <FlatList
+          data={imports}
+          keyExtractor={(item, index) => index}
+          renderItem={({ item }) => (
+            <ImportItem
+              kind={item.kind}
+              details={'Some detail text will appear here.'}
+              date={item.updatedDate}
+              status={item.status}
+            />
+          )}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          removeClippedSubviews={false}
+          ListEmptyComponent={<Spinner color={'white'} />}
+        />
       </View>
     );
   }
@@ -162,7 +174,10 @@ const nativebaseStyles = {
   },
 };
 
-const mapStateToProps = ({ user }) => ({});
+const mapStateToProps = ({ auth, user }) => ({
+  accessToken: auth.tokens.access_token,
+  currentUser: user.currentUser,
+});
 
 ImportLibrary.propTypes = {};
 

@@ -105,6 +105,7 @@ class GeneralSettings extends React.Component {
                   autoCapitalize={'words'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
+                  keyboardAppearance={'dark'}
                 />
               </View>
               <ItemSeparator />
@@ -119,6 +120,7 @@ class GeneralSettings extends React.Component {
                   autoCapitalize={'none'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
+                  keyboardAppearance={'dark'}
                 />
               </View>
               <ItemSeparator />
@@ -137,6 +139,7 @@ class GeneralSettings extends React.Component {
                   placeholder={'Start typing to set a new password.'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
+                  keyboardAppearance={'dark'}
                 />
               </View>
               {this.state.shouldShowValidationInput &&
@@ -152,6 +155,7 @@ class GeneralSettings extends React.Component {
                     placeholder={'Confirm password'}
                     autoCorrect={false}
                     underlineColorAndroid={'transparent'}
+                    keyboardAppearance={'dark'}
                   />
                 </View>}
               <SidebarTitle title={'Content on Kitsu'} />
