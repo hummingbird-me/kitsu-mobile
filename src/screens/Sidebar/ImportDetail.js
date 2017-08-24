@@ -52,7 +52,11 @@ class ImportDetail extends React.Component {
                 />
               </View>
             </View>
-            <SidebarButton onPress={() => {}} title={'Save Privacy Settings'} loading={false} />
+            <SidebarButton
+              onPress={() => {}}
+              title={`Start ${item.title} Import`}
+              loading={false}
+            />
           </View>
         </Container>
       )
