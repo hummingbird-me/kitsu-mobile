@@ -3,17 +3,13 @@ import { View, Image, TouchableOpacity, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Text, Container, Content, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import * as colors from 'kitsu/constants/colors';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
+import { SidebarTitle, ItemSeparator } from './common/';
 
 class LinkedAccounts extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Linked Accounts'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Linked Accounts',
+  };
 
   onUnlinkAccount = () => {};
 

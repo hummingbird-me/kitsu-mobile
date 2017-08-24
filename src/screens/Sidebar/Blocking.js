@@ -7,11 +7,10 @@ import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import SearchBox from 'kitsu/components/SearchBox';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
+import { SidebarTitle, ItemSeparator } from './common/';
 import styles from './styles';
 
 const RowItem = ({ type, item, onPress }) => {
@@ -84,12 +83,9 @@ const Hits = connectInfiniteHits(({ hits, hasMore, refine, onPress }) => (
 ));
 
 class Blocking extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Blocking'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Blocking',
+  };
 
   state = {
     loading: true,

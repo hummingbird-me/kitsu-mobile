@@ -3,28 +3,18 @@ import { View, Image, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Container } from 'native-base';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import PropTypes from 'prop-types';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { startCase } from 'lodash';
-import {
-  SidebarHeader,
-  SidebarListItem,
-  SidebarTitle,
-  ItemSeparator,
-  SidebarButton,
-} from './common/';
+import { SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import styles from './styles';
 
 class Library extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Library'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Library',
+  };
 
   state = {
     titleLanguagePreference: this.props.titleLanguagePreference,

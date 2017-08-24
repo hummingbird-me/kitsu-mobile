@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Icon, Spinner } from 'native-base';
+import { Container, Spinner } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
@@ -39,7 +39,7 @@ class ProfileScreen extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
+      <Image source={require('kitsu/assets/img/tabbar_icons/update.png')} style={{ tintColor, width: 22, height: 22, overflow: 'visible' }} />
     ),
     header: null,
   });

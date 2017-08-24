@@ -5,19 +5,15 @@ import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { isEmpty } from 'lodash';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import styles from './styles';
 
 class GeneralSettings extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'General'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'General',
+  };
 
   constructor(props) {
     super(props);

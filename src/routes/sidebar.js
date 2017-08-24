@@ -1,4 +1,7 @@
+import React from 'react';
+import { Image } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import sidebar from 'kitsu/assets/img/tabbar_icons/sidebar.png';
 import SidebarScreen from 'kitsu/screens/Sidebar/SidebarScreen';
 import SettingsScreen from 'kitsu/screens/Sidebar/SettingsScreen';
 import GeneralSettings from 'kitsu/screens/Sidebar/GeneralSettings';
@@ -8,6 +11,7 @@ import Blocking from 'kitsu/screens/Sidebar/Blocking';
 import LinkedAccounts from 'kitsu/screens/Sidebar/LinkedAccounts';
 import ImportLibrary from 'kitsu/screens/Sidebar/ImportLibrary';
 import ImportDetail from 'kitsu/screens/Sidebar/ImportDetail';
+import { SidebarHeader } from 'kitsu/screens/Sidebar/common/';
 import navigationOptions from './navigationOptions';
 
 const SidebarStack = StackNavigator(
@@ -41,7 +45,18 @@ const SidebarStack = StackNavigator(
     },
   },
   {
-    navigationOptions: navigationOptions(null),
+    navigationOptions: ({ navigation }) => ({
+      header: ({ getScreenDetails, scene }) => (
+        <SidebarHeader
+          navigation={navigation}
+          headerTitle={getScreenDetails(scene).options.title}
+        />
+      ),
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={sidebar} style={{ tintColor, width: 20, height: 21 }} />
+      ),
+      ...navigationOptions(null),
+    }),
   },
 );
 

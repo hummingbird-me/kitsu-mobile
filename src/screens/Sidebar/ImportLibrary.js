@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import { Text, Container, Icon, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
-import { SidebarHeader, SidebarTitle, ItemSeparator, WidthFixer } from './common/';
+import { SidebarTitle, ItemSeparator, WidthFixer } from './common/';
 import styles from './styles';
 
 const MediaItem = ({ onPress, title, details, logoURL }) => (
@@ -64,12 +63,9 @@ const ImportItem = ({ title, details, status, date }) => {
 };
 
 class ImportLibrary extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Import Library'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Import Library',
+  };
 
   onMediaItemPressed = (item) => {
     const { navigation } = this.props;

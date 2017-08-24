@@ -3,18 +3,12 @@ import { View, Image, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { Text, Container, Button } from 'native-base';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import PropTypes from 'prop-types';
-import { SidebarHeader, ItemSeparator, SidebarButton } from './common/';
+import { ItemSeparator, SidebarButton } from './common/';
 
 class ImportDetail extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    header: () => (
-      <SidebarHeader navigation={navigation} headerTitle={navigation.state.params.item.title} />
-    ),
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
+    title: navigation.state.params.item.title,
   });
 
   render() {

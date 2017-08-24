@@ -4,17 +4,13 @@ import { connect } from 'react-redux';
 import { Container } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { blocking, library, privacy, settings, linked } from 'kitsu/assets/img/sidebar_icons/';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
+import { SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
 
 class SettingsScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Settings'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Settings',
+  };
 
   render() {
     const { navigation } = this.props;

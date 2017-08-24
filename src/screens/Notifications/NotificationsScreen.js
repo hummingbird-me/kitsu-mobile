@@ -48,7 +48,10 @@ class NotificationsScreen extends Component {
               {screenProps.badge}
             </Text>
           </View>}
-        <Image source={require('../../assets/img/tabbar_icons/notifications.png')} style={{ tintColor: tintColor, width: 20, height: 21 }} />
+        <Image
+          source={require('kitsu/assets/img/tabbar_icons/notf.png')}
+          style={{ tintColor, width: 20, height: 21 }}
+        />
       </View>
     ),
   });
@@ -166,7 +169,7 @@ class NotificationsScreen extends Component {
           data={notifications}
           renderItem={this.renderItem}
           onEndReached={() => this.loadMore()}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           onEndReachedThreshold={0.5}
           initialNumToRender={30}
           refreshing={loadingNotifications}

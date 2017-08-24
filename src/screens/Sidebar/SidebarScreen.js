@@ -11,7 +11,6 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Text, Container, Icon, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { logoutUser } from 'kitsu/store/auth/actions';
@@ -54,9 +53,6 @@ const GroupsItem = ({ imageURL, title, onPress }) => (
 class SidebarScreen extends React.Component {
   static navigationOptions = {
     header: null, // overlaps statusbar
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
   };
 
   componentDidMount() {

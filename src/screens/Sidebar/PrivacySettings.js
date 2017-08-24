@@ -4,17 +4,13 @@ import { connect } from 'react-redux';
 import { Text, Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 
 class PrivacySettings extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Privacy'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Privacy',
+  };
 
   state = {
     loading: true,
