@@ -19,13 +19,9 @@ export class Counter extends React.PureComponent {
     progressCounter: false,
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      value: props.initialValue,
-    };
-  }
+  state = {
+    value: this.props.initialValue,
+  };
 
   decrementCount = () => {
     const value = this.state.value - 1;
