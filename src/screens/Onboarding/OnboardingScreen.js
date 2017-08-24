@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Dimensions, Platform } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
@@ -59,9 +59,17 @@ const INTROS = [
   },
 ];
 
-class OnboardingScreen extends Component {
+class OnboardingScreen extends PureComponent {
   static navigationOptions = {
     header: null,
+  };
+
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+  };
+
+  static defaultProps = {
+    navigation: {},
   };
 
   state = {
@@ -97,7 +105,7 @@ class OnboardingScreen extends Component {
               onSnapToItem={step => this.setState({ step })}
               sliderWidth={Dimensions.get('window').width}
               itemWidth={265}
-              decelerationRate={'fast'}
+              decelerationRate="fast"
             />
           </View>
 
@@ -133,13 +141,5 @@ class OnboardingScreen extends Component {
     );
   }
 }
-
-OnboardingScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-};
-
-OnboardingScreen.defaultProps = {
-  navigation: {},
-};
 
 export default OnboardingScreen;
