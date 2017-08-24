@@ -5,8 +5,6 @@ import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import * as colors from 'kitsu/constants/colors';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -63,7 +61,10 @@ class HomeScreen extends Component {
               Create Post
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
+          <Button onPress={() => navigation.navigate('UserProfile', {
+            userId: 5554,
+          })}
+          >
             <Text>
               Logged In Profile
             </Text>
@@ -95,26 +96,6 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
-
-          <SelectMenu
-            style={{ width: 50, height: 50, backgroundColor: 'transparent', borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}
-            onOptionSelected={(...args) => { console.log(args); }}
-            options={[{ value: 'anime', text: 'Fancy Anime' }, { value: 'all', text: 'All The Things' }, { value: 'cancel', text: 'Haha JK' }]}
-          >
-            <Text>Josh</Text>
-          </SelectMenu>
-
-          <SelectMenu
-            style={{ width: 50, height: 50, backgroundColor: colors.lightGrey, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}
-            onOptionSelected={(...args) => { console.log(args); }}
-            options={['anime', 'all', 'cancel']}
-          >
-            <Image
-              source={require('kitsu/assets/img/menus/three-dot-horizontal-grey.png')}
-              style={{ width: 20 }}
-              resizeMode="contain"
-            />
-          </SelectMenu>
         </Content>
       </Container>
     );

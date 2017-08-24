@@ -91,6 +91,7 @@ export default (state = INITIAL_STATE, action) => {
           ...userLibraryInitial,
           loading: true,
           searchTerm: action.searchTerm,
+          userId: action.userId,
         },
       };
     case types.FETCH_USER_LIBRARY_SUCCESS:
