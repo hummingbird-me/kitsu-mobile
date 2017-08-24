@@ -5,17 +5,16 @@ import { Text, Icon, Right, Item, Spinner } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
+import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
+import myanimelist from 'kitsu/assets/img/myanimelist.png';
+import anilist from 'kitsu/assets/img/anilist.png';
 import { SidebarTitle, ItemSeparator, WidthFixer } from './common/';
 import styles from './styles';
 
-const MediaItem = ({ onPress, title, details, logoURL }) => (
+const MediaItem = ({ onPress, title, details, image }) => (
   <Item onPress={onPress} button style={nativebaseStyles.sectionListItem}>
     <View style={{ justifyContent: 'center', marginLeft: 8 }}>
-      <Image
-        source={{ uri: logoURL }}
-        style={{ width: 100, height: 24, resizeMode: 'contain', borderRadius: 12 }}
-      />
+      <Image source={image} style={{ width: 100, height: 24, resizeMode: 'contain' }} />
       <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
         {details}
       </Text>
@@ -26,21 +25,31 @@ const MediaItem = ({ onPress, title, details, logoURL }) => (
   </Item>
 );
 
-const ImportItem = ({ kind, details, status, date }) => {
+const ImportItem = ({ kind, status, date, total }) => {
   let icon = null;
+  let details = '';
   const title = kind === 'my-anime-list' ? 'MyAnimeList' : 'AniList';
   switch (status) {
-    case 'queued':
+    case 'running':
       icon = pending;
+      details = `Currently importing ${total} titles`;
+      break;
+    case 'queued':
+      icon = queued;
+      details = `Preparing to import ${total} titles`;
       break;
     case 'completed':
       icon = success;
+      details = `Successfully imported ${total} titles`;
       break;
     case 'failed':
       icon = failed;
+      details = `Failed to import ${total} titles. Try again later.`;
       break;
     default:
-      icon = 'pending';
+      icon = failed;
+      details = `Failed to import ${total} titles. Try again later.`;
+      break;
   }
   return (
     <Item button style={nativebaseStyles.sectionListItem}>
@@ -114,13 +123,13 @@ class ImportLibrary extends React.Component {
               {
                 title: 'MyAnimeList',
                 details: 'Import anime & manga library',
-                logoURL: 'https://i2.wp.com/www.otakutale.com/wp-content/uploads/2015/07/MyAnimeList-Logo.jpg?resize=800%2C136',
+                image: myanimelist,
                 target: '',
               },
               {
                 title: 'AniList',
                 details: 'Import anime & manga library',
-                logoURL: 'https://anilist.co/img/logo_anilist.png',
+                image: anilist,
                 target: '',
               },
             ]}
@@ -128,7 +137,7 @@ class ImportLibrary extends React.Component {
             renderItem={({ item }) => (
               <MediaItem
                 onPress={() => this.onMediaItemPressed(item)}
-                logoURL={item.logoURL}
+                image={item.image}
                 title={item.title}
                 details={item.details}
               />
@@ -143,8 +152,8 @@ class ImportLibrary extends React.Component {
           keyExtractor={(item, index) => index}
           renderItem={({ item }) => (
             <ImportItem
+              total={item.total}
               kind={item.kind}
-              details={'Some detail text will appear here.'}
               date={item.updatedDate}
               status={item.status}
             />

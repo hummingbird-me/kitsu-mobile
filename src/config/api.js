@@ -62,6 +62,7 @@ Kitsu.define(
     likesGivenCount: '',
     reviewsCount: '',
     likesReceivedCount: '',
+    mediaReactionsCount: '',
     postsCount: '',
     ratingsCount: '',
     proExpiresAt: '',

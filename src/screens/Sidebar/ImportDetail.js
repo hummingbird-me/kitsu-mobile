@@ -77,7 +77,7 @@ class ImportDetail extends React.Component {
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
                 <Image
-                  source={{ uri: item.logoURL }}
+                  source={item.image}
                   style={{ width: 120, height: 40, resizeMode: 'contain' }}
                 />
               </View>
