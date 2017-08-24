@@ -20,7 +20,7 @@ import DoubleProgress from 'kitsu/components/DoubleProgress';
 import CardStatus from 'kitsu/components/Card/CardStatus';
 import CardFull from 'kitsu/components/Card/CardFull';
 import CardActivity from 'kitsu/components/Card/CardActivity';
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import getTitleField from 'kitsu/utils/getTitleField';
 import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from 'kitsu/store/media/actions';
 import { getMediaFeed } from 'kitsu/store/feed/actions';

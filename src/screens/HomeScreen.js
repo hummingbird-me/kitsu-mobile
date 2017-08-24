@@ -5,8 +5,7 @@ import { Spinner, Button, Container, Content, Icon } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import * as colors from 'kitsu/constants/colors';
+import { Counter } from 'kitsu/components/Counter';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -33,7 +32,7 @@ class HomeScreen extends Component {
   render() {
     const { currentUser, navigation, loading } = this.props;
     return (
-      <Container>
+      <Container style={{ backgroundColor: 'white' }}>
         <Content style={{ padding: 50 }}>
           {loading
             ? <Spinner size="large" />
@@ -63,7 +62,10 @@ class HomeScreen extends Component {
               Create Post
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
+          <Button onPress={() => navigation.navigate('UserProfile', {
+            userId: 5554,
+          })}
+          >
             <Text>
               Logged In Profile
             </Text>
@@ -96,25 +98,8 @@ class HomeScreen extends Component {
             </Text>
           </Button>
 
-          <SelectMenu
-            style={{ width: 50, height: 50, backgroundColor: 'transparent', borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}
-            onOptionSelected={(...args) => { console.log(args); }}
-            options={[{ value: 'anime', text: 'Fancy Anime' }, { value: 'all', text: 'All The Things' }, { value: 'cancel', text: 'Haha JK' }]}
-          >
-            <Text>Josh</Text>
-          </SelectMenu>
-
-          <SelectMenu
-            style={{ width: 50, height: 50, backgroundColor: colors.lightGrey, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}
-            onOptionSelected={(...args) => { console.log(args); }}
-            options={['anime', 'all', 'cancel']}
-          >
-            <Image
-              source={require('kitsu/assets/img/menus/three-dot-horizontal-grey.png')}
-              style={{ width: 20 }}
-              resizeMode="contain"
-            />
-          </SelectMenu>
+          <Counter initialValue={14} maxValue={20} progressCounter />
+          <Counter initialValue={11} maxValue={20} />
         </Content>
       </Container>
     );

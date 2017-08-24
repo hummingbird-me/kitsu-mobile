@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Icon, Button, Container } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 

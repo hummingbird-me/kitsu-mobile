@@ -20,7 +20,7 @@ import CardStatus from 'kitsu/components/Card/CardStatus';
 import CardFull from 'kitsu/components/Card/CardFull';
 import CardTabs from 'kitsu/components/Card/CardTabs';
 import CardActivity from 'kitsu/components/Card/CardActivity';
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
 import { defaultAvatar } from 'kitsu/constants/app';
 import ResultsList from 'kitsu/screens/Search/Lists/ResultsList';
@@ -100,7 +100,7 @@ class ProfileScreen extends Component {
               source={{ uri: item.image }}
               containerStyle={{
                 height,
-                backgroundColor: colors.imageGrey,
+                backgroundColor: colors.lightGrey,
               }}
               style={{ height, borderRadius: 1 }}
             />
