@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 // import HTMLView from 'react-native-htmlview';
 
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import HTMLView from 'kitsu/components/htmlView';
 import * as colors from 'kitsu/constants/colors';
 import { defaultAvatar } from 'kitsu/constants/app';

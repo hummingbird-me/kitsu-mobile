@@ -62,7 +62,10 @@ class HomeScreen extends Component {
               Create Post
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserProfile', { userId: 5554 })}>
+          <Button onPress={() => navigation.navigate('UserProfile', {
+            userId: 5554,
+          })}
+          >
             <Text>
               Logged In Profile
             </Text>

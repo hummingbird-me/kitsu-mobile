@@ -12,7 +12,7 @@ export const LeftIconWrapper = ({ children }) => (
 );
 
 export const ItemSeparator = () => (
-  <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.imageGrey }} />
+  <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }} />
 );
 
 const SidebarListItem = ({ image, title, onPress }) => (

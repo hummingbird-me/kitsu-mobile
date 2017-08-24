@@ -153,10 +153,9 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       status: options.status,
     });
   } catch (error) {
-    console.log(error);
     dispatch({
-      type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
       error,
+      type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
     });
   }
 };
@@ -164,6 +163,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, getState) => {
   dispatch({
     searchTerm,
+    userId,
     type: types.FETCH_USER_LIBRARY,
   });
 
@@ -185,10 +185,9 @@ export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, ge
       type: types.FETCH_USER_LIBRARY_SUCCESS,
     });
   } catch (error) {
-    console.log(error);
     dispatch({
-      type: types.FETCH_USER_LIBRARY_FAIL,
       error,
+      type: types.FETCH_USER_LIBRARY_FAIL,
     });
   }
 };

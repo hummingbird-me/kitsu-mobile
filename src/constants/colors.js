@@ -10,6 +10,7 @@ export const fbBlue = '#507CC0';
 
 /* purples */
 export const darkPurple = '#402F3F';
+export const lightPurple = '#624E5F';
 export const listBackPurple = '#443443';
 export const tabBarPuple = '#453342';
 
@@ -28,6 +29,7 @@ export const darkGrey = '#696969';
 export const yellow = '#F0AD4E';
 
 /* blacks */
+export const black = '#000000';
 export const offBlack = '#2B212B';
 
 /* misc */

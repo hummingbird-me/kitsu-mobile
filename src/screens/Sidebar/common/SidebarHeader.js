@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Platform } from 'react-native';
 import { Button, Icon, Left, Right } from 'native-base';
-import ProgressiveImage from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import PropTypes from 'prop-types';
 
 const SidebarHeader = ({ navigation, headerTitle }) => (

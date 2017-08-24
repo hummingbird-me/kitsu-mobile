@@ -25,6 +25,7 @@
     "react": "16.0.0-alpha.6",
     "react-instantsearch": "^4.0.10",
     "react-native": "0.44.0",
+    "react-native-actionsheet": "^2.2.2",
     "react-native-animatable": "^1.2.0",
     "react-native-animated-progress-bar": "^1.1.0",
     "react-native-code-push": "^2.0.3-beta",
