@@ -46,6 +46,7 @@ const SidebarStack = StackNavigator(
   },
   {
     navigationOptions: ({ navigation }) => ({
+      ...navigationOptions(null),
       header: ({ getScreenDetails, scene }) => (
         <SidebarHeader
           navigation={navigation}
@@ -55,7 +56,6 @@ const SidebarStack = StackNavigator(
       tabBarIcon: ({ tintColor }) => (
         <Image source={sidebar} style={{ tintColor, width: 20, height: 21 }} />
       ),
-      ...navigationOptions(null),
     }),
   },
 );
