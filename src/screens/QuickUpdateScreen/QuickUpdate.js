@@ -17,6 +17,7 @@ import styles from './styles';
 class QuickUpdate extends Component {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
+    onClose: PropTypes.func.isRequired,
   };
 
   state = {
@@ -188,7 +189,7 @@ class QuickUpdate extends Component {
         />
 
         {/* Close Button */}
-        <TouchableOpacity style={styles.closeButton}>
+        <TouchableOpacity style={styles.closeButton} onPress={this.props.onClose}>
           <Icon name="ios-close" size={70} color="white" />
         </TouchableOpacity>
       </View>

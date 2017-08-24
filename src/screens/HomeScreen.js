@@ -25,6 +25,7 @@ class HomeScreen extends Component {
   state = {
     selectedImages: [],
     searchTerm: '',
+    quickUpdateModalVisible: false,
   };
 
   componentWillMount() {
@@ -105,8 +106,9 @@ class HomeScreen extends Component {
         </Content>
         <Modal
           visible={this.state.quickUpdateModalVisible}
+          animationType="slide"
         >
-          <QuickUpdateScreen />
+          <QuickUpdateScreen onClose={() => this.setState({ quickUpdateModalVisible: false })} />
         </Modal>
       </Container>
     );
