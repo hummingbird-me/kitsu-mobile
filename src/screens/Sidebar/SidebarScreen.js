@@ -7,7 +7,7 @@
 */
 
 import React from 'react';
-import { View, Image, Text, SectionList, Platform, TouchableOpacity } from 'react-native';
+import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Container } from 'native-base';
@@ -24,7 +24,7 @@ const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bug', image: bugs, target: '' },
   { title: 'Suggest Features', image: suggest, target: '' },
-  { title: 'Contact Us', image: contact, target: '' },
+  { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
 
 class SidebarScreen extends React.Component {
@@ -97,7 +97,11 @@ class SidebarScreen extends React.Component {
             image={item.image}
             title={item.title}
             onPress={() => {
-              navigation.navigate(item.target);
+              if (item.target === 'mailto') {
+                Linking.openURL('mailto:josh@kitsu.com');
+              } else {
+                navigation.navigate(item.target);
+              }
             }}
           />
         ),
@@ -119,6 +123,7 @@ class SidebarScreen extends React.Component {
               }}
             >
               <TouchableOpacity
+                activeOpacity={0.6}
                 style={{
                   marginTop: 12,
                   marginHorizontal: 12,
@@ -155,7 +160,7 @@ class SidebarScreen extends React.Component {
             sections={sectionListData}
             keyExtractor={(item, index) => index}
             ListHeaderComponent={() => <View height={20} />}
-            renderItem={() => <SettingsItem />}
+            renderItem={() => <SidebarListItem />}
             renderSectionHeader={({ section }) => (
               <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
             )}
