@@ -23,7 +23,7 @@ const shortcutsData = [{ title: 'View Library', image: library, target: 'Library
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bug', image: bugs, target: '' },
-  { title: 'Suggest Features', image: suggest, target: '' },
+  { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
   { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
 
