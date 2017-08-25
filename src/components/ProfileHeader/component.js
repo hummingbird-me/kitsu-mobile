@@ -17,7 +17,9 @@ CustomStatusBar.propTypes = {
   backgroundColor: PropTypes.string.isRequired,
 };
 
-export const ProfileHeader = ({ profile, followButton, title, onClickBack }) => {
+export const ProfileHeader = (
+  { profile, showCoverImage, showFollowButton, showProfileImage, title, onClickBack },
+) => {
   const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
   const goBack = () => onClickBack();
@@ -26,17 +28,17 @@ export const ProfileHeader = ({ profile, followButton, title, onClickBack }) => 
     <View style={styles.headerContainer}>
       <CustomStatusBar backgroundColor={colors.darkPurple} barStyle="light-content" />
       <View style={styles.header}>
-        <Image style={commonStyles.absoluteFill} source={{ uri: coverImageUri }} />
+        {showCoverImage && <Image style={commonStyles.absoluteFill} source={{ uri: coverImageUri }} />}
 
         <Left>
           <Button transparent onPress={goBack}>
             <Icon name="arrow-back" style={StyleSheet.flatten(commonStyles.colorWhite)} />
-            <Image style={styles.profileImage} source={{ uri: profileImageUri }} />
-            {followButton && <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>}
+            {showProfileImage && <Image style={styles.profileImage} source={{ uri: profileImageUri }} />}
+            {showFollowButton && <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>}
           </Button>
         </Left>
 
-        {!followButton && (
+        {!showFollowButton && (
         <Body>
           <View style={{ backgroundColor: 'transparent' }}>
             <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>
@@ -45,7 +47,7 @@ export const ProfileHeader = ({ profile, followButton, title, onClickBack }) => 
         )}
 
         <Right>
-          {followButton && (
+          {showFollowButton && (
           <Button transparent style={StyleSheet.flatten(styles.followButton)} onPress={goBack}>
             <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
           </Button>
@@ -58,13 +60,17 @@ export const ProfileHeader = ({ profile, followButton, title, onClickBack }) => 
 
 ProfileHeader.propTypes = {
   profile: PropTypes.object.isRequired,
-  followButton: PropTypes.bool,
+  showCoverImage: PropTypes.bool,
+  showFollowButton: PropTypes.bool,
+  showProfileImage: PropTypes.bool,
   onClickBack: PropTypes.func,
   title: PropTypes.string,
 };
 
 ProfileHeader.defaultProps = {
-  followButton: true,
+  showCoverImage: true,
+  showFollowButton: true,
+  showProfileImage: true,
   onClickBack: () => {},
   title: '',
 };

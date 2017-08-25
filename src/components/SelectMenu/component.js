@@ -8,6 +8,7 @@ export class SelectMenu extends PureComponent {
   static propTypes = {
     cancelButtonIndex: PropTypes.number,
     children: PropTypes.element,
+    disabled: PropTypes.bool,
     options: PropTypes.arrayOf(PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object,
@@ -20,6 +21,7 @@ export class SelectMenu extends PureComponent {
   static defaultProps = {
     cancelButtonIndex: -1,
     children: undefined,
+    disabled: false,
     style: null,
     tintColor: colors.black,
   }
@@ -62,7 +64,11 @@ export class SelectMenu extends PureComponent {
 
   render() {
     return (
-      <TouchableOpacity onPress={this.showActionSheet} style={this.props.style}>
+      <TouchableOpacity
+        disabled={this.props.disabled}
+        onPress={this.showActionSheet}
+        style={this.props.style}
+      >
         {this.props.children}
         <ActionSheet
           cancelButtonIndex={this.getCancelButtonIndex()}

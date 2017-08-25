@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" npm start",
+    "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" yarn start",
     "lint": "eslint ./src",
+    "reset": "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start:reset": "yarn start -- --reset-cache",
     "test": "jest"
   },
   "dependencies": {

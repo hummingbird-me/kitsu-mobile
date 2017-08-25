@@ -307,7 +307,7 @@ class ProfileScreen extends Component {
             single
             singleText="View Library"
             heading="Library Activity"
-            onPress={() => this.props.navigation.navigate('Library', {
+            onPress={() => this.props.navigation.navigate('UserLibrary', {
               profile,
             })}
           >

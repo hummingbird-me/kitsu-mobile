@@ -32,7 +32,7 @@ export const ProgressBar = (props) => {
 };
 
 ProgressBar.propTypes = {
-  backgroundStyle: PropTypes.object,
+  backgroundStyle: PropTypes.any,
   fillColor: PropTypes.string,
   fillPercentage: PropTypes.number,
   height: PropTypes.number,

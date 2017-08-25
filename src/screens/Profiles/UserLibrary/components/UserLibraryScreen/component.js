@@ -227,7 +227,7 @@ export class UserLibraryScreenComponent extends React.Component {
   };
 
   renderLists = (type) => {
-    const { userLibrary } = this.props;
+    const { userLibrary, navigation } = this.props;
     const isUserLibraryLoading = userLibrary.loading;
     const width = constants.POSTER_CARD_WIDTH;
     const listOrder = [
@@ -258,10 +258,11 @@ export class UserLibraryScreenComponent extends React.Component {
       return (
         <View key={`${status}-${type}`}>
           <LibraryHeader
-            data={data}
-            status={status}
-            type={type}
-            title={currentList[type]}
+            libraryStatus={status}
+            libraryType={type}
+            listTitle={currentList[type]}
+            navigation={navigation}
+            profile={navigation.state.params.profile}
           />
 
           {isUserLibraryLoading && listLoading && this.renderLoadingList()}

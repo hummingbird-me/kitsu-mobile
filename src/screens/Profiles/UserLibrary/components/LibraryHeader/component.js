@@ -4,15 +4,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 
-export const LibraryHeader = ({ title }) => {
+export const LibraryHeader = ({ libraryStatus, libraryType, listTitle, navigation, profile }) => {
   const viewAll = () => {
-    console.log('view all!!!');
+    navigation.navigate('UserLibraryList', {
+      libraryStatus,
+      libraryType,
+      profile,
+    });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.listTitleContainer}>
-        <Text style={styles.listTitle}>{title}</Text>
+        <Text style={styles.listTitle}>{listTitle}</Text>
       </View>
 
       <TouchableOpacity onPress={viewAll}>
@@ -26,9 +30,9 @@ export const LibraryHeader = ({ title }) => {
 };
 
 LibraryHeader.propTypes = {
-  title: PropTypes.string,
-};
-
-LibraryHeader.defaultProps = {
-  title: '',
+  libraryStatus: PropTypes.string.isRequired,
+  libraryType: PropTypes.string.isRequired,
+  listTitle: PropTypes.string.isRequired,
+  navigation: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };

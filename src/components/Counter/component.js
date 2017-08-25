@@ -5,6 +5,7 @@ import { styles } from './styles';
 
 export class Counter extends React.PureComponent {
   static propTypes = {
+    disabled: PropTypes.bool,
     initialValue: PropTypes.number.isRequired,
     maxValue: PropTypes.number,
     minValue: PropTypes.number,
@@ -13,6 +14,7 @@ export class Counter extends React.PureComponent {
   }
 
   static defaultProps = {
+    disabled: false,
     maxValue: undefined,
     minValue: 0,
     onValueChanged: () => {},
@@ -49,6 +51,7 @@ export class Counter extends React.PureComponent {
     return (
       <View style={styles.container}>
         <TouchableOpacity
+          disabled={this.props.disabled}
           onPress={this.decrementCount}
           style={[styles.counterButton, styles.counterButtonLeft]}
         >
@@ -61,6 +64,7 @@ export class Counter extends React.PureComponent {
         </View>
 
         <TouchableOpacity
+          disabled={this.props.disabled}
           onPress={this.incrementCount}
           style={[styles.counterButton, styles.counterButtonRight]}
         >

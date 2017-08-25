@@ -2,6 +2,7 @@ import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigato
 import {
   MediaScreen,
   UserLibraryScreen,
+  UserLibraryListScreen,
   ProfileScreen,
   FavoriteCharacters,
   NetworkScreen,
@@ -20,8 +21,11 @@ const ProfileStack = DismissableStackNavigator(
     Character: {
       screen: MediaScreen,
     },
-    Library: {
+    UserLibrary: {
       screen: UserLibraryScreen,
+    },
+    UserLibraryList: {
+      screen: UserLibraryListScreen,
     },
     Network: {
       screen: NetworkScreen,
