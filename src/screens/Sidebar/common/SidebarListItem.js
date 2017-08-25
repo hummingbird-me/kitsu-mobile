@@ -21,7 +21,10 @@ const SidebarListItem = ({ image, imageURL, title, onPress }) => (
       <WidthFixer>
         {(image && <Image source={image} style={styles.image} />) ||
           (imageURL &&
-            <Image source={{ uri: imageURL }} style={[styles.image, { resizeMode: 'stretch' }]} />)}
+            <Image
+              source={{ uri: imageURL }}
+              style={[styles.image, { resizeMode: 'stretch', borderRadius: 4 }]}
+            />)}
       </WidthFixer>
       <Text style={styles.text}>
         {title}
@@ -60,12 +63,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 16,
     height: 16,
-    borderRadius: 4,
   },
   text: {
     fontFamily: 'OpenSans',
     fontSize: 12,
-    marginLeft: 8,
+    marginLeft: 6,
     color: '#444',
   },
 });

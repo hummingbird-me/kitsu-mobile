@@ -8,21 +8,19 @@ export class SelectMenu extends PureComponent {
   static propTypes = {
     cancelButtonIndex: PropTypes.number,
     children: PropTypes.element,
-    options: PropTypes.arrayOf(PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-    ])).isRequired,
+    options: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object]))
+      .isRequired,
     onOptionSelected: PropTypes.func.isRequired,
     style: PropTypes.any,
     tintColor: PropTypes.string,
-  }
+  };
 
   static defaultProps = {
     cancelButtonIndex: -1,
     children: undefined,
     style: null,
     tintColor: colors.black,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -54,21 +52,23 @@ export class SelectMenu extends PureComponent {
         this.props.onOptionSelected(option);
       }
     }
-  }
+  };
 
   showActionSheet = () => {
     this.ActionSheet.show();
-  }
+  };
 
   render() {
     return (
-      <TouchableOpacity onPress={this.showActionSheet} style={this.props.style}>
+      <TouchableOpacity activeOpacity={1} onPress={this.showActionSheet} style={this.props.style}>
         {this.props.children}
         <ActionSheet
           cancelButtonIndex={this.getCancelButtonIndex()}
           onPress={this.handleFilterChange}
           options={this.displayOptions}
-          ref={(component) => { this.ActionSheet = component; }}
+          ref={(component) => {
+            this.ActionSheet = component;
+          }}
           tintColor={this.props.tintColor}
         />
       </TouchableOpacity>

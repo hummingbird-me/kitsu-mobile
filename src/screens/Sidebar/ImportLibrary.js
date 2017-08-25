@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Icon, Right, Item, Spinner } from 'native-base';
+import { Text, Icon, Right } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
@@ -12,7 +12,7 @@ import { SidebarTitle, ItemSeparator, WidthFixer } from './common/';
 import styles from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
-  <Item onPress={onPress} button style={nativebaseStyles.sectionListItem}>
+  <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
     <View style={{ justifyContent: 'center', marginLeft: 8 }}>
       <Image source={image} style={{ width: 100, height: 24, resizeMode: 'contain' }} />
       <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
@@ -22,7 +22,7 @@ const MediaItem = ({ onPress, title, details, image }) => (
     <Right>
       <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
     </Right>
-  </Item>
+  </TouchableOpacity>
 );
 
 const ImportItem = ({ kind, status, date, total }) => {
@@ -52,8 +52,8 @@ const ImportItem = ({ kind, status, date, total }) => {
       break;
   }
   return (
-    <Item button style={nativebaseStyles.sectionListItem}>
-      <View style={{ justifyContent: 'center', marginLeft: 8 }}>
+    <View style={[styles.item, { paddingHorizontal: 12 }]}>
+      <View style={{ justifyContent: 'center' }}>
         <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
           {title}
         </Text>
@@ -65,11 +65,11 @@ const ImportItem = ({ kind, status, date, total }) => {
         <WidthFixer>
           <Image
             source={icon}
-            style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }}
+            style={{ resizeMode: 'contain', width: 16, height: 16, right: -2 }}
           />
         </WidthFixer>
       </Right>
-    </Item>
+    </View>
   );
 };
 
@@ -160,7 +160,7 @@ class ImportLibrary extends React.Component {
           )}
           ItemSeparatorComponent={() => <ItemSeparator />}
           removeClippedSubviews={false}
-          ListEmptyComponent={<Spinner color={'white'} />}
+          ListEmptyComponent={<ActivityIndicator color={'white'} />}
         />
       </View>
     );

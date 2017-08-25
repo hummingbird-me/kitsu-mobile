@@ -1,7 +1,15 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, FlatList, Keyboard } from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  Keyboard,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Left, Right, Item, Spinner } from 'native-base';
+import { Left, Right } from 'native-base';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
@@ -16,7 +24,7 @@ import styles from './styles';
 const RowItem = ({ type, item, onPress }) => {
   const buttonText = type === 'search' ? 'Block' : 'Unblock';
   return (
-    <Item style={nativebaseStyles.sectionListItem}>
+    <View style={styles.item}>
       <Left>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
@@ -51,7 +59,7 @@ const RowItem = ({ type, item, onPress }) => {
           </Text>
         </TouchableOpacity>
       </Right>
-    </Item>
+    </View>
   );
 };
 
@@ -208,11 +216,11 @@ class Blocking extends React.Component {
                 onPress={() => this.onUnblockUser(item)}
               />
               )}
-            ListEmptyComponent={() => <Spinner />}
+            ListEmptyComponent={() => <ActivityIndicator />}
             ItemSeparatorComponent={() => <ItemSeparator />}
             removeClippedSubviews={false}
           />
-          : <Spinner color={'white'} />}
+          : <ActivityIndicator color={'white'} />}
       </View>
     );
   }

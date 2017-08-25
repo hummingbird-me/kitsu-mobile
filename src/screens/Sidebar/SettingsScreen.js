@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Container } from 'native-base';
 import PropTypes from 'prop-types';

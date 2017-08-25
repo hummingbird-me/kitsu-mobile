@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Switch } from 'react-native';
+import { View, Switch } from 'react-native';
 import { connect } from 'react-redux';
 import { Text, Container, Content } from 'native-base';
 import PropTypes from 'prop-types';

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   fieldWrapper: {
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
@@ -33,6 +33,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingVertical: 8,
     paddingHorizontal: 12,
+  },
+  item: {
+    backgroundColor: colors.white,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 
