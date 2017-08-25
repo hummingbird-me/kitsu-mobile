@@ -10,13 +10,11 @@ const styles = StyleSheet.create({
   hintText: {
     fontFamily: 'OpenSans',
     fontSize: 10,
-    marginLeft: 8,
-    color: colors.lightGrey,
+    color: 'grey',
   },
   valueText: {
     fontFamily: 'OpenSans',
     fontSize: 12,
-    marginLeft: 8,
     marginTop: 4,
     color: '#444',
   },
@@ -24,11 +22,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 12,
     paddingVertical: 8,
-  },
-  fieldText: {
-    fontSize: 10,
-    color: 'grey',
-    fontFamily: 'OpenSans',
   },
   fieldInput: {
     marginTop: 4,
@@ -38,7 +31,8 @@ const styles = StyleSheet.create({
   },
   selectMenu: {
     backgroundColor: colors.white,
-    padding: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
 });
 

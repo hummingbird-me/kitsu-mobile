@@ -1,28 +1,23 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { Button, Spinner } from 'native-base';
+import { View, StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
-const SidebarButton = ({ loading, onPress, title, style }) => (
+const SidebarButton = ({ disabled = false, loading = false, onPress, title, style }) => (
   <View style={[styles.wrapper, style]}>
-    <Button block disabled={false && loading} onPress={onPress} style={nativeBaseStyles.button}>
+    <TouchableOpacity
+      disabled={disabled || loading}
+      onPress={onPress}
+      style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
+    >
       {loading
-        ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
+        ? <ActivityIndicator color="rgba(255,255,255,0.4)" />
         : <Text style={styles.title}>
           {title}
         </Text>}
-    </Button>
+    </TouchableOpacity>
   </View>
 );
-
-const nativeBaseStyles = {
-  button: {
-    backgroundColor: colors.green,
-    height: 47,
-    borderRadius: 3,
-  },
-};
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -37,16 +32,30 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontSize: 14,
   },
+  button: {
+    backgroundColor: colors.green,
+    height: 47,
+    borderRadius: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: colors.buttonDisabledColor,
+  },
 });
 
 SidebarButton.propTypes = {
+  style: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   loading: PropTypes.bool,
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
 };
 
 SidebarButton.defaultProps = {
+  style: null,
   loading: false,
+  disabled: false,
   onPress: () => {},
   title: 'Save',
 };

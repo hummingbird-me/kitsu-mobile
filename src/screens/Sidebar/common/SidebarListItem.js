@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import { Text, Icon, Right, Item } from 'native-base';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Icon, Right } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
-// have a standard width at all items.
+// have a standard width independent from icon/image width.
 export const WidthFixer = ({ children }) => (
   <View style={{ width: 25, alignItems: 'center' }}>
     {children}
@@ -15,28 +15,30 @@ export const ItemSeparator = () => (
   <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }} />
 );
 
-const SidebarListItem = ({ image, title, onPress }) => (
-  <Item button onPress={onPress} style={styles.sectionListItem}>
+const SidebarListItem = ({ image, imageURL, title, onPress }) => (
+  <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.item}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <WidthFixer>
-        <Image
-          source={image}
-          style={{ resizeMode: 'contain', width: 16, height: 16, borderRadius: 4 }}
-        />
+        {(image && <Image source={image} style={styles.image} />) ||
+          (imageURL &&
+            <Image source={{ uri: imageURL }} style={[styles.image, { resizeMode: 'stretch' }]} />)}
       </WidthFixer>
-      <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>
+      <Text style={styles.text}>
         {title}
       </Text>
     </View>
     <Right>
-      <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
+      <Icon
+        name={'ios-arrow-forward'}
+        style={{ color: colors.lightGrey, fontSize: 16, marginRight: 2 }}
+      />
     </Right>
-  </Item>
+  </TouchableOpacity>
 );
 
 SidebarListItem.propTypes = {
   title: PropTypes.string.isRequired,
-  image: PropTypes.number.isRequired,
+  image: PropTypes.number,
   onPress: PropTypes.func,
 };
 
@@ -44,20 +46,28 @@ SidebarListItem.defaultProps = {
   title: 'Settings',
 };
 
-const styles = {
-  sectionListItem: {
+const styles = StyleSheet.create({
+  item: {
     backgroundColor: colors.white,
     paddingHorizontal: 8,
     paddingVertical: 10,
-    borderRadius: 0,
-    borderColor: 'white',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 0,
-    marginLeft: 0, // NATIVEBASE.
   },
-};
+  image: {
+    resizeMode: 'contain',
+    width: 16,
+    height: 16,
+    borderRadius: 4,
+  },
+  text: {
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    marginLeft: 8,
+    color: '#444',
+  },
+});
 
 export default SidebarListItem;

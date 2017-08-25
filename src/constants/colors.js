@@ -33,6 +33,7 @@ export const black = '#000000';
 export const offBlack = '#2B212B';
 
 /* misc */
+export const buttonDisabledColor = '#878787';
 export const imageBackColor = 'rgb(153, 130, 153)';
 export const listSeparatorColor = '#261C25';
 export const categoryTextColor = '#C7C2C7';

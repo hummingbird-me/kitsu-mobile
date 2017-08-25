@@ -9,14 +9,14 @@ const SidebarTitle = ({ title, style }) => (
     style={[
       {
         marginTop: 20,
-        paddingHorizontal: 2,
+        paddingHorizontal: 12,
         paddingVertical: 8,
         backgroundColor: colors.listBackPurple,
       },
       style,
     ]}
   >
-    <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 12, color: colors.white }}>
+    <Text style={{ fontFamily: 'OpenSans', fontSize: 12, color: colors.white }}>
       {title}
     </Text>
   </View>

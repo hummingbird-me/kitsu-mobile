@@ -58,12 +58,7 @@ class LinkedAccounts extends React.Component {
             <View style={{ flex: 1, marginTop: 77 }}>
               <SidebarTitle title={'Social Accounts'} />
               <FlatList
-                data={[
-                  { logoURL: 'https://www.famouslogos.us/images/facebook-logo.jpg' },
-                  {
-                    logoURL: 'https://www.maistecnologia.com/wp-content/uploads/2016/01/twitter-logo-2.png',
-                  },
-                ]}
+                data={[{ logoURL: 'https://www.famouslogos.us/images/facebook-logo.jpg' }]}
                 keyExtractor={(item, index) => index}
                 renderItem={this.renderItem}
                 ItemSeparatorComponent={() => <ItemSeparator />}

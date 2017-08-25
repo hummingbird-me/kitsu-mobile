@@ -95,7 +95,7 @@ class GeneralSettings extends React.Component {
             <View style={{ flex: 1, marginTop: 77 }}>
               <SidebarTitle title={'Personal Settings'} />
               <View style={styles.fieldWrapper}>
-                <Text style={styles.fieldText}>
+                <Text style={styles.hintText}>
                   Username
                 </Text>
                 <TextInput
@@ -110,7 +110,7 @@ class GeneralSettings extends React.Component {
               </View>
               <ItemSeparator />
               <View style={styles.fieldWrapper}>
-                <Text style={styles.fieldText}>
+                <Text style={styles.hintText}>
                   Email Address
                 </Text>
                 <TextInput
@@ -125,7 +125,7 @@ class GeneralSettings extends React.Component {
               </View>
               <ItemSeparator />
               <View style={styles.fieldWrapper}>
-                <Text style={styles.fieldText}>
+                <Text style={styles.hintText}>
                   Password
                 </Text>
                 <TextInput
@@ -144,7 +144,7 @@ class GeneralSettings extends React.Component {
               </View>
               {this.state.shouldShowValidationInput &&
                 <View style={styles.fieldWrapper}>
-                  <Text style={styles.fieldText}>
+                  <Text style={styles.hintText}>
                     Confirm Password
                   </Text>
                   <TextInput
@@ -160,10 +160,7 @@ class GeneralSettings extends React.Component {
                 </View>}
               <SidebarTitle title={'Content on Kitsu'} />
               <SelectMenu
-                style={{
-                  backgroundColor: colors.white,
-                  padding: 8,
-                }}
+                style={styles.selectMenu}
                 onOptionSelected={this.onSelectFilterOption}
                 cancelButtonIndex={2}
                 options={this.filterOptions}

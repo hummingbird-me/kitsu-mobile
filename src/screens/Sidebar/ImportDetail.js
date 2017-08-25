@@ -107,6 +107,7 @@ class ImportDetail extends React.Component {
           </View>
           <SidebarButton
             style={{ marginTop: 0 }}
+            disabled={username.length === 0}
             onPress={this.onImportButtonPressed}
             title={`Start ${item.title} Import`}
             loading={loading}

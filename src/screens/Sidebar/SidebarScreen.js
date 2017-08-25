@@ -1,21 +1,23 @@
 /*
   // TODO
+  - get color code of black text, replace all #444.
   - reorganize styles
-  - navigationoptions from router?
+  - work on ListEmptyItems after react native upgrade
+  - imageURL replace default avatar with defaultGroupAvatar
 */
 
 import React from 'react';
-import { View, Image, SectionList, Platform, TouchableOpacity } from 'react-native';
+import { View, Image, Text, SectionList, Platform, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { Text, Container, Icon, Left, Right, Item } from 'native-base';
+import { Container } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
-import { SidebarListItem, SidebarTitle, ItemSeparator, WidthFixer } from './common/';
+import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
 
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 const settingsData = [
@@ -24,31 +26,6 @@ const settingsData = [
   { title: 'Suggest Features', image: suggest, target: '' },
   { title: 'Contact Us', image: contact, target: '' },
 ];
-
-const SettingsItem = ({ image, title, onPress }) => (
-  <SidebarListItem image={image} title={title} onPress={onPress} />
-);
-const GroupsItem = ({ imageURL, title, onPress }) => (
-  <Item button onPress={onPress} style={styles.sectionListItem}>
-    <Left>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <WidthFixer>
-          <Image
-            source={{ uri: imageURL }}
-            resizeMode={'stretch'}
-            style={{ width: 20, height: 20, borderRadius: 4 }}
-          />
-        </WidthFixer>
-        <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>
-          {title}
-        </Text>
-      </View>
-    </Left>
-    <Right>
-      <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
-    </Right>
-  </Item>
-);
 
 class SidebarScreen extends React.Component {
   static navigationOptions = {
@@ -63,6 +40,10 @@ class SidebarScreen extends React.Component {
     this.props.logoutUser(this.props.navigation);
   };
 
+  navigateUserProfile = () => {
+    // TODO: implement function.
+  };
+
   render() {
     const { navigation, currentUser, groupMemberships } = this.props;
     const { name, avatar } = currentUser;
@@ -74,27 +55,34 @@ class SidebarScreen extends React.Component {
         data: shortcutsData,
         title: 'Shortcuts',
         renderItem: ({ item }) => (
-          <SettingsItem
+          <SidebarListItem
+            image={item.image}
+            title={item.title}
             onPress={() => {
               navigation.navigate(item.target);
             }}
-            title={item.title}
-            image={item.image}
           />
         ),
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
       {
+        // TODO: imageURL replace default avatar with defaultGroupAvatar
         key: 'groups',
         data: groupsData,
         title: 'Groups',
         renderItem: ({ item }) => (
-          <GroupsItem
+          <SidebarListItem
             onPress={() => {
               navigation.navigate('');
             }}
             title={item.group.name}
-            imageURL={item.group.avatar.small}
+            imageURL={
+              item.group.avatar.small ||
+                item.group.avatar.medium ||
+                item.group.avatar.large ||
+                item.group.avatar.original ||
+                defaultAvatar
+            }
           />
         ),
         ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
@@ -105,12 +93,12 @@ class SidebarScreen extends React.Component {
         data: settingsData,
         title: 'Account Settings',
         renderItem: ({ item }) => (
-          <SettingsItem
+          <SidebarListItem
+            image={item.image}
+            title={item.title}
             onPress={() => {
               navigation.navigate(item.target);
             }}
-            title={item.title}
-            image={item.image}
           />
         ),
         ItemSeparatorComponent: () => <ItemSeparator />,
@@ -127,31 +115,39 @@ class SidebarScreen extends React.Component {
             <View
               style={{
                 flex: 1,
-                flexDirection: 'row',
-                paddingTop: Platform.select({ ios: 20, android: 24 }),
-                alignItems: 'center',
-                marginLeft: 20,
+                marginTop: Platform.select({ ios: 20, android: 24 }),
               }}
             >
-              <Image
-                style={{ width: 40, height: 40, borderRadius: 20 }}
-                source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
-              />
-              <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans',
-                    color: colors.white,
-                    fontSize: 14,
-                    fontWeight: '600',
-                  }}
-                >
-                  {name}
-                </Text>
-                <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>
-                  view profile
-                </Text>
-              </View>
+              <TouchableOpacity
+                style={{
+                  marginTop: 12,
+                  marginHorizontal: 12,
+                  padding: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+                onPress={this.navigateUserProfile}
+              >
+                <Image
+                  style={{ width: 40, height: 40, borderRadius: 20 }}
+                  source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+                />
+                <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans',
+                      color: colors.white,
+                      fontSize: 14,
+                      fontWeight: '600',
+                    }}
+                  >
+                    {name}
+                  </Text>
+                  <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>
+                    view profile
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </ProgressiveImage>
           <SectionList
