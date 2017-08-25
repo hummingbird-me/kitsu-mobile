@@ -16,8 +16,7 @@ console.disableYellowBox = true;
 
 class App extends Component {
   componentWillMount() {
-    // TODO: Once notifications are verified working, enable this if the in-app alert is ugly
-    // OneSignal.inFocusDisplaying(2);
+    OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('registered', this.onRegistered);

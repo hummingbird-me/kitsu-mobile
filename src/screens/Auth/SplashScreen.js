@@ -7,7 +7,6 @@ import Animation from 'lottie-react-native';
 
 import anim from 'kitsu/assets/animation/kitsu.json';
 import * as colors from 'kitsu/constants/colors';
-import { createOneSignalPlayer } from '../../store/auth/actions';
 
 class SplashScreen extends Component {
   static navigationOptions = {
@@ -31,7 +30,6 @@ class SplashScreen extends Component {
     const { dispatch } = this.props.navigation;
     let resetAction = null;
     if (authorized) {
-      this.props.createOneSignalPlayer();
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
@@ -82,7 +80,6 @@ const mapStateToProps = ({ auth }) => {
 SplashScreen.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
-  createOneSignalPlayer: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { createOneSignalPlayer })(SplashScreen);
+export default connect(mapStateToProps)(SplashScreen);

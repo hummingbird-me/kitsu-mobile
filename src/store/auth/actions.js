@@ -87,21 +87,3 @@ export const logoutUser = nav => (dispatch) => {
   nav.dispatch(loginAction);
   dispatch({ type: types.LOGOUT_USER });
 };
-
-export const createOneSignalPlayer = () => async (dispatch, getState) => {
-  const { auth: { playerId }, user: { currentUser, playerCreated } } = getState();
-  if (!playerCreated) {
-    dispatch({ type: types.CREATE_PLAYER });
-    try {
-      await Kitsu.create('oneSignalPlayers', {
-        playerId,
-        platform: 'mobile',
-        user: currentUser,
-      });
-      dispatch({ type: types.CREATE_PLAYER_SUCCESS });
-    } catch (e) {
-      console.log(e);
-      dispatch({ type: types.CREATE_PLAYER_FAIL, payload: 'Failed to register notifications' });
-    }
-  }
-};

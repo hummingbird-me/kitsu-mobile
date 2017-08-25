@@ -46,13 +46,12 @@
   [Fabric with:@[[Crashlytics class]]];
 
   self.oneSignal = [[RCTOneSignal alloc] initWithLaunchOptions:launchOptions
-                                                         appId:@"01f6e47a-6809-4118-a796-949952e9c209"];
-                                                      // settings:@{
-                                                        // TODO: Once notifications are verified working, enable this if the in-app alert is ugly
-                                                        // kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNotification),
+                                                         appId:@"01f6e47a-6809-4118-a796-949952e9c209"
+                                                      settings:@{
+                                                        kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNotification),
                                                         // enable this to cancel auto prompt for permission
                                                         // kOSSettingsKeyAutoPrompt: @false
-                                                      // }];
+                                                      }];
 
   return YES;
 }
