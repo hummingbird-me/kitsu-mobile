@@ -98,7 +98,7 @@ class SidebarScreen extends React.Component {
             title={item.title}
             onPress={() => {
               if (item.target === 'mailto') {
-                Linking.openURL('mailto:josh@kitsu.com');
+                Linking.openURL('mailto:josh@kitsu.io');
               } else {
                 navigation.navigate(item.target);
               }
