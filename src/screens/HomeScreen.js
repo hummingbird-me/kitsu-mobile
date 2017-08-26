@@ -13,7 +13,7 @@ class HomeScreen extends Component {
       { tintColor }, // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
     ) => (
       <Image
-        source={require('kitsu/assets/img/tabbar_icons/feed.png')}
+        source={require('kitsu/assets/img/tabbar_icons/home.png')}
         style={{ tintColor, width: 20, height: 21 }}
       />
     ),
@@ -61,9 +61,11 @@ class HomeScreen extends Component {
               Create Post
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserProfile', {
-            userId: 5554,
-          })}
+          <Button
+            onPress={() =>
+              navigation.navigate('UserProfile', {
+                userId: 5554,
+              })}
           >
             <Text>
               Logged In Profile

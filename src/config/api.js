@@ -62,6 +62,7 @@ Kitsu.define(
     likesGivenCount: '',
     reviewsCount: '',
     likesReceivedCount: '',
+    mediaReactionsCount: '',
     postsCount: '',
     ratingsCount: '',
     proExpiresAt: '',
@@ -106,6 +107,7 @@ Kitsu.define(
     },
     blocks: {
       jsonApi: 'hasMany',
+      type: 'blocks',
     },
     linkedAccounts: {
       jsonApi: 'hasMany',
@@ -228,6 +230,23 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'blocks',
+  {
+    createdAt: '',
+    updatedAt: '',
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+    blocked: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'blocks' },
+);
+
+Kitsu.define(
   'castings',
   {
     createdAt: '',
@@ -263,6 +282,28 @@ Kitsu.define(
     },
   },
   { collectionPath: 'follows' },
+);
+
+Kitsu.define(
+  'listImports',
+  {
+    inputText: '',
+    strategy: '',
+    kind: '',
+    inputFile: '',
+    progress: '',
+    status: '',
+    total: '',
+    errorMessage: '',
+    errorTrace: '',
+    createdAt: '',
+    updatedAt: '',
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'list-imports' },
 );
 
 Kitsu.define(
@@ -723,6 +764,86 @@ Kitsu.define(
   },
   { collectionPath: 'streamers' },
 );
+
+Kitsu.define(
+  'groups',
+  {
+    slug: '',
+    about: '',
+    locale: '',
+    membersCount: '',
+    name: '',
+    nsfw: '',
+    privacy: '',
+    rules: '',
+    rulesFormatted: '',
+    leadersCount: '',
+    neighborsCount: '',
+    featured: '',
+    tagline: '',
+    lastActivityAt: '',
+    avatar: '',
+    coverImage: '',
+    createdAt: '',
+    updatedAt: '',
+    pinnedPost: {
+      jsonApi: 'hasOne',
+    },
+    members: {
+      jsonApi: 'hasMany',
+    },
+    neighbors: {
+      jsonApi: 'hasMany',
+    },
+    tickets: {
+      jsonApi: 'hasMany',
+    },
+    invites: {
+      jsonApi: 'hasMany',
+    },
+    reports: {
+      jsonApi: 'hasMany',
+    },
+    leaderChatMessages: {
+      jsonApi: 'hasMany',
+    },
+    actionLogs: {
+      jsonApi: 'hasMany',
+    },
+    category: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'groups' },
+);
+
+Kitsu.define(
+  'groupMembers',
+  {
+    rank: '',
+    createdAt: '',
+    unreadCount: '',
+    updatedAt: '',
+    hidden: '',
+    permissions: {
+      jsonApi: 'hasMany',
+    },
+    group: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      jsonApi: 'hasOne',
+    },
+    notes: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'group-members' },
+);
+
+Kitsu.define('sso', {
+  token: '',
+});
 
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;

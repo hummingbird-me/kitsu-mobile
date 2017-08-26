@@ -7,8 +7,8 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
-import { SearchBar } from 'kitsu/components/SearchBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
+import { SearchBox } from 'kitsu/components/SearchBox';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 import * as constants from './constants';
@@ -267,9 +267,9 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   render() {
-    const searchBar = (
-      <SearchBar
-        containerStyle={styles.searchBar}
+    const searchBox = (
+      <SearchBox
+        style={styles.searchBox}
         onChangeText={this.onSearchTermChanged}
         placeholder="Search Library"
         searchIconOffset={120}
@@ -284,11 +284,11 @@ export class UserLibraryScreenComponent extends React.Component {
           renderTabBar={() => <ScrollableTabBar />}
         >
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
-            {searchBar}
+            {searchBox}
             {this.renderLists('anime')}
           </ScrollView>
           <ScrollView key="Manga" tabLabel="Manga" id="manga">
-            {searchBar}
+            {searchBox}
             {this.renderLists('manga')}
           </ScrollView>
         </ScrollableTabView>

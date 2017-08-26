@@ -13,10 +13,12 @@ export class SelectMenu extends PureComponent {
       PropTypes.string,
       PropTypes.object,
     ])).isRequired,
+    options: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object]))
+      .isRequired,
     onOptionSelected: PropTypes.func.isRequired,
     style: PropTypes.any,
     tintColor: PropTypes.string,
-  }
+  };
 
   static defaultProps = {
     cancelButtonIndex: -1,
@@ -24,7 +26,7 @@ export class SelectMenu extends PureComponent {
     disabled: false,
     style: null,
     tintColor: colors.black,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -44,6 +46,10 @@ export class SelectMenu extends PureComponent {
       : this.props.options.length - 1;
   }
 
+  setActionSheet = (component) => {
+    this.ActionSheet = component;
+  };
+
   handleFilterChange = (selectedIndex) => {
     const cancelButtonIndex = this.getCancelButtonIndex();
 
@@ -56,15 +62,16 @@ export class SelectMenu extends PureComponent {
         this.props.onOptionSelected(option);
       }
     }
-  }
+  };
 
   showActionSheet = () => {
     this.ActionSheet.show();
-  }
+  };
 
   render() {
     return (
       <TouchableOpacity
+        activeOpacity={1}
         disabled={this.props.disabled}
         onPress={this.showActionSheet}
         style={this.props.style}
@@ -74,7 +81,7 @@ export class SelectMenu extends PureComponent {
           cancelButtonIndex={this.getCancelButtonIndex()}
           onPress={this.handleFilterChange}
           options={this.displayOptions}
-          ref={(component) => { this.ActionSheet = component; }}
+          ref={this.setActionSheet}
           tintColor={this.props.tintColor}
         />
       </TouchableOpacity>

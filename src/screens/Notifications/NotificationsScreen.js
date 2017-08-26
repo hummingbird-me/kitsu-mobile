@@ -5,7 +5,7 @@ import { Container } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-
+import notificationIcon from 'kitsu/assets/img/tabbar_icons/notification.png';
 import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 
@@ -48,7 +48,7 @@ class NotificationsScreen extends Component {
               {screenProps.badge}
             </Text>
           </View>}
-        <Image source={require('../../assets/img/tabbar_icons/notifications.png')} style={{ tintColor: tintColor, width: 20, height: 21 }} />
+        <Image source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
       </View>
     ),
   });
@@ -166,7 +166,7 @@ class NotificationsScreen extends Component {
           data={notifications}
           renderItem={this.renderItem}
           onEndReached={() => this.loadMore()}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           onEndReachedThreshold={0.5}
           initialNumToRender={30}
           refreshing={loadingNotifications}
@@ -207,6 +207,10 @@ const styles = {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#EEEEEE',
     backgroundColor: '#FAFAFA',
+  },
+  tabBarIcon: {
+    width: 20,
+    height: 21,
   },
 };
 

@@ -1,167 +1,188 @@
 /*
   // TODO
-  - use svgs
+  - get color code of black text, replace all #444.
   - reorganize styles
-  - navigationoptions from router?
+  - work on ListEmptyItems after react native upgrade
+  - imageURL replace default avatar with defaultGroupAvatar
 */
 
-import React, { Component } from 'react';
-import { View, Image, SectionList, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { Text, Container, Icon, Left, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
-// import Icon from '../../components/Icon';
 import * as colors from 'kitsu/constants/colors';
-
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-import bugs from 'kitsu/assets/img/sidebar_icons/bugs.png';
-import contact from 'kitsu/assets/img/sidebar_icons/contact.png';
-import library from 'kitsu/assets/img/sidebar_icons/library.png';
-import suggest from 'kitsu/assets/img/sidebar_icons/suggest.png';
-import settings from 'kitsu/assets/img/sidebar_icons/settings.png';
+import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-
+import { defaultAvatar as defaultGroupAvatar } from 'kitsu/constants/app';
+import { commonStyles } from 'kitsu/common/styles';
+import { logoutUser } from 'kitsu/store/auth/actions';
+import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
+import styles from './styles';
 
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
-
-const groupsData = [
-  {
-    title: 'Weekly Shonen Jump',
-    imageURL: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg',
-    target: '',
-  },
-  {
-    title: 'Kitsu News Network',
-    imageURL: 'https://media.kitsu.io/groups/avatars/596/large.png?1490733214',
-    target: '',
-  },
-  {
-    title: 'Food Fighters! (Cooking Club)',
-    imageURL: 'https://media.kitsu.io/groups/avatars/91/large.gif?1424396944',
-    target: '',
-  },
-];
-
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bug', image: bugs, target: '' },
-  { title: 'Suggest Features', image: suggest, target: '' },
-  { title: 'Contact Us', image: contact, target: '' },
+  { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
+  { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
 
-const LeftIconWrapper = (
-  { children }, // have a standard width at all items.
-) => (
-  <View style={{ width: 25, alignItems: 'center' }}>
-    {children}
-  </View>
-);
+const keyExtractor = (item, index) => index;
 
-const SettingsItem = ({ image, title, onPress }) => (
-  <SidebarListItem image={image} title={title} onPress={onPress} />
-);
-
-const GroupsItem = ({ imageURL, title, onPress }) => (
-  <Item button onPress={onPress} style={styles.sectionListItem}>
-    <Left>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <LeftIconWrapper>
-          <Image
-            source={{ uri: imageURL }}
-            resizeMode={'stretch'}
-            style={{ width: 20, height: 20, borderRadius: 4 }}
-          />
-        </LeftIconWrapper>
-        <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: '#444' }}>
-          {title}
-        </Text>
-      </View>
-    </Left>
-    <Right>
-      <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
-    </Right>
-  </Item>
-);
-
-const SectionTitle = ({ title }) => <SidebarTitle title={title} />;
-
-class SidebarScreen extends Component {
+class SidebarScreen extends React.Component {
   static navigationOptions = {
     header: null, // overlaps statusbar
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
   };
 
+  componentDidMount() {
+    this.props.fetchGroupMemberships();
+  }
+
+  onLogoutButtonPressed = () => {
+    this.props.logoutUser(this.props.navigation);
+  };
+
+  navigateUserProfile = () => {
+    // TODO: implement function.
+  };
+
+  renderSectionSeparatorComponent = () => (
+    <View height={20} />
+  )
+
+  renderSectionHeader = ({ section }) => (
+    <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
+  );
+
+  renderSectionFooter = ({ section }) => null;
+
+  renderListHeaderComponent = () => <View height={10} />
+
+  renderListFooterComponent = () => (
+    <TouchableOpacity
+      onPress={this.onLogoutButtonPressed}
+      style={{
+        marginVertical: 40,
+        padding: 12,
+        backgroundColor: colors.white,
+        alignItems: 'center',
+      }}
+    >
+      <Text
+        style={[
+          commonStyles.text,
+          {
+            fontWeight: '500',
+            color: colors.activeRed,
+          },
+        ]}
+      >
+        Log Out
+      </Text>
+    </TouchableOpacity>
+  )
+
+  renderItemSeparatorComponent() {
+    return <ItemSeparator />;
+  }
+
   render() {
-    const { navigation } = this.props;
+    const { navigation, currentUser, groupMemberships } = this.props;
+    const { name, avatar } = currentUser;
+    const groupsData = groupMemberships || [];
+
     const sectionListData = [
       {
         key: 'shortcuts',
         data: shortcutsData,
         title: 'Shortcuts',
         renderItem: ({ item }) => (
-          <SettingsItem
+          <SidebarListItem
+            image={item.image}
+            title={item.title}
             onPress={() => {
               navigation.navigate(item.target);
             }}
-            title={item.title}
-            image={item.image}
           />
         ),
-        ItemSeparatorComponent: () => <ItemSeparator />,
+        ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
       {
+        // TODO: imageURL replace default avatar with defaultGroupAvatar
         key: 'groups',
         data: groupsData,
         title: 'Groups',
-        renderItem: ({ item }) => (
-          <GroupsItem
-            onPress={() => {
-              navigation.navigate(item.target);
-            }}
-            title={item.title}
-            imageURL={item.imageURL}
-          />
-        ),
-        ItemSeparatorComponent: () => <ItemSeparator />,
+        renderItem: ({ item }) => {
+          return (
+            <SidebarListItem
+              onPress={() => {
+                navigation.navigate('');
+              }}
+              title={item.group.name}
+              imageURL={
+                (item.group.avatar &&
+                  (item.group.avatar.small ||
+                    item.group.avatar.medium ||
+                    item.group.avatar.large ||
+                    item.group.avatar.original)) ||
+                  defaultGroupAvatar
+              }
+            />
+          );
+        },
+        ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
+        ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
       {
         key: 'settings',
         data: settingsData,
         title: 'Account Settings',
         renderItem: ({ item }) => (
-          <SettingsItem
-            onPress={() => {
-              navigation.navigate(item.target);
-            }}
-            title={item.title}
+          <SidebarListItem
             image={item.image}
+            title={item.title}
+            onPress={() => {
+              if (item.target === 'mailto') {
+                Linking.openURL('mailto:josh@kitsu.io');
+              } else {
+                navigation.navigate(item.target);
+              }
+            }}
           />
         ),
-        ItemSeparatorComponent: () => <ItemSeparator />,
+        ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
     ];
     return (
-      <Container style={styles.containerStyle}>
-        <View>
-          <ProgressiveImage
-            hasOverlay
-            style={{ height: 100, justifyContent: 'center' }}
-            source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
+      <View style={{ backgroundColor: colors.listBackPurple }}>
+        <ProgressiveImage
+          hasOverlay
+          style={styles.headerCoverImage}
+          source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
+        >
+          <View
+            style={{
+              flex: 1,
+              marginTop: Platform.select({ ios: 20, android: 24 }),
+            }}
           >
-            <View
+            <TouchableOpacity
+              activeOpacity={0.6}
               style={{
-                flex: 1,
+                marginTop: 12,
+                marginHorizontal: 12,
+                padding: 8,
                 flexDirection: 'row',
-                paddingTop: Platform.select({ ios: 20, android: 24 }),
                 alignItems: 'center',
-                marginLeft: 20,
               }}
+              onPress={this.navigateUserProfile}
             >
-              <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={defaultAvatar} />
+              <Image
+                style={{ width: 40, height: 40, borderRadius: 20 }}
+                source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+              />
               <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
                 <Text
                   style={{
@@ -171,72 +192,40 @@ class SidebarScreen extends Component {
                     fontWeight: '600',
                   }}
                 >
-                  Dummy UI
+                  {name}
                 </Text>
                 <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>
                   view profile
                 </Text>
               </View>
-            </View>
-          </ProgressiveImage>
-          <SectionList
-            contentContainerStyle={{ paddingBottom: 100 }}
-            sections={sectionListData}
-            keyExtractor={item => item.title}
-            ListHeaderComponent={() => <View height={20} />}
-            renderItem={() => <SettingsItem />}
-            renderSectionHeader={({ section }) => <SectionTitle title={section.title} />}
-            renderSectionFooter={({ section }) => {
-              // THIS FUNCTION IS NOT BEING INVOKED !?
-            }}
-            removeClippedSubviews={false}
-            SectionSeparatorComponent={() => <View height={28} />}
-            ListFooterComponent={() => (
-              <View
-                style={{
-                  marginTop: 40,
-                  padding: 12,
-                  backgroundColor: colors.white,
-                  alignItems: 'center',
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontFamily: 'OpenSans',
-                    fontWeight: '500',
-                    color: colors.activeRed,
-                  }}
-                >
-                  Log Out
-                </Text>
-              </View>
-            )}
-          />
-        </View>
-      </Container>
+            </TouchableOpacity>
+          </View>
+        </ProgressiveImage>
+        <SectionList
+          contentContainerStyle={{ paddingBottom: 100 }}
+          sections={sectionListData}
+          keyExtractor={keyExtractor}
+          ListHeaderComponent={this.renderListHeaderComponent}
+          renderSectionHeader={this.renderSectionHeader}
+          renderSectionFooter={this.renderSectionFooter}
+          removeClippedSubviews={false}
+          SectionSeparatorComponent={this.renderSectionSeparatorComponent}
+          ListFooterComponent={this.renderListFooterComponent}
+        />
+      </View>
     );
   }
 }
 
-const styles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
-  sectionListItem: {
-    backgroundColor: colors.white,
-    padding: 8,
-    borderRadius: 0,
-    borderColor: 'white',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0,
-    marginLeft: 0,
-  },
+const mapStateToProps = ({ user, groups }) => {
+  const { currentUser } = user;
+  const { groupMemberships } = groups;
+  return {
+    currentUser,
+    groupMemberships,
+  };
 };
-
-const mapStateToProps = ({ user }) => ({});
 
 SidebarScreen.propTypes = {};
 
-export default connect(mapStateToProps, {})(SidebarScreen);
+export default connect(mapStateToProps, { fetchGroupMemberships, logoutUser })(SidebarScreen);

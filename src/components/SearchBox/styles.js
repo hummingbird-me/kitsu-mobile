@@ -3,7 +3,6 @@ import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
   searchContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -22,6 +21,7 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+    color: colors.lightGrey,
     textAlign: 'center',
     paddingVertical: 10,
   },
