@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Icon } from 'native-base';
 import { FlatList, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { debounce } from 'lodash';
@@ -46,9 +45,6 @@ export class UserLibraryListScreenComponent extends React.Component {
           showFollowButton={false}
           showCoverImage={false}
         />
-      ),
-      tabBarIcon: ({ tintColor }) => (
-        <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
       ),
     };
   };

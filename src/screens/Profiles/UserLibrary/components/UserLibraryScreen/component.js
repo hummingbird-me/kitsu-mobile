@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Icon } from 'native-base';
 import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
@@ -13,7 +12,6 @@ import { commonStyles } from 'kitsu/common/styles';
 import { idExtractor } from 'kitsu/common/utils';
 import { styles } from './styles';
 import * as constants from './constants';
-
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
 const renderScrollTabBar = () => <ScrollableTabBar />;
@@ -57,8 +55,8 @@ export class UserLibraryScreenComponent extends React.Component {
     },
   };
 
-  static navigationOptions = (props) => {
-    const { profile } = props.navigation.state.params;
+  static navigationOptions = ({ navigation }) => {
+    const { profile } = navigation.state.params;
 
     return {
       headerStyle: {
@@ -69,11 +67,8 @@ export class UserLibraryScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title={profile.name}
-          onClickBack={props.navigation.goBack}
+          onClickBack={navigation.goBack}
         />
-      ),
-      tabBarIcon: ({ tintColor }) => (
-        <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
       ),
     };
   };

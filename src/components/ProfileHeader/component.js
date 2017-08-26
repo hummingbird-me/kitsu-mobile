@@ -22,6 +22,7 @@ export const ProfileHeader = (
 ) => {
   const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
+  const goBack = () => onClickBack();
 
   return (
     <View style={styles.headerContainer}>
@@ -35,7 +36,7 @@ export const ProfileHeader = (
 
       <View style={styles.headerWrapper}>
         <View style={[styles.header]}>
-          <TouchableOpacity style={styles.backButton} transparent onPress={onClickBack}>
+          <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
             {showProfileImage &&
               <Image style={styles.profileImage} source={{ uri: profileImageUri }} />
@@ -64,7 +65,7 @@ export const ProfileHeader = (
           )}
 
           {showFollowButton && (
-          <TouchableOpacity transparent style={styles.followButton} onPress={onClickBack}>
+          <TouchableOpacity transparent style={styles.followButton} onPress={goBack}>
             <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
           </TouchableOpacity>
           )}

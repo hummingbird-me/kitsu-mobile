@@ -25,7 +25,6 @@ import * as colors from 'kitsu/constants/colors';
 import ResultsList from 'kitsu/screens/Search/Lists/ResultsList';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
-import updateIcon from 'kitsu/assets/img/tabbar_icons/update.png';
 import {
   fetchProfile,
   fetchProfileFavorites,
@@ -36,17 +35,6 @@ import { getUserFeed } from 'kitsu/store/feed/actions';
 const Loader = <Spinner size="small" color="grey" />;
 
 class ProfileScreen extends Component {
-
-  static navigationOptions = ({ navigation }) => ({
-    tabBarIcon: ({ tintColor }) => (
-      <Image
-        source={updateIcon}
-        style={[styles.tabBarIcon, { tintColor }]}
-      />
-    ),
-    header: null,
-  });
-
   state = { page: 0 };
 
   componentDidMount() {
