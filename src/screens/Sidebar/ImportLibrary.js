@@ -8,7 +8,7 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
-import { SidebarTitle, ItemSeparator, WidthFixer } from './common/';
+import { SidebarTitle, ItemSeparator } from './common/';
 import styles from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
@@ -62,12 +62,7 @@ const ImportItem = ({ kind, status, date, total }) => {
         </Text>
       </View>
       <View>
-        <WidthFixer>
-          <Image
-            source={icon}
-            style={{ resizeMode: 'contain', width: 16, height: 16, right: -2 }}
-          />
-        </WidthFixer>
+        <Image source={icon} style={[styles.itemImage, { right: -2 }]} />
       </View>
     </View>
   );

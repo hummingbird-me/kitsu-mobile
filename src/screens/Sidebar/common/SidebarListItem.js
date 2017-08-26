@@ -4,28 +4,19 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
-// have a standard width independent from icon/image width.
-export const WidthFixer = ({ children }) => (
-  <View style={{ width: 25, alignItems: 'center' }}>
-    {children}
-  </View>
-);
-
 export const ItemSeparator = () => (
   <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }} />
 );
 
-const SidebarListItem = ({ image, imageURL, title, onPress }) => (
+export const SidebarListItem = ({ image, imageURL, title, onPress }) => (
   <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.item}>
     <View style={styles.leftContentWrapper}>
-      <WidthFixer>
-        {(image && <Image source={image} style={styles.image} />) ||
-          (imageURL &&
-            <Image
-              source={{ uri: imageURL }}
-              style={[styles.image, { resizeMode: 'stretch', borderRadius: 4 }]}
-            />)}
-      </WidthFixer>
+      {(image && <Image source={image} style={styles.image} />) ||
+        (imageURL &&
+          <Image
+            source={{ uri: imageURL }}
+            style={[styles.image, { resizeMode: 'stretch', borderRadius: 4 }]}
+          />)}
       <Text style={styles.text}>
         {title}
       </Text>
@@ -69,13 +60,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 16,
     height: 16,
+    marginHorizontal: 4,
   },
   text: {
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginLeft: 6,
-    color: '#444',
+    color: colors.softBlack,
   },
 });
-
-export default SidebarListItem;

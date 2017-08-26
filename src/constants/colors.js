@@ -32,6 +32,7 @@ export const yellow = '#F0AD4E';
 /* blacks */
 export const black = '#000000';
 export const offBlack = '#2B212B';
+export const softBlack = '#333';
 
 /* misc */
 export const buttonDisabledColor = '#878787';

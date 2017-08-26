@@ -32,7 +32,9 @@ const RowItem = ({ type, item, onPress }) => {
               style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
             />
           </View>
-          <Text style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8 }}>
+          <Text
+            style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: colors.softBlack }}
+          >
             {item.name}
           </Text>
         </View>
@@ -188,7 +190,9 @@ class Blocking extends React.Component {
     return (
       <View style={styles.containerStyle}>
         <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
-          <Text style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12 }}>
+          <Text
+            style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12, color: colors.softBlack }}
+          >
             Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
           </Text>
           <ItemSeparator />

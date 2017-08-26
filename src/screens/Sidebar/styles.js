@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginTop: 4,
-    color: colors.darkGrey,
+    color: colors.softBlack,
   },
   fieldWrapper: {
     backgroundColor: colors.white,
@@ -46,6 +46,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  itemImage: {
+    resizeMode: 'contain',
+    width: 16,
+    height: 16,
+    marginHorizontal: 4,
   },
   modalTitle: {
     fontWeight: 'bold',
