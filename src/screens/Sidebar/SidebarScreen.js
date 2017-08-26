@@ -29,6 +29,8 @@ const settingsData = [
   { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
 
+const keyExtractor = (item, index) => index;
+
 class SidebarScreen extends React.Component {
   static navigationOptions = {
     header: null, // overlaps statusbar
@@ -45,6 +47,56 @@ class SidebarScreen extends React.Component {
   navigateUserProfile = () => {
     // TODO: implement function.
   };
+
+  renderSectionSeparatorComponent() {
+    return (
+      <View height={20} />
+    );
+  }
+
+  renderSectionHeader({ section }) {
+    return (
+      <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
+    );
+  }
+
+  renderSectionFooter({ section }) {
+    return null; // update after react native upgrade.
+  }
+
+  renderListHeaderComponent() {
+    return (<View height={10} />);
+  }
+
+  renderListFooterComponent() {
+    return (
+      <TouchableOpacity
+        onPress={this.onLogoutButtonPressed}
+        style={{
+          marginVertical: 40,
+          padding: 12,
+          backgroundColor: colors.white,
+          alignItems: 'center',
+        }}
+      >
+        <Text
+          style={[
+            commonStyles.text,
+            {
+              fontWeight: '500',
+              color: colors.activeRed,
+            },
+          ]}
+        >
+          Log Out
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  renderItemSeparatorComponent() {
+    return (<ItemSeparator />);
+  }
 
   render() {
     const { navigation, currentUser, groupMemberships } = this.props;
@@ -65,7 +117,7 @@ class SidebarScreen extends React.Component {
             }}
           />
         ),
-        ItemSeparatorComponent: () => <ItemSeparator />,
+        ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
       {
         // TODO: imageURL replace default avatar with defaultGroupAvatar
@@ -73,7 +125,6 @@ class SidebarScreen extends React.Component {
         data: groupsData,
         title: 'Groups',
         renderItem: ({ item }) => {
-          console.log(item);
           return (
             <SidebarListItem
               onPress={() => {
@@ -92,7 +143,7 @@ class SidebarScreen extends React.Component {
           );
         },
         ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
-        ItemSeparatorComponent: () => <ItemSeparator />,
+        ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
       {
         key: 'settings',
@@ -111,7 +162,7 @@ class SidebarScreen extends React.Component {
             }}
           />
         ),
-        ItemSeparatorComponent: () => <ItemSeparator />,
+        ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
     ];
     return (
@@ -163,40 +214,13 @@ class SidebarScreen extends React.Component {
         <SectionList
           contentContainerStyle={{ paddingBottom: 100 }}
           sections={sectionListData}
-          keyExtractor={(item, index) => index}
-          ListHeaderComponent={() => <View height={10} />}
-          renderItem={() => <SidebarListItem />}
-          renderSectionHeader={({ section }) => (
-            <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
-          )}
-          renderSectionFooter={({ section }) => {
-            // THIS FUNCTION IS NOT BEING INVOKED !?
-          }}
+          keyExtractor={keyExtractor}
+          ListHeaderComponent={this.renderListHeaderComponent}
+          renderSectionHeader={this.renderSectionHeader}
+          renderSectionFooter={this.renderSectionFooter}
           removeClippedSubviews={false}
-          SectionSeparatorComponent={() => <View height={20} />}
-          ListFooterComponent={() => (
-            <TouchableOpacity
-              onPress={this.onLogoutButtonPressed}
-              style={{
-                marginVertical: 40,
-                padding: 12,
-                backgroundColor: colors.white,
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={[
-                  commonStyles.text,
-                  {
-                    fontWeight: '500',
-                    color: colors.activeRed,
-                  },
-                ]}
-              >
-                Log Out
-              </Text>
-            </TouchableOpacity>
-          )}
+          SectionSeparatorComponent={this.renderSectionSeparatorComponent}
+          ListFooterComponent={this.renderListFooterComponent}
         />
       </View>
     );
