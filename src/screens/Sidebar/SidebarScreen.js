@@ -48,54 +48,44 @@ class SidebarScreen extends React.Component {
     // TODO: implement function.
   };
 
-  renderSectionSeparatorComponent() {
-    return (
-      <View height={20} />
-    );
-  }
+  renderSectionSeparatorComponent = () => (
+    <View height={20} />
+  )
 
-  renderSectionHeader({ section }) {
-    return (
-      <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
-    );
-  }
+  renderSectionHeader = ({ section }) => (
+    <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
+  );
 
-  renderSectionFooter({ section }) {
-    return null; // update after react native upgrade.
-  }
+  renderSectionFooter = ({ section }) => null;
 
-  renderListHeaderComponent() {
-    return (<View height={10} />);
-  }
+  renderListHeaderComponent = () => <View height={10} />
 
-  renderListFooterComponent() {
-    return (
-      <TouchableOpacity
-        onPress={this.onLogoutButtonPressed}
-        style={{
-          marginVertical: 40,
-          padding: 12,
-          backgroundColor: colors.white,
-          alignItems: 'center',
-        }}
+  renderListFooterComponent = () => (
+    <TouchableOpacity
+      onPress={this.onLogoutButtonPressed}
+      style={{
+        marginVertical: 40,
+        padding: 12,
+        backgroundColor: colors.white,
+        alignItems: 'center',
+      }}
+    >
+      <Text
+        style={[
+          commonStyles.text,
+          {
+            fontWeight: '500',
+            color: colors.activeRed,
+          },
+        ]}
       >
-        <Text
-          style={[
-            commonStyles.text,
-            {
-              fontWeight: '500',
-              color: colors.activeRed,
-            },
-          ]}
-        >
-          Log Out
-        </Text>
-      </TouchableOpacity>
-    );
-  }
+        Log Out
+      </Text>
+    </TouchableOpacity>
+  )
 
   renderItemSeparatorComponent() {
-    return (<ItemSeparator />);
+    return <ItemSeparator />;
   }
 
   render() {
