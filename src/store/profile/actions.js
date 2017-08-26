@@ -16,8 +16,12 @@ export const fetchProfile = id => async (dispatch) => {
       include: 'waifu',
     });
     dispatch({ type: types.FETCH_USER_SUCCESS, payload: user[0] });
-  } catch (e) {
-    dispatch({ type: types.FETCH_USER_FAIL, payload: 'Failed to load user' });
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      type: types.FETCH_USER_FAIL,
+      payload: 'Failed to load user',
+    });
   }
 };
 
@@ -39,11 +43,12 @@ export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
         entries: [...results],
       },
     });
-  } catch (e) {
+  } catch (error) {
+    console.error(error);
     dispatch({
       type: types.FETCH_USER_FEED_FAIL,
       payload: {
-        error: e,
+        error,
       },
     });
   }
@@ -87,7 +92,8 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
         favorites: data,
       },
     });
-  } catch (e) {
+  } catch (error) {
+    console.error(error);
     dispatch({
       type: types.FETCH_USER_FAVORITES_FAIL,
       payload: {
@@ -165,6 +171,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       status: options.status,
     });
   } catch (error) {
+    console.error(error);
     dispatch({
       error,
       type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
@@ -197,6 +204,7 @@ export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, ge
       type: types.FETCH_USER_LIBRARY_SUCCESS,
     });
   } catch (error) {
+    console.error(error);
     dispatch({
       error,
       type: types.FETCH_USER_LIBRARY_FAIL,
@@ -248,7 +256,11 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
       });
       if (aaaa.length === 1) dispatch({ type: types.FETCH_NETWORK_FOLLOW, payload: item[type].id });
     });
-  } catch (e) {
-    dispatch({ type: types.FETCH_USER_NETWORK_FAIL, payload: 'Failed to load user' });
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      type: types.FETCH_USER_NETWORK_FAIL,
+      payload: 'Failed to load user',
+    });
   }
 };
