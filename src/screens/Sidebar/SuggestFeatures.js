@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, Text, WebView } from 'react-native';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
+import { Kitsu, setToken } from 'kitsu/config/api';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -10,7 +11,20 @@ class SuggestFeatures extends React.Component {
     title: 'Suggest Features',
   };
 
-  state = {};
+  state = {
+    loading: false,
+  };
+
+  getCannySsoKey = async () => {
+    const { accessToken, currentUser } = this.props;
+    setToken(accessToken);
+    this.setState({ loading: true });
+    try {
+      // execute request. > will continue later after fixing pr review stuff.
+    } catch (e) {
+      // catch.
+    }
+  };
 
   render() {
     const { navigation } = this.props;
