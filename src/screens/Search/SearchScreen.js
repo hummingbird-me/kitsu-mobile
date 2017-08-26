@@ -18,6 +18,9 @@ const styles = {
   scrollView: {
     backgroundColor: colors.listBackPurple,
   },
+  searchBox: {
+    marginHorizontal: 10,
+  },
   tabBar: {
     backgroundColor: colors.listBackPurple,
     borderTopWidth: 0,
@@ -107,7 +110,11 @@ class SearchScreen extends Component {
       indexName={route.indexName}
       onSearchStateChange={this.handleSearchStateChange}
     >
-      <InstantSearchBox placeholder={`Search ${route.title}`} searchIconOffset={108} />
+      <InstantSearchBox
+        placeholder={`Search ${route.title}`}
+        searchIconOffset={108}
+        style={styles.searchBox}
+      />
       {this.renderSubScene(route)}
     </InstantSearch>
   );

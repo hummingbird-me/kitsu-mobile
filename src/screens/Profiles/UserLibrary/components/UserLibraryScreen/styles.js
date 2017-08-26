@@ -58,7 +58,8 @@ export const styles = StyleSheet.create({
   rating: {
     marginTop: 2,
   },
-  searchBar: {
+  searchBox: {
+    height: 35,
     marginHorizontal: 10,
   },
 });
