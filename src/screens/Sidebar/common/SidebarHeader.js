@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, Platform } from 'react-native';
-import { Button, Icon, Left, Right } from 'native-base';
+import { View, Text, Platform, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import PropTypes from 'prop-types';
 
@@ -11,14 +11,34 @@ const SidebarHeader = ({ navigation, headerTitle }) => (
       style={styles.header}
       source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
     >
-      <View style={{ flex: 1, flexDirection: 'row', paddingTop: 30, alignItems: 'center' }}>
-        <Left>
-          <Button transparent color="white" onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" style={{ color: 'white' }} />
-          </Button>
-        </Left>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          paddingTop: 30,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={{ width: 30 }}>
+          <TouchableOpacity
+            style={{
+              marginTop: 3,
+              paddingHorizontal: 4,
+              paddingVertical: 8,
+              backgroundColor: 'transparent',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => navigation.goBack()}
+          >
+            <Icon name="ios-arrow-back" color={'white'} size={22} />
+          </TouchableOpacity>
+        </View>
         <Text
           style={{
+            flex: 1,
+            textAlign: 'center',
             backgroundColor: 'transparent',
             color: 'white',
             fontFamily: 'OpenSans',
@@ -28,9 +48,9 @@ const SidebarHeader = ({ navigation, headerTitle }) => (
         >
           {headerTitle}
         </Text>
-        <Right>
+        <View style={{ width: 30 }}>
           <View />
-        </Right>
+        </View>
       </View>
     </ProgressiveImage>
   </View>

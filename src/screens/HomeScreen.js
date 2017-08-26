@@ -14,7 +14,7 @@ class HomeScreen extends Component {
       { tintColor }, // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
     ) => (
       <Image
-        source={require('kitsu/assets/img/tabbar_icons/feed.png')}
+        source={require('kitsu/assets/img/tabbar_icons/home.png')}
         style={{ tintColor, width: 20, height: 21 }}
       />
     ),
@@ -62,26 +62,30 @@ class HomeScreen extends Component {
               Create Post
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserProfile', {
-            userId: 5554,
-          })}
+          <Button
+            onPress={() =>
+              navigation.navigate('UserProfile', {
+                userId: 5554,
+              })}
           >
             <Text>
               Logged In Profile
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('Library', {
-            profile: {
-              id: 5554,
-              name: 'Nuck',
-              coverImage: {
-                original: 'https://media.kitsu.io/users/cover_images/5554/original.png?1487275574',
-              },
-              avatar: {
-                tiny: 'https://media.kitsu.io/users/avatars/5554/tiny.png?1502777221',
-              },
-            },
-          })}
+          <Button
+            onPress={() =>
+              navigation.navigate('Library', {
+                profile: {
+                  id: 5554,
+                  name: 'Nuck',
+                  coverImage: {
+                    original: 'https://media.kitsu.io/users/cover_images/5554/original.png?1487275574',
+                  },
+                  avatar: {
+                    tiny: 'https://media.kitsu.io/users/avatars/5554/tiny.png?1502777221',
+                  },
+                },
+              })}
           >
             <Text>
               Nuck Library

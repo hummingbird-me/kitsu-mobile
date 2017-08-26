@@ -1,105 +1,184 @@
-import React, { Component } from 'react';
-import { View, Image, TextInput } from 'react-native';
+import React from 'react';
+import { View, Text, TextInput, LayoutAnimation } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Button, Container, Content, Spinner } from 'native-base';
+import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
+import { updateGeneralSettings } from 'kitsu/store/user/actions';
+import { isEmpty } from 'lodash';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import styles from './styles';
 
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarDropdown } from './common/';
+class GeneralSettings extends React.Component {
+  static navigationOptions = {
+    title: 'General',
+  };
 
-class GeneralSettings extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'General'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  constructor(props) {
+    super(props);
+    this.filterOptions = [
+      { text: 'Hide Adult Titles', value: 'on' },
+      { text: 'Show Adult Titles O_O', value: 'off' },
+      { text: 'Cancel', value: null },
+    ];
+    const { name, email, sfwFilter } = props.currentUser;
+    this.state = {
+      name,
+      email,
+      sfwFilter,
+      password: '',
+      confirmPassword: '',
+      shouldShowValidationInput: false,
+      selectMenuText: sfwFilter ? this.filterOptions[0].text : this.filterOptions[1].text,
+    };
+  }
 
-  state = {
-    adult: 'Show Adult Titles (O_O)',
+  onSavePersonalSettings = () => {
+    // TODO: HANDLE INPUT VALIDATION.
+    const { name, email, password, confirmPassword, sfwFilter } = this.state;
+    const { currentUser } = this.props;
+    const valuesToUpdate = {
+      ...((name !== currentUser.name && { name }) || {}),
+      ...((email !== currentUser.email && { email }) || {}),
+      ...((sfwFilter !== currentUser.sfwFilter && { sfwFilter }) || {}),
+      ...((password === confirmPassword && { password }) || {}),
+    };
+    if (!isEmpty(valuesToUpdate)) {
+      this.props.updateGeneralSettings(valuesToUpdate);
+      this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
+    }
+  };
+
+  onSelectFilterOption = (value, option) => {
+    switch (value) {
+      case 'on':
+        this.setState({ sfwFilter: true, selectMenuText: option.text });
+        break;
+      case 'off':
+        this.setState({ sfwFilter: false, selectMenuText: option.text });
+        break;
+      default:
+        // cancel button pressed.
+        break;
+    }
+  };
+
+  toggle = (nextText) => {
+    LayoutAnimation.configureNext({
+      duration: 120,
+      create: {
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity,
+      },
+      update: {
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity,
+      },
+    });
+    if (nextText === '') {
+      // this means user clears the input.
+      this.setState({ shouldShowValidationInput: false });
+    } else if (this.state.password.length > 6) {
+      // only show after 8 chars
+      this.setState({ shouldShowValidationInput: true });
+    }
   };
 
   render() {
-    const { navigation } = this.props;
-    const loading = false; // temporary.
+    const { loading } = this.props;
     return (
-      // handle marginTop: 77
+      // TODO: handle marginTop: 77 for all other sidebar screens.
       (
-        <Container style={styles.containerStyle}>
+        <Container style={nativeBaseStyles.containerStyle}>
           <Content>
             <View style={{ flex: 1, marginTop: 77 }}>
-              <SidebarTitle style={{ marginTop: 20 }} title={'Personal Settings'} />
-              <View style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}>
-                <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+              <SidebarTitle title={'Personal Settings'} />
+              <View style={styles.fieldWrapper}>
+                <Text style={styles.hintText}>
                   Username
                 </Text>
                 <TextInput
-                  style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
-                  value={'Josh'}
+                  style={styles.fieldInput}
+                  value={this.state.name}
+                  onChangeText={t => this.setState({ name: t })}
                   autoCapitalize={'words'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
+                  keyboardAppearance={'dark'}
                 />
               </View>
               <ItemSeparator />
-              <View style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}>
-                <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+              <View style={styles.fieldWrapper}>
+                <Text style={styles.hintText}>
                   Email Address
                 </Text>
                 <TextInput
-                  style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
-                  value={'josh@kitsu.io'}
+                  style={styles.fieldInput}
+                  value={this.state.email}
+                  onChangeText={t => this.setState({ email: t })}
                   autoCapitalize={'none'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
+                  keyboardAppearance={'dark'}
                 />
               </View>
               <ItemSeparator />
-              <View style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}>
-                <Text style={{ fontSize: 10, color: 'grey', fontFamily: 'OpenSans' }}>
+              <View style={styles.fieldWrapper}>
+                <Text style={styles.hintText}>
                   Password
                 </Text>
                 <TextInput
-                  style={{ marginTop: 4, height: 30, fontFamily: 'OpenSans', fontSize: 14 }}
-                  value={'josh@kitsu.io'}
+                  style={styles.fieldInput}
+                  value={this.state.password}
+                  onChangeText={(t) => {
+                    this.toggle(t);
+                    this.setState({ password: t });
+                  }}
                   secureTextEntry
+                  placeholder={'Start typing to set a new password.'}
                   autoCorrect={false}
                   underlineColorAndroid={'transparent'}
+                  keyboardAppearance={'dark'}
                 />
               </View>
-              <SidebarTitle style={{ marginTop: 20 }} title={'Content on Kitsu'} />
-              <SidebarDropdown
-                title={'R18+ titles in feed, libraries, or search?'}
-                value={this.state.adult}
-                options={[{ title: 'Show Adult Titles (O_O)' }, { title: 'Hide Adult Titles' }]}
-                onSelectOption={adult => this.setState({ adult })}
+              {this.state.shouldShowValidationInput &&
+                <View style={styles.fieldWrapper}>
+                  <Text style={styles.hintText}>
+                    Confirm Password
+                  </Text>
+                  <TextInput
+                    style={styles.fieldInput}
+                    value={this.state.confirmPassword}
+                    onChangeText={t => this.setState({ confirmPassword: t })}
+                    secureTextEntry
+                    placeholder={'Confirm password'}
+                    autoCorrect={false}
+                    underlineColorAndroid={'transparent'}
+                    keyboardAppearance={'dark'}
+                  />
+                </View>}
+              <SidebarTitle title={'Content on Kitsu'} />
+              <SelectMenu
+                style={styles.selectMenu}
+                onOptionSelected={this.onSelectFilterOption}
+                cancelButtonIndex={2}
+                options={this.filterOptions}
+              >
+                <View>
+                  <Text style={styles.hintText}>
+                    R18+ titles in feed, libraries, or search?
+                  </Text>
+                  <Text style={styles.valueText}>
+                    {this.state.selectMenuText}
+                  </Text>
+                </View>
+              </SelectMenu>
+              <SidebarButton
+                loading={loading}
+                onPress={this.onSavePersonalSettings}
+                title={'Save General Settings'}
               />
-              <View style={{ marginTop: 20, padding: 10, paddingLeft: 25, paddingRight: 25 }}>
-                <Button
-                  block
-                  disabled={false && loading}
-                  onPress={() => {}}
-                  style={{
-                    backgroundColor: colors.green,
-                    height: 47,
-                    borderRadius: 3,
-                  }}
-                >
-                  {loading
-                    ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
-                    : <Text
-                      style={{
-                        color: colors.white,
-                        fontFamily: 'OpenSans-Semibold',
-                        lineHeight: 20,
-                        fontSize: 14,
-                      }}
-                    >
-                        Save General Settings
-                      </Text>}
-                </Button>
-              </View>
             </View>
           </Content>
         </Container>
@@ -108,12 +187,28 @@ class GeneralSettings extends Component {
   }
 }
 
-const styles = {
+const nativeBaseStyles = {
   containerStyle: { backgroundColor: colors.listBackPurple },
 };
 
-const mapStateToProps = ({ user }) => ({});
+const mapStateToProps = ({ user }) => {
+  const { currentUser, loading } = user;
+  return {
+    currentUser,
+    loading,
+  };
+};
 
-GeneralSettings.propTypes = {};
+GeneralSettings.propTypes = {
+  updateGeneralSettings: PropTypes.func,
+  currentUser: PropTypes.object,
+  loading: PropTypes.bool,
+};
 
-export default connect(mapStateToProps, {})(GeneralSettings);
+GeneralSettings.defaultProps = {
+  updateGeneralSettings: () => {},
+  currentUser: {},
+  loading: true,
+};
+
+export default connect(mapStateToProps, { updateGeneralSettings })(GeneralSettings);
