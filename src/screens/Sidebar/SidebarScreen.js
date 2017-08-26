@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
+import { defaultAvatar as defaultGroupAvatar } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
@@ -71,21 +72,25 @@ class SidebarScreen extends React.Component {
         key: 'groups',
         data: groupsData,
         title: 'Groups',
-        renderItem: ({ item }) => (
-          <SidebarListItem
-            onPress={() => {
-              navigation.navigate('');
-            }}
-            title={item.group.name}
-            imageURL={
-              item.group.avatar.small ||
-                item.group.avatar.medium ||
-                item.group.avatar.large ||
-                item.group.avatar.original ||
-                defaultAvatar
-            }
-          />
-        ),
+        renderItem: ({ item }) => {
+          console.log(item);
+          return (
+            <SidebarListItem
+              onPress={() => {
+                navigation.navigate('');
+              }}
+              title={item.group.name}
+              imageURL={
+                (item.group.avatar &&
+                  (item.group.avatar.small ||
+                    item.group.avatar.medium ||
+                    item.group.avatar.large ||
+                    item.group.avatar.original)) ||
+                  defaultGroupAvatar
+              }
+            />
+          );
+        },
         ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
         ItemSeparatorComponent: () => <ItemSeparator />,
       },
@@ -111,90 +116,88 @@ class SidebarScreen extends React.Component {
     ];
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>
-        <View>
-          <ProgressiveImage
-            hasOverlay
-            style={styles.headerCoverImage}
-            source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
+        <ProgressiveImage
+          hasOverlay
+          style={styles.headerCoverImage}
+          source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
+        >
+          <View
+            style={{
+              flex: 1,
+              marginTop: Platform.select({ ios: 20, android: 24 }),
+            }}
           >
-            <View
+            <TouchableOpacity
+              activeOpacity={0.6}
               style={{
-                flex: 1,
-                marginTop: Platform.select({ ios: 20, android: 24 }),
+                marginTop: 12,
+                marginHorizontal: 12,
+                padding: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              onPress={this.navigateUserProfile}
+            >
+              <Image
+                style={{ width: 40, height: 40, borderRadius: 20 }}
+                source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+              />
+              <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans',
+                    color: colors.white,
+                    fontSize: 14,
+                    fontWeight: '600',
+                  }}
+                >
+                  {name}
+                </Text>
+                <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>
+                  view profile
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ProgressiveImage>
+        <SectionList
+          contentContainerStyle={{ paddingBottom: 100 }}
+          sections={sectionListData}
+          keyExtractor={(item, index) => index}
+          ListHeaderComponent={() => <View height={10} />}
+          renderItem={() => <SidebarListItem />}
+          renderSectionHeader={({ section }) => (
+            <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
+          )}
+          renderSectionFooter={({ section }) => {
+            // THIS FUNCTION IS NOT BEING INVOKED !?
+          }}
+          removeClippedSubviews={false}
+          SectionSeparatorComponent={() => <View height={20} />}
+          ListFooterComponent={() => (
+            <TouchableOpacity
+              onPress={this.onLogoutButtonPressed}
+              style={{
+                marginVertical: 40,
+                padding: 12,
+                backgroundColor: colors.white,
+                alignItems: 'center',
               }}
             >
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{
-                  marginTop: 12,
-                  marginHorizontal: 12,
-                  padding: 8,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
-                onPress={this.navigateUserProfile}
+              <Text
+                style={[
+                  commonStyles.text,
+                  {
+                    fontWeight: '500',
+                    color: colors.activeRed,
+                  },
+                ]}
               >
-                <Image
-                  style={{ width: 40, height: 40, borderRadius: 20 }}
-                  source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
-                />
-                <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans',
-                      color: colors.white,
-                      fontSize: 14,
-                      fontWeight: '600',
-                    }}
-                  >
-                    {name}
-                  </Text>
-                  <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>
-                    view profile
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </ProgressiveImage>
-          <SectionList
-            contentContainerStyle={{ paddingBottom: 100 }}
-            sections={sectionListData}
-            keyExtractor={(item, index) => index}
-            ListHeaderComponent={() => <View height={10} />}
-            renderItem={() => <SidebarListItem />}
-            renderSectionHeader={({ section }) => (
-              <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
-            )}
-            renderSectionFooter={({ section }) => {
-              // THIS FUNCTION IS NOT BEING INVOKED !?
-            }}
-            removeClippedSubviews={false}
-            SectionSeparatorComponent={() => <View height={20} />}
-            ListFooterComponent={() => (
-              <TouchableOpacity
-                onPress={this.onLogoutButtonPressed}
-                style={{
-                  marginVertical: 40,
-                  padding: 12,
-                  backgroundColor: colors.white,
-                  alignItems: 'center',
-                }}
-              >
-                <Text
-                  style={[
-                    commonStyles.text,
-                    {
-                      fontWeight: '500',
-                      color: colors.activeRed,
-                    },
-                  ]}
-                >
-                  Log Out
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+                Log Out
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
       </View>
     );
   }

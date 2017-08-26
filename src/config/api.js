@@ -839,6 +839,10 @@ Kitsu.define(
   { collectionPath: 'group-members' },
 );
 
+Kitsu.define('sso', {
+  token: '',
+});
+
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
 };
