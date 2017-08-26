@@ -18,7 +18,7 @@ CustomStatusBar.propTypes = {
 };
 
 export const ProfileHeader = (
-  { profile, showCoverImage, showFollowButton, showProfileImage, title, onClickBack }
+  { profile, showCoverImage, showFollowButton, showProfileImage, title, onClickBack },
 ) => {
   const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
