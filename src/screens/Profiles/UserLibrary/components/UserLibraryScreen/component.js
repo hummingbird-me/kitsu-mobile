@@ -305,7 +305,10 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
+        <ScrollableTabView
+          locked
+          renderTabBar={() => <ScrollableTabBar />}
+        >
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
             {searchBar}
             {this.renderLists('anime')}

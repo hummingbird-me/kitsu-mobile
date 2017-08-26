@@ -1,5 +1,5 @@
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { Body, Button, Icon, Left, Right } from 'native-base';
+import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
@@ -26,44 +26,45 @@ export const ProfileHeader = (
 
   return (
     <View style={styles.headerContainer}>
-      <CustomStatusBar backgroundColor={colors.darkPurple} barStyle="light-content" />
-      <View style={styles.header}>
-        {showCoverImage && <Image style={commonStyles.absoluteFill} source={{ uri: coverImageUri }} />}
+      <CustomStatusBar backgroundColor={colors.darkPurple} />
+      {showCoverImage &&
+        <Image
+          style={commonStyles.absoluteFill}
+          source={{ uri: coverImageUri }}
+        />
+      }
 
-        <Left>
-          <Button transparent onPress={goBack}>
-            <Icon name="arrow-back" style={StyleSheet.flatten(commonStyles.colorWhite)} />
+      <View style={styles.headerWrapper}>
+        <View style={[styles.header]}>
+          <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
+            <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
             {showProfileImage && <Image style={styles.profileImage} source={{ uri: profileImageUri }} />}
             {showFollowButton && <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>}
-          </Button>
-        </Left>
+          </TouchableOpacity>
 
-        {!showFollowButton && (
-        <Body>
-          <View style={{ backgroundColor: 'transparent' }}>
+          {!showFollowButton && (
+          <View style={styles.titleOnlyContainer}>
             <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>
           </View>
-        </Body>
-        )}
-
-        <Right>
-          {showFollowButton && (
-          <Button transparent style={StyleSheet.flatten(styles.followButton)} onPress={goBack}>
-            <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
-          </Button>
           )}
-        </Right>
+
+          {showFollowButton && (
+          <TouchableOpacity transparent style={styles.followButton} onPress={goBack}>
+            <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
+          </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
 };
 
 ProfileHeader.propTypes = {
+  onClickBack: PropTypes.func,
   profile: PropTypes.object.isRequired,
   showCoverImage: PropTypes.bool,
   showFollowButton: PropTypes.bool,
   showProfileImage: PropTypes.bool,
-  onClickBack: PropTypes.func,
   title: PropTypes.string,
 };
 
@@ -72,5 +73,8 @@ ProfileHeader.defaultProps = {
   showFollowButton: true,
   showProfileImage: true,
   onClickBack: () => {},
+  showCoverImage: true,
+  showFollowButton: true,
+  showProfileImage: true,
   title: '',
 };
