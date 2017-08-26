@@ -58,6 +58,7 @@ export class SearchBar extends React.PureComponent {
             commonStyles.colorLightGrey,
             styles.input,
           ]}
+          underlineColorAndroid="transparent"
           value={this.props.value || this.state.value}
         />
       </View>
