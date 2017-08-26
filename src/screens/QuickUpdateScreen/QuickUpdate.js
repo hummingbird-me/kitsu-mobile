@@ -79,15 +79,18 @@ class QuickUpdate extends Component {
 
     try {
       const library = await Kitsu.findAll('libraryEntries', {
-        'fields[libraryEntries]': LIBRARY_ENTRIES_FIELDS.join(),
-        'fields[anime]': ANIME_FIELDS.join(),
-        'fields[user]': USER_FIELDS.join(),
-        'filter[status]': 'current,planned',
-        'filter[user_id]': this.props.currentUser.id,
-        'filter[kind]': 'anime',
+        fields: {
+          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
+          anime: ANIME_FIELDS.join(),
+          user: USER_FIELDS.join(),
+        },
+        filter: {
+          status: 'current,planned',
+          user_id: this.props.currentUser.id,
+          kind: 'anime',
+        },
         include: INCLUDE.join(),
-        'page[offset]': 0,
-        'page[limit]': 40,
+        page: { limit: 40 },
         sort: 'status,-progressed_at,-updated_at',
       });
 
