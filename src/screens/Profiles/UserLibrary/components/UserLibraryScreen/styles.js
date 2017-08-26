@@ -38,25 +38,11 @@ export const styles = StyleSheet.create({
     marginHorizontal: 4,
     width: constants.POSTER_CARD_WIDTH,
   },
-  posterImageContainer: {
-    width: constants.POSTER_CARD_WIDTH,
-    marginHorizontal: 4,
-  },
-  posterImageCard: {
-    backgroundColor: colors.lightPurple,
-    width: constants.POSTER_CARD_WIDTH,
-    height: constants.POSTER_CARD_HEIGHT,
-    marginBottom: 2,
-    borderRadius: 3,
-  },
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
   posterImageLoading: {
     backgroundColor: colors.lightPurple,
-  },
-  rating: {
-    marginTop: 2,
   },
   searchBar: {
     marginHorizontal: 10,

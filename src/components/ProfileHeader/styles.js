@@ -5,6 +5,7 @@ const HEADER_NAVIGATION_IMAGE_HEIGHT = 60;
 
 export const styles = StyleSheet.create({
   backButton: {
+    borderWidth: 1,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',

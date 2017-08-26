@@ -23,6 +23,7 @@ export const styles = StyleSheet.create({
   posterImage: {
     width: 65,
     height: 75,
+    borderRadius: 4,
   },
   progressBarBackgroun: {
     backgroundColor: colors.lightGrey,

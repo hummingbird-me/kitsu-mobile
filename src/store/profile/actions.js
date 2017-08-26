@@ -17,13 +17,12 @@ export const fetchProfile = id => async (dispatch) => {
     });
     dispatch({ type: types.FETCH_USER_SUCCESS, payload: user[0] });
   } catch (e) {
-    console.log(e);
     dispatch({ type: types.FETCH_USER_FAIL, payload: 'Failed to load user' });
   }
 };
 
 export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
-  dispatch({ type: types.FETCH_USER_LIB_ENTRIES });
+  dispatch({ type: types.FETCH_USER_FEED });
   try {
     const results = await Kitsu.one('userFeed', userId).get({
       page: { limit },
@@ -34,14 +33,19 @@ export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
     });
 
     dispatch({
-      type: types.FETCH_USER_LIB_ENTRIES_SUCCESS,
+      type: types.FETCH_USER_FEED_SUCCESS,
       payload: {
         userId,
         entries: [...results],
       },
     });
   } catch (e) {
-    console.log(e);
+    dispatch({
+      type: types.FETCH_USER_FEED_FAIL,
+      payload: {
+        error: e,
+      },
+    });
   }
 };
 
@@ -84,7 +88,6 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
       },
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: types.FETCH_USER_FAVORITES_FAIL,
       payload: {
@@ -130,6 +133,11 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
   try {
     const libraryEntries = await Kitsu.findAll('libraryEntries', {
+      fields: {
+        anime: 'canonicalTitle,posterImage,episodeCount',
+        manga: 'canonicalTitle,posterImage,chapterCount',
+        libraryEntries: 'anime,manga,progress,ratingTwenty,status',
+      },
       filter,
       include: 'anime,manga',
       page: {
@@ -237,7 +245,6 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
       if (aaaa.length === 1) dispatch({ type: types.FETCH_NETWORK_FOLLOW, payload: item[type].id });
     });
   } catch (e) {
-    console.log(e);
     dispatch({ type: types.FETCH_USER_NETWORK_FAIL, payload: 'Failed to load user' });
   }
 };

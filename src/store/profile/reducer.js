@@ -64,21 +64,21 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         error: action.payload,
       };
-    case types.FETCH_USER_LIB_ENTRIES:
+    case types.FETCH_USER_FEED:
       return {
         ...state,
         loadingLibrary: true,
         library: {},
         error: '',
       };
-    case types.FETCH_USER_LIB_ENTRIES_SUCCESS:
+    case types.FETCH_USER_FEED_SUCCESS:
       return {
         ...state,
         loadingLibrary: false,
         library: { [action.payload.userId]: action.payload.entries },
         error: '',
       };
-    case types.FETCH_USER_LIB_ENTRIES_FAIL:
+    case types.FETCH_USER_FEED_FAIL:
       return {
         ...state,
         loadingLibrary: false,

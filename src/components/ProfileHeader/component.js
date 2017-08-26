@@ -38,13 +38,29 @@ export const ProfileHeader = (
         <View style={[styles.header]}>
           <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
-            {showProfileImage && <Image style={styles.profileImage} source={{ uri: profileImageUri }} />}
-            {showFollowButton && <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>}
+            {showProfileImage &&
+              <Image style={styles.profileImage} source={{ uri: profileImageUri }} />
+            }
+            {showFollowButton &&
+              <Text style={[
+                commonStyles.text,
+                commonStyles.colorWhite,
+                styles.titleText]}
+              >
+                {title}
+              </Text>
+            }
           </TouchableOpacity>
 
           {!showFollowButton && (
           <View style={styles.titleOnlyContainer}>
-            <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>
+            <Text style={[
+              commonStyles.text,
+              commonStyles.colorWhite,
+              styles.titleText]}
+            >
+              {title}
+            </Text>
           </View>
           )}
 
@@ -69,9 +85,6 @@ ProfileHeader.propTypes = {
 };
 
 ProfileHeader.defaultProps = {
-  showCoverImage: true,
-  showFollowButton: true,
-  showProfileImage: true,
   onClickBack: () => {},
   showCoverImage: true,
   showFollowButton: true,

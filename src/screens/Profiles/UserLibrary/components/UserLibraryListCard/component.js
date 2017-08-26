@@ -15,6 +15,7 @@ const STATUS_SELECT_OPTIONS = [
   { value: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
   { value: 'onHold', anime: 'On Hold', manga: 'On Hold' },
   { value: 'dropped', anime: 'Dropped', manga: 'Dropped' },
+  { value: 'completed', anime: 'Completed', manga: 'Completed' },
   { value: 'remove', anime: 'Remove From Library', manga: 'Remove From Library' },
   { value: 'cancel', anime: 'Nevermind', manga: 'Nevermind' },
 ];
@@ -23,6 +24,7 @@ export class UserLibraryListCard extends React.Component {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
+    libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     profile: PropTypes.object.isRequired,
   }
@@ -64,7 +66,7 @@ export class UserLibraryListCard extends React.Component {
   selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
     value: option.value,
     text: option[this.props.libraryType],
-  }));
+  })).filter(option => option.value !== this.props.libraryStatus);
 
   render() {
     const { data, libraryType, currentUser } = this.props;
@@ -96,17 +98,18 @@ export class UserLibraryListCard extends React.Component {
           <View style={styles.content}>
             <View style={styles.titleSection}>
               <Text style={styles.titleText}>{mediaData.canonicalTitle}</Text>
-              <SelectMenu
-                disabled={!canEdit}
-                options={this.selectOptions}
-                onOptionSelected={this.onStatusSelected}
-              >
-                <Image
-                  source={menuImage}
-                  style={styles.menuButton}
-                  resizeMode="contain"
-                />
-              </SelectMenu>
+              {canEdit && (
+                <SelectMenu
+                  options={this.selectOptions}
+                  onOptionSelected={this.onStatusSelected}
+                >
+                  <Image
+                    source={menuImage}
+                    style={styles.menuButton}
+                    resizeMode="contain"
+                  />
+                </SelectMenu>
+              )}
             </View>
             <View style={styles.progressContainer}>
               <ProgressBar

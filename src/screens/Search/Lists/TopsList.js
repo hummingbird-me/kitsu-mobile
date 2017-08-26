@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Left, Right, Button, Text, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import * as colors from 'kitsu/constants/colors';
 import { getDefaults } from 'kitsu/store/anime/actions';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { MediaCard } from 'kitsu/components/MediaCard';
 
 const list = [
   { label: 'Release date', key: 'release' },
@@ -79,16 +79,11 @@ class TopsList extends Component {
   }
 
   renderGallery(array, title, type) {
-    let data = Array(10).fill(1).map((item, index) => ({ key: index }));
     const { active } = this.props;
-    if (array.length > 0) {
-      data = array.map(item => ({
-        image: item.posterImage ? item.posterImage.small : 'none',
-        key: item.id,
-        id: item.id,
-        type: item.type,
-      }));
-    }
+    const data = array.length > 0
+      ? array
+      : Array(10).fill(1).map((item, index) => ({ key: index }));
+
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>
         <View
@@ -150,29 +145,12 @@ class TopsList extends Component {
             removeClippedSubviews={false}
             data={data}
             renderItem={({ item, index }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate('Media', {
-                    mediaId: item.id,
-                    type: item.type,
-                  });
-                }}
-                style={{ paddingRight: 5.74, marginLeft: index === 0 ? 11 : 0 }}
-              >
-                <ProgressiveImage
-                  source={{ uri: item.image }}
-                  containerStyle={{
-                    height: 118.6,
-                    width: 79.48,
-                  }}
-                  style={{
-                    height: 118.6,
-                    width: 79.48,
-                    borderRadius: 3,
-                    backgroundColor: colors.imageBackColor,
-                  }}
-                />
-              </TouchableOpacity>
+              <MediaCard
+                cardDimensions={{ height: 120, width: 80 }}
+                mediaData={item}
+                navigate={this.props.navigation.navigate}
+                style={index === 0 ? { marginLeft: 11 } : null}
+              />
             )}
           />}
       </View>

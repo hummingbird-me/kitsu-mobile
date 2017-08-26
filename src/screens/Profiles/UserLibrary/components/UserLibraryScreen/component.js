@@ -8,9 +8,7 @@ import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { SearchBar } from 'kitsu/components/SearchBar';
-import { ProgressBar } from 'kitsu/components/ProgressBar';
-import { Rating } from 'kitsu/components/Rating';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 import * as constants from './constants';
@@ -24,6 +22,16 @@ const getCardVisibilityCounts = () => {
     countForMaxWidth: Math.ceil(maxWidth / constants.POSTER_CARD_WIDTH),
     countForCurrentWidth: Math.ceil(width / constants.POSTER_CARD_WIDTH),
   };
+};
+
+const progressFromLibraryEntry = (libraryEntry) => {
+  const mediaData = libraryEntry.anime || libraryEntry.manga;
+
+  if (mediaData.type === 'anime') {
+    return Math.floor((libraryEntry.progress / mediaData.episodeCount) * 100);
+  }
+
+  return Math.floor((libraryEntry.progress / mediaData.chapterCount) * 100);
 };
 
 export class UserLibraryScreenComponent extends React.Component {
@@ -124,52 +132,27 @@ export class UserLibraryScreenComponent extends React.Component {
 
     const data = item.anime || item.manga;
     const { currentUser } = this.props;
-
-    let progress = 0;
-    if (data.type === 'anime') {
-      progress = Math.floor((item.progress / data.episodeCount) * 100);
-    } else {
-      progress = Math.floor((item.progress / data.chapterCount) * 100);
-    }
-
-    const rating = item.ratingTwenty === null ? null : item.ratingTwenty / 2;
+    const progress = progressFromLibraryEntry(item);
 
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.navigate('Media', {
-            mediaId: data.id,
-            type: data.type,
-          });
+      <MediaCard
+        cardDimensions={{
+          height: constants.POSTER_CARD_HEIGHT,
+          width: constants.POSTER_CARD_WIDTH,
         }}
-      >
-        <View style={[
-          styles.posterImageContainer,
-          index === 0 && styles.posterImageCardFirstChild,
-        ]}
-        >
-          <ProgressiveImage
-            source={{ uri: data.posterImage.tiny }}
-            style={styles.posterImageCard}
-          />
-          {progress > 0 && <ProgressBar fillPercentage={progress} height={3} />}
-          <Rating
-            disabled
-            rating={rating}
-            ratingSystem={currentUser.ratingSystem}
-            size="tiny"
-            viewType="single"
-            showNotRated={false}
-            style={styles.rating}
-          />
-        </View>
-      </TouchableOpacity>
+        mediaData={data}
+        navigate={this.props.navigation.navigate}
+        progress={progress}
+        ratingTwenty={item.ratingTwenty}
+        ratingSystem={currentUser.ratingSystem}
+        style={index === 0 ? styles.posterImageCardFirstChild : null}
+      />
     );
   }
 
   renderLoadingList = () => {
     const { countForMaxWidth } = getCardVisibilityCounts();
-    const data = Array(countForMaxWidth).fill(1).map((_, index) => ({ id: index }));
+    const data = Array(countForMaxWidth).fill(1).map((_, index) => ({ id: index, anime: {} }));
     const width = constants.POSTER_CARD_WIDTH;
 
     return (
@@ -183,15 +166,7 @@ export class UserLibraryScreenComponent extends React.Component {
           { width, offset: width * index, index }
         )}
         removeClippedSubviews={false}
-        renderItem={({ index }) => (
-          <View style={[
-            styles.posterImageCard,
-            styles.posterImageContainer,
-            styles.posterImageLoading,
-            (index === 0 && styles.posterImageCardFirstChild),
-          ]}
-          />
-        )}
+        renderItem={this.renderItem}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
       />
@@ -237,7 +212,6 @@ export class UserLibraryScreenComponent extends React.Component {
       { status: 'onHold', anime: 'On Hold', manga: 'On Hold' },
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
-
 
     return listOrder.map((currentList) => {
       const { status } = currentList;
