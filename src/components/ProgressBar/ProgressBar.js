@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import styles from './styles';
@@ -16,7 +16,7 @@ const ProgressBar = (props) => {
 
 ProgressBar.propTypes = {
   progress: PropTypes.number.isRequired,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  style: ViewPropTypes.style,
 };
 
 ProgressBar.defaultProps = {

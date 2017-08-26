@@ -14,7 +14,7 @@ const HIT_SLOP = {
 
 export default class QuickUpdateEditor extends PureComponent {
   static propTypes = {
-    episode: PropTypes.string.isRequired,
+    episode: PropTypes.number.isRequired,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onDone: PropTypes.func,

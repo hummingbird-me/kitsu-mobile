@@ -10,15 +10,16 @@ import styles from './styles';
 
 export default class QuickUpdateCard extends PureComponent {
   static propTypes = {
+    // TODO: Not yet a complete definition of the things we use in data.
     data: PropTypes.shape({
       item: PropTypes.shape({
-        anime: {
+        anime: PropTypes.shape({
           canonicalTitle: PropTypes.string.isRequired,
           id: PropTypes.string.isRequired,
-          posterImage: {
+          posterImage: PropTypes.shape({
             large: PropTypes.string.isRequired,
-          },
-        },
+          }),
+        }).isRequired,
       }).isRequired,
     }).isRequired,
     onBeginEditing: PropTypes.func,
