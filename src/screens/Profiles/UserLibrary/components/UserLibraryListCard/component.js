@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Kitsu } from 'kitsu/config/api';
+import { debounce } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
 import { Counter } from 'kitsu/components/Counter';
@@ -30,14 +32,24 @@ export class UserLibraryListCard extends React.Component {
   }
 
   state = {
-    progress: Math.floor((this.props.data.progress / this.getMaxProgress()) * 100),
+    libraryStatus: this.props.data.status,
+    progress: this.props.data.progress,
+    progressPercentage: Math.floor((this.props.data.progress / this.getMaxProgress()) * 100),
+    ratingTwenty: this.props.data.ratingTwenty,
     sliderCanActivate: false,
   }
 
   onProgressValueChanged = (newProgress) => {
     const maxProgress = this.getMaxProgress();
-    const progress = Math.floor((newProgress / maxProgress) * 100);
-    this.setState({ progress });
+    const progressPercentage = Math.floor((newProgress / maxProgress) * 100);
+    this.setState({
+      progressPercentage,
+      progress: newProgress,
+    }, this.debounceSave);
+  }
+
+  onRatingChanged = (ratingTwenty) => {
+    this.setState({ ratingTwenty }, this.debounceSave);
   }
 
   onRightButtonsActivate = () => {
@@ -48,8 +60,8 @@ export class UserLibraryListCard extends React.Component {
     this.setState({ sliderCanActivate: false });
   }
 
-  onStatusSelected = () => {
-
+  onStatusSelected = (libraryStatus) => {
+    this.setState({ libraryStatus }, this.debounceSave);
   }
 
   getMaxProgress() {
@@ -63,6 +75,31 @@ export class UserLibraryListCard extends React.Component {
     return mediaData.chapterCount;
   }
 
+  saveEntry = async () => {
+    const { libraryStatus, progress, ratingTwenty } = this.state;
+
+    try {
+      await Kitsu.update('libraryEntries', {
+        id: this.props.data.id,
+        progress,
+        ratingTwenty,
+        status: libraryStatus,
+      });
+
+      this.props.data.progress = progress;
+      this.props.data.ratingTwenty = ratingTwenty;
+      this.props.data.status = libraryStatus;
+    } catch (e) {
+      this.setState({
+        progress: this.props.data.progress,
+        ratingTwenty: this.props.data.ratingTwenty,
+        status: this.props.data.status,
+      });
+    }
+  }
+
+  debounceSave = debounce(this.saveEntry, 200);
+
   selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
     value: option.value,
     text: option[this.props.libraryType],
@@ -70,7 +107,7 @@ export class UserLibraryListCard extends React.Component {
 
   render() {
     const { data, libraryType, currentUser } = this.props;
-    const { progress, sliderCanActivate } = this.state;
+    const { progressPercentage, sliderCanActivate } = this.state;
     const mediaData = data[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
@@ -114,7 +151,7 @@ export class UserLibraryListCard extends React.Component {
             <View style={styles.progressContainer}>
               <ProgressBar
                 height={6}
-                fillPercentage={progress}
+                fillPercentage={progressPercentage}
                 backgroundStyle={styles.progressBarBackgroun}
               />
             </View>
@@ -130,7 +167,9 @@ export class UserLibraryListCard extends React.Component {
                 disabled={!canEdit}
                 size="small"
                 viewType="single"
+                onRatingChanged={this.onRatingChanged}
                 style={styles.ratingStyle}
+                rating={data.ratingTwenty}
                 ratingSystem={currentUser.ratingSystem}
               />
             </View>
