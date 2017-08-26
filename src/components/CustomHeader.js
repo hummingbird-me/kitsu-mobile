@@ -31,7 +31,7 @@ const CustomHeader = ({
   const leftBtn = (
     <Button transparent color="white" onPress={() => navigation.dismiss()}>
       <Icon name="arrow-back" style={{ color: 'white' }} />
-      {leftText && <Text style={{ color: 'white', fontWeight: '600' }}>{leftText}</Text>}
+      {leftText ? <Text style={{ color: 'white', fontWeight: '600' }}>{leftText}</Text> : <Text />}
     </Button>
   );
   const colors = [hasOverlay ? 'transparent' : '#0E0805', 'transparent'];

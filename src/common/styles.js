@@ -13,6 +13,9 @@ export const commonStyles = StyleSheet.create({
   textHeavy: {
     fontWeight: '800',
   },
+  transparent: {
+    backgroundColor: 'transparent',
+  },
   colorWhite: {
     color: colors.white,
   },
