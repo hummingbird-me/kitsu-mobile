@@ -16,7 +16,7 @@ const ProgressBar = (props) => {
 
 ProgressBar.propTypes = {
   progress: PropTypes.number.isRequired,
-  style: PropTypes.object,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
 ProgressBar.defaultProps = {

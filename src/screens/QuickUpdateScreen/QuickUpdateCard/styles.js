@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 5,
-    borderWidth: 1,
     marginHorizontal: 10,
     marginBottom: 10,
   },
@@ -118,7 +117,18 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     color: colors.lightGrey,
   },
-  textInput: {
+  placeholderWrapper: {
+    flex: 1,
+  },
+  placeholder: {
+    color: colors.lightGrey,
+    flex: 1,
+    fontSize: 12,
+    fontFamily: 'OpenSans',
+    margin: 10,
+  },
+  updateText: {
+    color: 'black',
     flex: 1,
     fontSize: 12,
     fontFamily: 'OpenSans',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Animated, Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
@@ -25,6 +25,7 @@ class QuickUpdate extends Component {
     filterMode: 'all',
     backgroundImageUri: undefined,
     faderOpacity: new Animated.Value(0.5),
+    headerOpacity: new Animated.Value(1),
   }
 
   componentWillMount() {
@@ -58,6 +59,7 @@ class QuickUpdate extends Component {
 
     const ANIME_FIELDS = [
       'slug',
+      'coverImage',
       'posterImage',
       'episodeCount',
       'canonicalTitle',
@@ -67,29 +69,19 @@ class QuickUpdate extends Component {
       'startDate',
     ];
 
-    const USER_FIELDS = [
-      'id',
-    ];
-
-    const INCLUDE = [
-      'anime',
-      'manga',
-      'unit',
-    ];
-
     try {
       const library = await Kitsu.findAll('libraryEntries', {
         fields: {
           libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
           anime: ANIME_FIELDS.join(),
-          user: USER_FIELDS.join(),
+          user: 'id',
         },
         filter: {
           status: 'current,planned',
           user_id: this.props.currentUser.id,
           kind: 'anime',
         },
-        include: INCLUDE.join(),
+        include: 'anime,manga,unit',
         page: { limit: 40 },
         sort: 'status,-progressed_at,-updated_at',
       });
@@ -112,12 +104,14 @@ class QuickUpdate extends Component {
   }
 
   carouselItemChanged = debounce((index) => {
-    const { backgroundImageUri, faderOpacity } = this.state;
+    const { backgroundImageUri, faderOpacity, library } = this.state;
+
+    const newBackgroundImage = library[index].anime.coverImage.original;
 
     // On first load we don't really need to do the fader business.
     if (!backgroundImageUri) {
       this.setState({
-        backgroundImageUri: this.state.library[index].anime.posterImage.large,
+        backgroundImageUri: newBackgroundImage,
       });
 
       return;
@@ -134,7 +128,7 @@ class QuickUpdate extends Component {
       if (!finished) return;
       // Once that's complete, change the image.
       this.setState({
-        backgroundImageUri: this.state.library[index].anime.posterImage.large,
+        backgroundImageUri: newBackgroundImage,
       });
 
       // And after a small delay to let it load, fade it back in.
@@ -147,18 +141,53 @@ class QuickUpdate extends Component {
     });
   }, 500)
 
-  renderItem = data => <QuickUpdateCard data={data} />;
+  hideHeader = () => {
+    this.animateHeaderOpacityTo(0);
+  }
+
+  showHeader = () => {
+    this.animateHeaderOpacityTo(1, 500);
+  }
+
+  animateHeaderOpacityTo = (toValue, delay = 0) => {
+    const { headerOpacity } = this.state;
+
+    Animated.timing(headerOpacity, {
+      toValue,
+      delay,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  renderItem = data => (
+    <QuickUpdateCard
+      data={data}
+      onBeginEditing={this.hideHeader}
+      onEndEditing={this.showHeader}
+    />);
 
   render() {
-    const { backgroundImageUri, faderOpacity, library, filterMode } = this.state;
+    const {
+      backgroundImageUri,
+      faderOpacity,
+      filterMode,
+      headerOpacity,
+      library,
+      loading,
+    } = this.state;
 
-    if (!library) {
-      return null;
+    if (loading || !library) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
     }
 
     return (
       <View style={styles.wrapper}>
-        {/* Background Image */}
+        {/* Background Image, Cover image for the series. */}
         <Image
           source={{ uri: backgroundImageUri }}
           style={styles.backgroundImage}
@@ -169,7 +198,7 @@ class QuickUpdate extends Component {
         />
 
         {/* Header */}
-        <View style={styles.header}>
+        <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
           {/* Dummy View, helps with layout to center text */}
           <View style={styles.spacer} />
           <Text style={styles.headerText}>Quick Update</Text>
@@ -178,7 +207,7 @@ class QuickUpdate extends Component {
             onModeChanged={this.filterModeChanged}
             style={styles.filterButton}
           />
-        </View>
+        </Animated.View>
 
         {/* Carousel */}
         <Carousel

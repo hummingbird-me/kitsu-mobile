@@ -105,8 +105,8 @@ class HomeScreen extends Component {
           <Counter initialValue={11} maxValue={20} />
         </Content>
         <Modal
-          visible={this.state.quickUpdateModalVisible}
           animationType="fade"
+          visible={this.state.quickUpdateModalVisible}
         >
           <QuickUpdateScreen onClose={() => this.setState({ quickUpdateModalVisible: false })} />
         </Modal>

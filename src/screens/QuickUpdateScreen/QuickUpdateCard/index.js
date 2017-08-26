@@ -1,3 +1,3 @@
-import QuickUpdateCard from './QuickUpdateCard';
+import QuickUpdateCard from './component';
 
 export default QuickUpdateCard;
