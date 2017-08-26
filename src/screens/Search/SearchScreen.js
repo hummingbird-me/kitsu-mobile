@@ -5,7 +5,7 @@ import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
-import { SearchBar } from 'kitsu/components/SearchBar';
+import { InstantSearchBox } from 'kitsu/components/SearchBox';
 import { kitsuConfig } from 'kitsu/config/env';
 import * as colors from 'kitsu/constants/colors';
 import { ResultsList, TopsList } from './Lists';
@@ -17,6 +17,9 @@ const styles = {
   },
   scrollView: {
     backgroundColor: colors.listBackPurple,
+  },
+  searchBox: {
+    marginHorizontal: 10,
   },
   tabBar: {
     backgroundColor: colors.listBackPurple,
@@ -107,7 +110,11 @@ class SearchScreen extends Component {
       indexName={route.indexName}
       onSearchStateChange={this.handleSearchStateChange}
     >
-      <SearchBar placeholder={`Search ${route.title}`} searchIconOffset={108} />
+      <InstantSearchBox
+        placeholder={`Search ${route.title}`}
+        searchIconOffset={108}
+        style={styles.searchBox}
+      />
       {this.renderSubScene(route)}
     </InstantSearch>
   );
