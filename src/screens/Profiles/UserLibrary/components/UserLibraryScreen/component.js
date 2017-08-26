@@ -294,7 +294,7 @@ export class UserLibraryScreenComponent extends React.Component {
   render() {
     const searchBox = (
       <SearchBox
-        containerStyle={styles.SearchBox}
+        style={styles.searchBox}
         onChangeText={this.onSearchTermChanged}
         placeholder="Search Library"
         searchIconOffset={120}

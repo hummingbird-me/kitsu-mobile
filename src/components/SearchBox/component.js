@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
-import { View, TextInput } from 'react-native';
+import { TextInput, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { commonStyles } from 'kitsu/common/styles';
 import * as colors from 'kitsu/constants/colors';
@@ -8,7 +8,7 @@ import { styles } from './styles';
 
 export class SearchBox extends React.PureComponent {
   static propTypes = {
-    containerStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+    style: ViewPropTypes.style,
     defaultValue: PropTypes.string,
     onChangeText: PropTypes.func,
     placeholder: PropTypes.string,
@@ -17,11 +17,11 @@ export class SearchBox extends React.PureComponent {
   };
 
   static defaultProps = {
-    containerStyle: {},
     defaultValue: '',
     onChangeText: () => {},
     placeholder: 'Search',
     searchIconOffset: 80,
+    style: null,
     value: '',
   };
 
@@ -29,7 +29,7 @@ export class SearchBox extends React.PureComponent {
     const { defaultValue, onChangeText, placeholder, searchIconOffset, value } = this.props;
 
     return (
-      <View style={[styles.searchContainer, this.props.containerStyle]}>
+      <View style={[styles.searchContainer, this.props.style]}>
         <Icon
           name="search"
           style={[
@@ -43,13 +43,12 @@ export class SearchBox extends React.PureComponent {
           {...this.props}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          style={[commonStyles.text, commonStyles.colorLightGrey, styles.input]}
+          style={[commonStyles.text, styles.input]}
           underlineColorAndroid="transparent"
           defaultValue={defaultValue}
           value={value}
           autoCapitalize={'none'}
           autoCorrect={false}
-          placeholderTextColor={colors.placeholderGrey}
           keyboardAppearance={'dark'}
         />
       </View>
