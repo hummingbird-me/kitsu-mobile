@@ -47,6 +47,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  modalTitle: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingVertical: 8,
+    fontSize: 14,
+  },
+  modalText: {
+    textAlign: 'center',
+    paddingHorizontal: 12,
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+  },
 });
 
 export default styles;

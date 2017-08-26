@@ -133,48 +133,28 @@ class ImportDetail extends React.Component {
             >
               {!errMessage
                 ? <View>
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                      paddingVertical: 8,
-                      fontSize: 14,
-                    }}
-                  >
-                      Hang tight! We're importing your data!
+                  <Text style={styles.modalTitle}>
+                      Hang tight! We{"'"}re importing your data!
                     </Text>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      paddingHorizontal: 12,
-                      fontFamily: 'OpenSans',
-                      fontSize: 12,
-                    }}
-                  >
+                  <Text style={styles.modalText}>
                       Your {item.title}
-                      import will continue in the background. We'll send you a notification when your import has completed!
+                      import will continue in the background. We
+                      {"'"}
+                      ll send you a notification when your import has completed!
                     </Text>
                 </View>
                 : <View>
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                      paddingVertical: 8,
-                      fontSize: 14,
-                    }}
-                  >
+                  <Text style={styles.modalTitle}>
                       Bummer!
                     </Text>
                   <Text
-                    style={{
-                      textAlign: 'center',
-                      paddingHorizontal: 12,
-                      marginBottom: 4,
-                      fontFamily: 'OpenSans',
-                      fontSize: 12,
-                      minWidth: 240,
-                    }}
+                    style={[
+                      styles.modalText,
+                      {
+                        marginBottom: 4,
+                        minWidth: 240,
+                      },
+                    ]}
                   >
                     {errMessage}
                   </Text>

@@ -17,7 +17,7 @@ export const ItemSeparator = () => (
 
 const SidebarListItem = ({ image, imageURL, title, onPress }) => (
   <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.item}>
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View style={styles.leftContentWrapper}>
       <WidthFixer>
         {(image && <Image source={image} style={styles.image} />) ||
           (imageURL &&
@@ -32,8 +32,10 @@ const SidebarListItem = ({ image, imageURL, title, onPress }) => (
     </View>
     <View>
       <Icon
+        style={{ marginRight: 2 }}
         name={'ios-arrow-forward'}
-        style={{ color: colors.lightGrey, fontSize: 16, marginRight: 2 }}
+        color={colors.lightGrey}
+        size={16}
       />
     </View>
   </TouchableOpacity>
@@ -57,6 +59,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  leftContentWrapper: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
   image: {
