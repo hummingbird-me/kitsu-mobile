@@ -106,7 +106,7 @@ class HomeScreen extends Component {
         </Content>
         <Modal
           visible={this.state.quickUpdateModalVisible}
-          animationType="slide"
+          animationType="fade"
         >
           <QuickUpdateScreen onClose={() => this.setState({ quickUpdateModalVisible: false })} />
         </Modal>
