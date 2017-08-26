@@ -56,7 +56,7 @@ class NetworkScreen extends Component {
     if (!item[a]) return <View style={styles.itemStyle}><Spinner size="small" /></View>;
     return (
       <TouchableHighlight
-        onPress={() => this.props.navigation.navigate('UserProfile', { userId: item[a].id })}
+        onPress={() => this.props.navigation.navigate('UserProfile', { userSlug: item[a].slug })}
       >
         <View style={styles.itemStyle}>
           <View style={{ paddingRight: 10 }}>

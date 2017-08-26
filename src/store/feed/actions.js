@@ -1,6 +1,7 @@
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 import { getStream } from 'kitsu/config/stream';
+import { kitsuConfig } from 'kitsu/config/env';
 
 const feedInclude =
   'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga';
@@ -172,4 +173,12 @@ export const seenNotifications = arr => async (dispatch, getState) => {
   const { id } = getState().user.profile;
   const results = await Kitsu.one('activityGroups', id).all('_seen').post(arr);
   console.log(results);
+};
+
+export const markNotifications = (id, token, notifs) => {
+  fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_read`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(notifs),
+  });
 };

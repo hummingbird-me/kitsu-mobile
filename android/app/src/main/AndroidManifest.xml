@@ -3,39 +3,51 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
+  <uses-sdk
+      android:minSdkVersion="16"
+      android:targetSdkVersion="22" />
 
-    <application
+  <application
       android:name=".MainApplication"
       android:allowBackup="true"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:theme="@style/AppTheme">
-      <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-      <provider android:authorities="com.facebook.app.FacebookContentProvider325314560922421"
-          android:name="com.facebook.FacebookContentProvider"
-          android:exported="true" />
-      <activity
+
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+    <provider android:authorities="com.facebook.app.FacebookContentProvider325314560922421"
+        android:name="com.facebook.FacebookContentProvider"
+        android:exported="true" />
+    <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:launchMode="singleTop"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:windowSoftInputMode="adjustPan|adjustResize">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-      </activity>
-      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-      <meta-data
-          android:name="io.fabric.ApiKey"
-          android:value="b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00"
-      />
-    </application>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/anime" />
+        <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/manga" />
+        <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/users" />
+        <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/posts" />
+        <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/comments" />
+        <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/media-reactions" />
+      </intent-filter>
+    </activity>
+    <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00"/>
+
+  </application>
 
 </manifest>

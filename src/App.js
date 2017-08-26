@@ -1,15 +1,17 @@
 /* global __DEV__ */
 import React, { Component } from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, Linking } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { identity } from 'lodash';
 
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
 import store from './store/config';
 import Root from './Router';
 import * as types from './store/types';
+import { markNotifications } from './store/feed/actions';
 
 // eslint-disable-next-line
 console.disableYellowBox = true;
@@ -17,38 +19,50 @@ console.disableYellowBox = true;
 class App extends Component {
   componentWillMount() {
     OneSignal.inFocusDisplaying(2);
-    OneSignal.addEventListener('received', this.onReceived);
-    OneSignal.addEventListener('opened', this.onOpened);
-    OneSignal.addEventListener('registered', this.onRegistered);
     OneSignal.addEventListener('ids', this.onIds);
+    Linking.addEventListener('url', this.onUrl);
   }
 
   componentWillUnmount() {
-    OneSignal.removeEventListener('received', this.onReceived);
-    OneSignal.removeEventListener('opened', this.onOpened);
-    OneSignal.removeEventListener('registered', this.onRegistered);
     OneSignal.removeEventListener('ids', this.onIds);
-  }
-
-  onReceived(notification) {
-    console.log('Notification received: ', notification);
-  }
-
-  onOpened(openResult) {
-    console.log('Message: ', openResult.notification.payload.body);
-    console.log('Data: ', openResult.notification.payload.additionalData);
-    console.log('isActive: ', openResult.notification.isAppInFocus);
-    console.log('openResult: ', openResult);
-  }
-
-  onRegistered(notifData) {
-    console.log('Device has been registered for push notifications!', notifData);
+    Linking.removeEventListener('url', this.onUrl);
   }
 
   onIds(device) {
-    console.log('Device info: ', device);
-    const { userId } = device;
-    store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: userId });
+    store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: device.userId });
+  }
+
+  onUrl({ url }) {
+    const [path, query] = url.replace('https://kitsu.io/', '').split('?');
+    const paths = path.split('/');
+    const params = query.split('&').map(param => param.split('=')).reduce((acc, curr) => ({
+      ...acc, [curr[0]]: curr[1],
+    }), {});
+
+    if (params.notification) {
+      const { id } = store.getState().user.currentUser;
+      const token = store.getState().auth.tokens.access_token;
+      if (id) {
+        markNotifications(id, token, [params.notification]);
+      }
+    }
+
+    let action;
+    switch (paths[0]) {
+      // TODO: Add more handlers here as we get more pages implemented
+      case 'users':
+        if (paths[1]) {
+          action = NavigationActions.navigate('UserProfile', { userSlug: paths[1] });
+        }
+        break;
+      default:
+    }
+
+    if (action) {
+      this.navigation.dispatch(action);
+    } else {
+      Linking.openURL(url);
+    }
   }
 
   render() {
@@ -63,7 +77,7 @@ class App extends Component {
 const RootContainer = ({ badge }) => (
   <View style={{ flex: 1 }}>
     <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-    <Root screenProps={{ badge }} />
+    <Root ref={(nav) => { this.navigation = nav; }} screenProps={{ badge }} />
   </View>
 );
 
