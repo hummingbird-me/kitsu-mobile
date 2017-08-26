@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
   posterImageLoading: {
     backgroundColor: colors.lightPurple,
   },
-  searchBar: {
+  searchBox: {
     height: 35,
     marginHorizontal: 10,
   },

@@ -4,8 +4,9 @@ import { FlatList, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { debounce } from 'lodash';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
-import { SearchBar } from 'kitsu/components/SearchBar';
+import { SearchBox } from 'kitsu/components/SearchBox';
 import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
+import { idExtractor } from 'kitsu/common/utils';
 import { styles } from './styles';
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
@@ -80,22 +81,9 @@ export class UserLibraryListScreenComponent extends React.Component {
     this.props.fetchUserLibrary(profile.id, searchTerm);
   }, 100);
 
-  fetchMore = () => {
-    const { libraryEntries, libraryStatus, libraryType, navigation } = this.props;
-    const { profile } = navigation.state.params;
-
-    if (libraryEntries.data.length < libraryEntries.meta.count) {
-      this.props.fetchUserLibraryByType({
-        userId: profile.id,
-        library: libraryType,
-        status: libraryStatus,
-      });
-    }
-  }
-
   renderSearchBar = () => ((
-    <SearchBar
-      containerStyle={styles.searchBar}
+    <SearchBox
+      style={styles.searchBar}
       onChangeText={this.onSearchTermChanged}
       placeholder="Search Library"
       searchIconOffset={120}
@@ -114,16 +102,18 @@ export class UserLibraryListScreenComponent extends React.Component {
   );
 
   render() {
+    const { libraryEntries } = this.props;
+
     return (
       <View style={styles.container}>
         <View>
           <FlatList
             ListHeaderComponent={this.renderSearchBar}
-            data={this.props.libraryEntries.data}
+            data={libraryEntries.data}
             initialNumToRender={10}
             initialScrollIndex={0}
-            keyExtractor={item => item.id}
-            onEndReached={this.fetchMore}
+            keyExtractor={idExtractor}
+            onEndReached={libraryEntries.fetchMore}
             onEndReachedThreshold={0.75}
             removeClippedSubviews={false}
             renderItem={this.renderItem}

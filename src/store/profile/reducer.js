@@ -134,6 +134,7 @@ export default (state = INITIAL_STATE, action) => {
             ...state.userLibrary[action.library],
             [action.status]: {
               data: action.data,
+              fetchMore: action.fetchMore,
               meta: action.data.meta,
               loading: false,
             },

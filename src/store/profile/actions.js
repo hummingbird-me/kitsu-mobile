@@ -113,7 +113,6 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     userId: options.userId,
     status: options.status === 'onHold' ? 'on_hold' : options.status,
     kind: options.library,
-
   };
 
   const { userLibrary } = getState().profile;
@@ -157,6 +156,11 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     dispatch({
       data,
       type: types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
+      fetchMore: () => {
+        if (data.length < libraryEntries.meta.count) {
+          fetchUserLibraryByType(options)(dispatch, getState);
+        }
+      },
       library: options.library,
       status: options.status,
     });

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import ActionSheet from 'react-native-actionsheet';
 import * as colors from 'kitsu/constants/colors';
@@ -13,8 +13,6 @@ export class SelectMenu extends PureComponent {
       PropTypes.string,
       PropTypes.object,
     ])).isRequired,
-    options: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object]))
-      .isRequired,
     onOptionSelected: PropTypes.func.isRequired,
     style: PropTypes.any,
     tintColor: PropTypes.string,
