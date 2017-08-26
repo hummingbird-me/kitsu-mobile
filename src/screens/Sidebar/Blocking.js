@@ -13,7 +13,7 @@ import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import { SearchBar } from 'kitsu/components/SearchBar';
+import { SearchBox } from 'kitsu/components/SearchBox';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
@@ -203,7 +203,7 @@ class Blocking extends React.Component {
             searchState={this.state.searchState}
             onSearchStateChange={this.handleSearchStateChange}
           >
-            <SearchBar placeholder={'Search Users to Block'} searchIconOffset={160} />
+            <SearchBox placeholder={'Search Users to Block'} searchIconOffset={160} />
             {this.renderResults()}
           </InstantSearch>
         </View>
