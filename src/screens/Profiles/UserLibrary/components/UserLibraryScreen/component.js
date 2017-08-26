@@ -85,7 +85,7 @@ export class UserLibraryScreenComponent extends React.Component {
     } else if (isSearching && searchTerm.length === 0) {
       this.debouncedFetch();
     }
-  };
+  }
 
   debouncedFetch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
@@ -111,7 +111,7 @@ export class UserLibraryScreenComponent extends React.Component {
         status,
       });
     }
-  };
+  }
 
   renderEmptyItem() {
     return <View style={styles.emptyPosterImageCard} />;
@@ -127,9 +127,9 @@ export class UserLibraryScreenComponent extends React.Component {
 
     let progress = 0;
     if (data.type === 'anime') {
-      progress = Math.floor(item.progress / data.episodeCount * 100);
+      progress = Math.floor((item.progress / data.episodeCount) * 100);
     } else {
-      progress = Math.floor(item.progress / data.chapterCount * 100);
+      progress = Math.floor((item.progress / data.chapterCount) * 100);
     }
 
     const rating = item.ratingTwenty === null ? null : item.ratingTwenty / 2;
@@ -143,8 +143,10 @@ export class UserLibraryScreenComponent extends React.Component {
           });
         }}
       >
-        <View
-          style={[styles.posterImageContainer, index === 0 && styles.posterImageCardFirstChild]}
+        <View style={[
+          styles.posterImageContainer,
+          index === 0 && styles.posterImageCardFirstChild,
+        ]}
         >
           <ProgressiveImage
             source={{ uri: data.posterImage.tiny }}
@@ -163,7 +165,7 @@ export class UserLibraryScreenComponent extends React.Component {
         </View>
       </TouchableOpacity>
     );
-  };
+  }
 
   renderLoadingList = () => {
     const { countForMaxWidth } = getCardVisibilityCounts();
@@ -177,23 +179,24 @@ export class UserLibraryScreenComponent extends React.Component {
         initialNumToRender={countForMaxWidth}
         initialScrollIndex={0}
         keyExtractor={item => item.id}
-        getItemLayout={(_data, index) => ({ width, offset: width * index, index })}
+        getItemLayout={(_data, index) => (
+          { width, offset: width * index, index }
+        )}
         removeClippedSubviews={false}
         renderItem={({ index }) => (
-          <View
-            style={[
-              styles.posterImageCard,
-              styles.posterImageContainer,
-              styles.posterImageLoading,
-              index === 0 && styles.posterImageCardFirstChild,
-            ]}
+          <View style={[
+            styles.posterImageCard,
+            styles.posterImageContainer,
+            styles.posterImageLoading,
+            (index === 0 && styles.posterImageCardFirstChild),
+          ]}
           />
         )}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
       />
     );
-  };
+  }
 
   renderEmptyList = (type, status) => {
     const messageMapping = {
@@ -206,7 +209,12 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return (
       <View style={styles.emptyList}>
-        <Text style={[commonStyles.text, commonStyles.colorWhite, styles.browseText]}>
+        <Text style={[
+          commonStyles.text,
+          commonStyles.colorWhite,
+          styles.browseText,
+        ]}
+        >
           {`You haven't marked any ${type} as ${messageMapping[status][type]} yet!`}
         </Text>
         <TouchableOpacity style={styles.browseButton}>
@@ -230,6 +238,7 @@ export class UserLibraryScreenComponent extends React.Component {
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 
+
     return listOrder.map((currentList) => {
       const { status } = currentList;
       const { data, loading: listLoading } = userLibrary[type][status];
@@ -248,18 +257,26 @@ export class UserLibraryScreenComponent extends React.Component {
 
       return (
         <View key={`${status}-${type}`}>
-          <LibraryHeader data={data} status={status} type={type} title={currentList[type]} />
+          <LibraryHeader
+            data={data}
+            status={status}
+            type={type}
+            title={currentList[type]}
+          />
 
           {isUserLibraryLoading && listLoading && this.renderLoadingList()}
 
-          {!isUserLibraryLoading && !data.length
-            ? this.renderEmptyList(type, status)
-            : <FlatList
+          {!isUserLibraryLoading && !data.length ?
+            this.renderEmptyList(type, status)
+            :
+            <FlatList
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}
               initialScrollIndex={0}
-              getItemLayout={(_data, index) => ({ width, offset: width * index, index })}
+              getItemLayout={(_data, index) => (
+                { width, offset: width * index, index }
+              )}
               keyExtractor={item => item.id}
               onEndReached={() => this.fetchMore(type, status)}
               onEndReachedThreshold={0.5}
@@ -267,16 +284,17 @@ export class UserLibraryScreenComponent extends React.Component {
               renderItem={this.renderItem}
               scrollEnabled={data.length >= countForCurrentWidth}
               showsHorizontalScrollIndicator={false}
-            />}
+            />
+          }
         </View>
       );
     });
-  };
+  }
 
   render() {
     const searchBox = (
       <SearchBox
-        containerStyle={styles.SearchBox}
+        style={styles.searchBox}
         onChangeText={this.onSearchTermChanged}
         placeholder="Search Library"
         searchIconOffset={120}
@@ -286,7 +304,10 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ScrollableTabView locked renderTabBar={() => <ScrollableTabBar />}>
+        <ScrollableTabView
+          locked
+          renderTabBar={() => <ScrollableTabBar />}
+        >
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
             {searchBox}
             {this.renderLists('anime')}
