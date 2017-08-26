@@ -24,6 +24,7 @@ export const offWhite = '#FAFAFA';
 export const imageGrey = '#D8D8D8';
 export const lightGrey = '#CCCCCC';
 export const darkGrey = '#696969';
+export const grey = '#808080'; // html grey aka 'grey'
 
 /* yellows */
 export const yellow = '#F0AD4E';

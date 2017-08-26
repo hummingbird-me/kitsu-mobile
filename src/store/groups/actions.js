@@ -10,7 +10,6 @@ export const fetchGroupMemberships = () => async (dispatch, getState) => {
     });
     dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS_SUCCESS, payload: groups });
   } catch (e) {
-    console.log(e);
     dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS_FAIL, payload: 'Failed to load groups' });
   }
 };

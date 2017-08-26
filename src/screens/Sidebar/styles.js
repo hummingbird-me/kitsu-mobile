@@ -7,16 +7,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.listBackPurple,
     paddingTop: 77,
   },
+  headerCoverImage: {
+    height: 100,
+    justifyContent: 'center',
+  },
   hintText: {
     fontFamily: 'OpenSans',
     fontSize: 10,
-    color: 'grey',
+    color: colors.grey,
   },
   valueText: {
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginTop: 4,
-    color: '#444',
+    color: colors.darkGrey,
   },
   fieldWrapper: {
     backgroundColor: colors.white,

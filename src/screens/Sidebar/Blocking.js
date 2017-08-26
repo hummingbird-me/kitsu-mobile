@@ -9,12 +9,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Left, Right } from 'native-base';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import SearchBox from 'kitsu/components/SearchBox';
+import { SearchBar } from 'kitsu/components/SearchBar';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
@@ -25,7 +24,7 @@ const RowItem = ({ type, item, onPress }) => {
   const buttonText = type === 'search' ? 'Block' : 'Unblock';
   return (
     <View style={styles.item}>
-      <Left>
+      <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
             <Image
@@ -37,8 +36,8 @@ const RowItem = ({ type, item, onPress }) => {
             {item.name}
           </Text>
         </View>
-      </Left>
-      <Right>
+      </View>
+      <View>
         <TouchableOpacity
           onPress={() => onPress(item)}
           style={{
@@ -58,7 +57,7 @@ const RowItem = ({ type, item, onPress }) => {
             {buttonText}
           </Text>
         </TouchableOpacity>
-      </Right>
+      </View>
     </View>
   );
 };
@@ -200,7 +199,7 @@ class Blocking extends React.Component {
             searchState={this.state.searchState}
             onSearchStateChange={this.handleSearchStateChange}
           >
-            <SearchBox placeholder={'Search Users to Block'} />
+            <SearchBar placeholder={'Search Users to Block'} searchIconOffset={160} />
             {this.renderResults()}
           </InstantSearch>
         </View>

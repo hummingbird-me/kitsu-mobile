@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import PropTypes from 'prop-types';
+import { startCase } from 'lodash';
+import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { startCase } from 'lodash';
 import { SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import styles from './styles';
 

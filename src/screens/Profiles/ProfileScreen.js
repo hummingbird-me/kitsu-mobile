@@ -22,10 +22,10 @@ import CardTabs from 'kitsu/components/Card/CardTabs';
 import CardActivity from 'kitsu/components/Card/CardActivity';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
-import { defaultAvatar } from 'kitsu/constants/app';
 import ResultsList from 'kitsu/screens/Search/Lists/ResultsList';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import { defaultCover } from 'kitsu/constants/app';
+import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
+import updateIcon from 'kitsu/assets/img/tabbar_icons/update.png';
 import {
   fetchProfile,
   fetchProfileFavorites,
@@ -39,7 +39,10 @@ class ProfileScreen extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     tabBarIcon: ({ tintColor }) => (
-      <Image source={require('kitsu/assets/img/tabbar_icons/update.png')} style={{ tintColor, width: 22, height: 22, overflow: 'visible' }} />
+      <Image
+        source={updateIcon}
+        style={[styles.tabBarIcon, { tintColor }]}
+      />
     ),
     header: null,
   });
@@ -588,6 +591,11 @@ const styles = {
     alignSelf: 'stretch',
     right: 0,
     left: 0,
+  },
+  tabBarIcon: {
+    width: 22,
+    height: 22,
+    overflow: 'visible',
   },
 };
 

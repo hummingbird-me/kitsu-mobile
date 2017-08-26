@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, TextInput, LayoutAnimation, StyleSheet } from 'react-native';
+import { View, Text, TextInput, LayoutAnimation } from 'react-native';
 import { connect } from 'react-redux';
 import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
@@ -7,7 +7,7 @@ import * as colors from 'kitsu/constants/colors';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import { isEmpty } from 'lodash';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import styles from './styles';
 
 class GeneralSettings extends React.Component {

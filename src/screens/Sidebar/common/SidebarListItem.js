@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Icon, Right } from 'native-base';
+import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
@@ -30,12 +30,12 @@ const SidebarListItem = ({ image, imageURL, title, onPress }) => (
         {title}
       </Text>
     </View>
-    <Right>
+    <View>
       <Icon
         name={'ios-arrow-forward'}
         style={{ color: colors.lightGrey, fontSize: 16, marginRight: 2 }}
       />
-    </Right>
+    </View>
   </TouchableOpacity>
 );
 

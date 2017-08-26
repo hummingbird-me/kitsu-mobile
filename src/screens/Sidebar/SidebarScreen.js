@@ -10,14 +10,15 @@ import React from 'react';
 import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { Container } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
+import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
+import styles from './styles';
 
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 const settingsData = [
@@ -109,11 +110,11 @@ class SidebarScreen extends React.Component {
       },
     ];
     return (
-      <Container style={styles.containerStyle}>
+      <View style={{ backgroundColor: colors.listBackPurple }}>
         <View>
           <ProgressiveImage
             hasOverlay
-            style={{ height: 100, justifyContent: 'center' }}
+            style={styles.headerCoverImage}
             source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
           >
             <View
@@ -159,7 +160,7 @@ class SidebarScreen extends React.Component {
             contentContainerStyle={{ paddingBottom: 100 }}
             sections={sectionListData}
             keyExtractor={(item, index) => index}
-            ListHeaderComponent={() => <View height={20} />}
+            ListHeaderComponent={() => <View height={10} />}
             renderItem={() => <SidebarListItem />}
             renderSectionHeader={({ section }) => (
               <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
@@ -168,7 +169,7 @@ class SidebarScreen extends React.Component {
               // THIS FUNCTION IS NOT BEING INVOKED !?
             }}
             removeClippedSubviews={false}
-            SectionSeparatorComponent={() => <View height={28} />}
+            SectionSeparatorComponent={() => <View height={20} />}
             ListFooterComponent={() => (
               <TouchableOpacity
                 onPress={this.onLogoutButtonPressed}
@@ -180,12 +181,13 @@ class SidebarScreen extends React.Component {
                 }}
               >
                 <Text
-                  style={{
-                    fontSize: 12,
-                    fontFamily: 'OpenSans',
-                    fontWeight: '500',
-                    color: colors.activeRed,
-                  }}
+                  style={[
+                    commonStyles.text,
+                    {
+                      fontWeight: '500',
+                      color: colors.activeRed,
+                    },
+                  ]}
                 >
                   Log Out
                 </Text>
@@ -193,26 +195,10 @@ class SidebarScreen extends React.Component {
             )}
           />
         </View>
-      </Container>
+      </View>
     );
   }
 }
-
-const styles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
-  sectionListItem: {
-    backgroundColor: colors.white,
-    padding: 8,
-    borderRadius: 0,
-    borderColor: 'white',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0,
-    marginLeft: 0,
-  },
-};
 
 const mapStateToProps = ({ user, groups }) => {
   const { currentUser } = user;

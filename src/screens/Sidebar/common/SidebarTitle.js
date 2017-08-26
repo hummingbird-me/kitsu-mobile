@@ -1,14 +1,14 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Text } from 'native-base';
+import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
+import { commonStyles } from 'kitsu/common/styles';
 
 const SidebarTitle = ({ title, style }) => (
   <View
     style={[
       {
-        marginTop: 20,
+        marginTop: 8,
         paddingHorizontal: 12,
         paddingVertical: 8,
         backgroundColor: colors.listBackPurple,
@@ -16,7 +16,7 @@ const SidebarTitle = ({ title, style }) => (
       style,
     ]}
   >
-    <Text style={{ fontFamily: 'OpenSans', fontSize: 12, color: colors.white }}>
+    <Text style={[commonStyles.text, { color: colors.white, fontWeight: 'normal' }]}>
       {title}
     </Text>
   </View>

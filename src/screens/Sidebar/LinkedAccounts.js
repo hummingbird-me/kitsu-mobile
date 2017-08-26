@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Image, TouchableOpacity, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Container, Content, Left, Right, Item } from 'native-base';
+import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { SidebarTitle, ItemSeparator } from './common/';
@@ -14,8 +14,8 @@ class LinkedAccounts extends React.Component {
   onUnlinkAccount = () => {};
 
   renderItem = ({ item }) => (
-    <Item style={styles.sectionListItem}>
-      <Left>
+    <View style={styles.sectionListItem}>
+      <View>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 90, alignItems: 'center' }}>
             <Image
@@ -24,8 +24,8 @@ class LinkedAccounts extends React.Component {
             />
           </View>
         </View>
-      </Left>
-      <Right>
+      </View>
+      <View>
         <TouchableOpacity
           onPress={() => this.onUnlinkAccount(item)}
           style={{
@@ -44,8 +44,8 @@ class LinkedAccounts extends React.Component {
             Disconnect
           </Text>
         </TouchableOpacity>
-      </Right>
-    </Item>
+      </View>
+    </View>
   );
 
   render() {

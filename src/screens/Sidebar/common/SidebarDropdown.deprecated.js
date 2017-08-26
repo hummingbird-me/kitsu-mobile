@@ -84,14 +84,14 @@ class SidebarDropdown extends React.Component {
           }}
         >
           {this.state.active &&
-            options.map((v, i) => (
+            options.map((option, i) => (
               <View key={`${i}dd`} style={{ height: 50 }}>
                 <DropdownItem
                   onPress={() => {
-                    onSelectOption(v);
+                    onSelectOption(option);
                     this.toggle();
                   }}
-                  title={v.title}
+                  title={option.title}
                 />
                 {options.length - 1 !== +i ? <ItemSeparator /> : null}
               </View>

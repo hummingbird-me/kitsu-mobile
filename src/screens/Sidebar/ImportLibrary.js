@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { Text, Icon, Right } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
@@ -13,15 +13,15 @@ import styles from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
-    <View style={{ justifyContent: 'center', marginLeft: 8 }}>
+    <View style={{ justifyContent: 'center' }}>
       <Image source={image} style={{ width: 100, height: 24, resizeMode: 'contain' }} />
       <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
         {details}
       </Text>
     </View>
-    <Right>
+    <View>
       <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
-    </Right>
+    </View>
   </TouchableOpacity>
 );
 
@@ -61,14 +61,14 @@ const ImportItem = ({ kind, status, date, total }) => {
           {details}
         </Text>
       </View>
-      <Right>
+      <View>
         <WidthFixer>
           <Image
             source={icon}
             style={{ resizeMode: 'contain', width: 16, height: 16, right: -2 }}
           />
         </WidthFixer>
-      </Right>
+      </View>
     </View>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Switch } from 'react-native';
+import { View, Switch, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Container, Content } from 'native-base';
+import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
