@@ -537,10 +537,16 @@ class ProfileScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const { navigation } = ownProps;
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
   const { currentUser } = state.user;
-  const userId = currentUser.id;
+
+  let userId = currentUser.id;
+  if (navigation.state.params && navigation.state.params.userId) {
+    userId = navigation.state.params.userId;
+  }
+
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
   const a = (anime[userId] && anime[userId].map(({ item }) => item)) || [];

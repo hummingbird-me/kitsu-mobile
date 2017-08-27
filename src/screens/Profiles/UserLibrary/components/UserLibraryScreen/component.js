@@ -79,9 +79,10 @@ export class UserLibraryScreenComponent extends React.Component {
 
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
+    const { countForMaxWidth } = getCardVisibilityCounts();
 
     if (this.props.userLibrary.userId !== profile.id) {
-      this.props.fetchUserLibrary(profile.id);
+      this.props.fetchUserLibrary({ userId: profile.id, limit: countForMaxWidth });
     }
   }
 
@@ -99,13 +100,16 @@ export class UserLibraryScreenComponent extends React.Component {
 
   debouncedFetch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
-    this.props.fetchUserLibrary(profile.id);
+    this.props.fetchUserLibrary({ userId: profile.id });
   }, 100);
 
   debouncedSearch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
     const { searchTerm } = this.state;
-    this.props.fetchUserLibrary(profile.id, searchTerm);
+    this.props.fetchUserLibrary({
+      searchTerm,
+      userId: profile.id,
+    });
   }, 100);
 
   renderEmptyItem() {
@@ -194,7 +198,6 @@ export class UserLibraryScreenComponent extends React.Component {
 
   renderLists = (type) => {
     const { userLibrary, navigation } = this.props;
-    const isUserLibraryLoading = userLibrary.loading;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
@@ -205,13 +208,13 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return listOrder.map((currentList) => {
       const { status } = currentList;
-      const { data, fetchMore, loading: listLoading } = userLibrary[type][status];
+      const { data, fetchMore, loading } = userLibrary[type][status];
 
       const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
       const emptyItemsToAdd = countForMaxWidth - data.length;
       const dataFilled = data.slice();
 
-      if (!listLoading && emptyItemsToAdd > 0) {
+      if (!loading && emptyItemsToAdd > 0) {
         for (let x = 0; x < emptyItemsToAdd; x += 1) {
           dataFilled.push({ id: x, type: 'empty-item' });
         }
@@ -229,9 +232,9 @@ export class UserLibraryScreenComponent extends React.Component {
             profile={navigation.state.params.profile}
           />
 
-          {isUserLibraryLoading && listLoading && this.renderLoadingList()}
+          {loading && this.renderLoadingList()}
 
-          {!isUserLibraryLoading && !data.length ?
+          {!loading && !data.length ?
             this.renderEmptyList(type, status)
             :
             <FlatList

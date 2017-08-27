@@ -9,6 +9,7 @@ export class ProgressiveImage extends React.Component {
   static propTypes = {
     backgroundStyle: PropTypes.object,
     children: PropTypes.object,
+    duration: PropTypes.number,
     style: PropTypes.any,
     resizeMode: PropTypes.string,
     source: PropTypes.object.isRequired,
@@ -17,6 +18,7 @@ export class ProgressiveImage extends React.Component {
   static defaultProps = {
     backgroundStyle: undefined,
     children: undefined,
+    duration: 300,
     style: undefined,
     resizeMode: 'cover',
   };
@@ -30,7 +32,7 @@ export class ProgressiveImage extends React.Component {
   onLoad = () => {
     Animated.timing(this.state.thumbnailOpacity, {
       toValue: 1,
-      duration: 300,
+      duration: this.props.duration,
     }).start();
   };
 

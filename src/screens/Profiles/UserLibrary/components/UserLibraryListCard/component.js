@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { debounce } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
 import { Counter } from 'kitsu/components/Counter';
@@ -45,11 +46,11 @@ export class UserLibraryListCard extends React.Component {
     this.setState({
       progressPercentage,
       progress: newProgress,
-    }, this.saveEntry);
+    }, this.debounceSave);
   }
 
   onRatingChanged = (ratingTwenty) => {
-    this.setState({ ratingTwenty }, this.saveEntry);
+    this.setState({ ratingTwenty }, this.debounceSave);
   }
 
   onRightButtonsActivate = () => {
@@ -61,7 +62,7 @@ export class UserLibraryListCard extends React.Component {
   }
 
   onStatusSelected = (libraryStatus) => {
-    this.setState({ libraryStatus }, this.saveEntry);
+    this.setState({ libraryStatus }, this.debounceSave);
   }
 
   getMaxProgress() {
@@ -82,17 +83,15 @@ export class UserLibraryListCard extends React.Component {
     const { libraryStatus, libraryType } = this.props;
     const { libraryStatus: newStatus, progress, ratingTwenty } = this.state;
 
-    this.setState({ isUpdating: true });
-
     await this.props.updateUserLibraryEntry(libraryType, libraryStatus, {
       id: this.props.data.id,
       progress,
       ratingTwenty,
       status: newStatus,
     });
-
-    this.setState({ isUpdating: false });
   }
+
+  debounceSave = debounce(this.saveEntry, 200);
 
   selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
     value: option.value,
@@ -101,10 +100,9 @@ export class UserLibraryListCard extends React.Component {
 
   render() {
     const { data, libraryType, currentUser } = this.props;
-    const { isUpdating, progressPercentage, sliderCanActivate } = this.state;
+    const { progressPercentage, sliderCanActivate } = this.state;
     const mediaData = data[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
-    const disableEdit = !canEdit || isUpdating;
     const maxProgress = this.getMaxProgress();
 
     return (
@@ -115,7 +113,6 @@ export class UserLibraryListCard extends React.Component {
         rightButtonWidth={145}
         rightButtons={[
           <TouchableHighlight
-            disabled={isUpdating}
             style={[
               styles.swipeButton,
               (sliderCanActivate ? styles.swipeButtonActive : styles.swipeButtonInactive),
@@ -133,7 +130,6 @@ export class UserLibraryListCard extends React.Component {
               <Text style={styles.titleText}>{mediaData.canonicalTitle}</Text>
               {canEdit && (
                 <SelectMenu
-                  disabled={disableEdit}
                   options={this.selectOptions}
                   onOptionSelected={this.onStatusSelected}
                 >
@@ -154,14 +150,14 @@ export class UserLibraryListCard extends React.Component {
             </View>
             <View style={styles.statusSection}>
               <Counter
-                disabled={disableEdit}
+                disabled={!canEdit}
                 initialValue={data.progress}
                 maxValue={maxProgress}
                 progressCounter
                 onValueChanged={this.onProgressValueChanged}
               />
               <Rating
-                disabled={disableEdit}
+                disabled={!canEdit}
                 size="small"
                 viewType="single"
                 onRatingChanged={this.onRatingChanged}
