@@ -7,6 +7,7 @@ import LinkedAccounts from './LinkedAccounts';
 import PrivacySettings from './PrivacySettings';
 import SettingsScreen from './SettingsScreen';
 import SidebarScreen from './SidebarScreen';
+import { CannyBoard } from './CannyBoard';
 
 export {
   Blocking,
@@ -18,4 +19,5 @@ export {
   PrivacySettings,
   SettingsScreen,
   SidebarScreen,
+  CannyBoard,
 };
