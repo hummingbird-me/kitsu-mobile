@@ -13,6 +13,7 @@ const emptyBorderStyle = {
 export const styles = StyleSheet.create({
   browseText: {
     paddingBottom: 10,
+    textAlign: 'center',
   },
   browseButton: {
     ...flattenCommon('centerCenter'),

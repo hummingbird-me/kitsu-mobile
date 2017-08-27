@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { debounce } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
 import { Counter } from 'kitsu/components/Counter';
@@ -32,6 +31,7 @@ export class UserLibraryListCard extends React.Component {
   }
 
   state = {
+    isUpdating: false,
     libraryStatus: this.props.data.status,
     progress: this.props.data.progress,
     progressPercentage: Math.floor((this.props.data.progress / this.getMaxProgress()) * 100),
@@ -45,11 +45,11 @@ export class UserLibraryListCard extends React.Component {
     this.setState({
       progressPercentage,
       progress: newProgress,
-    }, this.debounceSave);
+    }, this.saveEntry);
   }
 
   onRatingChanged = (ratingTwenty) => {
-    this.setState({ ratingTwenty }, this.debounceSave);
+    this.setState({ ratingTwenty }, this.saveEntry);
   }
 
   onRightButtonsActivate = () => {
@@ -61,7 +61,7 @@ export class UserLibraryListCard extends React.Component {
   }
 
   onStatusSelected = (libraryStatus) => {
-    this.setState({ libraryStatus }, this.debounceSave);
+    this.setState({ libraryStatus }, this.saveEntry);
   }
 
   getMaxProgress() {
@@ -75,21 +75,24 @@ export class UserLibraryListCard extends React.Component {
     return mediaData.chapterCount;
   }
 
-  saveEntry = () => {
+  saveEntry = async () => {
     // send the status from props because that is the list we're looking
     // at not the status from state because that is what the value of the
     // card may have just been changed to
     const { libraryStatus, libraryType } = this.props;
     const { libraryStatus: newStatus, progress, ratingTwenty } = this.state;
-    this.props.updateUserLibraryEntry(libraryType, libraryStatus, {
+
+    this.setState({ isUpdating: true });
+
+    await this.props.updateUserLibraryEntry(libraryType, libraryStatus, {
       id: this.props.data.id,
       progress,
       ratingTwenty,
       status: newStatus,
     });
-  }
 
-  debounceSave = debounce(this.saveEntry, 100);
+    this.setState({ isUpdating: false });
+  }
 
   selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
     value: option.value,
@@ -98,9 +101,10 @@ export class UserLibraryListCard extends React.Component {
 
   render() {
     const { data, libraryType, currentUser } = this.props;
-    const { progressPercentage, sliderCanActivate } = this.state;
+    const { isUpdating, progressPercentage, sliderCanActivate } = this.state;
     const mediaData = data[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
+    const disableEdit = !canEdit || isUpdating;
     const maxProgress = this.getMaxProgress();
 
     return (
@@ -111,6 +115,7 @@ export class UserLibraryListCard extends React.Component {
         rightButtonWidth={145}
         rightButtons={[
           <TouchableHighlight
+            disabled={isUpdating}
             style={[
               styles.swipeButton,
               (sliderCanActivate ? styles.swipeButtonActive : styles.swipeButtonInactive),
@@ -128,6 +133,7 @@ export class UserLibraryListCard extends React.Component {
               <Text style={styles.titleText}>{mediaData.canonicalTitle}</Text>
               {canEdit && (
                 <SelectMenu
+                  disabled={disableEdit}
                   options={this.selectOptions}
                   onOptionSelected={this.onStatusSelected}
                 >
@@ -148,14 +154,14 @@ export class UserLibraryListCard extends React.Component {
             </View>
             <View style={styles.statusSection}>
               <Counter
-                disabled={!canEdit}
+                disabled={disableEdit}
                 initialValue={data.progress}
                 maxValue={maxProgress}
                 progressCounter
                 onValueChanged={this.onProgressValueChanged}
               />
               <Rating
-                disabled={!canEdit}
+                disabled={disableEdit}
                 size="small"
                 viewType="single"
                 onRatingChanged={this.onRatingChanged}

@@ -9,7 +9,7 @@ import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { commonStyles } from 'kitsu/common/styles';
-import { idExtractor } from 'kitsu/common/utils';
+import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
 import { styles } from './styles';
 import * as constants from './constants';
 
@@ -158,6 +158,9 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   renderEmptyList = (type, status) => {
+    const { searchTerm } = this.state;
+    const { currentUser, navigation } = this.props;
+    const { profile } = navigation.state.params;
     const messageMapping = {
       current: { anime: 'watching', manga: 'reading' },
       planned: { anime: 'planned', manga: 'planned' },
@@ -165,6 +168,10 @@ export class UserLibraryScreenComponent extends React.Component {
       onHold: { anime: 'on hold', manga: 'on hold' },
       dropped: { anime: 'dropped', manga: 'dropped' },
     };
+
+    const messagePrefix = isIdForCurrentUser(profile.id, currentUser)
+      ? "You haven't"
+      : `${profile.name} hasn't`;
 
     return (
       <View style={styles.emptyList}>
@@ -174,7 +181,7 @@ export class UserLibraryScreenComponent extends React.Component {
           styles.browseText,
         ]}
         >
-          {`You haven't marked any ${type} as ${messageMapping[status][type]} yet!`}
+          {`${messagePrefix} marked any ${type}${searchTerm.length ? ' matching your search' : ''} as ${messageMapping[status][type]} yet!`}
         </Text>
         <TouchableOpacity style={styles.browseButton}>
           <Text style={[commonStyles.text, commonStyles.colorWhite]}>
