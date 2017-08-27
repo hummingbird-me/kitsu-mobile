@@ -36,17 +36,35 @@ export const ProfileHeader = (
 
       <View style={styles.headerWrapper}>
         <View style={[styles.header]}>
+          {/* if there is no follow button, render the absolute-centered header first
+          so that the back button still lays over top of it.*/}
+          {!showFollowButton && (
+            <View style={styles.titleOnlyContainer}>
+              <Text style={[
+                commonStyles.text,
+                commonStyles.colorWhite,
+                styles.titleText]}
+              >
+                {title}
+              </Text>
+            </View>
+          )}
+
           <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
-            {showProfileImage && <Image style={styles.profileImage} source={{ uri: profileImageUri }} />}
-            {showFollowButton && <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>}
+            {showProfileImage &&
+              <Image style={styles.profileImage} source={{ uri: profileImageUri }} />
+            }
+            {showFollowButton &&
+              <Text style={[
+                commonStyles.text,
+                commonStyles.colorWhite,
+                styles.titleText]}
+              >
+                {title}
+              </Text>
+            }
           </TouchableOpacity>
-
-          {!showFollowButton && (
-          <View style={styles.titleOnlyContainer}>
-            <Text style={[commonStyles.text, commonStyles.colorWhite, styles.titleText]}>{title}</Text>
-          </View>
-          )}
 
           {showFollowButton && (
           <TouchableOpacity transparent style={styles.followButton} onPress={goBack}>
@@ -60,7 +78,7 @@ export const ProfileHeader = (
 };
 
 ProfileHeader.propTypes = {
-  onClickBack: PropTypes.func,
+  onClickBack: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   showCoverImage: PropTypes.bool,
   showFollowButton: PropTypes.bool,
@@ -69,7 +87,6 @@ ProfileHeader.propTypes = {
 };
 
 ProfileHeader.defaultProps = {
-  followButton: true,
   onClickBack: () => {},
   showCoverImage: true,
   showFollowButton: true,

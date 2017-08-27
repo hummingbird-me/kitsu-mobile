@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Icon } from 'native-base';
 import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
@@ -7,15 +6,20 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
+import { MediaCard } from 'kitsu/components/MediaCard';
 import { SearchBox } from 'kitsu/components/SearchBox';
-import { ProgressBar } from 'kitsu/components/ProgressBar';
-import { Rating } from 'kitsu/components/Rating';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { commonStyles } from 'kitsu/common/styles';
+import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
 import { styles } from './styles';
 import * as constants from './constants';
 
 const MINIMUM_SEARCH_TERM_LENGTH = 3;
+const renderScrollTabBar = () => <ScrollableTabBar />;
+
+const getItemLayout = (_data, index) => {
+  const width = constants.POSTER_CARD_WIDTH;
+  return { width, offset: width * index, index };
+};
 
 const getCardVisibilityCounts = () => {
   const { height, width } = Dimensions.get('screen');
@@ -26,11 +30,20 @@ const getCardVisibilityCounts = () => {
   };
 };
 
+const progressFromLibraryEntry = (libraryEntry) => {
+  const mediaData = libraryEntry.anime || libraryEntry.manga;
+
+  if (mediaData.type === 'anime') {
+    return Math.floor((libraryEntry.progress / mediaData.episodeCount) * 100);
+  }
+
+  return Math.floor((libraryEntry.progress / mediaData.chapterCount) * 100);
+};
+
 export class UserLibraryScreenComponent extends React.Component {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
     fetchUserLibrary: PropTypes.func.isRequired,
-    fetchUserLibraryByType: PropTypes.func.isRequired,
     currentUser: PropTypes.object,
     userLibrary: PropTypes.object,
   };
@@ -42,8 +55,8 @@ export class UserLibraryScreenComponent extends React.Component {
     },
   };
 
-  static navigationOptions = (props) => {
-    const { profile } = props.navigation.state.params;
+  static navigationOptions = ({ navigation }) => {
+    const { profile } = navigation.state.params;
 
     return {
       headerStyle: {
@@ -54,17 +67,14 @@ export class UserLibraryScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title={profile.name}
-          onClickBack={props.navigation.goBack}
+          onClickBack={navigation.goBack}
         />
-      ),
-      tabBarIcon: ({ tintColor }) => (
-        <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
       ),
     };
   };
 
   state = {
-    searchTerm: '',
+    searchTerm: this.props.userLibrary.searchTerm,
   };
 
   componentDidMount() {
@@ -98,21 +108,6 @@ export class UserLibraryScreenComponent extends React.Component {
     this.props.fetchUserLibrary(profile.id, searchTerm);
   }, 100);
 
-  fetchMore = (type, status) => {
-    const { userLibrary } = this.props;
-    const { data, meta } = userLibrary[type][status];
-    const { navigation } = this.props;
-    const { profile } = navigation.state.params;
-
-    if (data.length < meta.count) {
-      this.props.fetchUserLibraryByType({
-        userId: profile.id,
-        library: type,
-        status,
-      });
-    }
-  }
-
   renderEmptyItem() {
     return <View style={styles.emptyPosterImageCard} />;
   }
@@ -124,53 +119,27 @@ export class UserLibraryScreenComponent extends React.Component {
 
     const data = item.anime || item.manga;
     const { currentUser } = this.props;
-
-    let progress = 0;
-    if (data.type === 'anime') {
-      progress = Math.floor((item.progress / data.episodeCount) * 100);
-    } else {
-      progress = Math.floor((item.progress / data.chapterCount) * 100);
-    }
-
-    const rating = item.ratingTwenty === null ? null : item.ratingTwenty / 2;
+    const progress = progressFromLibraryEntry(item);
 
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.navigate('Media', {
-            mediaId: data.id,
-            type: data.type,
-          });
+      <MediaCard
+        cardDimensions={{
+          height: constants.POSTER_CARD_HEIGHT,
+          width: constants.POSTER_CARD_WIDTH,
         }}
-      >
-        <View style={[
-          styles.posterImageContainer,
-          index === 0 && styles.posterImageCardFirstChild,
-        ]}
-        >
-          <ProgressiveImage
-            source={{ uri: data.posterImage.tiny }}
-            style={styles.posterImageCard}
-          />
-          {progress > 0 && <ProgressBar fillPercentage={progress} height={3} />}
-          <Rating
-            disabled
-            rating={rating}
-            ratingSystem={currentUser.ratingSystem}
-            size="tiny"
-            viewType="single"
-            showNotRated={false}
-            style={styles.rating}
-          />
-        </View>
-      </TouchableOpacity>
+        mediaData={data}
+        navigate={this.props.navigation.navigate}
+        progress={progress}
+        ratingTwenty={item.ratingTwenty}
+        ratingSystem={currentUser.ratingSystem}
+        style={index === 0 ? styles.posterImageCardFirstChild : null}
+      />
     );
   }
 
   renderLoadingList = () => {
     const { countForMaxWidth } = getCardVisibilityCounts();
-    const data = Array(countForMaxWidth).fill(1).map((_, index) => ({ id: index }));
-    const width = constants.POSTER_CARD_WIDTH;
+    const data = Array(countForMaxWidth).fill(1).map((_, index) => ({ id: index, anime: {} }));
 
     return (
       <FlatList
@@ -178,20 +147,10 @@ export class UserLibraryScreenComponent extends React.Component {
         data={data}
         initialNumToRender={countForMaxWidth}
         initialScrollIndex={0}
-        keyExtractor={item => item.id}
-        getItemLayout={(_data, index) => (
-          { width, offset: width * index, index }
-        )}
+        keyExtractor={idExtractor}
+        getItemLayout={getItemLayout}
         removeClippedSubviews={false}
-        renderItem={({ index }) => (
-          <View style={[
-            styles.posterImageCard,
-            styles.posterImageContainer,
-            styles.posterImageLoading,
-            (index === 0 && styles.posterImageCardFirstChild),
-          ]}
-          />
-        )}
+        renderItem={this.renderItem}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
       />
@@ -199,6 +158,9 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   renderEmptyList = (type, status) => {
+    const { searchTerm } = this.state;
+    const { currentUser, navigation } = this.props;
+    const { profile } = navigation.state.params;
     const messageMapping = {
       current: { anime: 'watching', manga: 'reading' },
       planned: { anime: 'planned', manga: 'planned' },
@@ -206,6 +168,10 @@ export class UserLibraryScreenComponent extends React.Component {
       onHold: { anime: 'on hold', manga: 'on hold' },
       dropped: { anime: 'dropped', manga: 'dropped' },
     };
+
+    const messagePrefix = isIdForCurrentUser(profile.id, currentUser)
+      ? "You haven't"
+      : `${profile.name} hasn't`;
 
     return (
       <View style={styles.emptyList}>
@@ -215,7 +181,7 @@ export class UserLibraryScreenComponent extends React.Component {
           styles.browseText,
         ]}
         >
-          {`You haven't marked any ${type} as ${messageMapping[status][type]} yet!`}
+          {`${messagePrefix} marked any ${type}${searchTerm.length ? ' matching your search' : ''} as ${messageMapping[status][type]} yet!`}
         </Text>
         <TouchableOpacity style={styles.browseButton}>
           <Text style={[commonStyles.text, commonStyles.colorWhite]}>
@@ -227,9 +193,8 @@ export class UserLibraryScreenComponent extends React.Component {
   };
 
   renderLists = (type) => {
-    const { userLibrary } = this.props;
+    const { userLibrary, navigation } = this.props;
     const isUserLibraryLoading = userLibrary.loading;
-    const width = constants.POSTER_CARD_WIDTH;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
@@ -238,10 +203,9 @@ export class UserLibraryScreenComponent extends React.Component {
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 
-
     return listOrder.map((currentList) => {
       const { status } = currentList;
-      const { data, loading: listLoading } = userLibrary[type][status];
+      const { data, fetchMore, loading: listLoading } = userLibrary[type][status];
 
       const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
       const emptyItemsToAdd = countForMaxWidth - data.length;
@@ -258,10 +222,11 @@ export class UserLibraryScreenComponent extends React.Component {
       return (
         <View key={`${status}-${type}`}>
           <LibraryHeader
-            data={data}
-            status={status}
-            type={type}
-            title={currentList[type]}
+            libraryStatus={status}
+            libraryType={type}
+            listTitle={currentList[type]}
+            navigation={navigation}
+            profile={navigation.state.params.profile}
           />
 
           {isUserLibraryLoading && listLoading && this.renderLoadingList()}
@@ -274,11 +239,9 @@ export class UserLibraryScreenComponent extends React.Component {
               data={renderData}
               initialNumToRender={countForMaxWidth}
               initialScrollIndex={0}
-              getItemLayout={(_data, index) => (
-                { width, offset: width * index, index }
-              )}
-              keyExtractor={item => item.id}
-              onEndReached={() => this.fetchMore(type, status)}
+              getItemLayout={getItemLayout}
+              keyExtractor={idExtractor}
+              onEndReached={fetchMore}
               onEndReachedThreshold={0.5}
               removeClippedSubviews={false}
               renderItem={this.renderItem}
@@ -304,10 +267,7 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ScrollableTabView
-          locked
-          renderTabBar={() => <ScrollableTabBar />}
-        >
+        <ScrollableTabView locked renderTabBar={renderScrollTabBar}>
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
             {searchBox}
             {this.renderLists('anime')}

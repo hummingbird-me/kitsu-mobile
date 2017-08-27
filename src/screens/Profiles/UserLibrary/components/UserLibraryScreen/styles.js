@@ -13,6 +13,7 @@ const emptyBorderStyle = {
 export const styles = StyleSheet.create({
   browseText: {
     paddingBottom: 10,
+    textAlign: 'center',
   },
   browseButton: {
     ...flattenCommon('centerCenter'),
@@ -39,25 +40,11 @@ export const styles = StyleSheet.create({
     marginHorizontal: 4,
     width: constants.POSTER_CARD_WIDTH,
   },
-  posterImageContainer: {
-    width: constants.POSTER_CARD_WIDTH,
-    marginHorizontal: 4,
-  },
-  posterImageCard: {
-    backgroundColor: colors.lightPurple,
-    width: constants.POSTER_CARD_WIDTH,
-    height: constants.POSTER_CARD_HEIGHT,
-    marginBottom: 2,
-    borderRadius: constants.CARD_BORDER_RADIUS,
-  },
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
   posterImageLoading: {
     backgroundColor: colors.lightPurple,
-  },
-  rating: {
-    marginTop: 2,
   },
   searchBox: {
     height: 35,

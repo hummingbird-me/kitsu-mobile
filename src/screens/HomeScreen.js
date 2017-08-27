@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { Spinner, Button, Container, Content, Icon } from 'native-base';
+import { Spinner, Button, Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { Counter } from 'kitsu/components/Counter';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -72,20 +71,18 @@ class HomeScreen extends Component {
               Logged In Profile
             </Text>
           </Button>
-          <Button
-            onPress={() =>
-              navigation.navigate('Library', {
-                profile: {
-                  id: 5554,
-                  name: 'Nuck',
-                  coverImage: {
-                    original: 'https://media.kitsu.io/users/cover_images/5554/original.png?1487275574',
-                  },
-                  avatar: {
-                    tiny: 'https://media.kitsu.io/users/avatars/5554/tiny.png?1502777221',
-                  },
-                },
-              })}
+          <Button onPress={() => navigation.navigate('UserLibrary', {
+            profile: {
+              id: 5554,
+              name: 'Nuck',
+              coverImage: {
+                original: 'https://media.kitsu.io/users/cover_images/5554/original.png?1487275574',
+              },
+              avatar: {
+                tiny: 'https://media.kitsu.io/users/avatars/5554/tiny.png?1502777221',
+              },
+            },
+          })}
           >
             <Text>
               Nuck Library
@@ -101,9 +98,6 @@ class HomeScreen extends Component {
               Upload Media
             </Text>
           </Button>
-
-          <Counter initialValue={14} maxValue={20} progressCounter />
-          <Counter initialValue={11} maxValue={20} />
         </Content>
       </Container>
     );
