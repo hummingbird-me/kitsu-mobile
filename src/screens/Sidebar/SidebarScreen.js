@@ -89,7 +89,7 @@ class SidebarScreen extends React.Component {
   }
 
   render() {
-    const { navigation, currentUser, groupMemberships } = this.props;
+    const { navigation, currentUser, groupMemberships, accessToken } = this.props;
     const { name, avatar, coverImage } = currentUser;
     const groupsData = groupMemberships || [];
 
@@ -143,10 +143,21 @@ class SidebarScreen extends React.Component {
             image={item.image}
             title={item.title}
             onPress={() => {
-              if (item.target === 'mailto') {
-                Linking.openURL('mailto:josh@kitsu.io');
-              } else {
-                navigation.navigate(item.target);
+              switch (item.target) {
+                case 'Settings':
+                  navigation.navigate(item.target);
+                  break;
+                case 'ReportBugs':
+                  navigation.navigate(item.target, { title: item.title, type: 'bugReport', token: accessToken });
+                  break;
+                case 'SuggestFeatures':
+                  navigation.navigate(item.target, { title: item.title, type: 'featureRequest', token: accessToken });
+                  break;
+                case 'mailto':
+                  Linking.openURL('mailto:josh@kitsu.io');
+                  break;
+                default:
+                  break;
               }
             }}
           />
@@ -216,14 +227,11 @@ class SidebarScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user, groups }) => {
-  const { currentUser } = user;
-  const { groupMemberships } = groups;
-  return {
-    currentUser,
-    groupMemberships,
-  };
-};
+const mapStateToProps = ({ auth, user, groups }) => ({
+  accessToken: auth.tokens.access_token,
+  currentUser: user.currentUser,
+  groupMemberships: groups.groupMemberships,
+});
 
 SidebarScreen.propTypes = {};
 

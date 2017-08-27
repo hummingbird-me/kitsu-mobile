@@ -7,8 +7,6 @@ import LinkedAccounts from './LinkedAccounts';
 import PrivacySettings from './PrivacySettings';
 import SettingsScreen from './SettingsScreen';
 import SidebarScreen from './SidebarScreen';
-import SuggestFeatures from './SuggestFeatures';
-import ReportBugs from './ReportBugs';
 
 export {
   Blocking,
@@ -20,6 +18,4 @@ export {
   PrivacySettings,
   SettingsScreen,
   SidebarScreen,
-  SuggestFeatures,
-  ReportBugs,
 };

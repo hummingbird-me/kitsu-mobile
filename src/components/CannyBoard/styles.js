@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: colors.listBackPurple,
+    paddingTop: 77,
   },
   webView: {
     flex: 1,

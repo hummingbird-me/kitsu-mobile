@@ -12,10 +12,9 @@ import {
   LinkedAccounts,
   ImportLibrary,
   ImportDetail,
-  SuggestFeatures,
-  ReportBugs,
 } from 'kitsu/screens/Sidebar/';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common/';
+import { CannyBoard } from 'kitsu/components/CannyBoard';
 import navigationOptions from './navigationOptions';
 
 const SidebarStack = StackNavigator(
@@ -48,10 +47,10 @@ const SidebarStack = StackNavigator(
       screen: ImportDetail,
     },
     SuggestFeatures: {
-      screen: SuggestFeatures,
+      screen: CannyBoard,
     },
     ReportBugs: {
-      screen: ReportBugs,
+      screen: CannyBoard,
     },
   },
   {
