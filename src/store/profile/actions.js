@@ -264,3 +264,35 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
     });
   }
 };
+
+export const updateUserLibraryEntry = (libraryType, libraryStatus, newLibraryEntry) => async (
+  dispatch, getState,
+) => {
+  const { userLibrary } = getState().profile;
+  const libraryEntries = userLibrary[libraryType][libraryStatus].data;
+  const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+
+  try {
+    const updateEntry = { ...newLibraryEntry };
+    if (updateEntry.status === 'onHold') {
+      updateEntry.status = 'on_hold';
+    }
+
+    // optimistically update state
+    dispatch({
+      libraryStatus,
+      libraryType,
+
+      previousLibraryStatus: previousLibraryEntry.status === 'on_hold' ? 'onHold' : previousLibraryEntry.status,
+      newLibraryStatus: newLibraryEntry.status === 'on_hold' ? 'onHold' : newLibraryEntry.status,
+
+      previousLibraryEntry,
+      newLibraryEntry: updateEntry,
+      type: types.UPDATE_USER_LIBRARY_ENTRY,
+    });
+
+    await Kitsu.update('libraryEntries', updateEntry);
+  } catch (e) {
+    // TODO: handle the case where the entry update fails
+  }
+};

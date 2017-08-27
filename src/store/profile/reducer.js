@@ -1,6 +1,23 @@
 import { REHYDRATE } from 'redux-persist/constants';
 import * as types from 'kitsu/store/types';
 
+function updateObjectInArray(array, entry) {
+  return array.map((currentItem) => {
+    if (currentItem.id !== entry.id) {
+      return currentItem;
+    }
+
+    return {
+      ...currentItem,
+      ...entry,
+    };
+  });
+}
+
+function removeObjectFromArray(array, entry) {
+  return array.filter(currentItem => currentItem.id !== entry.id);
+}
+
 const userLibraryInitial = {
   anime: {
     completed: { data: [], loading: false },
@@ -151,6 +168,53 @@ export default (state = INITIAL_STATE, action) => {
             [action.status]: {
               ...state.userLibrary[action.library][action.status],
               loading: false,
+            },
+          },
+        },
+      };
+    case types.UPDATE_USER_LIBRARY_ENTRY:
+      if (action.previousLibraryStatus !== action.newLibraryStatus) {
+        return {
+          ...state,
+          userLibrary: {
+            ...state.userLibrary,
+            [action.libraryType]: {
+              ...state.userLibrary[action.libraryType],
+
+              // remove from previousLibraryEntry.status
+              [action.previousLibraryStatus]: {
+                ...state.userLibrary[action.libraryType][action.previousLibraryStatus],
+                data: removeObjectFromArray(
+                  state.userLibrary[action.libraryType][action.previousLibraryStatus].data,
+                  action.newLibraryEntry,
+                ),
+              },
+
+              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to onHold for us)
+              [action.newLibraryStatus]: {
+                ...state.userLibrary[action.libraryType][action.newLibraryStatus],
+                data: [
+                  { ...action.previousLibraryEntry, ...action.newLibraryEntry },
+                  ...state.userLibrary[action.libraryType][action.newLibraryStatus].data,
+                ],
+              },
+            },
+          },
+        };
+      }
+
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.libraryType]: {
+            ...state.userLibrary[action.libraryType],
+            [action.libraryStatus]: {
+              ...state.userLibrary[action.libraryType][action.libraryStatus],
+              data: updateObjectInArray(
+                state.userLibrary[action.libraryType][action.libraryStatus].data,
+                action.newLibraryEntry,
+              ),
             },
           },
         },

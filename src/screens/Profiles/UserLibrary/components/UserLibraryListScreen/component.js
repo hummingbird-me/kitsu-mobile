@@ -27,6 +27,7 @@ export class UserLibraryListScreenComponent extends React.Component {
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     searchTerm: PropTypes.string.isRequired,
+    updateUserLibraryEntry: PropTypes.func.isRequired,
   };
 
   static navigationOptions = (props) => {
@@ -94,6 +95,7 @@ export class UserLibraryListScreenComponent extends React.Component {
       libraryStatus={this.props.libraryStatus}
       currentUser={this.props.currentUser}
       profile={this.props.navigation.state.params.profile}
+      updateUserLibraryEntry={this.props.updateUserLibraryEntry}
     />
   );
 

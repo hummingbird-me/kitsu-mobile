@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Kitsu } from 'kitsu/config/api';
 import { debounce } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
@@ -29,6 +28,7 @@ export class UserLibraryListCard extends React.Component {
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     profile: PropTypes.object.isRequired,
+    updateUserLibraryEntry: PropTypes.func.isRequired,
   }
 
   state = {
@@ -75,30 +75,21 @@ export class UserLibraryListCard extends React.Component {
     return mediaData.chapterCount;
   }
 
-  saveEntry = async () => {
-    const { libraryStatus, progress, ratingTwenty } = this.state;
-
-    try {
-      await Kitsu.update('libraryEntries', {
-        id: this.props.data.id,
-        progress,
-        ratingTwenty,
-        status: libraryStatus,
-      });
-
-      this.props.data.progress = progress;
-      this.props.data.ratingTwenty = ratingTwenty;
-      this.props.data.status = libraryStatus;
-    } catch (e) {
-      this.setState({
-        progress: this.props.data.progress,
-        ratingTwenty: this.props.data.ratingTwenty,
-        status: this.props.data.status,
-      });
-    }
+  saveEntry = () => {
+    // send the status from props because that is the list we're looking
+    // at not the status from state because that is what the value of the
+    // card may have just been changed to
+    const { libraryStatus, libraryType } = this.props;
+    const { libraryStatus: newStatus, progress, ratingTwenty } = this.state;
+    this.props.updateUserLibraryEntry(libraryType, libraryStatus, {
+      id: this.props.data.id,
+      progress,
+      ratingTwenty,
+      status: newStatus,
+    });
   }
 
-  debounceSave = debounce(this.saveEntry, 200);
+  debounceSave = debounce(this.saveEntry, 100);
 
   selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
     value: option.value,

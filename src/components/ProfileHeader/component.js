@@ -36,6 +36,20 @@ export const ProfileHeader = (
 
       <View style={styles.headerWrapper}>
         <View style={[styles.header]}>
+          {/* if there is no follow button, render the absolute-centered header first
+          so that the back button still lays over top of it.*/}
+          {!showFollowButton && (
+            <View style={styles.titleOnlyContainer}>
+              <Text style={[
+                commonStyles.text,
+                commonStyles.colorWhite,
+                styles.titleText]}
+              >
+                {title}
+              </Text>
+            </View>
+          )}
+
           <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
             {showProfileImage &&
@@ -51,18 +65,6 @@ export const ProfileHeader = (
               </Text>
             }
           </TouchableOpacity>
-
-          {!showFollowButton && (
-          <View style={styles.titleOnlyContainer}>
-            <Text style={[
-              commonStyles.text,
-              commonStyles.colorWhite,
-              styles.titleText]}
-            >
-              {title}
-            </Text>
-          </View>
-          )}
 
           {showFollowButton && (
           <TouchableOpacity transparent style={styles.followButton} onPress={goBack}>
