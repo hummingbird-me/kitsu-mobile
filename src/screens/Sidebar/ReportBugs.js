@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, WebView, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { cannyBoardTokens } from 'kitsu/constants/app';
+import { CannyBoard } from 'kitsu/components/CannyBoard';
+import { commonStyles } from 'kitsu/common/styles';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -23,10 +24,8 @@ class ReportBugs extends React.Component {
     fetch('https://kitsu.io/api/edge/sso/canny', {
       method: 'GET',
       headers: {
-        'Accept': 'application/vnd.api+json',
-        'Content-Type': 'application/vnd.api+json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Host': 'kitsu.io',
+        Accept: 'application/vnd.api+json',
+        Authorization: `Bearer ${accessToken}`,
       },
     })
     .then(response => response.json())
@@ -45,15 +44,11 @@ class ReportBugs extends React.Component {
     return (
       <View style={styles.containerStyle}>
         {loading
-          ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          ? <View style={[commonStyles.centerCenter, { flex: 1 }]}>
             <ActivityIndicator />
           </View>
-          : <WebView
-            style={{ flex: 1 }}
-            source={{
-              uri: `https://webview.canny.io?boardToken=${cannyBoardTokens.bugReport}&ssoToken=${ssoToken}`,
-            }}
-          />}
+          : <CannyBoard type={'bugReport'} token={ssoToken} />
+        }
       </View>
     );
   }

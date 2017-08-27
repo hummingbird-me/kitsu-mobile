@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, WebView, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { cannyBoardTokens } from 'kitsu/constants/app';
 import PropTypes from 'prop-types';
+import { CannyBoard } from 'kitsu/components/CannyBoard';
+import { commonStyles } from 'kitsu/common/styles';
 import styles from './styles';
 
 class SuggestFeatures extends React.Component {
@@ -23,10 +24,8 @@ class SuggestFeatures extends React.Component {
     fetch('https://kitsu.io/api/edge/sso/canny', {
       method: 'GET',
       headers: {
-        'Accept': 'application/vnd.api+json',
-        'Content-Type': 'application/vnd.api+json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Host': 'kitsu.io',
+        Accept: 'application/vnd.api+json',
+        Authorization: `Bearer ${accessToken}`,
       },
     })
     .then(response => response.json())
@@ -45,15 +44,12 @@ class SuggestFeatures extends React.Component {
     return (
       <View style={styles.containerStyle}>
         {loading
-          ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          ? <View style={[commonStyles.centerCenter, { flex: 1 }]}>
             <ActivityIndicator />
           </View>
-          : <WebView
-            style={{ flex: 1 }}
-            source={{
-              uri: `https://webview.canny.io?boardToken=${cannyBoardTokens.featureRequest}&ssoToken=${ssoToken}`,
-            }}
-          />}
+          :
+          <CannyBoard type={'featureRequest'} token={ssoToken} />
+        }
       </View>
     );
   }
