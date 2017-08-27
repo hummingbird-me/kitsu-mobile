@@ -75,7 +75,10 @@ export class UserLibraryListScreenComponent extends React.Component {
   debouncedSearch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
     const { searchTerm } = this.state;
-    this.props.fetchUserLibrary(profile.id, searchTerm);
+    this.props.fetchUserLibrary({
+      searchTerm,
+      userId: profile.id,
+    });
   }, 100);
 
   renderSearchBar = () => ((

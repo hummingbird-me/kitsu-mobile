@@ -79,9 +79,10 @@ export class UserLibraryScreenComponent extends React.Component {
 
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
+    const { countForMaxWidth } = getCardVisibilityCounts();
 
     if (this.props.userLibrary.userId !== profile.id) {
-      this.props.fetchUserLibrary(profile.id);
+      this.props.fetchUserLibrary({ userId: profile.id, limit: countForMaxWidth });
     }
   }
 
@@ -99,13 +100,16 @@ export class UserLibraryScreenComponent extends React.Component {
 
   debouncedFetch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
-    this.props.fetchUserLibrary(profile.id);
+    this.props.fetchUserLibrary({ userId: profile.id });
   }, 100);
 
   debouncedSearch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
     const { searchTerm } = this.state;
-    this.props.fetchUserLibrary(profile.id, searchTerm);
+    this.props.fetchUserLibrary({
+      searchTerm,
+      userId: profile.id,
+    });
   }, 100);
 
   renderEmptyItem() {
