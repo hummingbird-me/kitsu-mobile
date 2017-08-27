@@ -5,5 +5,6 @@ import anime from './anime/reducer';
 import feed from './feed/reducer';
 import profile from './profile/reducer';
 import media from './media/reducer';
+import groups from './groups/reducer';
 
-export { app, auth, user, anime, feed, profile, media };
+export { app, auth, user, anime, feed, profile, media, groups };

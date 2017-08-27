@@ -1,76 +1,130 @@
 import React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { Text, Container, Icon, Right, Item } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
+import { Kitsu, setToken } from 'kitsu/config/api';
+import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
+import myanimelist from 'kitsu/assets/img/myanimelist.png';
+import anilist from 'kitsu/assets/img/anilist.png';
+import { SidebarTitle, ItemSeparator } from './common/';
+import styles from './styles';
 
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
-
-const MediaItem = ({ onPress, title, details, logoURL }) => (
-  <Item onPress={onPress} button style={styles.sectionListItem}>
-    <View style={{ justifyContent: 'center', marginLeft: 8 }}>
-      <Image
-        source={{ uri: logoURL }}
-        style={{ width: 100, height: 24, resizeMode: 'contain', borderRadius: 12 }}
-      />
+const MediaItem = ({ onPress, title, details, image }) => (
+  <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
+    <View style={{ justifyContent: 'center' }}>
+      <Image source={image} style={{ width: 100, height: 24, resizeMode: 'contain' }} />
       <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
         {details}
       </Text>
     </View>
-    <Right>
+    <View>
       <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
-    </Right>
-  </Item>
+    </View>
+  </TouchableOpacity>
 );
 
-const ImportItem = ({ title, details, status, date }) => (
-  <Item button style={styles.sectionListItem}>
-    <View style={{ justifyContent: 'center', marginLeft: 8 }}>
-      <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
-        {title}
-      </Text>
-      <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
-        {details}
-      </Text>
+const ImportItem = ({ kind, status, date, total }) => {
+  let icon = null;
+  let details = '';
+  const title = kind === 'my-anime-list' ? 'MyAnimeList' : 'AniList';
+  switch (status) {
+    case 'running':
+      icon = pending;
+      details = `Currently importing ${total} titles`;
+      break;
+    case 'queued':
+      icon = queued;
+      details = `Preparing to import ${total} titles`;
+      break;
+    case 'completed':
+      icon = success;
+      details = `Successfully imported ${total} titles`;
+      break;
+    case 'failed':
+      icon = failed;
+      details = `Failed to import ${total} titles. Try again later.`;
+      break;
+    default:
+      icon = failed;
+      details = `Failed to import ${total} titles. Try again later.`;
+      break;
+  }
+  return (
+    <View style={[styles.item, { paddingHorizontal: 12 }]}>
+      <View style={{ justifyContent: 'center' }}>
+        <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
+          {title}
+        </Text>
+        <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
+          {details}
+        </Text>
+      </View>
+      <View>
+        <Image source={icon} style={[styles.itemImage, { right: -2 }]} />
+      </View>
     </View>
-    <Right>
-      <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
-    </Right>
-  </Item>
-);
+  );
+};
 
 class ImportLibrary extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Import Library'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Import Library',
+  };
+
+  state = {
+    imports: [],
+    loading: true,
+  };
+
+  componentDidMount() {
+    this.fetchLibraryImports();
+  }
 
   onMediaItemPressed = (item) => {
     const { navigation } = this.props;
     navigation.navigate('ImportDetail', { item });
   };
 
+  fetchLibraryImports = async () => {
+    const { accessToken, currentUser } = this.props;
+    const { id } = currentUser;
+    setToken(accessToken);
+    try {
+      const imports = await Kitsu.findAll('listImports', {
+        filter: { user_id: id },
+      });
+      this.setState({
+        imports,
+        loading: false,
+      });
+    } catch (e) {
+      this.setState({
+        error: e,
+        loading: false,
+      });
+    }
+  };
+
   render() {
+    const { imports } = this.state;
     return (
-      <Container style={styles.containerStyle}>
-        <View style={{ marginTop: 77 }}>
-          <SidebarTitle style={{ marginTop: 20 }} title={'Import Media'} />
+      <View style={styles.containerStyle}>
+        <View>
+          <SidebarTitle title={'Import Media'} />
           <FlatList
             data={[
               {
                 title: 'MyAnimeList',
                 details: 'Import anime & manga library',
-                logoURL: 'https://i2.wp.com/www.otakutale.com/wp-content/uploads/2015/07/MyAnimeList-Logo.jpg?resize=800%2C136',
+                image: myanimelist,
                 target: '',
               },
               {
                 title: 'AniList',
                 details: 'Import anime & manga library',
-                logoURL: 'https://anilist.co/img/logo_anilist.png',
+                image: anilist,
                 target: '',
               },
             ]}
@@ -78,56 +132,37 @@ class ImportLibrary extends React.Component {
             renderItem={({ item }) => (
               <MediaItem
                 onPress={() => this.onMediaItemPressed(item)}
-                logoURL={item.logoURL}
+                image={item.image}
                 title={item.title}
                 details={item.details}
-              />
-            )}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            removeClippedSubviews={false}
-          />
-          <SidebarTitle style={{ marginTop: 20 }} title={'Previous Imports'} />
-          <FlatList
-            data={[
-              {
-                title: 'MyAnimeList',
-                details: 'Currently importing 231 titles',
-                status: 'syncing',
-                date: '',
-              },
-              {
-                title: 'MyAnimeList',
-                details: 'Successfully imported 231 titles',
-                status: 'success',
-                date: '',
-              },
-              {
-                title: 'AniList',
-                details: 'Failed to import 231 titles. Try again later.',
-                status: 'fail',
-                date: '',
-              },
-            ]}
-            keyExtractor={(item, index) => index}
-            renderItem={({ item }) => (
-              <ImportItem
-                title={item.title}
-                details={item.details}
-                date={item.date}
-                status={item.status}
               />
             )}
             ItemSeparatorComponent={() => <ItemSeparator />}
             removeClippedSubviews={false}
           />
         </View>
-      </Container>
+        <SidebarTitle title={'Previous Imports'} />
+        <FlatList
+          data={imports}
+          keyExtractor={(item, index) => index}
+          renderItem={({ item }) => (
+            <ImportItem
+              total={item.total}
+              kind={item.kind}
+              date={item.updatedDate}
+              status={item.status}
+            />
+          )}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          removeClippedSubviews={false}
+          ListEmptyComponent={<ActivityIndicator color={'white'} />}
+        />
+      </View>
     );
   }
 }
 
-const styles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
+const nativebaseStyles = {
   sectionListItem: {
     backgroundColor: colors.white,
     paddingHorizontal: 8,
@@ -143,7 +178,10 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => ({});
+const mapStateToProps = ({ auth, user }) => ({
+  accessToken: auth.tokens.access_token,
+  currentUser: user.currentUser,
+});
 
 ImportLibrary.propTypes = {};
 

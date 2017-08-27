@@ -4,6 +4,7 @@ import ProfileStack from './profile';
 import FilterStack from './filter';
 import Tabs from './tabs';
 import PostStack from './post';
+import SidebarStack from './sidebar';
 
 export default {
   SearchStack,
@@ -12,4 +13,5 @@ export default {
   FilterStack,
   Tabs,
   PostStack,
+  SidebarStack,
 };

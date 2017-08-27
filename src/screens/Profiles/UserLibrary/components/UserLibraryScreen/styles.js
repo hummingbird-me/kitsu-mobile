@@ -1,39 +1,40 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { flattenCommon } from 'kitsu/common/styles';
 import * as constants from './constants';
+
+const emptyBorderStyle = {
+  borderColor: 'rgba(255,255,255,0.1)',
+  borderRadius: constants.CARD_BORDER_RADIUS,
+  borderStyle: 'dashed',
+  borderWidth: 2,
+};
 
 export const styles = StyleSheet.create({
   browseText: {
     paddingBottom: 10,
   },
   browseButton: {
+    ...flattenCommon('centerCenter'),
     width: 125,
     height: 30,
     borderRadius: 4,
     backgroundColor: colors.green,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
+    ...flattenCommon('centerCenter'),
     flex: 1,
-    alignItems: 'center',
     backgroundColor: colors.darkPurple,
-    justifyContent: 'center',
   },
   emptyList: {
-    alignItems: 'center',
-    borderStyle: 'dashed',
-    borderWidth: 2,
-    borderColor: colors.lightGrey,
+    ...flattenCommon('centerCenter'),
+    ...emptyBorderStyle,
     flex: 1,
     height: constants.EMPTY_LIST_HEIGHT,
-    justifyContent: 'center',
     marginHorizontal: 15,
   },
   emptyPosterImageCard: {
-    borderColor: colors.lightGrey,
-    borderStyle: 'dashed',
-    borderWidth: 2,
+    ...emptyBorderStyle,
     height: constants.POSTER_CARD_HEIGHT,
     marginHorizontal: 4,
     width: constants.POSTER_CARD_WIDTH,
@@ -47,7 +48,7 @@ export const styles = StyleSheet.create({
     width: constants.POSTER_CARD_WIDTH,
     height: constants.POSTER_CARD_HEIGHT,
     marginBottom: 2,
-    borderRadius: 3,
+    borderRadius: constants.CARD_BORDER_RADIUS,
   },
   posterImageCardFirstChild: {
     marginLeft: 12,
@@ -58,7 +59,8 @@ export const styles = StyleSheet.create({
   rating: {
     marginTop: 2,
   },
-  searchBar: {
+  searchBox: {
+    height: 35,
     marginHorizontal: 10,
   },
 });
