@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Modal, View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { Spinner, Button, Container, Content, Icon } from 'native-base';
+import { Spinner, Button, Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { Counter } from 'kitsu/components/Counter';
 
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 
@@ -16,7 +15,7 @@ class HomeScreen extends Component {
       { tintColor }, // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
     ) => (
       <Image
-        source={require('kitsu/assets/img/tabbar_icons/feed.png')}
+        source={require('kitsu/assets/img/tabbar_icons/home.png')}
         style={{ tintColor, width: 20, height: 21 }}
       />
     ),
@@ -65,15 +64,17 @@ class HomeScreen extends Component {
               Create Post
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserProfile', {
-            userId: 5554,
-          })}
+          <Button
+            onPress={() =>
+              navigation.navigate('UserProfile', {
+                userId: 5554,
+              })}
           >
             <Text>
               Logged In Profile
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('Library', {
+          <Button onPress={() => navigation.navigate('UserLibrary', {
             profile: {
               id: 5554,
               name: 'Nuck',
@@ -100,9 +101,6 @@ class HomeScreen extends Component {
               Quick Update
             </Text>
           </Button>
-
-          <Counter initialValue={14} maxValue={20} progressCounter />
-          <Counter initialValue={11} maxValue={20} />
         </Content>
         <Modal
           animationType="fade"

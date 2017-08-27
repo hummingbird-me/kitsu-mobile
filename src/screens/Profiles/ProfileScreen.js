@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Icon, Spinner } from 'native-base';
+import { Container, Spinner } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
@@ -22,10 +22,9 @@ import CardTabs from 'kitsu/components/Card/CardTabs';
 import CardActivity from 'kitsu/components/Card/CardActivity';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
-import { defaultAvatar } from 'kitsu/constants/app';
 import ResultsList from 'kitsu/screens/Search/Lists/ResultsList';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import { defaultCover } from 'kitsu/constants/app';
+import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
 import {
   fetchProfile,
   fetchProfileFavorites,
@@ -36,14 +35,6 @@ import { getUserFeed } from 'kitsu/store/feed/actions';
 const Loader = <Spinner size="small" color="grey" />;
 
 class ProfileScreen extends Component {
-
-  static navigationOptions = ({ navigation }) => ({
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
-    ),
-    header: null,
-  });
-
   state = { page: 0 };
 
   componentDidMount() {
@@ -307,7 +298,7 @@ class ProfileScreen extends Component {
             single
             singleText="View Library"
             heading="Library Activity"
-            onPress={() => this.props.navigation.navigate('Library', {
+            onPress={() => this.props.navigation.navigate('UserLibrary', {
               profile,
             })}
           >
@@ -588,6 +579,11 @@ const styles = {
     alignSelf: 'stretch',
     right: 0,
     left: 0,
+  },
+  tabBarIcon: {
+    width: 22,
+    height: 22,
+    overflow: 'visible',
   },
 };
 

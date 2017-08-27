@@ -5,6 +5,10 @@ export const commonStyles = StyleSheet.create({
   absoluteFill: {
     ...StyleSheet.absoluteFillObject,
   },
+  centerCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text: {
     fontFamily: 'OpenSans',
     fontSize: 12,
@@ -12,6 +16,9 @@ export const commonStyles = StyleSheet.create({
   },
   textHeavy: {
     fontWeight: '800',
+  },
+  transparent: {
+    backgroundColor: 'transparent',
   },
   colorWhite: {
     color: colors.white,
@@ -23,3 +30,8 @@ export const commonStyles = StyleSheet.create({
     color: colors.lightGrey,
   },
 });
+
+export const flattenCommon = (...styles) => {
+  const includedStyles = styles.map(style => commonStyles[style]);
+  return StyleSheet.flatten(includedStyles);
+};

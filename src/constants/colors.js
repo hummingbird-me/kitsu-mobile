@@ -24,6 +24,7 @@ export const offWhite = '#FAFAFA';
 export const imageGrey = '#D8D8D8';
 export const lightGrey = '#CCCCCC';
 export const darkGrey = '#696969';
+export const grey = '#808080'; // html grey aka 'grey'
 
 /* yellows */
 export const yellow = '#F0AD4E';
@@ -31,8 +32,10 @@ export const yellow = '#F0AD4E';
 /* blacks */
 export const black = '#000000';
 export const offBlack = '#2B212B';
+export const softBlack = '#333';
 
 /* misc */
+export const buttonDisabledColor = '#878787';
 export const imageBackColor = 'rgb(153, 130, 153)';
 export const listSeparatorColor = '#261C25';
 export const categoryTextColor = '#C7C2C7';

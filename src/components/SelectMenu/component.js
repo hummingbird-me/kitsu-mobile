@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import ActionSheet from 'react-native-actionsheet';
 import * as colors from 'kitsu/constants/colors';
@@ -8,6 +8,7 @@ export class SelectMenu extends PureComponent {
   static propTypes = {
     cancelButtonIndex: PropTypes.number,
     children: PropTypes.element,
+    disabled: PropTypes.bool,
     options: PropTypes.arrayOf(PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object,
@@ -15,14 +16,15 @@ export class SelectMenu extends PureComponent {
     onOptionSelected: PropTypes.func.isRequired,
     style: PropTypes.any,
     tintColor: PropTypes.string,
-  }
+  };
 
   static defaultProps = {
     cancelButtonIndex: -1,
     children: undefined,
+    disabled: false,
     style: null,
     tintColor: colors.black,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -42,6 +44,10 @@ export class SelectMenu extends PureComponent {
       : this.props.options.length - 1;
   }
 
+  setActionSheet = (component) => {
+    this.ActionSheet = component;
+  };
+
   handleFilterChange = (selectedIndex) => {
     const cancelButtonIndex = this.getCancelButtonIndex();
 
@@ -54,21 +60,26 @@ export class SelectMenu extends PureComponent {
         this.props.onOptionSelected(option);
       }
     }
-  }
+  };
 
   showActionSheet = () => {
     this.ActionSheet.show();
-  }
+  };
 
   render() {
     return (
-      <TouchableOpacity onPress={this.showActionSheet} style={this.props.style}>
+      <TouchableOpacity
+        activeOpacity={1}
+        disabled={this.props.disabled}
+        onPress={this.showActionSheet}
+        style={this.props.style}
+      >
         {this.props.children}
         <ActionSheet
           cancelButtonIndex={this.getCancelButtonIndex()}
           onPress={this.handleFilterChange}
           options={this.displayOptions}
-          ref={(component) => { this.ActionSheet = component; }}
+          ref={this.setActionSheet}
           tintColor={this.props.tintColor}
         />
       </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import htmlToElement from './htmlToElement';
 
@@ -115,7 +115,7 @@ HtmlView.propTypes = {
   renderNode: PropTypes.func,
   RootComponent: PropTypes.func,
   rootComponentProps: PropTypes.object,
-  style: View.propTypes.style,
+  style: ViewPropTypes.style,
   stylesheet: PropTypes.object,
   TextComponent: PropTypes.func,
   textComponentProps: PropTypes.object,

@@ -5,6 +5,7 @@ import FilterStack from './filter';
 import Tabs from './tabs';
 import PostStack from './post';
 import QuickUpdateStack from './quickUpdate';
+import SidebarStack from './sidebar';
 
 export default {
   SearchStack,
@@ -14,4 +15,5 @@ export default {
   Tabs,
   PostStack,
   QuickUpdateStack,
+  SidebarStack,
 };

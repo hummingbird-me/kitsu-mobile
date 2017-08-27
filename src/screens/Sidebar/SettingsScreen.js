@@ -1,63 +1,46 @@
-import React, { Component } from 'react';
-import { View, Image, FlatList } from 'react-native';
+import React from 'react';
+import { View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { Container } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
-import library from 'kitsu/assets/img/sidebar_icons/library.png';
-import privacy from 'kitsu/assets/img/sidebar_icons/privacy.png';
-import linked from 'kitsu/assets/img/sidebar_icons/linked.png';
-import blocking from 'kitsu/assets/img/sidebar_icons/blocking.png';
-import settings from 'kitsu/assets/img/sidebar_icons/settings.png';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
+import { blocking, library, privacy, settings, linked } from 'kitsu/assets/img/sidebar_icons/';
+import { SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
+import styles from './styles';
 
-class SettingsScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Settings'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+class SettingsScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Settings',
+  };
 
   render() {
     const { navigation } = this.props;
     return (
-      // handle marginTop: 77
-      (
-        <Container style={styles.containerStyle}>
-          <View style={{ marginTop: 77 }}>
-            <SidebarTitle style={{ marginTop: 20 }} title={'Account Settings'} />
-            <FlatList
-              data={[
-                { title: 'General', image: settings, target: 'GeneralSettings' },
-                { title: 'Privacy', image: privacy, target: 'PrivacySettings' },
-                { title: 'Linked Accounts', image: linked, target: 'LinkedAccounts' },
-                { title: 'Library', image: library, target: 'Library' },
-                { title: 'Blocking', image: blocking, target: 'Blocking' },
-              ]}
-              keyExtractor={item => item.title}
-              renderItem={({ item }) => (
-                <SidebarListItem
-                  title={item.title}
-                  image={item.image}
-                  onPress={() => navigation.navigate(item.target)}
-                />
-              )}
-              ItemSeparatorComponent={() => <ItemSeparator />}
-              removeClippedSubviews={false}
-              scrollEnabled={false}
+      <View style={styles.containerStyle}>
+        <SidebarTitle title={'Account Settings'} />
+        <FlatList
+          data={[
+            { title: 'General', image: settings, target: 'GeneralSettings' },
+            { title: 'Privacy', image: privacy, target: 'PrivacySettings' },
+            { title: 'Linked Accounts', image: linked, target: 'LinkedAccounts' },
+            { title: 'Library', image: library, target: 'Library' },
+            { title: 'Blocking', image: blocking, target: 'Blocking' },
+          ]}
+          keyExtractor={item => item.title}
+          renderItem={({ item }) => (
+            <SidebarListItem
+              title={item.title}
+              image={item.image}
+              onPress={() => navigation.navigate(item.target)}
             />
-          </View>
-        </Container>
-      )
+          )}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          removeClippedSubviews={false}
+          scrollEnabled={false}
+        />
+      </View>
     );
   }
 }
-
-const styles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
-};
 
 const mapStateToProps = ({ user }) => ({});
 

@@ -1,25 +1,21 @@
-import React, { Component } from 'react';
-import { View, Image, TouchableOpacity, FlatList } from 'react-native';
+import React from 'react';
+import { View, Image, TouchableOpacity, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Text, Container, Content, Left, Right, Item } from 'native-base';
+import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
-import menu from 'kitsu/assets/img/tabbar_icons/menu.png';
 import * as colors from 'kitsu/constants/colors';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
+import { SidebarTitle, ItemSeparator } from './common/';
 
 class LinkedAccounts extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => <SidebarHeader navigation={navigation} headerTitle={'Linked Accounts'} />,
-    tabBarIcon: ({ tintColor }) => (
-      <Image source={menu} style={{ tintColor, width: 20, height: 21 }} />
-    ),
-  });
+  static navigationOptions = {
+    title: 'Linked Accounts',
+  };
 
   onUnlinkAccount = () => {};
 
   renderItem = ({ item }) => (
-    <Item style={styles.sectionListItem}>
-      <Left>
+    <View style={styles.sectionListItem}>
+      <View>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 90, alignItems: 'center' }}>
             <Image
@@ -28,8 +24,8 @@ class LinkedAccounts extends React.Component {
             />
           </View>
         </View>
-      </Left>
-      <Right>
+      </View>
+      <View>
         <TouchableOpacity
           onPress={() => this.onUnlinkAccount(item)}
           style={{
@@ -48,8 +44,8 @@ class LinkedAccounts extends React.Component {
             Disconnect
           </Text>
         </TouchableOpacity>
-      </Right>
-    </Item>
+      </View>
+    </View>
   );
 
   render() {
@@ -60,14 +56,9 @@ class LinkedAccounts extends React.Component {
         <Container style={styles.containerStyle}>
           <Content scrollEnabled={false}>
             <View style={{ flex: 1, marginTop: 77 }}>
-              <SidebarTitle style={{ marginTop: 20 }} title={'Social Accounts'} />
+              <SidebarTitle title={'Social Accounts'} />
               <FlatList
-                data={[
-                  { logoURL: 'https://www.famouslogos.us/images/facebook-logo.jpg' },
-                  {
-                    logoURL: 'https://www.maistecnologia.com/wp-content/uploads/2016/01/twitter-logo-2.png',
-                  },
-                ]}
+                data={[{ logoURL: 'https://www.famouslogos.us/images/facebook-logo.jpg' }]}
                 keyExtractor={(item, index) => index}
                 renderItem={this.renderItem}
                 ItemSeparatorComponent={() => <ItemSeparator />}

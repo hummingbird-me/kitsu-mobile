@@ -16,14 +16,17 @@ export const fetchProfile = id => async (dispatch) => {
       include: 'waifu',
     });
     dispatch({ type: types.FETCH_USER_SUCCESS, payload: user[0] });
-  } catch (e) {
-    console.log(e);
-    dispatch({ type: types.FETCH_USER_FAIL, payload: 'Failed to load user' });
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      type: types.FETCH_USER_FAIL,
+      payload: 'Failed to load user',
+    });
   }
 };
 
 export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
-  dispatch({ type: types.FETCH_USER_LIB_ENTRIES });
+  dispatch({ type: types.FETCH_USER_FEED });
   try {
     const results = await Kitsu.one('userFeed', userId).get({
       page: { limit },
@@ -34,14 +37,20 @@ export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
     });
 
     dispatch({
-      type: types.FETCH_USER_LIB_ENTRIES_SUCCESS,
+      type: types.FETCH_USER_FEED_SUCCESS,
       payload: {
         userId,
         entries: [...results],
       },
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      type: types.FETCH_USER_FEED_FAIL,
+      payload: {
+        error,
+      },
+    });
   }
 };
 
@@ -83,8 +92,8 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
         favorites: data,
       },
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.error(error);
     dispatch({
       type: types.FETCH_USER_FAVORITES_FAIL,
       payload: {
@@ -110,7 +119,6 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     userId: options.userId,
     status: options.status === 'onHold' ? 'on_hold' : options.status,
     kind: options.library,
-
   };
 
   const { userLibrary } = getState().profile;
@@ -130,6 +138,11 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
   try {
     const libraryEntries = await Kitsu.findAll('libraryEntries', {
+      fields: {
+        anime: 'canonicalTitle,posterImage,episodeCount',
+        manga: 'canonicalTitle,posterImage,chapterCount',
+        libraryEntries: 'anime,manga,progress,ratingTwenty,status',
+      },
       filter,
       include: 'anime,manga',
       page: {
@@ -149,10 +162,16 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     dispatch({
       data,
       type: types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
+      fetchMore: () => {
+        if (data.length < libraryEntries.meta.count) {
+          fetchUserLibraryByType(options)(dispatch, getState);
+        }
+      },
       library: options.library,
       status: options.status,
     });
   } catch (error) {
+    console.error(error);
     dispatch({
       error,
       type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
@@ -185,6 +204,7 @@ export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, ge
       type: types.FETCH_USER_LIBRARY_SUCCESS,
     });
   } catch (error) {
+    console.error(error);
     dispatch({
       error,
       type: types.FETCH_USER_LIBRARY_FAIL,
@@ -236,8 +256,43 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
       });
       if (aaaa.length === 1) dispatch({ type: types.FETCH_NETWORK_FOLLOW, payload: item[type].id });
     });
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      type: types.FETCH_USER_NETWORK_FAIL,
+      payload: 'Failed to load user',
+    });
+  }
+};
+
+export const updateUserLibraryEntry = (libraryType, libraryStatus, newLibraryEntry) => async (
+  dispatch, getState,
+) => {
+  const { userLibrary } = getState().profile;
+  const libraryEntries = userLibrary[libraryType][libraryStatus].data;
+  const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+
+  try {
+    const updateEntry = { ...newLibraryEntry };
+    if (updateEntry.status === 'onHold') {
+      updateEntry.status = 'on_hold';
+    }
+
+    // optimistically update state
+    dispatch({
+      libraryStatus,
+      libraryType,
+
+      previousLibraryStatus: previousLibraryEntry.status === 'on_hold' ? 'onHold' : previousLibraryEntry.status,
+      newLibraryStatus: newLibraryEntry.status === 'on_hold' ? 'onHold' : newLibraryEntry.status,
+
+      previousLibraryEntry,
+      newLibraryEntry: updateEntry,
+      type: types.UPDATE_USER_LIBRARY_ENTRY,
+    });
+
+    await Kitsu.update('libraryEntries', updateEntry);
   } catch (e) {
-    console.log(e);
-    dispatch({ type: types.FETCH_USER_NETWORK_FAIL, payload: 'Failed to load user' });
+    // TODO: handle the case where the entry update fails
   }
 };
