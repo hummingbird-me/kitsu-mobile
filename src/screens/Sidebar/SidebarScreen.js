@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { defaultAvatar as defaultGroupAvatar } from 'kitsu/constants/app';
+import { defaultAvatar as defaultGroupAvatar, defaultCover } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
@@ -24,7 +24,7 @@ import styles from './styles';
 const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
-  { title: 'Report Bug', image: bugs, target: '' },
+  { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
   { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
   { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
@@ -90,7 +90,7 @@ class SidebarScreen extends React.Component {
 
   render() {
     const { navigation, currentUser, groupMemberships } = this.props;
-    const { name, avatar } = currentUser;
+    const { name, avatar, coverImage } = currentUser;
     const groupsData = groupMemberships || [];
 
     const sectionListData = [
@@ -110,7 +110,6 @@ class SidebarScreen extends React.Component {
         ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
       {
-        // TODO: imageURL replace default avatar with defaultGroupAvatar
         key: 'groups',
         data: groupsData,
         title: 'Groups',
@@ -160,7 +159,7 @@ class SidebarScreen extends React.Component {
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
-          source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
+          source={{ uri: (coverImage && coverImage.large) || defaultCover }}
         >
           <View
             style={{

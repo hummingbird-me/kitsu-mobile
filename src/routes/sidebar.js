@@ -13,6 +13,7 @@ import {
   ImportLibrary,
   ImportDetail,
   SuggestFeatures,
+  ReportBugs,
 } from 'kitsu/screens/Sidebar/';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common/';
 import navigationOptions from './navigationOptions';
@@ -48,6 +49,9 @@ const SidebarStack = StackNavigator(
     },
     SuggestFeatures: {
       screen: SuggestFeatures,
+    },
+    ReportBugs: {
+      screen: ReportBugs,
     },
   },
   {

@@ -5,9 +5,9 @@ import { cannyBoardTokens } from 'kitsu/constants/app';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-class SuggestFeatures extends React.Component {
+class ReportBugs extends React.Component {
   static navigationOptions = {
-    title: 'Suggest Features',
+    title: 'Report Bugs',
   };
 
   state = {
@@ -49,7 +49,7 @@ class SuggestFeatures extends React.Component {
           : <WebView
             style={{ flex: 1 }}
             source={{
-              uri: `https://webview.canny.io?boardToken=${cannyBoardTokens.featureRequest}&ssoToken=${ssoToken}`,
+              uri: `https://webview.canny.io?boardToken=${cannyBoardTokens.bugReport}&ssoToken=${ssoToken}`,
             }}
           />}
       </View>
@@ -62,6 +62,6 @@ const mapStateToProps = ({ auth, user }) => ({
   accessToken: auth.tokens.access_token,
 });
 
-SuggestFeatures.propTypes = {};
+ReportBugs.propTypes = {};
 
-export default connect(mapStateToProps, {})(SuggestFeatures);
+export default connect(mapStateToProps, {})(ReportBugs);

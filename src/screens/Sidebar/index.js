@@ -8,6 +8,7 @@ import PrivacySettings from './PrivacySettings';
 import SettingsScreen from './SettingsScreen';
 import SidebarScreen from './SidebarScreen';
 import SuggestFeatures from './SuggestFeatures';
+import ReportBugs from './ReportBugs';
 
 export {
   Blocking,
@@ -20,4 +21,5 @@ export {
   SettingsScreen,
   SidebarScreen,
   SuggestFeatures,
+  ReportBugs,
 };
