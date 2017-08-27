@@ -839,14 +839,6 @@ Kitsu.define(
   { collectionPath: 'group-members' },
 );
 
-Kitsu.define(
-  'cannySso',
-  {
-    token: '',
-  },
-  { collectionPath: 'sso/canny' },
-);
-
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
 };
