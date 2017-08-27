@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
-import { commonStyles } from 'kitsu/common/styles';
+import { flattenCommon } from 'kitsu/common/styles';
 
 export const styles = StyleSheet.create({
   captionText: {
-    ...StyleSheet.flatten(commonStyles.text),
+    ...flattenCommon('text'),
     textAlign: 'center',
     fontSize: 10,
   },
