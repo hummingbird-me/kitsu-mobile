@@ -15,6 +15,7 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
       filter: { self: true },
     });
     dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
+    createOneSignalPlayer(dispatch, getState);
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
   }
@@ -75,5 +76,23 @@ export const updateLibrarySettings = data => async (dispatch, getState) => {
     dispatch({ type: types.UPDATE_LIBRARY_SETTINGS_SUCCESS, payload: data });
   } catch (e) {
     dispatch({ type: types.UPDATE_LIBRARY_SETTINGS_FAIL });
+  }
+};
+
+const createOneSignalPlayer = async (dispatch, getState) => {
+  const { playerId, playerCreated, currentUser } = getState().user;
+  if (!playerCreated) {
+    dispatch({ type: types.CREATE_PLAYER });
+    try {
+      await Kitsu.create('oneSignalPlayers', {
+        playerId,
+        platform: 'mobile',
+        user: currentUser,
+      });
+      dispatch({ type: types.CREATE_PLAYER_SUCCESS });
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: types.CREATE_PLAYER_FAIL, payload: 'Failed to register notifications' });
+    }
   }
 };

@@ -11,6 +11,7 @@
 #import <CodePush/CodePush.h>
 
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTLinkingManager.h>
 #import <React/RCTRootView.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Fabric/Fabric.h>
@@ -18,12 +19,13 @@
 
 
 @implementation AppDelegate
+@synthesize oneSignal = _oneSignal;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
 
-  
+
 #ifdef DEBUG
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 #else
@@ -41,7 +43,17 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
   [Fabric with:@[[Crashlytics class]]];
+
+  self.oneSignal = [[RCTOneSignal alloc] initWithLaunchOptions:launchOptions
+                                                         appId:@"01f6e47a-6809-4118-a796-949952e9c209"
+                                                      settings:@{
+                                                        kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNotification),
+                                                        // enable this to cancel auto prompt for permission
+                                                        // kOSSettingsKeyAutoPrompt: @false
+                                                      }];
+
   return YES;
 }
 
@@ -57,6 +69,13 @@
                                                          openURL:url
                                                sourceApplication:sourceApplication
                                                       annotation:annotation];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+  return [RCTLinkingManager application:application
+                   continueUserActivity:userActivity
+                     restorationHandler:restorationHandler];
 }
 
 @end
