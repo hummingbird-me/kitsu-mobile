@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, WebView, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { cannyBoardTokens } from 'kitsu/config/env/';
+import { kitsuConfig } from 'kitsu/config/env/';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
@@ -52,8 +52,8 @@ class Board extends React.Component {
   render() {
     const { token, loading } = this.state;
     const { navigation } = this.props;
-    const boardToken = cannyBoardTokens[navigation.state.params.type];
-    console.log(boardToken, token)
+    const boardToken = kitsuConfig.cannyBoardTokens[navigation.state.params.type];
+
     return (
       <View style={styles.wrapper}>
         {loading
