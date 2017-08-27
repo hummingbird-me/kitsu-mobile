@@ -7,7 +7,6 @@ import { identity } from 'lodash';
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
-import { NavigationActions } from 'react-navigation';
 import store from './store/config';
 import Root from './Router';
 import * as types from './store/types';
@@ -45,22 +44,21 @@ class App extends Component {
       }
     }
 
-    let action;
     switch (paths[0]) {
       // TODO: Add more handlers here as we get more pages implemented
       case 'users':
         if (paths[1]) {
-          action = NavigationActions.navigate('UserProfile', { userSlug: paths[1] });
+          this.navigation.dispatch({
+            type: 'Navigate',
+            routeName: 'UserProfile',
+            params: { userSlug: paths[1] },
+          });
         }
         break;
       default:
     }
 
-    if (action) {
-      this.navigation.dispatch(action);
-    } else {
-      Linking.openURL(url);
-    }
+    Linking.openURL(url);
   }
 
   render() {
