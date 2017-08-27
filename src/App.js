@@ -51,7 +51,7 @@ class App extends Component {
           this.navigation.dispatch({
             type: 'Navigate',
             routeName: 'UserProfile',
-            params: { userSlug: paths[1] },
+            params: { userName: paths[1] },
           });
         }
         break;

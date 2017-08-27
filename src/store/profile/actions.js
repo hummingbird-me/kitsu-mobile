@@ -2,16 +2,16 @@ import _ from 'lodash';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 
-export const fetchProfile = slug => async (dispatch) => {
+export const fetchProfile = name => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
   try {
     const user = await Kitsu.findAll('users', {
       filter: {
-        slug,
+        name,
       },
       fields: {
         users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount' +
-          ',coverImage,avatar,about,name,waifu,slug',
+          ',coverImage,avatar,about,name,waifu',
       },
       include: 'waifu',
     });
@@ -233,7 +233,7 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
       },
       sort: '-created_at',
       fields: {
-        users: 'avatar,name,followersCount,slug',
+        users: 'avatar,name,followersCount',
       },
       page: {
         limit,
