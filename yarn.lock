@@ -4560,9 +4560,11 @@ react-native-keyboard-aware-scroll-view@0.2.7:
   dependencies:
     react-timer-mixin "^0.13.3"
 
-react-native-linear-gradient@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.0.0.tgz#7442c00e1fcd9fca329119dcbaf744d12bcd1b5a"
+react-native-linear-gradient@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.3.0.tgz#757997197e35edf52e290891a11566e462845da1"
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-modal-picker@^0.0.16:
   version "0.0.16"

@@ -153,6 +153,7 @@ Kitsu.define(
     finishedAt: '',
     rating: '',
     ratingTwenty: '',
+    reactionSkipped: '',
     user: {
       jsonApi: 'hasOne',
       type: 'users',
