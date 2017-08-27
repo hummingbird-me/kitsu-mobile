@@ -29,6 +29,7 @@ export const MediaCard = ({
         {mediaData.posterImage
           ?
             <ProgressiveImage
+              duration={500}
               source={{ uri: mediaData.posterImage.small }}
               style={[styles.posterImageCard, cardDimensions]}
             />
