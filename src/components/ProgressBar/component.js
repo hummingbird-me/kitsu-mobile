@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, ViewPropTypes } from 'react-native';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
@@ -32,7 +32,7 @@ export const ProgressBar = (props) => {
 };
 
 ProgressBar.propTypes = {
-  backgroundStyle: PropTypes.object,
+  backgroundStyle: ViewPropTypes.style,
   fillColor: PropTypes.string,
   fillPercentage: PropTypes.number,
   height: PropTypes.number,
