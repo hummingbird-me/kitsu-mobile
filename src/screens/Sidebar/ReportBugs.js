@@ -15,10 +15,10 @@ class ReportBugs extends React.Component {
   };
 
   componentDidMount() {
-    this.getCannySsoKey();
+    this.getCannySsoToken();
   }
 
-  getCannySsoKey = async () => {
+  getCannySsoToken = async () => {
     const { accessToken } = this.props;
     fetch('https://kitsu.io/api/edge/sso/canny', {
       method: 'GET',
