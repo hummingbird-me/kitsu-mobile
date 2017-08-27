@@ -28,7 +28,9 @@ class SuggestFeatures extends React.Component {
         'Authorization': `Bearer ${accessToken}`,
         'Host': 'kitsu.io',
       },
-    }).then(response => response.json()).then((responseJson) => {
+    })
+    .then(response => response.json())
+    .then((responseJson) => {
       if (responseJson && responseJson.token) {
         this.setState({
           ssoToken: responseJson.token,
