@@ -33,17 +33,15 @@ class App extends Component {
   }
 
   onUrl({ url }) {
-    const [path, query] = url.replace('https://kitsu.io/', '').split('?');
-    const paths = path.split('/');
-    const params = query.split('&').map(param => param.split('=')).reduce((acc, curr) => ({
-      ...acc, [curr[0]]: curr[1],
-    }), {});
+    const { pathname, searchParams } = new URL(url);
+    const paths = pathname.split('/').slice(1);
 
-    if (params.notification) {
+    const notification = searchParams.get('notification');
+    if (notification) {
       const { id } = store.getState().user.currentUser;
       const token = store.getState().auth.tokens.access_token;
       if (id) {
-        markNotifications(id, token, [params.notification]);
+        markNotifications(id, token, [notification]);
       }
     }
 
