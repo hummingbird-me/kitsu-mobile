@@ -24,7 +24,8 @@ class QuickUpdate extends Component {
     library: null,
     filterMode: 'all',
     backgroundImageUri: undefined,
-    faderOpacity: new Animated.Value(0.5),
+    nextUpBackgroundImageUri: undefined,
+    faderOpacity: new Animated.Value(1),
     headerOpacity: new Animated.Value(1),
   }
 
@@ -103,43 +104,74 @@ class QuickUpdate extends Component {
     });
   }
 
-  carouselItemChanged = debounce((index) => {
-    const { backgroundImageUri, faderOpacity, library } = this.state;
+  // These are requests to change the background image.
+  // If they happen at all in parallel it looks awful.
+  imageFadeOperations = []
+  operationInProgress = false
 
-    const newBackgroundImage = library[index].anime.coverImage.original;
+  ensureAllImageFadeOperationsHandled = async () => {
+    if (this.operationInProgress) { return; }
 
-    // On first load we don't really need to do the fader business.
-    if (!backgroundImageUri) {
-      this.setState({
-        backgroundImageUri: newBackgroundImage,
+    this.operationInProgress = true;
+
+    while (this.imageFadeOperations.length > 0) {
+      const index = this.imageFadeOperations.pop();
+      const newBackgroundImage = this.state.library[index].anime.coverImage.original;
+
+      // Clear any remaining ones, they're now irrelevant.
+      this.imageFadeOperations.length = 0;
+
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((resolve) => {
+        const { backgroundImageUri, faderOpacity } = this.state;
+
+        // On first load we don't really need to do the fader business.
+        if (!backgroundImageUri) {
+          this.setState({
+            backgroundImageUri: newBackgroundImage,
+            nextUpBackgroundImageUri: newBackgroundImage,
+          });
+
+          return resolve();
+        }
+
+        // Otherwise we need to do a fade.
+        // Load the new image.
+        this.setState({ nextUpBackgroundImageUri: newBackgroundImage });
+
+        // After a short delay fade out the old one.
+        Animated.timing(faderOpacity, {
+          toValue: 0,
+          delay: 400,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          // Once that's complete, change the image and set our opacity back to 1 for the main one,
+          // but with a delay, otherwise there's a flicker when it appears while it loads the other
+          // image from the cache.
+          this.setState({
+            backgroundImageUri: newBackgroundImage,
+          });
+
+          Animated.timing(faderOpacity, {
+            toValue: 1,
+            delay: 300,
+            duration: 0,
+            useNativeDriver: true,
+          }).start(() => resolve());
+        });
+
+        return null;
       });
-
-      return;
     }
 
-    // But afterwards, we should:
-    // Fade it out by making the black view 100% opaque.
-    Animated.timing(faderOpacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start((finished) => {
-      // If we got cancelled, there's another one coming our way.
-      if (!finished) return;
-      // Once that's complete, change the image.
-      this.setState({
-        backgroundImageUri: newBackgroundImage,
-      });
+    this.operationInProgress = false;
+  }
 
-      // And after a small delay to let it load, fade it back in.
-      Animated.timing(faderOpacity, {
-        toValue: 0.5,
-        duration: 300,
-        delay: 50,
-        useNativeDriver: true,
-      }).start();
-    });
-  }, 500)
+  carouselItemChanged = (index) => {
+    this.imageFadeOperations.push(index);
+    this.ensureAllImageFadeOperationsHandled();
+  }
 
   hideHeader = () => {
     this.animateHeaderOpacityTo(0);
@@ -169,6 +201,7 @@ class QuickUpdate extends Component {
 
   render() {
     const {
+      nextUpBackgroundImageUri,
       backgroundImageUri,
       faderOpacity,
       filterMode,
@@ -187,14 +220,14 @@ class QuickUpdate extends Component {
 
     return (
       <View style={styles.wrapper}>
-        {/* Background Image, Cover image for the series. */}
+        {/* Background Image, staging for next image, Cover image for the series. */}
         <Image
-          source={{ uri: backgroundImageUri }}
+          source={{ uri: nextUpBackgroundImageUri }}
           style={styles.backgroundImage}
         />
-        <Animated.View style={[
-          styles.backgroundFaderView,
-          { opacity: faderOpacity }]}
+        <Animated.Image
+          source={{ uri: backgroundImageUri }}
+          style={[styles.backgroundImage, { opacity: faderOpacity }]}
         />
 
         {/* Header */}

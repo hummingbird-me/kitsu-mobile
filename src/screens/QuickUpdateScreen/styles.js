@@ -18,14 +18,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-  backgroundFaderView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    backgroundColor: 'black',
-  },
   header: {
     height: 70,
     flexDirection: 'row',
