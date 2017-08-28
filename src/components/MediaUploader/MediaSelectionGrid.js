@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -96,6 +97,9 @@ export default class MediaSelectionGrid extends Component {
   }
 
   groupTypeForFilterContext = () => {
+    // If we're on Android, groupTypes isn't supported.
+    if (Platform.OS === 'android') return undefined;
+
     switch (this.props.filterContext) {
       case 'Photo Stream':
         return 'PhotoStream';
@@ -111,27 +115,34 @@ export default class MediaSelectionGrid extends Component {
 
     const groupTypes = this.groupTypeForFilterContext();
 
-    const page = await CameraRoll.getPhotos({
-      assetType: 'Photos', // This is the default, but we'll change to video later, so left this here.
-      groupTypes,
-      first: MEDIA_PAGE_SIZE,
-      after: this.state.nextPage || undefined, // Null can't be passed over the bridge.
-    });
+    console.log('yup');
 
-    let existing = this.state.allMedia;
+    try {
+      const page = await CameraRoll.getPhotos({
+        assetType: 'Photos', // This is the default, but we'll change to video later, so left this here.
+        groupTypes,
+        first: MEDIA_PAGE_SIZE,
+        after: this.state.nextPage || undefined, // Null can't be passed over the bridge.
+      });
 
-    // Our initial load is full of placeholders. Throw those away.
-    if (this.state.initialLoad) {
-      existing = [];
+      let existing = this.state.allMedia;
+
+      // Our initial load is full of placeholders. Throw those away.
+      if (this.state.initialLoad) {
+        existing = [];
+      }
+
+      const newAllMedia = [...existing, ...page.edges];
+      console.log(newAllMedia);
+      this.setState({
+        allMedia: newAllMedia,
+        hasNextPage: page.page_info.has_next_page,
+        nextPage: page.page_info.end_cursor,
+        initialLoad: false,
+      });
+    } catch (e) {
+      console.log(e);
     }
-
-    const newAllMedia = [...existing, ...page.edges];
-    this.setState({
-      allMedia: newAllMedia,
-      hasNextPage: page.page_info.has_next_page,
-      nextPage: page.page_info.end_cursor,
-      initialLoad: false,
-    });
   }
 
   renderItem = ({ item }) => {
