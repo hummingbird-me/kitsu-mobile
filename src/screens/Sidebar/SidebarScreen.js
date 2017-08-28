@@ -3,7 +3,6 @@
   - get color code of black text, replace all #444.
   - reorganize styles
   - work on ListEmptyItems after react native upgrade
-  - imageURL replace default avatar with defaultGroupAvatar
 */
 
 import React from 'react';
@@ -19,9 +18,8 @@ import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
-import styles from './styles';
+import { styles } from './styles';
 
-const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
@@ -96,14 +94,14 @@ class SidebarScreen extends React.Component {
     const sectionListData = [
       {
         key: 'shortcuts',
-        data: shortcutsData,
+        data: [{ title: 'View Library', image: library, target: 'UserLibraryScreen' }],
         title: 'Shortcuts',
         renderItem: ({ item }) => (
           <SidebarListItem
             image={item.image}
             title={item.title}
             onPress={() => {
-              navigation.navigate(item.target);
+              navigation.navigate(item.target, { profile: currentUser });
             }}
           />
         ),

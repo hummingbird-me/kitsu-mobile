@@ -7,13 +7,15 @@ import {
   SettingsScreen,
   GeneralSettings,
   PrivacySettings,
-  Library,
+  LibraryScreen,
   Blocking,
   LinkedAccounts,
   ImportLibrary,
   ImportDetail,
+  ExportLibrary,
   CannyBoard,
 } from 'kitsu/screens/Sidebar/';
+import { UserLibraryScreen } from 'kitsu/screens/Profiles';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common/';
 import navigationOptions from './navigationOptions';
 
@@ -32,13 +34,19 @@ const SidebarStack = StackNavigator(
       screen: PrivacySettings,
     },
     Library: {
-      screen: Library,
+      screen: LibraryScreen,
+    },
+    UserLibraryScreen: {
+      screen: UserLibraryScreen,
     },
     Blocking: {
       screen: Blocking,
     },
     LinkedAccounts: {
       screen: LinkedAccounts,
+    },
+    ExportLibrary: {
+      screen: ExportLibrary,
     },
     ImportLibrary: {
       screen: ImportLibrary,

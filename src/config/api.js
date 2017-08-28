@@ -110,6 +110,7 @@ Kitsu.define(
     },
     linkedAccounts: {
       jsonApi: 'hasMany',
+      type: 'linkedAccounts',
     },
     profileLinks: {
       jsonApi: 'hasMany',
@@ -242,6 +243,27 @@ Kitsu.define(
     },
   },
   { collectionPath: 'blocks' },
+);
+
+Kitsu.define(
+  'linkedAccounts',
+  {
+    externalUserId: '',
+    kind: '',
+    syncTo: '',
+    token: '',
+    createdAt: '',
+    updatedAt: '',
+    shareTo: '',
+    shareFrom: '',
+    disabledReason: '',
+    libraryEntryLogs: '',
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'linked-accounts' },
 );
 
 Kitsu.define(

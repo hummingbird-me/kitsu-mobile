@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   containerStyle: {
     flex: 1,
     backgroundColor: colors.listBackPurple,
@@ -22,14 +22,15 @@ const styles = StyleSheet.create({
     marginTop: 4,
     color: colors.softBlack,
   },
-  fieldWrapper: {
+  inputWrapper: {
     backgroundColor: colors.white,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingTop: 8,
+    paddingBottom: 4,
   },
-  fieldInput: {
-    marginTop: 4,
-    height: 30,
+  input: {
+    flex: 1,
+    height: 40,
     fontFamily: 'OpenSans',
     fontSize: 14,
   },
@@ -53,18 +54,10 @@ const styles = StyleSheet.create({
     height: 16,
     marginHorizontal: 4,
   },
-  modalTitle: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    paddingVertical: 8,
-    fontSize: 14,
-  },
-  modalText: {
-    textAlign: 'center',
-    paddingHorizontal: 12,
-    fontFamily: 'OpenSans',
-    fontSize: 12,
-  },
 });
 
-export default styles;
+
+export const flatten = (...additionalStyles) => {
+  const includedStyles = additionalStyles.map(style => styles[style]);
+  return StyleSheet.flatten(includedStyles);
+};

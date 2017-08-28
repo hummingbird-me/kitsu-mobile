@@ -8,14 +8,14 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
-import { SidebarTitle, ItemSeparator } from './common/';
-import styles from './styles';
+import { SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { styles } from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
     <View style={{ justifyContent: 'center' }}>
-      <Image source={image} style={{ width: 100, height: 24, resizeMode: 'contain' }} />
-      <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
+      <Image source={image} style={styles.itemLogo} />
+      <Text style={styles.hintText}>
         {details}
       </Text>
     </View>
