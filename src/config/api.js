@@ -267,6 +267,28 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'libraryEntryLogs',
+  {
+    actionPerformed: '',
+    createdAt: '',
+    errorMessage: '',
+    progress: '',
+    rating: '',
+    reconsumeCount: '',
+    reconsuming: '',
+    status: '',
+    syncStatus: '',
+    updatedAt: '',
+    volumesOwned: '',
+    media: {
+      jsonApi: 'hasOne',
+      type: ['anime', 'manga', 'drama'],
+    },
+  },
+  { collectionPath: 'library-entry-logs' },
+);
+
+Kitsu.define(
   'castings',
   {
     createdAt: '',

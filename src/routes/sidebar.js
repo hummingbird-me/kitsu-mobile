@@ -57,6 +57,9 @@ const SidebarStack = StackNavigator(
     SuggestFeatures: {
       screen: CannyBoard,
     },
+    DatabaseRequests: {
+      screen: CannyBoard,
+    },
     ReportBugs: {
       screen: CannyBoard,
     },

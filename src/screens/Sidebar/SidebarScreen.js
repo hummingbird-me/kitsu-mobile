@@ -24,6 +24,7 @@ const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
   { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
+  { title: 'Database Requests', image: suggest, target: 'DatabaseRequests' },
   { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
 
@@ -150,6 +151,9 @@ class SidebarScreen extends React.Component {
                   break;
                 case 'SuggestFeatures':
                   navigation.navigate(item.target, { title: item.title, type: 'featureRequest', token: accessToken });
+                  break;
+                case 'DatabaseRequests':
+                  navigation.navigate(item.target, { title: item.title, type: 'databaseRequest', token: accessToken });
                   break;
                 case 'mailto':
                   Linking.openURL('mailto:josh@kitsu.io');
