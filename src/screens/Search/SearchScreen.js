@@ -91,7 +91,7 @@ class SearchScreen extends Component {
       manga: undefined,
       users: undefined,
     },
-    index: 2,
+    index: 0,
     routes: [
       {
         key: 'anime',
