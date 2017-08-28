@@ -47,6 +47,7 @@ matrix:
         - gem install fastlane --no-rdoc --no-ri --no-document --quiet
         - chmod +x ./android/gradlew
         - openssl aes-256-cbc -K $encrypted_68a856edd0d9_key -iv $encrypted_68a856edd0d9_iv -in ./android/app/kitsu-android-key.keystore.enc -out ./android/app/kitsu-android-key.keystore -d
+        # - security delete-certificate -c "Apple Worldwide Developer Relations Certification Authority" # add this to resolve 'Could not install WWDR certificate'
       install:
         - yarn install
       script:
