@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableHighlight } from 'react-native';
 import * as PropTypes from 'prop-types';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const DEFAULT_AVATAR = require('kitsu/assets/img/default_avatar.png');
 
@@ -13,8 +14,8 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   userContainer: {
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: 12,
+    paddingBottom: 12,
     paddingRight: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -29,6 +30,13 @@ const styles = StyleSheet.create({
   },
   userLeftSection: {
     flexDirection: 'row',
+    flex: 7,
+  },
+  userRightSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flex: 3,
   },
   userMetaContainer: {
     justifyContent: 'center',
@@ -53,9 +61,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
   },
+  moreIcon: {
+    color: '#ADADAD',
+  },
 });
 
-const User = ({ user, onPress }) => {
+const User = ({ user, onFollow }) => {
   const userAvatar = user.avatar ? { uri: user.avatar.small } : DEFAULT_AVATAR;
   const followerTxt = user.followersCount > 1 ? 'followers' : 'follower';
   return (
@@ -67,24 +78,30 @@ const User = ({ user, onPress }) => {
           <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>
         </View>
       </View>
-      <TouchableHighlight style={styles.actionButton}>
-        <Text style={styles.actionButtonText} onPress={onPress}>Follow</Text>
-      </TouchableHighlight>
+      <View style={styles.userRightSection}>
+        <TouchableHighlight style={styles.actionButton} onPress={() => onFollow(user.id)}>
+          <Text style={styles.actionButtonText}>Follow</Text>
+        </TouchableHighlight>
+        <FontAwesome name="ellipsis-v" size={20} style={styles.moreIcon} />
+      </View>
     </View>
   );
 };
 
 User.propTypes = {
   user: PropTypes.object,
-  onPress: PropTypes.func,
+  onFollow: PropTypes.func,
 };
 
-const UsersList = ({ hits, hasMore, refine, onPress }) => {
+const UsersList = ({ hits, hasMore, refine, onFollow, onData }) => {
   const onEndReached = () => {
     if (hasMore) {
       refine();
     }
   };
+
+  // Send users data to reducer to maintain single source of truth
+  onData(hits);
 
   return (
     <FlatList
@@ -95,7 +112,7 @@ const UsersList = ({ hits, hasMore, refine, onPress }) => {
       style={styles.container}
       scrollEnabled
       contentContainerStyle={styles.userList}
-      renderItem={({ item }) => <User key={`${item.name}`} user={item} onPress={onPress} />}
+      renderItem={({ item }) => <User key={`${item.name}`} user={item} onFollow={onFollow} />}
     />
   );
 };

@@ -9,12 +9,18 @@ import { InstantSearchBox } from 'kitsu/components/SearchBox';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 import * as colors from 'kitsu/constants/colors';
+import { followUser } from 'kitsu/store/user/actions';
+import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from './Lists';
 
 const styles = {
   container: {
     backgroundColor: colors.listBackPurple,
     flex: 1,
+  },
+  sceneContainer: {
+    flex: 1,
+    marginBottom: 10,
   },
   scrollView: {
     backgroundColor: colors.listBackPurple,
@@ -126,14 +132,15 @@ class SearchScreen extends Component {
 
   renderSubScene = (route) => {
     const { query } = this.state;
-    const { navigation } = this.props;
+    const { navigation, followUser, captureUsersData } = this.props;
+
     const activeQuery = query[route.key];
     switch (route.key) {
       case 'users': {
         const UserHits = connectInfiniteHits(UsersList);
         return (
           <ScrollView style={styles.scrollView}>
-            <UserHits />
+            <UserHits onFollow={followUser} onData={captureUsersData} />
           </ScrollView>
         );
       }
@@ -202,4 +209,4 @@ const mapper = (state) => {
   };
 };
 
-export default connect(mapper, {})(SearchScreen);
+export default connect(mapper, { followUser, captureUsersData })(SearchScreen);

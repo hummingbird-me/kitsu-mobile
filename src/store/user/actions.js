@@ -96,3 +96,19 @@ const createOneSignalPlayer = async (dispatch, getState) => {
     }
   }
 };
+
+export const followUser = userId => async (dispatch, getState) => {
+  dispatch({ type: types.USER_FOLLOW_REQUEST });
+
+  const { user: { currentUser: { id } } } = getState();
+  const data = {
+    follower: { id },
+    followed: { id: userId },
+  };
+  try {
+    const response = await Kitsu.create('follows', data);
+    dispatch({ type: types.USER_FOLLOW_SUCCESS, payload: response });
+  } catch (e) {
+    dispatch({ type: types.USER_FOLLOW_FAIL, payload: e });
+  }
+};
