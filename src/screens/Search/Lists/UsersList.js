@@ -2,8 +2,7 @@ import * as React from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableHighlight } from 'react-native';
 import * as PropTypes from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-const DEFAULT_AVATAR = require('kitsu/assets/img/default_avatar.png');
+import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
 
 const styles = StyleSheet.create({
   container: {
