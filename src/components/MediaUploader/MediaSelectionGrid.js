@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  PermissionsAndroid,
   Platform,
   Text,
   View,
@@ -110,12 +111,42 @@ export default class MediaSelectionGrid extends Component {
     }
   }
 
+  ensureSufficientPermissions = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Kitsu Photos Permission',
+          message: 'Kitsu needs access to your photos to allow you to choose and upload one.',
+        });
+
+      // If they didn't give us the permission, go ahead and show them
+      // the nothing here message.
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        this.setState({
+          allMedia: [],
+          hasNextPage: false,
+          nextPage: null,
+          initialLoad: false,
+        });
+
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+
+    return true;
+  }
+
   loadMore = async () => {
+    const permissions = await this.ensureSufficientPermissions();
+    if (!permissions) return;
+
     if (!this.state.initialLoad && !this.state.hasNextPage) return;
 
     const groupTypes = this.groupTypeForFilterContext();
-
-    console.log('yup');
 
     try {
       const page = await CameraRoll.getPhotos({
@@ -133,7 +164,7 @@ export default class MediaSelectionGrid extends Component {
       }
 
       const newAllMedia = [...existing, ...page.edges];
-      console.log(newAllMedia);
+
       this.setState({
         allMedia: newAllMedia,
         hasNextPage: page.page_info.has_next_page,
