@@ -147,8 +147,7 @@ class SearchScreen extends Component {
       default: {
         return (
           <ScrollView style={styles.scrollView}>
-            {!activeQuery && <TopsList active={route.key} mounted navigation={navigation} />}
-            {activeQuery && <Hits />}
+            {activeQuery ? <Hits /> : <TopsList active={route.key} mounted navigation={navigation} />}
           </ScrollView>
         );
       }
