@@ -5,6 +5,8 @@ import {
   Dimensions,
   FlatList,
   Image,
+  PermissionsAndroid,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -96,6 +98,9 @@ export default class MediaSelectionGrid extends Component {
   }
 
   groupTypeForFilterContext = () => {
+    // If we're on Android, groupTypes isn't supported.
+    if (Platform.OS === 'android') return undefined;
+
     switch (this.props.filterContext) {
       case 'Photo Stream':
         return 'PhotoStream';
@@ -106,32 +111,69 @@ export default class MediaSelectionGrid extends Component {
     }
   }
 
+  ensureSufficientPermissions = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Kitsu Photos Permission',
+          message: 'Kitsu needs access to your photos to allow you to choose and upload one.',
+        });
+
+      // If they didn't give us the permission, go ahead and show them
+      // the nothing here message.
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        this.setState({
+          allMedia: [],
+          hasNextPage: false,
+          nextPage: null,
+          initialLoad: false,
+        });
+
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+
+    return true;
+  }
+
   loadMore = async () => {
+    const permissions = await this.ensureSufficientPermissions();
+    if (!permissions) return;
+
     if (!this.state.initialLoad && !this.state.hasNextPage) return;
 
     const groupTypes = this.groupTypeForFilterContext();
 
-    const page = await CameraRoll.getPhotos({
-      assetType: 'Photos', // This is the default, but we'll change to video later, so left this here.
-      groupTypes,
-      first: MEDIA_PAGE_SIZE,
-      after: this.state.nextPage || undefined, // Null can't be passed over the bridge.
-    });
+    try {
+      const page = await CameraRoll.getPhotos({
+        assetType: 'Photos', // This is the default, but we'll change to video later, so left this here.
+        groupTypes,
+        first: MEDIA_PAGE_SIZE,
+        after: this.state.nextPage || undefined, // Null can't be passed over the bridge.
+      });
 
-    let existing = this.state.allMedia;
+      let existing = this.state.allMedia;
 
-    // Our initial load is full of placeholders. Throw those away.
-    if (this.state.initialLoad) {
-      existing = [];
+      // Our initial load is full of placeholders. Throw those away.
+      if (this.state.initialLoad) {
+        existing = [];
+      }
+
+      const newAllMedia = [...existing, ...page.edges];
+
+      this.setState({
+        allMedia: newAllMedia,
+        hasNextPage: page.page_info.has_next_page,
+        nextPage: page.page_info.end_cursor,
+        initialLoad: false,
+      });
+    } catch (e) {
+      console.log(e);
     }
-
-    const newAllMedia = [...existing, ...page.edges];
-    this.setState({
-      allMedia: newAllMedia,
-      hasNextPage: page.page_info.has_next_page,
-      nextPage: page.page_info.end_cursor,
-      initialLoad: false,
-    });
   }
 
   renderItem = ({ item }) => {
