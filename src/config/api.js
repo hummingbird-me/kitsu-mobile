@@ -19,6 +19,7 @@ Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
 const errorMiddleware = {
   name: 'error-middleware',
   error: (payload) => {
+    console.log('failed payload', payload);
     if (payload.status === 401) {
       return {
         request: {
@@ -277,9 +278,11 @@ Kitsu.define(
     updatedAt: '',
     follower: {
       jsonApi: 'hasOne',
+      type: 'users',
     },
     followed: {
       jsonApi: 'hasOne',
+      type: 'users',
     },
   },
   { collectionPath: 'follows' },
