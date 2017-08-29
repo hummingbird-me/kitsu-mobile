@@ -19,7 +19,7 @@ class Board extends React.Component {
     this.getCannySsoToken();
   }
 
-  getCannySsoToken = async () => {
+  getCannySsoToken = () => {
     const accessToken = this.props.navigation.state.params.token;
     fetch('https://kitsu.io/api/edge/sso/canny', {
       method: 'GET',
