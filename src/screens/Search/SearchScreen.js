@@ -13,6 +13,8 @@ import { followUser } from 'kitsu/store/user/actions';
 import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from './Lists';
 
+const TABBAR_HEIGHT = 40;
+
 const styles = {
   container: {
     backgroundColor: colors.listBackPurple,
@@ -25,6 +27,9 @@ const styles = {
   scrollView: {
     backgroundColor: colors.listBackPurple,
   },
+  scrollViewContentContainer: {
+    paddingBottom: TABBAR_HEIGHT,
+  },
   searchBox: {
     marginHorizontal: 10,
   },
@@ -34,7 +39,7 @@ const styles = {
     borderBottomWidth: 0,
     borderRightWidth: 0,
     borderLeftWidth: 0,
-    height: 40,
+    height: TABBAR_HEIGHT,
     paddingRight: 5,
     paddingLeft: 5,
     shadowColor: 'black',
@@ -139,14 +144,14 @@ class SearchScreen extends Component {
       case 'users': {
         const UserHits = connectInfiniteHits(UsersList);
         return (
-          <ScrollView contentContainerStyle={{ paddingBottom: 40 }} style={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollViewContentContainer} style={styles.scrollView}>
             <UserHits onFollow={followUser} onData={captureUsersData} />
           </ScrollView>
         );
       }
       default: {
         return (
-          <ScrollView contentContainerStyle={{ paddingBottom: 40 }} style={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollViewContentContainer} style={styles.scrollView}>
             {activeQuery ? <Hits /> : <TopsList active={route.key} mounted navigation={navigation} />}
           </ScrollView>
         );
