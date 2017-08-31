@@ -4,7 +4,7 @@ const initialState = {
   algoliaKeys: {},
 };
 
-export default (state = initialState, action) => {
+export const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.ALGOLIA_KEY_SUCCESS:
       return {

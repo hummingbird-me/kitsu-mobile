@@ -8,7 +8,7 @@ import { MediaFilter, MediaFilterMenu, MediaSelectionGrid } from 'kitsu/componen
 export default class MediaUploadScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerLeft: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
+      <Button transparent color="white" onPress={navigation.goBack}>
         <Text style={styles.headerButton}>Cancel</Text>
       </Button>
     ),
@@ -19,7 +19,7 @@ export default class MediaUploadScreen extends Component {
       />
     ),
     headerRight: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
+      <Button transparent color="white" onPress={navigation.goBack}>
         <Text style={styles.headerButton}>Done</Text>
       </Button>
     ),

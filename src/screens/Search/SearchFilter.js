@@ -19,6 +19,7 @@ class SearchFilter extends Component {
     this.renderFooter = this.renderFooter.bind(this);
     this.renderCustomItem = this.renderCustomItem.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.renderSectionHeader = this.renderSectionHeader.bind(this);
   }
 
   componentWillMount() {
@@ -41,7 +42,7 @@ class SearchFilter extends Component {
     }
   }
 
-  onApply() {
+  onApply = () => {
     const { navigation: { state: { params: { onApply } } } } = this.props;
     const query = {
       filter: {},
@@ -135,7 +136,7 @@ class SearchFilter extends Component {
             justifyContent: 'center',
             backgroundColor: '#16A085',
           }}
-          onPress={() => this.onApply()}
+          onPress={this.onApply}
         >
           <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{btnText}</Text>
         </Button>
@@ -263,6 +264,14 @@ class SearchFilter extends Component {
     );
   }
 
+  renderSectionHeader({ section }) {
+    return (
+      <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 32 }}>
+        {section.title.toUpperCase()}
+      </Text>
+    );
+  }
+
   render() {
     return (
       <Container style={{ backgroundColor: colors.darkPurple }}>
@@ -270,11 +279,7 @@ class SearchFilter extends Component {
           <View style={{ padding: 20, paddingTop: 0 }}>
             {this.renderCustomItem('Sort By', 'sort')}
             <SectionList
-              renderSectionHeader={({ section }) => (
-                <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 32 }}>
-                  {section.title.toUpperCase()}
-                </Text>
-              )}
+              renderSectionHeader={this.renderSectionHeader}
               renderItem={this.renderItem}
               sections={[
                 {

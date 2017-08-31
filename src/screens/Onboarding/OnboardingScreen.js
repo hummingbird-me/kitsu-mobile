@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Dimensions, Platform, Easing } from 'react-native';
+import { View, Text, Dimensions, Platform } from 'react-native';
 import { Container, Content, Footer, FooterTab, Button } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
 import * as colors from 'kitsu/constants/colors';

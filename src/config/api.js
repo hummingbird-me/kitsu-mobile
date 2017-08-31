@@ -83,7 +83,6 @@ Kitsu.define(
     previousEmail: '',
     confirmed: '',
     password: '',
-    mediaReactionsCount: '',
     waifu: {
       jsonApi: 'hasOne',
       type: 'characters',
@@ -156,7 +155,6 @@ Kitsu.define(
     finishedAt: '',
     rating: '',
     ratingTwenty: '',
-    reactionSkipped: '',
     user: {
       jsonApi: 'hasOne',
       type: 'users',

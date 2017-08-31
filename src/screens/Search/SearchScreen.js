@@ -139,14 +139,14 @@ class SearchScreen extends Component {
       case 'users': {
         const UserHits = connectInfiniteHits(UsersList);
         return (
-          <ScrollView style={styles.scrollView}>
+          <ScrollView contentContainerStyle={{ paddingBottom: 40 }} style={styles.scrollView}>
             <UserHits onFollow={followUser} onData={captureUsersData} />
           </ScrollView>
         );
       }
       default: {
         return (
-          <ScrollView style={styles.scrollView}>
+          <ScrollView contentContainerStyle={{ paddingBottom: 40 }} style={styles.scrollView}>
             {activeQuery ? <Hits /> : <TopsList active={route.key} mounted navigation={navigation} />}
           </ScrollView>
         );

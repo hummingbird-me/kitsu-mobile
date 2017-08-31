@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   loadingCastings: false,
 };
 
-export default(state = INITIAL_STATE, action) => {
+export const mediaReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.FETCH_MEDIA:
       return {

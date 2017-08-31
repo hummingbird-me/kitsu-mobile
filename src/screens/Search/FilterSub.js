@@ -14,7 +14,7 @@ class FilterSub extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.title || navigation.state.params.label,
     headerLeft: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
+      <Button transparent color="white" onPress={navigation.goBack}>
         <Icon name="arrow-back" style={{ color: 'white' }} />
       </Button>
     ),
@@ -28,6 +28,7 @@ class FilterSub extends Component {
     this.renderItem = this.renderItem.bind(this);
     this.renderLength = this.renderLength.bind(this);
     this.renderFooter = this.renderFooter.bind(this);
+    this.renderSectionHeader = this.renderSectionHeader.bind(this);
     this.state = {
       show: false,
       selected: {},
@@ -118,11 +119,7 @@ class FilterSub extends Component {
       <View style={{ padding: 20, paddingTop: 0 }}>
         {/* this.renderItem({ item: { title: 'Title', key: 'title' } })*/}
         <SectionList
-          renderSectionHeader={({ section }) => (
-            <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 12 }}>
-              {section.title.toUpperCase()}
-            </Text>
-          )}
+          renderSectionHeader={this.renderSectionHeader}
           renderItem={this.renderItem}
           sections={[
             {
@@ -203,6 +200,14 @@ class FilterSub extends Component {
           ]}
         />
       </View>
+    );
+  }
+
+  renderSectionHeader({ section }) {
+    return (
+      <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 12 }}>
+        {section.title.toUpperCase()}
+      </Text>
     );
   }
 

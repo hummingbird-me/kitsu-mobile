@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   rehydratedAt: null,
 };
 
-export default (state = INITIAL_STATE, action) => {
+export const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.LOGIN_USER:
       return {

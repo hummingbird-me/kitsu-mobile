@@ -7,6 +7,7 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  InteractionManager
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Container, Spinner } from 'native-base';
@@ -35,16 +36,25 @@ import { getUserFeed } from 'kitsu/store/feed/actions';
 const Loader = <Spinner size="small" color="grey" />;
 
 class ProfileScreen extends Component {
-  state = { page: 0 };
+  constructor(props) {
+    super(props);
+
+    this.renderHeader = this.renderHeader.bind(this);
+    this.renderInfoBlock = this.renderInfoBlock.bind(this);
+
+    this.state = { page: 0 };
+  }
 
   componentDidMount() {
     const { userId } = this.props;
-    this.props.fetchProfile(userId);
-    this.props.fetchUserFeed(userId, 12);
-    this.props.fetchProfileFavorites(userId, 'character');
-    this.props.fetchProfileFavorites(userId, 'manga');
-    this.props.fetchProfileFavorites(userId, 'anime');
-    this.props.getUserFeed(userId);
+    InteractionManager.runAfterInteractions(() => {
+      this.props.fetchProfile(userId);
+      this.props.fetchUserFeed(userId, 12);
+      this.props.fetchProfileFavorites(userId, 'character');
+      this.props.fetchProfileFavorites(userId, 'manga');
+      this.props.fetchProfileFavorites(userId, 'anime');
+      this.props.getUserFeed(userId);
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -163,7 +173,7 @@ class ProfileScreen extends Component {
     return item;
   }
 
-  renderInfoBlock = () => {
+  renderInfoBlock() {
     const { profile, loading, navigation } = this.props;
     const infos = [];
     _.forOwn(getInfo(profile), (item, key) => {
@@ -234,7 +244,7 @@ class ProfileScreen extends Component {
     return result;
   }
 
-  renderHeader = () => {
+  renderHeader() {
     const {
       profile,
       navigation,
@@ -481,6 +491,7 @@ class ProfileScreen extends Component {
       currentUser,
       favorite: { characters, anime, manga },
       entries,
+      userFeed,
     } = this.props;
 
     return (
@@ -497,7 +508,7 @@ class ProfileScreen extends Component {
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
+              source={{ uri: (profile.coverImage && profile.coverImage.original) || defaultCover }}
             />
           )}
           renderForeground={() => (
@@ -518,13 +529,14 @@ class ProfileScreen extends Component {
           <View style={{ width: Dimensions.get('window').width }}>
             <FlatList
               style={{ backgroundColor: colors.listBackPurple }}
-              data={this.props.userFeed}
-              ListHeaderComponent={() => this.renderHeader()}
+              data={userFeed}
+              ListHeaderComponent={this.renderHeader}
               keyExtractor={item => item.id}
               renderItem={({ item }) => <CardActivity {...item} />}
               onEndReached={() => this.loadMore(profile.id)}
-              onEndReachedThreshold={0.5} />
-            </View>
+              onEndReachedThreshold={0.5}
+            />
+          </View>
         </ParallaxScrollView>
         <CustomHeader
           style={styles.customHeader}
