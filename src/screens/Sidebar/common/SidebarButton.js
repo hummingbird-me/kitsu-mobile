@@ -22,9 +22,8 @@ const SidebarButton = ({ disabled = false, loading = false, onPress, title, styl
 const styles = StyleSheet.create({
   wrapper: {
     marginTop: 20,
-    padding: 10,
-    paddingLeft: 25,
-    paddingRight: 25,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
   },
   title: {
     color: colors.white,
