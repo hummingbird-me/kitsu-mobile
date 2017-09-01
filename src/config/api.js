@@ -111,6 +111,7 @@ Kitsu.define(
     },
     linkedAccounts: {
       jsonApi: 'hasMany',
+      type: 'linkedAccounts',
     },
     profileLinks: {
       jsonApi: 'hasMany',
@@ -244,6 +245,49 @@ Kitsu.define(
     },
   },
   { collectionPath: 'blocks' },
+);
+
+Kitsu.define(
+  'linkedAccounts',
+  {
+    externalUserId: '',
+    kind: '',
+    syncTo: '',
+    token: '',
+    createdAt: '',
+    updatedAt: '',
+    shareTo: '',
+    shareFrom: '',
+    disabledReason: '',
+    libraryEntryLogs: '',
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'linked-accounts' },
+);
+
+Kitsu.define(
+  'libraryEntryLogs',
+  {
+    actionPerformed: '',
+    createdAt: '',
+    errorMessage: '',
+    progress: '',
+    rating: '',
+    reconsumeCount: '',
+    reconsuming: '',
+    status: '',
+    syncStatus: '',
+    updatedAt: '',
+    volumesOwned: '',
+    media: {
+      jsonApi: 'hasOne',
+      type: ['anime', 'manga', 'drama'],
+    },
+  },
+  { collectionPath: 'library-entry-logs' },
 );
 
 Kitsu.define(
@@ -854,10 +898,6 @@ Kitsu.define(
   },
   { collectionPath: 'group-members' },
 );
-
-Kitsu.define('sso', {
-  token: '',
-});
 
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;

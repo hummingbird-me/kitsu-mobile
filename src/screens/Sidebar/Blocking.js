@@ -18,7 +18,7 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { SidebarTitle, ItemSeparator } from './common/';
-import styles from './styles';
+import { styles } from './styles';
 
 const RowItem = ({ type, item, onPress }) => {
   const buttonText = type === 'search' ? 'Block' : 'Unblock';
@@ -228,22 +228,6 @@ class Blocking extends React.Component {
     );
   }
 }
-
-const nativebaseStyles = {
-  sectionListItem: {
-    backgroundColor: colors.white,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 0,
-    borderColor: 'white',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0,
-    marginLeft: 0, // NATIVEBASE.
-  },
-};
 
 const mapStateToProps = ({ app, auth, user }) => ({
   accessToken: auth.tokens.access_token,

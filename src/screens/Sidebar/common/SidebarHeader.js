@@ -1,15 +1,17 @@
 import React from 'react';
 import { View, Text, Platform, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { defaultCover } from 'kitsu/constants/app/';
 import PropTypes from 'prop-types';
 
-const SidebarHeader = ({ navigation, headerTitle }) => (
+const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
   <View style={styles.absolute}>
     <ProgressiveImage
       hasOverlay
       style={styles.header}
-      source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
+      source={{ uri: (coverImage && coverImage.large) || defaultCover }}
     >
       <View
         style={{
@@ -76,4 +78,9 @@ const styles = {
     height: 77 + Platform.select({ ios: 0, android: 4 }),
   },
 };
-export default SidebarHeader;
+
+const mapStateToProps = ({ user }) => ({
+  coverImage: user.currentUser.coverImage,
+});
+
+export default connect(mapStateToProps, {})(SidebarHeader);
