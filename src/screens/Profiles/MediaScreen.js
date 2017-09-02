@@ -32,9 +32,6 @@ const { width } = Dimensions.get('window');
 
 class MediaScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
-    ),
     header: null,
     headerStyle: {
       position: 'absolute',

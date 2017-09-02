@@ -42,9 +42,6 @@ class SearchResults extends Component {
         <AweIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
       </Button>
     ),
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-search" android="md-search" style={{ fontSize: 24, color: tintColor }} />
-    ),
   });
 
   constructor(props) {

@@ -26,9 +26,6 @@ class NetworkScreen extends Component {
         <Icon name="arrow-back" style={{ color: 'white' }} />
       </Button>
     ),
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
-    ),
   });
 
   constructor(props) {

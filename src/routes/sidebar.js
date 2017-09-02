@@ -73,8 +73,9 @@ const SidebarStack = StackNavigator(
           headerTitle={getScreenDetails(scene).options.title}
         />
       ),
+      // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <Image source={sidebar} style={{ tintColor, width: 20, height: 21 }} />
+        <Image source={sidebar} style={{ tintColor, width: 21, height: 21 }} />
       ),
     }),
   },

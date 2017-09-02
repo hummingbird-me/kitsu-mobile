@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { Container, Icon } from 'native-base';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
@@ -85,9 +84,6 @@ class SearchScreen extends Component {
       shadowOpacity: 0,
       height: 0,
     },
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-search" android="md-search" style={{ fontSize: 24, color: tintColor }} />
-    ),
   };
 
   state = {
@@ -193,7 +189,7 @@ class SearchScreen extends Component {
 
   render() {
     return (
-      <Container style={styles.container}>
+      <View style={styles.container}>
         <TabViewAnimated
           style={{ flex: 1 }}
           navigationState={this.state}
@@ -201,7 +197,7 @@ class SearchScreen extends Component {
           renderHeader={this.renderHeader}
           onIndexChange={this.handleIndexChange}
         />
-      </Container>
+      </View>
     );
   }
 }

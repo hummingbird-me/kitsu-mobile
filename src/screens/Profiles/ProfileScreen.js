@@ -7,10 +7,10 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
-  InteractionManager
+  InteractionManager,
+  ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Spinner } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
@@ -33,7 +33,7 @@ import {
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
-const Loader = <Spinner size="small" color="grey" />;
+const Loader = <ActivityIndicator size="small" color="grey" />;
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -495,7 +495,7 @@ class ProfileScreen extends Component {
     } = this.props;
 
     return (
-      <Container style={styles.container}>
+      <View style={styles.container}>
         <ParallaxScrollView
           backgroundColor='#fff0'
           contentBackgroundColor='#fff0'
@@ -544,7 +544,7 @@ class ProfileScreen extends Component {
           headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
           leftText={profile.name}
         />
-      </Container>
+      </View>
     );
   }
 }

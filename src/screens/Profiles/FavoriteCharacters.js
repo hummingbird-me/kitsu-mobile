@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Dimensions, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { Icon, Button, Container } from 'native-base';
+import { Icon, Button } from 'native-base';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
@@ -16,9 +16,6 @@ class FavoriteCharacter extends Component {
         <Icon name="arrow-back" style={{ color: 'white' }} />
       </Button>
     ),
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
-    ),
   });
 
   constructor(props) {
@@ -30,7 +27,6 @@ class FavoriteCharacter extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.navigation);
     const { mediaId } = this.props.navigation.state.params;
     if (mediaId) {
       this.props.fetchMediaCastings(mediaId);
@@ -120,11 +116,11 @@ class FavoriteCharacter extends Component {
         ...this.props.characters.slice(2),
       ]
       : [];
-    console.log(data);
+    // console.log(data);
     return (
-      <Container>
+      <View>
         {this.renderTab(data)}
-      </Container>
+      </View>
     );
   }
 }
