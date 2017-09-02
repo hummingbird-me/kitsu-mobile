@@ -9,7 +9,6 @@ import React from 'react';
 import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';

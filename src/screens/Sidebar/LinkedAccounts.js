@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
@@ -51,20 +50,17 @@ class LinkedAccounts extends React.Component {
   render() {
     const { navigation } = this.props;
     return (
-      // handle marginTop: 77
-      (
-        <View style={styles.containerStyle}>
-          <SidebarTitle title={'Social Accounts'} />
-          <FlatList
-            data={[{ logoURL: 'https://www.famouslogos.us/images/facebook-logo.jpg' }]}
-            keyExtractor={(item, index) => index}
-            renderItem={this.renderItem}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            removeClippedSubviews={false}
-            scrollEnabled={false}
-          />
-        </View>
-      )
+      <View style={styles.containerStyle}>
+        <SidebarTitle title={'Social Accounts'} />
+        <FlatList
+          data={[{ logoURL: 'https://www.famouslogos.us/images/facebook-logo.jpg' }]}
+          keyExtractor={(item, index) => index}
+          renderItem={this.renderItem}
+          ItemSeparatorComponent={() => <ItemSeparator />}
+          removeClippedSubviews={false}
+          scrollEnabled={false}
+        />
+      </View>
     );
   }
 }

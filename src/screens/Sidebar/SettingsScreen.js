@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { blocking, library, privacy, settings, linked } from 'kitsu/assets/img/sidebar_icons/';
 import { SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
 import { styles } from './styles';

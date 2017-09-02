@@ -72,9 +72,9 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
   };
   return (
     <FlatList
+      data={hits}
       keyboardShouldPersistTaps={'handled'}
       removeClippedSubviews={false}
-      data={hits}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
       initialNumToRender={10}
