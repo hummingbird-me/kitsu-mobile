@@ -16,27 +16,22 @@ class NotificationsScreen extends Component {
       height: 64,
     },
   });
-  constructor(props) {
-    super(props);
-    this.state = {
-      offset: 0,
-    };
-    this.renderItem = this.renderItem.bind(this);
-    this.renderText = this.renderText.bind(this);
-    this.loadMore = this.loadMore.bind(this);
+
+  state = {
+    offset: 0,
   }
 
   componentDidMount() {
     this.props.getNotifications();
   }
 
-  loadMore() {
+  loadMore = () => {
     // const offset = this.state.offset + 30;
     // this.props.getNotifications(offset);
     // this.setState({ offset });
   }
 
-  renderText(activity) {
+  renderText = (activity) => {
     const { currentUser: { id } } = this.props;
     const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
     let text = '';
@@ -75,7 +70,7 @@ class NotificationsScreen extends Component {
     }
   }
 
-  renderItem({ item }) {
+  renderItem = ({ item }) => {
     const activity = item.activities[0];
     let others = null;
     if (item.activities.length > 1) {
@@ -124,7 +119,7 @@ class NotificationsScreen extends Component {
   render() {
     const { notifications, loadingNotifications } = this.props;
     return (
-      <View style={{ backgroundColor: '#FAFAFA' }}>
+      <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
         <FlatList
           removeClippedSubviews={false}
           data={notifications}

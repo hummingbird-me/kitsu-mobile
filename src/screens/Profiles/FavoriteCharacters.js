@@ -115,7 +115,7 @@ class FavoriteCharacter extends Component {
       : [];
     // console.log(data);
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         {this.renderTab(data)}
       </View>
     );

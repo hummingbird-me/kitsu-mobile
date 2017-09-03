@@ -89,7 +89,7 @@ class FavoriteMedia extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
           <View tabLabel="Anime" style={{ padding: 5, paddingTop: 0, backgroundColor: 'white' }}>
             {this.renderTab('anime')}
