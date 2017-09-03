@@ -7,7 +7,6 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
-  InteractionManager,
   ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -42,14 +41,12 @@ class ProfileScreen extends Component {
 
   componentDidMount() {
     const { userId } = this.props;
-    InteractionManager.runAfterInteractions(() => {
-      this.props.fetchProfile(userId);
-      this.props.fetchUserFeed(userId, 12);
-      this.props.fetchProfileFavorites(userId, 'character');
-      this.props.fetchProfileFavorites(userId, 'manga');
-      this.props.fetchProfileFavorites(userId, 'anime');
-      this.props.getUserFeed(userId);
-    });
+    this.props.fetchProfile(userId);
+    this.props.fetchUserFeed(userId, 12);
+    this.props.fetchProfileFavorites(userId, 'character');
+    this.props.fetchProfileFavorites(userId, 'manga');
+    this.props.fetchProfileFavorites(userId, 'anime');
+    this.props.getUserFeed(userId);
   }
 
   componentWillReceiveProps(nextProps) {
