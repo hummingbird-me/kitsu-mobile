@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   playerCreated: false,
 };
 
-export default (state = INITIAL_STATE, action) => {
+export const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.FETCH_CURRENT_USER:
       return {

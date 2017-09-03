@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { Container } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import notificationIcon from 'kitsu/assets/img/tabbar_icons/notification.png';
 import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 
@@ -17,62 +15,23 @@ class NotificationsScreen extends Component {
       shadowOpacity: 0,
       height: 64,
     },
-    tabBarIcon: ({ tintColor }) => (
-      <View>
-        {screenProps &&
-          screenProps.badge > 0 &&
-          <View
-            style={{
-              position: 'absolute',
-              top: -7,
-              left: 12,
-              backgroundColor: colors.darkPurple,
-              padding: 3,
-              borderRadius: 16,
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 2,
-              minWidth: 16,
-            }}
-          >
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 10,
-                minWidth: 14,
-                fontWeight: '700',
-                textAlign: 'center',
-                fontFamily: 'OpenSans',
-              }}
-            >
-              {screenProps.badge}
-            </Text>
-          </View>}
-        <Image source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
-      </View>
-    ),
   });
-  constructor(props) {
-    super(props);
-    this.state = {
-      offset: 0,
-    };
-    this.renderItem = this.renderItem.bind(this);
-    this.renderText = this.renderText.bind(this);
-    this.loadMore = this.loadMore.bind(this);
+
+  state = {
+    offset: 0,
   }
 
   componentDidMount() {
     this.props.getNotifications();
   }
 
-  loadMore() {
+  loadMore = () => {
     // const offset = this.state.offset + 30;
     // this.props.getNotifications(offset);
     // this.setState({ offset });
   }
 
-  renderText(activity) {
+  renderText = (activity) => {
     const { currentUser: { id } } = this.props;
     const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
     let text = '';
@@ -111,7 +70,7 @@ class NotificationsScreen extends Component {
     }
   }
 
-  renderItem({ item }) {
+  renderItem = ({ item }) => {
     const activity = item.activities[0];
     let others = null;
     if (item.activities.length > 1) {
@@ -160,7 +119,7 @@ class NotificationsScreen extends Component {
   render() {
     const { notifications, loadingNotifications } = this.props;
     return (
-      <Container style={{ backgroundColor: '#FAFAFA' }}>
+      <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
         <FlatList
           removeClippedSubviews={false}
           data={notifications}
@@ -172,7 +131,7 @@ class NotificationsScreen extends Component {
           refreshing={loadingNotifications}
           onRefresh={() => this.props.getNotifications()}
         />
-      </Container>
+      </View>
     );
   }
 }
@@ -207,10 +166,6 @@ const styles = {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#EEEEEE',
     backgroundColor: '#FAFAFA',
-  },
-  tabBarIcon: {
-    width: 20,
-    height: 21,
   },
 };
 

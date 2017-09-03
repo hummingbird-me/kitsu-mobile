@@ -14,23 +14,17 @@ class SearchCategory extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.title || navigation.state.params.label,
     headerLeft: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
+      <Button transparent color="white" onPress={navigation.goBack}>
         <Icon name="arrow-back" style={{ color: 'white' }} />
       </Button>
     ),
     tabBarVisible: false,
   });
-  constructor(props) {
-    super(props);
-    this.renderFlatList = this.renderFlatList.bind(this);
-    this.renderGenreList = this.renderGenreList.bind(this);
-    this.renderYears = this.renderYears.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.state = {
-      show: false,
-      selected: {},
-    };
-  }
+
+  state = {
+    show: false,
+    selected: {},
+  };
 
   componentWillMount() {
     this.props.getCategories();
@@ -38,7 +32,7 @@ class SearchCategory extends Component {
     if (categories) this.setState({ selected: categories });
   }
 
-  onSubmit(genresArr) {
+  onSubmit = (genresArr) => {
     const { navigation } = this.props;
     const { active } = navigation.state.params;
     const selected = { ...this.state.selected };
@@ -53,7 +47,7 @@ class SearchCategory extends Component {
     }
   }
 
-  renderFlatList(data) {
+  renderFlatList = (data) => {
     const { navigation } = this.props;
     const { active } = navigation.state.params;
     return (
@@ -84,7 +78,7 @@ class SearchCategory extends Component {
     );
   }
 
-  renderGenreList(id, level) {
+  renderGenreList = (id, level) => {
     const { categories, getCategories } = this.props;
     const genresArray = _.orderBy(_.values(categories[id]), ['title'], ['asc']).map(item => ({
       key: item.id,
@@ -165,7 +159,7 @@ class SearchCategory extends Component {
     );
   }
 
-  renderYears() {
+  renderYears = () => {
     const today = new Date();
     const min = 1900;
     const step = 10;
@@ -183,7 +177,7 @@ class SearchCategory extends Component {
     return this.renderFlatList(years);
   }
 
-  renderFooter() {
+  renderFooter = () => {
     const { navigation } = this.props;
     const genresArr = _.values(this.state.selected).filter(a => a);
     const btnText = genresArr.length > 0
@@ -214,7 +208,7 @@ class SearchCategory extends Component {
             borderRadius: 3,
             justifyContent: 'center',
           }}
-          onPress={() => navigation.goBack()}
+          onPress={navigation.goBack}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
             Back
@@ -237,6 +231,7 @@ class SearchCategory extends Component {
       </Footer>
     );
   }
+
   render() {
     const { key } = this.props.navigation.state.params;
     return (

@@ -107,6 +107,12 @@ class ImportLibrary extends React.Component {
     }
   };
 
+  renderItemSeparatorComponent() {
+    return (
+      <ItemSeparator />
+    );
+  }
+
   render() {
     const { imports } = this.state;
     return (
@@ -137,7 +143,7 @@ class ImportLibrary extends React.Component {
                 details={item.details}
               />
             )}
-            ItemSeparatorComponent={() => <ItemSeparator />}
+            ItemSeparatorComponent={this.renderItemSeparatorComponent}
             removeClippedSubviews={false}
           />
         </View>
@@ -153,30 +159,14 @@ class ImportLibrary extends React.Component {
               status={item.status}
             />
           )}
-          ItemSeparatorComponent={() => <ItemSeparator />}
+          ItemSeparatorComponent={this.renderItemSeparatorComponent}
           removeClippedSubviews={false}
-          ListEmptyComponent={<ActivityIndicator color={'white'} />}
+          // ListEmptyComponent={<ActivityIndicator color={'white'} />}
         />
       </View>
     );
   }
 }
-
-const nativebaseStyles = {
-  sectionListItem: {
-    backgroundColor: colors.white,
-    paddingHorizontal: 8,
-    paddingVertical: 10,
-    borderRadius: 0,
-    borderColor: 'white',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0,
-    marginLeft: 0, // NATIVEBASE.
-  },
-};
 
 const mapStateToProps = ({ auth, user }) => ({
   accessToken: auth.tokens.access_token,

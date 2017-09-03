@@ -15,26 +15,18 @@ const list = [
 ];
 
 class TopsList extends Component {
-  constructor(props) {
-    super(props);
-
-    this.renderList = this.renderList.bind(this);
-    this.renderGallery = this.renderGallery.bind(this);
-    this.init = this.init.bind(this);
-  }
-
   componentDidMount() {
     this.init(this.props.active);
   }
 
-  init(type) {
+  init = (type) => {
     this.props.getDefaults('topAiring', type);
     this.props.getDefaults('popular', type);
     this.props.getDefaults('highest', type);
     this.props.getDefaults('topUpcoming', type);
   }
 
-  renderList() {
+  renderList = () => {
     const { active } = this.props;
     return (
       <FlatList
@@ -78,7 +70,7 @@ class TopsList extends Component {
     );
   }
 
-  renderGallery(array, title, type) {
+  renderGallery = (array, title, type) => {
     const { active } = this.props;
     const data = array.length > 0
       ? array

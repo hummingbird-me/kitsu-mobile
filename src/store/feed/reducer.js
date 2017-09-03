@@ -10,7 +10,7 @@ const INITIAL_STATE = {
   loadingMediaFeed: false,
 };
 
-export default (state = INITIAL_STATE, action) => {
+export const feedReducer = (state = INITIAL_STATE, action) => {
   let notifications = [];
   let feed = [];
   let filtered = [];

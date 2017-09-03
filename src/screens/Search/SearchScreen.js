@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { Container, Icon } from 'native-base';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
@@ -13,7 +12,9 @@ import { followUser } from 'kitsu/store/user/actions';
 import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from './Lists';
 
-const styles = {
+const TABBAR_HEIGHT = 40;
+
+const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.listBackPurple,
     flex: 1,
@@ -25,6 +26,9 @@ const styles = {
   scrollView: {
     backgroundColor: colors.listBackPurple,
   },
+  scrollViewContentContainer: {
+    paddingBottom: TABBAR_HEIGHT,
+  },
   searchBox: {
     marginHorizontal: 10,
   },
@@ -34,7 +38,7 @@ const styles = {
     borderBottomWidth: 0,
     borderRightWidth: 0,
     borderLeftWidth: 0,
-    height: 40,
+    height: TABBAR_HEIGHT,
     paddingRight: 5,
     paddingLeft: 5,
     shadowColor: 'black',
@@ -68,7 +72,7 @@ const styles = {
     opacity: 0.6,
     fontSize: 12,
   },
-};
+});
 
 const Hits = connectInfiniteHits(ResultsList);
 
@@ -80,9 +84,6 @@ class SearchScreen extends Component {
       shadowOpacity: 0,
       height: 0,
     },
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-search" android="md-search" style={{ fontSize: 24, color: tintColor }} />
-    ),
   };
 
   state = {
@@ -139,14 +140,14 @@ class SearchScreen extends Component {
       case 'users': {
         const UserHits = connectInfiniteHits(UsersList);
         return (
-          <ScrollView style={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollViewContentContainer} style={styles.scrollView}>
             <UserHits onFollow={followUser} onData={captureUsersData} />
           </ScrollView>
         );
       }
       default: {
         return (
-          <ScrollView style={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollViewContentContainer} style={styles.scrollView}>
             {activeQuery ? <Hits /> : <TopsList active={route.key} mounted navigation={navigation} />}
           </ScrollView>
         );
@@ -188,7 +189,7 @@ class SearchScreen extends Component {
 
   render() {
     return (
-      <Container style={styles.container}>
+      <View style={styles.container}>
         <TabViewAnimated
           style={{ flex: 1 }}
           navigationState={this.state}
@@ -196,7 +197,7 @@ class SearchScreen extends Component {
           renderHeader={this.renderHeader}
           onIndexChange={this.handleIndexChange}
         />
-      </Container>
+      </View>
     );
   }
 }
