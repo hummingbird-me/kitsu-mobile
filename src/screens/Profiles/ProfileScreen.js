@@ -36,13 +36,8 @@ import { getUserFeed } from 'kitsu/store/feed/actions';
 const Loader = <ActivityIndicator size="small" color="grey" />;
 
 class ProfileScreen extends Component {
-  constructor(props) {
-    super(props);
-
-    this.renderHeader = this.renderHeader.bind(this);
-    this.renderInfoBlock = this.renderInfoBlock.bind(this);
-
-    this.state = { page: 0 };
+  state = {
+    page: 0,
   }
 
   componentDidMount() {
@@ -166,14 +161,14 @@ class ProfileScreen extends Component {
     );
   }
 
-  wrapTouchable(item, wrap, navigate) {
+  wrapTouchable = (item, wrap, navigate) => {
     if (wrap) {
       return <TouchableOpacity key="6" onPress={() => navigate()}>{item}</TouchableOpacity>;
     }
     return item;
   }
 
-  renderInfoBlock() {
+  renderInfoBlock = () => {
     const { profile, loading, navigation } = this.props;
     const infos = [];
     _.forOwn(getInfo(profile), (item, key) => {
@@ -244,7 +239,7 @@ class ProfileScreen extends Component {
     return result;
   }
 
-  renderHeader() {
+  renderHeader = () => {
     const {
       profile,
       navigation,
@@ -586,6 +581,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const styles = {
   container: {
+    flex: 1,
     backgroundColor: colors.listBackPurple,
     justifyContent: 'center',
     alignItems: 'center',

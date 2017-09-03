@@ -18,12 +18,9 @@ class FavoriteCharacter extends Component {
     ),
   });
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      index: 0,
-    };
+  state = {
+    loading: false,
+    index: 0,
   }
 
   componentDidMount() {

@@ -21,23 +21,15 @@ class FilterSub extends Component {
     gesturesEnabled: false,
     tabBarVisible: false,
   });
-  constructor(props) {
-    super(props);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.renderSort = this.renderSort.bind(this);
-    this.renderItem = this.renderItem.bind(this);
-    this.renderLength = this.renderLength.bind(this);
-    this.renderFooter = this.renderFooter.bind(this);
-    this.renderSectionHeader = this.renderSectionHeader.bind(this);
-    this.state = {
-      show: false,
-      selected: {},
-      start: 0,
-      end: 100,
-      startV: 0,
-      endV: 100,
-    };
-  }
+
+  state = {
+    show: false,
+    selected: {},
+    start: 0,
+    end: 100,
+    startV: 0,
+    endV: 100,
+  };
 
   componentWillMount() {
     const { navigation: { state: { params } } } = this.props;
@@ -52,28 +44,26 @@ class FilterSub extends Component {
     }
   }
 
-  onSubmit(item) {
+  onSubmit = (item) => {
     const { navigation } = this.props;
     navigation.state.params.onPressFilterButton(item);
   }
 
-  renderItem({ item }) {
-    return (
-      <TouchableOpacity
-        onPress={() => this.onSubmit({ label: item.section, ...item })}
-        button
-        style={styles.parentItem}
-      >
-        <Left>
-          <Text style={styles.outerText}>
-            {item.title}
-          </Text>
-        </Left>
-      </TouchableOpacity>
-    );
-  }
+  renderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => this.onSubmit({ label: item.section, ...item })}
+      button
+      style={styles.parentItem}
+    >
+      <Left>
+        <Text style={styles.outerText}>
+          {item.title}
+        </Text>
+      </Left>
+    </TouchableOpacity>
+  );
 
-  renderLength() {
+  renderLength = () => {
     const { start, end, startV, endV } = this.state;
     return (
       <View style={{ padding: 20, paddingTop: 40, flexDirection: 'column' }}>
@@ -114,104 +104,100 @@ class FilterSub extends Component {
     );
   }
 
-  renderSort() {
-    return (
-      <View style={{ padding: 20, paddingTop: 0 }}>
-        {/* this.renderItem({ item: { title: 'Title', key: 'title' } })*/}
-        <SectionList
-          renderSectionHeader={this.renderSectionHeader}
-          renderItem={this.renderItem}
-          sections={[
-            {
-              data: [
-                {
-                  key: 'highest',
-                  title: 'Highest first',
-                  section: 'Average Rating',
-                  type: '-averageRating',
-                },
-                {
-                  key: 'lowest',
-                  title: 'Lowest first',
-                  section: 'Average Rating',
-                  type: 'averageRating',
-                },
-              ],
-              title: 'Average Rating',
-              key: 'a1',
-            },
-            {
-              data: [
-                {
-                  key: 'newest',
-                  title: 'Newest first',
-                  section: 'Release Date',
-                  type: '-startDate',
-                },
-                {
-                  key: 'earliest',
-                  title: 'Earliest first',
-                  section: 'Release Date',
-                  type: 'startDate',
-                },
-              ],
-              title: 'Release Date',
-              key: 'a2',
-            },
-            {
-              data: [
-                {
-                  key: 'shortest',
-                  title: 'Shortest first',
-                  section: 'Duration',
-                  type: 'episodeLength',
-                },
-                {
-                  key: 'longest',
-                  title: 'Longest first',
-                  section: 'Duration',
-                  type: '-episodeLength',
-                },
-              ],
-              title: 'Duration',
-              key: 'a3',
-            },
-            {
-              data: [
-                {
-                  key: 'most',
-                  title: 'Most popular first',
-                  section: 'Popularity',
-                  type: '-userCount',
-                },
-                {
-                  key: 'least',
-                  title: 'Least popular first',
-                  section: 'Popularity',
-                  type: 'userCount',
-                },
-                // { key: 'week', title: 'This week' },
-                // { key: 'month', title: 'This month' },
-                // { key: 'year', title: 'This year' },
-              ],
-              title: 'Popularity',
-              key: 'a4',
-            },
-          ]}
-        />
-      </View>
-    );
-  }
+  renderSort = () => (
+    <View style={{ padding: 20, paddingTop: 0 }}>
+      {/* this.renderItem({ item: { title: 'Title', key: 'title' } })*/}
+      <SectionList
+        renderSectionHeader={this.renderSectionHeader}
+        renderItem={this.renderItem}
+        sections={[
+          {
+            data: [
+              {
+                key: 'highest',
+                title: 'Highest first',
+                section: 'Average Rating',
+                type: '-averageRating',
+              },
+              {
+                key: 'lowest',
+                title: 'Lowest first',
+                section: 'Average Rating',
+                type: 'averageRating',
+              },
+            ],
+            title: 'Average Rating',
+            key: 'a1',
+          },
+          {
+            data: [
+              {
+                key: 'newest',
+                title: 'Newest first',
+                section: 'Release Date',
+                type: '-startDate',
+              },
+              {
+                key: 'earliest',
+                title: 'Earliest first',
+                section: 'Release Date',
+                type: 'startDate',
+              },
+            ],
+            title: 'Release Date',
+            key: 'a2',
+          },
+          {
+            data: [
+              {
+                key: 'shortest',
+                title: 'Shortest first',
+                section: 'Duration',
+                type: 'episodeLength',
+              },
+              {
+                key: 'longest',
+                title: 'Longest first',
+                section: 'Duration',
+                type: '-episodeLength',
+              },
+            ],
+            title: 'Duration',
+            key: 'a3',
+          },
+          {
+            data: [
+              {
+                key: 'most',
+                title: 'Most popular first',
+                section: 'Popularity',
+                type: '-userCount',
+              },
+              {
+                key: 'least',
+                title: 'Least popular first',
+                section: 'Popularity',
+                type: 'userCount',
+              },
+              // { key: 'week', title: 'This week' },
+              // { key: 'month', title: 'This month' },
+              // { key: 'year', title: 'This year' },
+            ],
+            title: 'Popularity',
+            key: 'a4',
+          },
+        ]}
+      />
+    </View>
+  );
 
-  renderSectionHeader({ section }) {
-    return (
-      <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 12 }}>
-        {section.title.toUpperCase()}
-      </Text>
-    );
-  }
+  renderSectionHeader = ({ section }) => (
+    <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 12 }}>
+      {section.title.toUpperCase()}
+    </Text>
+  );
 
-  renderFooter() {
+  renderFooter = () => {
     const { navigation } = this.props;
     const btnText = 'Set';
     const { start, end } = this.state;

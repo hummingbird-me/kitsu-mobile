@@ -59,17 +59,11 @@ class MediaScreen extends Component {
     ),
   });
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      expanded: false,
-    };
-    this.animatedValue = new Animated.Value(0);
-    this.renderEpisodes = this.renderEpisodes.bind(this);
-    this.renderCharacters = this.renderCharacters.bind(this);
-    this.renderHeader = this.renderHeader.bind(this);
-    this.renderReactions = this.renderReactions.bind(this);
+  state = {
+    expanded: false,
   }
+
+  animatedValue = new Animated.Value(0);
 
   componentDidMount() {
     const { state } = this.props.navigation;
@@ -90,7 +84,7 @@ class MediaScreen extends Component {
     }
   }
 
-  renderScrollableRow(items) {
+  renderScrollableRow = (items) => {
     const data = items.map((e) => {
       let char = {
         image: defaultAvatar,
@@ -142,7 +136,7 @@ class MediaScreen extends Component {
     );
   }
 
-  renderImageRow(data, height = 120, width = 85, type = 'media', hasCaption = false) {
+  renderImageRow = (data, height = 120, width = 85, type = 'media', hasCaption = false) => {
     return (
       <ScrollView horizontal style={{ flexDirection: 'row', marginBottom: 5 }}>
         {data.map((item, index) => (
@@ -182,7 +176,7 @@ class MediaScreen extends Component {
     );
   }
 
-  renderEpisodes() {
+  renderEpisodes = () => {
     const { media, navigation } = this.props;
     const { type } = navigation.state.params;
     let series = type === 'anime' ? media.episodes || [] : media.chapters || [];
@@ -280,7 +274,7 @@ class MediaScreen extends Component {
     );
   }
 
-  renderRelatedMedia() {
+  renderRelatedMedia = () => {
     let more = [0, 1, 2, 3];
     const { mediaRelationships } = this.props.media;
     if (mediaRelationships && mediaRelationships.length === 0) return;
@@ -303,7 +297,7 @@ class MediaScreen extends Component {
     );
   }
 
-  renderReactions() {
+  renderReactions = () => {
     const { reactions } = this.props;
     console.log(JSON.stringify(reactions));
     return (
@@ -337,7 +331,7 @@ class MediaScreen extends Component {
     );
   }
 
-  renderCharacters() {
+  renderCharacters = () => {
     const { media } = this.props;
     const characters = this.props.castings.map(item => ({
       image: item.character.image ? item.character.image.original : defaultAvatar,
@@ -379,7 +373,7 @@ class MediaScreen extends Component {
     );
   }
 
-  setTextHeightStyle = function() {
+  setTextHeightStyle = () => {
     if(this.state.expanded){
       return { paddingLeft: 14, paddingRight: 14, paddingTop: 0, flex: 1, paddingBottom: 14, overflow: 'hidden', zIndex: 2 };
     }
@@ -387,7 +381,7 @@ class MediaScreen extends Component {
       return { paddingLeft: 14, paddingRight: 14, paddingTop: 0, height: 70.67, overflow: 'hidden', zIndex: 2 };
     }
   }
-  renderHeader() {
+  renderHeader = () => {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
     console.log(reactions);
     var items = new Array();
@@ -593,11 +587,11 @@ class MediaScreen extends Component {
     );
   }
 
-  refresh(mediaId, type) {
+  refresh = (mediaId, type) => {
     this.props.getMediaFeed(mediaId, type);
   }
 
-  loadMore(mediaId, type) {
+  loadMore = (mediaId, type) => {
     const { loadingMediaFeed, mediaFeed } = this.props;
 
     if (loadingMediaFeed) return;

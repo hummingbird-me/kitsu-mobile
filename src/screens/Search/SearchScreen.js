@@ -14,7 +14,7 @@ import { ResultsList, TopsList } from './Lists';
 
 const TABBAR_HEIGHT = 40;
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.listBackPurple,
     flex: 1,
@@ -72,7 +72,7 @@ const styles = {
     opacity: 0.6,
     fontSize: 12,
   },
-};
+});
 
 const Hits = connectInfiniteHits(ResultsList);
 

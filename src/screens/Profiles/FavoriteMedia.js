@@ -26,17 +26,13 @@ class FavoriteMedia extends Component {
     };
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      index: 0,
-      mangaloading: false,
-      animeloading: false,
-    };
-    this.loadMore = this.loadMore.bind(this);
+  state = {
+    index: 0,
+    mangaloading: false,
+    animeloading: false,
   }
 
-  loadMore(type) {
+  loadMore = (type) => {
     const { query, active, index } = this.state;
     const { loading, fetchProfileFavorites, userId } = this.props;
     if (!this.state[`${type}loading`]) {

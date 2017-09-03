@@ -44,15 +44,9 @@ class SearchResults extends Component {
     ),
   });
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      index: 0,
-    };
-    this.loadMore = this.loadMore.bind(this);
-    this.refresh = this.refresh.bind(this);
-    this.getData = this.getData.bind(this);
+  state = {
+    loading: false,
+    index: 0,
   }
 
   componentDidMount() {
@@ -68,17 +62,17 @@ class SearchResults extends Component {
     }
   }
 
-  getData(index = 0, newParams) {
+  getData = (index = 0, newParams) => {
     const { params } = newParams || this.props.navigation.state;
     this.props.search(params.filter, params.sort, index, params.default, params.active);
   }
 
-  refresh() {
+  refresh = () => {
     this.setState({ loading: true, index: 0 });
     this.getData();
   }
 
-  loadMore() {
+  loadMore = () => {
     if (!this.props.loading) {
       const index = this.state.index + 1;
       this.getData(index);

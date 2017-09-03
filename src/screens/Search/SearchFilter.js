@@ -13,14 +13,10 @@ class SearchFilter extends Component {
     title: 'Filter',
     tabBarVisible: false,
   });
-  constructor(props) {
-    super(props);
-    this.state = { ...defaultState };
-    this.renderFooter = this.renderFooter.bind(this);
-    this.renderCustomItem = this.renderCustomItem.bind(this);
-    this.renderItem = this.renderItem.bind(this);
-    this.renderSectionHeader = this.renderSectionHeader.bind(this);
-  }
+
+  state = {
+    ...defaultState,
+  };
 
   componentWillMount() {
     const { data } = this.props.navigation.state.params;
@@ -92,7 +88,7 @@ class SearchFilter extends Component {
     onApply(query, { ...this.state });
   }
 
-  renderFooter() {
+  renderFooter = () => {
     const { navigation } = this.props;
     const btnText = 'Apply Filters';
 
@@ -144,7 +140,7 @@ class SearchFilter extends Component {
     );
   }
 
-  renderItem({ item }) {
+  renderItem = ({ item }) => {
     const { navigation } = this.props;
     const { key } = item;
 
@@ -230,7 +226,7 @@ class SearchFilter extends Component {
     );
   }
 
-  renderCustomItem(header, param) {
+  renderCustomItem = (header, param) => {
     const { navigation } = this.props;
     return (
       <TouchableOpacity
@@ -264,7 +260,7 @@ class SearchFilter extends Component {
     );
   }
 
-  renderSectionHeader({ section }) {
+  renderSectionHeader = ({ section }) => {
     return (
       <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 32 }}>
         {section.title.toUpperCase()}
