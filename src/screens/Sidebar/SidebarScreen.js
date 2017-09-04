@@ -3,7 +3,6 @@
   - get color code of black text, replace all #444.
   - reorganize styles
   - work on ListEmptyItems after react native upgrade
-  - imageURL replace default avatar with defaultGroupAvatar
 */
 
 import React from 'react';
@@ -14,18 +13,18 @@ import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { defaultAvatar as defaultGroupAvatar } from 'kitsu/constants/app';
+import { defaultAvatar as defaultGroupAvatar, defaultCover } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
-import styles from './styles';
+import { styles } from './styles';
 
-const shortcutsData = [{ title: 'View Library', image: library, target: 'Library' }];
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
-  { title: 'Report Bug', image: bugs, target: '' },
+  { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
   { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
+  { title: 'Database Requests', image: suggest, target: 'DatabaseRequests' },
   { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
 
@@ -89,28 +88,27 @@ class SidebarScreen extends React.Component {
   }
 
   render() {
-    const { navigation, currentUser, groupMemberships } = this.props;
-    const { name, avatar } = currentUser;
+    const { navigation, currentUser, groupMemberships, accessToken } = this.props;
+    const { name, avatar, coverImage } = currentUser;
     const groupsData = groupMemberships || [];
 
     const sectionListData = [
       {
         key: 'shortcuts',
-        data: shortcutsData,
+        data: [{ title: 'View Library', image: library, target: 'UserLibraryScreen' }],
         title: 'Shortcuts',
         renderItem: ({ item }) => (
           <SidebarListItem
             image={item.image}
             title={item.title}
             onPress={() => {
-              navigation.navigate(item.target);
+              navigation.navigate(item.target, { profile: currentUser });
             }}
           />
         ),
         ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
       {
-        // TODO: imageURL replace default avatar with defaultGroupAvatar
         key: 'groups',
         data: groupsData,
         title: 'Groups',
@@ -144,10 +142,24 @@ class SidebarScreen extends React.Component {
             image={item.image}
             title={item.title}
             onPress={() => {
-              if (item.target === 'mailto') {
-                Linking.openURL('mailto:josh@kitsu.io');
-              } else {
-                navigation.navigate(item.target);
+              switch (item.target) {
+                case 'Settings':
+                  navigation.navigate(item.target);
+                  break;
+                case 'ReportBugs':
+                  navigation.navigate(item.target, { title: item.title, type: 'bugReport', token: accessToken });
+                  break;
+                case 'SuggestFeatures':
+                  navigation.navigate(item.target, { title: item.title, type: 'featureRequest', token: accessToken });
+                  break;
+                case 'DatabaseRequests':
+                  navigation.navigate(item.target, { title: item.title, type: 'databaseRequest', token: accessToken });
+                  break;
+                case 'mailto':
+                  Linking.openURL('mailto:josh@kitsu.io');
+                  break;
+                default:
+                  break;
               }
             }}
           />
@@ -160,7 +172,7 @@ class SidebarScreen extends React.Component {
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
-          source={{ uri: 'https://fubukinofansub.files.wordpress.com/2011/12/cover-03-04.jpg' }}
+          source={{ uri: (coverImage && coverImage.large) || defaultCover }}
         >
           <View
             style={{
@@ -217,14 +229,11 @@ class SidebarScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user, groups }) => {
-  const { currentUser } = user;
-  const { groupMemberships } = groups;
-  return {
-    currentUser,
-    groupMemberships,
-  };
-};
+const mapStateToProps = ({ auth, user, groups }) => ({
+  accessToken: auth.tokens.access_token,
+  currentUser: user.currentUser,
+  groupMemberships: groups.groupMemberships,
+});
 
 SidebarScreen.propTypes = {};
 

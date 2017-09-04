@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { View, Dimensions, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { Icon, Button, Container } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 
@@ -25,23 +23,16 @@ class FavoriteMedia extends Component {
           onClickBack={props.navigation.goBack}
         />
       ),
-      tabBarIcon: ({ tintColor }) => (
-        <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
-      ),
     };
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      index: 0,
-      mangaloading: false,
-      animeloading: false,
-    };
-    this.loadMore = this.loadMore.bind(this);
+  state = {
+    index: 0,
+    mangaloading: false,
+    animeloading: false,
   }
 
-  loadMore(type) {
+  loadMore = (type) => {
     const { query, active, index } = this.state;
     const { loading, fetchProfileFavorites, userId } = this.props;
     if (!this.state[`${type}loading`]) {
@@ -98,7 +89,7 @@ class FavoriteMedia extends Component {
 
   render() {
     return (
-      <Container>
+      <View style={{ flex: 1 }}>
         <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
           <View tabLabel="Anime" style={{ padding: 5, paddingTop: 0, backgroundColor: 'white' }}>
             {this.renderTab('anime')}
@@ -107,7 +98,7 @@ class FavoriteMedia extends Component {
             {this.renderTab('manga')}
           </View>
         </ScrollableTabView>
-      </Container>
+      </View>
     );
   }
 }

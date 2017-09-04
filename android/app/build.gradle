@@ -117,6 +117,10 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [
+            onesignal_app_id: "01f6e47a-6809-4118-a796-949952e9c209",
+            onesignal_google_project_number: "427013649345"
+        ]
     }
     splits {
         abi {
@@ -159,6 +163,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-onesignal')
     compile project(':react-native-youtube')
     compile project(':react-native-linear-gradient')
     compile project(':lottie-react-native')

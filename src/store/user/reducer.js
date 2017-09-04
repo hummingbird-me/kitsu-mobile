@@ -8,9 +8,11 @@ const INITIAL_STATE = {
   signingUp: false,
   signupError: {},
   ifollow: {},
+  playerId: '',
+  playerCreated: false,
 };
 
-export default (state = INITIAL_STATE, action) => {
+export const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.FETCH_CURRENT_USER:
       return {
@@ -95,6 +97,16 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         error: '', //TODO: handle the error ~ Toast?
+      };
+    case types.ONESIGNAL_ID_RECEIVED:
+      return {
+        ...state,
+        playerId: action.payload,
+      };
+    case types.CREATE_PLAYER_SUCCESS:
+      return {
+        ...state,
+        playerCreated: true,
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;

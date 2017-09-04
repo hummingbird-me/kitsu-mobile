@@ -8,14 +8,14 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
-import { SidebarTitle, ItemSeparator } from './common/';
-import styles from './styles';
+import { SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { styles } from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
     <View style={{ justifyContent: 'center' }}>
-      <Image source={image} style={{ width: 100, height: 24, resizeMode: 'contain' }} />
-      <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
+      <Image source={image} style={styles.itemLogo} />
+      <Text style={styles.hintText}>
         {details}
       </Text>
     </View>
@@ -107,6 +107,12 @@ class ImportLibrary extends React.Component {
     }
   };
 
+  renderItemSeparatorComponent() {
+    return (
+      <ItemSeparator />
+    );
+  }
+
   render() {
     const { imports } = this.state;
     return (
@@ -137,7 +143,7 @@ class ImportLibrary extends React.Component {
                 details={item.details}
               />
             )}
-            ItemSeparatorComponent={() => <ItemSeparator />}
+            ItemSeparatorComponent={this.renderItemSeparatorComponent}
             removeClippedSubviews={false}
           />
         </View>
@@ -153,30 +159,14 @@ class ImportLibrary extends React.Component {
               status={item.status}
             />
           )}
-          ItemSeparatorComponent={() => <ItemSeparator />}
+          ItemSeparatorComponent={this.renderItemSeparatorComponent}
           removeClippedSubviews={false}
-          ListEmptyComponent={<ActivityIndicator color={'white'} />}
+          // ListEmptyComponent={<ActivityIndicator color={'white'} />}
         />
       </View>
     );
   }
 }
-
-const nativebaseStyles = {
-  sectionListItem: {
-    backgroundColor: colors.white,
-    paddingHorizontal: 8,
-    paddingVertical: 10,
-    borderRadius: 0,
-    borderColor: 'white',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0,
-    marginLeft: 0, // NATIVEBASE.
-  },
-};
 
 const mapStateToProps = ({ auth, user }) => ({
   accessToken: auth.tokens.access_token,

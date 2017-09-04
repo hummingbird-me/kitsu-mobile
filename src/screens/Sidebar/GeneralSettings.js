@@ -8,7 +8,7 @@ import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import { isEmpty } from 'lodash';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
-import styles from './styles';
+import { styles } from './styles';
 
 class GeneralSettings extends React.Component {
   static navigationOptions = {
@@ -94,12 +94,12 @@ class GeneralSettings extends React.Component {
           <Content>
             <View style={{ flex: 1, marginTop: 77 }}>
               <SidebarTitle title={'Personal Settings'} />
-              <View style={styles.fieldWrapper}>
+              <View style={styles.inputWrapper}>
                 <Text style={styles.hintText}>
                   Username
                 </Text>
                 <TextInput
-                  style={styles.fieldInput}
+                  style={styles.input}
                   value={this.state.name}
                   onChangeText={t => this.setState({ name: t })}
                   autoCapitalize={'words'}
@@ -109,12 +109,12 @@ class GeneralSettings extends React.Component {
                 />
               </View>
               <ItemSeparator />
-              <View style={styles.fieldWrapper}>
+              <View style={styles.inputWrapper}>
                 <Text style={styles.hintText}>
                   Email Address
                 </Text>
                 <TextInput
-                  style={styles.fieldInput}
+                  style={styles.input}
                   value={this.state.email}
                   onChangeText={t => this.setState({ email: t })}
                   autoCapitalize={'none'}
@@ -124,12 +124,12 @@ class GeneralSettings extends React.Component {
                 />
               </View>
               <ItemSeparator />
-              <View style={styles.fieldWrapper}>
+              <View style={styles.inputWrapper}>
                 <Text style={styles.hintText}>
                   Password
                 </Text>
                 <TextInput
-                  style={styles.fieldInput}
+                  style={styles.input}
                   value={this.state.password}
                   onChangeText={(t) => {
                     this.toggle(t);
@@ -143,12 +143,12 @@ class GeneralSettings extends React.Component {
                 />
               </View>
               {this.state.shouldShowValidationInput &&
-                <View style={styles.fieldWrapper}>
+                <View style={styles.inputWrapper}>
                   <Text style={styles.hintText}>
                     Confirm Password
                   </Text>
                   <TextInput
-                    style={styles.fieldInput}
+                    style={styles.input}
                     value={this.state.confirmPassword}
                     onChangeText={t => this.setState({ confirmPassword: t })}
                     secureTextEntry

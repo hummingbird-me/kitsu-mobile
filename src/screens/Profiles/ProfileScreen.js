@@ -7,9 +7,9 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Spinner } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
@@ -32,10 +32,12 @@ import {
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
-const Loader = <Spinner size="small" color="grey" />;
+const Loader = <ActivityIndicator size="small" color="grey" />;
 
 class ProfileScreen extends Component {
-  state = { page: 0 };
+  state = {
+    page: 0,
+  }
 
   componentDidMount() {
     const { userId } = this.props;
@@ -156,7 +158,7 @@ class ProfileScreen extends Component {
     );
   }
 
-  wrapTouchable(item, wrap, navigate) {
+  wrapTouchable = (item, wrap, navigate) => {
     if (wrap) {
       return <TouchableOpacity key="6" onPress={() => navigate()}>{item}</TouchableOpacity>;
     }
@@ -481,10 +483,11 @@ class ProfileScreen extends Component {
       currentUser,
       favorite: { characters, anime, manga },
       entries,
+      userFeed,
     } = this.props;
 
     return (
-      <Container style={styles.container}>
+      <View style={styles.container}>
         <ParallaxScrollView
           backgroundColor='#fff0'
           contentBackgroundColor='#fff0'
@@ -497,7 +500,7 @@ class ProfileScreen extends Component {
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri:  profile.coverImage && profile.coverImage.original || defaultCover }}
+              source={{ uri: (profile.coverImage && profile.coverImage.original) || defaultCover }}
             />
           )}
           renderForeground={() => (
@@ -518,13 +521,14 @@ class ProfileScreen extends Component {
           <View style={{ width: Dimensions.get('window').width }}>
             <FlatList
               style={{ backgroundColor: colors.listBackPurple }}
-              data={this.props.userFeed}
-              ListHeaderComponent={() => this.renderHeader()}
+              data={userFeed}
+              ListHeaderComponent={this.renderHeader}
               keyExtractor={item => item.id}
               renderItem={({ item }) => <CardActivity {...item} />}
               onEndReached={() => this.loadMore(profile.id)}
-              onEndReachedThreshold={0.5} />
-            </View>
+              onEndReachedThreshold={0.5}
+            />
+          </View>
         </ParallaxScrollView>
         <CustomHeader
           style={styles.customHeader}
@@ -532,15 +536,21 @@ class ProfileScreen extends Component {
           headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
           leftText={profile.name}
         />
-      </Container>
+      </View>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const { navigation } = ownProps;
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
   const { currentUser } = state.user;
-  const userId = currentUser.id;
+
+  let userId = currentUser.id;
+  if (navigation.state.params && navigation.state.params.userId) {
+    userId = navigation.state.params.userId;
+  }
+
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
   const a = (anime[userId] && anime[userId].map(({ item }) => item)) || [];
@@ -568,6 +578,7 @@ const mapStateToProps = (state) => {
 
 const styles = {
   container: {
+    flex: 1,
     backgroundColor: colors.listBackPurple,
     justifyContent: 'center',
     alignItems: 'center',

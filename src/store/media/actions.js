@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 

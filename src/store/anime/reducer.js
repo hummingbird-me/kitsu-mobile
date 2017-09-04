@@ -21,7 +21,7 @@ const INITIAL_STATE = {
   error: '',
 };
 
-export default (state = INITIAL_STATE, action) => {
+export const animeReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.SEARCH:
       return {

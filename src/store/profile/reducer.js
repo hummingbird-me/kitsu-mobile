@@ -57,7 +57,7 @@ const INITIAL_STATE = {
   signupError: {},
 };
 
-export default (state = INITIAL_STATE, action) => {
+export const profileReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.FETCH_USER:
       return {

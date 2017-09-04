@@ -1,23 +1,22 @@
 import Blocking from './Blocking';
 import GeneralSettings from './GeneralSettings';
-import ImportDetail from './ImportDetail';
-import ImportLibrary from './ImportLibrary';
-import Library from './Library';
+import { LibraryScreen, ExportLibrary, ImportLibrary, ImportDetail } from './Library';
 import LinkedAccounts from './LinkedAccounts';
 import PrivacySettings from './PrivacySettings';
 import SettingsScreen from './SettingsScreen';
 import SidebarScreen from './SidebarScreen';
-import SuggestFeatures from './SuggestFeatures';
+import { CannyBoard } from './CannyBoard';
 
 export {
   Blocking,
   GeneralSettings,
   ImportDetail,
   ImportLibrary,
-  Library,
+  ExportLibrary,
+  LibraryScreen,
   LinkedAccounts,
   PrivacySettings,
   SettingsScreen,
   SidebarScreen,
-  SuggestFeatures,
+  CannyBoard,
 };

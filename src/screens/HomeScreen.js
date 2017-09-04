@@ -67,7 +67,7 @@ class HomeScreen extends Component {
           <Button
             onPress={() =>
               navigation.navigate('UserProfile', {
-                userId: 5554,
+                userName: 'nuck',
               })}
           >
             <Text>

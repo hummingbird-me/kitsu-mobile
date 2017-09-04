@@ -19,6 +19,7 @@ Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
 const errorMiddleware = {
   name: 'error-middleware',
   error: (payload) => {
+    console.log('failed payload', payload);
     if (payload.status === 401) {
       return {
         request: {
@@ -82,7 +83,6 @@ Kitsu.define(
     previousEmail: '',
     confirmed: '',
     password: '',
-    mediaReactionsCount: '',
     waifu: {
       jsonApi: 'hasOne',
       type: 'characters',
@@ -111,6 +111,7 @@ Kitsu.define(
     },
     linkedAccounts: {
       jsonApi: 'hasMany',
+      type: 'linkedAccounts',
     },
     profileLinks: {
       jsonApi: 'hasMany',
@@ -155,7 +156,6 @@ Kitsu.define(
     finishedAt: '',
     rating: '',
     ratingTwenty: '',
-    reactionSkipped: '',
     user: {
       jsonApi: 'hasOne',
       type: 'users',
@@ -248,6 +248,49 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'linkedAccounts',
+  {
+    externalUserId: '',
+    kind: '',
+    syncTo: '',
+    token: '',
+    createdAt: '',
+    updatedAt: '',
+    shareTo: '',
+    shareFrom: '',
+    disabledReason: '',
+    libraryEntryLogs: '',
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'linked-accounts' },
+);
+
+Kitsu.define(
+  'libraryEntryLogs',
+  {
+    actionPerformed: '',
+    createdAt: '',
+    errorMessage: '',
+    progress: '',
+    rating: '',
+    reconsumeCount: '',
+    reconsuming: '',
+    status: '',
+    syncStatus: '',
+    updatedAt: '',
+    volumesOwned: '',
+    media: {
+      jsonApi: 'hasOne',
+      type: ['anime', 'manga', 'drama'],
+    },
+  },
+  { collectionPath: 'library-entry-logs' },
+);
+
+Kitsu.define(
   'castings',
   {
     createdAt: '',
@@ -277,9 +320,11 @@ Kitsu.define(
     updatedAt: '',
     follower: {
       jsonApi: 'hasOne',
+      type: 'users',
     },
     followed: {
       jsonApi: 'hasOne',
+      type: 'users',
     },
   },
   { collectionPath: 'follows' },
@@ -757,6 +802,18 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'oneSignalPlayers',
+  {
+    playerId: '',
+    platform: '',
+    user: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'one-signal-players' },
+);
+
+Kitsu.define(
   'streamers',
   {
     siteName: '',
@@ -841,10 +898,6 @@ Kitsu.define(
   },
   { collectionPath: 'group-members' },
 );
-
-Kitsu.define('sso', {
-  token: '',
-});
 
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;

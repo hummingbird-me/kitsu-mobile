@@ -11,4 +11,9 @@ export const kitsuConfig = {
     APP_ID: '18373',
   },
   algoliaAppId: 'AWQO5J657S',
+  cannyBoardTokens: {
+    bugReport: 'b3f2fed5-ca07-bf13-dbbb-6e9fea351064',
+    featureRequest: 'fed94acf-1df6-dda7-fdd0-7c86cb41eb63',
+    databaseRequest: '91febb25-fc04-e80a-c5c4-0dcd7028a4ac',
+  },
 };

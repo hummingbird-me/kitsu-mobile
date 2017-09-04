@@ -7,13 +7,15 @@ import {
   SettingsScreen,
   GeneralSettings,
   PrivacySettings,
-  Library,
+  LibraryScreen,
   Blocking,
   LinkedAccounts,
   ImportLibrary,
   ImportDetail,
-  SuggestFeatures,
+  ExportLibrary,
+  CannyBoard,
 } from 'kitsu/screens/Sidebar/';
+import { UserLibraryScreen } from 'kitsu/screens/Profiles';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common/';
 import navigationOptions from './navigationOptions';
 
@@ -32,13 +34,19 @@ const SidebarStack = StackNavigator(
       screen: PrivacySettings,
     },
     Library: {
-      screen: Library,
+      screen: LibraryScreen,
+    },
+    UserLibraryScreen: {
+      screen: UserLibraryScreen,
     },
     Blocking: {
       screen: Blocking,
     },
     LinkedAccounts: {
       screen: LinkedAccounts,
+    },
+    ExportLibrary: {
+      screen: ExportLibrary,
     },
     ImportLibrary: {
       screen: ImportLibrary,
@@ -47,7 +55,13 @@ const SidebarStack = StackNavigator(
       screen: ImportDetail,
     },
     SuggestFeatures: {
-      screen: SuggestFeatures,
+      screen: CannyBoard,
+    },
+    DatabaseRequests: {
+      screen: CannyBoard,
+    },
+    ReportBugs: {
+      screen: CannyBoard,
     },
   },
   {
@@ -59,8 +73,9 @@ const SidebarStack = StackNavigator(
           headerTitle={getScreenDetails(scene).options.title}
         />
       ),
+      // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <Image source={sidebar} style={{ tintColor, width: 20, height: 21 }} />
+        <Image source={sidebar} style={{ tintColor, width: 21, height: 21 }} />
       ),
     }),
   },

@@ -6,10 +6,10 @@ import { startCase } from 'lodash';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
-import styles from './styles';
+import { SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
+import { styles } from './styles';
 
-class Library extends React.Component {
+class LibraryScreen extends React.Component {
   static navigationOptions = {
     title: 'Library',
   };
@@ -85,7 +85,7 @@ class Library extends React.Component {
           <FlatList
             data={[
               { title: 'Import Library', image: libraryImport, target: 'ImportLibrary' },
-              { title: 'Export Library', image: libraryExport, target: '' },
+              { title: 'Export Library', image: libraryExport, target: 'ExportLibrary' },
             ]}
             keyExtractor={item => item.title}
             renderItem={({ item }) => (
@@ -116,18 +116,18 @@ const mapStateToProps = ({ user }) => ({
   loading: user.loading,
 });
 
-Library.propTypes = {
+LibraryScreen.propTypes = {
   ratingSystem: PropTypes.string,
   titleLanguagePreference: PropTypes.string,
   updateLibrarySettings: PropTypes.func,
   loading: PropTypes.bool,
 };
 
-Library.defaultProps = {
+LibraryScreen.defaultProps = {
   ratingSystem: 'Simple',
   titleLanguagePreference: 'Canonical',
   updateLibrarySettings: null,
   loading: false,
 };
 
-export default connect(mapStateToProps, { updateLibrarySettings })(Library);
+export default connect(mapStateToProps, { updateLibrarySettings })(LibraryScreen);

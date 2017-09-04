@@ -1,5 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import * as PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 
@@ -56,6 +57,13 @@ const ResultsList = ({ hits, hasMore, refine, onPress }) => {
       style={styles.container}
     />
   );
+};
+
+ResultsList.propTypes = {
+  hits: PropTypes.array.isRequired,
+  hasMore: PropTypes.bool.isRequired,
+  refine: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired,
 };
 
 const renderItem = ({ item }, onPress) => {

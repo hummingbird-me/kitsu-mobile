@@ -42,7 +42,7 @@ class LoginScreen extends Component {
         <LoginForm
           data={this.state}
           handleChange={this.handleChange}
-          onSubmit={() => this.onSubmit()}
+          onSubmit={this.onSubmit}
           loading={this.props.signingIn || this.state.loading}
         />
         <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>

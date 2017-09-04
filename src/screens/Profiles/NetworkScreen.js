@@ -26,22 +26,11 @@ class NetworkScreen extends Component {
         <Icon name="arrow-back" style={{ color: 'white' }} />
       </Button>
     ),
-    tabBarIcon: ({ tintColor }) => (
-      <Icon ios="ios-body" android="md-body" style={{ fontSize: 24, color: tintColor }} />
-    ),
   });
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      follower: 0,
-      followed: 0,
-    };
-
-    this.renderHeader = this.renderHeader.bind(this);
-    this.renderFooter = this.renderFooter.bind(this);
-    this.renderItem = this.renderItem.bind(this);
-    this.loadMore = this.loadMore.bind(this);
+  state = {
+    follower: 0,
+    followed: 0,
   }
 
   componentDidMount() {
@@ -50,13 +39,13 @@ class NetworkScreen extends Component {
     this.props.fetchNetwork(userId, 'follower');
   }
 
-  renderItem({ item, index }, type) {
+  renderItem = ({ item, index }, type) => {
     const { ifollow, currentUser } = this.props;
     const a = type === 'Following' ? 'followed' : 'follower';
     if (!item[a]) return <View style={styles.itemStyle}><Spinner size="small" /></View>;
     return (
       <TouchableHighlight
-        onPress={() => this.props.navigation.navigate('UserProfile', { userId: item[a].id })}
+        onPress={() => this.props.navigation.navigate('UserProfile', { userName: item[a].name })}
       >
         <View style={styles.itemStyle}>
           <View style={{ paddingRight: 10 }}>
@@ -114,7 +103,7 @@ class NetworkScreen extends Component {
     );
   }
 
-  renderHeader(type) {
+  renderHeader = (type) => {
     return (
       <View
         style={{ height: 47, backgroundColor: '#EEEEEE', justifyContent: 'center', padding: 9 }}
@@ -149,7 +138,7 @@ class NetworkScreen extends Component {
     );
   }
 
-  loadMore(dat) {
+  loadMore = (dat) => {
     const type = dat === 'Following' ? 'followed' : 'follower';
     const { userId } = this.props.navigation.state.params;
     if (!this.props.networkLoading[type]) {
@@ -158,7 +147,7 @@ class NetworkScreen extends Component {
     }
   }
 
-  renderFooter(dat) {
+  renderFooter = (dat) => {
     const { networkLoading } = this.props;
     const type = dat === 'Following' ? 'followed' : 'follower';
     if (this.state[type] > 0 && networkLoading[type]) {
@@ -167,7 +156,7 @@ class NetworkScreen extends Component {
     return null;
   }
 
-  renderTab(data, type) {
+  renderTab = (data, type) => {
     return (
       <FlatList
         removeClippedSubviews={false}

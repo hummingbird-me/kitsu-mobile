@@ -2,12 +2,12 @@ import _ from 'lodash';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 
-export const fetchProfile = id => async (dispatch) => {
+export const fetchProfile = userId => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
   try {
     const user = await Kitsu.findAll('users', {
       filter: {
-        id,
+        id: userId,
       },
       fields: {
         users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount' +
@@ -179,25 +179,37 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
   }
 };
 
-export const fetchUserLibrary = (userId, searchTerm = '') => async (dispatch, getState) => {
+export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
+  const options = {
+    searchTerm: '',
+    limit: 10,
+    ...fetchOptions,
+  };
+
   dispatch({
-    searchTerm,
-    userId,
+    searchTerm: options.searchTerm,
+    userId: options.userId,
     type: types.FETCH_USER_LIBRARY,
   });
 
+  const fetchUserTypeOptions = {
+    limit: options.limit,
+    userId: options.userId,
+    searchTerm: options.searchTerm,
+  };
+
   try {
     await Promise.all([
-      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'onHold' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'anime', status: 'planned' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'onHold' })(dispatch, getState),
-      fetchUserLibraryByType({ userId, searchTerm, library: 'manga', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'current' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'onHold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'planned' })(dispatch, getState),
     ]);
 
     dispatch({

@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   error: '',
 };
 
-export default (state = INITIAL_STATE, action) => {
+export const groupsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.FETCH_GROUP_MEMBERSHIPS:
       return {
