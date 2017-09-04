@@ -228,6 +228,7 @@ class QuickUpdate extends Component {
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
         />
+        <View style={styles.faderCover} />
 
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
