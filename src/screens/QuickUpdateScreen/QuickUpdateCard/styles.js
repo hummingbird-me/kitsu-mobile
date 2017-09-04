@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     minWidth: Dimensions.get('window').width * 0.85,
+    minHeight: Dimensions.get('window').height - 150,
     marginBottom: 70,
   },
   shadow: {

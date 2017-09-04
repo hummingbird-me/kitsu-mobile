@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { debounce } from 'lodash';
 
 import { Kitsu } from 'kitsu/config/api';
 

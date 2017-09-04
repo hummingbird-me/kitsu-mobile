@@ -46,6 +46,11 @@ const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: 'transparent',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 80,
   },
 });
 
