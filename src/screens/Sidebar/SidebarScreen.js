@@ -46,23 +46,22 @@ class SidebarScreen extends React.Component {
     // TODO: implement function.
   };
 
-  renderSectionSeparatorComponent = () => (
-    <View height={20} />
-  )
+  renderSectionSeparatorComponent = () => null;
 
   renderSectionHeader = ({ section }) => (
     <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
   );
 
-  renderSectionFooter = ({ section }) => null;
+  renderSectionFooter = ({ section }) => <View height={20} />;
 
-  renderListHeaderComponent = () => <View height={10} />
+  renderListHeaderComponent = () => <View height={20} />
 
   renderListFooterComponent = () => (
     <TouchableOpacity
       onPress={this.onLogoutButtonPressed}
       style={{
-        marginVertical: 40,
+        marginTop: 20,
+        marginBottom: 40,
         padding: 12,
         backgroundColor: colors.white,
         alignItems: 'center',
@@ -124,7 +123,7 @@ class SidebarScreen extends React.Component {
                     item.group.avatar.medium ||
                     item.group.avatar.large ||
                     item.group.avatar.original)) ||
-                  defaultGroupAvatar
+                defaultGroupAvatar
               }
             />
           );
