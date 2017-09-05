@@ -6,7 +6,7 @@ import * as colors from 'kitsu/constants/colors';
 
 export const ItemSeparator = ({ underlineImage }) => {
   if (!underlineImage) {
-    return ( // this is done to show white border under image (when list has non-white background)
+    return ( // done to show white border under image (when list has non-white background)
       <View style={{ flexDirection: 'row', height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }}>
         <View style={{ width: 38, backgroundColor: colors.white }} />
         <View />
