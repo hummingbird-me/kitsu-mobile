@@ -7,10 +7,9 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
-  InteractionManager
+  ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Spinner } from 'native-base';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
@@ -33,28 +32,21 @@ import {
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
-const Loader = <Spinner size="small" color="grey" />;
+const Loader = <ActivityIndicator size="small" color="grey" />;
 
 class ProfileScreen extends Component {
-  constructor(props) {
-    super(props);
-
-    this.renderHeader = this.renderHeader.bind(this);
-    this.renderInfoBlock = this.renderInfoBlock.bind(this);
-
-    this.state = { page: 0 };
+  state = {
+    page: 0,
   }
 
   componentDidMount() {
     const { userId } = this.props;
-    InteractionManager.runAfterInteractions(() => {
-      this.props.fetchProfile(userId);
-      this.props.fetchUserFeed(userId, 12);
-      this.props.fetchProfileFavorites(userId, 'character');
-      this.props.fetchProfileFavorites(userId, 'manga');
-      this.props.fetchProfileFavorites(userId, 'anime');
-      this.props.getUserFeed(userId);
-    });
+    this.props.fetchProfile(userId);
+    this.props.fetchUserFeed(userId, 12);
+    this.props.fetchProfileFavorites(userId, 'character');
+    this.props.fetchProfileFavorites(userId, 'manga');
+    this.props.fetchProfileFavorites(userId, 'anime');
+    this.props.getUserFeed(userId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -166,14 +158,14 @@ class ProfileScreen extends Component {
     );
   }
 
-  wrapTouchable(item, wrap, navigate) {
+  wrapTouchable = (item, wrap, navigate) => {
     if (wrap) {
       return <TouchableOpacity key="6" onPress={() => navigate()}>{item}</TouchableOpacity>;
     }
     return item;
   }
 
-  renderInfoBlock() {
+  renderInfoBlock = () => {
     const { profile, loading, navigation } = this.props;
     const infos = [];
     _.forOwn(getInfo(profile), (item, key) => {
@@ -244,7 +236,7 @@ class ProfileScreen extends Component {
     return result;
   }
 
-  renderHeader() {
+  renderHeader = () => {
     const {
       profile,
       navigation,
@@ -495,7 +487,7 @@ class ProfileScreen extends Component {
     } = this.props;
 
     return (
-      <Container style={styles.container}>
+      <View style={styles.container}>
         <ParallaxScrollView
           backgroundColor='#fff0'
           contentBackgroundColor='#fff0'
@@ -544,7 +536,7 @@ class ProfileScreen extends Component {
           headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
           leftText={profile.name}
         />
-      </Container>
+      </View>
     );
   }
 }
@@ -586,6 +578,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const styles = {
   container: {
+    flex: 1,
     backgroundColor: colors.listBackPurple,
     justifyContent: 'center',
     alignItems: 'center',
