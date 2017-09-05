@@ -14,7 +14,6 @@ export const groupsReducer = (state = INITIAL_STATE, action) => {
         loadingGroups: true,
       };
     case types.FETCH_GROUP_MEMBERSHIPS_SUCCESS:
-      console.log(action.payload)
       return {
         ...state,
         loadingGroups: false,
