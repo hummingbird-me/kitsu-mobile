@@ -34,6 +34,10 @@ class SidebarScreen extends React.Component {
     header: null, // overlaps statusbar
   };
 
+  state = {
+    showAllGroups: false,
+  }
+
   componentDidMount() {
     this.props.fetchGroupMemberships();
   }
@@ -41,6 +45,11 @@ class SidebarScreen extends React.Component {
   onLogoutButtonPressed = () => {
     this.props.logoutUser(this.props.navigation);
   };
+
+  onSeeMoreButtonPressed = () => {
+    // todo: handle load more.
+    this.setState({ showAllGroups: true });
+  }
 
   navigateUserProfile = () => {
     // TODO: implement function.
@@ -50,7 +59,21 @@ class SidebarScreen extends React.Component {
     <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
   );
 
-  renderSectionFooter = ({ section }) => <View height={20} />;
+  renderSectionFooter = ({ section }) => {
+    if (section.key === 'groups' && !this.state.showAllGroups) {
+      return (
+        <View>
+          <ItemSeparator underlineImage={false} />
+          <TouchableOpacity activeOpacity={0.6} style={[styles.item, { paddingVertical: 8 }]} onPress={this.onSeeMoreButtonPressed}>
+            <Text style={[styles.linkText, { marginLeft: 26 }]}>See More...</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return (
+      <View height={20} />
+    );
+  };
 
   renderListHeaderComponent = () => <View height={20} />
 
@@ -85,8 +108,9 @@ class SidebarScreen extends React.Component {
 
   render() {
     const { navigation, currentUser, groupMemberships, accessToken } = this.props;
+    const { showAllGroups } = this.state;
     const { name, avatar, coverImage } = currentUser;
-    const groupsData = groupMemberships || [];
+    const groupsData = (groupMemberships && (showAllGroups ? groupMemberships : groupMemberships.slice(0, 3))) || [];
 
     const sectionListData = [
       {
@@ -108,26 +132,24 @@ class SidebarScreen extends React.Component {
         key: 'groups',
         data: groupsData,
         title: 'Groups',
-        renderItem: ({ item }) => {
-          return (
-            <SidebarListItem
-              onPress={() => {
-                navigation.navigate('');
-              }}
-              title={item.group.name}
-              imageURL={
-                (item.group.avatar &&
-                  (item.group.avatar.small ||
-                    item.group.avatar.medium ||
-                    item.group.avatar.large ||
-                    item.group.avatar.original)) ||
-                defaultGroupAvatar
-              }
-            />
-          );
-        },
+        renderItem: ({ item }) => (
+          <SidebarListItem
+            onPress={() => {
+              navigation.navigate('');
+            }}
+            title={item.group.name}
+            imageURL={
+              (item.group.avatar &&
+                (item.group.avatar.small ||
+                  item.group.avatar.medium ||
+                  item.group.avatar.large ||
+                  item.group.avatar.original)) ||
+              defaultGroupAvatar
+            }
+          />
+        ),
         ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
-        ItemSeparatorComponent: this.renderItemSeparatorComponent,
+        ItemSeparatorComponent: () => <ItemSeparator underlineImage={false} />,
       },
       {
         key: 'settings',
@@ -213,12 +235,12 @@ class SidebarScreen extends React.Component {
           contentContainerStyle={{ paddingBottom: 100 }}
           sections={sectionListData}
           keyExtractor={keyExtractor}
-          ListHeaderComponent={this.renderListHeaderComponent}
           renderSectionHeader={this.renderSectionHeader}
           renderSectionFooter={this.renderSectionFooter}
-          removeClippedSubviews={false}
-          SectionSeparatorComponent={this.renderSectionSeparatorComponent}
+          ListHeaderComponent={this.renderListHeaderComponent}
           ListFooterComponent={this.renderListFooterComponent}
+          SectionSeparatorComponent={this.renderSectionSeparatorComponent}
+          removeClippedSubviews={false}
         />
       </View>
     );

@@ -22,6 +22,11 @@ export const styles = StyleSheet.create({
     marginTop: 4,
     color: colors.softBlack,
   },
+  linkText: {
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    color: colors.linkBlue,
+  },
   inputWrapper: {
     backgroundColor: colors.white,
     paddingHorizontal: 12,
