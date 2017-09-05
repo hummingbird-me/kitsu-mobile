@@ -46,8 +46,6 @@ class SidebarScreen extends React.Component {
     // TODO: implement function.
   };
 
-  renderSectionSeparatorComponent = () => null;
-
   renderSectionHeader = ({ section }) => (
     <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
   );
@@ -81,9 +79,9 @@ class SidebarScreen extends React.Component {
     </TouchableOpacity>
   )
 
-  renderItemSeparatorComponent() {
-    return <ItemSeparator />;
-  }
+  renderItemSeparatorComponent = () => <ItemSeparator />
+
+  renderSectionSeparatorComponent = () => null;
 
   render() {
     const { navigation, currentUser, groupMemberships, accessToken } = this.props;

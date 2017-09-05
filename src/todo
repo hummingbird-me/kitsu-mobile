@@ -1,5 +1,10 @@
+App:
+- Image helper for avatars @joshmadewell
+
 Favorites Media: 
  - add load more to anime and manga
  
-Sidebar Screen:
- - progressive image children may accidentally be covered by the overlay? just a thought
+Sidebar Screen: @eden
+ - replace dummy icons
+ - show network error feedback to user
+ - groups section show more button
