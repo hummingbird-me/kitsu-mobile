@@ -53,11 +53,15 @@ export const SidebarListItem = ({ image, imageURL, title, onPress }) => (
 SidebarListItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.number,
+  imageURL: PropTypes.string,
   onPress: PropTypes.func,
 };
 
 SidebarListItem.defaultProps = {
   title: 'Settings',
+  image: null,
+  imageURL: null,
+  onPress: null,
 };
 
 const styles = StyleSheet.create({
