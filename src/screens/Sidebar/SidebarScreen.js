@@ -47,7 +47,6 @@ class SidebarScreen extends React.Component {
   };
 
   onSeeMoreButtonPressed = () => {
-    // todo: handle load more.
     this.setState({ showAllGroups: true });
   }
 
@@ -62,7 +61,7 @@ class SidebarScreen extends React.Component {
   renderSectionFooter = ({ section }) => {
     if (section.key === 'groups' && !this.state.showAllGroups) {
       return (
-        <View>
+        <View style={{ marginBottom: 20 }}>
           <ItemSeparator underlineImage={false} />
           <TouchableOpacity activeOpacity={0.6} style={[styles.item, { paddingVertical: 8 }]} onPress={this.onSeeMoreButtonPressed}>
             <Text style={[styles.linkText, { marginLeft: 26 }]}>See More...</Text>
