@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export default StyleSheet.create({
@@ -13,7 +13,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    marginTop: '16%',
   },
   logo: {
     width: 50,
@@ -32,7 +32,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   page: {
-    height: 320,
+    height: 360,
   },
   slide: {
     alignItems: 'center',
@@ -50,8 +50,8 @@ export default StyleSheet.create({
     paddingRight: 25,
     paddingLeft: 25,
     color: colors.white,
-    fontSize: 17,
-    lineHeight: 21,
+    fontSize: 16,
+    lineHeight: 20,
     fontFamily: 'OpenSans',
     textAlign: 'center',
     backgroundColor: 'transparent',
@@ -70,7 +70,7 @@ export default StyleSheet.create({
     marginBottom: 16,
     backgroundColor: colors.white,
     borderRadius: 4,
-    height: 50,
+    height: 47,
     justifyContent: 'center',
     alignItems: 'center',
   },
