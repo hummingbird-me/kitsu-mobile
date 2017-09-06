@@ -139,16 +139,17 @@ class ExportLibrary extends React.Component {
         user: { id },
         filter: { kind: 'my-anime-list' },
       });
-      const hasAccount = linkedAccounts[0] !== undefined;
+      const hasAccount = typeof linkedAccounts[0] !== 'undefined';
       // show form if user has no linked accounts. else, load the data and fetch
       // entry logs.
-      if (hasAccount) {
-        this.fetchLibraryEntryLogs();
-      }
       this.setState({
         linkedAccount: linkedAccounts[0],
         loading: hasAccount,
         hasAccount,
+      }, () => {
+        if (hasAccount) {
+          this.fetchLibraryEntryLogs();
+        }
       });
     } catch (e) {
       this.setState({
