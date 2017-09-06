@@ -1,42 +1,85 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export default StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: colors.darkPurple,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  footerButtonText: {
-    opacity: 0.51,
-    fontSize: 16,
-    color: colors.white,
-    fontFamily: 'OpenSans',
+  contentWrapper: {
+    flex: 1,
+  },
+  logoWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+  },
+  logoText: {
+    fontSize: 34,
+    color: 'white',
+    fontFamily: 'Asap-Bold',
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  pageWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  page: {
+    height: 320,
   },
   slide: {
-    width: 265,
-    height: 390,
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 3,
+    backgroundColor: colors.darkPurple,
   },
   text: {
     marginTop: 5,
-    color: '#333333',
-    fontSize: 17,
+    color: colors.white,
+    fontSize: 18,
     lineHeight: 21,
     fontFamily: 'Asap-Bold',
   },
   desc: {
-    padding: 15,
+    marginTop: 8,
     paddingRight: 25,
     paddingLeft: 25,
-    color: '#333333',
+    color: colors.white,
     fontSize: 17,
     lineHeight: 21,
     fontFamily: 'OpenSans',
     textAlign: 'center',
     backgroundColor: 'transparent',
+  },
+  stepContainer: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+  },
+  stepImage: {
+    width: 210,
+    height: 240,
+    resizeMode: 'contain',
+  },
+  getStartedButton: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    backgroundColor: colors.white,
+    borderRadius: 4,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  getStartedText: {
+    color: colors.darkPurple,
+    textAlign: 'center',
+    fontSize: 17,
+    fontFamily: 'OpenSans',
+    fontWeight: 'bold',
   },
   dotContainer: {
     flexDirection: 'row',
@@ -44,34 +87,17 @@ export default StyleSheet.create({
     justifyContent: 'center',
     padding: 25,
   },
-  stepContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  stepImage: {
-    width: 210,
-    height: 230,
-    marginTop: 30,
-    resizeMode: 'contain',
-  },
-  getStartedBtn: {
-    color: colors.white,
-    textAlign: 'center',
-    fontSize: 17,
-    fontFamily: 'OpenSans',
-  },
   stepDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    marginLeft: 3,
-    marginRight: 3,
-    marginTop: 3,
-    marginBottom: 3,
+    margin: 3,
     backgroundColor: colors.lightPink,
   },
   stepDotActive: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: colors.white,
   },
 });
