@@ -77,7 +77,7 @@ class GeneralSettings extends React.Component {
     if (nextText === '') {
       // this means user clears the input.
       this.setState({ shouldShowValidationInput: false });
-    } else if (this.state.password.length > 6) {
+    } else {
       // only show after 8 chars
       this.setState({ shouldShowValidationInput: true });
     }

@@ -3,7 +3,7 @@ import { View, Text, Platform, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { defaultCover } from 'kitsu/constants/app/';
+import { defaultCover as defaultCoverUri } from 'kitsu/constants/app/';
 import PropTypes from 'prop-types';
 
 const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
@@ -11,7 +11,7 @@ const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
     <ProgressiveImage
       hasOverlay
       style={styles.header}
-      source={{ uri: (coverImage && coverImage.large) || defaultCover }}
+      source={{ uri: (coverImage && coverImage.large) || defaultCoverUri }}
     >
       <View
         style={{

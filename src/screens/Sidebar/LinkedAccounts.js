@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, TouchableOpacity, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
+import fblogo from 'kitsu/assets/img/fblogo.png';
 import { SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
 
@@ -18,7 +19,7 @@ class LinkedAccounts extends React.Component {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 90, alignItems: 'center' }}>
             <Image
-              source={{ uri: item.logoURL }}
+              source={fblogo}
               style={{ resizeMode: 'contain', width: 90, height: 40 }}
             />
           </View>

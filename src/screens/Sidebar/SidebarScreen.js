@@ -12,7 +12,8 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { defaultAvatar as defaultGroupAvatar, defaultCover } from 'kitsu/constants/app';
+import defaultCover from 'kitsu/assets/img/default_cover.png';
+import { defaultAvatar as defaultGroupAvatar, defaultCover as defaultCoverUri } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
@@ -51,7 +52,7 @@ class SidebarScreen extends React.Component {
   }
 
   navigateUserProfile = () => {
-    // TODO: implement function.
+    this.props.navigation.navigate('UserProfile');
   };
 
   renderSectionHeader = ({ section }) => (
@@ -59,7 +60,8 @@ class SidebarScreen extends React.Component {
   );
 
   renderSectionFooter = ({ section }) => {
-    if (section.key === 'groups' && !this.state.showAllGroups) {
+    const { groupMemberships } = this.props;
+    if (section.key === 'groups' && !this.state.showAllGroups && groupMemberships && groupMemberships.length > 3) {
       return (
         <View style={{ marginBottom: 20 }}>
           <ItemSeparator underlineImage={false} />
@@ -110,8 +112,7 @@ class SidebarScreen extends React.Component {
     const { showAllGroups } = this.state;
     const { name, avatar, coverImage } = currentUser;
     const groupsData = (groupMemberships && (showAllGroups ? groupMemberships : groupMemberships.slice(0, 3))) || [];
-
-    const sectionListData = [
+    let sectionListData = [
       {
         key: 'shortcuts',
         data: [{ title: 'View Library', image: library, target: 'UserLibraryScreen' }],
@@ -126,29 +127,6 @@ class SidebarScreen extends React.Component {
           />
         ),
         ItemSeparatorComponent: this.renderItemSeparatorComponent,
-      },
-      {
-        key: 'groups',
-        data: groupsData,
-        title: 'Groups',
-        renderItem: ({ item }) => (
-          <SidebarListItem
-            onPress={() => {
-              navigation.navigate('');
-            }}
-            title={item.group.name}
-            imageURL={
-              (item.group.avatar &&
-                (item.group.avatar.small ||
-                  item.group.avatar.medium ||
-                  item.group.avatar.large ||
-                  item.group.avatar.original)) ||
-              defaultGroupAvatar
-            }
-          />
-        ),
-        ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
-        ItemSeparatorComponent: () => <ItemSeparator underlineImage={false} />,
       },
       {
         key: 'settings',
@@ -184,12 +162,38 @@ class SidebarScreen extends React.Component {
         ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
     ];
+    if (groupsData.length > 0) {
+      sectionListData.splice(1, 0, {
+        key: 'groups',
+        data: groupsData,
+        title: 'Groups',
+        renderItem: ({ item }) => (
+          <SidebarListItem
+            onPress={() => {
+              navigation.navigate('');
+            }}
+            title={item.group.name}
+            imageURL={
+              (item.group.avatar &&
+                (item.group.avatar.small ||
+                  item.group.avatar.medium ||
+                  item.group.avatar.large ||
+                  item.group.avatar.original)) ||
+              defaultGroupAvatar
+            }
+          />
+        ),
+        ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
+        ItemSeparatorComponent: () => <ItemSeparator underlineImage={false} />,
+      });
+    }
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
-          source={{ uri: (coverImage && coverImage.large) || defaultCover }}
+          source={{ uri: (coverImage && coverImage.large) || defaultCoverUri }}
+          defaultSource={defaultCover}
         >
           <View
             style={{

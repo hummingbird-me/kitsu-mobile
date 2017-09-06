@@ -185,8 +185,15 @@ class Blocking extends React.Component {
     );
   };
 
+  renderListEmptyComponent = () => (
+    <Text style={styles.emptyText}>
+      You aren{'\''}t currently blocking anyone.
+    </Text>
+  );
+
   render() {
     const { blocks, loading } = this.state;
+    const listTitle = blocks.length > 0 ? 'Blocked Users' : 'You aren\'t currently blocking any users.';
     return (
       <View style={styles.containerStyle}>
         <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
@@ -207,23 +214,25 @@ class Blocking extends React.Component {
             {this.renderResults()}
           </InstantSearch>
         </View>
-        <SidebarTitle title={'Blocked Users'} />
         {!loading
-          ? <FlatList
-            data={blocks}
-            keyExtractor={item => item.blocked.id}
-            renderItem={({ item }) => (
-              <RowItem
-                type={'flatlist'}
-                item={item.blocked}
-                onPress={() => this.onUnblockUser(item)}
-              />
-              )}
-            ListEmptyComponent={() => <ActivityIndicator />}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            removeClippedSubviews={false}
-          />
-          : <ActivityIndicator color={'white'} />}
+          ? <View>
+            <SidebarTitle title={listTitle} />
+            <FlatList
+              data={blocks}
+              keyExtractor={item => item.blocked.id}
+              renderItem={({ item }) => (
+                <RowItem
+                  type={'flatlist'}
+                  item={item.blocked}
+                  onPress={() => this.onUnblockUser(item)}
+                />
+                )}
+              // ListEmptyComponent={this.renderListEmptyComponent}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              removeClippedSubviews={false}
+            />
+          </View>
+          : <ActivityIndicator style={{ marginTop: 8 }} color={'white'} />}
       </View>
     );
   }

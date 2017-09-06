@@ -27,6 +27,13 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.linkBlue,
   },
+  emptyText: {
+    marginVertical: 4,
+    marginLeft: 13,
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    color: colors.white,
+  },
   inputWrapper: {
     backgroundColor: colors.white,
     paddingHorizontal: 12,
