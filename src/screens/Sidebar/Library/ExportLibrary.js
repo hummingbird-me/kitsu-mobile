@@ -164,13 +164,13 @@ class ExportLibrary extends React.Component {
     const { accessToken } = this.props;
     const { linkedAccount } = this.state;
     setToken(accessToken);
+    console.log(accessToken, linkedAccount);
     try {
       const libraryEntryLogs = await Kitsu.findAll('libraryEntryLogs', {
         filter: { linked_account_id: linkedAccount.id },
-        fields: {
-          media: 'canonicalTitle,titles,posterImage,slug',
-        },
-        sort: 'created_at',
+        fields: { media: 'canonicalTitle,titles,posterImage,slug' },
+        page: { limit: 20 },
+        sort: '-created_at',
         include: 'media',
       });
       this.setState({
