@@ -160,24 +160,25 @@ export default class QuickUpdateCard extends PureComponent {
             </TouchableOpacity>
           }
           {/* Action Row */}
-          <View style={styles.actionRow}>
-            <TouchableOpacity
-              onPress={this.onViewDiscussion}
-              disabled={loading}
-              style={[styles.button, styles.discussionButton]}
-            >
-              <Text style={styles.buttonText}>View Discussion</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={this.onMarkComplete}
-              disabled={loading}
-              style={[styles.button, styles.markWatchedButton]}
-            >
-              <Text style={styles.buttonText}>Mark </Text>
-              <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Episode {data.item.progress}</Text>
-              <Text style={styles.buttonText}> Watched</Text>
-            </TouchableOpacity>
-          </View>
+          {
+            !loading &&
+            <View style={styles.actionRow}>
+              <TouchableOpacity
+                onPress={this.onViewDiscussion}
+                style={[styles.button, styles.discussionButton]}
+              >
+                <Text style={styles.buttonText}>View Discussion</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this.onMarkComplete}
+                style={[styles.button, styles.markWatchedButton]}
+              >
+                <Text style={styles.buttonText}>Mark </Text>
+                <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Episode {data.item.progress}</Text>
+                <Text style={styles.buttonText}> Watched</Text>
+              </TouchableOpacity>
+            </View>
+          }
         </View>
 
         {/* Editor */}
