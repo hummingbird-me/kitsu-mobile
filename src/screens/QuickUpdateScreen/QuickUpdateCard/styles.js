@@ -162,6 +162,9 @@ const styles = StyleSheet.create({
     flex: 5,
     backgroundColor: colors.lightGreen,
   },
+  loadingSpinner: {
+    flexGrow: 1,
+  },
 });
 
 export default styles;

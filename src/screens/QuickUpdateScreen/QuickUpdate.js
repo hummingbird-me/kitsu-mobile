@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Animated, Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Dimensions,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
@@ -12,6 +21,27 @@ import HeaderFilterButton from './HeaderFilterButton';
 
 import styles from './styles';
 
+const LIBRARY_ENTRIES_FIELDS = [
+  'progress',
+  'status',
+  'rating',
+  'unit',
+  'updatedAt',
+  'anime',
+  'manga',
+];
+
+const ANIME_FIELDS = [
+  'slug',
+  'coverImage',
+  'posterImage',
+  'episodeCount',
+  'canonicalTitle',
+  'titles',
+  'synopsis',
+  'status',
+  'startDate',
+];
 
 class QuickUpdate extends Component {
   static propTypes = {
@@ -47,28 +77,6 @@ class QuickUpdate extends Component {
 
     const { filterMode } = this.state;
 
-    const LIBRARY_ENTRIES_FIELDS = [
-      'progress',
-      'status',
-      'rating',
-      'unit',
-      'updatedAt',
-      'anime',
-      'manga',
-    ];
-
-    const ANIME_FIELDS = [
-      'slug',
-      'coverImage',
-      'posterImage',
-      'episodeCount',
-      'canonicalTitle',
-      'titles',
-      'synopsis',
-      'status',
-      'startDate',
-    ];
-
     try {
       const library = await Kitsu.findAll('libraryEntries', {
         fields: {
@@ -92,6 +100,33 @@ class QuickUpdate extends Component {
       }, () => {
         this.carouselItemChanged(0);
       });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  refetchLibraryEntry = async (libraryEntry) => {
+    const index = this.state.library.indexOf(libraryEntry);
+    let library = [...this.state.library];
+
+    // Tell the entry it's loading.
+    library[index].loading = true;
+    this.setState({ library });
+
+    try {
+      const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
+        fields: {
+          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
+          anime: ANIME_FIELDS.join(),
+          user: 'id',
+        },
+        include: 'anime,manga,unit',
+      });
+
+      library = [...this.state.library];
+      library[index] = entry;
+
+      this.setState({ library });
     } catch (e) {
       console.log(e);
     }
@@ -191,11 +226,32 @@ class QuickUpdate extends Component {
     }).start();
   }
 
+  markComplete = async (libraryEntry) => {
+    const result = await Kitsu.update('libraryEntries', {
+      id: libraryEntry.id,
+      progress: libraryEntry.progress + 1,
+    });
+
+    if (!result.progress) {
+      Alert.alert(
+        'Error',
+        'Error while updating progress, please try again.',
+        [
+          { text: 'OK', style: 'cancel' },
+        ],
+      );
+    } else {
+      this.refetchLibraryEntry(libraryEntry);
+    }
+  }
+
   renderItem = data => (
     <QuickUpdateCard
       data={data}
       onBeginEditing={this.hideHeader}
       onEndEditing={this.showHeader}
+      onViewDiscussion={this.viewDiscussion}
+      onMarkComplete={this.markComplete}
     />);
 
   render() {

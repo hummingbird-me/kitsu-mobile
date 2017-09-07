@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from 'kitsu/components/ProgressBar';
 import PropTypes from 'prop-types';
@@ -12,6 +12,7 @@ export default class QuickUpdateCard extends PureComponent {
   static propTypes = {
     // TODO: Not yet a complete definition of the things we use in data.
     data: PropTypes.shape({
+      loading: PropTypes.bool,
       item: PropTypes.shape({
         anime: PropTypes.shape({
           canonicalTitle: PropTypes.string.isRequired,
@@ -24,11 +25,15 @@ export default class QuickUpdateCard extends PureComponent {
     }).isRequired,
     onBeginEditing: PropTypes.func,
     onEndEditing: PropTypes.func,
+    onMarkComplete: PropTypes.func,
+    onViewDiscussion: PropTypes.func,
   }
 
   static defaultProps = {
     onBeginEditing: () => {},
     onEndEditing: () => {},
+    onMarkComplete: () => {},
+    onViewDiscussion: () => {},
   }
 
   state = {
@@ -40,8 +45,26 @@ export default class QuickUpdateCard extends PureComponent {
     updateText: null,
   }
 
+  componentWillReceiveProps = (nextProps) => {
+    // This means they've likely reloaded the data.
+    if (this.props.data !== nextProps.data) {
+      this.setState({
+        editingUpdateText: null,
+        updateText: null,
+      });
+    }
+  }
+
   onEditorChanged = (editingUpdateText) => {
     this.setState({ editingUpdateText });
+  }
+
+  onViewDiscussion = () => {
+    this.props.onViewDiscussion(this.props.data.item);
+  }
+
+  onMarkComplete = () => {
+    this.props.onMarkComplete(this.props.data.item);
   }
 
   updateTextAndToggle = () => {
@@ -52,9 +75,10 @@ export default class QuickUpdateCard extends PureComponent {
   }
 
   toggleEditor = () => {
+    const { loading } = this.props.data;
     const { editing, updateText } = this.state;
 
-    if (!editing) {
+    if (!loading && !editing) {
       this.setState({
         editing: true,
         // Need to copy the current updateText over so the dialog shows with the correct text in it.
@@ -69,6 +93,7 @@ export default class QuickUpdateCard extends PureComponent {
 
   render() {
     const { data } = this.props;
+    const { loading } = data.item;
     const { editing, editingUpdateText, updateText } = this.state;
 
     if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
@@ -120,19 +145,34 @@ export default class QuickUpdateCard extends PureComponent {
               </View>
             </View>
           </View>
-          <TouchableOpacity onPress={this.toggleEditor} style={styles.placeholderWrapper}>
-            <Text
-              style={updateText ? styles.updateText : styles.placeholder}
-            >
-              {updateText || `(Optional) Share your thoughts on Episode ${data.item.progress}`}
-            </Text>
-          </TouchableOpacity>
+          {
+            loading &&
+            <ActivityIndicator size="large" style={styles.loadingSpinner} />
+          }
+          {
+            !loading &&
+            <TouchableOpacity onPress={this.toggleEditor} style={styles.placeholderWrapper}>
+              <Text
+                style={updateText ? styles.updateText : styles.placeholder}
+              >
+                {updateText || `(Optional) Share your thoughts on Episode ${data.item.progress}`}
+              </Text>
+            </TouchableOpacity>
+          }
           {/* Action Row */}
           <View style={styles.actionRow}>
-            <TouchableOpacity style={[styles.button, styles.discussionButton]}>
+            <TouchableOpacity
+              onPress={this.onViewDiscussion}
+              disabled={loading}
+              style={[styles.button, styles.discussionButton]}
+            >
               <Text style={styles.buttonText}>View Discussion</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.markWatchedButton]}>
+            <TouchableOpacity
+              onPress={this.onMarkComplete}
+              disabled={loading}
+              style={[styles.button, styles.markWatchedButton]}
+            >
               <Text style={styles.buttonText}>Mark </Text>
               <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Episode {data.item.progress}</Text>
               <Text style={styles.buttonText}> Watched</Text>
