@@ -32,6 +32,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: 15,
+    minWidth: 80,
+    maxWidth: 80,
+  },
+  manualEditTextInput: {
+    ...StyleSheet.flatten(commonStyles.text),
+    borderWidth: 1,
+    borderColor: colors.lightGrey,
+    color: '#000000',
+    padding: 3,
+    textAlign: 'center',
   },
   progressText: {
     ...StyleSheet.flatten(commonStyles.text),

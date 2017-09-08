@@ -1,46 +1,58 @@
 import * as React from 'react';
-import { View, ViewPropTypes } from 'react-native';
+import { Animated, Easing, View, ViewPropTypes } from 'react-native';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-export const ProgressBar = (props) => {
-  let fillPercentage = props.fillPercentage;
-  if (fillPercentage > 100) {
-    fillPercentage = 100;
-  } else if (fillPercentage < 0) {
-    fillPercentage = 0;
-  }
-
-  const fillStyle = {
-    height: props.height,
-    backgroundColor: props.fillColor,
-    width: `${fillPercentage}%`,
-    borderRadius: props.height,
+export class ProgressBar extends React.Component {
+  static propTypes = {
+    backgroundStyle: ViewPropTypes.style,
+    fillColor: PropTypes.string,
+    fillPercentage: PropTypes.number,
+    height: PropTypes.number,
   };
 
-  return (
-    <View style={[
-      styles.background,
-      props.backgroundStyle,
-      { height: props.height, borderRadius: props.height },
-    ]}
-    >
-      <View style={fillStyle} />
-    </View>
-  );
-};
+  static defaultProps = {
+    backgroundStyle: {},
+    fillColor: colors.green,
+    fillPercentage: 0,
+    height: 5,
+  };
 
-ProgressBar.propTypes = {
-  backgroundStyle: ViewPropTypes.style,
-  fillColor: PropTypes.string,
-  fillPercentage: PropTypes.number,
-  height: PropTypes.number,
-};
+  state = {
+    fillPercentage: new Animated.Value(this.props.fillPercentage),
+  }
 
-ProgressBar.defaultProps = {
-  backgroundStyle: {},
-  fillColor: colors.green,
-  fillPercentage: 0,
-  height: 5,
-};
+  componentWillReceiveProps(nextProps) {
+    this.update(nextProps.fillPercentage);
+  }
+
+  render() {
+    const fillStyle = {
+      height: this.props.height,
+      backgroundColor: this.props.fillColor,
+      width: this.state.fillPercentage.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['0%', '100%'],
+      }),
+      borderRadius: this.props.height,
+    };
+
+    return (
+      <View style={[
+        styles.background,
+        this.props.backgroundStyle,
+        { height: this.props.height, borderRadius: this.props.height },
+      ]}
+      >
+        <Animated.View style={fillStyle} />
+      </View>
+    );
+  }
+
+  update(fillPercentage) {
+    Animated.timing(this.state.fillPercentage, {
+      toValue: fillPercentage,
+    }).start();
+  }
+}
