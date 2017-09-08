@@ -158,8 +158,8 @@ export class UserLibraryListCard extends React.Component {
               <Counter
                 disabled={!canEdit}
                 initialValue={data.progress}
-                maxValue={maxProgress}
-                progressCounter
+                maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
+                progressCounter={typeof maxProgress === 'number'}
                 onValueChanged={this.onProgressValueChanged}
               />
               <Rating
