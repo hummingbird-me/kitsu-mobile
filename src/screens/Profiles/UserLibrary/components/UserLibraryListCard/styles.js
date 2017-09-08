@@ -2,6 +2,8 @@ import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { commonStyles } from 'kitsu/common/styles';
 
+const MENU_BUTTON_WIDTH = 24;
+
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
@@ -18,7 +20,10 @@ export const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   menuButton: {
-    width: 24,
+    width: MENU_BUTTON_WIDTH,
+  },
+  menuButtonContainer: {
+    marginLeft: 'auto',
   },
   posterImage: {
     width: 65,
@@ -67,5 +72,6 @@ export const styles = StyleSheet.create({
   },
   titleText: {
     ...StyleSheet.flatten(commonStyles.text),
+    marginRight: MENU_BUTTON_WIDTH + 2, // for padding
   },
 });

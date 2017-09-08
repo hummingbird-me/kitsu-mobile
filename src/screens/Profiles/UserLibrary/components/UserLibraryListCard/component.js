@@ -127,11 +127,17 @@ export class UserLibraryListCard extends React.Component {
 
           <View style={styles.content}>
             <View style={styles.titleSection}>
-              <Text style={styles.titleText}>{mediaData.canonicalTitle}</Text>
+              <Text
+                numberOfLines={1}
+                style={styles.titleText}
+              >
+                {mediaData.canonicalTitle}
+              </Text>
               {canEdit && (
                 <SelectMenu
                   options={this.selectOptions}
                   onOptionSelected={this.onStatusSelected}
+                  style={styles.menuButtonContainer}
                 >
                   <Image
                     source={menuImage}
