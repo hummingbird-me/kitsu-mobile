@@ -117,10 +117,16 @@ const UsersList = ({ hits, hasMore, refine, onFollow, onData }) => {
 };
 
 UsersList.propTypes = {
-  hits: PropTypes.array.isRequired,
+  hits: PropTypes.array,
   hasMore: PropTypes.bool.isRequired,
   refine: PropTypes.func,
-  onPress: PropTypes.func,
+  onFollow: PropTypes.func.isRequired,
+  onData: PropTypes.func.isRequired,
+};
+
+UsersList.defaultProps = {
+  hits: [],
+  refine: () => {},
 };
 
 export default UsersList;

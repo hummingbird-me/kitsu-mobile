@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Left, Right, Button, Text, Item } from 'native-base';
@@ -8,7 +9,20 @@ import * as colors from 'kitsu/constants/colors';
 import { getDefaults } from 'kitsu/store/anime/actions';
 import { MediaCard } from 'kitsu/components/MediaCard';
 
-const list = [
+const styles = StyleSheet.create({
+  listContainer: { backgroundColor: colors.listBackPurple },
+  item: {
+    height: 35,
+    flexDirection: 'row',
+    paddingLeft: 17,
+    paddingRight: 17,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: 0,
+    borderColor: colors.listSeparatorColor,
+  },
+});
+
+const CATEGORY_LIST = [
   { label: 'Release date', key: 'release' },
   { label: 'Category', key: 'categories', title: 'Select Categories' },
   { label: 'Streaming Service', key: 'service' },
@@ -16,36 +30,25 @@ const list = [
 
 class TopsList extends Component {
   componentDidMount() {
-    this.init(this.props.active);
-  }
-
-  init = (type) => {
-    this.props.getDefaults('topAiring', type);
-    this.props.getDefaults('popular', type);
-    this.props.getDefaults('highest', type);
-    this.props.getDefaults('topUpcoming', type);
+    const { active } = this.props;
+    this.props.getDefaults('topAiring', active);
+    this.props.getDefaults('popular', active);
+    this.props.getDefaults('highest', active);
+    this.props.getDefaults('topUpcoming', active);
   }
 
   renderList = () => {
     const { active } = this.props;
     return (
       <FlatList
-        style={{ backgroundColor: colors.listBackPurple }}
-        data={list}
+        style={styles.listContainer}
+        data={CATEGORY_LIST}
         removeClippedSubviews={false}
         renderItem={({ item }) => (
           <Item
             button
             key={item.id}
-            style={{
-              height: 35,
-              flexDirection: 'row',
-              paddingLeft: 17,
-              paddingRight: 17,
-              borderTopWidth: StyleSheet.hairlineWidth,
-              borderBottomWidth: 0,
-              borderColor: colors.listSeparatorColor,
-            }}
+            style={styles.item}
             onPress={() => this.props.navigation.navigate('SearchCategory', { ...item, active })}
           >
             <Left>
@@ -68,13 +71,16 @@ class TopsList extends Component {
         )}
       />
     );
-  }
+  };
 
   renderGallery = (array, title, type) => {
     const { active } = this.props;
-    const data = array.length > 0
-      ? array
-      : Array(10).fill(1).map((item, index) => ({ key: index }));
+    const data =
+      array.length > 0
+        ? array
+        : Array(10)
+            .fill(1)
+            .map((item, index) => ({ key: index }));
 
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>
@@ -131,7 +137,7 @@ class TopsList extends Component {
             />
           </Button>
         </View>
-        {data.length > 0 &&
+        {data.length > 0 && (
           <FlatList
             horizontal
             removeClippedSubviews={false}
@@ -144,22 +150,20 @@ class TopsList extends Component {
                 style={index === 0 ? { marginLeft: 11 } : null}
               />
             )}
-          />}
+          />
+        )}
       </View>
     );
-  }
+  };
 
   render() {
     const { active } = this.props;
     const data = this.props[active];
+
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>
         {this.renderGallery(data.topAiring, `Top Airing ${upperFirst(active)}`, 'topAiring')}
-        {this.renderGallery(
-          data.topUpcoming,
-          `Top Upcoming ${upperFirst(active)}`,
-          'topUpcoming',
-        )}
+        {this.renderGallery(data.topUpcoming, `Top Upcoming ${upperFirst(active)}`, 'topUpcoming')}
         {this.renderGallery(data.highest, `Highest Rated ${upperFirst(active)}`, 'highest')}
         {this.renderGallery(data.popular, `Most Popular ${upperFirst(active)}`, 'popular')}
         <View style={{ paddingLeft: 16, paddingRight: 16, marginTop: 31.68, marginBottom: 10.5 }}>

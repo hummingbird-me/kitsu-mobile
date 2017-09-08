@@ -11,36 +11,31 @@ export const MediaCard = ({
   cardDimensions,
   cardStyle,
   mediaData,
-  navigate,
+  onPress,
   progress,
   ratingTwenty,
   ratingSystem,
   style,
 }) => {
-  const onPress = () => {
-    navigate('Media', {
-      mediaId: mediaData.id,
-      type: mediaData.type,
-    });
+  const navParams = {
+    mediaId: mediaData.id,
+    type: mediaData.type,
   };
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={() => onPress(navParams)}>
       <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
-        {mediaData.posterImage
-          ?
-            <ProgressiveImage
-              duration={500}
-              source={{ uri: mediaData.posterImage.small }}
-              style={[styles.posterImageCard, cardDimensions, cardStyle]}
-            />
-          :
-            <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
-        }
-
-        {caption.length > 0 && (
-          <Text style={styles.captionText}>{caption}</Text>
+        {mediaData.posterImage ? (
+          <ProgressiveImage
+            duration={500}
+            source={{ uri: mediaData.posterImage.small }}
+            style={[styles.posterImageCard, cardDimensions, cardStyle]}
+          />
+        ) : (
+          <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
         )}
+
+        {caption.length > 0 && <Text style={styles.captionText}>{caption}</Text>}
 
         {progress > 0 && (
           <ProgressBar fillPercentage={progress} height={3} style={styles.progressBar} />
@@ -67,7 +62,7 @@ MediaCard.propTypes = {
   cardDimensions: PropTypes.object.isRequired,
   cardStyle: ViewPropTypes.style,
   mediaData: PropTypes.object.isRequired,
-  navigate: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired,
   progress: PropTypes.number,
   ratingTwenty: PropTypes.number,
   ratingSystem: PropTypes.string,
