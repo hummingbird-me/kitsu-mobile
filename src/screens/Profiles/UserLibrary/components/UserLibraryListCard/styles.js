@@ -26,8 +26,6 @@ export const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   posterImage: {
-    width: 65,
-    height: 75,
     borderRadius: 4,
   },
   progressBarBackground: {

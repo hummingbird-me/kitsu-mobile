@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
@@ -9,6 +9,7 @@ import { styles } from './styles';
 export const MediaCard = ({
   caption,
   cardDimensions,
+  cardStyle,
   mediaData,
   navigate,
   progress,
@@ -31,10 +32,10 @@ export const MediaCard = ({
             <ProgressiveImage
               duration={500}
               source={{ uri: mediaData.posterImage.small }}
-              style={[styles.posterImageCard, cardDimensions]}
+              style={[styles.posterImageCard, cardDimensions, cardStyle]}
             />
           :
-            <View style={[styles.posterImageCard, cardDimensions]} />
+            <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
         }
 
         {caption.length > 0 && (
@@ -64,16 +65,18 @@ export const MediaCard = ({
 MediaCard.propTypes = {
   caption: PropTypes.string,
   cardDimensions: PropTypes.object.isRequired,
+  cardStyle: ViewPropTypes.style,
   mediaData: PropTypes.object.isRequired,
   navigate: PropTypes.func.isRequired,
   progress: PropTypes.number,
   ratingTwenty: PropTypes.number,
   ratingSystem: PropTypes.string,
-  style: PropTypes.any,
+  style: ViewPropTypes.style,
 };
 
 MediaCard.defaultProps = {
   caption: '',
+  cardStyle: null,
   progress: 0,
   ratingTwenty: undefined,
   ratingSystem: 'simple',

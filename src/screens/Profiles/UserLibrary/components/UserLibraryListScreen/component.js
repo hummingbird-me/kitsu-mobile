@@ -93,10 +93,11 @@ export class UserLibraryListScreenComponent extends React.Component {
 
   renderItem = ({ item }) => (
     <UserLibraryListCard
-      data={item}
-      libraryType={this.props.libraryType}
-      libraryStatus={this.props.libraryStatus}
       currentUser={this.props.currentUser}
+      data={item}
+      libraryStatus={this.props.libraryStatus}
+      libraryType={this.props.libraryType}
+      navigate={this.props.navigation.navigate}
       profile={this.props.navigation.state.params.profile}
       updateUserLibraryEntry={this.props.updateUserLibraryEntry}
     />

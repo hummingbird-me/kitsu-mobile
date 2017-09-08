@@ -6,6 +6,7 @@ import { Counter } from 'kitsu/components/Counter';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { MediaCard } from 'kitsu/components/MediaCard';
 import Swipeable from 'react-native-swipeable';
 import { styles } from './styles';
 
@@ -27,6 +28,7 @@ export class UserLibraryListCard extends React.Component {
     data: PropTypes.object.isRequired,
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
+    navigate: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
   }
@@ -123,7 +125,12 @@ export class UserLibraryListCard extends React.Component {
         ]}
       >
         <View style={styles.container}>
-          <Image style={styles.posterImage} source={{ uri: mediaData.posterImage.small }} />
+          <MediaCard
+            cardDimensions={{ height: 75, width: 65 }}
+            cardStyle={styles.posterImage}
+            mediaData={mediaData}
+            navigate={this.props.navigate}
+          />
 
           <View style={styles.content}>
             <View style={styles.titleSection}>
