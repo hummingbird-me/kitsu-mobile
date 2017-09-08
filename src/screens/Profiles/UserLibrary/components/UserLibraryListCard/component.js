@@ -145,7 +145,7 @@ export class UserLibraryListCard extends React.Component {
               <ProgressBar
                 height={6}
                 fillPercentage={progressPercentage}
-                backgroundStyle={styles.progressBarBackgroun}
+                backgroundStyle={styles.progressBarBackground}
               />
             </View>
             <View style={styles.statusSection}>
