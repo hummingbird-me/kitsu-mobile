@@ -5,7 +5,6 @@ import { Form, Input, Item, Button, Spinner } from 'native-base';
 import * as colors from 'kitsu/constants/colors';
 import CustomIcon from 'kitsu/components/Icon';
 
-
 const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
   <View>
     <Form style={{ padding: 20, paddingLeft: 10 }}>
@@ -60,16 +59,17 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
       <Button
         block
         disabled={loading}
-        onPress={onSubmit}
+        onPress={() => onSubmit(false)}
         style={{
           backgroundColor: colors.green,
           height: 47,
           borderRadius: 3,
         }}
       >
-        {loading
-          ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
-          : <Text
+        {loading ? (
+          <Spinner size="small" color="rgba(255,255,255,0.4)" />
+        ) : (
+          <Text
             style={{
               color: colors.white,
               fontFamily: 'OpenSans-Semibold',
@@ -77,8 +77,9 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
               fontSize: 15,
             }}
           >
-              Sign in to your account
-            </Text>}
+            Sign in to your account
+          </Text>
+        )}
       </Button>
     </View>
   </View>
