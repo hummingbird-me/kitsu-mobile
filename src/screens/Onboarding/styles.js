@@ -9,24 +9,6 @@ export default StyleSheet.create({
   contentWrapper: {
     flex: 1,
   },
-  logoWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '16%',
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    resizeMode: 'contain',
-  },
-  logoText: {
-    fontSize: 34,
-    color: 'white',
-    fontFamily: 'Asap-Bold',
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
   pageWrapper: {
     flex: 1,
     justifyContent: 'center',
@@ -99,5 +81,11 @@ export default StyleSheet.create({
     height: 10,
     borderRadius: 5,
     backgroundColor: colors.white,
+  },
+  squareImage: {
+    marginHorizontal: 8,
+    width: 120,
+    height: 120,
+    borderRadius: 8,
   },
 });

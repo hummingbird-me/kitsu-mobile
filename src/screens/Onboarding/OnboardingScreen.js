@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { View, Image, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import logo from 'kitsu/assets/img/kitsu-logo.png';
+import React from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { intro1, intro2, intro3, intro4 } from 'kitsu/assets/img/onboarding/';
+import { OnboardingHeader } from './common/';
 import styles from './styles';
 import Step from './Step';
 import Dot from './Dot';
@@ -10,22 +10,22 @@ const INTROS = [
   {
     title: 'More of what you love',
     desc: 'Get recommendations to discover your next favorite anime or manga!',
-    image: require('../../assets/img/intro1.png'),
+    image: intro1,
   },
   {
     title: 'Track your progress',
     desc: 'Log and rate what you’ve seen and read to build a library of your history.',
-    image: require('../../assets/img/intro2.png'),
+    image: intro2,
   },
   {
     title: 'Join the Community',
     desc: 'Kitsu makes finding new like-minded friends easy with the global activity feed.',
-    image: require('../../assets/img/intro3.png'),
+    image: intro3,
   },
   {
     title: 'Share your Reactions',
     desc: 'Check the media ratings and reviews from other users and leave your own!',
-    image: require('../../assets/img/intro4.png'),
+    image: intro4,
   },
   // dummy view for smooth transition. Removing this and adding an additional dot instead looks bad when swipe bounces back.
   {
@@ -35,7 +35,7 @@ const INTROS = [
   },
 ];
 
-class OnboardingScreen extends Component {
+export default class OnboardingScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -49,8 +49,8 @@ class OnboardingScreen extends Component {
     const SCREEN_WIDTH = Dimensions.get('window').width;
     const position = (x / SCREEN_WIDTH);
     if (!this.navigating && position > (INTROS.length - 2) + 0.05) {
-      this.props.navigation.navigate('Signup');
-      this.navigating = true;
+      this.props.navigation.navigate('Registration');
+      this.navigating = true; // prevent triggering navigate twice.
     } else {
       // abs for -x direction values: prevent -1 value for step
       this.setState({ step: Math.floor(Math.abs(x) / SCREEN_WIDTH) });
@@ -67,10 +67,7 @@ class OnboardingScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
-          <View style={styles.logoWrapper}>
-            <Image style={styles.logo} source={logo} />
-            <Text style={styles.logoText}>KITSU</Text>
-          </View>
+          <OnboardingHeader />
           <View style={styles.pageWrapper}>
             <View style={styles.page}>
               <ScrollView
@@ -89,7 +86,7 @@ class OnboardingScreen extends Component {
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigate('Signup')} style={styles.getStartedButton}>
+        <TouchableOpacity onPress={() => navigate('Registration')} style={styles.getStartedButton}>
           <Text style={styles.getStartedText}>
             Get Started
           </Text>
@@ -99,12 +96,3 @@ class OnboardingScreen extends Component {
   }
 }
 
-OnboardingScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-};
-
-OnboardingScreen.defaultProps = {
-  navigation: {},
-};
-
-export default OnboardingScreen;
