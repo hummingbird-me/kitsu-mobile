@@ -86,7 +86,7 @@ export default class OnboardingScreen extends React.Component {
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigate('Registration')} style={styles.getStartedButton}>
+        <TouchableOpacity onPress={() => navigate('Registration')} style={styles.button}>
           <Text style={styles.getStartedText}>
             Get Started
           </Text>

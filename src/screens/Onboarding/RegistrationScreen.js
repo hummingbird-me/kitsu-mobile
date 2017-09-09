@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
 import { OnboardingHeader } from './common/';
 import styles from './styles';
@@ -24,48 +25,74 @@ export default class RegistrationScreen extends React.Component {
   state = {
   };
 
+  onSucess = () => {
+    // TODO: implement this function.
+  }
+
+  loginFacebook = () => {
+    LoginManager.logInWithReadPermissions(['public_profile']).then(
+      (result) => {
+        if (!result.isCancelled) {
+          onSuccess(true);
+        }
+      },
+      (error) => {
+        console.log(`Login fail with error: ${error}`);
+      },
+    );
+  };
+
   render() {
     const { navigate } = this.props.navigation;
-
+    // TODO: make this screen responsive.
     return (
       <View style={styles.container}>
         <OnboardingHeader />
-        <View style={{ marginVertical: 16, }}>
+        <View style={{ marginVertical: 24, justifyContent: 'center', }}>
           <GalleryRow />
           <GalleryRow />
         </View>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: colors.fbBlue,
-            height: 47,
-            marginHorizontal: 16,
-            borderRadius: 4,
-          }}
-          disabled={false}
-          onPress={() => {}}
-        >
-          <Icon
-            size={20}
-            name="facebook-official"
-            style={{
-              color: colors.white,
-              paddingRight: 8,
-              paddingLeft: 8,
-            }}
-          />
-          <Text style={{
-            fontFamily: 'OpenSans',
-            fontSize: 15,
-            lineHeight: 25,
-            color: colors.white,
-            textAlign: 'left',
-          }}>
-            Sign up with Facebook
-          </Text>
-        </TouchableOpacity>
+        <View style={{ height: 200, justifyContent: 'center' }}>
+          <TouchableOpacity
+            onPress={this.loginFacebook}
+            style={[styles.button, {
+              backgroundColor: colors.fbBlueDark,
+            }]}
+            disabled={false}
+          >
+            <Icon
+              size={20}
+              name="facebook-official"
+              style={styles.fbIcon}
+            />
+            <Text style={styles.buttonText}>
+              Sign up with Facebook
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigate('Signup')}
+            style={[styles.button, {
+              backgroundColor: 'transparent',
+              borderWidth: 1.5,
+              borderColor: colors.darkGrey,
+            }]}
+          >
+            <Text style={styles.buttonText}>Create an Account</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigate('Login')}
+            style={[styles.button, {
+              backgroundColor: 'transparent',
+            }]}
+          >
+            <Text style={[styles.buttonText, {
+              color: colors.lightGrey,
+            }]}
+            >
+              Already have an account?
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

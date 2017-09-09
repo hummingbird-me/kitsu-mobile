@@ -47,7 +47,8 @@ export default StyleSheet.create({
     height: 240,
     resizeMode: 'contain',
   },
-  getStartedButton: {
+  button: {
+    flexDirection: 'row',
     marginHorizontal: 16,
     marginBottom: 16,
     backgroundColor: colors.white,
@@ -55,6 +56,12 @@ export default StyleSheet.create({
     height: 47,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonText: {
+    fontFamily: 'OpenSans',
+    fontSize: 15,
+    lineHeight: 25,
+    color: colors.white,
   },
   getStartedText: {
     color: colors.darkPurple,
@@ -84,8 +91,13 @@ export default StyleSheet.create({
   },
   squareImage: {
     marginHorizontal: 8,
-    width: 120,
-    height: 120,
+    width: 130,
+    height: 130,
     borderRadius: 8,
+  },
+  fbIcon: {
+    color: colors.white,
+    paddingRight: 8,
+    paddingLeft: 8,
   },
 });
