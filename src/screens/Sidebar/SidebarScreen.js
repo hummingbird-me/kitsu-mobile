@@ -1,6 +1,5 @@
 /*
   // TODO
-  - get color code of black text, replace all #444.
   - reorganize styles
   - work on ListEmptyItems after react native upgrade
 */

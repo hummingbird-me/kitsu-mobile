@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.grey,
   },
-  valueText: {
+  valueText: { // TODO: Find a better name for this.
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginTop: 4,
@@ -65,6 +65,12 @@ export const styles = StyleSheet.create({
     width: 16,
     height: 16,
     marginHorizontal: 4,
+  },
+  blockingWrapper: {
+    backgroundColor: colors.white,
+    padding: 2,
+    borderRadius: 4,
+    margin: 12,
   },
 });
 

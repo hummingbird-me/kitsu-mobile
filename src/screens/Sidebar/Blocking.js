@@ -209,9 +209,9 @@ class Blocking extends React.Component {
           title={error}
           containerStyle={{ top: 85 }}
         />
-        <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
+        <View style={styles.blockingWrapper}>
           <Text
-            style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12, color: colors.softBlack }}
+            style={[styles.valueText, { padding: 12, paddingTop: 8, marginTop: 0 }]}
           >
             Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
           </Text>
