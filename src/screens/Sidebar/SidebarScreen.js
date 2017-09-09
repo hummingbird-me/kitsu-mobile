@@ -1,6 +1,6 @@
 /*
   // TODO
-  - reorganize styles
+  - reorganize styles -> generalize text component styles ( valueText )
   - work on ListEmptyItems after react native upgrade
 */
 

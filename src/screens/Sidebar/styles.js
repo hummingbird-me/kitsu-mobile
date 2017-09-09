@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.grey,
   },
-  valueText: { // TODO: Find a better name for this.
+  valueText: { // TODO: Find a better name for this and remove margin to generalize more.
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginTop: 4,
@@ -71,6 +71,11 @@ export const styles = StyleSheet.create({
     padding: 2,
     borderRadius: 4,
     margin: 12,
+  },
+  privacyTipsWrapper: {
+    backgroundColor: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
 });
 

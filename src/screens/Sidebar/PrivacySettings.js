@@ -67,23 +67,16 @@ class PrivacySettings extends React.Component {
       <View style={styles.containerStyle}>
         <SidebarTitle title={'Personal Settings'} />
         <View
-          style={{
-            flexDirection: 'row',
-            backgroundColor: 'white',
-            paddingHorizontal: 12,
-            paddingVertical: 16,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
+          style={[styles.item, { paddingHorizontal: 12 }]}
         >
-          <Text style={{ fontSize: 14 }}>Share posts to Global Feed</Text>
+          <Text style={[styles.valueText, { fontSize: 14, marginTop: 0 }]}>Share posts to Global Feed</Text>
           <Switch
             value={shareToGlobal}
             onValueChange={v => this.setState({ modified: true, shareToGlobal: v })}
           />
         </View>
         <ItemSeparator />
-        <View style={{ backgroundColor: 'white', paddingHorizontal: 12, paddingVertical: 8 }}>
+        <View style={styles.privacyTipsWrapper}>
           <Text style={{ fontSize: 10, color: 'grey' }}>
             If disabled, your posts will only be shared to your followers and guests to your profile.
           </Text>
