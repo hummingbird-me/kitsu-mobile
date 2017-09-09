@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 import { TextInput, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { commonStyles } from 'kitsu/common/styles';
-import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
 export class SearchBox extends React.PureComponent {

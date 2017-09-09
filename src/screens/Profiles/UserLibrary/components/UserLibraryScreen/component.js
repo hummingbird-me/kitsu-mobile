@@ -206,7 +206,7 @@ export class UserLibraryScreenComponent extends React.Component {
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 
-    return listOrder.map((currentList) => {
+    return listOrder.map((currentList, index) => {
       const { status } = currentList;
       const { data, fetchMore, loading } = userLibrary[type][status];
 
@@ -221,9 +221,9 @@ export class UserLibraryScreenComponent extends React.Component {
       }
 
       const renderData = emptyItemsToAdd > 0 ? dataFilled : data;
-
+      const listStyle = index === listOrder.length - 1 ? styles.listLastChild : null;
       return (
-        <View key={`${status}-${type}`}>
+        <View key={`${status}-${type}`} style={listStyle}>
           <LibraryHeader
             libraryStatus={status}
             libraryType={type}
@@ -232,7 +232,9 @@ export class UserLibraryScreenComponent extends React.Component {
             profile={navigation.state.params.profile}
           />
 
-          {loading && this.renderLoadingList()}
+          {loading && !data.length &&
+            this.renderLoadingList()
+          }
 
           {!loading && !data.length ?
             this.renderEmptyList(type, status)

@@ -40,6 +40,9 @@ export const styles = StyleSheet.create({
     marginHorizontal: 4,
     width: constants.POSTER_CARD_WIDTH,
   },
+  listLastChild: {
+    marginBottom: 12,
+  },
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
