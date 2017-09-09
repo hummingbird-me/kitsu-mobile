@@ -106,7 +106,13 @@ class Blocking extends React.Component {
 
   componentDidMount() {
     this.fetchUserBlocks();
-    setTimeout(() => this.feedback.show(), 1000);
+  }
+
+  onError = (e) => {
+    this.setState({
+      error: (e && e[0] && e[0].title) || 'Something went wrong',
+      loading: false,
+    }, this.feedback.show);
   }
 
   onBlockUser = async (user) => {
@@ -122,10 +128,7 @@ class Blocking extends React.Component {
       });
       this.fetchUserBlocks();
     } catch (e) {
-      this.setState({
-        error: e,
-        loading: false,
-      });
+      this.onError(e);
     }
   };
 
@@ -142,10 +145,7 @@ class Blocking extends React.Component {
         loading: false,
       });
     } catch (e) {
-      this.setState({
-        error: e,
-        loading: false,
-      });
+      this.onError(e);
     }
   };
 
@@ -163,10 +163,7 @@ class Blocking extends React.Component {
         loading: false,
       });
     } catch (e) {
-      this.setState({
-        error: e,
-        loading: false,
-      });
+      this.onError(e);
     }
   };
 
@@ -202,11 +199,16 @@ class Blocking extends React.Component {
   );
 
   render() {
-    const { blocks, loading, searchState } = this.state;
+    const { error, blocks, loading, searchState } = this.state;
     const { algoliaKeys } = this.props;
     const listTitle = blocks.length > 0 ? 'Blocked Users' : 'You aren\'t currently blocking any users.';
     return (
       <View style={styles.containerStyle}>
+        <Feedback
+          ref={(r) => this.feedback = r}
+          title={error}
+          containerStyle={{ top: 85 }}
+        />
         <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
           <Text
             style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12, color: colors.softBlack }}
@@ -225,11 +227,6 @@ class Blocking extends React.Component {
             {this.renderResults()}
           </InstantSearch>
         </View>
-        <Feedback
-          ref={(r) => this.feedback = r}
-          title={'Error blocking the user'}
-          containerStyle={{ top: 90 }}
-        />
         {!loading
           ? <View>
             <SidebarTitle title={listTitle} />

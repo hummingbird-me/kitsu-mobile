@@ -15,6 +15,7 @@ class LibraryScreen extends React.Component {
   };
 
   state = { // canonical -> map before setting.
+    modified: false,
     titleLanguagePreference: this.props.titleLanguagePreference,
     ratingSystem: this.props.ratingSystem,
   };
@@ -48,12 +49,13 @@ class LibraryScreen extends React.Component {
 
   render() {
     const { navigation, loading } = this.props;
+    const { modified } = this.state;
     return (
       <View style={styles.containerStyle}>
         <SidebarTitle title={'Media Preferences'} />
         <SelectMenu
           style={styles.selectMenu}
-          onOptionSelected={t => this.setState({ titleLanguagePreference: t })}
+          onOptionSelected={t => this.setState({ modified: true, titleLanguagePreference: t })}
           cancelButtonIndex={this.titleLanguagePreference.length - 1}
           options={this.titleLanguagePreference}
         >
@@ -69,7 +71,7 @@ class LibraryScreen extends React.Component {
         <ItemSeparator />
         <SelectMenu
           style={styles.selectMenu}
-          onOptionSelected={t => this.setState({ ratingSystem: t })}
+          onOptionSelected={t => this.setState({ modified: true, ratingSystem: t })}
           cancelButtonIndex={this.ratingSystem.length - 1}
           options={this.ratingSystem}
         >
@@ -106,6 +108,7 @@ class LibraryScreen extends React.Component {
           title={'Save Library Settings'}
           onPress={this.onUpdateLibrarySettings}
           loading={loading}
+          disabled={!modified}
         />
       </View>
     );

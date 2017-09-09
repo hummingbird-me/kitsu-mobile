@@ -12,6 +12,7 @@ class PrivacySettings extends React.Component {
   };
 
   state = {
+    modified: false,
     loading: true,
     shareToGlobal: false,
   };
@@ -61,7 +62,7 @@ class PrivacySettings extends React.Component {
 
   render() {
     const loading = this.state.loading;
-    const { shareToGlobal } = this.state;
+    const { shareToGlobal, modified } = this.state;
     return (
       <View style={styles.containerStyle}>
         <SidebarTitle title={'Personal Settings'} />
@@ -78,7 +79,7 @@ class PrivacySettings extends React.Component {
           <Text style={{ fontSize: 14 }}>Share posts to Global Feed</Text>
           <Switch
             value={shareToGlobal}
-            onValueChange={v => this.setState({ shareToGlobal: v })}
+            onValueChange={v => this.setState({ modified: true, shareToGlobal: v })}
           />
         </View>
         <ItemSeparator />
@@ -91,6 +92,7 @@ class PrivacySettings extends React.Component {
           title={'Save Privacy Settings'}
           onPress={this.onSavePrivacySettings}
           loading={loading}
+          disabled={!modified}
         />
       </View>
     );

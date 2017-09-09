@@ -12,12 +12,14 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 12,
     borderRadius: 2,
+    zIndex: 99,
   },
   title: {
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
     fontFamily: 'OpenSans',
+    textAlign: 'center',
   },
   defaultStyles: {
   },

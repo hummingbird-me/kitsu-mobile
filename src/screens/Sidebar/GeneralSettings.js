@@ -29,6 +29,7 @@ class GeneralSettings extends React.Component {
       confirmPassword: '',
       shouldShowValidationInput: false,
       selectMenuText: sfwFilter ? this.filterOptions[0].text : this.filterOptions[1].text,
+      modified: false,
     };
   }
 
@@ -51,10 +52,10 @@ class GeneralSettings extends React.Component {
   onSelectFilterOption = (value, option) => {
     switch (value) {
       case 'on':
-        this.setState({ sfwFilter: true, selectMenuText: option.text });
+        this.setState({ modified: true, sfwFilter: true, selectMenuText: option.text });
         break;
       case 'off':
-        this.setState({ sfwFilter: false, selectMenuText: option.text });
+        this.setState({ modified: true, sfwFilter: false, selectMenuText: option.text });
         break;
       default:
         // cancel button pressed.
@@ -85,6 +86,7 @@ class GeneralSettings extends React.Component {
 
   render() {
     const { loading } = this.props;
+    const { modified } = this.state;
     return (
       <View style={styles.containerStyle}>
         <ScrollView scrollEnabled={false}>
@@ -96,7 +98,7 @@ class GeneralSettings extends React.Component {
             <TextInput
               style={styles.input}
               value={this.state.name}
-              onChangeText={t => this.setState({ name: t })}
+              onChangeText={t => this.setState({ modified: true, name: t })}
               autoCapitalize={'words'}
               autoCorrect={false}
               underlineColorAndroid={'transparent'}
@@ -111,7 +113,7 @@ class GeneralSettings extends React.Component {
             <TextInput
               style={styles.input}
               value={this.state.email}
-              onChangeText={t => this.setState({ email: t })}
+              onChangeText={t => this.setState({ modified: true, email: t })}
               autoCapitalize={'none'}
               autoCorrect={false}
               underlineColorAndroid={'transparent'}
@@ -128,7 +130,7 @@ class GeneralSettings extends React.Component {
               value={this.state.password}
               onChangeText={(t) => {
                 this.toggle(t);
-                this.setState({ password: t });
+                this.setState({ modified: true, password: t });
               }}
               secureTextEntry
               placeholder={'Start typing to set a new password.'}
@@ -171,6 +173,7 @@ class GeneralSettings extends React.Component {
           </SelectMenu>
           <SidebarButton
             loading={loading}
+            disabled={!modified}
             onPress={this.onSavePersonalSettings}
             title={'Save General Settings'}
           />

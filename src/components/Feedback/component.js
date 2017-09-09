@@ -11,7 +11,7 @@ export class Feedback extends React.Component {
     title: PropTypes.string.isRequired,
     autoHide: PropTypes.bool,
     autoHideDuration: PropTypes.number,
-    duration: PropTypes.number,
+    fadeDuration: PropTypes.number,
   };
 
   static defaultProps = {
@@ -19,8 +19,8 @@ export class Feedback extends React.Component {
     titleStyle: styles.defaultStyles,
     title: 'Something went wrong.',
     autoHide: true,
-    autoHideDuration: 4000,
-    duration: 300,
+    autoHideDuration: 3000,
+    fadeDuration: 300,
   };
 
   state = {
@@ -32,25 +32,25 @@ export class Feedback extends React.Component {
   }
 
   show = () => {
-    const { autoHide, duration, autoHideDuration } = this.props;
+    const { autoHide, fadeDuration, autoHideDuration } = this.props;
     const { opacity } = this.state;
-    Animated.timing(opacity, { toValue: 1, duration }).start();
+    Animated.timing(opacity, { toValue: 1, duration: fadeDuration }).start();
     if (autoHide) {
       this.autoHideTimeout = setTimeout(this.hide, autoHideDuration);
     }
   }
 
   hide = () => {
-    const { duration } = this.props;
+    const { fadeDuration } = this.props;
     const { opacity } = this.state;
-    Animated.timing(opacity, { toValue: 0, duration }).start();
+    Animated.timing(opacity, { toValue: 0, duration: fadeDuration }).start();
   }
 
   render() {
-    const { containerStyle, title } = this.props;
+    const { title, containerStyle, titleStyle } = this.props;
     return (
       <Animated.View style={[styles.container, { opacity: this.state.opacity }, containerStyle]}>
-        <Text style={[styles.title, styles.titleStyle]}>
+        <Text style={[styles.title, titleStyle]}>
           {title}
         </Text>
       </Animated.View>
