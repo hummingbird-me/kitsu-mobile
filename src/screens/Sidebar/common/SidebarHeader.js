@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { defaultCover as defaultCoverUri } from 'kitsu/constants/app/';
+import * as colors from 'kitsu/constants/colors';
 import PropTypes from 'prop-types';
 
 const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
@@ -14,39 +15,18 @@ const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
       source={{ uri: (coverImage && coverImage.large) || defaultCoverUri }}
     >
       <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          paddingTop: 30,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
+        style={styles.headerContainer}
       >
         <View style={{ width: 30 }}>
           <TouchableOpacity
-            style={{
-              marginTop: 3,
-              paddingHorizontal: 4,
-              paddingVertical: 8,
-              backgroundColor: 'transparent',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Icon name="ios-arrow-back" color={'white'} size={22} />
+            <Icon name="ios-arrow-back" color={colors.white} size={22} />
           </TouchableOpacity>
         </View>
         <Text
-          style={{
-            flex: 1,
-            textAlign: 'center',
-            backgroundColor: 'transparent',
-            color: 'white',
-            fontFamily: 'OpenSans',
-            fontSize: 14,
-            fontWeight: 'bold',
-          }}
+          style={styles.title}
         >
           {headerTitle}
         </Text>
@@ -61,10 +41,12 @@ const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
 SidebarHeader.propTypes = {
   headerTitle: PropTypes.string.isRequired,
   navigation: PropTypes.object.isRequired,
+  coverImage: PropTypes.string,
 };
 
 SidebarHeader.defaultProps = {
   headerTitle: 'Settings',
+  coverImage: null,
 };
 
 const styles = {
@@ -76,6 +58,30 @@ const styles = {
   },
   header: {
     height: 77 + Platform.select({ ios: 0, android: 4 }),
+  },
+  headerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: 30,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  backButton: {
+    marginTop: 3,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    flex: 1,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+    color: colors.white,
+    fontFamily: 'OpenSans',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 };
 
