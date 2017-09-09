@@ -87,6 +87,7 @@ export default class RegistrationScreen extends React.Component {
           >
             <Text style={[styles.buttonText, {
               color: colors.lightGrey,
+              fontSize: 12,
             }]}
             >
               Already have an account?
