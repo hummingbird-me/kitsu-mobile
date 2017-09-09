@@ -69,13 +69,30 @@ export const styles = StyleSheet.create({
   blockingWrapper: {
     backgroundColor: colors.white,
     padding: 2,
-    borderRadius: 4,
+    borderRadius: 2,
     margin: 12,
+  },
+  privacySettingsWrapper: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  privacySettingsText: {
+    fontFamily: 'OpenSans',
+    color: colors.softBlack,
+    fontSize: 14,
   },
   privacyTipsWrapper: {
     backgroundColor: 'white',
     paddingHorizontal: 12,
     paddingVertical: 8,
+  },
+  privacyTipsText: {
+    fontSize: 10,
+    color: 'grey',
   },
 });
 

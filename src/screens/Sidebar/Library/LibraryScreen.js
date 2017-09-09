@@ -9,47 +9,51 @@ import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
+const mediaPreferenceKeyToTitle = (key) => {
+  const mapper = {
+    romanized: 'Romanized',
+    canonical: 'Most Common Usage',
+    english: 'English',
+  };
+  return mapper[key];
+};
+
+const mediaPreferenceTitleToKey = (title) => {
+  switch (title) {
+    case 'Romanized': return 'romanized';
+    case 'Most Common Usage': return 'canonical';
+    case 'English': return 'english';
+    default: return null;
+  }
+};
+
 class LibraryScreen extends React.Component {
   static navigationOptions = {
     title: 'Library',
   };
 
-  state = { // canonical -> map before setting.
+  // No mapping needed for Rating System, since API uses it as it is.
+  // We just need to translate Canonical to Most Common Usage.
+  state = {
     modified: false,
-    titleLanguagePreference: this.props.titleLanguagePreference,
+    titleLanguagePreference: mediaPreferenceKeyToTitle(this.props.titleLanguagePreference),
     ratingSystem: this.props.ratingSystem,
   };
 
-  // display mapped results
-  titleLanguagePreference = ['romanized', 'canonical', 'english', 'cancel'];
+  titleLanguagePreference = ['Romanized', 'Most Common Usage', 'English', 'cancel'];
   ratingSystem = ['simple', 'regular', 'advanced', 'cancel'];
-
-  onUpdateTitlePreference = (value, option) => {
-    switch (value) {
-      case 'on':
-        this.setState({ sfwFilter: false, selectMenuText: option.text });
-        break;
-      case 'off':
-        this.setState({ sfwFilter: true, selectMenuText: option.text });
-        break;
-      default:
-        // cancel button pressed.
-        break;
-    }
-  };
 
   onUpdateLibrarySettings = () => {
     const { titleLanguagePreference, ratingSystem } = this.state;
-    // demap it back to key
     this.props.updateLibrarySettings({
-      titleLanguagePreference,
+      titleLanguagePreference: mediaPreferenceTitleToKey(titleLanguagePreference),
       ratingSystem,
     });
   };
 
   render() {
     const { navigation, loading } = this.props;
-    const { modified } = this.state;
+    const { modified, titleLanguagePreference, ratingSystem } = this.state;
     return (
       <View style={styles.containerStyle}>
         <SidebarTitle title={'Media Preferences'} />
@@ -64,7 +68,7 @@ class LibraryScreen extends React.Component {
               Title Display
             </Text>
             <Text style={styles.valueText}>
-              {startCase(this.state.titleLanguagePreference)}
+              { titleLanguagePreference }
             </Text>
           </View>
         </SelectMenu>
@@ -80,7 +84,7 @@ class LibraryScreen extends React.Component {
               Rating Type
             </Text>
             <Text style={styles.valueText}>
-              {startCase(this.state.ratingSystem)}
+              { startCase(ratingSystem) }
             </Text>
           </View>
         </SelectMenu>
