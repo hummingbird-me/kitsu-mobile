@@ -59,7 +59,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
       <Button
         block
         disabled={loading}
-        onPress={() => onSubmit(false)}
+        onPress={onSubmit}
         style={{
           backgroundColor: colors.green,
           height: 47,
