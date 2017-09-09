@@ -227,8 +227,10 @@ class Blocking extends React.Component {
             {this.renderResults()}
           </InstantSearch>
         </View>
-        {!loading
-          ? <View>
+        {loading
+          ? <ActivityIndicator style={{ marginTop: 8 }} color={'white'} />
+          :
+          <View>
             <SidebarTitle title={listTitle} />
             <FlatList
               data={blocks}
@@ -237,8 +239,7 @@ class Blocking extends React.Component {
               ItemSeparatorComponent={() => <ItemSeparator />}
               removeClippedSubviews={false}
             />
-          </View>
-          : <ActivityIndicator style={{ marginTop: 8 }} color={'white'} />}
+          </View>}
       </View>
     );
   }
