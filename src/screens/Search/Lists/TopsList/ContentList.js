@@ -18,7 +18,7 @@ ContentListHeader.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export const ContentList = ({ title, data }) => (
+export const ContentList = ({ title, data, onItemPress }) => (
   <View style={styles.contentListContainer}>
     <ContentListHeader title={title} />
     <FlatList
@@ -29,7 +29,7 @@ export const ContentList = ({ title, data }) => (
         <MediaCard
           cardDimensions={{ height: 120, width: 80 }}
           mediaData={item}
-          onPress={p => console.log('params', p)}
+          onPress={onItemPress}
         />
       )}
     />
@@ -39,6 +39,7 @@ export const ContentList = ({ title, data }) => (
 ContentList.propTypes = {
   title: PropTypes.string.isRequired,
   data: PropTypes.array,
+  onItemPress: PropTypes.func.isRequired,
 };
 
 ContentList.defaultProps = {
