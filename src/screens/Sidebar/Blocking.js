@@ -14,6 +14,7 @@ import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { InstantSearchBox } from 'kitsu/components/SearchBox';
+import { Feedback } from 'kitsu/components/Feedback';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
@@ -105,6 +106,7 @@ class Blocking extends React.Component {
 
   componentDidMount() {
     this.fetchUserBlocks();
+    setTimeout(() => this.feedback.show(), 1000);
   }
 
   onBlockUser = async (user) => {
@@ -185,6 +187,14 @@ class Blocking extends React.Component {
     );
   };
 
+  renderBlocksItem = ({ item }) => (
+    <RowItem
+      type={'flatlist'}
+      item={item.blocked}
+      onPress={() => this.onUnblockUser(item)}
+    />
+  )
+
   renderListEmptyComponent = () => (
     <Text style={styles.emptyText}>
       You aren{'\''}t currently blocking anyone.
@@ -192,7 +202,8 @@ class Blocking extends React.Component {
   );
 
   render() {
-    const { blocks, loading } = this.state;
+    const { blocks, loading, searchState } = this.state;
+    const { algoliaKeys } = this.props;
     const listTitle = blocks.length > 0 ? 'Blocked Users' : 'You aren\'t currently blocking any users.';
     return (
       <View style={styles.containerStyle}>
@@ -205,29 +216,27 @@ class Blocking extends React.Component {
           <ItemSeparator />
           <InstantSearch
             appId={kitsuConfig.algoliaAppId}
-            apiKey={this.props.algoliaKeys.users.key}
-            indexName={this.props.algoliaKeys.users.index}
-            searchState={this.state.searchState}
+            apiKey={algoliaKeys.users.key}
+            indexName={algoliaKeys.users.index}
+            searchState={searchState}
             onSearchStateChange={this.handleSearchStateChange}
           >
             <InstantSearchBox placeholder={'Search Users to Block'} searchIconOffset={160} />
             {this.renderResults()}
           </InstantSearch>
         </View>
+        <Feedback
+          ref={(r) => this.feedback = r}
+          title={'Error blocking the user'}
+          containerStyle={{ top: 90 }}
+        />
         {!loading
           ? <View>
             <SidebarTitle title={listTitle} />
             <FlatList
               data={blocks}
               keyExtractor={item => item.blocked.id}
-              renderItem={({ item }) => (
-                <RowItem
-                  type={'flatlist'}
-                  item={item.blocked}
-                  onPress={() => this.onUnblockUser(item)}
-                />
-                )}
-              // ListEmptyComponent={this.renderListEmptyComponent}
+              renderItem={this.renderBlocksItem}
               ItemSeparatorComponent={() => <ItemSeparator />}
               removeClippedSubviews={false}
             />

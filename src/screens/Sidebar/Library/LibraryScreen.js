@@ -14,11 +14,12 @@ class LibraryScreen extends React.Component {
     title: 'Library',
   };
 
-  state = {
+  state = { // canonical -> map before setting.
     titleLanguagePreference: this.props.titleLanguagePreference,
     ratingSystem: this.props.ratingSystem,
   };
 
+  // display mapped results
   titleLanguagePreference = ['romanized', 'canonical', 'english', 'cancel'];
   ratingSystem = ['simple', 'regular', 'advanced', 'cancel'];
 
@@ -38,6 +39,7 @@ class LibraryScreen extends React.Component {
 
   onUpdateLibrarySettings = () => {
     const { titleLanguagePreference, ratingSystem } = this.state;
+    // demap it back to key
     this.props.updateLibrarySettings({
       titleLanguagePreference,
       ratingSystem,
