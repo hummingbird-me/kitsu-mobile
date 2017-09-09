@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { upperFirst } from 'lodash';
-import { getDefaults, getStreamers } from 'kitsu/store/anime/actions';
+import { getDefaults, getStreamers, getCategories } from 'kitsu/store/anime/actions';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { ContentList } from './ContentList';
 import { styles } from './styles';
@@ -11,6 +11,7 @@ class TopsList extends PureComponent {
   componentWillMount() {
     const { active } = this.props;
     this.props.getStreamers();
+    this.props.getCategories();
     this.props.getDefaults('topAiring', active);
     this.props.getDefaults('popular', active);
     this.props.getDefaults('highest', active);
@@ -22,7 +23,7 @@ class TopsList extends PureComponent {
   };
 
   render() {
-    const { active } = this.props;
+    const { active, streamers } = this.props;
     const data = this.props[active] || {};
 
     return (
@@ -31,6 +32,12 @@ class TopsList extends PureComponent {
           title={`Top Airing ${upperFirst(active)}`}
           data={data.topAiring}
           onItemPress={this.onItemPress}
+        />
+        <ContentList
+          title="Anime By Streaming"
+          dark
+          data={streamers}
+          onItemPress={p => console.log('nav params', p)}
         />
         <ContentList
           title={`Top Upcoming ${upperFirst(active)}`}
@@ -93,4 +100,4 @@ const mapStateToProps = ({ anime }) => {
   };
 };
 
-export default connect(mapStateToProps, { getDefaults, getStreamers })(TopsList);
+export default connect(mapStateToProps, { getDefaults, getStreamers, getCategories })(TopsList);

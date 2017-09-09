@@ -7,9 +7,17 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.lightPurple,
   },
   contentListContainer: {
-    backgroundColor: colors.white,
     paddingHorizontal: 10,
     paddingVertical: 10,
+  },
+  darkBg: {
+    backgroundColor: colors.lightPurple,
+  },
+  lightBg: {
+    backgroundColor: colors.white,
+  },
+  lightText: {
+    color: colors.white,
   },
   contentListHeaderContainer: {
     flexDirection: 'row',
