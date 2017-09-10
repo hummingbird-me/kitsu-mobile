@@ -22,6 +22,9 @@ const ProfileStack = DismissableStackNavigator(
     UserLibraryList: {
       screen: ProfileScreens.UserLibraryListScreen,
     },
+    UserLibrarySearch: {
+      screen: ProfileScreens.UserLibrarySearchScreen,
+    },
     Network: {
       screen: ProfileScreens.NetworkScreen,
     },

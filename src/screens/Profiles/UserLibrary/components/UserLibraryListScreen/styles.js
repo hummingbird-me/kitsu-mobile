@@ -6,9 +6,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.darkPurple,
     flex: 1,
   },
-  searchBar: {
-    height: 30,
-    marginHorizontal: 10,
+  searchBox: {
     marginVertical: 10,
   },
 });

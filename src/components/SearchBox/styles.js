@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: colors.lightGrey,
+    color: colors.black,
     textAlign: 'center',
     paddingVertical: 10,
   },
