@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { View, ScrollView, Dimensions } from 'react-native';
 import { intro1, intro2, intro3, intro4 } from 'kitsu/assets/img/onboarding/';
+import { Button } from 'kitsu/components/Button';
 import { OnboardingHeader } from './common/';
 import styles from './styles';
 import Step from './Step';
@@ -66,8 +67,8 @@ export default class OnboardingScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.contentWrapper}>
-          <OnboardingHeader />
+        <OnboardingHeader style={styles.header} />
+        <View style={{ flex: 8 }}>
           <View style={styles.page}>
             <ScrollView
               pagingEnabled
@@ -80,15 +81,18 @@ export default class OnboardingScreen extends React.Component {
               {this.renderStep()}
             </ScrollView>
           </View>
-          <View style={styles.dotContainer}>
-            {this.renderDots()}
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={styles.dotContainer}>
+              {this.renderDots()}
+            </View>
+            <Button
+              style={styles.getStartedButton}
+              title={'Get Started'}
+              titleStyle={styles.getStartedText}
+              onPress={() => navigate('Registration')}
+            />
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigate('Registration')} style={styles.button}>
-          <Text style={styles.getStartedText}>
-            Get Started
-          </Text>
-        </TouchableOpacity>
       </View>
     );
   }

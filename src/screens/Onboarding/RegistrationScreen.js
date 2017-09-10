@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { View, Image } from 'react-native';
 import { Button } from 'kitsu/components/Button';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
 import { OnboardingHeader } from './common/';
@@ -34,7 +33,7 @@ export default class RegistrationScreen extends React.Component {
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (!result.isCancelled) {
-          onSuccess(true);
+          this.onSuccess();
         }
       },
       (error) => {
@@ -48,33 +47,35 @@ export default class RegistrationScreen extends React.Component {
     // TODO: make this screen responsive.
     return (
       <View style={styles.container}>
-        <OnboardingHeader />
-        <View style={{ marginBottom: 24 }}>
-          <GalleryRow />
-          <GalleryRow />
-        </View>
-        <View style={{ justifyContent: 'center' }}>
-          <Button
-            style={{ backgroundColor: colors.fbBlueDark }}
-            title={'Sign up with Facebook'}
-            icon={'facebook-official'}
-            onPress={this.loginFacebook}
-          />
-          <Button
-            style={{
-              backgroundColor: colors.transparent,
-              borderWidth: 1.5,
-              borderColor: colors.darkGrey,
-            }}
-            title={'Create an Account'}
-            onPress={() => navigate('Signup')}
-          />
-          <Button
-            style={{ backgroundColor: colors.transparent }}
-            title={'Already have an account?'}
-            titleStyle={{ fontSize: 12, color: colors.lightGrey }}
-            onPress={() => navigate('Login')}
-          />
+        <OnboardingHeader style={styles.header} />
+        <View style={{ flex: 8 }}>
+          <View>
+            <GalleryRow />
+            <GalleryRow />
+          </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Button
+              style={{ backgroundColor: colors.fbBlueDark }}
+              title={'Sign up with Facebook'}
+              icon={'facebook-official'}
+              onPress={this.loginFacebook}
+            />
+            <Button
+              style={{
+                backgroundColor: colors.transparent,
+                borderWidth: 1.5,
+                borderColor: colors.darkGrey,
+              }}
+              title={'Create an Account'}
+              onPress={() => navigate('Signup')}
+            />
+            <Button
+              style={{ backgroundColor: colors.transparent }}
+              title={'Already have an account?'}
+              titleStyle={{ fontSize: 12, color: colors.lightGrey }}
+              onPress={() => navigate('Login')}
+            />
+          </View>
         </View>
       </View>
     );

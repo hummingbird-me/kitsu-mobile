@@ -7,11 +7,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: Platform.select({ ios: 20, android: 24 }),
-    height: 120,
   },
   logo: {
-    width: 50,
-    height: 50,
+    marginTop: 4,
+    width: 44,
+    height: 44,
     resizeMode: 'contain',
   },
   logoText: {

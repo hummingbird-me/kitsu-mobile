@@ -9,7 +9,11 @@ export default StyleSheet.create({
   contentWrapper: {
     flex: 1,
   },
+  header: {
+    flex: 2,
+  },
   page: {
+    justifyContent: 'center',
     height: 320,
   },
   slide: {
@@ -43,30 +47,17 @@ export default StyleSheet.create({
     height: 240,
     resizeMode: 'contain',
   },
-  button: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
+  getStartedButton: {
     marginBottom: 16,
     backgroundColor: colors.white,
-    borderRadius: 4,
-    height: 47,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontFamily: 'OpenSans',
-    fontSize: 15,
-    lineHeight: 25,
-    color: colors.white,
   },
   getStartedText: {
     color: colors.darkPurple,
-    textAlign: 'center',
     fontSize: 17,
-    fontFamily: 'OpenSans',
     fontWeight: 'bold',
   },
   dotContainer: {
+    top: -10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
