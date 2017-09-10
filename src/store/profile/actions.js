@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
+import map from 'lodash/map';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 
@@ -72,7 +73,7 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
     const favorites = await Kitsu.findAll('favorites', {
       filter: {
         userId,
-        itemType: _.capitalize(type),
+        itemType: capitalize(type),
       },
       page: {
         limit,
@@ -259,7 +260,7 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
       payload: { network: [...data, ...network], type, userId },
     });
 
-    _.map(network, async (item) => {
+    map(network, async (item) => {
       const aaaa = await Kitsu.findAll('follows', {
         filter: {
           followed: item[type].id,

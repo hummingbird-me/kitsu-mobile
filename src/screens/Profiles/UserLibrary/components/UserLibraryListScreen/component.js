@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FlatList, View } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';

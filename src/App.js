@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { View, StatusBar, Linking } from 'react-native';
 import { Provider, connect } from 'react-redux';
-import { identity } from 'lodash';
+import identity from 'lodash/identity';
 
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
