@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { Button } from 'kitsu/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
@@ -48,51 +49,32 @@ export default class RegistrationScreen extends React.Component {
     return (
       <View style={styles.container}>
         <OnboardingHeader />
-        <View style={{ marginVertical: 24, justifyContent: 'center', }}>
+        <View style={{ marginBottom: 24 }}>
           <GalleryRow />
           <GalleryRow />
         </View>
-        <View style={{ height: 200, justifyContent: 'center' }}>
-          <TouchableOpacity
+        <View style={{ justifyContent: 'center' }}>
+          <Button
+            style={{ backgroundColor: colors.fbBlueDark }}
+            title={'Sign up with Facebook'}
+            icon={'facebook-official'}
             onPress={this.loginFacebook}
-            style={[styles.button, {
-              backgroundColor: colors.fbBlueDark,
-            }]}
-            disabled={false}
-          >
-            <Icon
-              size={20}
-              name="facebook-official"
-              style={styles.fbIcon}
-            />
-            <Text style={styles.buttonText}>
-              Sign up with Facebook
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigate('Signup')}
-            style={[styles.button, {
-              backgroundColor: 'transparent',
+          />
+          <Button
+            style={{
+              backgroundColor: colors.transparent,
               borderWidth: 1.5,
               borderColor: colors.darkGrey,
-            }]}
-          >
-            <Text style={styles.buttonText}>Create an Account</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+            }}
+            title={'Create an Account'}
+            onPress={() => navigate('Signup')}
+          />
+          <Button
+            style={{ backgroundColor: colors.transparent }}
+            title={'Already have an account?'}
+            titleStyle={{ fontSize: 12, color: colors.lightGrey }}
             onPress={() => navigate('Login')}
-            style={[styles.button, {
-              backgroundColor: 'transparent',
-            }]}
-          >
-            <Text style={[styles.buttonText, {
-              color: colors.lightGrey,
-              fontSize: 12,
-            }]}
-            >
-              Already have an account?
-            </Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
     );

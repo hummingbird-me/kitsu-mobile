@@ -68,22 +68,20 @@ export default class OnboardingScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
           <OnboardingHeader />
-          <View style={styles.pageWrapper}>
-            <View style={styles.page}>
-              <ScrollView
-                pagingEnabled
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                alwaysBounceHorizontal={false}
-                onScroll={this.handleScroll}
-                scrollEventThrottle={300} // decrease for precision, lower values trigger onScroll more.
-              >
-                {this.renderStep()}
-              </ScrollView>
-            </View>
-            <View style={styles.dotContainer}>
-              {this.renderDots()}
-            </View>
+          <View style={styles.page}>
+            <ScrollView
+              pagingEnabled
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              alwaysBounceHorizontal={false}
+              onScroll={this.handleScroll}
+              scrollEventThrottle={300} // decrease for precision, lower values trigger onScroll more.
+            >
+              {this.renderStep()}
+            </ScrollView>
+          </View>
+          <View style={styles.dotContainer}>
+            {this.renderDots()}
           </View>
         </View>
         <TouchableOpacity onPress={() => navigate('Registration')} style={styles.button}>

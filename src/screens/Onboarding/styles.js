@@ -9,12 +9,8 @@ export default StyleSheet.create({
   contentWrapper: {
     flex: 1,
   },
-  pageWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-  },
   page: {
-    height: 360,
+    height: 320,
   },
   slide: {
     alignItems: 'center',
