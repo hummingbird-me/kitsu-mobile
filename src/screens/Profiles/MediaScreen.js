@@ -14,7 +14,8 @@ import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
-import _ from 'lodash';
+import uniqBy from 'lodash/uniqBy';
+import capitalize from 'lodash/capitalize';
 import CustomHeader from 'kitsu/components/CustomHeader';
 import DoubleProgress from 'kitsu/components/DoubleProgress';
 import CardStatus from 'kitsu/components/Card/CardStatus';
@@ -95,7 +96,7 @@ class MediaScreen extends Component {
         if (activity.verb === 'progressed') {
           caption = `${activity.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${activity.progress}`;
         } else if (activity.verb === 'updated') {
-          caption = `${_.capitalize(activity.status.replace('_', ' '))}`;
+          caption = `${capitalize(activity.status.replace('_', ' '))}`;
         } else if (activity.verb === 'rated') {
           caption = `Rated: ${activity.rating}`;
         }
@@ -363,7 +364,7 @@ class MediaScreen extends Component {
             Hmm, there doesn't seem to be anything here yet.
           </Text>}
         {this.renderImageRow(
-          _.uniqBy(characters, item => item.id).slice(0, 6),
+          uniqBy(characters, item => item.id).slice(0, 6),
           115,
           115,
           'character',
