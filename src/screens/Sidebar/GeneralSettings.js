@@ -5,7 +5,7 @@ import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import { styles } from './styles';

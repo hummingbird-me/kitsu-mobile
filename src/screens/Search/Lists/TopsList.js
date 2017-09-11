@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Left, Right, Button, Text, Item } from 'native-base';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import upperFirst from 'lodash/upperFirst';
 import * as colors from 'kitsu/constants/colors';
 import { getDefaults } from 'kitsu/store/anime/actions';
 import { MediaCard } from 'kitsu/components/MediaCard';
@@ -154,14 +154,14 @@ class TopsList extends Component {
     const data = this.props[active];
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>
-        {this.renderGallery(data.topAiring, `Top Airing ${_.upperFirst(active)}`, 'topAiring')}
+        {this.renderGallery(data.topAiring, `Top Airing ${upperFirst(active)}`, 'topAiring')}
         {this.renderGallery(
           data.topUpcoming,
-          `Top Upcoming ${_.upperFirst(active)}`,
+          `Top Upcoming ${upperFirst(active)}`,
           'topUpcoming',
         )}
-        {this.renderGallery(data.highest, `Highest Rated ${_.upperFirst(active)}`, 'highest')}
-        {this.renderGallery(data.popular, `Most Popular ${_.upperFirst(active)}`, 'popular')}
+        {this.renderGallery(data.highest, `Highest Rated ${upperFirst(active)}`, 'highest')}
+        {this.renderGallery(data.popular, `Most Popular ${upperFirst(active)}`, 'popular')}
         <View style={{ paddingLeft: 16, paddingRight: 16, marginTop: 31.68, marginBottom: 10.5 }}>
           <Text
             style={{
