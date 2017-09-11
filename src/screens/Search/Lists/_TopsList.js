@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
@@ -29,6 +29,10 @@ const CATEGORY_LIST = [
 ];
 
 class TopsList extends Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+
   componentDidMount() {
     const { active } = this.props;
     this.props.getDefaults('topAiring', active);
@@ -79,8 +83,8 @@ class TopsList extends Component {
       array.length > 0
         ? array
         : Array(10)
-            .fill(1)
-            .map((item, index) => ({ key: index }));
+          .fill(1)
+          .map((item, index) => ({ key: index }));
 
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>

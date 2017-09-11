@@ -32,32 +32,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const ResultsList = ({ hits, hasMore, refine, onPress }) => {
-  const onEndReached = () => {
-    if (hasMore) {
-      refine();
-    }
-  };
-  return (
-    <FlatList
-      removeClippedSubviews={false}
-      data={hits}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.5}
-      getItemLayout={(data, index) => ({
-        length: IMAGE_SIZE.height,
-        offset: IMAGE_SIZE.height * index,
-        index,
-      })}
-      initialNumToRender={10}
-      numColumns={4}
-      scrollEnabled
-      contentContainerStyle={styles.list}
-      renderItem={e => renderItem(e, onPress)}
-      style={styles.container}
-    />
+const ResultsList = ({ hits, onPress }) => (
+  <FlatList
+    removeClippedSubviews={false}
+    data={hits}
+    getItemLayout={(data, index) => ({
+      length: IMAGE_SIZE.height,
+      offset: IMAGE_SIZE.height * index,
+      index,
+    })}
+    initialNumToRender={10}
+    numColumns={4}
+    scrollEnabled
+    contentContainerStyle={styles.list}
+    renderItem={e => renderItem(e, onPress)}
+    style={styles.container}
+  />
   );
-};
 
 ResultsList.propTypes = {
   hits: PropTypes.array.isRequired,
@@ -91,12 +82,13 @@ const renderItem = ({ item }, onPress) => {
             width: width - m * 2,
           }}
         />
-        {title &&
+        {title && (
           <LinearGradient colors={['transparent', 'black']} style={styles.linearGradient}>
             <Text style={styles.titleText} numberOfLines={2}>
               {title}
             </Text>
-          </LinearGradient>}
+          </LinearGradient>
+        )}
       </View>
     </TouchableOpacity>
   );

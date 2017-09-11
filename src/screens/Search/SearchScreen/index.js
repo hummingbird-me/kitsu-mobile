@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
-import { InstantSearch } from 'react-instantsearch/native';
-import { connectInfiniteHits } from 'react-instantsearch/connectors';
+
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
-import { InstantSearchBox } from 'kitsu/components/SearchBox';
+import algolia from 'algoliasearch/reactnative';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 
 import { followUser } from 'kitsu/store/user/actions';
 import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
-import { styles } from './styles';
+import { SearchBox } from 'kitsu/components/SearchBox';
 
-const Hits = connectInfiniteHits(ResultsList);
+import { styles } from './styles';
 
 class SearchScreen extends Component {
   state = {
@@ -22,6 +21,11 @@ class SearchScreen extends Component {
       anime: undefined,
       manga: undefined,
       users: undefined,
+    },
+    searchResults: {
+      anime: [],
+      manga: [],
+      users: [],
     },
     index: 0,
     routes: [
@@ -34,8 +38,8 @@ class SearchScreen extends Component {
       {
         key: 'manga',
         title: 'Manga',
-        apiKey: this.props.algoliaKeys.posts.key,
-        indexName: this.props.algoliaKeys.posts.index,
+        apiKey: this.props.algoliaKeys.media.key,
+        indexName: this.props.algoliaKeys.media.index,
       },
       {
         key: 'users',
@@ -46,64 +50,65 @@ class SearchScreen extends Component {
     ],
   };
 
-  renderScene = ({ route }) => (
-    <InstantSearch
-      appId={kitsuConfig.algoliaAppId}
-      apiKey={route.apiKey}
-      indexName={route.indexName}
-      onSearchStateChange={s => this.handleSearchStateChange(route, s)}
-    >
-      <InstantSearchBox
-        placeholder={`Search ${route.title}`}
-        searchIconOffset={108}
-        style={styles.searchBox}
-      />
-      {this.renderSubScene({ route })}
-    </InstantSearch>
-  );
+  handleSearchStateChange = (route, query) => {
+    const algoliaClient = algolia(kitsuConfig.algoliaAppId, route.apiKey);
+    const algoliaIndex = algoliaClient.initIndex(route.indexName);
+
+    // const { query } = searchState;
+    const nextQueryState = { ...this.state.query, [route.key]: query !== '' ? query : undefined };
+    this.setState({ query: nextQueryState }, () => {
+      algoliaIndex.search(query, (err, content) => {
+        console.log(`${route.key} query....`, content, err);
+        if (!err) {
+          this.setState({ searchResults: { [route.key]: content.hits } });
+        }
+      });
+    });
+  };
+
+  handleIndexChange = index => this.setState({ index });
+
+  renderScene = ({ route }) => {
+    const currentValue = this.state.query[route.key];
+
+    return (
+      <View>
+        <SearchBox
+          placeholder={`Search ${route.title}`}
+          searchIconOffset={108}
+          style={styles.searchBox}
+          value={currentValue}
+          onChangeText={t => this.handleSearchStateChange(route, t)}
+        />
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContentContainer}
+          style={styles.scrollView}
+        >
+          {this.renderSubScene({ route })}
+        </ScrollView>
+      </View>
+    );
+  };
 
   renderSubScene = ({ route }) => {
     const { query } = this.state;
     const { navigation, followUser, captureUsersData } = this.props;
 
     const activeQuery = query[route.key];
-
+    const hits = this.state.searchResults[route.key];
     switch (route.key) {
-      // case 'users': {
-      //   const UserHits = connectInfiniteHits(UsersList);
-      //   return (
-      //     <ScrollView
-      //       contentContainerStyle={styles.scrollViewContentContainer}
-      //       style={styles.scrollView}
-      //     >
-      //       <UserHits onFollow={followUser} onData={captureUsersData} />
-      //     </ScrollView>
-      //   );
-      // }
+      case 'users': {
+        return <UsersList hits={hits} onFollow={followUser} onData={captureUsersData} />;
+      }
       default: {
-        return (
-          <ScrollView
-            contentContainerStyle={styles.scrollViewContentContainer}
-            style={styles.scrollView}
-          >
-            {activeQuery ? (
-              <Hits />
-            ) : (
-              <TopsList active={route.key} mounted navigation={navigation} />
-            )}
-          </ScrollView>
+        return activeQuery ? (
+          <ResultsList hits={hits} />
+        ) : (
+          <TopsList active={route.key} mounted navigation={navigation} />
         );
       }
     }
   };
-
-  handleSearchStateChange = (route, searchState) => {
-    const { query } = searchState;
-    const nextQueryState = { ...this.state.query, [route.key]: query !== '' ? query : undefined };
-    this.setState({ query: nextQueryState });
-  };
-
-  handleIndexChange = index => this.setState({ index });
 
   renderIndicator = () => <View />;
 

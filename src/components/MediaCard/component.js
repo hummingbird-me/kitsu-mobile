@@ -6,56 +6,64 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Rating } from 'kitsu/components/Rating';
 import { styles } from './styles';
 
-export const MediaCard = ({
-  caption,
-  cardDimensions,
-  cardStyle,
-  mediaData,
-  onPress,
-  progress,
-  ratingTwenty,
-  ratingSystem,
-  style,
-}) => {
-  const navParams = {
-    mediaId: mediaData.id,
-    type: mediaData.type,
-  };
+export class MediaCard extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return nextProps.mediaData.posterImage !== this.props.mediaData.posterImage;
+  }
 
-  return (
-    <TouchableOpacity onPress={() => onPress(navParams)}>
-      <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
-        {mediaData.posterImage ? (
-          <ProgressiveImage
-            duration={500}
-            source={{ uri: mediaData.posterImage.small }}
-            style={[styles.posterImageCard, cardDimensions, cardStyle]}
-          />
-        ) : (
-          <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
-        )}
+  render() {
+    const {
+      caption,
+      cardDimensions,
+      cardStyle,
+      mediaData,
+      onPress,
+      progress,
+      ratingTwenty,
+      ratingSystem,
+      style,
+    } = this.props;
 
-        {caption.length > 0 && <Text style={styles.captionText}>{caption}</Text>}
+    const navParams = {
+      mediaId: mediaData.id,
+      type: mediaData.type,
+    };
 
-        {progress > 0 && (
-          <ProgressBar fillPercentage={progress} height={3} style={styles.progressBar} />
-        )}
+    return (
+      <TouchableOpacity onPress={() => onPress(navParams)}>
+        <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
+          {mediaData.posterImage ? (
+            <ProgressiveImage
+              duration={500}
+              source={{ uri: mediaData.posterImage.small }}
+              style={[styles.posterImageCard, cardDimensions, cardStyle]}
+            />
+          ) : (
+            <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
+          )}
 
-        {typeof ratingTwenty !== 'undefined' && (
-          <Rating
-            disabled
-            rating={ratingTwenty}
-            ratingSystem={ratingSystem}
-            size="tiny"
-            viewType="single"
-            showNotRated={false}
-            style={styles.rating}
-          />
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-};
+          {caption.length > 0 && <Text style={styles.captionText}>{caption}</Text>}
+
+          {progress > 0 && (
+            <ProgressBar fillPercentage={progress} height={3} style={styles.progressBar} />
+          )}
+
+          {typeof ratingTwenty !== 'undefined' && (
+            <Rating
+              disabled
+              rating={ratingTwenty}
+              ratingSystem={ratingSystem}
+              size="tiny"
+              viewType="single"
+              showNotRated={false}
+              style={styles.rating}
+            />
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 MediaCard.propTypes = {
   caption: PropTypes.string,

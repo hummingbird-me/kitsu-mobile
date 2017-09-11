@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
 import { View, Animated } from 'react-native';
+import {CustomCachedImage} from "react-native-img-cache";
 import LinearGradient from 'react-native-linear-gradient';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
