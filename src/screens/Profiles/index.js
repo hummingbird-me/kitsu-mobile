@@ -6,8 +6,9 @@ import ProfileScreen from './ProfileScreen';
 
 export {
   User,
-  UserLibraryListScreen,
   UserLibraryScreen,
+  UserLibraryEditScreen,
+  UserLibraryListScreen,
   UserLibrarySearchScreen,
 } from './UserLibrary';
 

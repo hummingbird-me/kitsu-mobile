@@ -5,6 +5,7 @@ import { Spinner, Button, Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
+import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -32,6 +33,11 @@ class HomeScreen extends Component {
     const { currentUser, navigation, loading } = this.props;
     return (
       <Container style={{ backgroundColor: 'white' }}>
+        <SimpleHeader
+          leftContent="Cancel"
+          titleContent="Edit Entry"
+          rightContent="Save"
+        />
         <Content style={{ padding: 50 }}>
           {loading
             ? <Spinner size="large" />

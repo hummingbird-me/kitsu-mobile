@@ -14,6 +14,9 @@ export const commonStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
+  textSmall: {
+    fontSize: 10,
+  },
   textHeavy: {
     fontWeight: '800',
   },

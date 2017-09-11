@@ -153,7 +153,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       fields: {
         anime: 'canonicalTitle,posterImage,episodeCount',
         manga: 'canonicalTitle,posterImage,chapterCount',
-        libraryEntries: 'anime,manga,progress,ratingTwenty,status',
+        libraryEntries: 'anime,finishedAt,manga,notes,private,progress,ratingTwenty,reconsumeCount,startedAt,status',
       },
       filter,
       include: 'anime,manga',
