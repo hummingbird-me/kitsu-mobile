@@ -3,15 +3,21 @@ import * as PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 
+const noop = () => {};
+
 export const SimpleHeader = (props) => {
   const LeftWrapper = props.leftAction ? TouchableOpacity : View;
   const TitleWrapper = props.titleAction ? TouchableOpacity : View;
   const RightWrapper = props.rightAction ? TouchableOpacity : View;
 
+  const leftAction = props.leftAction ? () => props.leftAction() : noop;
+  const titleAction = props.titleAction ? () => props.leftAction() : noop;
+  const rightAction = props.rightAction ? () => props.leftAction() : noop;
+
   return (
     <View style={styles.headerContainer}>
       {props.titleContent &&
-        <TitleWrapper style={styles.titleContainer} onPress={props.titleAction}>
+        <TitleWrapper style={styles.titleContainer} onPress={titleAction}>
           {typeof props.titleContent === 'string' ?
             <Text style={styles.headerTitleText}>{props.titleContent}</Text> :
             props.titleContent
@@ -20,7 +26,7 @@ export const SimpleHeader = (props) => {
       }
 
       {props.leftContent &&
-        <LeftWrapper style={styles.leftContainer} onPress={props.leftAction}>
+        <LeftWrapper style={styles.leftContainer} onPress={leftAction}>
           {typeof props.leftContent === 'string' ?
             <Text style={styles.headerItemText}>{props.leftContent}</Text> :
             props.leftContent
@@ -29,7 +35,7 @@ export const SimpleHeader = (props) => {
       }
 
       {props.rightContent &&
-        <RightWrapper style={styles.rightContainer} onPress={props.rightAction}>
+        <RightWrapper style={styles.rightContainer} onPress={rightAction}>
           {typeof props.rightContent === 'string' ?
             <Text style={styles.headerItemText}>{props.rightContent}</Text> :
             props.rightContent
