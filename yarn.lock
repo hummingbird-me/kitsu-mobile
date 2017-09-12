@@ -4664,9 +4664,9 @@ react-native-animated-progress-bar@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-animated-progress-bar/-/react-native-animated-progress-bar-1.1.0.tgz#9cb5bd8955dd15726568734c304454c81003dae1"
 
-react-native-code-push@^5.0.0-beta:
-  version "5.0.0-beta"
-  resolved "https://registry.yarnpkg.com/react-native-code-push/-/react-native-code-push-5.0.0-beta.tgz#7d182c93c945e9d5e9e7dd92dab4237ef743ed00"
+react-native-code-push@^2.0.3-beta:
+  version "2.0.3-beta"
+  resolved "https://registry.yarnpkg.com/react-native-code-push/-/react-native-code-push-2.0.3-beta.tgz#2eca24e125a85711abda4e5a553deb4ff61c9177"
   dependencies:
     code-push "1.11.2-beta"
     glob "^5.0.15"

@@ -27,7 +27,7 @@
     "react-native-actionsheet": "^2.2.2",
     "react-native-animatable": "^1.2.0",
     "react-native-animated-progress-bar": "^1.1.0",
-    "react-native-code-push": "^5.0.0-beta",
+    "react-native-code-push": "^2.0.3-beta",
     "react-native-elements": "^0.12.2",
     "react-native-fading-slides": "^0.1.4",
     "react-native-fbsdk": "0.6.1",
