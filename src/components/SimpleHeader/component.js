@@ -3,16 +3,14 @@ import * as PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 
-const noop = () => {};
-
 export const SimpleHeader = (props) => {
   const LeftWrapper = props.leftAction ? TouchableOpacity : View;
   const TitleWrapper = props.titleAction ? TouchableOpacity : View;
   const RightWrapper = props.rightAction ? TouchableOpacity : View;
 
-  const leftAction = props.leftAction ? () => props.leftAction() : noop;
-  const titleAction = props.titleAction ? () => props.leftAction() : noop;
-  const rightAction = props.rightAction ? () => props.leftAction() : noop;
+  const leftAction = props.leftAction ? () => props.leftAction() : null;
+  const titleAction = props.titleAction ? () => props.leftAction() : null;
+  const rightAction = props.rightAction ? () => props.leftAction() : null;
 
   return (
     <View style={styles.headerContainer}>
