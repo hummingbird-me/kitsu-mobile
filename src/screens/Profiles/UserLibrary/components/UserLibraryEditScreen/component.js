@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import moment from 'moment';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { STATUS_SELECT_OPTIONS } from 'kitsu/screens/Profiles/UserLibrary';
 import { Counter } from 'kitsu/components/Counter';
 import { Rating } from 'kitsu/components/Rating';
@@ -15,9 +15,10 @@ const visibilityOptions = [
   { text: 'Nevermind', value: 'cancel' },
 ];
 
-export class UserLibraryEditScreen extends React.Component {
+export class UserLibraryEditScreenComponent extends React.Component {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
+    deleteUserLibraryEntry: PropTypes.func.isRequired,
   }
 
   static navigationOptions = () => ({
@@ -67,8 +68,14 @@ export class UserLibraryEditScreen extends React.Component {
     this.setState({ startedAt });
   }
 
-  onStatusSelected = (libraryStatus) => {
+  onStatusChanged = (libraryStatus) => {
     this.setState({ libraryStatus });
+  }
+
+  onDeleteEntry = async () => {
+    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    await this.props.deleteUserLibraryEntry(libraryEntry.id, libraryEntry.status, libraryType);
+    this.props.navigation.goBack();
   }
 
   getMaxProgress() {
@@ -150,7 +157,7 @@ export class UserLibraryEditScreen extends React.Component {
             <Text style={styles.editRowValue}>Currently Watching</Text>
           </View>
           {canEdit &&
-            <SelectMenu options={this.selectOptions}>
+            <SelectMenu options={this.selectOptions} onOptionSelected={this.onStatusChanged}>
               <Text>X</Text>
             </SelectMenu>
           }
@@ -197,7 +204,7 @@ export class UserLibraryEditScreen extends React.Component {
             </Text>
           </View>
           {canEdit &&
-            <SelectMenu options={visibilityOptions}>
+            <SelectMenu options={visibilityOptions} onOptionSelected={this.onVisibilityChanged}>
               <Text>X</Text>
             </SelectMenu>
           }
@@ -256,9 +263,9 @@ export class UserLibraryEditScreen extends React.Component {
         </View>
         {canEdit &&
           <View style={[styles.deleteEntryRow]}>
-            <TouchableOpacity disabled={!canEdit}>
+            <SelectMenu options={['Yes, Delete.', 'Nevermind']} onOptionSelected={this.onDeleteEntry}>
               <Text style={styles.deleteEntryText}>Delete Library Entry</Text>
-            </TouchableOpacity>
+            </SelectMenu>
           </View>
         }
       </View>

@@ -339,6 +339,17 @@ export const updateUserLibrarySearchEntry = (
   updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true);
 };
 
+export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch) => {
+  await Kitsu.destroy('libraryEntries', id);
+
+  dispatch({
+    type: types.DELETE_USER_LIBRARY_ENTRY,
+    id,
+    libraryStatus,
+    libraryType,
+  });
+};
+
 export function updateLibrarySearchTerm(searchTerm) {
   return {
     type: types.UPDATE_USER_LIBRARY_SEARCH_TERM,
