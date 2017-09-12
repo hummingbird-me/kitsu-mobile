@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput } from 'react-native';
 import { Thumbnail } from 'native-base';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 
 import { defaultAvatar } from 'kitsu/constants/app';
 
@@ -22,7 +22,7 @@ const CardStatus = (props) => {
           style={{ flex: 1, padding: 10, fontSize: 14, fontFamily: 'OpenSans' }}
           multiline
           placeholderTextColor="#B5B5B5"
-          placeholder={`Write something to ${_.capitalize(props.toUser.name)}…`}
+          placeholder={`Write something to ${capitalize(props.toUser.name)}…`}
         />
       </View>
     </Card>

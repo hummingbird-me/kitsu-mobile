@@ -1,7 +1,6 @@
 /*
   // TODO
-  - get color code of black text, replace all #444.
-  - reorganize styles
+  - reorganize styles -> generalize text component styles ( valueText )
   - work on ListEmptyItems after react native upgrade
 */
 
@@ -9,11 +8,11 @@ import React from 'react';
 import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { defaultAvatar as defaultGroupAvatar, defaultCover } from 'kitsu/constants/app';
+import defaultCover from 'kitsu/assets/img/default_cover.png';
+import { defaultAvatar as defaultGroupAvatar, defaultCover as defaultCoverUri } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
@@ -35,6 +34,10 @@ class SidebarScreen extends React.Component {
     header: null, // overlaps statusbar
   };
 
+  state = {
+    showAllGroups: false,
+  }
+
   componentDidMount() {
     this.props.fetchGroupMemberships();
   }
@@ -43,27 +46,43 @@ class SidebarScreen extends React.Component {
     this.props.logoutUser(this.props.navigation);
   };
 
-  navigateUserProfile = () => {
-    // TODO: implement function.
-  };
+  onSeeMoreButtonPressed = () => {
+    this.setState({ showAllGroups: true });
+  }
 
-  renderSectionSeparatorComponent = () => (
-    <View height={20} />
-  )
+  navigateUserProfile = () => {
+    this.props.navigation.navigate('UserProfile');
+  };
 
   renderSectionHeader = ({ section }) => (
     <SidebarTitle title={section.title} style={{ marginTop: 0 }} />
   );
 
-  renderSectionFooter = ({ section }) => null;
+  renderSectionFooter = ({ section }) => {
+    const { groupMemberships } = this.props;
+    if (section.key === 'groups' && !this.state.showAllGroups && groupMemberships && groupMemberships.length > 3) {
+      return (
+        <View style={{ marginBottom: 20 }}>
+          <ItemSeparator underlineImage={false} />
+          <TouchableOpacity activeOpacity={0.6} style={[styles.item, { paddingVertical: 8 }]} onPress={this.onSeeMoreButtonPressed}>
+            <Text style={[styles.linkText, { marginLeft: 26 }]}>See More...</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return (
+      <View height={20} />
+    );
+  };
 
-  renderListHeaderComponent = () => <View height={10} />
+  renderListHeaderComponent = () => <View height={20} />
 
   renderListFooterComponent = () => (
     <TouchableOpacity
       onPress={this.onLogoutButtonPressed}
       style={{
-        marginVertical: 40,
+        marginTop: 20,
+        marginBottom: 40,
         padding: 12,
         backgroundColor: colors.white,
         alignItems: 'center',
@@ -83,16 +102,16 @@ class SidebarScreen extends React.Component {
     </TouchableOpacity>
   )
 
-  renderItemSeparatorComponent() {
-    return <ItemSeparator />;
-  }
+  renderItemSeparatorComponent = () => <ItemSeparator />
+
+  renderSectionSeparatorComponent = () => null;
 
   render() {
     const { navigation, currentUser, groupMemberships, accessToken } = this.props;
+    const { showAllGroups } = this.state;
     const { name, avatar, coverImage } = currentUser;
-    const groupsData = groupMemberships || [];
-
-    const sectionListData = [
+    const groupsData = (groupMemberships && (showAllGroups ? groupMemberships : groupMemberships.slice(0, 3))) || [];
+    let sectionListData = [
       {
         key: 'shortcuts',
         data: [{ title: 'View Library', image: library, target: 'UserLibraryScreen' }],
@@ -106,31 +125,6 @@ class SidebarScreen extends React.Component {
             }}
           />
         ),
-        ItemSeparatorComponent: this.renderItemSeparatorComponent,
-      },
-      {
-        key: 'groups',
-        data: groupsData,
-        title: 'Groups',
-        renderItem: ({ item }) => {
-          return (
-            <SidebarListItem
-              onPress={() => {
-                navigation.navigate('');
-              }}
-              title={item.group.name}
-              imageURL={
-                (item.group.avatar &&
-                  (item.group.avatar.small ||
-                    item.group.avatar.medium ||
-                    item.group.avatar.large ||
-                    item.group.avatar.original)) ||
-                  defaultGroupAvatar
-              }
-            />
-          );
-        },
-        ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
         ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
       {
@@ -167,12 +161,38 @@ class SidebarScreen extends React.Component {
         ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
     ];
+    if (groupsData.length > 0) {
+      sectionListData.splice(1, 0, {
+        key: 'groups',
+        data: groupsData,
+        title: 'Groups',
+        renderItem: ({ item }) => (
+          <SidebarListItem
+            onPress={() => {
+              navigation.navigate('');
+            }}
+            title={item.group.name}
+            imageURL={
+              (item.group.avatar &&
+                (item.group.avatar.small ||
+                  item.group.avatar.medium ||
+                  item.group.avatar.large ||
+                  item.group.avatar.original)) ||
+              defaultGroupAvatar
+            }
+          />
+        ),
+        ListEmptyComponent: () => <Text style={{ color: 'white' }}>Fetching Groups</Text>,
+        ItemSeparatorComponent: () => <ItemSeparator underlineImage={false} />,
+      });
+    }
     return (
       <View style={{ backgroundColor: colors.listBackPurple }}>
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
-          source={{ uri: (coverImage && coverImage.large) || defaultCover }}
+          source={{ uri: (coverImage && coverImage.large) || defaultCoverUri }}
+          defaultSource={defaultCover}
         >
           <View
             style={{
@@ -217,12 +237,12 @@ class SidebarScreen extends React.Component {
           contentContainerStyle={{ paddingBottom: 100 }}
           sections={sectionListData}
           keyExtractor={keyExtractor}
-          ListHeaderComponent={this.renderListHeaderComponent}
           renderSectionHeader={this.renderSectionHeader}
           renderSectionFooter={this.renderSectionFooter}
-          removeClippedSubviews={false}
-          SectionSeparatorComponent={this.renderSectionSeparatorComponent}
+          ListHeaderComponent={this.renderListHeaderComponent}
           ListFooterComponent={this.renderListFooterComponent}
+          SectionSeparatorComponent={this.renderSectionSeparatorComponent}
+          removeClippedSubviews={false}
         />
       </View>
     );
