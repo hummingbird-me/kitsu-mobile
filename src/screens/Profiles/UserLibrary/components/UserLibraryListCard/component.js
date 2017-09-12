@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { PropTypes } from 'prop-types';
 import { Image, Text, View } from 'react-native';
 import { Counter } from 'kitsu/components/Counter';
