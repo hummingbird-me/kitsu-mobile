@@ -1,9 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput, LayoutAnimation } from 'react-native';
+import { View, Text, TextInput, ScrollView, LayoutAnimation } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import isEmpty from 'lodash/isEmpty';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
@@ -31,6 +29,7 @@ class GeneralSettings extends React.Component {
       confirmPassword: '',
       shouldShowValidationInput: false,
       selectMenuText: sfwFilter ? this.filterOptions[0].text : this.filterOptions[1].text,
+      modified: false,
     };
   }
 
@@ -53,10 +52,10 @@ class GeneralSettings extends React.Component {
   onSelectFilterOption = (value, option) => {
     switch (value) {
       case 'on':
-        this.setState({ sfwFilter: true, selectMenuText: option.text });
+        this.setState({ modified: true, sfwFilter: true, selectMenuText: option.text });
         break;
       case 'off':
-        this.setState({ sfwFilter: false, selectMenuText: option.text });
+        this.setState({ modified: true, sfwFilter: false, selectMenuText: option.text });
         break;
       default:
         // cancel button pressed.
@@ -79,7 +78,7 @@ class GeneralSettings extends React.Component {
     if (nextText === '') {
       // this means user clears the input.
       this.setState({ shouldShowValidationInput: false });
-    } else if (this.state.password.length > 6) {
+    } else {
       // only show after 8 chars
       this.setState({ shouldShowValidationInput: true });
     }
@@ -87,109 +86,102 @@ class GeneralSettings extends React.Component {
 
   render() {
     const { loading } = this.props;
+    const { modified } = this.state;
     return (
-      // TODO: handle marginTop: 77 for all other sidebar screens.
-      (
-        <Container style={nativeBaseStyles.containerStyle}>
-          <Content>
-            <View style={{ flex: 1, marginTop: 77 }}>
-              <SidebarTitle title={'Personal Settings'} />
-              <View style={styles.inputWrapper}>
-                <Text style={styles.hintText}>
-                  Username
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  value={this.state.name}
-                  onChangeText={t => this.setState({ name: t })}
-                  autoCapitalize={'words'}
-                  autoCorrect={false}
-                  underlineColorAndroid={'transparent'}
-                  keyboardAppearance={'dark'}
-                />
-              </View>
-              <ItemSeparator />
-              <View style={styles.inputWrapper}>
-                <Text style={styles.hintText}>
-                  Email Address
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  value={this.state.email}
-                  onChangeText={t => this.setState({ email: t })}
-                  autoCapitalize={'none'}
-                  autoCorrect={false}
-                  underlineColorAndroid={'transparent'}
-                  keyboardAppearance={'dark'}
-                />
-              </View>
-              <ItemSeparator />
-              <View style={styles.inputWrapper}>
-                <Text style={styles.hintText}>
-                  Password
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  value={this.state.password}
-                  onChangeText={(t) => {
-                    this.toggle(t);
-                    this.setState({ password: t });
-                  }}
-                  secureTextEntry
-                  placeholder={'Start typing to set a new password.'}
-                  autoCorrect={false}
-                  underlineColorAndroid={'transparent'}
-                  keyboardAppearance={'dark'}
-                />
-              </View>
-              {this.state.shouldShowValidationInput &&
-                <View style={styles.inputWrapper}>
-                  <Text style={styles.hintText}>
-                    Confirm Password
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    value={this.state.confirmPassword}
-                    onChangeText={t => this.setState({ confirmPassword: t })}
-                    secureTextEntry
-                    placeholder={'Confirm password'}
-                    autoCorrect={false}
-                    underlineColorAndroid={'transparent'}
-                    keyboardAppearance={'dark'}
-                  />
-                </View>}
-              <SidebarTitle title={'Content on Kitsu'} />
-              <SelectMenu
-                style={styles.selectMenu}
-                onOptionSelected={this.onSelectFilterOption}
-                cancelButtonIndex={2}
-                options={this.filterOptions}
-              >
-                <View>
-                  <Text style={styles.hintText}>
-                    R18+ titles in feed, libraries, or search?
-                  </Text>
-                  <Text style={styles.valueText}>
-                    {this.state.selectMenuText}
-                  </Text>
-                </View>
-              </SelectMenu>
-              <SidebarButton
-                loading={loading}
-                onPress={this.onSavePersonalSettings}
-                title={'Save General Settings'}
+      <View style={styles.containerStyle}>
+        <ScrollView scrollEnabled={false}>
+          <SidebarTitle title={'Personal Settings'} />
+          <View style={styles.inputWrapper}>
+            <Text style={styles.hintText}>
+              Username
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={this.state.name}
+              onChangeText={t => this.setState({ modified: true, name: t })}
+              autoCapitalize={'words'}
+              autoCorrect={false}
+              underlineColorAndroid={'transparent'}
+              keyboardAppearance={'dark'}
+            />
+          </View>
+          <ItemSeparator />
+          <View style={styles.inputWrapper}>
+            <Text style={styles.hintText}>
+              Email Address
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={this.state.email}
+              onChangeText={t => this.setState({ modified: true, email: t })}
+              autoCapitalize={'none'}
+              autoCorrect={false}
+              underlineColorAndroid={'transparent'}
+              keyboardAppearance={'dark'}
+            />
+          </View>
+          <ItemSeparator />
+          <View style={styles.inputWrapper}>
+            <Text style={styles.hintText}>
+              Password
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={this.state.password}
+              onChangeText={(t) => {
+                this.toggle(t);
+                this.setState({ modified: true, password: t });
+              }}
+              secureTextEntry
+              placeholder={'Start typing to set a new password.'}
+              autoCorrect={false}
+              underlineColorAndroid={'transparent'}
+              keyboardAppearance={'dark'}
+            />
+          </View>
+          {this.state.shouldShowValidationInput &&
+            <View style={styles.inputWrapper}>
+              <Text style={styles.hintText}>
+                Confirm Password
+              </Text>
+              <TextInput
+                style={styles.input}
+                value={this.state.confirmPassword}
+                onChangeText={t => this.setState({ confirmPassword: t })}
+                secureTextEntry
+                placeholder={'Confirm password'}
+                autoCorrect={false}
+                underlineColorAndroid={'transparent'}
+                keyboardAppearance={'dark'}
               />
+            </View>}
+          <SidebarTitle title={'Content on Kitsu'} />
+          <SelectMenu
+            style={styles.selectMenu}
+            onOptionSelected={this.onSelectFilterOption}
+            cancelButtonIndex={2}
+            options={this.filterOptions}
+          >
+            <View>
+              <Text style={styles.hintText}>
+                R18+ titles in feed, libraries, or search?
+              </Text>
+              <Text style={styles.valueText}>
+                {this.state.selectMenuText}
+              </Text>
             </View>
-          </Content>
-        </Container>
-      )
+          </SelectMenu>
+          <SidebarButton
+            loading={loading}
+            disabled={!modified}
+            onPress={this.onSavePersonalSettings}
+            title={'Save General Settings'}
+          />
+        </ScrollView>
+      </View>
     );
   }
 }
-
-const nativeBaseStyles = {
-  containerStyle: { backgroundColor: colors.listBackPurple },
-};
 
 const mapStateToProps = ({ user }) => {
   const { currentUser, loading } = user;
