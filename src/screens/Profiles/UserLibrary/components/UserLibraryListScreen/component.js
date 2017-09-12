@@ -3,12 +3,10 @@ import { FlatList, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
-import { SearchBox } from 'kitsu/components/SearchBox';
-import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
+import { UserLibraryListCard, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
 import { idExtractor } from 'kitsu/common/utils';
 import { styles } from './styles';
 
-const MINIMUM_SEARCH_TERM_LENGTH = 3;
 const HEADER_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },
   planned: { anime: 'Want To Watch', manga: 'Want to Read' },
@@ -20,13 +18,11 @@ const HEADER_TEXT_MAPPING = {
 export class UserLibraryListScreenComponent extends React.Component {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
-    fetchUserLibrary: PropTypes.func.isRequired,
     fetchUserLibraryByType: PropTypes.func.isRequired,
     navigation: PropTypes.object.isRequired,
     libraryEntries: PropTypes.object.isRequired,
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
-    searchTerm: PropTypes.string.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
   };
 
@@ -43,25 +39,10 @@ export class UserLibraryListScreenComponent extends React.Component {
           profile={profile}
           title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
           onClickBack={props.navigation.goBack}
-          showFollowButton={false}
-          showCoverImage={false}
         />
       ),
     };
   };
-
-  state = {
-    searchTerm: this.props.searchTerm,
-  };
-
-  onSearchTermChanged = (searchTerm) => {
-    this.setState({ searchTerm });
-    if (searchTerm.length >= MINIMUM_SEARCH_TERM_LENGTH) {
-      this.debouncedSearch();
-    } else if (searchTerm.length === 0) {
-      this.debouncedFetch();
-    }
-  }
 
   debouncedFetch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
@@ -72,24 +53,17 @@ export class UserLibraryListScreenComponent extends React.Component {
     });
   }, 100);
 
-  debouncedSearch = debounce(() => {
+  renderSearchBar = () => {
     const { profile } = this.props.navigation.state.params;
-    const { searchTerm } = this.state;
-    this.props.fetchUserLibrary({
-      searchTerm,
-      userId: profile.id,
-    });
-  }, 100);
 
-  renderSearchBar = () => ((
-    <SearchBox
-      style={styles.searchBar}
-      onChangeText={this.onSearchTermChanged}
-      placeholder="Search Library"
-      searchIconOffset={120}
-      value={this.state.searchTerm}
-    />
-  ))
+    return (
+      <UserLibrarySearchBox
+        navigation={this.props.navigation}
+        profile={profile}
+        style={styles.searchBox}
+      />
+    );
+  }
 
   renderItem = ({ item }) => (
     <UserLibraryListCard

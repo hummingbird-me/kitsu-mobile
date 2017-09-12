@@ -1,4 +1,6 @@
-export { UserLibraryScreen } from './components/UserLibraryScreen';
-export { UserLibraryListScreen } from './components/UserLibraryListScreen';
-export { UserLibraryListCard } from './components/UserLibraryListCard';
 export { LibraryHeader } from './components/LibraryHeader';
+export { UserLibraryListCard } from './components/UserLibraryListCard';
+export { UserLibraryListScreen } from './components/UserLibraryListScreen';
+export { UserLibrarySearchBox } from './components/UserLibrarySearchBox';
+export { UserLibraryScreen } from './components/UserLibraryScreen';
+export { UserLibrarySearchScreen } from './components/UserLibrarySearchScreen';
