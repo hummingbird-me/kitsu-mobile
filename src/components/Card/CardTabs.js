@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Button, Left, Right } from 'native-base';
-import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 const renderFooter = (props) => {
@@ -48,22 +48,14 @@ const renderFooter = (props) => {
 const CardTabs = props => (
   <View style={{ ...styles.container, ...props.style }}>
     <View>
-      <ScrollableTabView renderTabBar={() => <SimpleTabBar />}>
-        {props.children}
-      </ScrollableTabView>
+      <ScrollableTabView renderTabBar={<SimpleTabBar />}>{props.children}</ScrollableTabView>
     </View>
     {renderFooter(props)}
   </View>
 );
 
-const SimpleTabBar = React.createClass({
-  tabIcons: [],
-
-  propTypes: {
-    goToPage: React.PropTypes.func,
-    activeTab: React.PropTypes.number,
-    tabs: React.PropTypes.array,
-  },
+class SimpleTabBar extends React.PureComponent {
+  tabIcons = [];
 
   setAnimationValue({ value }) {
     this.tabIcons.forEach((icon, i) => {
@@ -74,7 +66,7 @@ const SimpleTabBar = React.createClass({
         },
       });
     });
-  },
+  }
 
   // color between rgb(59,89,152) and rgb(204,204,204)
   iconColor(progress) {
@@ -82,7 +74,7 @@ const SimpleTabBar = React.createClass({
     const green = 89 + (204 - 89) * progress;
     const blue = 152 + (204 - 152) * progress;
     return `rgb(${red}, ${green}, ${blue})`;
-  },
+  }
 
   render() {
     return (
@@ -115,8 +107,14 @@ const SimpleTabBar = React.createClass({
         ))}
       </View>
     );
-  },
-});
+  }
+}
+
+SimpleTabBar.propTypes = {
+  goToPage: PropTypes.func,
+  activeTab: PropTypes.number,
+  tabs: PropTypes.array,
+};
 
 CardTabs.propTypes = {
   leftText: PropTypes.string,
