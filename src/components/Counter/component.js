@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PropTypes } from 'prop-types';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
-import * as colors from 'kitsu/constants/colors';
 
 export class Counter extends React.PureComponent {
   static propTypes = {
@@ -26,6 +25,34 @@ export class Counter extends React.PureComponent {
     manualEditMode: false,
     value: this.props.initialValue,
   };
+
+  onManualValueChanged = (value) => {
+    this.setState({
+      manualEditValue: parseInt(value, 10),
+    });
+  }
+
+  activateManualEdit = () => {
+    this.setState({
+      manualEditMode: true,
+    });
+  }
+
+  deactivateManualEdit = () => {
+    const { manualEditValue } = this.state;
+    const { maxValue, minValue } = this.props;
+    let { value } = this.state;
+    if (manualEditValue >= minValue && manualEditValue <= maxValue) {
+      value = manualEditValue;
+    }
+
+    this.setState({
+      manualEditMode: false,
+      value,
+    });
+
+    this.props.onValueChanged(value);
+  }
 
   decrementCount = () => {
     const value = this.state.value - 1;
@@ -62,7 +89,7 @@ export class Counter extends React.PureComponent {
 
         <TouchableOpacity style={styles.counterStatusContainer} onPress={this.activateManualEdit}>
           {this.state.manualEditMode
-            ?
+            ? (
               <TextInput
                 style={styles.manualEditTextInput}
                 defaultValue={this.state.value.toString()}
@@ -72,8 +99,9 @@ export class Counter extends React.PureComponent {
                 onChangeText={this.onManualValueChanged}
                 keyboardType="numeric"
               />
-            :
+            ) : (
               <Text style={styles.statusText}>{this.state.value}</Text>
+            )
           }
           {this.props.progressCounter && <Text style={styles.progressText}>{` of ${this.props.maxValue}`}</Text>}
         </TouchableOpacity>
@@ -87,33 +115,5 @@ export class Counter extends React.PureComponent {
         </TouchableOpacity>
       </View>
     );
-  }
-
-  activateManualEdit = () => {
-    this.setState({
-      manualEditMode: true,
-    });
-  }
-
-  deactivateManualEdit = () => {
-    const { manualEditValue } = this.state;
-    const { maxValue, minValue } = this.props;
-    let { value } = this.state;
-    if (manualEditValue >= minValue && manualEditValue <= maxValue) {
-      value = manualEditValue;
-    }
-
-    this.setState({
-      manualEditMode: false,
-      value,
-    });
-
-    this.props.onValueChanged(value);
-  }
-
-  onManualValueChanged = (value) => {
-    this.setState({
-      manualEditValue: parseInt(value, 10),
-    });
   }
 }

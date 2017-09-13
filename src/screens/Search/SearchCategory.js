@@ -3,7 +3,8 @@ import { Text, FlatList, StyleSheet, View, TouchableOpacity } from 'react-native
 import { connect } from 'react-redux';
 import { Button, Container, Content, Icon, Item, Left, Right, Footer, Body } from 'native-base';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import orderBy from 'lodash/orderBy';
+import values from 'lodash/values';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import { CheckBox } from 'react-native-elements';
 import { getCategories } from 'kitsu/store/anime/actions';
@@ -80,7 +81,7 @@ class SearchCategory extends Component {
 
   renderGenreList = (id, level) => {
     const { categories, getCategories } = this.props;
-    const genresArray = _.orderBy(_.values(categories[id]), ['title'], ['asc']).map(item => ({
+    const genresArray = orderBy(values(categories[id]), ['title'], ['asc']).map(item => ({
       key: item.id,
       childCount: item.childCount,
       label: item.title,
@@ -179,7 +180,7 @@ class SearchCategory extends Component {
 
   renderFooter = () => {
     const { navigation } = this.props;
-    const genresArr = _.values(this.state.selected).filter(a => a);
+    const genresArr = values(this.state.selected).filter(a => a);
     const btnText = genresArr.length > 0
       ? `Filter by (${genresArr.length}) ${genresArr.length > 1 ? 'categories' : 'category'}`
       : 'Select at least one';

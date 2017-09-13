@@ -3,7 +3,7 @@ import { View, Text, TextInput, ScrollView, LayoutAnimation } from 'react-native
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import { styles } from './styles';
