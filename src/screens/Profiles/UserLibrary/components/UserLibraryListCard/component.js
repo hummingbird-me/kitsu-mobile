@@ -8,9 +8,10 @@ import { Rating } from 'kitsu/components/Rating';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import Swipeable from 'react-native-swipeable';
+import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
 import { styles } from './styles';
 
-const menuImage = require('kitsu/assets/img/menus/three-dot-horizontal-grey.png');
+const USER_LIBRARY_EDIT_SCREEN = 'UserLibraryEdit';
 
 export const STATUS_SELECT_OPTIONS = [
   { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
@@ -29,6 +30,7 @@ export class UserLibraryListCard extends React.Component {
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
+    onSwipingItem: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
   }
@@ -67,6 +69,10 @@ export class UserLibraryListCard extends React.Component {
     this.setState({ libraryStatus }, this.debounceSave);
   }
 
+  onSwipeStart = () => this.props.onSwipingItem(true)
+
+  onSwipeRelease = () => this.props.onSwipingItem(false)
+
   getMaxProgress() {
     const { data, libraryType } = this.props;
     const mediaData = data[libraryType];
@@ -89,7 +95,7 @@ export class UserLibraryListCard extends React.Component {
         updateUserLibraryEntry,
       } = this.props;
 
-      this.props.navigate('UserLibraryEdit', {
+      this.props.navigate(USER_LIBRARY_EDIT_SCREEN, {
         libraryStatus,
         libraryType,
         profile,
@@ -135,6 +141,8 @@ export class UserLibraryListCard extends React.Component {
         onRightActionActivate={this.onRightActionActivate}
         onRightActionDeactivate={this.onRightActionDeactivate}
         onRightActionComplete={this.navigateToEditEntry}
+        onSwipeStart={this.onSwipeStart}
+        onSwipeRelease={this.onSwipeRelease}
         rightActionActivationDistance={145}
         rightContent={[
           <View

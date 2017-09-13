@@ -44,6 +44,14 @@ export class UserLibraryListScreenComponent extends React.Component {
     };
   };
 
+  state = {
+    isSwiping: false,
+  }
+
+  onSwipingItem = (isSwiping) => {
+    this.setState({ isSwiping });
+  }
+
   debouncedFetch = debounce(() => {
     const { profile } = this.props.navigation.state.params;
     this.props.fetchUserLibraryByType({
@@ -74,6 +82,7 @@ export class UserLibraryListScreenComponent extends React.Component {
       navigate={this.props.navigation.navigate}
       profile={this.props.navigation.state.params.profile}
       updateUserLibraryEntry={this.props.updateUserLibraryEntry}
+      onSwipingItem={this.onSwipingItem}
     />
   );
 
@@ -93,6 +102,7 @@ export class UserLibraryListScreenComponent extends React.Component {
             onEndReachedThreshold={0.75}
             removeClippedSubviews={false}
             renderItem={this.renderItem}
+            scrollEnabled={!this.state.isSwiping}
           />
         </View>
       </View>
