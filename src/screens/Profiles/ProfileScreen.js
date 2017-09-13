@@ -13,7 +13,8 @@ import { connect } from 'react-redux';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
-import _ from 'lodash';
+import forOwn from 'lodash/forOwn';
+import capitalize from 'lodash/capitalize';
 import moment from 'moment';
 import CustomHeader from 'kitsu/components/CustomHeader';
 import CardStatus from 'kitsu/components/Card/CardStatus';
@@ -115,7 +116,7 @@ class ProfileScreen extends Component {
         if (activity.verb === 'progressed') {
           caption = `${activity.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${activity.progress}`;
         } else if (activity.verb === 'updated') {
-          caption = `${_.capitalize(activity.status.replace('_', ' '))}`;
+          caption = `${capitalize(activity.status.replace('_', ' '))}`;
         } else if (activity.verb === 'rated') {
           caption = `Rated: ${activity.rating}`;
         }
@@ -168,7 +169,7 @@ class ProfileScreen extends Component {
   renderInfoBlock = () => {
     const { profile, loading, navigation } = this.props;
     const infos = [];
-    _.forOwn(getInfo(profile), (item, key) => {
+    forOwn(getInfo(profile), (item, key) => {
       infos.push(
         this.wrapTouchable(
           <View
@@ -610,7 +611,7 @@ ProfileScreen.propTypes = {
 
 const getInfo = (profile) => {
   const info = {};
-  _.forOwn(profile, (value, key) => {
+  forOwn(profile, (value, key) => {
     if (value) {
       if (key === 'waifuOrHusbando') {
         let image = '';

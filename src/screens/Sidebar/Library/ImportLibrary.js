@@ -94,6 +94,7 @@ class ImportLibrary extends React.Component {
     try {
       const imports = await Kitsu.findAll('listImports', {
         filter: { user_id: id },
+        page: { limit: 20 },
       });
       this.setState({
         imports,

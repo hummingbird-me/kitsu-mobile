@@ -4,9 +4,27 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
-export const ItemSeparator = () => (
-  <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }} />
-);
+export const ItemSeparator = ({ underlineImage }) => {
+  if (!underlineImage) {
+    return ( // done to show white border under image (when list has non-white background)
+      <View style={{ flexDirection: 'row', height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }}>
+        <View style={{ width: 38, backgroundColor: colors.white }} />
+        <View />
+      </View>
+    );
+  }
+  return (
+    <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }} />
+  );
+};
+
+ItemSeparator.propTypes = {
+  underlineImage: PropTypes.bool,
+};
+
+ItemSeparator.defaultProps = {
+  underlineImage: true,
+};
 
 export const SidebarListItem = ({ image, imageURL, title, onPress }) => (
   <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.item}>
@@ -35,11 +53,15 @@ export const SidebarListItem = ({ image, imageURL, title, onPress }) => (
 SidebarListItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.number,
+  imageURL: PropTypes.string,
   onPress: PropTypes.func,
 };
 
 SidebarListItem.defaultProps = {
   title: 'Settings',
+  image: null,
+  imageURL: null,
+  onPress: null,
 };
 
 const styles = StyleSheet.create({
@@ -58,8 +80,8 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'contain',
-    width: 16,
-    height: 16,
+    width: 18,
+    height: 18,
     marginHorizontal: 4,
   },
   text: {

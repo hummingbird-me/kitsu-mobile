@@ -16,11 +16,23 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.grey,
   },
-  valueText: {
+  valueText: { // TODO: Find a better name for this and remove margin to generalize more.
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginTop: 4,
     color: colors.softBlack,
+  },
+  linkText: {
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    color: colors.linkBlue,
+  },
+  emptyText: {
+    marginVertical: 4,
+    marginLeft: 13,
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    color: colors.white,
   },
   inputWrapper: {
     backgroundColor: colors.white,
@@ -53,6 +65,34 @@ export const styles = StyleSheet.create({
     width: 16,
     height: 16,
     marginHorizontal: 4,
+  },
+  blockingWrapper: {
+    backgroundColor: colors.white,
+    padding: 2,
+    borderRadius: 2,
+    margin: 12,
+  },
+  privacySettingsWrapper: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  privacySettingsText: {
+    fontFamily: 'OpenSans',
+    color: colors.softBlack,
+    fontSize: 14,
+  },
+  privacyTipsWrapper: {
+    backgroundColor: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  privacyTipsText: {
+    fontSize: 10,
+    color: 'grey',
   },
 });
 

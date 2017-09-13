@@ -21,7 +21,7 @@ class LoginScreen extends Component {
     loading: false,
   };
 
-  onSubmit = (isFb) => {
+  onSubmit = (isFb = false) => {
     const { username, password } = this.state;
     const { navigation } = this.props;
     if (isFb) {
@@ -46,8 +46,8 @@ class LoginScreen extends Component {
           loading={this.props.signingIn || this.state.loading}
         />
         <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15 }}>
-          {this.props.loginError
-            ? <Text
+          {this.props.loginError ? (
+            <Text
               style={{
                 color: 'red',
                 paddingBottom: 10,
@@ -56,7 +56,7 @@ class LoginScreen extends Component {
             >
               {this.props.loginError}
             </Text>
-            : null}
+          ) : null}
           <Text
             onPress={() => navigate('Recovery')}
             style={{
@@ -98,7 +98,8 @@ class LoginScreen extends Component {
                   fontFamily: 'OpenSans-Bold',
                 }}
               >
-                {' '}Create one
+                {' '}
+                Create one
               </Text>
             </Text>
           </Button>

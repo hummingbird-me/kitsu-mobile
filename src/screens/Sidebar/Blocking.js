@@ -14,6 +14,7 @@ import { connectInfiniteHits } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { InstantSearchBox } from 'kitsu/components/SearchBox';
+import { Feedback } from 'kitsu/components/Feedback';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
@@ -72,9 +73,9 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
   };
   return (
     <FlatList
+      data={hits}
       keyboardShouldPersistTaps={'handled'}
       removeClippedSubviews={false}
-      data={hits}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
       initialNumToRender={10}
@@ -107,6 +108,13 @@ class Blocking extends React.Component {
     this.fetchUserBlocks();
   }
 
+  onError = (e) => {
+    this.setState({
+      error: (e && e[0] && e[0].title) || 'Something went wrong',
+      loading: false,
+    }, this.feedback.show);
+  }
+
   onBlockUser = async (user) => {
     const { currentUser, accessToken } = this.props;
     const { id } = user;
@@ -120,10 +128,7 @@ class Blocking extends React.Component {
       });
       this.fetchUserBlocks();
     } catch (e) {
-      this.setState({
-        error: e,
-        loading: false,
-      });
+      this.onError(e);
     }
   };
 
@@ -140,10 +145,7 @@ class Blocking extends React.Component {
         loading: false,
       });
     } catch (e) {
-      this.setState({
-        error: e,
-        loading: false,
-      });
+      this.onError(e);
     }
   };
 
@@ -161,10 +163,7 @@ class Blocking extends React.Component {
         loading: false,
       });
     } catch (e) {
-      this.setState({
-        error: e,
-        loading: false,
-      });
+      this.onError(e);
     }
   };
 
@@ -185,45 +184,62 @@ class Blocking extends React.Component {
     );
   };
 
+  renderBlocksItem = ({ item }) => (
+    <RowItem
+      type={'flatlist'}
+      item={item.blocked}
+      onPress={() => this.onUnblockUser(item)}
+    />
+  )
+
+  renderListEmptyComponent = () => (
+    <Text style={styles.emptyText}>
+      You aren{'\''}t currently blocking anyone.
+    </Text>
+  );
+
   render() {
-    const { blocks, loading } = this.state;
+    const { error, blocks, loading, searchState } = this.state;
+    const { algoliaKeys } = this.props;
+    const listTitle = blocks.length > 0 ? 'Blocked Users' : 'You aren\'t currently blocking any users.';
     return (
       <View style={styles.containerStyle}>
-        <View style={{ backgroundColor: colors.white, padding: 2, borderRadius: 4, margin: 12 }}>
+        <Feedback
+          ref={(r) => this.feedback = r}
+          title={error}
+          containerStyle={{ top: 85 }}
+        />
+        <View style={styles.blockingWrapper}>
           <Text
-            style={{ padding: 12, fontFamily: 'OpenSans', fontSize: 12, color: colors.softBlack }}
+            style={[styles.valueText, { padding: 12, paddingTop: 8, marginTop: 0 }]}
           >
             Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
           </Text>
           <ItemSeparator />
           <InstantSearch
             appId={kitsuConfig.algoliaAppId}
-            apiKey={this.props.algoliaKeys.users.key}
-            indexName={this.props.algoliaKeys.users.index}
-            searchState={this.state.searchState}
+            apiKey={algoliaKeys.users.key}
+            indexName={algoliaKeys.users.index}
+            searchState={searchState}
             onSearchStateChange={this.handleSearchStateChange}
           >
             <InstantSearchBox placeholder={'Search Users to Block'} searchIconOffset={160} />
             {this.renderResults()}
           </InstantSearch>
         </View>
-        <SidebarTitle title={'Blocked Users'} />
-        {!loading
-          ? <FlatList
-            data={blocks}
-            keyExtractor={item => item.blocked.id}
-            renderItem={({ item }) => (
-              <RowItem
-                type={'flatlist'}
-                item={item.blocked}
-                onPress={() => this.onUnblockUser(item)}
-              />
-              )}
-            ListEmptyComponent={() => <ActivityIndicator />}
-            ItemSeparatorComponent={() => <ItemSeparator />}
-            removeClippedSubviews={false}
-          />
-          : <ActivityIndicator color={'white'} />}
+        {loading
+          ? <ActivityIndicator style={{ marginTop: 8 }} color={'white'} />
+          :
+          <View>
+            <SidebarTitle title={listTitle} />
+            <FlatList
+              data={blocks}
+              keyExtractor={item => item.blocked.id}
+              renderItem={this.renderBlocksItem}
+              ItemSeparatorComponent={() => <ItemSeparator />}
+              removeClippedSubviews={false}
+            />
+          </View>}
       </View>
     );
   }
