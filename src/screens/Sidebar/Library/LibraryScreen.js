@@ -2,56 +2,64 @@ import React from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { startCase } from 'lodash';
+import startCase from 'lodash/startCase';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
+const mediaPreferenceKeyToTitle = (key) => {
+  const mapper = {
+    romanized: 'Romanized',
+    canonical: 'Most Common Usage',
+    english: 'English',
+  };
+  return mapper[key];
+};
+
+const mediaPreferenceTitleToKey = (title) => {
+  switch (title) {
+    case 'Romanized': return 'romanized';
+    case 'Most Common Usage': return 'canonical';
+    case 'English': return 'english';
+    default: return null;
+  }
+};
+
 class LibraryScreen extends React.Component {
   static navigationOptions = {
     title: 'Library',
   };
 
+  // No mapping needed for Rating System, since API uses it as it is.
+  // We just need to translate Canonical to Most Common Usage.
   state = {
-    titleLanguagePreference: this.props.titleLanguagePreference,
+    modified: false,
+    titleLanguagePreference: mediaPreferenceKeyToTitle(this.props.titleLanguagePreference),
     ratingSystem: this.props.ratingSystem,
   };
 
-  titleLanguagePreference = ['romanized', 'canonical', 'english', 'cancel'];
+  titleLanguagePreference = ['Romanized', 'Most Common Usage', 'English', 'cancel'];
   ratingSystem = ['simple', 'regular', 'advanced', 'cancel'];
-
-  onUpdateTitlePreference = (value, option) => {
-    switch (value) {
-      case 'on':
-        this.setState({ sfwFilter: false, selectMenuText: option.text });
-        break;
-      case 'off':
-        this.setState({ sfwFilter: true, selectMenuText: option.text });
-        break;
-      default:
-        // cancel button pressed.
-        break;
-    }
-  };
 
   onUpdateLibrarySettings = () => {
     const { titleLanguagePreference, ratingSystem } = this.state;
     this.props.updateLibrarySettings({
-      titleLanguagePreference,
+      titleLanguagePreference: mediaPreferenceTitleToKey(titleLanguagePreference),
       ratingSystem,
     });
   };
 
   render() {
     const { navigation, loading } = this.props;
+    const { modified, titleLanguagePreference, ratingSystem } = this.state;
     return (
       <View style={styles.containerStyle}>
         <SidebarTitle title={'Media Preferences'} />
         <SelectMenu
           style={styles.selectMenu}
-          onOptionSelected={t => this.setState({ titleLanguagePreference: t })}
+          onOptionSelected={t => this.setState({ modified: true, titleLanguagePreference: t })}
           cancelButtonIndex={this.titleLanguagePreference.length - 1}
           options={this.titleLanguagePreference}
         >
@@ -60,14 +68,14 @@ class LibraryScreen extends React.Component {
               Title Display
             </Text>
             <Text style={styles.valueText}>
-              {startCase(this.state.titleLanguagePreference)}
+              { titleLanguagePreference }
             </Text>
           </View>
         </SelectMenu>
         <ItemSeparator />
         <SelectMenu
           style={styles.selectMenu}
-          onOptionSelected={t => this.setState({ ratingSystem: t })}
+          onOptionSelected={t => this.setState({ modified: true, ratingSystem: t })}
           cancelButtonIndex={this.ratingSystem.length - 1}
           options={this.ratingSystem}
         >
@@ -76,7 +84,7 @@ class LibraryScreen extends React.Component {
               Rating Type
             </Text>
             <Text style={styles.valueText}>
-              {startCase(this.state.ratingSystem)}
+              { startCase(ratingSystem) }
             </Text>
           </View>
         </SelectMenu>
@@ -104,6 +112,7 @@ class LibraryScreen extends React.Component {
           title={'Save Library Settings'}
           onPress={this.onUpdateLibrarySettings}
           loading={loading}
+          disabled={!modified}
         />
       </View>
     );

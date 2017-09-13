@@ -13,6 +13,7 @@ export class ProgressiveImage extends React.Component {
     style: PropTypes.any,
     resizeMode: PropTypes.string,
     source: PropTypes.object.isRequired,
+    defaultSource: PropTypes.number,
   };
 
   static defaultProps = {
@@ -21,6 +22,7 @@ export class ProgressiveImage extends React.Component {
     duration: 300,
     style: undefined,
     resizeMode: 'cover',
+    defaultSource: undefined,
   };
 
   state = {
@@ -43,7 +45,7 @@ export class ProgressiveImage extends React.Component {
 
   render() {
     const { thumbnailOpacity } = this.state;
-    const { backgroundStyle, children, style, resizeMode, source } = this.props;
+    const { backgroundStyle, children, style, resizeMode, source, defaultSource } = this.props;
 
     return (
       <View style={[styles.imageBackground, backgroundStyle, style]} >
@@ -53,6 +55,7 @@ export class ProgressiveImage extends React.Component {
             onLayout={this.onLayout}
             resizeMode={resizeMode}
             source={source}
+            defaultSource={defaultSource}
             style={[style, { opacity: thumbnailOpacity }]}
           />
         }

@@ -139,16 +139,17 @@ class ExportLibrary extends React.Component {
         user: { id },
         filter: { kind: 'my-anime-list' },
       });
-      const hasAccount = linkedAccounts[0] !== undefined;
+      const hasAccount = typeof linkedAccounts[0] !== 'undefined';
       // show form if user has no linked accounts. else, load the data and fetch
       // entry logs.
-      if (hasAccount) {
-        this.fetchLibraryEntryLogs();
-      }
       this.setState({
         linkedAccount: linkedAccounts[0],
         loading: hasAccount,
         hasAccount,
+      }, () => {
+        if (hasAccount) {
+          this.fetchLibraryEntryLogs();
+        }
       });
     } catch (e) {
       this.setState({
@@ -163,13 +164,13 @@ class ExportLibrary extends React.Component {
     const { accessToken } = this.props;
     const { linkedAccount } = this.state;
     setToken(accessToken);
+    console.log(accessToken, linkedAccount);
     try {
       const libraryEntryLogs = await Kitsu.findAll('libraryEntryLogs', {
         filter: { linked_account_id: linkedAccount.id },
-        fields: {
-          media: 'canonicalTitle,titles,posterImage,slug',
-        },
-        sort: 'created_at',
+        fields: { media: 'canonicalTitle,titles,posterImage,slug' },
+        page: { limit: 20 },
+        sort: '-created_at',
         include: 'media',
       });
       this.setState({

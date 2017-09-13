@@ -1,5 +1,11 @@
+App:
+  - Image helper for avatars @joshmadewell
+  - ? Render feedback component app-wide | App.js > RootContainer > below statusbar
+
 Favorites Media: 
- - add load more to anime and manga
- 
-Sidebar Screen:
- - progressive image children may accidentally be covered by the overlay? just a thought
+  - add load more to anime and manga
+
+Sidebar Screen: @eden
+  - replace dummy icons
+  - show network error feedback to user
+  - blocking screen block/unblock button: add spinner inside the button to indicate progress. (currently shows a spinner in place of flatlist)

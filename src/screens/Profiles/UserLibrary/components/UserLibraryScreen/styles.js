@@ -40,14 +40,13 @@ export const styles = StyleSheet.create({
     marginHorizontal: 4,
     width: constants.POSTER_CARD_WIDTH,
   },
+  listLastChild: {
+    marginBottom: 12,
+  },
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
   posterImageLoading: {
     backgroundColor: colors.lightPurple,
-  },
-  searchBox: {
-    height: 35,
-    marginHorizontal: 10,
   },
 });

@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { PropTypes } from 'prop-types';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
 import { Counter } from 'kitsu/components/Counter';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { MediaCard } from 'kitsu/components/MediaCard';
 import Swipeable from 'react-native-swipeable';
 import { styles } from './styles';
 
@@ -27,6 +28,7 @@ export class UserLibraryListCard extends React.Component {
     data: PropTypes.object.isRequired,
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
+    navigate: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
   }
@@ -123,15 +125,26 @@ export class UserLibraryListCard extends React.Component {
         ]}
       >
         <View style={styles.container}>
-          <Image style={styles.posterImage} source={{ uri: mediaData.posterImage.small }} />
+          <MediaCard
+            cardDimensions={{ height: 75, width: 65 }}
+            cardStyle={styles.posterImage}
+            mediaData={mediaData}
+            navigate={this.props.navigate}
+          />
 
           <View style={styles.content}>
             <View style={styles.titleSection}>
-              <Text style={styles.titleText}>{mediaData.canonicalTitle}</Text>
+              <Text
+                numberOfLines={1}
+                style={styles.titleText}
+              >
+                {mediaData.canonicalTitle}
+              </Text>
               {canEdit && (
                 <SelectMenu
                   options={this.selectOptions}
                   onOptionSelected={this.onStatusSelected}
+                  style={styles.menuButtonContainer}
                 >
                   <Image
                     source={menuImage}
@@ -145,15 +158,15 @@ export class UserLibraryListCard extends React.Component {
               <ProgressBar
                 height={6}
                 fillPercentage={progressPercentage}
-                backgroundStyle={styles.progressBarBackgroun}
+                backgroundStyle={styles.progressBarBackground}
               />
             </View>
             <View style={styles.statusSection}>
               <Counter
                 disabled={!canEdit}
                 initialValue={data.progress}
-                maxValue={maxProgress}
-                progressCounter
+                maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
+                progressCounter={typeof maxProgress === 'number'}
                 onValueChanged={this.onProgressValueChanged}
               />
               <Rating
