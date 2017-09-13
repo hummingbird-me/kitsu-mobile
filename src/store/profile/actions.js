@@ -300,9 +300,7 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
 
 export const updateUserLibraryEntry = (
   libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
-) => async (
-  dispatch, getState,
-) => {
+) => async (dispatch, getState) => {
   const { userLibrary } = getState().profile;
   const libraryEntries = userLibrary[libraryType][libraryStatus].data;
   const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
@@ -335,8 +333,8 @@ export const updateUserLibraryEntry = (
 
 export const updateUserLibrarySearchEntry = (
   libraryType, libraryStatus, newLibraryEntry,
-) => async () => {
-  updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true);
+) => async (dispatch, getState) => {
+  updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
 };
 
 export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch) => {

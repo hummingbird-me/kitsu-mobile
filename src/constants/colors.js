@@ -7,6 +7,7 @@ export const tabRed = 'rgb(252, 117, 92)';
 /* blues */
 export const blue = '#43ABF1';
 export const fbBlue = '#507CC0';
+export const linkBlue = '#083d8d'; // sidebar seemore text
 
 /* purples */
 export const darkPurple = '#402F3F';
