@@ -76,11 +76,20 @@ export default StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.white,
   },
+  galleryRow: {
+    marginVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
   squareImage: {
     marginHorizontal: 8,
     width: 130,
     height: 130,
     borderRadius: 8,
+  },
+  buttonsWrapper: {
+    flex: 1,
+    justifyContent: 'center',
   },
   fbIcon: {
     color: colors.white,

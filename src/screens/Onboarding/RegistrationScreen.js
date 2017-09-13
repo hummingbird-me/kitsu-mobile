@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Image } from 'react-native';
-import { Button } from 'kitsu/components/Button';
 import { LoginManager } from 'react-native-fbsdk';
+import { connect } from 'react-redux';
+import { Button } from 'kitsu/components/Button';
+import { loginUser } from 'kitsu/store/auth/actions';
 import * as colors from 'kitsu/constants/colors';
 import { OnboardingHeader } from './common/';
 import styles from './styles';
@@ -9,7 +11,7 @@ import styles from './styles';
 const TEMP_IMG_URL = 'https://goo.gl/7XKV53';
 
 const GalleryRow = () => (
-  <View style={{ marginVertical: 8, flexDirection: 'row', justifyContent: 'center' }}>
+  <View style={styles.galleryRow}>
     <Image source={{ uri: TEMP_IMG_URL }} style={styles.squareImage} />
     <Image source={{ uri: TEMP_IMG_URL }} style={styles.squareImage} />
     <Image source={{ uri: TEMP_IMG_URL }} style={styles.squareImage} />
@@ -17,26 +19,25 @@ const GalleryRow = () => (
   </View>
 );
 
-export default class RegistrationScreen extends React.Component {
+class RegistrationScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
   state = {
-  };
-
-  onSucess = () => {
-    // TODO: implement this function.
+    loggingUser: false,
   }
 
   loginFacebook = () => {
+    this.setState({ loggingUser: true })
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (!result.isCancelled) {
-          this.onSuccess();
+          this.props.loginUser(null, navigation, 'signup');
         }
       },
       (error) => {
+        this.setState({ loggingUser: false })
         console.log(`Login fail with error: ${error}`);
       },
     );
@@ -44,6 +45,7 @@ export default class RegistrationScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
+    const { loggingUser } = this.state;
     // TODO: make this screen responsive.
     return (
       <View style={styles.container}>
@@ -53,11 +55,12 @@ export default class RegistrationScreen extends React.Component {
             <GalleryRow />
             <GalleryRow />
           </View>
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={styles.buttonsWrapper}>
             <Button
               style={{ backgroundColor: colors.fbBlueDark }}
               title={'Sign up with Facebook'}
               icon={'facebook-official'}
+              loading={loggingUser}
               onPress={this.loginFacebook}
             />
             <Button
@@ -81,3 +84,5 @@ export default class RegistrationScreen extends React.Component {
     );
   }
 }
+
+export default connect(null, { loginUser })(RegistrationScreen);
