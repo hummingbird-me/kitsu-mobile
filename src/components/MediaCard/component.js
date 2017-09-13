@@ -6,71 +6,65 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Rating } from 'kitsu/components/Rating';
 import { styles } from './styles';
 
-export class MediaCard extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return nextProps.mediaData.posterImage !== this.props.mediaData.posterImage;
-  }
-
-  render() {
-    const {
-      caption,
-      cardDimensions,
-      cardStyle,
-      mediaData,
-      onPress,
-      progress,
-      ratingTwenty,
-      ratingSystem,
-      style,
-    } = this.props;
-
-    const navParams = {
+export const MediaCard = ({
+  caption,
+  cardDimensions,
+  cardStyle,
+  mediaData,
+  navigate,
+  progress,
+  ratingTwenty,
+  ratingSystem,
+  style,
+}) => {
+  const onPress = () => {
+    navigate('Media', {
       mediaId: mediaData.id,
       type: mediaData.type,
-    };
+    });
+  };
 
-    return (
-      <TouchableOpacity onPress={() => onPress(navParams)}>
-        <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
-          {mediaData.posterImage ? (
-            <ProgressiveImage
-              duration={500}
-              source={{ uri: mediaData.posterImage.small }}
-              style={[styles.posterImageCard, cardDimensions, cardStyle]}
-            />
-          ) : (
-            <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
-          )}
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
+        {mediaData.posterImage ? (
+          <ProgressiveImage
+            duration={500}
+            source={{ uri: mediaData.posterImage.small }}
+            style={[styles.posterImageCard, cardDimensions, cardStyle]}
+          />
+        ) : (
+          <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
+        )}
 
-          {caption.length > 0 && <Text style={styles.captionText}>{caption}</Text>}
+        {caption.length > 0 && <Text style={styles.captionText}>{caption}</Text>}
 
-          {progress > 0 && (
-            <ProgressBar fillPercentage={progress} height={3} style={styles.progressBar} />
-          )}
+        {progress > 0 && (
+          <ProgressBar fillPercentage={progress} height={3} style={styles.progressBar} />
+        )}
 
-          {typeof ratingTwenty !== 'undefined' && (
-            <Rating
-              disabled
-              rating={ratingTwenty}
-              ratingSystem={ratingSystem}
-              size="tiny"
-              viewType="single"
-              showNotRated={false}
-              style={styles.rating}
-            />
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }
-}
+        {typeof ratingTwenty !== 'undefined' && (
+          <Rating
+            disabled
+            rating={ratingTwenty}
+            ratingSystem={ratingSystem}
+            size="tiny"
+            viewType="single"
+            showNotRated={false}
+            style={styles.rating}
+          />
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 MediaCard.propTypes = {
   caption: PropTypes.string,
   cardDimensions: PropTypes.object.isRequired,
   cardStyle: ViewPropTypes.style,
   mediaData: PropTypes.object.isRequired,
-  onPress: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
   progress: PropTypes.number,
   ratingTwenty: PropTypes.number,
   ratingSystem: PropTypes.string,

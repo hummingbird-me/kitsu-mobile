@@ -58,7 +58,6 @@ class SearchScreen extends Component {
     const nextQueryState = { ...this.state.query, [route.key]: query !== '' ? query : undefined };
     this.setState({ query: nextQueryState }, () => {
       algoliaIndex.search(query, (err, content) => {
-        console.log(`${route.key} query....`, content, err);
         if (!err) {
           this.setState({ searchResults: { [route.key]: content.hits } });
         }

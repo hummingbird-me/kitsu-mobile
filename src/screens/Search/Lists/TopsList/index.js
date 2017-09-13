@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { upperFirst } from 'lodash';
 import { getDefaults, getStreamers, getCategories } from 'kitsu/store/anime/actions';
-import { MediaCard } from 'kitsu/components/MediaCard';
 import { ContentList } from './ContentList';
 import { styles } from './styles';
 
@@ -18,42 +17,57 @@ class TopsList extends PureComponent {
     this.props.getDefaults('topUpcoming', active);
   }
 
-  onItemPress = (navParams) => {
-    this.props.navigation.navigate('Media', navParams);
+  handleViewAllPress = (title, type) => {
+    this.props.navigation.navigate('SearchResults', {
+      label: title,
+      default: type,
+      active: this.props.active,
+    });
   };
 
   render() {
-    const { active, streamers } = this.props;
+    const { active, streamers, navigation: { navigate } } = this.props;
     const data = this.props[active] || {};
 
+    const listData = [
+      {
+        title: `Top Airing ${upperFirst(active)}`,
+        data: data.topAiring,
+        type: 'topAiring',
+      },
+      {
+        title: 'Anime By Streaming',
+        dark: true,
+        data: streamers,
+        type: 'streaming',
+      },
+      {
+        title: `Top Upcoming ${upperFirst(active)}`,
+        data: data.topUpcoming,
+        type: 'topUpcoming',
+      },
+      {
+        title: `Highest Rated ${upperFirst(active)}`,
+        data: data.highest,
+        type: 'highest',
+      },
+      {
+        title: `Most Popular ${upperFirst(active)}`,
+        data: data.popular,
+        type: 'popular',
+      },
+    ];
     return (
       <ScrollView style={styles.scrollContainer}>
-        <ContentList
-          title={`Top Airing ${upperFirst(active)}`}
-          data={data.topAiring}
-          onItemPress={this.onItemPress}
-        />
-        <ContentList
-          title="Anime By Streaming"
-          dark
-          data={streamers}
-          onItemPress={p => console.log('nav params', p)}
-        />
-        <ContentList
-          title={`Top Upcoming ${upperFirst(active)}`}
-          data={data.topUpcoming}
-          onItemPress={this.onItemPress}
-        />
-        <ContentList
-          title={`Highest Rated ${upperFirst(active)}`}
-          data={data.highest}
-          onItemPress={this.onItemPress}
-        />
-        <ContentList
-          title={`Most Popular ${upperFirst(active)}`}
-          data={data.popular}
-          onItemPress={this.onItemPress}
-        />
+        {listData.map(listItem => (
+          <ContentList
+            title={listItem.title}
+            data={listItem.data}
+            navigate={navigate}
+            dark={listItem.dark || false}
+            onPress={() => this.handleViewAllPress(listItem.title, listItem.type)}
+          />
+        ))}
       </ScrollView>
     );
   }

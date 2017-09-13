@@ -41,8 +41,15 @@ export const styles = StyleSheet.create({
     color: '#392F39',
   },
   linkIcon: {
-    fontSize: 12,
+    fontSize: 10,
+    fontWeight: '200',
     fontFamily: 'OpenSans',
+    paddingLeft: 4,
+  },
+  iconDark: {
     color: '#392F39',
+  },
+  iconLight: {
+    color: colors.white,
   },
 });
