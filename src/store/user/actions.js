@@ -1,3 +1,4 @@
+import { LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import * as types from 'kitsu/store/types';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';
@@ -9,7 +10,7 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
   try {
     const user = await Kitsu.findAll('users', {
       fields: {
-        users: 'id,name,createdAt,email,avatar,coverImage,about,bio,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,titleLanguagePreference',
+        users: 'id,name,createdAt,email,avatar,coverImage,about,bio,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,titleLanguagePreference',
       },
       filter: { self: true },
     });
@@ -45,6 +46,55 @@ export const createUser = (data, nav) => async (dispatch, getState) => {
     dispatch({ type: types.CREATE_USER_FAIL, payload: e });
   }
 };
+
+export const connectFBUser = () => async (dispatch, getState) => {
+  dispatch({ type: types.CONNECT_FBUSER });
+  const infoRequest = new GraphRequest(
+    '/me',
+    {
+      httpMethod: 'GET',
+      version: 'v2.5',
+      parameters: {
+        fields: {
+          string: 'email, name, gender',
+        },
+      },
+    },
+     async (error, fbdata) => {
+      if (!error) {
+        const token = getState().auth.tokens.access_token;
+        const currentUser = getState().user.currentUser;
+        setToken(token);
+        try {
+          await Kitsu.update('users', { id: currentUser.id, facebookId: fbdata.id });
+          dispatch({ type: types.CONNECT_FBUSER_SUCCESS, payload: fbdata.id });
+        } catch (e) {
+          dispatch({ type: types.CONNECT_FBUSER_FAIL, payload: 'Failed to connect Facebook user' });
+          console.log(e);
+        }
+      } else {
+        console.log(error)
+        dispatch({ type: types.CONNECT_FBUSER_FAIL, payload: 'Failed to connect Facebook user' });
+      }
+    },
+  );
+  new GraphRequestManager().addRequest(infoRequest).start();
+}
+
+export const disconnectFBUser = () => async (dispatch, getState) => {
+  dispatch({ type: types.DISCONNECT_FBUSER });
+  const token = getState().auth.tokens.access_token;
+  const currentUser = getState().user.currentUser;
+  setToken(token);
+  try {
+    await Kitsu.update('users', { id: currentUser.id, facebookId: null });
+    dispatch({ type: types.DISCONNECT_FBUSER_SUCCESS });
+    LoginManager.logOut();
+  } catch (e) {
+    dispatch({ type: types.DISCONNECT_FBUSER_FAIL, payload: 'Failed to disconnect fb user' });
+    console.log(e);
+  }
+}
 
 export const updateGeneralSettings = data => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_GENERAL_SETTINGS });
