@@ -24,7 +24,7 @@ class RegistrationScreen extends React.Component {
     this.fetchTopMedia();
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     clearInterval(this.animation);
   }
 
