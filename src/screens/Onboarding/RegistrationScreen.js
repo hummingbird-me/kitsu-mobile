@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, FlatList } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
@@ -26,6 +26,36 @@ class RegistrationScreen extends React.Component {
 
   state = {
     loggingUser: false,
+    topAnime: [],
+    topManga: [],
+  }
+  animation = 0;
+
+  componentDidMount() {
+    this.fetchTopMedia();
+  }
+
+  componentWillUnMount() {
+    clearInterval(this.animation);
+  }
+
+  fetchTopMedia = async () => {
+    // TODO: use kitsu
+    const topAnime = await fetch('https://kitsu.io/api/edge/trending/anime?limit=10').then(res => res.json());
+    const topManga = await fetch('https://kitsu.io/api/edge/trending/manga?limit=10').then(res => res.json());
+    this.setState({
+      topAnime: topAnime.data,
+      topManga: topManga.data,
+    }, this.animateLists);
+  }
+
+  animateLists = () => {
+    let offset = 4;
+    this.animation = setInterval(() => {
+      this.animeList.scrollToOffset({ offset, animated: true });
+      this.mangaList.scrollToOffset({ offset, animated: true });
+      offset += 4;
+    }, 120);
   }
 
   loginFacebook = () => {
@@ -43,17 +73,48 @@ class RegistrationScreen extends React.Component {
     );
   };
 
+  renderItem = ({ item }) => (
+    <Image source={{ uri: item.attributes.posterImage.large }} style={styles.squareImage} />
+  )
+
   render() {
     const { navigate } = this.props.navigation;
-    const { loggingUser } = this.state;
+    const { loggingUser, topAnime, topManga } = this.state;
     // TODO: make this screen responsive.
     return (
       <View style={styles.container}>
         <OnboardingHeader style={styles.header} />
         <View style={{ flex: 8 }}>
           <View>
-            <GalleryRow />
-            <GalleryRow />
+            <FlatList
+              ref={ref => this.animeList = ref}
+              style={{ marginBottom: 8 }}
+              horizontal
+              scrollEnabled={false}
+              data={topAnime}
+              renderItem={this.renderItem}
+              onEndReached={() => {
+                this.setState({
+                  topAnime: this.state.topAnime.concat(topAnime),
+                });
+              }}
+              onEndReachedThreshold={0.5}
+            />
+            <FlatList
+              ref={ref => this.mangaList = ref}
+              inverted
+              horizontal
+              scrollEnabled={false}
+              style={{ marginTop: 8 }}
+              data={topManga}
+              renderItem={this.renderItem}
+              onEndReached={() => {
+                this.setState({
+                  topManga: this.state.topManga.concat(topManga),
+                });
+              }}
+              onEndReachedThreshold={0.5}
+            />
           </View>
           <View style={styles.buttonsWrapper}>
             <Button
