@@ -5,19 +5,9 @@ import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
 import { loginUser } from 'kitsu/store/auth/actions';
 import * as colors from 'kitsu/constants/colors';
+import { placeholderImage } from 'kitsu/assets/img/onboarding';
 import { OnboardingHeader } from './common/';
 import styles from './styles';
-
-const TEMP_IMG_URL = 'https://goo.gl/7XKV53';
-
-const GalleryRow = () => (
-  <View style={styles.galleryRow}>
-    <Image source={{ uri: TEMP_IMG_URL }} style={styles.squareImage} />
-    <Image source={{ uri: TEMP_IMG_URL }} style={styles.squareImage} />
-    <Image source={{ uri: TEMP_IMG_URL }} style={styles.squareImage} />
-    <Image source={{ uri: TEMP_IMG_URL }} style={styles.squareImage} />
-  </View>
-);
 
 class RegistrationScreen extends React.Component {
   static navigationOptions = {
@@ -26,10 +16,9 @@ class RegistrationScreen extends React.Component {
 
   state = {
     loggingUser: false,
-    topAnime: [],
-    topManga: [],
-  }
-  animation = 0;
+    topAnime: Array(10).fill({}),
+    topManga: Array(10).fill({}),
+  };
 
   componentDidMount() {
     this.fetchTopMedia();
@@ -39,14 +28,20 @@ class RegistrationScreen extends React.Component {
     clearInterval(this.animation);
   }
 
+  animation = 0;
+
   fetchTopMedia = async () => {
-    // TODO: use kitsu
-    const topAnime = await fetch('https://kitsu.io/api/edge/trending/anime?limit=10').then(res => res.json());
-    const topManga = await fetch('https://kitsu.io/api/edge/trending/manga?limit=10').then(res => res.json());
-    this.setState({
-      topAnime: topAnime.data,
-      topManga: topManga.data,
-    }, this.animateLists);
+    // TODO: use
+    try {
+      const topAnime = await fetch('https://kitsu.io/api/edge/trending/anime?limit=10').then(res => res.json());
+      const topManga = await fetch('https://kitsu.io/api/edge/trending/manga?limit=10').then(res => res.json());
+      this.setState({
+        topAnime: topAnime.data,
+        topManga: topManga.data,
+      }, this.animateLists);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   animateLists = () => {
@@ -59,7 +54,7 @@ class RegistrationScreen extends React.Component {
   }
 
   loginFacebook = () => {
-    this.setState({ loggingUser: true })
+    this.setState({ loggingUser: true });
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (!result.isCancelled) {
@@ -67,15 +62,22 @@ class RegistrationScreen extends React.Component {
         }
       },
       (error) => {
-        this.setState({ loggingUser: false })
+        this.setState({ loggingUser: false });
         console.log(`Login fail with error: ${error}`);
       },
     );
   };
 
+  populateList = (topList) => {
+    const list = this.state[topList];
+    this.setState({
+      [topList]: list.concat(list),
+    });
+  }
+
   renderItem = ({ item }) => (
-    <Image source={{ uri: item.attributes.posterImage.large }} style={styles.squareImage} />
-  )
+    <Image source={(item.attributes && { uri: item.attributes.posterImage.large }) || placeholderImage} style={styles.squareImage} />
+  );
 
   render() {
     const { navigate } = this.props.navigation;
@@ -90,29 +92,21 @@ class RegistrationScreen extends React.Component {
               ref={ref => this.animeList = ref}
               style={{ marginBottom: 8 }}
               horizontal
+              inverted
               scrollEnabled={false}
               data={topAnime}
               renderItem={this.renderItem}
-              onEndReached={() => {
-                this.setState({
-                  topAnime: this.state.topAnime.concat(topAnime),
-                });
-              }}
+              onEndReached={() => this.populateList('topAnime')}
               onEndReachedThreshold={0.5}
             />
             <FlatList
               ref={ref => this.mangaList = ref}
-              inverted
               horizontal
               scrollEnabled={false}
               style={{ marginTop: 8 }}
               data={topManga}
               renderItem={this.renderItem}
-              onEndReached={() => {
-                this.setState({
-                  topManga: this.state.topManga.concat(topManga),
-                });
-              }}
+              onEndReached={() => this.populateList('topManga')}
               onEndReachedThreshold={0.5}
             />
           </View>
