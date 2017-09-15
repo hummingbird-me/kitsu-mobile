@@ -1,7 +1,12 @@
 import React from 'react';
+<<<<<<< HEAD
 import { View, ScrollView, Dimensions } from 'react-native';
 import { intro1, intro2, intro3, intro4 } from 'kitsu/assets/img/onboarding/';
 import { Button } from 'kitsu/components/Button';
+=======
+import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { intro1, intro2, intro3, intro4 } from 'kitsu/assets/img/onboarding/';
+>>>>>>> ac7ac011c40b7d0948eef59ca59ff6b91fec105f
 import { OnboardingHeader } from './common/';
 import styles from './styles';
 import Step from './Step';
