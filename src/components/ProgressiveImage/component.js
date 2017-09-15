@@ -42,15 +42,15 @@ export class ProgressiveImage extends React.Component {
   onLayout = (event) => {
     const { height, width } = event.nativeEvent.layout;
     this.setState({ height, width });
-  }
+  };
 
   render() {
     const { thumbnailOpacity } = this.state;
     const { backgroundStyle, children, style, resizeMode, source, defaultSource } = this.props;
 
     return (
-      <View style={[styles.imageBackground, backgroundStyle, style]} >
-        {source.uri &&
+      <View style={[styles.imageBackground, backgroundStyle, style]}>
+        {source.uri && (
           <Animated.Image
             onLoad={this.onLoad}
             onLayout={this.onLayout}
@@ -59,16 +59,17 @@ export class ProgressiveImage extends React.Component {
             defaultSource={defaultSource}
             style={[style, { opacity: thumbnailOpacity }]}
           />
-        }
+        )}
 
-        {children && source.uri &&
-          <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.6)']}
-            style={[commonStyles.absoluteFill, style]}
-          >
-            {children}
-          </LinearGradient>
-        }
+        {children &&
+        source.uri && (
+        <LinearGradient
+              colors={['transparent', 'rgba(0,0,0,0.6)']}
+              style={[commonStyles.absoluteFill, style]}
+            >
+              {children}
+            </LinearGradient>
+          )}
       </View>
     );
   }
