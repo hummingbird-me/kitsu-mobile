@@ -46,7 +46,7 @@ export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime')
     }
     const results = await Kitsu.findAll([type], query);
     data = [...data, ...results];
-    console.log('search successded', data, results);
+
     dispatch({ type: types.SEARCH_SUCCESS, field: 'results', payload: data, selected: type });
   } catch (e) {
     console.log('search failed', e);

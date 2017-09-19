@@ -16,6 +16,10 @@ import { SearchBox } from 'kitsu/components/SearchBox';
 import { styles } from './styles';
 
 class SearchScreen extends Component {
+  static navigationOptions = {
+    header: null,
+  };
+
   state = {
     query: {
       anime: undefined,
@@ -50,22 +54,33 @@ class SearchScreen extends Component {
     ],
   };
 
-  handleSearchStateChange = (route, query) => {
+  doSearch = (query, route) => {
     const algoliaClient = algolia(kitsuConfig.algoliaAppId, route.apiKey);
     const algoliaIndex = algoliaClient.initIndex(route.indexName);
 
+    algoliaIndex.search(query, (err, content) => {
+      if (!err) {
+        this.setState({ searchResults: { [route.key]: content.hits } });
+      }
+    });
+  };
+
+  handleSearchStateChange = (route, query) => {
     // const { query } = searchState;
     const nextQueryState = { ...this.state.query, [route.key]: query !== '' ? query : undefined };
     this.setState({ query: nextQueryState }, () => {
-      algoliaIndex.search(query, (err, content) => {
-        if (!err) {
-          this.setState({ searchResults: { [route.key]: content.hits } });
-        }
-      });
+      this.doSearch(query, route);
     });
   };
 
   handleIndexChange = index => this.setState({ index });
+
+  navigateToMedia = (media) => {
+    this.props.navigation.navigate('Media', {
+      mediaId: media.id,
+      type: media.type,
+    });
+  };
 
   renderScene = ({ route }) => {
     const currentValue = this.state.query[route.key];
@@ -101,7 +116,7 @@ class SearchScreen extends Component {
       }
       default: {
         return activeQuery ? (
-          <ResultsList hits={hits} />
+          <ResultsList hits={hits} onPress={this.navigateToMedia} />
         ) : (
           <TopsList active={route.key} mounted navigation={navigation} />
         );

@@ -186,6 +186,7 @@ class TopsList extends PureComponent {
         {listData.map(listItem => (
           <ContentList
             {...listItem}
+            key={listItem.name || listItem.title}
             navigate={navigate}
             onPress={() => this.handleViewAllPress(listItem.title, listItem.type)}
           />

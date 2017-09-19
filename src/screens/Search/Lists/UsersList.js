@@ -110,8 +110,6 @@ const UsersList = ({ hits, onFollow, onData }) => {
 
 UsersList.propTypes = {
   hits: PropTypes.array,
-  hasMore: PropTypes.bool.isRequired,
-  refine: PropTypes.func,
   onFollow: PropTypes.func.isRequired,
   onData: PropTypes.func.isRequired,
 };
