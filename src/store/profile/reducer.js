@@ -339,6 +339,32 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           },
         },
       };
+    case types.DELETE_USER_LIBRARY_ENTRY:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.libraryType]: {
+            ...state.userLibrary[action.libraryType],
+            [action.libraryStatus]: {
+              ...state.userLibrary[action.libraryType][action.libraryStatus],
+              data: state.userLibrary[action.libraryType][action.libraryStatus].data
+                .filter(entry => entry.id !== action.id),
+            },
+          },
+        },
+        userLibrarySearch: {
+          ...state.userLibrarySearch,
+          [action.libraryType]: {
+            ...state.userLibrarySearch[action.libraryType],
+            [action.libraryStatus]: {
+              ...state.userLibrarySearch[action.libraryType][action.libraryStatus],
+              data: state.userLibrarySearch[action.libraryType][action.libraryStatus].data
+                .filter(entry => entry.id !== action.id),
+            },
+          },
+        },
+      };
     case types.UPDATE_USER_LIBRARY_SEARCH_TERM:
       return {
         ...state,

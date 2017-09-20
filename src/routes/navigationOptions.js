@@ -1,6 +1,6 @@
 import { darkPurple, white } from 'kitsu/constants/colors';
 
-export default (headerHeight = 64, marginTop = 0) => ({
+export default (headerHeight = 64, marginTop = 0, extras = {}) => ({
   headerStyle: { backgroundColor: darkPurple, height: headerHeight },
   headerTitleStyle: {
     color: white,
@@ -9,4 +9,5 @@ export default (headerHeight = 64, marginTop = 0) => ({
     fontSize: 15,
     marginTop,
   },
+  ...extras,
 });
