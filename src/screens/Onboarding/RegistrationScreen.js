@@ -59,6 +59,8 @@ class RegistrationScreen extends React.Component {
       (result) => {
         if (!result.isCancelled) {
           this.props.loginUser(null, navigation, 'signup');
+        } else {
+          this.setState({ loggingUser: false });
         }
       },
       (error) => {
