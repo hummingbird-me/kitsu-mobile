@@ -4,6 +4,7 @@ import { flattenCommon } from 'kitsu/common/styles';
 
 export const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: colors.white,
   },
   dateStarted: {
