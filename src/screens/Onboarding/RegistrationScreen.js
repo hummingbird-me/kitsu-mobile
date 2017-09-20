@@ -46,7 +46,7 @@ export default class RegistrationScreen extends React.Component {
     const { navigate } = this.props.navigation;
     // TODO: make this screen responsive.
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <OnboardingHeader />
         <View style={{ marginVertical: 24, justifyContent: 'center', }}>
           <GalleryRow />
@@ -93,7 +93,7 @@ export default class RegistrationScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

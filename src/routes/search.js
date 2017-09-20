@@ -20,7 +20,7 @@ const SearchStack = StackNavigator(
     },
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    navigationOptions: () => ({
       ...navigationOptions(),
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (

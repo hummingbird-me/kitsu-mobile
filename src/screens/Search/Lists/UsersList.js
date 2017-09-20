@@ -92,13 +92,7 @@ User.propTypes = {
   onFollow: PropTypes.func,
 };
 
-const UsersList = ({ hits, hasMore, refine, onFollow, onData }) => {
-  const onEndReached = () => {
-    if (hasMore) {
-      refine();
-    }
-  };
-
+const UsersList = ({ hits, onFollow, onData }) => {
   // Send users data to reducer to maintain single source of truth
   onData(hits);
 
@@ -106,8 +100,6 @@ const UsersList = ({ hits, hasMore, refine, onFollow, onData }) => {
     <FlatList
       removeClippedSubviews={false}
       data={hits}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.5}
       style={styles.container}
       scrollEnabled
       contentContainerStyle={styles.userList}
@@ -117,10 +109,14 @@ const UsersList = ({ hits, hasMore, refine, onFollow, onData }) => {
 };
 
 UsersList.propTypes = {
-  hits: PropTypes.array.isRequired,
-  hasMore: PropTypes.bool.isRequired,
-  refine: PropTypes.func,
-  onPress: PropTypes.func,
+  hits: PropTypes.array,
+  onFollow: PropTypes.func.isRequired,
+  onData: PropTypes.func.isRequired,
+};
+
+UsersList.defaultProps = {
+  hits: [],
+  refine: () => {},
 };
 
 export default UsersList;
