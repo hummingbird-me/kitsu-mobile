@@ -9,8 +9,8 @@ export const SimpleHeader = (props) => {
   const RightWrapper = props.rightAction ? TouchableOpacity : View;
 
   const leftAction = props.leftAction ? () => props.leftAction() : null;
-  const titleAction = props.titleAction ? () => props.leftAction() : null;
-  const rightAction = props.rightAction ? () => props.leftAction() : null;
+  const titleAction = props.titleAction ? () => props.titleAction() : null;
+  const rightAction = props.rightAction ? () => props.rightAction() : null;
 
   return (
     <View style={styles.headerContainer}>

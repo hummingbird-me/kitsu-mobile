@@ -1,18 +1,19 @@
 import * as React from 'react';
 import debounce from 'lodash/debounce';
 import { PropTypes } from 'prop-types';
-import { Image, Text, TouchableHighlight, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { Counter } from 'kitsu/components/Counter';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import Swipeable from 'react-native-swipeable';
+import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
 import { styles } from './styles';
 
-const menuImage = require('kitsu/assets/img/menus/three-dot-horizontal-grey.png');
+const USER_LIBRARY_EDIT_SCREEN = 'UserLibraryEdit';
 
-const STATUS_SELECT_OPTIONS = [
+export const STATUS_SELECT_OPTIONS = [
   { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
   { value: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
   { value: 'onHold', anime: 'On Hold', manga: 'On Hold' },
@@ -29,6 +30,7 @@ export class UserLibraryListCard extends React.Component {
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
+    onSwipingItem: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
   }
@@ -39,7 +41,7 @@ export class UserLibraryListCard extends React.Component {
     progress: this.props.data.progress,
     progressPercentage: Math.floor((this.props.data.progress / this.getMaxProgress()) * 100),
     ratingTwenty: this.props.data.ratingTwenty,
-    sliderCanActivate: false,
+    isSliderActive: false,
   }
 
   onProgressValueChanged = (newProgress) => {
@@ -55,17 +57,21 @@ export class UserLibraryListCard extends React.Component {
     this.setState({ ratingTwenty }, this.debounceSave);
   }
 
-  onRightButtonsActivate = () => {
-    this.setState({ sliderCanActivate: true });
+  onRightActionActivate = () => {
+    this.setState({ isSliderActive: true });
   }
 
-  onRightButtonsDeactivate = () => {
-    this.setState({ sliderCanActivate: false });
+  onRightActionDeactivate = () => {
+    this.setState({ isSliderActive: false });
   }
 
   onStatusSelected = (libraryStatus) => {
     this.setState({ libraryStatus }, this.debounceSave);
   }
+
+  onSwipeStart = () => this.props.onSwipingItem(true)
+
+  onSwipeRelease = () => this.props.onSwipingItem(false)
 
   getMaxProgress() {
     const { data, libraryType } = this.props;
@@ -76,6 +82,29 @@ export class UserLibraryListCard extends React.Component {
     }
 
     return mediaData.chapterCount;
+  }
+
+  navigateToEditEntry = () => {
+    if (this.state.isSliderActive) {
+      const {
+        currentUser,
+        profile,
+        data,
+        libraryStatus,
+        libraryType,
+        updateUserLibraryEntry,
+      } = this.props;
+
+      this.props.navigate(USER_LIBRARY_EDIT_SCREEN, {
+        libraryStatus,
+        libraryType,
+        profile,
+        canEdit: profile.id === currentUser.id,
+        libraryEntry: data,
+        ratingSystem: currentUser.ratingSystem,
+        updateUserLibraryEntry,
+      });
+    }
   }
 
   saveEntry = async () => {
@@ -102,26 +131,29 @@ export class UserLibraryListCard extends React.Component {
 
   render() {
     const { data, libraryType, currentUser } = this.props;
-    const { progressPercentage, sliderCanActivate } = this.state;
+    const { progressPercentage, isSliderActive } = this.state;
     const mediaData = data[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
 
     return (
       <Swipeable
-        onRightButtonsActivate={this.onRightButtonsActivate}
-        onRightButtonsDeactivate={this.onRightButtonsDeactivate}
-        rightButtonsActivationDistance={145}
-        rightButtonWidth={145}
-        rightButtons={[
-          <TouchableHighlight
+        onRightActionActivate={this.onRightActionActivate}
+        onRightActionDeactivate={this.onRightActionDeactivate}
+        onRightActionComplete={this.navigateToEditEntry}
+        onSwipeStart={this.onSwipeStart}
+        onSwipeRelease={this.onSwipeRelease}
+        rightActionActivationDistance={145}
+        rightContent={[
+          <View
+            key={0}
             style={[
               styles.swipeButton,
-              (sliderCanActivate ? styles.swipeButtonActive : styles.swipeButtonInactive),
+              (isSliderActive ? styles.swipeButtonActive : styles.swipeButtonInactive),
             ]}
           >
             <Text style={styles.swipeButtonText}>{canEdit ? 'Edit Entry' : 'View Details'}</Text>
-          </TouchableHighlight>,
+          </View>,
         ]}
       >
         <View style={styles.container}>

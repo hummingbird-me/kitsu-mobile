@@ -153,7 +153,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       fields: {
         anime: 'canonicalTitle,posterImage,episodeCount',
         manga: 'canonicalTitle,posterImage,chapterCount',
-        libraryEntries: 'anime,manga,progress,ratingTwenty,status',
+        libraryEntries: 'anime,finishedAt,manga,notes,private,progress,ratingTwenty,reconsumeCount,startedAt,status',
       },
       filter,
       include: 'anime,manga',
@@ -335,6 +335,17 @@ export const updateUserLibrarySearchEntry = (
   libraryType, libraryStatus, newLibraryEntry,
 ) => async (dispatch, getState) => {
   updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
+};
+
+export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch) => {
+  await Kitsu.destroy('libraryEntries', id);
+
+  dispatch({
+    type: types.DELETE_USER_LIBRARY_ENTRY,
+    id,
+    libraryStatus,
+    libraryType,
+  });
 };
 
 export function updateLibrarySearchTerm(searchTerm) {
