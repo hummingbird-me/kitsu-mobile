@@ -43,7 +43,7 @@ export class UserLibrarySearchScreenComponent extends React.Component {
     return (
       <UserLibraryListCard
         currentUser={this.props.currentUser}
-        data={item}
+        libraryEntry={item}
         libraryStatus={item.status}
         libraryType={media.type}
         navigate={this.props.navigation.navigate}
@@ -59,7 +59,7 @@ export class UserLibrarySearchScreenComponent extends React.Component {
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
       { status: 'completed', anime: 'Completed', manga: 'Completed' },
-      { status: 'onHold', anime: 'On Hold', manga: 'On Hold' },
+      { status: 'on_hold', anime: 'On Hold', manga: 'On Hold' },
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 

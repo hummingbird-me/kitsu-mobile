@@ -23,14 +23,14 @@ const userLibraryInitial = {
     completed: { data: [], loading: false },
     current: { data: [], loading: false },
     dropped: { data: [], loading: false },
-    onHold: { data: [], loading: false },
+    on_hold: { data: [], loading: false },
     planned: { data: [], loading: false },
   },
   manga: {
     completed: { data: [], loading: false },
     current: { data: [], loading: false },
     dropped: { data: [], loading: false },
-    onHold: { data: [], loading: false },
+    on_hold: { data: [], loading: false },
     planned: { data: [], loading: false },
   },
 };
@@ -192,7 +192,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
                 ),
               },
 
-              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to onHold for us)
+              // add to newLibraryEntry.status
               [action.newLibraryStatus]: {
                 ...state.userLibrary[action.libraryType][action.newLibraryStatus],
                 data: [
@@ -310,7 +310,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
                 ),
               },
 
-              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to onHold for us)
+              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to on_hold for us)
               [action.newLibraryStatus]: {
                 ...state.userLibrarySearch[action.libraryType][action.newLibraryStatus],
                 data: [

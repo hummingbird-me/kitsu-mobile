@@ -118,7 +118,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
   const filter = {
     userId: options.userId,
-    status: options.status === 'onHold' ? 'on_hold' : options.status,
+    status: options.status,
     kind: options.library,
   };
 
@@ -221,16 +221,19 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
 
   try {
     await Promise.all([
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'completed' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'onHold' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'planned' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'completed' })(dispatch, getState),
+    ]);
+
+    await Promise.all([
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'on_hold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'onHold' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'on_hold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
     ]);
 
     dispatch({
@@ -307,17 +310,14 @@ export const updateUserLibraryEntry = (
 
   try {
     const updateEntry = { ...newLibraryEntry };
-    if (updateEntry.status === 'onHold') {
-      updateEntry.status = 'on_hold';
-    }
 
     // optimistically update state
     dispatch({
       libraryStatus,
       libraryType,
 
-      previousLibraryStatus: previousLibraryEntry.status === 'on_hold' ? 'onHold' : previousLibraryEntry.status,
-      newLibraryStatus: newLibraryEntry.status === 'on_hold' ? 'onHold' : newLibraryEntry.status,
+      previousLibraryStatus: previousLibraryEntry.status,
+      newLibraryStatus: newLibraryEntry.status,
 
       previousLibraryEntry,
       newLibraryEntry: updateEntry,
