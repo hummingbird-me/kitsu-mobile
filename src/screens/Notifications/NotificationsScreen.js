@@ -10,9 +10,39 @@ import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 const isMentioned = (arr, id) => arr.includes(id);
 
 const styles = StyleSheet.create({
-  listStyle: {
+  container: {
     backgroundColor: colors.darkPurple,
     flex: 1,
+  },
+  noticeContainer: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 3,
+    backgroundColor: colors.white,
+    marginBottom: 6,
+    position: 'relative',
+  },
+  noticeText: {
+    fontWeight: '600',
+    fontFamily: 'Open Sans',
+    paddingVertical: 10,
+  },
+  actionButton: {
+    backgroundColor: colors.green,
+    borderRadius: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  actionButtonText: {
+    color: colors.white,
+  },
+  closeIcon: {
+    position: 'absolute',
+    right: 5,
+    top: 5,
+    color: colors.grey,
+    fontSize: 18,
   },
   outerText: {
     color: 'black',
@@ -30,7 +60,7 @@ const styles = StyleSheet.create({
   },
   parentItem: {
     flexDirection: 'row',
-    backgroundColor: '#FAFAFA',
+    backgroundColor: colors.offWhite,
     paddingHorizontal: 8,
     paddingVertical: 12,
   },
@@ -139,9 +169,9 @@ class NotificationsScreen extends Component {
         : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity style={styles.parentItem}>
+      <TouchableOpacity style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
         <View style={styles.iconContainer}>
-          {!item.isRead && <Icon name="circle" style={styles.icon} />}
+          <Icon name="circle" style={styles.icon} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={{ paddingRight: 10 }}>
@@ -168,10 +198,21 @@ class NotificationsScreen extends Component {
 
   renderItemSeperator = () => <View style={styles.itemSeperator} />;
 
+  renderHeader = () => (
+    <View style={styles.noticeContainer}>
+      <Text style={styles.noticeText}>Kitsu is better with notifications!</Text>
+      <TouchableOpacity style={styles.actionButton}>
+        <Text style={styles.actionButtonText}>Turn on notifications</Text>
+      </TouchableOpacity>
+      <Icon name="close" style={styles.closeIcon} />
+    </View>
+  );
+
   render() {
     const { notifications, loadingNotifications, getNotifications } = this.props;
     return (
       <FlatList
+        ListHeaderComponent={this.renderHeader}
         removeClippedSubviews={false}
         data={notifications}
         renderItem={this.renderItem}
@@ -182,7 +223,7 @@ class NotificationsScreen extends Component {
         initialNumToRender={10}
         refreshing={loadingNotifications}
         onRefresh={getNotifications}
-        style={styles.listStyle}
+        style={styles.container}
       />
     );
   }
