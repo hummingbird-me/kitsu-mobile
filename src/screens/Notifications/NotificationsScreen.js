@@ -7,8 +7,55 @@ import moment from 'moment';
 import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 
+const isMentioned = (arr, id) => arr.includes(id);
+
+const styles = StyleSheet.create({
+  listStyle: {
+    backgroundColor: colors.darkPurple,
+    flex: 1,
+  },
+  outerText: {
+    color: 'black',
+    fontFamily: 'OpenSans',
+    fontSize: 16,
+    lineHeight: 18,
+    fontWeight: 'bold',
+  },
+  innerText: {
+    color: 'black',
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    lineHeight: 12,
+    fontWeight: '600',
+  },
+  parentItem: {
+    flexDirection: 'row',
+    backgroundColor: '#FAFAFA',
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+  },
+  itemSeperator: {
+    borderWidth: 1,
+    borderColor: colors.darkPurple,
+  },
+  iconContainer: { justifyContent: 'center', paddingLeft: 5, paddingRight: 10, width: 25 },
+  icon: { fontSize: 8, color: '#FF102E' },
+  detailsContainer: { alignItems: 'center', flexDirection: 'row', flex: 1 },
+  userAvatar: { width: 32, height: 32, borderRadius: 16 },
+  activityContainer: { flex: 1, justifyContent: 'center' },
+  activityTextContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  activityText: { fontFamily: 'OpenSans', fontSize: 12, fontWeight: '400' },
+  activityTextHighlight: { color: '#FF300A', fontWeight: '500' },
+  activityMetaContainer: { justifyContent: 'flex-start' },
+  activityMetaText: { fontSize: 10, color: '#919191' },
+});
+
 class NotificationsScreen extends Component {
-  static navigationOptions = ({ screenProps }) => ({
+  static navigationOptions = () => ({
     title: 'Notifications',
     headerStyle: {
       backgroundColor: colors.darkPurple,
@@ -19,7 +66,7 @@ class NotificationsScreen extends Component {
 
   state = {
     offset: 0,
-  }
+  };
 
   componentDidMount() {
     this.props.getNotifications();
@@ -29,7 +76,7 @@ class NotificationsScreen extends Component {
     // const offset = this.state.offset + 30;
     // this.props.getNotifications(offset);
     // this.setState({ offset });
-  }
+  };
 
   renderText = (activity) => {
     const { currentUser: { id } } = this.props;
@@ -68,70 +115,75 @@ class NotificationsScreen extends Component {
       default:
         return <Text>made an action</Text>;
     }
-  }
+  };
 
   renderItem = ({ item }) => {
     const activity = item.activities[0];
+
     let others = null;
     if (item.activities.length > 1) {
-      others = item.activities.length === 2
-        ? (<Text style={{ color: '#FF300A', fontWeight: '500' }}>
-          {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
-        </Text>)
-        : (<Text>
-          <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
-        </Text>);
+      others =
+        item.activities.length === 2 ? (
+          <Text style={{ color: '#FF300A', fontWeight: '500' }}>
+            {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
+          </Text>
+        ) : (
+          <Text>
+            <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
+          </Text>
+        );
     }
-    const ava = activity.actor && activity.actor.avatar
-      ? activity.actor.avatar.tiny
-      : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
+    const ava =
+      activity.actor && activity.actor.avatar
+        ? activity.actor.avatar.tiny
+        : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity button style={{ ...styles.parentItem, padding: 5 }}>
-        <View style={{ justifyContent: 'center', paddingLeft: 5, paddingRight: 10, width: 25 }}>
-          {!item.isRead && <Icon name="circle" style={{ fontSize: 8, color: '#FF102E' }} />}
+      <TouchableOpacity style={styles.parentItem}>
+        <View style={styles.iconContainer}>
+          {!item.isRead && <Icon name="circle" style={styles.icon} />}
         </View>
-        <View style={{ alignItems: 'center', flexDirection: 'row', flex: 1 }}>
+        <View style={styles.detailsContainer}>
           <View style={{ paddingRight: 10 }}>
-            <Image style={{ width: 32, height: 32, borderRadius: 16 }} source={{ uri: ava }} />
+            <Image style={styles.userAvatar} source={{ uri: ava }} />
           </View>
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
-              <Text style={{ fontFamily: 'OpenSans', fontSize: 12, fontWeight: '400' }}>
-                <Text style={{ color: '#FF300A', fontWeight: '500' }}>
-                  {activity.actor && activity.actor.name}{' '}
-                </Text>
+          <View style={styles.activityContainer}>
+            <View style={styles.activityTextContainer}>
+              <Text style={[styles.activityText, styles.activityTextHighlight]}>
+                {activity.actor && activity.actor.name}{' '}
+              </Text>
+              <Text style={styles.activityText}>
                 {others && <Text>and {others}</Text>}
                 {this.renderText(activity)}
               </Text>
             </View>
-            <View style={{ justifyContent: 'flex-start' }}>
-              <Text style={{ fontSize: 10, color: '#919191' }}>
-                {moment(activity.time).fromNow()}
-              </Text>
+            <View style={styles.activityMetaContainer}>
+              <Text style={styles.activityMetaText}>{moment(activity.time).fromNow()}</Text>
             </View>
           </View>
         </View>
       </TouchableOpacity>
     );
-  }
+  };
+
+  renderItemSeperator = () => <View style={styles.itemSeperator} />;
 
   render() {
-    const { notifications, loadingNotifications } = this.props;
+    const { notifications, loadingNotifications, getNotifications } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
-        <FlatList
-          removeClippedSubviews={false}
-          data={notifications}
-          renderItem={this.renderItem}
-          onEndReached={() => this.loadMore()}
-          keyExtractor={item => item.id}
-          onEndReachedThreshold={0.5}
-          initialNumToRender={30}
-          refreshing={loadingNotifications}
-          onRefresh={() => this.props.getNotifications()}
-        />
-      </View>
+      <FlatList
+        removeClippedSubviews={false}
+        data={notifications}
+        renderItem={this.renderItem}
+        onEndReached={this.loadMore}
+        keyExtractor={item => item.id}
+        onEndReachedThreshold={0.5}
+        ItemSeparatorComponent={this.renderItemSeperator}
+        initialNumToRender={10}
+        refreshing={loadingNotifications}
+        onRefresh={getNotifications}
+        style={styles.listStyle}
+      />
     );
   }
 }
@@ -141,32 +193,6 @@ NotificationsScreen.propTypes = {
   currentUser: PropTypes.object.isRequired,
   notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
-};
-
-const isMentioned = (arr, id) => arr.includes(id);
-
-const styles = {
-  outerText: {
-    color: 'black',
-    fontFamily: 'OpenSans',
-    fontSize: 16,
-    lineHeight: 18,
-    fontWeight: 'bold',
-  },
-  innerText: {
-    color: 'black',
-    fontFamily: 'OpenSans',
-    fontSize: 12,
-    lineHeight: 12,
-    fontWeight: '600',
-  },
-  parentItem: {
-    height: 65,
-    flexDirection: 'row',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: '#EEEEEE',
-    backgroundColor: '#FAFAFA',
-  },
 };
 
 const mapStateToProps = ({ feed, user }) => {
