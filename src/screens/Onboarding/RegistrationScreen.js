@@ -100,6 +100,7 @@ class RegistrationScreen extends React.Component {
               renderItem={this.renderItem}
               onEndReached={() => this.populateList('topAnime')}
               onEndReachedThreshold={0.5}
+              showsHorizontalScrollIndicator={false}
             />
             <FlatList
               ref={ref => this.mangaList = ref}
@@ -110,6 +111,7 @@ class RegistrationScreen extends React.Component {
               renderItem={this.renderItem}
               onEndReached={() => this.populateList('topManga')}
               onEndReachedThreshold={0.5}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
           <View style={styles.buttonsWrapper}>
