@@ -31,7 +31,7 @@ class RegistrationScreen extends React.Component {
   animation = 0;
 
   fetchTopMedia = async () => {
-    // TODO: use
+    // TODO: handle network error.
     try {
       const topAnime = await fetch('https://kitsu.io/api/edge/trending/anime?limit=10').then(res => res.json());
       const topManga = await fetch('https://kitsu.io/api/edge/trending/manga?limit=10').then(res => res.json());
