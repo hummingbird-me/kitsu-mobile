@@ -1,24 +1,33 @@
 import React, { Component } from 'react';
-import { Dimensions, View } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Icon, Button } from 'native-base';
-import AweIcon from 'react-native-vector-icons/FontAwesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { search } from 'kitsu/store/anime/actions';
 import { ResultsList } from './Lists';
+import * as colors from 'kitsu/constants/colors';
+
+const styles = StyleSheet.create({
+  button: {
+    padding: 10,
+  },
+  list: {
+    backgroundColor: colors.darkPurple,
+    paddingHorizontal: 4,
+  },
+});
 
 class SearchResults extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.label,
     headerLeft: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" style={{ color: 'white' }} />
-      </Button>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+        <FontAwesomeIcon name="chevron-left" style={{ color: 'white' }} />
+      </TouchableOpacity>
     ),
     headerRight: (
-      <Button
-        transparent
-        color="white"
+      <TouchableOpacity
+        style={styles.button}
         onPress={() =>
           navigation.navigate('SearchFilter', {
             ...navigation.state.params,
@@ -39,15 +48,15 @@ class SearchResults extends Component {
             },
           })}
       >
-        <AweIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
-      </Button>
+        <FontAwesomeIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
+      </TouchableOpacity>
     ),
   });
 
   state = {
     loading: false,
     index: 0,
-  }
+  };
 
   componentDidMount() {
     this.getData();
@@ -65,12 +74,12 @@ class SearchResults extends Component {
   getData = (index = 0, newParams) => {
     const { params } = newParams || this.props.navigation.state;
     this.props.search(params.filter, params.sort, index, params.default, params.active);
-  }
+  };
 
   refresh = () => {
     this.setState({ loading: true, index: 0 });
     this.getData();
-  }
+  };
 
   loadMore = () => {
     if (!this.props.loading) {
@@ -78,31 +87,30 @@ class SearchResults extends Component {
       this.getData(index);
       this.setState({ index });
     }
-  }
+  };
 
   render() {
-    const data = this.props.results.length > 0
-      ? this.props.results
-      : Array(20).fill(1).map((item, index) => ({ key: index }));
+    const data =
+      this.props.results.length > 0
+        ? this.props.results
+        : Array(20)
+          .fill(1)
+          .map((item, index) => ({ key: index }));
     return (
-      <View style={{ marginRight: 0, marginLeft: 0, backgroundColor: 'white' }}>
-        <ResultsList
-          dataArray={data}
-          loadMore={this.loadMore}
-          refresh={this.refresh}
-          refreshing={this.state.refresh}
-          imageSize={{
-            h: Dimensions.get('window').width / 4 * 1.25,
-            w: (Dimensions.get('window').width - 5) / 4,
-          }}
-          onPress={(media) => {
-            this.props.navigation.navigate('Media', {
-              mediaId: media.id,
-              type: media.type,
-            });
-          }}
-        />
-      </View>
+      <ResultsList
+        hits={data}
+        numColumns={3}
+        onEndReached={this.loadMore}
+        onRefresh={this.refresh}
+        refreshing={this.state.loading}
+        onPress={(media) => {
+          this.props.navigation.navigate('Media', {
+            mediaId: media.id,
+            type: media.type,
+          });
+        }}
+        style={styles.list}
+      />
     );
   }
 }

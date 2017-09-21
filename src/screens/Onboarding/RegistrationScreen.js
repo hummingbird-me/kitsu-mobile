@@ -137,7 +137,7 @@ class RegistrationScreen extends React.Component {
             />
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
