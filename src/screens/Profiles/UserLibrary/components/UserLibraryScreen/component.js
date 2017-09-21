@@ -8,6 +8,7 @@ import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
 import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
+import { Spinner } from 'native-base';
 import { styles } from './styles';
 import * as constants from './constants';
 
@@ -135,7 +136,7 @@ export class UserLibraryScreenComponent extends React.Component {
       current: { anime: 'watching', manga: 'reading' },
       planned: { anime: 'planned', manga: 'planned' },
       completed: { anime: 'complete', manga: 'complete' },
-      onHold: { anime: 'on hold', manga: 'on hold' },
+      on_hold: { anime: 'on hold', manga: 'on hold' },
       dropped: { anime: 'dropped', manga: 'dropped' },
     };
 
@@ -162,13 +163,28 @@ export class UserLibraryScreenComponent extends React.Component {
     );
   };
 
+  renderFetchingMoreSpinner = (type, status) => {
+    const { userLibrary } = this.props;
+    const { data, loading } = userLibrary[type][status];
+
+    if (loading && data.length) {
+      return (
+        <View style={styles.listLoadingSpinnerContainer}>
+          <Spinner color="white" />
+        </View>
+      );
+    }
+
+    return null;
+  }
+
   renderLists = (type) => {
     const { userLibrary, navigation } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
       { status: 'completed', anime: 'Completed', manga: 'Completed' },
-      { status: 'onHold', anime: 'On Hold', manga: 'On Hold' },
+      { status: 'on_hold', anime: 'On Hold', manga: 'On Hold' },
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 
@@ -206,6 +222,7 @@ export class UserLibraryScreenComponent extends React.Component {
             this.renderEmptyList(type, status)
             :
             <FlatList
+              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}

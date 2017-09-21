@@ -23,14 +23,14 @@ const userLibraryInitial = {
     completed: { data: [], loading: false },
     current: { data: [], loading: false },
     dropped: { data: [], loading: false },
-    onHold: { data: [], loading: false },
+    on_hold: { data: [], loading: false },
     planned: { data: [], loading: false },
   },
   manga: {
     completed: { data: [], loading: false },
     current: { data: [], loading: false },
     dropped: { data: [], loading: false },
-    onHold: { data: [], loading: false },
+    on_hold: { data: [], loading: false },
     planned: { data: [], loading: false },
   },
 };
@@ -192,7 +192,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
                 ),
               },
 
-              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to onHold for us)
+              // add to newLibraryEntry.status
               [action.newLibraryStatus]: {
                 ...state.userLibrary[action.libraryType][action.newLibraryStatus],
                 data: [
@@ -310,7 +310,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
                 ),
               },
 
-              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to onHold for us)
+              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to on_hold for us)
               [action.newLibraryStatus]: {
                 ...state.userLibrarySearch[action.libraryType][action.newLibraryStatus],
                 data: [
@@ -335,6 +335,32 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
                 state.userLibrarySearch[action.libraryType][action.libraryStatus].data,
                 action.newLibraryEntry,
               ),
+            },
+          },
+        },
+      };
+    case types.DELETE_USER_LIBRARY_ENTRY:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.libraryType]: {
+            ...state.userLibrary[action.libraryType],
+            [action.libraryStatus]: {
+              ...state.userLibrary[action.libraryType][action.libraryStatus],
+              data: state.userLibrary[action.libraryType][action.libraryStatus].data
+                .filter(entry => entry.id !== action.id),
+            },
+          },
+        },
+        userLibrarySearch: {
+          ...state.userLibrarySearch,
+          [action.libraryType]: {
+            ...state.userLibrarySearch[action.libraryType],
+            [action.libraryStatus]: {
+              ...state.userLibrarySearch[action.libraryType][action.libraryStatus],
+              data: state.userLibrarySearch[action.libraryType][action.libraryStatus].data
+                .filter(entry => entry.id !== action.id),
             },
           },
         },
