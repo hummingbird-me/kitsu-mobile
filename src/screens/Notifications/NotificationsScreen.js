@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
+import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
@@ -95,18 +96,26 @@ class NotificationsScreen extends Component {
   });
 
   state = {
-    offset: 0,
+    showNotice: false,
+  };
+
+  handleActionBtnPress = () => {
+    if (Platform.OS === 'ios') {
+      // OneSignal.requestPermissions({ alert: true, sound: true, })
+      OneSignal.addEventListener('registered', (data) => {
+        console.log('data', data);
+      });
+    }
   };
 
   componentDidMount() {
     this.props.getNotifications();
+    if (Platform.OS === 'ios') {
+      OneSignal.checkPermissions(permissions =>
+        this.setState({ showNotice: permissions.alert !== 1 }),
+      );
+    }
   }
-
-  loadMore = () => {
-    // const offset = this.state.offset + 30;
-    // this.props.getNotifications(offset);
-    // this.setState({ offset });
-  };
 
   renderText = (activity) => {
     const { currentUser: { id } } = this.props;
@@ -198,15 +207,20 @@ class NotificationsScreen extends Component {
 
   renderItemSeperator = () => <View style={styles.itemSeperator} />;
 
-  renderHeader = () => (
-    <View style={styles.noticeContainer}>
-      <Text style={styles.noticeText}>Kitsu is better with notifications!</Text>
-      <TouchableOpacity style={styles.actionButton}>
-        <Text style={styles.actionButtonText}>Turn on notifications</Text>
-      </TouchableOpacity>
-      <Icon name="close" style={styles.closeIcon} />
-    </View>
-  );
+  renderHeader = () => {
+    if (this.state.showNotice) {
+      return (
+        <View style={styles.noticeContainer}>
+          <Text style={styles.noticeText}>Kitsu is better with notifications!</Text>
+          <TouchableOpacity style={styles.actionButton}>
+            <Text style={styles.actionButtonText}>Turn on notifications</Text>
+          </TouchableOpacity>
+          <Icon name="close" style={styles.closeIcon} />
+        </View>
+      );
+    }
+    return <View />;
+  };
 
   render() {
     const { notifications, loadingNotifications, getNotifications } = this.props;
@@ -216,9 +230,7 @@ class NotificationsScreen extends Component {
         removeClippedSubviews={false}
         data={notifications}
         renderItem={this.renderItem}
-        onEndReached={this.loadMore}
         keyExtractor={item => item.id}
-        onEndReachedThreshold={0.5}
         ItemSeparatorComponent={this.renderItemSeperator}
         initialNumToRender={10}
         refreshing={loadingNotifications}
