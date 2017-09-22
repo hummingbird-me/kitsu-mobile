@@ -37,6 +37,7 @@ export const offBlack = '#2B212B';
 export const softBlack = '#333';
 
 /* misc */
+export const transparent = 'transparent';
 export const buttonDisabledColor = '#878787';
 export const imageBackColor = 'rgb(153, 130, 153)';
 export const listSeparatorColor = '#261C25';

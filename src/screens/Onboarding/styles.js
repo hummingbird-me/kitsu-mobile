@@ -9,12 +9,12 @@ export default StyleSheet.create({
   contentWrapper: {
     flex: 1,
   },
-  pageWrapper: {
-    flex: 1,
-    justifyContent: 'center',
+  header: {
+    flex: 2,
   },
   page: {
-    height: 360,
+    justifyContent: 'center',
+    height: 320,
   },
   slide: {
     alignItems: 'center',
@@ -47,30 +47,17 @@ export default StyleSheet.create({
     height: 240,
     resizeMode: 'contain',
   },
-  button: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
+  getStartedButton: {
     marginBottom: 16,
     backgroundColor: colors.white,
-    borderRadius: 4,
-    height: 47,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontFamily: 'OpenSans',
-    fontSize: 15,
-    lineHeight: 25,
-    color: colors.white,
   },
   getStartedText: {
     color: colors.darkPurple,
-    textAlign: 'center',
     fontSize: 17,
-    fontFamily: 'OpenSans',
     fontWeight: 'bold',
   },
   dotContainer: {
+    top: -10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -89,11 +76,20 @@ export default StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.white,
   },
+  galleryRow: {
+    marginVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
   squareImage: {
     marginHorizontal: 8,
     width: 130,
     height: 130,
     borderRadius: 8,
+  },
+  buttonsWrapper: {
+    flex: 1,
+    justifyContent: 'center',
   },
   fbIcon: {
     color: colors.white,

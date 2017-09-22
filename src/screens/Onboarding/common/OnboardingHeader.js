@@ -1,17 +1,21 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ViewPropTypes } from 'react-native';
 import logo from 'kitsu/assets/img/kitsu-logo.png';
 import styles from './styles';
 
-const OnboardingHeader = () => (
-  <View style={styles.logoWrapper}>
+const OnboardingHeader = ({ style }) => (
+  <View style={[styles.logoWrapper, style]}>
     <Image style={styles.logo} source={logo} />
     <Text style={styles.logoText}>KITSU</Text>
   </View>
 );
 
-OnboardingHeader.propTypes = {};
+OnboardingHeader.propTypes = {
+  style: ViewPropTypes.style,
+};
 
-OnboardingHeader.defaultProps = {};
+OnboardingHeader.defaultProps = {
+  style: null,
+};
 
 export default OnboardingHeader;

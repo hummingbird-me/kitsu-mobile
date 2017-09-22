@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export default StyleSheet.create({
@@ -6,11 +6,12 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '16%', // TODO: lacks symmetry
+    marginTop: Platform.select({ ios: 20, android: 24 }),
   },
   logo: {
-    width: 50,
-    height: 50,
+    marginTop: 4,
+    width: 44,
+    height: 44,
     resizeMode: 'contain',
   },
   logoText: {
