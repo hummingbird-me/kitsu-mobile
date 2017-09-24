@@ -3,13 +3,14 @@ import { View, Text, FlatList, StyleSheet, Image, TouchableHighlight } from 'rea
 import * as PropTypes from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
+import * as colors from 'kitsu/constants/colors';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   userList: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     paddingLeft: 8,
   },
   userContainer: {
@@ -42,14 +43,14 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   userNameText: {
-    color: '#333333',
+    color: colors.softBlack,
     fontWeight: '500',
   },
   userFollowText: {
     color: '#616161',
   },
   actionButton: {
-    backgroundColor: '#16A085',
+    backgroundColor: colors.green,
     borderRadius: 2,
     paddingTop: 6,
     paddingBottom: 6,
@@ -57,8 +58,11 @@ const styles = StyleSheet.create({
     paddingRight: 25,
   },
   actionButtonText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 12,
+  },
+  actionUnfollowButton: {
+    color: colors.buttonDisabledColor,
   },
   moreIcon: {
     color: '#ADADAD',
@@ -78,9 +82,19 @@ const User = ({ user, onFollow }) => {
         </View>
       </View>
       <View style={styles.userRightSection}>
-        <TouchableHighlight style={styles.actionButton} onPress={() => onFollow(user.id)}>
-          <Text style={styles.actionButtonText}>Follow</Text>
-        </TouchableHighlight>
+        {!user.following && (
+          <TouchableHighlight style={styles.actionButton} onPress={() => onFollow(user.id)}>
+            <Text style={styles.actionButtonText}>Follow</Text>
+          </TouchableHighlight>
+        )}
+        {user.following && (
+          <TouchableHighlight
+            style={[styles.actionButton, styles.actionUnfollowButton]}
+            onPress={() => onFollow(user.id)}
+          >
+            <Text style={styles.actionButtonText}>Unfollow</Text>
+          </TouchableHighlight>
+        )}
         <FontAwesome name="ellipsis-v" size={20} style={styles.moreIcon} />
       </View>
     </View>
@@ -92,14 +106,12 @@ User.propTypes = {
   onFollow: PropTypes.func,
 };
 
-const UsersList = ({ hits, onFollow, onData }) => {
-  // Send users data to reducer to maintain single source of truth
-  onData(hits);
-
+const UsersList = ({ users, onFollow }) => {
+  // const usersArray = Object.values(users);
   return (
     <FlatList
       removeClippedSubviews={false}
-      data={hits}
+      data={users}
       style={styles.container}
       scrollEnabled
       contentContainerStyle={styles.userList}
@@ -109,14 +121,12 @@ const UsersList = ({ hits, onFollow, onData }) => {
 };
 
 UsersList.propTypes = {
-  hits: PropTypes.array,
+  users: PropTypes.object,
   onFollow: PropTypes.func.isRequired,
-  onData: PropTypes.func.isRequired,
 };
 
 UsersList.defaultProps = {
-  hits: [],
-  refine: () => {},
+  users: {},
 };
 
 export default UsersList;
