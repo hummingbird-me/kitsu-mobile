@@ -127,9 +127,10 @@ class SearchScreen extends Component {
   renderIndicator = () => <View />;
 
   renderLabel = ({ route }) => {
-    let labelTextStyle = styles.tabBarText;
-    if (parseInt(route.key, 10) === this.state.index + 1) {
-      labelTextStyle = { ...styles.tabBarText, ...styles.tabBarTextActive };
+    const labelTextStyle = [styles.tabBarText];
+    const activeRoute = this.state.routes[this.state.index];
+    if (route.key === activeRoute.key) {
+      labelTextStyle.push(styles.tabBarTextActive);
     }
 
     return (
