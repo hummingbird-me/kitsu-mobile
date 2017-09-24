@@ -25,7 +25,7 @@ class SearchResults extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.label,
     headerLeft: (
-      <TouchableOpacity onPress={navigation.goBack} style={styles.button}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
         <FontAwesomeIcon name="chevron-left" style={styles.icon} />
       </TouchableOpacity>
     ),

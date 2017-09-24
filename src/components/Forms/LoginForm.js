@@ -21,6 +21,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
           placeholder="Email or Username"
           placeholderTextColor="rgba(255,255,254,0.5)"
           autoCapitalize="none"
+          autoCorrect={false}
           value={data.username}
           onChangeText={text => handleChange(text, 'username')}
           style={{
