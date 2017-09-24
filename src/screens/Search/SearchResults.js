@@ -11,10 +11,6 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
   },
-  icon: {
-    fontSize: 18,
-    color: colors.white,
-  },
   list: {
     backgroundColor: colors.darkPurple,
     paddingHorizontal: 4,
@@ -22,18 +18,18 @@ const styles = StyleSheet.create({
 });
 
 class SearchResults extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     title: navigation.state.params.label,
     headerLeft: (
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <FontAwesomeIcon name="chevron-left" style={styles.icon} />
+        <FontAwesomeIcon name="chevron-left" style={{ color: 'white' }} />
       </TouchableOpacity>
     ),
     headerRight: (
       <TouchableOpacity
         style={styles.button}
-        onPress={() =>
-          navigation.navigate('SearchFilter', {
+        onPress={() => {
+          screenProps.rootNavigation.navigate('SearchFilter', {
             ...navigation.state.params,
             onApply: (data, state) => {
               navigation.goBack(null);
@@ -50,9 +46,10 @@ class SearchResults extends Component {
                 10,
               );
             },
-          })}
+          });
+        }}
       >
-        <FontAwesomeIcon name="sliders" style={styles.icon} />
+        <FontAwesomeIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
       </TouchableOpacity>
     ),
   });

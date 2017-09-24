@@ -52,7 +52,7 @@ class TabsNav extends React.PureComponent {
   }
 
   render() {
-    return <Tabs />;
+    return <Tabs screenProps={{ rootNavigation: this.props.navigation }} />;
   }
 }
 
