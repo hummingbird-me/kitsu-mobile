@@ -54,10 +54,11 @@ export const styles = StyleSheet.create({
     position: 'relative',
   },
   landscapeImage: {
-    width: 200,
+    width: 210,
     height: 100,
     resizeMode: 'cover',
     zIndex: 0,
+    borderRadius: 8,
   },
   landscapeImageTitle: {
     color: colors.white,
