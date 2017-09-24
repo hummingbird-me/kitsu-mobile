@@ -11,6 +11,10 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
   },
+  icon: {
+    fontSize: 18,
+    color: colors.white,
+  },
   list: {
     backgroundColor: colors.darkPurple,
     paddingHorizontal: 4,
@@ -21,8 +25,8 @@ class SearchResults extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.label,
     headerLeft: (
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <FontAwesomeIcon name="chevron-left" style={{ color: 'white' }} />
+      <TouchableOpacity onPress={navigation.goBack} style={styles.button}>
+        <FontAwesomeIcon name="chevron-left" style={styles.icon} />
       </TouchableOpacity>
     ),
     headerRight: (
@@ -48,7 +52,7 @@ class SearchResults extends Component {
             },
           })}
       >
-        <FontAwesomeIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
+        <FontAwesomeIcon name="sliders" style={styles.icon} />
       </TouchableOpacity>
     ),
   });
