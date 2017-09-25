@@ -32,18 +32,16 @@ class SearchResults extends Component {
           screenProps.rootNavigation.navigate('SearchFilter', {
             ...navigation.state.params,
             onApply: (data, state) => {
-              navigation.goBack(null);
-              setTimeout(
-                () =>
-                  navigation.setParams({
-                    filter: data.filter,
-                    sort: data.sort,
-                    default: null,
-                    label: 'Search',
-                    data: state,
-                    fade: data.fade,
-                  }),
-                10,
+              screenProps.rootNavigation.goBack(null);
+              setTimeout(() =>
+                navigation.setParams({
+                  filter: data.filter,
+                  sort: data.sort,
+                  default: null,
+                  label: 'Search',
+                  data: state,
+                  fade: data.fade,
+                }),
               );
             },
           });

@@ -22,13 +22,11 @@ class SearchFilter extends Component {
     ...defaultState,
   };
 
-  componentWillMount() {
-    const { data } = this.props.navigation.state.params;
-    this.setState({ ...data });
-  }
-
   componentDidMount() {
-    this.props.getStreamers();
+    const { data } = this.props.navigation.state.params;
+    this.setState({ ...data }, () => {
+      this.props.getStreamers();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
