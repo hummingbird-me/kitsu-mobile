@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import React, { PureComponent } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
@@ -7,85 +7,11 @@ import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
+import { styles } from './styles';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.darkPurple,
-    flex: 1,
-  },
-  noticeContainer: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 3,
-    backgroundColor: colors.white,
-    marginBottom: 6,
-    position: 'relative',
-  },
-  noticeText: {
-    fontWeight: '600',
-    fontFamily: 'Open Sans',
-    paddingVertical: 10,
-  },
-  actionButton: {
-    backgroundColor: colors.green,
-    borderRadius: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  actionButtonText: {
-    color: colors.white,
-  },
-  closeIcon: {
-    position: 'absolute',
-    right: 5,
-    top: 5,
-    color: colors.grey,
-    fontSize: 18,
-  },
-  outerText: {
-    color: 'black',
-    fontFamily: 'OpenSans',
-    fontSize: 16,
-    lineHeight: 18,
-    fontWeight: 'bold',
-  },
-  innerText: {
-    color: 'black',
-    fontFamily: 'OpenSans',
-    fontSize: 12,
-    lineHeight: 12,
-    fontWeight: '600',
-  },
-  parentItem: {
-    flexDirection: 'row',
-    backgroundColor: colors.offWhite,
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-  },
-  itemSeperator: {
-    borderWidth: 1,
-    borderColor: colors.darkPurple,
-  },
-  iconContainer: { justifyContent: 'center', paddingLeft: 5, paddingRight: 10, width: 25 },
-  icon: { fontSize: 8, color: '#FF102E' },
-  detailsContainer: { alignItems: 'center', flexDirection: 'row', flex: 1 },
-  userAvatar: { width: 32, height: 32, borderRadius: 16 },
-  activityContainer: { flex: 1, justifyContent: 'center' },
-  activityTextContainer: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  activityText: { fontFamily: 'OpenSans', fontSize: 12, fontWeight: '400' },
-  activityTextHighlight: { color: '#FF300A', fontWeight: '500' },
-  activityMetaContainer: { justifyContent: 'flex-start' },
-  activityMetaText: { fontSize: 10, color: '#919191' },
-});
-
-class NotificationsScreen extends Component {
+class NotificationsScreen extends PureComponent {
   static navigationOptions = () => ({
     title: 'Notifications',
     headerStyle: {
@@ -95,27 +21,15 @@ class NotificationsScreen extends Component {
     },
   });
 
-  state = {
-    showNotice: false,
-  };
+  componentDidMount() {
+    this.props.getNotifications();
+  }
 
   handleActionBtnPress = () => {
     if (Platform.OS === 'ios') {
-      // OneSignal.requestPermissions({ alert: true, sound: true, })
-      OneSignal.addEventListener('registered', (data) => {
-        console.log('data', data);
-      });
+      OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
     }
   };
-
-  componentDidMount() {
-    this.props.getNotifications();
-    if (Platform.OS === 'ios') {
-      OneSignal.checkPermissions(permissions =>
-        this.setState({ showNotice: permissions.alert !== 1 }),
-      );
-    }
-  }
 
   renderText = (activity) => {
     const { currentUser: { id } } = this.props;
@@ -208,11 +122,11 @@ class NotificationsScreen extends Component {
   renderItemSeperator = () => <View style={styles.itemSeperator} />;
 
   renderHeader = () => {
-    if (this.state.showNotice) {
+    if (!this.props.pushNotificationEnabled) {
       return (
         <View style={styles.noticeContainer}>
           <Text style={styles.noticeText}>Kitsu is better with notifications!</Text>
-          <TouchableOpacity style={styles.actionButton}>
+          <TouchableOpacity style={styles.actionButton} onPress={this.handleActionBtnPress}>
             <Text style={styles.actionButtonText}>Turn on notifications</Text>
           </TouchableOpacity>
           <Icon name="close" style={styles.closeIcon} />
@@ -248,10 +162,17 @@ NotificationsScreen.propTypes = {
   loadingNotifications: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ feed, user }) => {
+const mapStateToProps = ({ feed, user, app }) => {
   const { notifications, notificationsUnseen, loadingNotifications } = feed;
   const { currentUser } = user;
-  return { notifications, notificationsUnseen, loadingNotifications, currentUser };
+  const { pushNotificationEnabled } = app;
+  return {
+    notifications,
+    notificationsUnseen,
+    loadingNotifications,
+    currentUser,
+    pushNotificationEnabled,
+  };
 };
 export default connect(mapStateToProps, { getNotifications, seenNotifications })(
   NotificationsScreen,

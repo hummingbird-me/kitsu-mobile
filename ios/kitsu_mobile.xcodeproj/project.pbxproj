@@ -182,13 +182,6 @@
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
 		};
-		1C2EB1B51F6A59B300DBFB19 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A82502C2E8A8471AA6303833 /* CodePush.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6463C8241EBA0CB60095B8CD;
-			remoteInfo = "CodePush-tvOS";
-		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -890,7 +883,6 @@
 			isa = PBXGroup;
 			children = (
 				7BE3B0AB1ECFF02E0012FD5C /* libCodePush.a */,
-				1C2EB1B61F6A59B300DBFB19 /* libCodePush.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -966,6 +958,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				6D33A6C67DF148E09CE537CB /* Frameworks */,
 				D7757FB0234F48C3A09F0799 /* Resources */,
+				B49CFD671F792E6F0049EE7B /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -980,6 +973,23 @@
 				2D02E4901E0B4A5D006451C7 /* kitsu_mobile-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B49CFD671F792E6F0049EE7B /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				40C1013E41074CFBA8034B60 /* libCodePush.a */,
+				6592628EF114480BA70E7059 /* libRNVectorIcons.a */,
+				025D7DCB646B4EB5B33D71D7 /* libRCTFBSDK.a */,
+				02B0EC9812B94201AB2627F9 /* libLottieReactNative.a */,
+				F51148AA22694F92AB484605 /* libLottie.a */,
+				74F436878F9E4560BCD4200F /* libBVLinearGradient.a */,
+				32B99BDC2D7D4547AD86C3AF /* libRCTActionSheet.a */,
+				DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */,
+				FF0AD57CF1A14A05AB0F02EE /* libRNShimmer.a */,
+				E2221571BBEC4788A0E756DA /* libRCTOneSignal.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		D7757FB0234F48C3A09F0799 /* Resources */ = {
@@ -1333,13 +1343,6 @@
 			fileType = archive.ar;
 			path = libReact.a;
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1C2EB1B61F6A59B300DBFB19 /* libCodePush.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCodePush.a;
-			remoteRef = 1C2EB1B51F6A59B300DBFB19 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		34C118181F3D8E2E006AE4D3 /* libRCTOneSignal.a */ = {
