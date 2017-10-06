@@ -5,12 +5,12 @@ import { cardSize } from '../constants';
 
 const Container = glamorous.view(
   {
-    borderRadius: 6,
     overflow: 'hidden',
   },
-  ({ variant }) => ({
+  ({ variant, borderRadius }) => ({
     width: cardSize[variant].width,
     height: cardSize[variant].height,
+    borderRadius,
   }),
 );
 
@@ -19,11 +19,13 @@ const MediaCard = ({ variant, ...props }) => (
 );
 
 MediaCard.propTypes = {
-  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'portraitLarge']),
+  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'portraitLarge', 'filled']),
+  borderRadius: PropTypes.number,
 };
 
 MediaCard.defaultProps = {
   variant: 'portrait',
+  borderRadius: 6,
 };
 
 export default MediaCard;

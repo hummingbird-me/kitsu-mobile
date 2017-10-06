@@ -6,6 +6,7 @@ import { scenePadding } from '../constants';
 
 const paddingOptions = {
   landscapeLarge: scenePadding,
+  filled: scenePadding,
   landscape: scenePadding / 2,
   portrait: scenePadding / 2,
   portraitLarge: scenePadding,
@@ -24,7 +25,7 @@ const TitleContainer = glamorous.view(
   }),
 );
 
-const ImageCard = ({ variant, noMask, title, subtitle, source }) => {
+const ImageCard = ({ variant, noMask, borderRadius, title, subtitle, source }) => {
   const titleSize = variant === 'landscapeLarge' ? 'default' : 'small';
   const subtitleSize = variant === 'landscapeLarge' ? 'small' : 'xsmall';
   const label = (title || subtitle) && (
@@ -34,7 +35,7 @@ const ImageCard = ({ variant, noMask, title, subtitle, source }) => {
     </TitleContainer>
   );
   return (
-    <MediaCard variant={variant}>
+    <MediaCard variant={variant} borderRadius={borderRadius}>
       <MaskedImage
         maskedBottom={!noMask}
         source={source}
@@ -45,11 +46,12 @@ const ImageCard = ({ variant, noMask, title, subtitle, source }) => {
 };
 
 ImageCard.propTypes = {
-  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'landscapeSmall', 'portraitLarge']),
+  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'landscapeSmall', 'portraitLarge', 'filled']),
   title: PropTypes.string,
   subtitle: PropTypes.string,
   source: PropTypes.object,
   noMask: PropTypes.bool,
+  borderRadius: PropTypes.number,
 };
 
 ImageCard.defaultProps = {
@@ -58,6 +60,7 @@ ImageCard.defaultProps = {
   subtitle: null,
   source: {},
   noMask: false,
+  borderRadius: 6,
 };
 
 export default ImageCard;

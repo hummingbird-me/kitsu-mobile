@@ -41,6 +41,10 @@ export const cardSize = {
     height: scene.width * 0.32,
     width: scene.width * 0.32,
   },
+  filled: {
+    width: '100%',
+    height: '100%',
+  },
 };
 
 export const borderWidth = {
