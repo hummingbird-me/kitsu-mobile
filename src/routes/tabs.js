@@ -11,11 +11,11 @@ import SidebarStack from './sidebar';
 
 const Tabs = TabNavigator(
   {
-    Home: {
-      screen: HomeScreen,
-    },
     Search: {
       screen: SearchStack,
+    },
+    Home: {
+      screen: HomeScreen,
     },
     Profile: {
       screen: ProfileStack,

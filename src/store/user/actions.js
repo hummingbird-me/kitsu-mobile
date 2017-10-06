@@ -9,7 +9,7 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
   try {
     const user = await Kitsu.findAll('users', {
       fields: {
-        users: 'id,name,createdAt,email,avatar,coverImage,about,bio,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,titleLanguagePreference',
+        users: 'id,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,titleLanguagePreference',
       },
       filter: { self: true },
     });
