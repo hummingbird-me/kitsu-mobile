@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SectionBox from './SectionBox';
+import ScrollableSection from './ScrollableSection';
 import ReactionBox from './ReactionBox';
 import { HScrollItem } from '../parts';
 
@@ -11,27 +11,24 @@ const ReactionsBox = ({
   titleLabel,
   data,
   onViewAllPress,
-}) => {
-  const items = data.map(item => (
-    <HScrollItem key={item.key}>
-      <ReactionBox
-        boxed
-        reactedMedia={reactedMedia}
-        reaction={item}
-      />
-    </HScrollItem>
-  ));
-  return (
-    <SectionBox
-      title={title}
-      titleAction={titleAction}
-      titleLabel={titleLabel}
-      onViewAllPress={onViewAllPress}
-    >
-      {items}
-    </SectionBox>
-  );
-};
+}) => (
+  <ScrollableSection
+    title={title}
+    titleAction={titleAction}
+    titleLabel={titleLabel}
+    onViewAllPress={onViewAllPress}
+    data={data}
+    renderItem={({ item }) => (
+      <HScrollItem key={item.key}>
+        <ReactionBox
+          boxed
+          reactedMedia={reactedMedia}
+          reaction={item}
+        />
+      </HScrollItem>
+    )}
+  />
+);
 
 ReactionsBox.propTypes = {
   reactedMedia: PropTypes.string,

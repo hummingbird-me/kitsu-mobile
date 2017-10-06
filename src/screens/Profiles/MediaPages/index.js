@@ -109,7 +109,7 @@ class MediaPages extends Component {
             categories={media.categories}
           />
           {this.renderTabNav()}
-          <TabScene />
+          <TabScene setActiveTab={(tab) => this.setActiveTab(tab)} />
         </ScrollView>
       </SceneContainer>
     );

@@ -1,7 +1,7 @@
 import SceneContainer from './SceneContainer';
 import SceneHeader from './SceneHeader';
 import SectionHeader from './SectionHeader';
-import SectionBox from './SectionBox';
+import ScrollableSection from './ScrollableSection';
 import ScrollableCategories from './ScrollableCategories';
 import ImageCard from './ImageCard';
 import EpisodesBox from './EpisodesBox';
@@ -19,7 +19,7 @@ export {
   SceneContainer,
   SceneHeader,
   SectionHeader,
-  SectionBox,
+  ScrollableSection,
   ScrollableCategories,
   ImageCard,
   EpisodesBox,

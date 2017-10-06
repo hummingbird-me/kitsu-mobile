@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Pill, HScrollContainer, HScrollItem } from '../parts';
+import { FlatList, View } from 'react-native';
+import { Pill } from '../parts';
+import { scenePadding } from '../constants';
 
-const ScrollableCategories = ({ categories }) => {
-  const categoryPills = categories.map(category => (
-    <HScrollItem key={category.key} spacing={5}>
-      <Pill label={category.title} />
-    </HScrollItem>
-  ));
-
-  return (
-    <HScrollContainer spacing={5}>
-      {categoryPills}
-    </HScrollContainer>
-  );
-};
+const ScrollableCategories = ({ categories }) => (
+  <FlatList
+    style={{ marginTop: scenePadding }}
+    contentContainerStyle={{ paddingLeft: scenePadding, marginLeft: -5 }}
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    data={categories}
+    renderItem={({ item }) => <View style={{ marginLeft: 5 }}><Pill label={item.title} /></View>}
+  />
+);
 
 ScrollableCategories.propTypes = {
   categories: PropTypes.array,

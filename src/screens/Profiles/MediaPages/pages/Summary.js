@@ -21,10 +21,7 @@ class Summary extends Component {
   }
 
   navigateTo = (scene) => {
-    this.props.navigation.navigate(scene, {
-      mediaId: this.props.mediaId,
-      type: this.props.type,
-    });
+    this.props.setActiveTab(scene);
   }
 
   formatData(data, numberOfItems = 12) {
@@ -32,6 +29,7 @@ class Summary extends Component {
   }
 
   render() {
+    console.log('==> PROPS', this.props.navigation);
     const { media, castings, reactions } = this.props;
     const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
     const seriesCount = series.length;

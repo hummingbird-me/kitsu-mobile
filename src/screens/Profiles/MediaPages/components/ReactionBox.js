@@ -53,7 +53,7 @@ const ReactionBox = ({ boxed, reactedMedia, reaction }) => {
         sideElement={<UpVoteCountBox upVotesCount={reaction.upVotesCount} />}
       />
       <Main>
-        <StyledText color="dark" size="small" numberOfLines={boxed && 4}>{reaction.reaction}</StyledText>
+        <StyledText color="dark" size="small" numberOfLines={boxed && 3}>{reaction.reaction}</StyledText>
       </Main>
     </Container>
   );

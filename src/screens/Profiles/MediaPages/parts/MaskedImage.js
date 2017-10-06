@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Image } from 'react-native';
 import glamorous from 'glamorous-native';
 import LinearGradient from 'react-native-linear-gradient';
 import StyledProgressiveImage from './StyledProgressiveImage';
@@ -33,27 +34,37 @@ const Overlay = glamorous.view({
   backgroundColor: 'rgba(0,0,0,0.3)',
 });
 
+const StyledImage = glamorous(Image)({
+  width: '100%',
+  height: '100%',
+});
+
 const MaskedImage = ({
   maskedTop = false,
   maskedBottom = false,
   overlay = false,
   resizeMode = 'cover',
   source = {},
-}) => (
-  <MaskedImageContainer>
-    <StyledProgressiveImage
-      resizeMode={resizeMode}
-      source={source}
-    />
-    {maskedTop && <StyledLinearGradient position="top" colors={['rgba(0,0,0,0.9)', 'transparent']} />}
-    {maskedBottom && <StyledLinearGradient position="bottom" colors={['transparent', 'rgba(0,0,0,0.9)']} />}
-    {overlay && <Overlay />}
-  </MaskedImageContainer>
-);
+  progressive,
+}) => {
+  const ImageComponent = progressive ? StyledProgressiveImage : StyledImage;
+  return (
+    <MaskedImageContainer>
+      <ImageComponent
+        resizeMode={resizeMode}
+        source={source}
+      />
+      {maskedTop && <StyledLinearGradient position="top" colors={['rgba(0,0,0,0.9)', 'transparent']} />}
+      {maskedBottom && <StyledLinearGradient position="bottom" colors={['transparent', 'rgba(0,0,0,0.9)']} />}
+      {overlay && <Overlay />}
+    </MaskedImageContainer>
+  );
+};
 
 MaskedImage.propTypes = {
   maskedTop: PropTypes.bool,
   maskedBottom: PropTypes.bool,
+  progressive: PropTypes.bool,
   overlay: PropTypes.bool,
   resizeMode: PropTypes.string,
   source: PropTypes.object,
@@ -62,6 +73,7 @@ MaskedImage.propTypes = {
 MaskedImage.defaultProps = {
   maskedTop: false,
   maskedBottom: false,
+  progressive: false,
   overlay: false,
   resizeMode: 'cover',
   source: {},
