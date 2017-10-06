@@ -601,7 +601,7 @@ class MediaScreen extends Component {
 
   render() {
     const { media, reactions, navigation, currentUser, mediaFeed, loadingMediaFeed } = this.props;
-    console.log(mediaFeed);
+    console.log('==> media', media);
     return (
       <Container style={styles.container}>
         <ParallaxScrollView

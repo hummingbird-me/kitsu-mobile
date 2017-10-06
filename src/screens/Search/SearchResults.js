@@ -105,8 +105,10 @@ class SearchResults extends Component {
         refreshing={this.state.loading}
         onPress={(media) => {
           this.props.navigation.navigate('Media', {
-            mediaId: media.id,
-            type: media.type,
+            mediaId: 12,
+            type: 'anime',
+            // mediaId: media.id,
+            // type: media.type,
           });
         }}
         style={styles.list}

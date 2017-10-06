@@ -164,7 +164,7 @@ class ExportLibrary extends React.Component {
     const { accessToken } = this.props;
     const { linkedAccount } = this.state;
     setToken(accessToken);
-    console.log(accessToken, linkedAccount);
+    // console.log(accessToken, linkedAccount);
     try {
       const libraryEntryLogs = await Kitsu.findAll('libraryEntryLogs', {
         filter: { linked_account_id: linkedAccount.id },
