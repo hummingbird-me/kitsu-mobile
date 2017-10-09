@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, TouchableOpacity } from 'react-native';
-import { TabRouter, TabNavigator } from 'react-navigation';
-import glamorous from 'glamorous-native';
+import { ScrollView } from 'react-native';
+import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import {
-  listBackPurple,
-  grey,
-  lightestGrey,
-  offWhite,
-} from 'kitsu/constants/colors';
-
-import { scenePadding, borderWidth } from './constants';
+  TabBar,
+  TabBarLink,
+} from 'kitsu/screens/Profiles/MediaPages/components/TabBar';
 
 import {
   SceneContainer,
   SceneHeader,
 } from './components';
-
-import { StyledText } from './parts';
 
 import Summary from './pages/Summary';
 
@@ -40,29 +33,6 @@ const TabRoutes = TabRouter({
 }, {
   initialRouteName: 'Summary',
 });
-
-const TabBar = glamorous.view({
-  flexDirection: 'row',
-  paddingVertical: scenePadding * 1.25,
-  paddingHorizontal: scenePadding,
-  backgroundColor: offWhite,
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  borderTopWidth: borderWidth.hairline,
-  borderTopColor: lightestGrey,
-  shadowColor: 'rgba(0,0,0,0.2)',
-  shadowOffset: {
-    width: 1,
-    height: 1,
-  },
-  shadowOpacity: 1,
-});
-
-const TabBarLink = ({ onPress, label, isActive }) => (
-  <TouchableOpacity onPress={onPress}>
-    <StyledText color={isActive ? 'dark' : 'grey'} size="xsmall" bold>{label}</StyledText>
-  </TouchableOpacity>
-);
 
 class MediaPages extends Component {
   static navigationOptions = {
