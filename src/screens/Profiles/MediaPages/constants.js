@@ -41,6 +41,10 @@ export const cardSize = {
     height: scene.width * 0.32,
     width: scene.width * 0.32,
   },
+  thumbnail: {
+    height: scene.width * 0.16,
+    width: scene.width * 0.16,
+  },
   filled: {
     width: '100%',
     height: '100%',

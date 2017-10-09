@@ -11,6 +11,7 @@ const paddingOptions = {
   portrait: scenePadding / 2,
   portraitLarge: scenePadding,
   square: scenePadding / 2,
+  thumbnail: scenePadding / 2,
 };
 
 const TitleContainer = glamorous.view(
@@ -46,7 +47,7 @@ const ImageCard = ({ variant, noMask, borderRadius, title, subtitle, source }) =
 };
 
 ImageCard.propTypes = {
-  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'landscapeSmall', 'portraitLarge', 'filled']),
+  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'landscapeSmall', 'portraitLarge', 'thumbnail', 'filled']),
   title: PropTypes.string,
   subtitle: PropTypes.string,
   source: PropTypes.object,

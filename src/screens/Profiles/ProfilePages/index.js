@@ -72,7 +72,7 @@ class ProfilePage extends Component {
   );
 
   render() {
-    const { profile } = this.props;
+    const { profile, entries } = this.props;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     return (
       <SceneContainer>
