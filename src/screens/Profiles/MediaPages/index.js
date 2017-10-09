@@ -4,17 +4,10 @@ import { ScrollView } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 
-import {
-  TabBar,
-  TabBarLink,
-} from 'kitsu/screens/Profiles/MediaPages/components/TabBar';
-
-import {
-  SceneContainer,
-  SceneHeader,
-} from './components';
-
-import Summary from './pages/Summary';
+import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/MediaPages/components/TabBar';
+import { SceneHeader } from 'kitsu/screens/Profiles/MediaPages/components/SceneHeader';
+import { SceneContainer } from 'kitsu/screens/Profiles/MediaPages/components';
+import Summary from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
@@ -69,6 +62,7 @@ class MediaPages extends Component {
       <SceneContainer>
         <ScrollView stickyHeaderIndices={[1]}>
           <SceneHeader
+            variant="media"
             type={media.type}
             title={media.canonicalTitle}
             description={media.synopsis}

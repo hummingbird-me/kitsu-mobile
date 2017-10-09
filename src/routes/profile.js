@@ -2,11 +2,15 @@ import * as React from 'react';
 import { Image } from 'react-native';
 import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
 import * as ProfileScreens from 'kitsu/screens/Profiles';
+import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import profileTabBarImage from 'kitsu/assets/img/tabbar_icons/update.png';
 import navigationOptions from './navigationOptions';
 
 const ProfileStack = DismissableStackNavigator(
   {
+    ProfilePages: {
+      screen: ProfilePages,
+    },
     UserProfile: {
       screen: ProfileScreens.ProfileScreen,
     },
