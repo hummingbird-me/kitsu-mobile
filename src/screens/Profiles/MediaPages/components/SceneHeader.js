@@ -4,6 +4,8 @@ import { TouchableOpacity } from 'react-native';
 import glamorous, { View } from 'glamorous-native';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { red, yellow, grey } from 'kitsu/constants/colors';
 import { MaskedImage, StyledProgressiveImage, StyledText } from '../parts';
 import ScrollableCategories from './ScrollableCategories';
 import {
@@ -105,9 +107,9 @@ MainButton.defaultProps = {
 };
 
 const MoreButton = ({ onPress }) => (
-  <View flex={1}>
-    <TouchableOpacity onPress={onPress} />
-  </View>
+  <TouchableOpacity onPress={onPress} style={{ flex: 1, justifyContent: 'center' }}>
+    <Icon name="md-more" style={{ color: grey, fontSize: 28 }} />
+  </TouchableOpacity>
 );
 
 MoreButton.propTypes = {
@@ -147,6 +149,10 @@ const ProfileStatus = glamorous.view({
 
 const Status = ({ statusType, ranking }) => (
   <View flexDirection="row" alignItems="center" style={{ marginLeft: statusType === 'rating' ? 10 : 0 }}>
+    <Icon
+      name={statusType === 'popularity' ? 'md-heart' : 'ios-star'}
+      style={{ fontSize: 17, color: statusType === 'popularity' ? red : yellow, marginRight: 5 }}
+    />
     <StyledText
       size="xsmall"
       style={{ marginLeft: 0 }}
