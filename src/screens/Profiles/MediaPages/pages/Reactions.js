@@ -8,7 +8,7 @@ import {
   ReactionBox,
   TabHeader,
   TabContainer,
-} from '../components';
+} from 'kitsu/screens/Profiles/components';
 
 const ItemSeparator = glamorous.view({
   alignItems: 'stretch',

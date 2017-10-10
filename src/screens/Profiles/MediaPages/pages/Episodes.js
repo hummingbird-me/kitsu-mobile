@@ -9,9 +9,9 @@ import {
   TabHeader,
   TabContainer,
   MediaRow,
-} from '../components';
+} from 'kitsu/screens/Profiles/components';
 
-import { borderWidth } from '../constants';
+import { borderWidth } from 'kitsu/screens/Profiles/constants';
 
 const ItemSeparator = glamorous.view({
   height: borderWidth.hairline,

@@ -9,9 +9,9 @@ import {
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
-import { LibraryActivityBox } from 'kitsu/screens/Profiles/MediaPages/components/LibraryActivityBox';
-import { ReactionsBox } from 'kitsu/screens/Profiles/MediaPages/components';
-import { SceneContainer } from 'kitsu/screens/Profiles/MediaPages/components';
+import { LibraryActivityBox } from 'kitsu/screens/Profiles/components/LibraryActivityBox';
+import { ReactionsBox } from 'kitsu/screens/Profiles/components';
+import { SceneContainer } from 'kitsu/screens/Profiles/components';
 
 class Summary extends Component {
   componentDidMount() {

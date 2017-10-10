@@ -4,9 +4,9 @@ import { ScrollView } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 
-import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/MediaPages/components/TabBar';
-import { SceneHeader } from 'kitsu/screens/Profiles/MediaPages/components/SceneHeader';
-import { SceneContainer } from 'kitsu/screens/Profiles/MediaPages/components';
+import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
+import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
+import { SceneContainer } from 'kitsu/screens/Profiles/components';
 import Summary from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 
 const TAB_ITEMS = [

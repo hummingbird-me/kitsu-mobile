@@ -11,9 +11,9 @@ import {
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
-import { LibraryActivityBox } from 'kitsu/screens/Profiles/MediaPages/components/LibraryActivityBox';
-import { InfoRow } from 'kitsu/screens/Profiles/MediaPages/components/InfoRow';
-import { SceneContainer, MediaRow } from 'kitsu/screens/Profiles/MediaPages/components';
+import { LibraryActivityBox } from 'kitsu/screens/Profiles/components/LibraryActivityBox';
+import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
+import { SceneContainer, MediaRow } from 'kitsu/screens/Profiles/components';
 
 const ItemSeparator = () => <View style={{ height: 10 }} />
 
@@ -55,7 +55,7 @@ class Summary extends Component {
             <InfoRow
               label={item.label}
               content={item.content}
-              contentComponent={item.contentComponent && item.contentComponent}
+              contentComponent={(item.key === 'waifuOrHusbando' && item.contentComponent) && item.contentComponent}
             />
           )}
           ItemSeparatorComponent={() => <ItemSeparator />}

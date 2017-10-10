@@ -9,7 +9,7 @@ import {
   RelatedMediaBox,
   ReactionsBox,
   CharactersBox,
-} from '../components';
+} from 'kitsu/screens/Profiles/components';
 
 class Summary extends Component {
   componentDidMount() {

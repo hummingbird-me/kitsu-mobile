@@ -5,9 +5,9 @@ import { fetchMedia, fetchMediaCastings } from 'kitsu/store/media/actions';
 import {
   TabHeader,
   TabContainer,
-} from 'kitsu/screens/Profiles/MediaPages/components';
+} from 'kitsu/screens/Profiles/components';
 
-import { PhotoGrid } from 'kitsu/screens/Profiles/MediaPages/components/PhotoGrid';
+import { PhotoGrid } from 'kitsu/screens/Profiles/components/PhotoGrid';
 
 class Characters extends Component {
   renderCharacters = () => {

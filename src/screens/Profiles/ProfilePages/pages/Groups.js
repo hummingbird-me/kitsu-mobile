@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   SceneContainer,
-} from 'kitsu/screens/Profiles/MediaPages/components';
+} from 'kitsu/screens/Profiles/components';
 
 class Groups extends Component {
   state = {};
