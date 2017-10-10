@@ -15,7 +15,9 @@ export const InfoRow = ({ label, content, contentComponent }) => (
   <View style={styles.row}>
     <StyledText size="xxsmall">{label}</StyledText>
     {content && <StyledText size="xsmall" bold style={{ marginTop: 5 }}>{content}</StyledText>}
-    {contentComponent && <View style={{ marginHorizontal: -scenePadding }}>{contentComponent}</View>}
+    {contentComponent && (
+      <View style={{ marginHorizontal: -scenePadding }}>{contentComponent}</View>
+    )}
   </View>
 );
 
