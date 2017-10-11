@@ -10,10 +10,20 @@ import {
 import { PhotoGrid } from 'kitsu/screens/Profiles/components/PhotoGrid';
 
 class Characters extends Component {
+  static propTypes = {
+    castings: PropTypes.object.isRequired,
+  }
+
+  static defaultProps = {
+    castings: {},
+  }
+
   renderCharacters = () => {
-    if (!this.props.castings) return null;
+    const { castings } = this.props;
+    if (!castings) return null;
+
     return (
-      <PhotoGrid photos={this.props.castings} />
+      <PhotoGrid photos={castings} />
     );
   }
 
@@ -27,14 +37,6 @@ class Characters extends Component {
   }
 }
 
-Characters.propTypes = {
-  castings: PropTypes.object.required,
-};
-
-Characters.defaultProps = {
-  castings: {},
-};
-
 const mapStateToProps = (state) => {
   const { media, castings } = state.media;
   const mediaId = 12;
@@ -44,7 +46,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {
+export const component = connect(mapStateToProps, {
   fetchMedia,
   fetchMediaCastings,
 })(Characters);

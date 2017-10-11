@@ -17,17 +17,29 @@ const TAB_ITEMS = [
   { key: 'franchise', label: 'Franchise', screen: 'Franchise' },
 ];
 
+/* eslint-disable global-require */
+
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
-  Episodes: { getScreen: () => require('./pages/Episodes').default },
-  Characters: { getScreen: () => require('./pages/Characters').default },
+  Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
+  Characters: { getScreen: () => require('./pages/Characters').Characters },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
   Franchise: { getScreen: () => require('./pages/Franchise').default },
 }, {
   initialRouteName: 'Summary',
 });
 
+/* eslint-enable global-require */
+
 class MediaPages extends Component {
+  static propTypes = {
+    media: PropTypes.object.required,
+  }
+
+  static defaultProps = {
+    media: {},
+  }
+
   static navigationOptions = {
     headerStyle: {
       backgroundColor: 'transparent',
@@ -73,20 +85,12 @@ class MediaPages extends Component {
             categories={media.categories}
           />
           {this.renderTabNav()}
-          <TabScene setActiveTab={(tab) => this.setActiveTab(tab)} />
+          <TabScene setActiveTab={tab => this.setActiveTab(tab)} />
         </ScrollView>
       </SceneContainer>
     );
   }
 }
-
-MediaPages.propTypes = {
-  media: PropTypes.object.required,
-};
-
-MediaPages.defaultProps = {
-  media: {},
-};
 
 const mapStateToProps = (state) => {
   const { media } = state.media;

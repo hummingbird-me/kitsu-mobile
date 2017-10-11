@@ -49,8 +49,9 @@ class Reactions extends Component {
   )
 
   renderReactionRows = () => {
-    if (!this.props.reactions) return null;
     const { reactions } = this.props;
+
+    if (!reactions) return null;
 
     return (
       <SectionList
