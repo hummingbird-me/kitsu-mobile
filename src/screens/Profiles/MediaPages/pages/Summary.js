@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from 'kitsu/store/media/actions';
@@ -12,6 +11,21 @@ import {
 } from 'kitsu/screens/Profiles/components';
 
 class Summary extends Component {
+  static propTypes = {
+    castings: PropTypes.array.isRequired,
+    media: PropTypes.object.isRequired,
+    reactions: PropTypes.array.isRequired,
+
+    fetchMediaReactions: PropTypes.func.isRequired,
+    fetchMediaCastings: PropTypes.func.isRequired,
+    fetchMedia: PropTypes.func.isRequired,
+    setActiveTab: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    media: {},
+  }
+
   componentDidMount() {
     const mediaId = 12;
     const type = 'anime';
@@ -25,11 +39,12 @@ class Summary extends Component {
   }
 
   formatData(data, numberOfItems = 12) {
+    if (!data) return [];
+
     return data.sort((a, b) => a - b).slice(0, numberOfItems);
   }
 
   render() {
-    console.log('==> PROPS', this.props.navigation);
     const { media, castings, reactions } = this.props;
     const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
     const seriesCount = series.length;
@@ -39,7 +54,7 @@ class Summary extends Component {
         <EpisodesBox
           title={`Episodes・${seriesCount}`}
           data={this.formatData(series)}
-          placeholderImage={media.posterImage.large}
+          placeholderImage={media.posterImage && media.posterImage.large}
           onViewAllPress={() => this.navigateTo('Episodes')}
         />
         <RelatedMediaBox
@@ -65,14 +80,6 @@ class Summary extends Component {
     );
   }
 }
-
-Summary.propTypes = {
-  media: PropTypes.object.required,
-};
-
-Summary.defaultProps = {
-  media: {},
-};
 
 const mapStateToProps = (state) => {
   const { media, reactions, castings } = state.media;

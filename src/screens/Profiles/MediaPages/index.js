@@ -66,8 +66,8 @@ class MediaPages extends Component {
             type={media.type}
             title={media.canonicalTitle}
             description={media.synopsis}
-            coverImage={media.coverImage.original}
-            posterImage={media.posterImage.large}
+            coverImage={media.coverImage && media.coverImage.original}
+            posterImage={media.posterImage && media.posterImage.large}
             popularityRank={media.popularityRank}
             ratingRank={media.ratingRank}
             categories={media.categories}
