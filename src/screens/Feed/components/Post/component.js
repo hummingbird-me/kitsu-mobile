@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
@@ -12,11 +12,16 @@ import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput
 import { styles } from './styles';
 
 // PostHeader
-const PostHeader = ({ avatar, name, time }) => {
+export const PostHeader = ({ avatar, name, time, onBackButtonPress }) => {
   const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
   return (
     <View style={styles.postHeader}>
       <Layout.RowWrap alignItems="center">
+        {onBackButtonPress && (
+          <TouchableOpacity onPress={onBackButtonPress} style={styles.postHeaderBackButton}>
+            <Icon name="ios-arrow-back" color={colors.listBackPurple} style={{ fontSize: 28 }} />
+          </TouchableOpacity>
+        )}
         <Avatar avatar={avatar} />
         <Layout.RowMain>
           <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
@@ -34,16 +39,18 @@ PostHeader.propTypes = {
   avatar: PropTypes.string,
   name: PropTypes.string,
   time: PropTypes.string,
+  onBackButtonPress: PropTypes.func,
 };
 PostHeader.defaultProps = {
   avatar: null,
   name: null,
   time: null,
+  onBackButtonPress: null,
 };
 
 
 // PostMain
-const PostMain = ({ content, likesCount, commentsCount }) => (
+export const PostMain = ({ content, likesCount, commentsCount }) => (
   <View style={styles.postMain}>
     <View style={styles.postContent}>
       <StyledText color="dark" size="small">{content}</StyledText>
@@ -82,7 +89,7 @@ const actionButtonLabels = {
   comment: 'Comment',
   share: 'Share',
 };
-const PostActionButton = ({ variant, isActive, onPress }) => (
+export const PostActionButton = ({ variant, isActive, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.postActionButton}>
     <Icon
       name={actionButtonIcons[variant]}
@@ -110,7 +117,7 @@ PostActionButton.defaultProps = {
   onPress: null,
 };
 
-const PostAction = ({ isLiked, onLikePress, onCommentPress, onSharePress }) => (
+export const PostAction = ({ isLiked, onLikePress, onCommentPress, onSharePress }) => (
   <View style={styles.postActionRow}>
     <PostActionButton variant="like" onPress={onLikePress} isActive={isLiked} />
     <PostActionButton variant="comment" onPress={onCommentPress} />
@@ -133,8 +140,9 @@ PostAction.defaultProps = {
 
 
 // Post Footer
-const PostFooter = props => <View style={styles.postFooter} {...props} />;
-const PostSection = props => <View style={styles.postSection} {...props} />;
+export const PostFooter = props => <View style={styles.postFooter} {...props} />;
+export const PostSection = props => <View style={styles.postSection} {...props} />;
+export const PostCommentsSection = props => <View style={styles.postCommentsSection} {...props} />;
 
 
 // Post
@@ -145,61 +153,66 @@ export const Post = ({
   postContent,
   postLikesCount,
   postCommentCount,
+  onPostPress,
   onLikePress,
   onCommentPress,
   onSharePress,
   comments,
 }) => (
-  <View style={styles.wrap}>
-    <PostHeader
-      avatar={authorAvatar}
-      name={authorName}
-      time={postTime}
-    />
-    <PostMain
-      content={postContent}
-      likesCount={postLikesCount}
-      commentsCount={postCommentCount}
-    />
-    <PostAction
-      onLikePress={onLikePress}
-      onCommentPress={onCommentPress}
-      onSharePress={onSharePress}
-    />
-    <PostFooter>
-      <PostSection>
-        <Comment comment={comments[0]} />
-      </PostSection>
-      <PostSection>
-        <CommentTextInput />
-      </PostSection>
-    </PostFooter>
-  </View>
+  <TouchableWithoutFeedback onPress={onPostPress}>
+    <View style={styles.wrap}>
+      <PostHeader
+        avatar={authorAvatar}
+        name={authorName}
+        time={postTime}
+      />
+      <PostMain
+        content={postContent}
+        likesCount={postLikesCount}
+        commentsCount={postCommentCount}
+      />
+      <PostAction
+        onLikePress={onLikePress}
+        onCommentPress={onCommentPress}
+        onSharePress={onSharePress}
+      />
+      <PostFooter>
+        <PostSection>
+          <Comment comment={comments[0]} />
+        </PostSection>
+        <PostSection>
+          <CommentTextInput />
+        </PostSection>
+      </PostFooter>
+    </View>
+  </TouchableWithoutFeedback>
 );
 
 
 Post.propTypes = {
   authorAvatar: PropTypes.string,
   authorName: PropTypes.string,
-  postTime: PropTypes.string,
+  comments: PropTypes.array,
+  onCommentPress: PropTypes.func,
+  onLikePress: PropTypes.func,
+  onPostPress: PropTypes.func,
+  onSharePress: PropTypes.func,
+  postCommentCount: PropTypes.number,
   postContent: PropTypes.string,
   postLikesCount: PropTypes.number,
-  postCommentCount: PropTypes.number,
-  onLikePress: PropTypes.func,
-  onCommentPress: PropTypes.func,
-  onSharePress: PropTypes.func,
-  comments: PropTypes.array,
+  postTime: PropTypes.string,
 };
 
 Post.defaultProps = {
   authorAvatar: null,
   authorName: null,
-  postTime: null,
+  comments: [],
+  onCommentPress: null,
+  onLikePress: null,
+  onPostPress: null,
+  onSharePress: null,
+  postCommentCount: 0,
   postContent: null,
   postLikesCount: 0,
-  postCommentCount: 0,
-  onLikePress: null,
-  onCommentPress: null,
-  onSharePress: null,
-  comments: [],
+  postTime: null,
 };

@@ -1,6 +1,6 @@
 import { StackNavigator } from 'react-navigation';
 import Feed from 'kitsu/screens/Feed';
-import Post from 'kitsu/screens/Feed/pages/Post';
+import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
 import PostCreation from 'kitsu/screens/PostCreation';
 import MediaUploadScreen from 'kitsu/screens/PostCreation/MediaUploadScreen';
 import navigationOptions from './navigationOptions';
@@ -10,8 +10,8 @@ const PostStack = StackNavigator(
     Feed: {
       screen: Feed,
     },
-    Post: {
-      screen: Post,
+    PostDetails: {
+      screen: PostDetails,
     },
     Creation: {
       screen: PostCreation,

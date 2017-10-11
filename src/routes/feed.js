@@ -2,7 +2,7 @@ import React from 'react';
 import { Image } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Feed from 'kitsu/screens/Feed';
-import Post from 'kitsu/screens/Feed/pages/Post';
+import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
 import homeIcon from 'kitsu/assets/img/tabbar_icons/home.png';
 import navigationOptions from './navigationOptions';
 
@@ -11,8 +11,8 @@ const FeedStack = StackNavigator(
     Feed: {
       screen: Feed,
     },
-    Post: {
-      screen: Post,
+    PostDetails: {
+      screen: PostDetails,
     },
   },
   {

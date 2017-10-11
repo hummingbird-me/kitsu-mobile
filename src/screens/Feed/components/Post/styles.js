@@ -13,6 +13,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: scenePadding,
     paddingVertical: scenePadding / 2,
   },
+  postHeaderBackButton: {
+    marginLeft: -scenePadding,
+    padding: scenePadding,
+  },
 
   postMain: {
     paddingHorizontal: scenePadding,
@@ -49,5 +53,10 @@ export const styles = StyleSheet.create({
   },
   postSection: {
     padding: scenePadding,
+  },
+  postCommentsSection: {
+    padding: scenePadding,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.lightGrey,
   },
 });

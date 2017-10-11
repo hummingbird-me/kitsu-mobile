@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FlatList, View, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchUserFeed } from 'kitsu/actions';
@@ -14,8 +15,6 @@ const TAB_ITEMS = [
   { key: 'anime', label: 'Anime' },
   { key: 'manga', label: 'Manga' },
 ];
-
-const ItemSeparator = () => <View style={{ height: 10, backgroundColor: listBackPurple }} />;
 
 class Feed extends React.Component {
   static navigationOptions = {
@@ -38,6 +37,9 @@ class Feed extends React.Component {
     this.setState({ activeFeed: feed });
   }
 
+  navigateToPost = () => {
+    this.props.navigation.navigate('PostDetails');
+  }
 
   renderFeedFilter = () => (
     <TabBar>
@@ -52,22 +54,21 @@ class Feed extends React.Component {
     </TabBar>
   );
 
-  renderPost = (post) => {
-    return (
-      <Post
-        authorAvatar={defaultAvatar}
-        authorName="Josh"
-        postTime={post.createdAt}
-        postContent={post.content}
-        postLikesCount={post.postLikesCount}
-        postCommentCount={post.commentsCount}
-        comments={post.comments}
-        onLikePress={this.onActionPress}
-        onCommentPress={this.onActionPress}
-        onSharePress={this.onActionPress}
-      />
-    );
-  }
+  renderPost = post => (
+    <Post
+      onPostPress={this.navigateToPost}
+      authorAvatar={defaultAvatar}
+      authorName="Josh"
+      postTime={post.createdAt}
+      postContent={post.content}
+      postLikesCount={post.postLikesCount}
+      postCommentCount={post.commentsCount}
+      comments={post.comments}
+      onLikePress={this.onActionPress}
+      onCommentPress={this.onActionPress}
+      onSharePress={this.onActionPress}
+    />
+  )
 
   render() {
     return (
@@ -88,5 +89,13 @@ class Feed extends React.Component {
     );
   }
 }
+
+Feed.propTypes = {
+  navigation: PropTypes.object,
+};
+
+Feed.defaultProps = {
+  navigation: {},
+};
 
 export default connect(() => ({}), { fetchUserFeed })(Feed);
