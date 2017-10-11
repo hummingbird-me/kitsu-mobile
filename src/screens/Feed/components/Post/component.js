@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { styles } from './styles';
@@ -15,14 +16,16 @@ const PostHeader = ({ avatar, name, time }) => {
   const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
   return (
     <View style={styles.postHeader}>
-      <Avatar avatar={avatar} />
-      <View style={styles.postHeaderMain}>
-        <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
-        <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>{postDateTime}</StyledText>
-      </View>
-      <TouchableOpacity>
-        <Icon name="ios-more" color={colors.lightGrey} style={{ fontSize: 32, paddingVertical: 10 }} />
-      </TouchableOpacity>
+      <Layout.RowWrap alignItems="center">
+        <Avatar avatar={avatar} />
+        <Layout.RowMain>
+          <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
+          <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>{postDateTime}</StyledText>
+        </Layout.RowMain>
+        <TouchableOpacity>
+          <Icon name="ios-more" color={colors.lightGrey} style={{ fontSize: 32, paddingVertical: 10 }} />
+        </TouchableOpacity>
+      </Layout.RowWrap>
     </View>
   );
 };

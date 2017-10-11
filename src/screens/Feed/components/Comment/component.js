@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
@@ -33,9 +34,9 @@ export const Comment = ({ comment }) => {
     children,
   } = comment.attributes;
   return (
-    <View style={styles.wrap}>
+    <Layout.RowWrap>
       <Avatar avatar={avatar} size="medium" />
-      <View style={styles.main}>
+      <Layout.RowMain>
         <CommentBubble name={name} content={content} />
         {showActions && (
           <View style={styled.commentActions} />
@@ -43,8 +44,8 @@ export const Comment = ({ comment }) => {
         {children && (
           <View style={styled.nestedCommentSection}>{children}</View>
         )}
-      </View>
-    </View>
+      </Layout.RowMain>
+    </Layout.RowWrap>
   );
 };
 

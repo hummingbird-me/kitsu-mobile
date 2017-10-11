@@ -12,20 +12,13 @@ export const styles = StyleSheet.create({
   postHeader: {
     paddingHorizontal: scenePadding,
     paddingVertical: scenePadding / 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
-  postHeaderMain: {
-    flex: 1,
-    paddingHorizontal: scenePadding,
-  },
-
 
   postMain: {
     paddingHorizontal: scenePadding,
     paddingVertical: scenePadding / 2,
   },
+
   postStatusRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -33,8 +26,6 @@ export const styles = StyleSheet.create({
     paddingVertical: scenePadding / 2,
     marginTop: scenePadding,
   },
-
-
   postActionRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -50,7 +41,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
 
   postFooter: {
     borderTopWidth: StyleSheet.hairlineWidth,
