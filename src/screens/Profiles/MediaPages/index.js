@@ -19,10 +19,10 @@ const TAB_ITEMS = [
 
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
-  Episodes: { getScreen: () => require('./pages/Episodes').default},
-  Characters: { getScreen: () => require('./pages/Characters').default},
-  Reactions: { getScreen: () => require('./pages/Reactions').default},
-  Franchise: { getScreen: () => require('./pages/Franchise').default},
+  Episodes: { getScreen: () => require('./pages/Episodes').default },
+  Characters: { getScreen: () => require('./pages/Characters').default },
+  Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
+  Franchise: { getScreen: () => require('./pages/Franchise').default },
 }, {
   initialRouteName: 'Summary',
 });
