@@ -2,7 +2,7 @@ export const FEED_DATA = [
   {
     createdAt: '2017-10-10T01:18:19.280Z',
     updatedAt: '2017-10-10T01:19:04.777Z',
-    content: 'My childhood anime!',
+    content: 'Huh, aren’t they already doing that with the ‘extension’ of Gundam the Origins? I mean, the battle of Loum is just literally inches away from the colony drop tragedy and the assault on Side 7 where episode 1 of MSG.',
     contentFormatted: '<p>My childhood anime!</p>\n',
     commentsCount: 4,
     postLikesCount: 0,
@@ -19,14 +19,14 @@ export const FEED_DATA = [
     comments: [
       {
         id: '28778670',
-        type: 'comments',
+        type: 'comment  s',
         links: {
           self: 'https://kitsu.io/api/edge/comments/28778670',
         },
         attributes: {
           createdAt: '2017-10-10T01:19:00.028Z',
           updatedAt: '2017-10-10T01:19:00.028Z',
-          content: 'This is new comment',
+          content: 'Hey! congrats on graduating. I’ve still got two years to go.',
           contentFormatted: '<p>This is new comment</p>\n',
           blocked: false,
           deletedAt: null,
@@ -46,7 +46,7 @@ export const FEED_DATA = [
         attributes: {
           createdAt: '2017-10-10T01:18:51.205Z',
           updatedAt: '2017-10-10T01:19:04.775Z',
-          content: 'This is another comment',
+          content: 'This is short comment',
           contentFormatted: '<p>This is another comment</p>\n',
           blocked: false,
           deletedAt: null,
@@ -62,7 +62,7 @@ export const FEED_DATA = [
   {
     createdAt: '2017-10-09T15:18:19.280Z',
     updatedAt: '2017-10-10T01:19:04.777Z',
-    content: 'My childhood anime!',
+    content: 'At the behest of @Doaks and several others on Kitsu, I’m going to be listing off someone of my favorite/most influential anime in no particular order. First, some background: I have been watching anime for nearly all my life. I remember watching the original Pokémon as it aired and staying at my maternal grandmother’s house to watch Digimon and Beyblade. Toonami introduced me to Naruto, Zatch Bell, and One Piece. However, I got into anime knowing what it was and how it was',
     contentFormatted: '<p>My childhood anime!</p>\n',
     commentsCount: 4,
     postLikesCount: 0,
@@ -86,7 +86,7 @@ export const FEED_DATA = [
         attributes: {
           createdAt: '2017-10-10T01:19:00.028Z',
           updatedAt: '2017-10-10T01:19:00.028Z',
-          content: 'This is new comment',
+          content: 'Idk about this, but I guess we’ll have to wait and see how it turns out.',
           contentFormatted: '<p>This is new comment</p>\n',
           blocked: false,
           deletedAt: null,
@@ -122,7 +122,7 @@ export const FEED_DATA = [
   {
     createdAt: '2017-10-06T13:28:19.280Z',
     updatedAt: '2017-10-10T01:19:04.777Z',
-    content: 'My childhood anime!',
+    content: 'Well, internet is crapping out. Guess that means it\'s time to watch some anime!',
     contentFormatted: '<p>My childhood anime!</p>\n',
     commentsCount: 4,
     postLikesCount: 0,

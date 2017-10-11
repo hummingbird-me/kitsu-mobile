@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { StyledText } from 'kitsu/components/StyledText';
-import { StyledProgressiveImage } from 'kitsu/screens/Feed/components/StyledProgressiveImage';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { styles } from './styles';
 
+// PostHeader
 const PostHeader = ({ avatar, name, time }) => {
-  const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : moment(time).format('DD MMM') + ' at ' + moment(time).format('H:MMA');
+  const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
   return (
     <View style={styles.postHeader}>
       <Avatar avatar={avatar} />
@@ -31,7 +32,6 @@ PostHeader.propTypes = {
   name: PropTypes.string,
   time: PropTypes.string,
 };
-
 PostHeader.defaultProps = {
   avatar: null,
   name: null,
@@ -39,6 +39,7 @@ PostHeader.defaultProps = {
 };
 
 
+// PostMain
 const PostMain = ({ content, likesCount, commentsCount }) => (
   <View style={styles.postMain}>
     <View style={styles.postContent}>
@@ -60,25 +61,24 @@ PostMain.propTypes = {
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
 };
-
 PostMain.defaultProps = {
   content: null,
   likesCount: 0,
   commentsCount: 0,
 };
 
+
+// PostAction
 const actionButtonIcons = {
-  like: 'md-heart-outline',
+  like: 'ios-heart-outline',
   comment: 'ios-text-outline',
   share: 'ios-redo-outline',
 };
-
 const actionButtonLabels = {
   like: 'Like',
   comment: 'Comment',
   share: 'Share',
 };
-
 const PostActionButton = ({ variant, isActive, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.postActionButton}>
     <Icon
@@ -101,7 +101,6 @@ PostActionButton.propTypes = {
   isActive: PropTypes.bool,
   onPress: PropTypes.func,
 };
-
 PostActionButton.defaultProps = {
   variant: 'like',
   isActive: false,
@@ -122,7 +121,6 @@ PostAction.propTypes = {
   onCommentPress: PropTypes.func,
   onSharePress: PropTypes.func,
 };
-
 PostAction.defaultProps = {
   isLiked: false,
   onLikePress: null,
@@ -130,11 +128,13 @@ PostAction.defaultProps = {
   onSharePress: null,
 };
 
+
+// Post Footer
 const PostFooter = props => <View style={styles.postFooter} {...props} />;
+const PostSection = props => <View style={styles.postSection} {...props} />;
 
-const Comment = () => <View />;
-const CreateComment = () => <View />;
 
+// Post
 export const Post = ({
   authorAvatar,
   authorName,
@@ -164,8 +164,12 @@ export const Post = ({
       onSharePress={onSharePress}
     />
     <PostFooter>
-      <Comment comment={comments[0]} />
-      <CreateComment />
+      <PostSection>
+        <Comment comment={comments[0]} />
+      </PostSection>
+      <PostSection>
+        <CommentTextInput />
+      </PostSection>
     </PostFooter>
   </View>
 );

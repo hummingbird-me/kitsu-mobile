@@ -6,7 +6,9 @@ import { StyledProgressiveImage } from 'kitsu/screens/Feed/components/StyledProg
 import { styles } from './styles';
 
 const avatarSizes = {
+  large: 62,
   default: 42,
+  medium: 36,
   small: 32,
   xsmall: 22,
 };
@@ -32,7 +34,7 @@ export const Avatar = ({ size, avatar }) => (
 
 Avatar.propTypes = {
   avatar: PropTypes.string,
-  size: PropTypes.oneOf(['default', 'small', 'xsmall']),
+  size: PropTypes.oneOf(['large', 'default', 'medium', 'small', 'xsmall']),
 };
 
 Avatar.defaultProps = {

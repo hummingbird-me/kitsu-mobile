@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
-import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange } from 'kitsu/constants/colors';
+import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red } from 'kitsu/constants/colors';
 import { styles } from './styles';
 
 const textSizes = {
@@ -21,6 +21,7 @@ const textColors = {
   lightGrey,
   yellow,
   orange,
+  red,
 };
 
 export const StyledText = ({
@@ -47,7 +48,7 @@ export const StyledText = ({
 
 StyledText.propTypes = {
   bold: PropTypes.bool,
-  color: PropTypes.oneOf(['light', 'dark', 'grey', 'darkGrey', 'lightGrey', 'yellow', 'orange']),
+  color: PropTypes.oneOf(['light', 'dark', 'grey', 'darkGrey', 'lightGrey', 'yellow', 'orange', 'red']),
   size: PropTypes.oneOf(['default', 'xxsmall', 'xsmall', 'small', 'large', 'xlarge']),
   textStyle: PropTypes.object,
 };

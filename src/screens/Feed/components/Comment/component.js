@@ -1,41 +1,68 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { StyledProgressiveImage } from 'kitsu/screens/Feed/components/StyledProgressiveImage';
+import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-const avatarSizes = {
-  default: 42,
-  small: 32,
-  xsmall: 22,
-};
-
-export const Avatar = ({ size, avatar }) => (
-  <View
-    style={[
-      styles.wrap,
-      {
-        width: avatarSizes[size],
-        height: avatarSizes[size],
-        borderRadius: avatarSizes[size],
-      },
-    ]}
-  >
-    <StyledProgressiveImage
-      resize="cover"
-      source={{ uri: avatar || defaultAvatar }}
-    />
+// CommentBubble
+// Todo: make name dynamic
+const CommentBubble = ({ name, content }) => (
+  <View style={styles.bubble}>
+    <StyledText size="xxsmall" color="dark" bold>Doaks</StyledText>
+    <StyledText size="xsmall" color="dark">{content}</StyledText>
   </View>
 );
 
-
-Avatar.propTypes = {
-  avatar: PropTypes.string,
-  size: PropTypes.oneOf(['default', 'small', 'xsmall']),
+CommentBubble.propTypes = {
+  name: PropTypes.string,
+  content: PropTypes.string,
+};
+CommentBubble.defaultProps = {
+  name: null,
+  content: null,
 };
 
-Avatar.defaultProps = {
+export const Comment = ({ comment }) => {
+  const {
+    avatar,
+    name,
+    content,
+    time,
+    showActions,
+    children,
+  } = comment.attributes;
+  return (
+    <View style={styles.wrap}>
+      <Avatar avatar={avatar} size="medium" />
+      <View style={styles.main}>
+        <CommentBubble name={name} content={content} />
+        {showActions && (
+          <View style={styled.commentActions} />
+        )}
+        {children && (
+          <View style={styled.nestedCommentSection}>{children}</View>
+        )}
+      </View>
+    </View>
+  );
+};
+
+
+Comment.propTypes = {
+  avatar: PropTypes.string,
+  name: PropTypes.string,
+  content: PropTypes.string,
+  time: PropTypes.string,
+  showActions: PropTypes.bool,
+  children: PropTypes.node,
+};
+
+Comment.defaultProps = {
   avatar: null,
-  size: 'default',
+  name: null,
+  content: null,
+  time: null,
+  showActions: false,
+  children: null,
 };

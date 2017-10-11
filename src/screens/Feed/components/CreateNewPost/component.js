@@ -13,7 +13,7 @@ export const CreateNewPost = ({ avatar, onPress }) => (
     <TouchableOpacity onPress={onPress} style={styles.touchArea}>
       <Avatar avatar={avatar} />
       <View style={styles.main}>
-        <StyledText color="lightGrey" size="xsmall">Want to share an update, Josh?</StyledText>
+        <StyledText color="grey" size="xsmall">Want to share an update, Josh?</StyledText>
       </View>
     </TouchableOpacity>
   </View>

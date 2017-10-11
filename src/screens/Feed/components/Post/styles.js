@@ -7,6 +7,8 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     marginTop: 10,
   },
+
+
   postHeader: {
     paddingHorizontal: scenePadding,
     paddingVertical: scenePadding / 2,
@@ -19,6 +21,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: scenePadding,
   },
 
+
   postMain: {
     paddingHorizontal: scenePadding,
     paddingVertical: scenePadding / 2,
@@ -30,6 +33,7 @@ export const styles = StyleSheet.create({
     paddingVertical: scenePadding / 2,
     marginTop: scenePadding,
   },
+
 
   postActionRow: {
     flexDirection: 'row',
@@ -45,5 +49,15 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+
+  postFooter: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.lightGrey,
+    backgroundColor: colors.offWhite,
+  },
+  postSection: {
+    padding: scenePadding,
   },
 });
