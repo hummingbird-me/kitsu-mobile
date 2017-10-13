@@ -18,10 +18,11 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 10,
   },
   contentListHeaderText: {
     fontSize: 12,
+    fontWeight: 'bold',
     fontFamily: 'OpenSans',
     color: '#392F39',
   },
@@ -32,6 +33,7 @@ export const styles = StyleSheet.create({
   },
   contentListActionLinkText: {
     fontSize: 12,
+    fontWeight: 'bold',
     fontFamily: 'OpenSans',
     color: '#392F39',
   },
@@ -54,10 +56,11 @@ export const styles = StyleSheet.create({
     position: 'relative',
   },
   landscapeImage: {
-    width: 200,
+    width: 210,
     height: 100,
     resizeMode: 'cover',
     zIndex: 0,
+    borderRadius: 8,
   },
   landscapeImageTitle: {
     color: colors.white,

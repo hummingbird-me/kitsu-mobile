@@ -12,6 +12,7 @@ import { getStreamers } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 
 class SearchFilter extends Component {
+
   static navigationOptions = () => ({
     title: 'Filter',
     tabBarVisible: false,
@@ -21,13 +22,11 @@ class SearchFilter extends Component {
     ...defaultState,
   };
 
-  componentWillMount() {
-    const { data } = this.props.navigation.state.params;
-    this.setState({ ...data });
-  }
-
   componentDidMount() {
-    this.props.getStreamers();
+    const { data } = this.props.navigation.state.params;
+    this.setState({ ...data }, () => {
+      this.props.getStreamers();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
