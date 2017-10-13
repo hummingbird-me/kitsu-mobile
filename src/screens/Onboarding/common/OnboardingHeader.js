@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Text, Image, ViewPropTypes } from 'react-native';
-import logo from 'kitsu/assets/img/kitsu-logo.png';
+import { View, Image, ViewPropTypes } from 'react-native';
+import { slidelogo } from 'kitsu/assets/img/onboarding/';
 import styles from './styles';
 
 const OnboardingHeader = ({ style }) => (
   <View style={[styles.logoWrapper, style]}>
-    <Image style={styles.logo} source={logo} />
-    <Text style={styles.logoText}>KITSU</Text>
+    <Image style={styles.logo} source={slidelogo} />
   </View>
 );
 

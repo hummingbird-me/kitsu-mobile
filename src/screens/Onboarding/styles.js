@@ -12,6 +12,9 @@ export default StyleSheet.create({
   header: {
     flex: 2,
   },
+  bodyWrapper: {
+    flex: 8,
+  },
   page: {
     justifyContent: 'center',
     height: 320,
@@ -76,10 +79,13 @@ export default StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.white,
   },
+  animatedList: {
+    marginBottom: 8,
+  },
   galleryRow: {
     marginVertical: 8,
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   squareImage: {
     marginHorizontal: 8,
@@ -96,4 +102,15 @@ export default StyleSheet.create({
     paddingRight: 8,
     paddingLeft: 8,
   },
+  buttonFacebook: {
+    backgroundColor: colors.fbBlueDark,
+  },
+  buttonCreateAccount: {
+    backgroundColor: colors.transparent,
+    borderWidth: 1.5,
+    borderColor: colors.darkGrey,
+  },
+  buttonAlreadyAccount: {
+    backgroundColor: colors.transparent,
+  }
 });
