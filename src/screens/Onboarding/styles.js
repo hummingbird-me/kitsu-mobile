@@ -80,7 +80,7 @@ export default StyleSheet.create({
     backgroundColor: colors.white,
   },
   animatedList: {
-    marginBottom: 8,
+    marginVertical: 8,
   },
   galleryRow: {
     marginVertical: 8,
@@ -112,5 +112,5 @@ export default StyleSheet.create({
   },
   buttonAlreadyAccount: {
     backgroundColor: colors.transparent,
-  }
+  },
 });
