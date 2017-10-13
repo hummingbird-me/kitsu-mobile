@@ -41,7 +41,7 @@ platform :android do
   lane :beta do |values|
     # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
 
-    emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com', 'josh.madewell@gmail.com'] # You can list more emails here
+    emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com', 'josh.madewell@gmail.com', 'is@urihere.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     bump_version_code

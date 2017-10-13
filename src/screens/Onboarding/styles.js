@@ -1,77 +1,99 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export default StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: colors.darkPurple,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  footerButtonText: {
-    opacity: 0.51,
-    fontSize: 16,
-    color: colors.white,
-    fontFamily: 'OpenSans',
+  contentWrapper: {
+    flex: 1,
+  },
+  header: {
+    flex: 2,
+  },
+  page: {
+    justifyContent: 'center',
+    height: 320,
   },
   slide: {
-    width: 265,
-    height: 390,
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 3,
+    backgroundColor: colors.darkPurple,
   },
   text: {
     marginTop: 5,
-    color: '#333333',
-    fontSize: 17,
+    color: colors.white,
+    fontSize: 18,
     lineHeight: 21,
     fontFamily: 'Asap-Bold',
   },
   desc: {
-    padding: 15,
+    marginTop: 8,
     paddingRight: 25,
     paddingLeft: 25,
-    color: '#333333',
-    fontSize: 17,
-    lineHeight: 21,
+    color: colors.white,
+    fontSize: 16,
+    lineHeight: 20,
     fontFamily: 'OpenSans',
     textAlign: 'center',
     backgroundColor: 'transparent',
   },
+  stepContainer: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+  },
+  stepImage: {
+    width: 210,
+    height: 240,
+    resizeMode: 'contain',
+  },
+  getStartedButton: {
+    marginBottom: 16,
+    backgroundColor: colors.white,
+  },
+  getStartedText: {
+    color: colors.darkPurple,
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
   dotContainer: {
+    top: -10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 25,
   },
-  stepContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  stepImage: {
-    width: 210,
-    height: 230,
-    marginTop: 30,
-    resizeMode: 'contain',
-  },
-  getStartedBtn: {
-    color: colors.white,
-    textAlign: 'center',
-    fontSize: 17,
-    fontFamily: 'OpenSans',
-  },
   stepDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    marginLeft: 3,
-    marginRight: 3,
-    marginTop: 3,
-    marginBottom: 3,
+    margin: 3,
     backgroundColor: colors.lightPink,
   },
   stepDotActive: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: colors.white,
+  },
+  galleryRow: {
+    marginVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  squareImage: {
+    marginHorizontal: 8,
+    width: 130,
+    height: 130,
+    borderRadius: 8,
+  },
+  buttonsWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  fbIcon: {
+    color: colors.white,
+    paddingRight: 8,
+    paddingLeft: 8,
   },
 });

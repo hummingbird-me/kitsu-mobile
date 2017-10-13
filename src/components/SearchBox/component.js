@@ -25,7 +25,7 @@ export class SearchBox extends React.PureComponent {
   };
 
   render() {
-    const { defaultValue, onChangeText, placeholder, searchIconOffset, value } = this.props;
+    const { searchIconOffset, value, ...restProps } = this.props;
 
     return (
       <View style={[styles.searchContainer, this.props.style]}>
@@ -39,13 +39,10 @@ export class SearchBox extends React.PureComponent {
           ]}
         />
         <TextInput
-          {...this.props}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
+          {...restProps}
+          value={value}
           style={[commonStyles.text, styles.input]}
           underlineColorAndroid="transparent"
-          defaultValue={defaultValue}
-          value={value}
           autoCapitalize={'none'}
           autoCorrect={false}
           keyboardAppearance={'dark'}

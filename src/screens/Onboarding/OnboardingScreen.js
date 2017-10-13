@@ -1,65 +1,42 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { View, Text, Dimensions, Platform } from 'react-native';
-import { Container, Content, Footer, FooterTab, Button } from 'native-base';
-import Carousel from 'react-native-snap-carousel';
-import * as colors from 'kitsu/constants/colors';
+import React from 'react';
+import { View, ScrollView, Dimensions } from 'react-native';
+import { intro1, intro2, intro3, intro4 } from 'kitsu/assets/img/onboarding/';
+import { Button } from 'kitsu/components/Button';
+import { OnboardingHeader } from './common/';
 import styles from './styles';
 import Step from './Step';
 import Dot from './Dot';
-
-
-const styleObj = {
-  container: {
-    backgroundColor: colors.darkPurple,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  contentContainer: {
-    // only necessary for scrollview (android).
-    // pick a value close to dotContainer padding.
-    paddingBottom: Platform.select({ ios: 0, android: 30 }),
-  },
-  footer: {
-    backgroundColor: colors.darkPurple,
-    borderTopColor: 'rgba(98,79,94,1)',
-    height: 60,
-  },
-  button: {
-    width: 265,
-    height: 50,
-    alignSelf: 'center',
-  },
-  buttonLast: {
-    backgroundColor: colors.green,
-    borderWidth: 0,
-  },
-};
 
 const INTROS = [
   {
     title: 'More of what you love',
     desc: 'Get recommendations to discover your next favorite anime or manga!',
-    image: require('../../assets/img/intro1.png'),
+    image: intro1,
   },
   {
     title: 'Track your progress',
     desc: 'Log and rate what you’ve seen and read to build a library of your history.',
-    image: require('../../assets/img/intro2.png'),
+    image: intro2,
   },
   {
     title: 'Join the Community',
     desc: 'Kitsu makes finding new like-minded friends easy with the global activity feed.',
-    image: require('../../assets/img/intro3.png'),
+    image: intro3,
   },
   {
     title: 'Share your Reactions',
     desc: 'Check the media ratings and reviews from other users and leave your own!',
-    image: require('../../assets/img/intro4.png'),
+    image: intro4,
+  },
+  // dummy view for smooth transition. Removing this and adding an additional dot instead looks bad when swipe bounces back.
+  {
+    title: '',
+    desc: '',
+    image: null,
   },
 ];
 
-class OnboardingScreen extends Component {
+export default class OnboardingScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -67,76 +44,57 @@ class OnboardingScreen extends Component {
   state = {
     step: 0,
   };
+  navigating = false;
+
+  handleScroll = ({ nativeEvent: { contentOffset: { x } } }) => {
+    const SCREEN_WIDTH = Dimensions.get('window').width;
+    const position = (x / SCREEN_WIDTH);
+    if (!this.navigating && position > (INTROS.length - 2) + 0.05) {
+      this.props.navigation.navigate('Registration');
+      this.navigating = true; // prevent triggering navigate twice.
+    } else {
+      // abs for -x direction values: prevent -1 value for step
+      this.setState({ step: Math.floor(Math.abs(x) / SCREEN_WIDTH) });
+    }
+  }
 
   renderStep = () => INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
 
-  renderDots = () =>
-    INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
+  renderDots = () => INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
 
   render() {
     const { navigate } = this.props.navigation;
-    let btnStyle = styleObj.button;
-    const last = this.state.step === INTROS.length - 1;
-    if (last) {
-      btnStyle = { ...styleObj.button, ...styleObj.buttonLast };
-    }
 
     return (
-      <Container style={styleObj.container}>
-        <Content contentContainerStyle={styleObj.contentContainer} scrollEnabled={Platform.select({ ios: false, android: true })}>
-          <View style={{ flex: 1, alignItems: 'center', paddingTop: 76 }}>
-            <Carousel
-              inactiveSlideScale={0.90}
-              inactiveSlideOpacity={0.5}
-              enableMomentum={false}
-              onSnapToItem={step => this.setState({ step })}
-              sliderWidth={Dimensions.get('window').width}
-              itemWidth={265}
-              decelerationRate={'fast'}
+      <View style={styles.container}>
+        <OnboardingHeader style={styles.header} />
+        <View style={{ flex: 8 }}>
+          <View style={styles.page}>
+            <ScrollView
+              pagingEnabled
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              alwaysBounceHorizontal={false}
+              onScroll={this.handleScroll}
+              scrollEventThrottle={300} // decrease for precision, lower values trigger onScroll more.
             >
               {this.renderStep()}
-            </Carousel>
+            </ScrollView>
           </View>
-
-          <View style={styles.dotContainer}>
-            {this.renderDots()}
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={styles.dotContainer}>
+              {this.renderDots()}
+            </View>
+            <Button
+              style={styles.getStartedButton}
+              title={'Get Started'}
+              titleStyle={styles.getStartedText}
+              onPress={() => navigate('Registration')}
+            />
           </View>
-
-          <Button
-            rounded
-            bordered={!last}
-            light
-            block
-            style={btnStyle}
-            onPress={() => navigate('Signup')}
-          >
-            <Text style={styles.getStartedBtn}>
-              Get Started
-            </Text>
-          </Button>
-        </Content>
-
-        <Footer style={styleObj.footer}>
-          <FooterTab>
-            <Button full onPress={() => navigate('Login')}>
-              <Text style={styles.footerButtonText}>
-                Have an account? Sign in
-              </Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-
-      </Container>
+        </View>
+      </View>
     );
   }
 }
 
-OnboardingScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-};
-
-OnboardingScreen.defaultProps = {
-  navigation: {},
-};
-
-export default OnboardingScreen;

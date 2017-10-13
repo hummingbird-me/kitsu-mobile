@@ -43,6 +43,11 @@ export const styles = StyleSheet.create({
   listLastChild: {
     marginBottom: 12,
   },
+  listLoadingSpinnerContainer: {
+    ...flattenCommon('centerCenter'),
+    height: constants.POSTER_CARD_HEIGHT,
+    width: constants.POSTER_CARD_WIDTH / 2,
+  },
   posterImageCardFirstChild: {
     marginLeft: 12,
   },

@@ -5,12 +5,14 @@
   "scripts": {
     "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" yarn start",
     "lint": "eslint ./src",
-    "reset": "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
+    "reset":
+      "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start:reset": "yarn start -- --reset-cache",
     "test": "jest"
   },
   "dependencies": {
+    "algoliasearch": "^3.24.3",
     "base-64": "^0.1.0",
     "client-oauth2": "https://github.com/magneticz/js-client-oauth2.git",
     "devour-client": "^1.4.3",
@@ -23,7 +25,7 @@
     "querystring": "^0.2.0",
     "react": "16.0.0-alpha.12",
     "react-instantsearch": "^4.0.10",
-    "react-native": "0.48.0",
+    "react-native": "0.46.4",
     "react-native-actionsheet": "^2.2.2",
     "react-native-animatable": "^1.2.0",
     "react-native-animated-progress-bar": "^1.1.0",
@@ -72,14 +74,13 @@
     "prettier-eslint": "^6.2.2",
     "react-native-debugger-open": "^0.3.12",
     "react-test-renderer": "16.0.0-alpha.6",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "babel-plugin-transform-remove-console": "^6.8.5"
   },
   "jest": {
     "preset": "react-native"
   },
   "rnpm": {
-    "assets": [
-      "src/assets/fonts"
-    ]
+    "assets": ["src/assets/fonts"]
   }
 }

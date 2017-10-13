@@ -7,6 +7,7 @@ export const tabRed = 'rgb(252, 117, 92)';
 /* blues */
 export const blue = '#43ABF1';
 export const fbBlue = '#507CC0';
+export const fbBlueDark = '#3B5998'; // taken from invision app designs
 export const linkBlue = '#083d8d'; // sidebar seemore text
 
 /* purples */
@@ -36,6 +37,7 @@ export const offBlack = '#2B212B';
 export const softBlack = '#333';
 
 /* misc */
+export const transparent = 'transparent';
 export const buttonDisabledColor = '#878787';
 export const imageBackColor = 'rgb(153, 130, 153)';
 export const listSeparatorColor = '#261C25';

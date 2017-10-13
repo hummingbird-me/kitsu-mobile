@@ -4,6 +4,8 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Button, Left, Right } from 'native-base';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
+const renderTabBar = () => <SimpleTabBar />;
+
 const renderFooter = (props) => {
   if (props.single) {
     return (
@@ -48,7 +50,7 @@ const renderFooter = (props) => {
 const CardTabs = props => (
   <View style={{ ...styles.container, ...props.style }}>
     <View>
-      <ScrollableTabView renderTabBar={<SimpleTabBar />}>{props.children}</ScrollableTabView>
+      <ScrollableTabView renderTabBar={renderTabBar}>{props.children}</ScrollableTabView>
     </View>
     {renderFooter(props)}
   </View>
