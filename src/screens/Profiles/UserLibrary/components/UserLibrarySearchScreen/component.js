@@ -38,15 +38,24 @@ export class UserLibrarySearchScreenComponent extends React.Component {
     };
   };
 
+  state = {
+    isSwiping: false,
+  }
+
+  onSwipingItem = (isSwiping) => {
+    this.setState({ isSwiping });
+  }
+
   renderItem = ({ item }) => {
     const media = item.anime || item.manga;
     return (
       <UserLibraryListCard
         currentUser={this.props.currentUser}
-        data={item}
+        libraryEntry={item}
         libraryStatus={item.status}
         libraryType={media.type}
         navigate={this.props.navigation.navigate}
+        onSwipingItem={this.onSwipingItem}
         profile={this.props.navigation.state.params.profile}
         updateUserLibraryEntry={this.props.updateUserLibrarySearchEntry}
       />
@@ -59,7 +68,7 @@ export class UserLibrarySearchScreenComponent extends React.Component {
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
       { status: 'completed', anime: 'Completed', manga: 'Completed' },
-      { status: 'onHold', anime: 'On Hold', manga: 'On Hold' },
+      { status: 'on_hold', anime: 'On Hold', manga: 'On Hold' },
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 
@@ -78,6 +87,7 @@ export class UserLibrarySearchScreenComponent extends React.Component {
             onEndReachedThreshold={0.5}
             removeClippedSubviews={false}
             renderItem={this.renderItem}
+            scrollEnabled={!this.state.isSwiping}
             showsHorizontalScrollIndicator={false}
           />
         </View>
@@ -96,7 +106,10 @@ export class UserLibrarySearchScreenComponent extends React.Component {
           style={styles.searchBoxStyle}
         />
 
-        <ScrollView style={styles.listsContainer}>
+        <ScrollView
+          style={styles.listsContainer}
+          scrollEnabled={!this.state.isSwiping}
+        >
           {this.renderLists('anime')}
           {this.renderLists('manga')}
         </ScrollView>
