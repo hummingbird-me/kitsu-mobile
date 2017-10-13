@@ -91,11 +91,11 @@ class RegistrationScreen extends React.Component {
     return (
       <View style={styles.container}>
         <OnboardingHeader style={styles.header} />
-        <View style={{ flex: 8 }}>
+        <View style={styles.bodyWrapper}>
           <View>
             <FlatList
               ref={ref => this.animeList = ref}
-              style={{ marginBottom: 8, transform: [{ scaleX: -1 }] }}
+              style={[styles.animatedList, { transform: [{ scaleX: -1 }] }]}
               horizontal
               scrollEnabled={false}
               data={topAnime}
@@ -109,7 +109,7 @@ class RegistrationScreen extends React.Component {
               ref={ref => this.mangaList = ref}
               horizontal
               scrollEnabled={false}
-              style={{ marginTop: 8 }}
+              style={styles.animatedList}
               data={topManga}
               renderItem={this.renderItem}
               keyExtractor={this.keyExtractor}
@@ -120,23 +120,19 @@ class RegistrationScreen extends React.Component {
           </View>
           <View style={styles.buttonsWrapper}>
             <Button
-              style={{ backgroundColor: colors.fbBlueDark }}
+              style={styles.buttonFacebook}
               title={'Sign up with Facebook'}
               icon={'facebook-official'}
               loading={loggingUser}
               onPress={this.loginFacebook}
             />
             <Button
-              style={{
-                backgroundColor: colors.transparent,
-                borderWidth: 1.5,
-                borderColor: colors.darkGrey,
-              }}
+              style={styles.buttonCreateAccount}
               title={'Create an Account'}
               onPress={() => navigate('Signup')}
             />
             <Button
-              style={{ backgroundColor: colors.transparent }}
+              style={styles.buttonAlreadyAccount}
               title={'Already have an account?'}
               titleStyle={{ fontSize: 12, color: colors.lightGrey }}
               onPress={() => navigate('Login')}

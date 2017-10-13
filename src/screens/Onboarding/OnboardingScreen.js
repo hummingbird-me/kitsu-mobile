@@ -68,7 +68,7 @@ export default class OnboardingScreen extends React.Component {
     return (
       <View style={styles.container}>
         <OnboardingHeader style={styles.header} />
-        <View style={{ flex: 8 }}>
+        <View style={styles.bodyWrapper}>
           <View style={styles.page}>
             <ScrollView
               pagingEnabled
@@ -81,7 +81,7 @@ export default class OnboardingScreen extends React.Component {
               {this.renderStep()}
             </ScrollView>
           </View>
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={styles.buttonsWrapper}>
             <View style={styles.dotContainer}>
               {this.renderDots()}
             </View>
