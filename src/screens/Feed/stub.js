@@ -180,3 +180,21 @@ export const FEED_DATA = [
     ],
   },
 ];
+
+export const FEED_STREAMS = [
+  {
+    key: 'followerFeed',
+    title: 'Follower Feed',
+    description: 'Shared with all of your followers',
+  },
+  {
+    key: 'animeFeed',
+    title: 'Anime Feed',
+    description: 'Shared with your followers and all anime fans',
+  },
+  {
+    key: 'mangeFeed',
+    title: 'Manga Feed',
+    description: 'Shared with your followers and all manga fans',
+  },
+];

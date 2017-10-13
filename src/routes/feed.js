@@ -3,12 +3,13 @@ import { Image } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Feed from 'kitsu/screens/Feed';
 import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
+import CreatePost from 'kitsu/screens/Feed/pages/CreatePost';
 import homeIcon from 'kitsu/assets/img/tabbar_icons/home.png';
 import navigationOptions from './navigationOptions';
 
-const FeedStack = StackNavigator(
+const PostStack = StackNavigator(
   {
-    Feed: {
+    FeedActivity: {
       screen: Feed,
     },
     PostDetails: {
@@ -16,6 +17,22 @@ const FeedStack = StackNavigator(
     },
   },
   {
+    ...navigationOptions(),
+    // eslint-disable-next-line react/prop-types
+  },
+);
+
+const FeedStack = StackNavigator(
+  {
+    PostStack: {
+      screen: PostStack,
+    },
+    CreatePost: {
+      screen: CreatePost,
+    },
+  },
+  {
+    mode: 'modal',
     navigationOptions: () => ({
       ...navigationOptions(),
       // eslint-disable-next-line react/prop-types

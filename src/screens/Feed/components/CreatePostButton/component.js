@@ -9,7 +9,7 @@ import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { styles } from './styles';
 
-export const CreateNewPost = ({ avatar, onPress }) => (
+export const CreatePostButton = ({ avatar, onPress }) => (
   <View style={styles.wrap}>
     <TouchableOpacity onPress={onPress}>
       <Layout.RowWrap alignItems="center">
@@ -22,12 +22,12 @@ export const CreateNewPost = ({ avatar, onPress }) => (
   </View>
 );
 
-CreateNewPost.propTypes = {
+CreatePostButton.propTypes = {
   avatar: PropTypes.string,
   onPress: PropTypes.func,
 };
 
-CreateNewPost.defaultProps = {
+CreatePostButton.defaultProps = {
   avatar: null,
   onPress: null,
 };

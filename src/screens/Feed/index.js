@@ -6,7 +6,7 @@ import { fetchUserFeed } from 'kitsu/actions';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
-import { CreateNewPost } from 'kitsu/screens/Feed/components/CreateNewPost';
+import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { FEED_DATA } from './stub';
 
@@ -39,6 +39,10 @@ class Feed extends React.Component {
 
   navigateToPost = () => {
     this.props.navigation.navigate('PostDetails');
+  }
+
+  navigateToCreatePost = () => {
+    this.props.navigation.navigate('CreatePost');
   }
 
   renderFeedFilter = () => (
@@ -77,7 +81,7 @@ class Feed extends React.Component {
         <FlatList
           data={FEED_DATA}
           renderItem={({ item }) => this.renderPost(item)}
-          ListHeaderComponent={() => <CreateNewPost avatar={defaultAvatar} />}
+          ListHeaderComponent={() => <CreatePostButton avatar={defaultAvatar} onPress={this.navigateToCreatePost} />}
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
