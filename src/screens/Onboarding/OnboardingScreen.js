@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, Dimensions } from 'react-native';
-import { intro1, intro2, intro3, intro4 } from 'kitsu/assets/img/onboarding/';
+import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/onboarding/';
 import { Button } from 'kitsu/components/Button';
 import { OnboardingHeader } from './common/';
 import styles from './styles';
@@ -11,22 +11,22 @@ const INTROS = [
   {
     title: 'More of what you love',
     desc: 'Get recommendations to discover your next favorite anime or manga!',
-    image: intro1,
+    image: slide1,
   },
   {
     title: 'Track your progress',
     desc: 'Log and rate what you’ve seen and read to build a library of your history.',
-    image: intro2,
+    image: slide2,
   },
   {
     title: 'Join the Community',
     desc: 'Kitsu makes finding new like-minded friends easy with the global activity feed.',
-    image: intro3,
+    image: slide3,
   },
   {
     title: 'Share your Reactions',
     desc: 'Check the media ratings and reviews from other users and leave your own!',
-    image: intro4,
+    image: slide4,
   },
   // dummy view for smooth transition. Removing this and adding an additional dot instead looks bad when swipe bounces back.
   {

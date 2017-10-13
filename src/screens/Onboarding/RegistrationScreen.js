@@ -77,6 +77,8 @@ class RegistrationScreen extends React.Component {
     });
   }
 
+  keyExtractor = (item, index) => index;
+
   renderItem = ({ item }) => (
     <Image source={(item.attributes && { uri: item.attributes.posterImage.large }) || placeholderImage} style={styles.squareImage} />
   );
@@ -85,6 +87,7 @@ class RegistrationScreen extends React.Component {
     const { navigate } = this.props.navigation;
     const { loggingUser, topAnime, topManga } = this.state;
     // TODO: make this screen responsive.
+    // TODO: as of react native 0.47, flatlist has inverted prop
     return (
       <View style={styles.container}>
         <OnboardingHeader style={styles.header} />
@@ -92,12 +95,12 @@ class RegistrationScreen extends React.Component {
           <View>
             <FlatList
               ref={ref => this.animeList = ref}
-              style={{ marginBottom: 8 }}
+              style={{ marginBottom: 8, transform: [{ scaleX: -1 }] }}
               horizontal
-              inverted
               scrollEnabled={false}
               data={topAnime}
               renderItem={this.renderItem}
+              keyExtractor={this.keyExtractor}
               onEndReached={() => this.populateList('topAnime')}
               onEndReachedThreshold={0.5}
               showsHorizontalScrollIndicator={false}
@@ -109,6 +112,7 @@ class RegistrationScreen extends React.Component {
               style={{ marginTop: 8 }}
               data={topManga}
               renderItem={this.renderItem}
+              keyExtractor={this.keyExtractor}
               onEndReached={() => this.populateList('topManga')}
               onEndReachedThreshold={0.5}
               showsHorizontalScrollIndicator={false}

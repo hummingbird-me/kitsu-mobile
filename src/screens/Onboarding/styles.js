@@ -79,7 +79,7 @@ export default StyleSheet.create({
   galleryRow: {
     marginVertical: 8,
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   squareImage: {
     marginHorizontal: 8,
