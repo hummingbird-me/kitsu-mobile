@@ -57,6 +57,46 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         signingUp: false,
         signupError: action.payload,
       };
+      case types.CONNECT_FBUSER:
+      return {
+        ...state,
+        loading: true,
+      };
+    case types.CONNECT_FBUSER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentUser: {
+          ...state.currentUser,
+          facebookId: action.payload,
+        }
+      };
+    case types.CONNECT_FBUSER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case types.DISCONNECT_FBUSER:
+      return {
+        ...state,
+        loading: true,
+      };
+    case types.DISCONNECT_FBUSER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentUser: {
+          ...state.currentUser,
+          facebookId: null,
+        }
+      };
+    case types.DISCONNECT_FBUSER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     case types.UPDATE_GENERAL_SETTINGS:
       return {
         ...state,
