@@ -8,13 +8,7 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
 import { Post } from 'kitsu/screens/Feed/components/Post';
-import { FEED_DATA } from './stub';
-
-const TAB_ITEMS = [
-  { key: 'following', label: 'Following' },
-  { key: 'anime', label: 'Anime' },
-  { key: 'manga', label: 'Manga' },
-];
+import { FEED_DATA, FEED_STREAMS } from './stub';
 
 class Feed extends React.Component {
   static navigationOptions = {
@@ -22,7 +16,7 @@ class Feed extends React.Component {
   }
 
   state = {
-    activeFeed: 'following',
+    activeFeed: 'follower',
     refreshing: false,
   }
 
@@ -47,7 +41,7 @@ class Feed extends React.Component {
 
   renderFeedFilter = () => (
     <TabBar>
-      {TAB_ITEMS.map(tabItem => (
+      {FEED_STREAMS.map(tabItem => (
         <TabBarLink
           key={tabItem.key}
           label={tabItem.label}
