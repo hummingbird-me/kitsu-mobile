@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, InteractionManager } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
-import algolia from 'algoliasearch/reactnative';
 
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
-
+import algolia from 'algoliasearch/reactnative';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 
@@ -22,7 +21,6 @@ class SearchScreen extends Component {
   };
 
   state = {
-    shouldTabRender: false,
     query: {
       anime: undefined,
       manga: undefined,
@@ -56,12 +54,6 @@ class SearchScreen extends Component {
     ],
   };
 
-  componentDidMount() {
-    InteractionManager.runAfterInteractions().then(() => {
-      this.setState({ shouldTabRender: true });
-    });
-  }
-
   doSearch = (query, route) => {
     const algoliaClient = algolia(kitsuConfig.algoliaAppId, route.apiKey);
     const algoliaIndex = algoliaClient.initIndex(route.indexName);
@@ -69,10 +61,6 @@ class SearchScreen extends Component {
     algoliaIndex.search(query, (err, content) => {
       if (!err) {
         this.setState({ searchResults: { [route.key]: content.hits } });
-        // Push users to redux store for data persistance across the app.
-        if (route.key === 'users') {
-          this.props.captureUsersData(content.hits);
-        }
       }
     });
   };
@@ -110,7 +98,7 @@ class SearchScreen extends Component {
           contentContainerStyle={styles.scrollViewContentContainer}
           style={styles.scrollView}
         >
-          {this.state.shouldTabRender && this.renderSubScene({ route })}
+          {this.renderSubScene({ route })}
         </ScrollView>
       </View>
     );
@@ -122,10 +110,9 @@ class SearchScreen extends Component {
 
     const activeQuery = query[route.key];
     const hits = this.state.searchResults[route.key];
-
     switch (route.key) {
       case 'users': {
-        return <UsersList users={this.props.users} onFollow={followUser} />;
+        return <UsersList hits={hits} onFollow={followUser} onData={captureUsersData} />;
       }
       default: {
         return activeQuery ? (
@@ -179,7 +166,7 @@ class SearchScreen extends Component {
 
 const AlgoliaPropType = {
   key: PropTypes.string.isRequired,
-  index: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 SearchScreen.propTypes = {
@@ -188,11 +175,8 @@ SearchScreen.propTypes = {
 
 const mapper = (state) => {
   const { algoliaKeys } = state.app;
-  const { users } = state;
-
   return {
     algoliaKeys,
-    users,
   };
 };
 
