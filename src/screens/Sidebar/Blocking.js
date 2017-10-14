@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { InstantSearch } from 'react-instantsearch/native';
-import { connectInfiniteHits } from 'react-instantsearch/connectors';
+import { connectInfiniteHits, connectSearchBox } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import { InstantSearchBox } from 'kitsu/components/SearchBox';
+import { SearchBox } from 'kitsu/components/SearchBox';
 import { Feedback } from 'kitsu/components/Feedback';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
@@ -91,6 +91,17 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
 const Hits = connectInfiniteHits(({ hits, hasMore, refine, onPress }) => (
   <BlockingResultList hits={hits} hasMore={hasMore} refine={refine} onPress={onPress} />
 ));
+
+const InstantSearchBox = connectSearchBox(
+  ({ refine, currentRefinement, placeholder, searchIconOffset, style }) => (
+    <SearchBox
+      onChangeText={refine}
+      value={currentRefinement}
+      placeholder={placeholder}
+      searchIconOffset={searchIconOffset}
+      style={style}
+    />
+  ));
 
 class Blocking extends React.Component {
   static navigationOptions = {
@@ -185,8 +196,8 @@ class Blocking extends React.Component {
           include: 'blocked',
           page: {
             limit: pageLimit,
-            offset: pageIndex * pageLimit
-          }
+            offset: pageIndex * pageLimit,
+          },
         });
         this.setState({
           loadingMore: false,
