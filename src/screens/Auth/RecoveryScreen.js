@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation';
 import * as colors from 'kitsu/constants/colors';
 import RecoveryForm from 'kitsu/components/Forms/RecoveryForm';
 import { loginUser } from 'kitsu/store/auth/actions';
-import AuthWrapper from './AuthWrapper';
+// import AuthWrapper from './AuthWrapper';
 
 class RecoveryScreen extends Component {
   static navigationOptions = {
@@ -38,12 +38,12 @@ class RecoveryScreen extends Component {
 
   render() {
     return (
-      <AuthWrapper loading={this.props.signingIn} onSuccess={this.onSubmit}>
+      <View loading={this.props.signingIn} onSuccess={this.onSubmit}>
         <View style={{ padding: 20, paddingLeft: 25, paddingTop: 15, paddingBottom: 0 }}>
           <Text style={{ fontSize: 14, lineHeight: 19, color: 'white', fontFamily: 'Asap-Bold' }}>
             Reset password
           </Text>
-          <Text style={{ fontSize: 12, lineHeight: 17, color: 'white', paddingTop: 10, fontFamily: 'OpenSans'}}>
+          <Text style={{ fontSize: 12, lineHeight: 17, color: 'white', paddingTop: 10, fontFamily: 'OpenSans' }}>
             Don’t worry, we’ve been there. Enter your email below and we’ll
             get you running again in no time!
           </Text>
@@ -124,7 +124,7 @@ class RecoveryScreen extends Component {
             </Text>
           </Button>
         </View>
-      </AuthWrapper>
+      </View>
     );
   }
 }

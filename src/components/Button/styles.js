@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 16,
     backgroundColor: colors.green,
     height: 47,
-    borderRadius: 4,
+    borderRadius: 8,
   },
   buttonDisabled: {
     backgroundColor: colors.buttonDisabledColor,
