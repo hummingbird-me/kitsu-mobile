@@ -15,7 +15,7 @@ import styles from './styles';
 
 class AuthScreen extends React.Component {
   state = {
-    formType: 'signup',
+    formType: this.props.navigation.state.params.authType === 'signup' ? 'signup' : 'login',
     loading: false,
     email: '',
     username: '',
@@ -24,6 +24,7 @@ class AuthScreen extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props)
     if (this.props.fbuser.name) {
       this.populateFB(this.props.fbuser);
     }
@@ -105,6 +106,7 @@ class AuthScreen extends React.Component {
           <View>
             <View style={styles.tabsWrapper}>
               <TouchableOpacity
+                activeOpacity={1}
                 style={styles.tab}
                 onPress={() => this.switchForm('signup')}
               >
@@ -113,6 +115,7 @@ class AuthScreen extends React.Component {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                activeOpacity={1}
                 style={styles.tab}
                 onPress={() => this.switchForm('login')}
               >
