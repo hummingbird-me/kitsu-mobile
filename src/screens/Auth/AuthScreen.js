@@ -35,21 +35,19 @@ class AuthScreen extends React.Component {
     }
   }
 
-  onSubmitSignup = (isFb, data) => {
+  onSubmitSignup = (isFb) => {
     const { navigation } = this.props;
+    const { email, username, password } = this.state;
     if (isFb) {
       this.props.loginUser(null, navigation, 'signup');
     } else {
-      this.setState({ ...data });
-      this.props.createUser(data, navigation);
-      // this.props.loginUser({ username, password }, navigation);
+      this.props.createUser({ email, username, password }, navigation);
     }
   }
 
   onSubmitLogin = () => {
     const { username, password } = this.state;
     const { navigation } = this.props;
-    console.log(navigation)
     if (username.length > 0 && password.length > 0) {
       this.props.loginUser({ username, password }, navigation);
     } else {
@@ -58,11 +56,10 @@ class AuthScreen extends React.Component {
   };
 
   loginFacebook = () => {
-    const { onSuccess } = this.props;
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (!result.isCancelled) {
-          onSuccess(true);
+          this.onSubmitSignup(true);
         }
       },
       (error) => {
@@ -92,11 +89,11 @@ class AuthScreen extends React.Component {
   }
 
   render() {
-    const { signingIn } = this.props;
-    const { formType } = this.state;
+    const { signingIn, signingUp } = this.props;
+    const { formType, loading } = this.state;
     return (
       <View style={styles.container}>
-        <KeyboardAwareScrollView contentContainerStyle={styles.stretch} scrollEnabled={Platform.select({ ios: false, android: true })}>
+        <KeyboardAwareScrollView extraHeight={80} contentContainerStyle={styles.stretch} scrollEnabled={Platform.select({ ios: false, android: true })}>
           <View style={styles.stretch}>
             <AnimatedWrapper />
             <Image
@@ -130,7 +127,7 @@ class AuthScreen extends React.Component {
                   data={this.state}
                   handleChange={this.handleChange}
                   onSubmit={this.onSubmitSignup}
-                  loading={signingIn || this.state.loading}
+                  loading={signingUp || loading}
                   loginFacebook={this.loginFacebook}
                 />
               ) : (
@@ -138,7 +135,7 @@ class AuthScreen extends React.Component {
                     data={this.state}
                     handleChange={this.handleChange}
                     onSubmit={this.onSubmitLogin}
-                    loading={signingIn || this.state.loading}
+                    loading={signingIn || loading}
                     loginFacebook={this.loginFacebook}
                   />
                 )}
