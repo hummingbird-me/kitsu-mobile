@@ -92,7 +92,12 @@ class AuthScreen extends React.Component {
     const { authType, loading } = this.state;
     return (
       <View style={styles.container}>
-        <KeyboardAwareScrollView extraHeight={80} contentContainerStyle={styles.stretch} scrollEnabled={Platform.select({ ios: false, android: true })}>
+        <KeyboardAwareScrollView
+          enableOnAndroid={false}
+          extraHeight={80}
+          contentContainerStyle={styles.stretch}
+          scrollEnabled={Platform.select({ ios: false, android: true })}
+        >
           <View style={styles.stretch}>
             <AnimatedWrapper />
             <Image
