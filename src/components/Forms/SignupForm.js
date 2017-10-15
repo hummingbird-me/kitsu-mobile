@@ -5,7 +5,7 @@ import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import styles from './styles';
 
-const SignupForm = ({ handleChange, data, onSubmit, loading, loginFacebook }) => (
+const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, signingInFacebook }) => (
   <View>
     <Input
       placeholder="Email"
@@ -44,8 +44,8 @@ const SignupForm = ({ handleChange, data, onSubmit, loading, loginFacebook }) =>
       style={styles.buttonFacebook}
       title={'Login with Facebook'}
       icon={'facebook-official'}
-      loading={loading}
-      onPress={loginFacebook}
+      loading={signingInFacebook}
+      onPress={onSignInFacebook}
     />
     <Text style={{ marginVertical: 16, textAlign: 'center', fontSize: 12, color: 'grey' }}>By creating an account, you agree our <Text style={{ fontWeight: 'bold' }}>Terms of Service</Text></Text>
   </View>
@@ -56,6 +56,8 @@ SignupForm.propTypes = {
   data: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  signingInFacebook: PropTypes.bool.isRequired,
+  onSignInFacebook: PropTypes.func.isRequired,
 };
 
 export default SignupForm;

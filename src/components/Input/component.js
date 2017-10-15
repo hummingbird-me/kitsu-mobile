@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, ViewPropTypes } from 'react-native';
+import { View, TextInput, ViewPropTypes, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
@@ -11,6 +11,8 @@ export const Input = ({ style, ...otherProps }) => (
       {...otherProps}
       style={[styles.input, style]}
       placeholderTextColor={colors.grey}
+      underlineColorAndroid={colors.transparent}
+      onSubmitEditing={Keyboard.dismiss}
     />
   </View>
 );

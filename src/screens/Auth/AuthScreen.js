@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { View, StyleSheet, TouchableOpacity, Text, Image, Platform, LayoutAnimation, UIManager } from 'react-native';
+import { View, TouchableOpacity, Text, Image, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
 import { slidelogo } from 'kitsu/assets/img/onboarding/';
@@ -15,7 +14,7 @@ import styles from './styles';
 
 class AuthScreen extends React.Component {
   state = {
-    formType: this.props.navigation.state.params.authType === 'signup' ? 'signup' : 'login',
+    authType: this.props.navigation.state.params.authType,
     loading: false,
     email: '',
     username: '',
@@ -24,7 +23,6 @@ class AuthScreen extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props)
     if (this.props.fbuser.name) {
       this.populateFB(this.props.fbuser);
     }
@@ -56,7 +54,7 @@ class AuthScreen extends React.Component {
     }
   };
 
-  loginFacebook = () => {
+  onSignInFacebook = () => {
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (!result.isCancelled) {
@@ -81,17 +79,17 @@ class AuthScreen extends React.Component {
     this.setState({ [name]: text });
   }
 
-  switchForm = (formType) => {
+  switchForm = (authType) => {
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    this.setState({ formType });
+    this.setState({ authType });
   }
 
   render() {
-    const { signingIn, signingUp } = this.props;
-    const { formType, loading } = this.state;
+    const { signingIn, signingUp, loadFBuser } = this.props;
+    const { authType, loading } = this.state;
     return (
       <View style={styles.container}>
         <KeyboardAwareScrollView extraHeight={80} contentContainerStyle={styles.stretch} scrollEnabled={Platform.select({ ios: false, android: true })}>
@@ -99,7 +97,7 @@ class AuthScreen extends React.Component {
             <AnimatedWrapper />
             <Image
               style={styles.logo}
-              resizeMode="cover"
+              resizeMode={'contain'}
               source={slidelogo}
             />
           </View>
@@ -110,7 +108,7 @@ class AuthScreen extends React.Component {
                 style={styles.tab}
                 onPress={() => this.switchForm('signup')}
               >
-                <Text style={[styles.tabTitle, formType === 'signup' ? { color: colors.tabRed } : {}]}>
+                <Text style={[styles.tabTitle, authType === 'signup' ? { color: colors.tabRed } : {}]}>
                   Sign up
                 </Text>
               </TouchableOpacity>
@@ -119,29 +117,31 @@ class AuthScreen extends React.Component {
                 style={styles.tab}
                 onPress={() => this.switchForm('login')}
               >
-                <Text style={[styles.tabTitle, formType === 'login' ? { color: colors.tabRed } : {}]}>
+                <Text style={[styles.tabTitle, authType === 'login' ? { color: colors.tabRed } : {}]}>
                   Sign in
                 </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.formsWrapper}>
-              {formType === 'signup' ? (
+              {authType === 'signup' ? (
                 <SignupForm
                   data={this.state}
                   handleChange={this.handleChange}
                   onSubmit={this.onSubmitSignup}
                   loading={signingUp || loading}
-                  loginFacebook={this.loginFacebook}
+                  signingInFacebook={loadFBuser}
+                  onSignInFacebook={this.onSignInFacebook}
                 />
               ) : (
-                  <LoginForm
-                    data={this.state}
-                    handleChange={this.handleChange}
-                    onSubmit={this.onSubmitLogin}
-                    loading={signingIn || loading}
-                    loginFacebook={this.loginFacebook}
-                  />
-                )}
+                <LoginForm
+                  data={this.state}
+                  handleChange={this.handleChange}
+                  onSubmit={this.onSubmitLogin}
+                  loading={signingIn || loading}
+                  signingInFacebook={loadFBuser}
+                  onSignInFacebook={this.onSignInFacebook}
+                />
+              )}
             </View>
           </View>
         </KeyboardAwareScrollView>

@@ -19,10 +19,13 @@ export const Button = ({
   onPress,
   loading,
   disabled,
+  ...otherProps
 }) => (
   <TouchableOpacity
+    {...otherProps}
     disabled={disabled || loading}
     onPress={onPress}
+    activeOpacity={0.6}
     style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
   >
     {loading ? <LoadingComponent />

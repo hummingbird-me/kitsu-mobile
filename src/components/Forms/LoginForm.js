@@ -6,7 +6,7 @@ import { Input } from 'kitsu/components/Input';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
-const LoginForm = ({ handleChange, data, onSubmit, loading, loginFacebook }) => (
+const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, signingInFacebook }) => (
   <View>
     <Input
       placeholder="Email"
@@ -32,8 +32,8 @@ const LoginForm = ({ handleChange, data, onSubmit, loading, loginFacebook }) => 
       style={styles.buttonFacebook}
       title={'Login with Facebook'}
       icon={'facebook-official'}
-      loading={loading}
-      onPress={loginFacebook}
+      loading={signingInFacebook}
+      onPress={onSignInFacebook}
     />
   </View>
 );
@@ -43,5 +43,7 @@ LoginForm.propTypes = {
   data: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  signingInFacebook: PropTypes.bool.isRequired,
+  onSignInFacebook: PropTypes.func.isRequired,
 };
 export default LoginForm;
