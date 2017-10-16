@@ -8,7 +8,10 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
 import { Post } from 'kitsu/screens/Feed/components/Post';
+import { scene } from 'kitsu/screens/Feed/constants';
 import { FEED_DATA, FEED_STREAMS } from './stub';
+
+const POST_COMMENT_OFFSET = 260 - (60 - 20); // Keyboard height - Tab Bar height - Space between posts and create post row
 
 class Feed extends React.Component {
   static navigationOptions = {
@@ -25,11 +28,21 @@ class Feed extends React.Component {
     this.setState({ refreshing: false });
   }
 
-  onActionPress = () => {}
+  onActionPress = (index) => {
+    this.postList.scrollToIndex({ animated: true, index, viewPosition: 1 });
+  }
 
   setActiveFeed = (feed) => {
     this.setState({ activeFeed: feed });
   }
+
+  getItemLayout = (data, index) => (
+    {
+      length: this.state.itemHeight,
+      offset: (this.state.itemHeight + 10) * index,
+      index,
+    }
+  )
 
   navigateToPost = () => {
     this.props.navigation.navigate('PostDetails');
@@ -37,6 +50,15 @@ class Feed extends React.Component {
 
   navigateToCreatePost = () => {
     this.props.navigation.navigate('CreatePost');
+  }
+
+  scrollToCommentInput = (index) => {
+    this.postList.scrollToIndex({
+      animated: true,
+      index,
+      viewPosition: 1,
+      viewOffset: POST_COMMENT_OFFSET * -1,
+    }); // Todo: Make 210 dynamic:
   }
 
   renderFeedFilter = () => (
@@ -50,21 +72,29 @@ class Feed extends React.Component {
         />
       ))}
     </TabBar>
-  );
+  )
 
-  renderPost = post => (
+  renderPost = ({ item, index }) => (
     <Post
       onPostPress={this.navigateToPost}
       authorAvatar={defaultAvatar}
       authorName="Josh"
-      postTime={post.createdAt}
-      postContent={post.content}
-      postLikesCount={post.postLikesCount}
-      postCommentCount={post.commentsCount}
-      comments={post.comments}
+      postTime={item.createdAt}
+      postContent={item.content}
+      postLikesCount={item.postLikesCount}
+      postCommentCount={item.commentsCount}
+      comments={item.comments}
       onLikePress={this.onActionPress}
-      onCommentPress={this.onActionPress}
       onSharePress={this.onActionPress}
+      onCommentPress={this.onActionPress}
+      onCommentInputFocus={() => this.scrollToCommentInput(index)}
+    />
+  )
+
+  renderCreatePostRow = () => (
+    <CreatePostButton
+      avatar={defaultAvatar}
+      onPress={this.navigateToCreatePost}
     />
   )
 
@@ -72,17 +102,21 @@ class Feed extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: listBackPurple }}>
         {this.renderFeedFilter()}
-        <FlatList
-          data={FEED_DATA}
-          renderItem={({ item }) => this.renderPost(item)}
-          ListHeaderComponent={() => <CreatePostButton avatar={defaultAvatar} onPress={this.navigateToCreatePost} />}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh}
-            />
-          }
-        />
+        <View style={{ flex: 1 }}>
+          <FlatList
+            ref={(el) => { this.postList = el; }}
+            data={FEED_DATA}
+            keyboardDismissMode="on-drag"
+            renderItem={this.renderPost}
+            ListHeaderComponent={() => this.renderCreatePostRow()}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />
+            }
+          />
+        </View>
       </View>
     );
   }

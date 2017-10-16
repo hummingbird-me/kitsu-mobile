@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import { KeyboardAvoidingView, FlatList, View, StatusBar, ScrollView } from 'react-native';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { PostHeader, PostMain, PostAction, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
@@ -17,11 +18,11 @@ class PostDetails extends React.Component {
     StatusBar.setBarStyle('light-content');
   }
 
+
+  onActionPress = () => {}
   goBack = () => {
     this.props.navigation.goBack();
   }
-
-  onActionPress = () => {}
 
   render() {
     const post = FEED_DATA[0];
@@ -64,5 +65,13 @@ class PostDetails extends React.Component {
     );
   }
 }
+
+PostDetails.propTypes = {
+  navigation: PropTypes.object,
+};
+
+PostDetails.defaultProps = {
+  navigation: {},
+};
 
 export default PostDetails;

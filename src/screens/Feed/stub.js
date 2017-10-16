@@ -2,7 +2,7 @@ export const FEED_DATA = [
   {
     createdAt: '2017-10-10T01:18:19.280Z',
     updatedAt: '2017-10-10T01:19:04.777Z',
-    content: 'Huh, aren’t they already doing that with the ‘extension’ of Gundam the Origins? I mean, the battle of Loum is just literally inches away from the colony drop tragedy and the assault on Side 7 where episode 1 of MSG.',
+    content: 'Huh, aren’t they already doing that with the ‘extension’ of Gundam the Origins? I mean, the battle of Loum is just literally inches away from the colony drop tragedy and the assault on Side 7 where episode 1 of MSG. Huh, aren’t they already doing that with the ‘extension’ of Gundam the Origins? I mean, the battle of Loum is just literally inches away from the colony drop tragedy and the assault on Side 7 where episode 1 of MSG. Huh, aren’t they already doing that with the ‘extension’ of Gundam the Origins? I mean, the battle of Loum is just literally inches away from the colony drop tragedy and the assault on Side 7 where episode 1 of MSG.',
     contentFormatted: '<p>My childhood anime!</p>\n',
     commentsCount: 4,
     postLikesCount: 0,

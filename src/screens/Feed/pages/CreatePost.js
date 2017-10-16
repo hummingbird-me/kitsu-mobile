@@ -51,7 +51,7 @@ class CreatePost extends React.Component {
             onFeedPillPress={() => this.handleFeedPickerModal(true)}
           />
           <PostTextInput
-            inputRef={el => this.postTextInput = el}
+            inputRef={(el) => { this.postTextInput = el; }}
             multiline
             numberOfLines={4}
             onChangeText={value => this.setState({ statusContent: value })}
