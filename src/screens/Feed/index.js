@@ -8,7 +8,6 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
 import { Post } from 'kitsu/screens/Feed/components/Post';
-import { scene } from 'kitsu/screens/Feed/constants';
 import { FEED_DATA, FEED_STREAMS } from './stub';
 
 const POST_COMMENT_OFFSET = 260 - (60 - 20); // Keyboard height - Tab Bar height - Space between posts and create post row
@@ -58,7 +57,7 @@ class Feed extends React.Component {
       index,
       viewPosition: 1,
       viewOffset: POST_COMMENT_OFFSET * -1,
-    }); // Todo: Make 210 dynamic:
+    });
   }
 
   renderFeedFilter = () => (
