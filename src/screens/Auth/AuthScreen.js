@@ -1,15 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, Image, Platform, LayoutAnimation, UIManager } from 'react-native';
+import { View, TouchableOpacity, Text, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
-import { slidelogo } from 'kitsu/assets/img/onboarding/';
 import { connect } from 'react-redux';
 import SignupForm from 'kitsu/components/Forms/SignupForm';
 import LoginForm from 'kitsu/components/Forms/LoginForm';
-import AnimatedWrapper from 'kitsu/components/AnimatedWrapper';
 import { loginUser } from 'kitsu/store/auth/actions';
 import { createUser } from 'kitsu/store/user/actions';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
 class AuthScreen extends React.Component {
@@ -67,6 +65,10 @@ class AuthScreen extends React.Component {
     );
   };
 
+  onForgotPassword = () => {
+    this.props.navigation.navigate('Recovery');
+  }
+
   populateFB = (fbuser) => {
     const { name, email } = fbuser;
     if (name) {
@@ -92,20 +94,7 @@ class AuthScreen extends React.Component {
     const { authType, loading } = this.state;
     return (
       <View style={styles.container}>
-        <KeyboardAwareScrollView
-          enableOnAndroid={false}
-          extraHeight={80}
-          contentContainerStyle={styles.stretch}
-          scrollEnabled={Platform.select({ ios: false, android: true })}
-        >
-          <View style={styles.stretch}>
-            <AnimatedWrapper />
-            <Image
-              style={styles.logo}
-              resizeMode={'contain'}
-              source={slidelogo}
-            />
-          </View>
+        <AuthWrapper>
           <View>
             <View style={styles.tabsWrapper}>
               <TouchableOpacity
@@ -145,11 +134,12 @@ class AuthScreen extends React.Component {
                   loading={signingIn || loading}
                   signingInFacebook={loadFBuser}
                   onSignInFacebook={this.onSignInFacebook}
+                  onForgotPassword={this.onForgotPassword}
                 />
               )}
             </View>
           </View>
-        </KeyboardAwareScrollView>
+        </AuthWrapper>
       </View>
     );
   }

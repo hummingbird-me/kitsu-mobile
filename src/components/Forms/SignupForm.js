@@ -47,7 +47,7 @@ const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, s
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
-    <Text style={{ marginVertical: 16, textAlign: 'center', fontSize: 12, color: 'grey' }}>By creating an account, you agree our <Text style={{ fontWeight: 'bold' }}>Terms of Service</Text></Text>
+    <Text style={styles.terms}>By creating an account, you agree our <Text style={styles.termsHightlight}>Terms of Service</Text></Text>
   </View>
 );
 

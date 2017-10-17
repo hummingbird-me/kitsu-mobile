@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
-const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, signingInFacebook }) => (
+const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, signingInFacebook, onForgotPassword }) => (
   <View>
     <Input
       placeholder="Email"
@@ -35,6 +35,9 @@ const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, si
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
+    <TouchableOpacity onPress={onForgotPassword}>
+      <Text>Forgot password</Text>
+    </TouchableOpacity>
   </View>
 );
 
@@ -45,5 +48,6 @@ LoginForm.propTypes = {
   loading: PropTypes.bool.isRequired,
   signingInFacebook: PropTypes.bool.isRequired,
   onSignInFacebook: PropTypes.func.isRequired,
+  onForgotPassword: PropTypes.func.isRequired,
 };
 export default LoginForm;

@@ -20,4 +20,13 @@ export default StyleSheet.create({
     backgroundColor: colors.transparent,
     borderColor: 'rgba(255, 255, 255, 0.2)',
   },
+  terms: {
+    marginVertical: 16,
+    textAlign: 'center',
+    fontSize: 12,
+    color: 'grey',
+  },
+  termsHightlight: {
+    fontWeight: 'bold',
+  },
 });
