@@ -49,7 +49,7 @@ const RecoveryForm = ({ handleChange, data, onSubmit, loading }) => (
             }}
           >
               Send password reset
-            </Text>}
+          </Text>}
       </Button>
     </View>
   </View>

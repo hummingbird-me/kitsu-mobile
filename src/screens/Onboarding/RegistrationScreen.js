@@ -129,13 +129,13 @@ class RegistrationScreen extends React.Component {
             <Button
               style={styles.buttonCreateAccount}
               title={'Create an Account'}
-              onPress={() => navigate('Signup')}
+              onPress={() => navigate('AuthScreen', { authType: 'signup' })}
             />
             <Button
               style={styles.buttonAlreadyAccount}
               title={'Already have an account?'}
               titleStyle={{ fontSize: 12, color: colors.lightGrey }}
-              onPress={() => navigate('Login')}
+              onPress={() => navigate('AuthScreen', { authType: 'login' })}
             />
           </View>
         </View>

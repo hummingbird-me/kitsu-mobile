@@ -58,7 +58,7 @@ class AnimatedWrapped extends Component {
         style={{
           flex: 1,
           alignItems: 'center',
-          height: 174,
+          height: 450,
           overflow: 'hidden',
           backgroundColor: '#372836',
         }}
@@ -68,7 +68,7 @@ class AnimatedWrapped extends Component {
           style={{
             opacity: 0.4,
             width: Dimensions.get('window').width,
-            height: 174,
+            height: 450,
           }}
           resizeMode="cover"
           source={images[ind]}
