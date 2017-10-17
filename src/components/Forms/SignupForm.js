@@ -5,13 +5,14 @@ import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import styles from './styles';
 
-const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, signingInFacebook }) => (
+const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, signingInFacebook, onBirthdayButtonPressed, birthday }) => (
   <View>
     <Input
       placeholder="Email"
       autoCapitalize="none"
       autoCorrect={false}
       value={data.email}
+      keyboardType={'email-address'}
       onChangeText={text => handleChange(text, 'email')}
     />
     <Input
@@ -34,12 +35,11 @@ const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, s
       onChangeText={text => handleChange(text, 'confirmPassword')}
       autoCapitalize="none"
     />
-    <Input
-      editable={data.birthdayFieldEditable}
-      placeholder="Birthday"
-      value={data.birthday}
-      onChangeText={text => handleChange(text, 'birthday')}
-      autoCapitalize="none"
+    <Button
+      title={birthday}
+      onPress={onBirthdayButtonPressed}
+      style={{ backgroundColor: 'white', paddingHorizontal: 10, alignItems: 'flex-start' }}
+      titleStyle={{ color: 'grey', textAlign: 'left', fontSize: 14 }}
     />
     <Button
       loading={loading}
@@ -70,6 +70,8 @@ SignupForm.propTypes = {
   loading: PropTypes.bool.isRequired,
   signingInFacebook: PropTypes.bool.isRequired,
   onSignInFacebook: PropTypes.func.isRequired,
+  onBirthdayButtonPressed: PropTypes.func.isRequired,
+  birthday: PropTypes.string.isRequired,
 };
 
 export default SignupForm;

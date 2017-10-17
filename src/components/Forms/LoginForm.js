@@ -13,6 +13,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, si
       autoCapitalize="none"
       autoCorrect={false}
       value={data.username}
+      // keyboardType={'email-address'}
       onChangeText={text => handleChange(text, 'username')}
     />
     <Input

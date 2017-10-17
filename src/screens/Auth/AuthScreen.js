@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, Platform, LayoutAnimation, UIManager } from 'react-native';
+import { View, TouchableOpacity, Text, Modal, Platform, LayoutAnimation, UIManager, DatePickerAndroid, DatePickerIOS } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
 import { connect } from 'react-redux';
@@ -18,6 +18,9 @@ class AuthScreen extends React.Component {
     username: '',
     password: '',
     confirmPassword: '',
+    birthday: new Date(),
+    isBirthdaySet: false,
+    showDateModalIOS: false,
   }
 
   componentDidMount() {
@@ -69,6 +72,29 @@ class AuthScreen extends React.Component {
     this.props.navigation.navigate('Recovery');
   }
 
+  onBirthdayButtonPressed = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const { action, year, month, day } = await DatePickerAndroid.open({
+          // Use `new Date()` for current date.
+          // May 25 2020. Month 0 is January.
+          date: new Date(),
+        });
+        if (action !== DatePickerAndroid.dismissedAction) {
+          // Selected year, month (0-11), day
+          this.setState({
+            birthday: new Date(),
+            isBirthdaySet: true,
+          });
+        }
+      } catch ({ code, message }) {
+        console.warn('Cannot open date picker', message);
+      }
+    } else {
+      this.setState({ showDateModalIOS: true });
+    }
+  }
+
   populateFB = (fbuser) => {
     const { name, email } = fbuser;
     if (name) {
@@ -91,7 +117,7 @@ class AuthScreen extends React.Component {
 
   render() {
     const { signingIn, signingUp, loadFBuser } = this.props;
-    const { authType, loading } = this.state;
+    const { authType, birthday, isBirthdaySet, loading, showDateModalIOS } = this.state;
     return (
       <View style={styles.container}>
         <AuthWrapper>
@@ -125,6 +151,8 @@ class AuthScreen extends React.Component {
                   loading={signingUp || loading}
                   signingInFacebook={loadFBuser}
                   onSignInFacebook={this.onSignInFacebook}
+                  birthday={isBirthdaySet ? birthday.toLocaleDateString() : 'Birthday'} // Placeholder
+                  onBirthdayButtonPressed={this.onBirthdayButtonPressed}
                 />
               ) : (
                 <LoginForm
@@ -140,6 +168,19 @@ class AuthScreen extends React.Component {
             </View>
           </View>
         </AuthWrapper>
+        <Modal
+          transparent
+          visible={showDateModalIOS}
+          animationType={'slide'}
+        >
+          <View style={styles.container}>
+            <DatePickerIOS
+              date={birthday}
+              mode="date"
+              onDateChange={date => this.setState({ date, isBirthdaySet: true })}
+            />
+          </View>
+        </Modal>
       </View>
     );
   }
