@@ -37,7 +37,7 @@ const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, s
     <Button
       loading={loading}
       title={'Create account'}
-      onPress={() => onSubmit()}
+      onPress={onSubmit}
       style={{ marginTop: 10 }}
     />
     <Button
@@ -47,7 +47,12 @@ const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, s
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
-    <Text style={styles.terms}>By creating an account, you agree our <Text style={styles.termsHightlight}>Terms of Service</Text></Text>
+    <Text style={styles.terms}>
+      By creating an account, you agree our{' '}
+      <Text style={styles.termsHightlight}>
+        Terms of Service
+      </Text>
+    </Text>
   </View>
 );
 

@@ -25,7 +25,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, si
     <Button
       loading={loading}
       title={'Sign in to your account'}
-      onPress={() => onSubmit()}
+      onPress={onSubmit}
       style={{ marginTop: 10 }}
     />
     <Button
@@ -35,8 +35,11 @@ const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, si
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
-    <TouchableOpacity onPress={onForgotPassword}>
-      <Text>Forgot password</Text>
+    <TouchableOpacity
+      style={styles.forgotButton}
+      onPress={onForgotPassword}
+    >
+      <Text style={styles.forgotText}>Forgot password</Text>
     </TouchableOpacity>
   </View>
 );

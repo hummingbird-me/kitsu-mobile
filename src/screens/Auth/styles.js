@@ -37,4 +37,21 @@ export default StyleSheet.create({
   formsWrapper: {
     marginVertical: 8,
   },
+  forgotTextWrapper: {
+    marginHorizontal: 16,
+    padding: 16,
+  },
+  forgotDescription: {
+    fontSize: 12,
+    color: 'white',
+    marginTop: 10,
+    fontFamily: 'OpenSans',
+    textAlign: 'center',
+  },
+  forgotTitle: {
+    fontSize: 21,
+    color: 'white',
+    fontFamily: 'OpenSans',
+    textAlign: 'center',
+  }
 });
