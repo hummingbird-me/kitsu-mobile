@@ -44,7 +44,7 @@ class RecoveryScreen extends Component {
               There are worse things to forget. Enter your email below and we{'\''}ll get that reset code for you.
             </Text>
           </View>
-          <View style={[styles.formsWrapper, { marginVertical: 16 }]}>
+          <View style={[styles.formsWrapper, { marginTop: 0, marginBottom: 16 }]}>
             <RecoveryForm
               data={this.state}
               handleChange={this.handleChange}

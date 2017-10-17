@@ -34,6 +34,13 @@ const SignupForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, s
       onChangeText={text => handleChange(text, 'confirmPassword')}
       autoCapitalize="none"
     />
+    <Input
+      editable={data.birthdayFieldEditable}
+      placeholder="Birthday"
+      value={data.birthday}
+      onChangeText={text => handleChange(text, 'birthday')}
+      autoCapitalize="none"
+    />
     <Button
       loading={loading}
       title={'Create account'}
