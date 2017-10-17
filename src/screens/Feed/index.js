@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { FlatList, View, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchUserFeed } from 'kitsu/actions';
@@ -8,12 +9,9 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
 import { Post } from 'kitsu/screens/Feed/components/Post';
-import { scene } from 'kitsu/screens/Feed/constants';
 import { FEED_DATA, FEED_STREAMS } from './stub';
 
-const POST_COMMENT_OFFSET = 260 - (60 - 20); // Keyboard height - Tab Bar height - Space between posts and create post row
-
-class Feed extends React.Component {
+class Feed extends React.PureComponent {
   static navigationOptions = {
     header: null,
   }
@@ -52,15 +50,6 @@ class Feed extends React.Component {
     this.props.navigation.navigate('CreatePost');
   }
 
-  scrollToCommentInput = (index) => {
-    this.postList.scrollToIndex({
-      animated: true,
-      index,
-      viewPosition: 1,
-      viewOffset: POST_COMMENT_OFFSET * -1,
-    }); // Todo: Make 210 dynamic:
-  }
-
   renderFeedFilter = () => (
     <TabBar>
       {FEED_STREAMS.map(tabItem => (
@@ -87,7 +76,6 @@ class Feed extends React.Component {
       onLikePress={this.onActionPress}
       onSharePress={this.onActionPress}
       onCommentPress={this.onActionPress}
-      onCommentInputFocus={() => this.scrollToCommentInput(index)}
     />
   )
 
@@ -103,7 +91,7 @@ class Feed extends React.Component {
       <View style={{ flex: 1, backgroundColor: listBackPurple }}>
         {this.renderFeedFilter()}
         <View style={{ flex: 1 }}>
-          <FlatList
+          <KeyboardAwareFlatList
             ref={(el) => { this.postList = el; }}
             data={FEED_DATA}
             keyboardDismissMode="on-drag"

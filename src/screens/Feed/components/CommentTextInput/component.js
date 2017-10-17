@@ -14,9 +14,6 @@ export class CommentTextInput extends Component {
 
   handleOnFocus = (isFocused) => {
     this.setState({ isFocused });
-    if (this.props.onFocus) {
-      this.props.onFocus();
-    }
   }
 
   render() {
@@ -58,7 +55,6 @@ CommentTextInput.propTypes = {
   placeholder: PropTypes.string,
   showAvatar: PropTypes.bool,
   onSubmit: PropTypes.func,
-  onFocus: PropTypes.func,
 };
 
 CommentTextInput.defaultProps = {
@@ -66,5 +62,4 @@ CommentTextInput.defaultProps = {
   placeholder: 'Write a comment...',
   showAvatar: true,
   onSubmit: null,
-  onFocus: null,
 };
