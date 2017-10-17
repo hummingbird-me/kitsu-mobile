@@ -13,6 +13,7 @@ export const Input = ({ style, ...otherProps }) => (
       placeholderTextColor={colors.grey}
       underlineColorAndroid={colors.transparent}
       onSubmitEditing={Keyboard.dismiss}
+      keyboardAppearance={'dark'}
     />
   </View>
 );

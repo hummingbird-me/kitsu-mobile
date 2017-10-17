@@ -25,8 +25,18 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
     color: 'grey',
+    fontFamily: 'OpenSans',
   },
   termsHightlight: {
     fontWeight: 'bold',
+  },
+  forgotButton: {
+    padding: 8,
+  },
+  forgotText: {
+    fontSize: 12,
+    color: 'grey',
+    textAlign: 'center',
+    fontFamily: 'OpenSans',
   },
 });
