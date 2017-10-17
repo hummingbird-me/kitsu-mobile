@@ -24,7 +24,7 @@ const TabRoutes = TabRouter({
   Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
   Characters: { getScreen: () => require('./pages/Characters').Characters },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
-  Franchise: { getScreen: () => require('./pages/Franchise').default },
+  Franchise: { getScreen: () => require('./pages/Franchise').Franchise },
 }, {
   initialRouteName: 'Summary',
 });

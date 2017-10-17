@@ -67,6 +67,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {
+export const component = connect(mapStateToProps, {
   fetchMedia,
 })(Franchise);
