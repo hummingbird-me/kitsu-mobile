@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { FlatList, View } from 'react-native';
-
 import {
   fetchProfile,
   fetchProfileFavorites,
@@ -11,14 +10,14 @@ import {
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
-import { LibraryActivityBox } from 'kitsu/screens/Profiles/components/LibraryActivityBox';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
+import { styles } from './styles';
 
 const ItemSeparator = () => <View style={{ height: 10 }} />
 
-class Summary extends Component {
+class About extends Component {
   componentDidMount() {
     const { userId } = this.props;
     this.props.fetchProfile(userId);
@@ -124,10 +123,9 @@ const mapStateToProps = (state, ownProps) => {
     loadingUserFeed,
   };
 };
-
-export default connect(mapStateToProps, {
+export const component = connect(mapStateToProps, {
   fetchProfile,
   fetchProfileFavorites,
   fetchUserFeed,
   getUserFeed,
-})(Summary);
+})(About);

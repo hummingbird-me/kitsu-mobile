@@ -3,7 +3,7 @@ import {
   SceneContainer,
 } from 'kitsu/screens/Profiles/components/SceneContainer';
 
-class Groups extends Component {
+export class Library extends Component {
   state = {};
 
   render() {
@@ -12,5 +12,3 @@ class Groups extends Component {
     );
   }
 }
-
-export default Groups;

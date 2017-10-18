@@ -3,7 +3,7 @@ import {
   SceneContainer,
 } from 'kitsu/screens/Profiles/components/SceneContainer';
 
-class Reactions extends Component {
+export class Groups extends Component {
   state = {};
 
   render() {
@@ -12,5 +12,3 @@ class Reactions extends Component {
     );
   }
 }
-
-export default Reactions;
