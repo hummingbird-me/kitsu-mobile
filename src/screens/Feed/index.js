@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { FlatList, View, RefreshControl } from 'react-native';
+import { View, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchUserFeed } from 'kitsu/actions';
 import { defaultAvatar } from 'kitsu/constants/app';
@@ -9,9 +9,14 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
 import { Post } from 'kitsu/screens/Feed/components/Post';
-import { FEED_DATA, FEED_STREAMS } from './stub';
+import { FEED_DATA } from './stub';
+import { feedStreams } from './feedStreams';
 
 class Feed extends React.PureComponent {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+  }
+
   static navigationOptions = {
     header: null,
   }
@@ -24,10 +29,6 @@ class Feed extends React.PureComponent {
   onRefresh = () => {
     this.setState({ refreshing: true });
     this.setState({ refreshing: false });
-  }
-
-  onActionPress = (index) => {
-    this.postList.scrollToIndex({ animated: true, index, viewPosition: 1 });
   }
 
   setActiveFeed = (feed) => {
@@ -52,7 +53,7 @@ class Feed extends React.PureComponent {
 
   renderFeedFilter = () => (
     <TabBar>
-      {FEED_STREAMS.map(tabItem => (
+      {feedStreams.map(tabItem => (
         <TabBarLink
           key={tabItem.key}
           label={tabItem.label}
@@ -65,6 +66,7 @@ class Feed extends React.PureComponent {
 
   renderPost = ({ item, index }) => (
     <Post
+      key={index}
       onPostPress={this.navigateToPost}
       authorAvatar={defaultAvatar}
       authorName="Josh"
@@ -73,16 +75,9 @@ class Feed extends React.PureComponent {
       postLikesCount={item.postLikesCount}
       postCommentCount={item.commentsCount}
       comments={item.comments}
-      onLikePress={this.onActionPress}
-      onSharePress={this.onActionPress}
-      onCommentPress={this.onActionPress}
-    />
-  )
-
-  renderCreatePostRow = () => (
-    <CreatePostButton
-      avatar={defaultAvatar}
-      onPress={this.navigateToCreatePost}
+      onLikePress={null}
+      onSharePress={null}
+      onCommentPress={null}
     />
   )
 
@@ -94,9 +89,13 @@ class Feed extends React.PureComponent {
           <KeyboardAwareFlatList
             ref={(el) => { this.postList = el; }}
             data={FEED_DATA}
-            keyboardDismissMode="on-drag"
             renderItem={this.renderPost}
-            ListHeaderComponent={() => this.renderCreatePostRow()}
+            ListHeaderComponent={
+              <CreatePostButton
+                avatar={defaultAvatar}
+                onPress={this.navigateToCreatePost}
+              />
+            }
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -109,13 +108,5 @@ class Feed extends React.PureComponent {
     );
   }
 }
-
-Feed.propTypes = {
-  navigation: PropTypes.object,
-};
-
-Feed.defaultProps = {
-  navigation: {},
-};
 
 export default connect(() => ({}), { fetchUserFeed })(Feed);
