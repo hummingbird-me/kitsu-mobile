@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import glamorous from 'glamorous-native';
+import { View } from 'react-native';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
+import { styles } from './styles';
 
-const Container = glamorous.view(
-  {
-    overflow: 'hidden',
-  },
-  ({ variant, borderRadius }) => ({
-    width: cardSize[variant].width,
-    height: cardSize[variant].height,
-    borderRadius,
-  }),
-);
-
-const MediaCard = ({ variant, ...props }) => (
-  <Container variant={variant} {...props} />
+export const MediaCard = ({ variant, borderRadius, ...props }) => (
+  <View
+    style={[
+      styles.mediaCard,
+      {
+        borderRadius,
+        width: cardSize[variant].width,
+        height: cardSize[variant].height,
+      },
+    ]}
+    {...props}
+  />
 );
 
 MediaCard.propTypes = {
@@ -27,5 +27,3 @@ MediaCard.defaultProps = {
   variant: 'portrait',
   borderRadius: 6,
 };
-
-export default MediaCard;

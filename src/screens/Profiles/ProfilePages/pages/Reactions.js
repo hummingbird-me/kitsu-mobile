@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   SceneContainer,
-} from 'kitsu/screens/Profiles/components';
+} from 'kitsu/screens/Profiles/components/SceneContainer';
 
 class Reactions extends Component {
   state = {};

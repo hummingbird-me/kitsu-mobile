@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from 'kitsu/store/media/actions';
-import {
-  EpisodesBox,
-  RelatedMediaBox,
-  ReactionsBox,
-  CharactersBox,
-} from 'kitsu/screens/Profiles/components';
-
+import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
+import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
+import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 
 class Summary extends Component {
   static propTypes = {
@@ -52,31 +49,82 @@ class Summary extends Component {
 
     return (
       <SceneContainer>
-        <EpisodesBox
+        {/* Episodes */}
+        <ScrollableSection
           title={`Episodes・${seriesCount}`}
-          data={this.formatData(series)}
-          placeholderImage={media.posterImage && media.posterImage.large}
           onViewAllPress={() => this.navigateTo('Episodes')}
+          data={this.formatData(series)}
+          renderItem={({ item }) => (
+            <ScrollItem>
+              <ImageCard
+                subtitle="Ep. 1 of 12"
+                title={item.canonicalTitle}
+                variant="landscapeLarge"
+                source={{
+                  uri:
+                    (item.thumbnail && item.thumbnail.original) ||
+                    (media.posterImage && media.posterImage.large),
+                }}
+              />
+            </ScrollItem>
+          )}
         />
-        <RelatedMediaBox
+
+        {/* Related Media */}
+        <ScrollableSection
           contentDark
           title="More from this series"
           data={this.formatData(media.mediaRelationships)}
+          renderItem={({ item }) => (
+            <ScrollItem>
+              <ImageCard
+                variant="portraitLarge"
+                title={item.destination.canonicalTitle}
+                source={{
+                  uri: item.destination.posterImage && item.destination.posterImage.original,
+                }}
+              />
+            </ScrollItem>
+          )}
         />
-        <ReactionsBox
+
+        {/* Reactions */}
+        <ScrollableSection
           title="Reactions"
-          titleAction={() => {}}
           titleLabel="Write reactions"
-          reactedMedia={media.canonicalTitle}
-          data={this.formatData(reactions)}
+          titleAction={() => {}}
           onViewAllPress={() => this.navigateTo('Reactions')}
+          data={this.formatData(reactions)}
+          renderItem={({ item }) => (
+            <ScrollItem>
+              <ReactionBox
+                boxed
+                reactedMedia={media.canonicalTitle}
+                reaction={item}
+              />
+            </ScrollItem>
+          )}
         />
-        <CharactersBox
+
+        {/* Characters */}
+        <ScrollableSection
           contentDark
           title="Characters"
-          data={this.formatData(castings)}
           onViewAllPress={() => this.navigateTo('Characters')}
+          data={this.formatData(castings)}
+          renderItem={({ item }) => (
+            <ScrollItem>
+              <ImageCard
+                variant="portrait"
+                title={item.character.name}
+                source={{
+                  uri: item.character.image && item.character.image.original,
+                }}
+              />
+            </ScrollItem>
+          )}
         />
+
       </SceneContainer>
     );
   }

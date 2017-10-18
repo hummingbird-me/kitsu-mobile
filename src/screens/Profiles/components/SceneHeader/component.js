@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
+import { StyledText } from 'kitsu/components/StyledText';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { MaskedImage, StyledProgressiveImage, StyledText, Pill } from 'kitsu/screens/Profiles/parts';
+import { Pill } from 'kitsu/screens/Profiles/components/Pill';
+import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
+import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { styles } from './styles';
 
 export class SceneHeader extends Component {
@@ -33,7 +36,7 @@ export class SceneHeader extends Component {
         <View>
           {/* Rankings */}
           <View style={styles.descriptionView}>
-            <StyledText size="small" ellipsizeMode="tail" numberOfLines={!this.state.expanded && 4}>{description}</StyledText>
+            <StyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={!this.state.expanded && 4}>{description}</StyledText>
             <TouchableOpacity onPress={this.toggleExpanded}>
               <StyledText size="small" color="grey">{expandedText}</StyledText>
             </TouchableOpacity>
@@ -61,7 +64,7 @@ export class SceneHeader extends Component {
     return (
       <View>
         <View style={styles.descriptionView}>
-          <StyledText size="small">{description}</StyledText>
+          <StyledText size="small" color="dark">{description}</StyledText>
         </View>
         <View style={styles.statusView}>
           <FollowStatus followStatusType="following" count={followingCount} />
@@ -140,7 +143,7 @@ const Status = ({ statusType, ranking }) => (
       name={statusType === 'popularity' ? 'md-heart' : 'ios-star'}
       style={[styles.statusIcon, styles[`statusIcon__${statusType}`]]}
     />
-    <StyledText size="xsmall">
+    <StyledText size="xsmall" color="dark">
       Rank #{ranking}
       <StyledText size="xsmall" color="grey">&nbsp;({statusType})</StyledText>
     </StyledText>
@@ -159,7 +162,7 @@ Status.defaultProps = {
 
 const FollowStatus = ({ followStatusType, count }) => (
   <View style={[styles.followStatus, styles[`followStatus__${followStatusType}`]]}>
-    <StyledText size="xsmall">
+    <StyledText size="xsmall" color="dark">
       {count}
       <StyledText size="xsmall" color="grey">&nbsp;{followStatusType === 'following' ? 'Following' : 'Followers'}</StyledText>
     </StyledText>

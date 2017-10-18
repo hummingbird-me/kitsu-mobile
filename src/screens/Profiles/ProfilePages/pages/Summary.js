@@ -10,7 +10,6 @@ import {
 import { getUserFeed } from 'kitsu/store/feed/actions';
 
 import { LibraryActivityBox } from 'kitsu/screens/Profiles/components/LibraryActivityBox';
-import { ReactionsBox } from 'kitsu/screens/Profiles/components/ReactionsBox';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 
 class Summary extends Component {
@@ -45,12 +44,14 @@ class Summary extends Component {
           data={this.formatData(entries)}
           onViewAllPress={() => this.navigateTo('Library')}
         />
-        <ReactionsBox
+        {/*
+          <ReactionsBox
           title="Reactions"
           titleAction={() => {}}
           titleLabel="Write reactions"
           onViewAllPress={() => this.navigateTo('Reactions')}
         />
+        */}
       </SceneContainer>
     );
   }

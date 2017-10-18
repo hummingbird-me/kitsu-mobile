@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
+import { StyledText } from 'kitsu/components/StyledText';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
-import { StyledText } from 'kitsu/screens/Profiles/parts';
 
 const styles = StyleSheet.create({
   row: {

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { MaskedImage, StyledText, MediaCard } from 'kitsu/screens/Profiles/parts';
+import { StyledText } from 'kitsu/components/StyledText';
+import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
+import { MediaCard } from 'kitsu/screens/Profiles/components/MediaCard';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { styles } from './styles';
 

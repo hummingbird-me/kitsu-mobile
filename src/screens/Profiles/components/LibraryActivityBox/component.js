@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import { View } from 'react-native';
+import { StyledText } from 'kitsu/components/StyledText';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
-import { StyledText, HScrollItem } from 'kitsu/screens/Profiles/parts';
+import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 
 export const LibraryActivityBox = ({
   contentDark,
@@ -29,7 +30,7 @@ export const LibraryActivityBox = ({
       }
 
       return (
-        <HScrollItem>
+        <ScrollItem>
           <ImageCard
             noMask
             variant="portraitLarge"
@@ -38,7 +39,7 @@ export const LibraryActivityBox = ({
           <View style={{ alignItems: 'center', marginTop: 3 }}>
             <StyledText size="xxsmall">{caption}</StyledText>
           </View>
-        </HScrollItem>
+        </ScrollItem>
       );
     }}
   />
