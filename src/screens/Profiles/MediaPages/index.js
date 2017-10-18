@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
-import { SceneContainer } from 'kitsu/screens/Profiles/components';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import Summary from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 
 const TAB_ITEMS = [

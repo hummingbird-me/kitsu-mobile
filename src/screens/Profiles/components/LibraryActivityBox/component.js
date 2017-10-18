@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import { View } from 'react-native';
-import ScrollableSection from 'kitsu/screens/Profiles/components/ScrollableSection';
-import ImageCard from 'kitsu/screens/Profiles/components/ImageCard';
+import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
+import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { StyledText, HScrollItem } from 'kitsu/screens/Profiles/parts';
 
 export const LibraryActivityBox = ({

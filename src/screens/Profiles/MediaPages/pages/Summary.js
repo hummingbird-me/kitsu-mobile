@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from 'kitsu/store/media/actions';
 import {
-  SceneContainer,
   EpisodesBox,
   RelatedMediaBox,
   ReactionsBox,
   CharactersBox,
 } from 'kitsu/screens/Profiles/components';
+
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 
 class Summary extends Component {
   static propTypes = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ScrollableSection from 'kitsu/screens/Profiles/components/ScrollableSection';
-import ImageCard from 'kitsu/screens/Profiles/components/ImageCard';
+import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
+import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { HScrollItem } from 'kitsu/screens/Profiles/parts';
 
 const EpisodesBox = ({ contentDark, title, data, placeholderImage, onViewAllPress }) => (

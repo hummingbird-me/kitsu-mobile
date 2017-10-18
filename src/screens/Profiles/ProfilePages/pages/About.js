@@ -13,7 +13,8 @@ import { getUserFeed } from 'kitsu/store/feed/actions';
 
 import { LibraryActivityBox } from 'kitsu/screens/Profiles/components/LibraryActivityBox';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
-import { SceneContainer, MediaRow } from 'kitsu/screens/Profiles/components';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 
 const ItemSeparator = () => <View style={{ height: 10 }} />
 

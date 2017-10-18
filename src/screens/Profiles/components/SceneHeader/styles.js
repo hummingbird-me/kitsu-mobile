@@ -169,4 +169,12 @@ export const styles = StyleSheet.create({
   followStatus__following: {
     marginLeft: 0,
   },
+
+  categories: {
+    marginTop: scenePadding,
+  },
+  categoriesInner: {
+    paddingLeft: scenePadding,
+    marginLeft: -5,
+  },
 });

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, View } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
-import ScrollableCategories from 'kitsu/screens/Profiles/components/ScrollableCategories';
-
-import { MaskedImage, StyledProgressiveImage, StyledText } from 'kitsu/screens/Profiles/parts';
+import { MaskedImage, StyledProgressiveImage, StyledText, Pill } from 'kitsu/screens/Profiles/parts';
 import { styles } from './styles';
 
 export class SceneHeader extends Component {
@@ -33,6 +31,7 @@ export class SceneHeader extends Component {
       const expandedText = this.state.expanded ? 'less' : 'more';
       return (
         <View>
+          {/* Rankings */}
           <View style={styles.descriptionView}>
             <StyledText size="small" ellipsizeMode="tail" numberOfLines={!this.state.expanded && 4}>{description}</StyledText>
             <TouchableOpacity onPress={this.toggleExpanded}>
@@ -44,7 +43,17 @@ export class SceneHeader extends Component {
             <Status statusType="rating" ranking={ratingRank} />
           </View>
 
-          <ScrollableCategories categories={categories} />
+          {/* Categories pills */}
+          <FlatList
+            horizontal
+            style={styles.categories}
+            contentContainerStyle={styles.categoriesInner}
+            showsHorizontalScrollIndicator={false}
+            data={categories}
+            renderItem={({ item }) => (
+              <View style={{ marginLeft: 5 }}><Pill label={item.title} /></View>
+            )}
+          />
         </View>
       );
     }

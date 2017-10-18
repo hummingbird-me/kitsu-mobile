@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import glamorous from 'glamorous-native';
+import { View } from 'react-native';
 import { MaskedImage, StyledText, MediaCard } from 'kitsu/screens/Profiles/parts';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { styles } from './styles';
 
 const paddingOptions = {
   landscapeLarge: scenePadding,
@@ -14,26 +15,21 @@ const paddingOptions = {
   thumbnail: scenePadding / 2,
 };
 
-const TitleContainer = glamorous.view(
-  {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  ({ variant }) => ({
-    padding: paddingOptions[variant],
-  }),
-);
-
-const ImageCard = ({ variant, noMask, borderRadius, title, subtitle, source }) => {
+export const ImageCard = ({
+  variant,
+  noMask,
+  borderRadius,
+  title,
+  subtitle,
+  source,
+}) => {
   const titleSize = variant === 'landscapeLarge' ? 'default' : 'small';
   const subtitleSize = variant === 'landscapeLarge' ? 'small' : 'xsmall';
   const label = (title || subtitle) && (
-    <TitleContainer variant={variant}>
+    <View style={[styles.titleView, { padding: paddingOptions[variant] }]}>
       {subtitle && <StyledText color="lightGrey" size={subtitleSize} numberOfLines={1}>{subtitle}</StyledText>}
       {title && <StyledText color="light" size={titleSize} bold numberOfLines={2} lineHeight={titleSize}>{title}</StyledText>}
-    </TitleContainer>
+    </View>
   );
   return (
     <MediaCard variant={variant} borderRadius={borderRadius}>
@@ -63,5 +59,3 @@ ImageCard.defaultProps = {
   noMask: false,
   borderRadius: 6,
 };
-
-export default ImageCard;

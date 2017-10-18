@@ -1,42 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity } from 'react-native';
-import glamorous from 'glamorous-native';
-import { StyledText } from 'kitsu/screens/Profiles/parts';
-import { scenePadding } from 'kitsu/screens/Profiles/constants';
-
-const Container = glamorous.view(
-  {
-    paddingTop: scenePadding,
-    paddingBottom: scenePadding,
-    paddingHorizontal: scenePadding,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-);
+import { TouchableOpacity, View } from 'react-native';
+import { StyledText } from 'kitsu/components/StyledText';
+import { styles } from './styles';
 
 const TitleText = props => <StyledText size="xsmall" bold {...props} />;
 
-const TabHeader = ({
-  padded,
+export const TabHeader = ({
   contentDark,
   title,
   actionOnPress,
   actionTitle,
 }) => (
-  <Container padded={padded}>
+  <View style={styles.wrap}>
     <TitleText color={contentDark ? 'dark' : 'lightGrey'}>{title}</TitleText>
     {(actionTitle && actionOnPress) && (
       <TouchableOpacity onPress={actionOnPress}>
         <TitleText color="yellow">{actionTitle}</TitleText>
       </TouchableOpacity>
     )}
-  </Container>
+  </View>
 );
 
 TabHeader.propTypes = {
-  padded: PropTypes.bool,
   contentDark: PropTypes.bool,
   actionOnPress: PropTypes.func,
   actionTitle: PropTypes.string,
@@ -44,11 +30,8 @@ TabHeader.propTypes = {
 };
 
 TabHeader.defaultProps = {
-  padded: false,
   contentDark: false,
   actionOnPress: null,
   actionTitle: null,
   title: '',
 };
-
-export default TabHeader;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ScrollableSection from 'kitsu/screens/Profiles/components/ScrollableSection';
-import ReactionBox from 'kitsu/screens/Profiles/components/ReactionBox';
+import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
+import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { HScrollItem } from 'kitsu/screens/Profiles/parts';
 
 const ReactionsBox = ({

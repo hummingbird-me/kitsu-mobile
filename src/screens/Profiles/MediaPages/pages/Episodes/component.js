@@ -3,12 +3,9 @@ import { FlatList, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia } from 'kitsu/store/media/actions';
-import {
-  TabHeader,
-  TabContainer,
-  MediaRow,
-} from 'kitsu/screens/Profiles/components';
-
+import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
+import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { styles } from './styles';
 
 class Episodes extends Component {

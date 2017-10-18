@@ -1,27 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import glamorous from 'glamorous-native';
+import { View } from 'react-native';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/parts';
+import { styles } from './styles';
 
-const Container = glamorous.view(
-  {
-    width: 30,
-    height: 30,
-    borderRadius: 30,
-    position: 'relative',
-    overflow: 'hidden',
-    backgroundColor: '#F1F1F1',
-  },
-);
-
-const Avatar = ({ avatar }) => (
-  <Container>
+export const Avatar = ({ avatar }) => (
+  <View style={styles.wrap}>
     <StyledProgressiveImage
       resize="cover"
       source={{ uri: avatar || defaultAvatar }}
     />
-  </Container>
+  </View>
 );
 
 
@@ -30,7 +20,5 @@ Avatar.propTypes = {
 };
 
 Avatar.defaultProps = {
-  avatar: '',
+  avatar: null,
 };
-
-export default Avatar;
