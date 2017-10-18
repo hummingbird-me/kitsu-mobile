@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
   },
   profileImageView__profile: {
     width: cardSize.square.width,
-    height: cardSize.portraitLarge.height,
+    height: cardSize.square.height,
     borderRadius: 6,
   },
   profileImageView__group: {

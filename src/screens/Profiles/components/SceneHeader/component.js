@@ -75,6 +75,36 @@ export class SceneHeader extends Component {
     );
   }
 
+  renderMainButton = () => {
+    if (this.props.variant === 'media') {
+      return (
+        <SelectMenu
+          options={this.props.mainButtonOptions}
+          onOptionSelected={this.props.onMainButtonOptionsSelected}
+          activeOpacity={0.8}
+          style={styles.mainButtonView}
+        >
+          <Button
+            block
+            title={this.props.mainButtonTitle}
+            style={styles.mainButton}
+          />
+        </SelectMenu>
+      );
+    }
+
+    return (
+      <View style={styles.mainButtonView}>
+        <Button
+          block
+          title={this.props.mainButtonTitle}
+          style={styles.mainButton}
+          onPress={this.props.onFollowButtonPress}
+        />
+      </View>
+    );
+  }
+
   render() {
     const {
       variant,
@@ -120,18 +150,7 @@ export class SceneHeader extends Component {
 
             {/* Add to library button & more button */}
             <View style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}>
-              <SelectMenu
-                options={mainButtonOptions}
-                onOptionSelected={onMainButtonOptionsSelected}
-                activeOpacity={0.8}
-                style={styles.mainButtonView}
-              >
-                <Button
-                  block
-                  title={mainButtonTitle}
-                  style={styles.mainButton}
-                />
-              </SelectMenu>
+              {this.renderMainButton()}
               <SelectMenu
                 options={moreButtonOptions}
                 onOptionSelected={onMoreButtonOptionsSelected}
@@ -205,6 +224,7 @@ SceneHeader.propTypes = {
   categories: PropTypes.array,
   mainButtonOptions: PropTypes.array,
   onMainButtonOptionsSelected: PropTypes.func,
+  onFollowButtonPress: PropTypes.func,
   moreButtonOptions: PropTypes.array,
   onMoreButtonOptionsSelected: PropTypes.func,
   mainButtonTitle: PropTypes.string,
@@ -224,6 +244,7 @@ SceneHeader.defaultProps = {
   categories: [],
   mainButtonOptions: [],
   onMainButtonOptionsSelected: null,
+  onFollowButtonPress: null,
   moreButtonOptions: [],
   onMoreButtonOptionsSelected: null,
   mainButtonTitle: 'Follow',

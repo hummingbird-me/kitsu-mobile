@@ -16,6 +16,8 @@ import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import Summary from 'kitsu/screens/Profiles/ProfilePages/pages/Summary';
 
+const MORE_BUTTON_OPTIONS = ['Block', 'Report Profile', 'Nevermind'];
+
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
   { key: 'about', label: 'About', screen: 'About' },
@@ -56,9 +58,13 @@ class ProfilePage extends Component {
     this.props.getUserFeed(userId);
   }
 
+  onMoreButtonOptionsSelected = () => {}
+
   setActiveTab = (tab) => {
     this.setState({ active: tab });
   }
+
+  handleFollowing = () => {}
 
   renderTabNav = () => (
     <TabBar>
@@ -87,6 +93,9 @@ class ProfilePage extends Component {
             posterImage={profile.avatar && profile.avatar.large}
             followersCount={profile.followersCount}
             followingCount={profile.followingCount}
+            onFollowButtonPress={this.handleFollowing}
+            moreButtonOptions={MORE_BUTTON_OPTIONS}
+            onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabNav()}
           <TabScene setActiveTab={(tab) => this.setActiveTab(tab)} />
