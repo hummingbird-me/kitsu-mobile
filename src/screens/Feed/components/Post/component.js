@@ -154,12 +154,6 @@ export class Post extends Component {
     height: '',
   }
 
-  measureView = (event) => {
-    this.setState({
-      height: event.nativeEvent.layout.height,
-    });
-  }
-
   render() {
     const {
       authorAvatar,
@@ -173,7 +167,6 @@ export class Post extends Component {
       onCommentPress,
       onSharePress,
       comments,
-      onCommentInputFocus,
     } = this.props;
 
     return (
@@ -200,7 +193,7 @@ export class Post extends Component {
                 <Comment comment={comments[0]} />
               </PostSection>
               <PostSection>
-                <CommentTextInput onFocus={onCommentInputFocus} />
+                <CommentTextInput />
               </PostSection>
             </PostFooter>
           </View>

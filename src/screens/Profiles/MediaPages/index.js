@@ -75,6 +75,7 @@ class MediaPages extends Component {
         <ScrollView stickyHeaderIndices={[1]}>
           <SceneHeader
             variant="media"
+            media={media}
             type={media.type}
             title={media.canonicalTitle}
             description={media.synopsis}

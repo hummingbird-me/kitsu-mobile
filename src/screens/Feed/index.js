@@ -7,7 +7,7 @@ import { fetchUserFeed } from 'kitsu/actions';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
-import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
+import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { FEED_DATA, FEED_STREAMS } from './stub';
 
@@ -26,21 +26,11 @@ class Feed extends React.PureComponent {
     this.setState({ refreshing: false });
   }
 
-  onActionPress = (index) => {
-    this.postList.scrollToIndex({ animated: true, index, viewPosition: 1 });
-  }
+  onActionPress = () => {}
 
   setActiveFeed = (feed) => {
     this.setState({ activeFeed: feed });
   }
-
-  getItemLayout = (data, index) => (
-    {
-      length: this.state.itemHeight,
-      offset: (this.state.itemHeight + 10) * index,
-      index,
-    }
-  )
 
   navigateToPost = () => {
     this.props.navigation.navigate('PostDetails');
@@ -80,7 +70,7 @@ class Feed extends React.PureComponent {
   )
 
   renderCreatePostRow = () => (
-    <CreatePostButton
+    <CreatePostRow
       avatar={defaultAvatar}
       onPress={this.navigateToCreatePost}
     />
@@ -92,7 +82,6 @@ class Feed extends React.PureComponent {
         {this.renderFeedFilter()}
         <View style={{ flex: 1 }}>
           <KeyboardAwareFlatList
-            ref={(el) => { this.postList = el; }}
             data={FEED_DATA}
             keyboardDismissMode="on-drag"
             renderItem={this.renderPost}

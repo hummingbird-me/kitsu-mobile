@@ -33,6 +33,9 @@ export const Comment = ({ comment }) => {
     showActions,
     children,
   } = comment.attributes;
+
+  console.log('==> Comment', comment);
+
   return (
     <Layout.RowWrap>
       <Avatar avatar={avatar} size="medium" />

@@ -1,236 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity } from 'react-native';
-import glamorous, { View } from 'glamorous-native';
+import { TouchableOpacity, View } from 'react-native';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { red, yellow, grey } from 'kitsu/constants/colors';
 import ScrollableCategories from 'kitsu/screens/Profiles/components/ScrollableCategories';
-import {
-  scenePadding,
-  cardSize,
-  coverImageHeight,
-  borderWidth,
-  spacing,
-} from 'kitsu/screens/Profiles/constants';
+
 import { MaskedImage, StyledProgressiveImage, StyledText } from 'kitsu/screens/Profiles/parts';
-
-const HeaderContainer = glamorous.view({
-  marginTop: -20, // to cover the status bar in iOS
-  backgroundColor: '#FFFFFF',
-  paddingBottom: spacing.small,
-});
-
-const CoverImage = glamorous.view({
-  width: '100%',
-  height: coverImageHeight,
-});
-
-const ProfileHeader = glamorous.view(
-  {
-    flexDirection: 'row',
-    paddingHorizontal: scenePadding,
-  },
-  ({ variant }) => ({ marginTop: cardSize[variant === 'media' ? 'portraitLarge' : 'square'].height * (variant === 'media' ? -0.65 : -0.5) }),
-);
-
-const ProfileImageShadow = glamorous.view(
-  {
-    borderRadius: 6,
-    shadowColor: 'rgba(0,0,0,0.2)',
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
-    shadowOpacity: 1,
-  },
-  ({ variant }) => ({
-    borderRadius: variant === 'media' ? 6 : cardSize.square.width,
-  }),
-);
-
-const ProfileImageContainer = glamorous.view(
-  {
-    borderWidth: 4 * borderWidth.hairline,
-    borderColor: '#FFFFFF',
-    overflow: 'hidden',
-  },
-  ({ variant }) => ({
-    width: cardSize[variant === 'media' ? 'portraitLarge' : 'square'].width,
-    height: cardSize[variant === 'media' ? 'portraitLarge' : 'square'].height,
-    borderRadius: variant === 'media' ? 6 : cardSize.square.width,
-  }),
-);
-
-const TitleView = glamorous.view(
-  {
-    flex: 1,
-    marginLeft: scenePadding,
-    position: 'relative',
-  },
-  ({ variant }) => ({
-    height: cardSize[variant === 'media' ? 'portraitLarge' : 'square'].height,
-  }),
-);
-
-const TitleTop = glamorous.view(
-  {
-    justifyContent: 'flex-end',
-    height: '65%',
-    paddingBottom: scenePadding,
-  },
-  ({ variant }) => ({
-    height: variant === 'media' ? '65%' : '50%',
-  }),
-);
-
-const TitleBottom = glamorous.view(
-  {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  ({ variant }) => ({
-    height: variant === 'media' ? '35%' : '50%',
-  }),
-);
-
-const ProfileImage = ({ variant, source }) => (
-  <ProfileImageShadow>
-    <ProfileImageContainer variant={variant}>
-      <StyledProgressiveImage
-        variant={variant}
-        resize="cover"
-        source={source}
-      />
-    </ProfileImageContainer>
-  </ProfileImageShadow>
-);
-
-ProfileImage.propTypes = {
-  variant: PropTypes.oneOf(['profile', 'media', 'group']),
-  source: PropTypes.string,
-};
-
-ProfileImage.defaultProps = {
-  variant: 'profile',
-  source: '',
-};
-
-const MainButton = ({ title, onPress }) => (
-  <View flex={3}>
-    <Button onPress={onPress} block title={title} style={{ height: 35, marginLeft: 0 }} />
-  </View>
-);
-
-MainButton.propTypes = {
-  title: PropTypes.string,
-  onPress: PropTypes.func,
-};
-
-MainButton.defaultProps = {
-  title: '',
-  onPress: null,
-};
-
-const MoreButton = ({ onPress }) => (
-  <TouchableOpacity onPress={onPress} style={{ flex: 1, justifyContent: 'center' }}>
-    <Icon name="md-more" style={{ color: grey, fontSize: 28 }} />
-  </TouchableOpacity>
-);
-
-MoreButton.propTypes = {
-  onPress: PropTypes.func,
-};
-
-MoreButton.defaultProps = {
-  onPress: null,
-};
-
-const ProfileDescription = glamorous.view({
-  paddingHorizontal: scenePadding,
-  marginTop: scenePadding,
-});
-
-const ExpandButton = ({ onPress, text }) => (
-  <TouchableOpacity onPress={onPress}>
-    <StyledText size="small" color="grey">{text}</StyledText>
-  </TouchableOpacity>
-);
-
-ExpandButton.propTypes = {
-  text: PropTypes.string,
-  onPress: PropTypes.func,
-};
-
-ExpandButton.defaultProps = {
-  text: '',
-  onPress: null,
-};
-
-const ProfileStatus = glamorous.view({
-  flexDirection: 'row',
-  paddingHorizontal: scenePadding,
-  marginTop: scenePadding,
-});
-
-const Status = ({ statusType, ranking }) => (
-  <View flexDirection="row" alignItems="center" style={{ marginLeft: statusType === 'rating' ? 10 : 0 }}>
-    <Icon
-      name={statusType === 'popularity' ? 'md-heart' : 'ios-star'}
-      style={{ fontSize: 17, color: statusType === 'popularity' ? red : yellow, marginRight: 5 }}
-    />
-    <StyledText
-      size="xsmall"
-      style={{ marginLeft: 0 }}
-    >
-      Rank #{ranking}
-      <StyledText
-        size="xsmall"
-        color="grey"
-      >
-        &nbsp;({statusType})
-      </StyledText>
-    </StyledText>
-  </View>
-);
-
-Status.propTypes = {
-  statusType: PropTypes.oneOf(['popularity', 'rating']),
-  ranking: PropTypes.string,
-};
-
-Status.defaultProps = {
-  statusType: 'popularity',
-  ranking: '',
-};
-
-const FollowStatus = ({ followStatusType, count }) => (
-  <View flexDirection="row" alignItems="center" style={{ marginLeft: followStatusType === 'followers' ? 10 : 0 }}>
-    <StyledText
-      size="xsmall"
-      style={{ marginLeft: 0 }}
-    >
-      {count}
-      <StyledText
-        size="xsmall"
-        color="grey"
-      >
-        &nbsp;{followStatusType === 'following' ? 'Following' : 'Followers'}
-      </StyledText>
-    </StyledText>
-  </View>
-);
-
-FollowStatus.propTypes = {
-  followStatusType: PropTypes.oneOf(['following', 'followers']),
-  count: PropTypes.number,
-};
-
-FollowStatus.defaultProps = {
-  followStatusType: 'following',
-  count: 0,
-};
+import { styles } from './styles';
 
 export class SceneHeader extends Component {
   state = {
@@ -251,18 +28,21 @@ export class SceneHeader extends Component {
       followersCount,
       followingCount,
     } = this.props;
+
     if (variant === 'media') {
       const expandedText = this.state.expanded ? 'less' : 'more';
       return (
         <View>
-          <ProfileDescription>
+          <View style={styles.descriptionView}>
             <StyledText size="small" ellipsizeMode="tail" numberOfLines={!this.state.expanded && 4}>{description}</StyledText>
-            <ExpandButton onPress={this.toggleExpanded} text={expandedText} />
-          </ProfileDescription>
-          <ProfileStatus>
+            <TouchableOpacity onPress={this.toggleExpanded}>
+              <StyledText size="small" color="grey">{expandedText}</StyledText>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.statusView}>
             <Status statusType="popularity" ranking={popularityRank} />
             <Status statusType="rating" ranking={ratingRank} />
-          </ProfileStatus>
+          </View>
 
           <ScrollableCategories categories={categories} />
         </View>
@@ -271,13 +51,13 @@ export class SceneHeader extends Component {
 
     return (
       <View>
-        <ProfileDescription>
+        <View style={styles.descriptionView}>
           <StyledText size="small">{description}</StyledText>
-        </ProfileDescription>
-        <ProfileStatus>
+        </View>
+        <View style={styles.statusView}>
           <FollowStatus followStatusType="following" count={followingCount} />
           <FollowStatus followStatusType="followers" count={followersCount} />
-        </ProfileStatus>
+        </View>
       </View>
     );
   }
@@ -292,34 +72,100 @@ export class SceneHeader extends Component {
     } = this.props;
 
     return (
-      <HeaderContainer>
-        <CoverImage>
+      <View style={styles.wrap}>
+        {/* Profile Cover Image */}
+        <View style={styles.coverImageView}>
           <MaskedImage
             maskedBottom
             source={{ uri: coverImage || defaultCover }}
           />
-        </CoverImage>
+        </View>
 
-        <ProfileHeader variant={variant}>
-          <ProfileImage variant={variant} source={{ uri: posterImage || defaultAvatar }} />
+        <View style={[styles.profileHeaderView, styles[`profileHeaderView__${variant}`]]}>
+          {/* Profile Poster Image */}
+          <View style={styles.profileImageViewShadow}>
+            <View style={[styles.profileImageView, styles[`profileImageView__${variant}`]]}>
+              <StyledProgressiveImage
+                variant={variant}
+                resize="cover"
+                source={{ uri: posterImage || defaultAvatar }}
+              />
+            </View>
+          </View>
 
-          <TitleView variant={variant}>
-            <TitleTop variant={variant}>
+          <View style={[styles.titleView, styles[`titleView__${variant}`]]}>
+            {/* Title */}
+            <View style={[styles.titleTop, styles[`titleTop__${variant}`]]}>
               <StyledText size="xsmall" color="light">{type}</StyledText>
               <StyledText size="large" color="light" bold>{title}</StyledText>
-            </TitleTop>
+            </View>
 
-            <TitleBottom variant={variant}>
-              <MainButton title="Add to Library" />
-              <MoreButton />
-            </TitleBottom>
-          </TitleView>
-        </ProfileHeader>
+            {/* Add to library button & more button */}
+            <View style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}>
+              <View style={styles.mainButtonView}>
+                <Button
+                  block
+                  onPress={() => {}}
+                  title="Add to library"
+                  style={styles.mainButton}
+                />
+              </View>
+              <View style={styles.moreButton}>
+                <TouchableOpacity onPress={() => {}}>
+                  <Icon name="md-more" style={styles.moreIcon} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+
         {this.renderDescription()}
-      </HeaderContainer>
+      </View>
     );
   }
 }
+
+const Status = ({ statusType, ranking }) => (
+  <View style={[styles.statusItemView, styles[`statusItemView__${statusType}`]]}>
+    <Icon
+      name={statusType === 'popularity' ? 'md-heart' : 'ios-star'}
+      style={[styles.statusIcon, styles[`statusIcon__${statusType}`]]}
+    />
+    <StyledText size="xsmall">
+      Rank #{ranking}
+      <StyledText size="xsmall" color="grey">&nbsp;({statusType})</StyledText>
+    </StyledText>
+  </View>
+);
+
+Status.propTypes = {
+  statusType: PropTypes.oneOf(['popularity', 'rating']),
+  ranking: PropTypes.string,
+};
+
+Status.defaultProps = {
+  statusType: 'popularity',
+  ranking: '',
+};
+
+const FollowStatus = ({ followStatusType, count }) => (
+  <View style={[styles.followStatus, styles[`followStatus__${followStatusType}`]]}>
+    <StyledText size="xsmall">
+      {count}
+      <StyledText size="xsmall" color="grey">&nbsp;{followStatusType === 'following' ? 'Following' : 'Followers'}</StyledText>
+    </StyledText>
+  </View>
+);
+
+FollowStatus.propTypes = {
+  followStatusType: PropTypes.oneOf(['following', 'followers']),
+  count: PropTypes.number,
+};
+
+FollowStatus.defaultProps = {
+  followStatusType: 'following',
+  count: 0,
+};
 
 SceneHeader.propTypes = {
   variant: PropTypes.oneOf(['profile', 'media', 'group']),
