@@ -7,7 +7,7 @@ import { fetchUserFeed } from 'kitsu/actions';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
-import { CreatePostButton } from 'kitsu/screens/Feed/components/CreatePostButton';
+import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { FEED_DATA } from './stub';
 import { feedStreams } from './feedStreams';
@@ -31,17 +31,11 @@ class Feed extends React.PureComponent {
     this.setState({ refreshing: false });
   }
 
+  onActionPress = () => {}
+
   setActiveFeed = (feed) => {
     this.setState({ activeFeed: feed });
   }
-
-  getItemLayout = (data, index) => (
-    {
-      length: this.state.itemHeight,
-      offset: (this.state.itemHeight + 10) * index,
-      index,
-    }
-  )
 
   navigateToPost = () => {
     this.props.navigation.navigate('PostDetails');
@@ -64,7 +58,7 @@ class Feed extends React.PureComponent {
     </TabBar>
   )
 
-  renderPost = ({ item, index }) => (
+  renderPost = item => (
     <Post
       key={index}
       onPostPress={this.navigateToPost}
@@ -75,9 +69,16 @@ class Feed extends React.PureComponent {
       postLikesCount={item.postLikesCount}
       postCommentCount={item.commentsCount}
       comments={item.comments}
-      onLikePress={null}
-      onSharePress={null}
-      onCommentPress={null}
+      onLikePress={this.onActionPress}
+      onSharePress={this.onActionPress}
+      onCommentPress={this.onActionPress}
+    />
+  )
+
+  renderCreatePostRow = () => (
+    <CreatePostRow
+      avatar={defaultAvatar}
+      onPress={this.navigateToCreatePost}
     />
   )
 
@@ -87,7 +88,6 @@ class Feed extends React.PureComponent {
         {this.renderFeedFilter()}
         <View style={{ flex: 1 }}>
           <KeyboardAwareFlatList
-            ref={(el) => { this.postList = el; }}
             data={FEED_DATA}
             renderItem={this.renderPost}
             ListHeaderComponent={

@@ -13,8 +13,10 @@ import { getUserFeed } from 'kitsu/store/feed/actions';
 
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
-import { SceneContainer } from 'kitsu/screens/Profiles/components';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import Summary from 'kitsu/screens/Profiles/ProfilePages/pages/Summary';
+
+const MORE_BUTTON_OPTIONS = ['Block', 'Report Profile', 'Nevermind'];
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
@@ -24,12 +26,14 @@ const TAB_ITEMS = [
   { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
 ];
 
+/* eslint-disable global-require */
+
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
-  About: { getScreen: () => require('./pages/About').default},
-  Library: { getScreen: () => require('./pages/Library').default},
-  Groups: { getScreen: () => require('./pages/Groups').default},
-  Reactions: { getScreen: () => require('./pages/Reactions').default},
+  About: { getScreen: () => require('./pages/About').About },
+  Library: { getScreen: () => require('./pages/Library').Library },
+  Groups: { getScreen: () => require('./pages/Groups').Groups },
+  Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
 }, {
   initialRouteName: 'Summary',
 });
@@ -54,9 +58,13 @@ class ProfilePage extends Component {
     this.props.getUserFeed(userId);
   }
 
+  onMoreButtonOptionsSelected = () => {}
+
   setActiveTab = (tab) => {
     this.setState({ active: tab });
   }
+
+  handleFollowing = () => {}
 
   renderTabNav = () => (
     <TabBar>
@@ -85,6 +93,9 @@ class ProfilePage extends Component {
             posterImage={profile.avatar && profile.avatar.large}
             followersCount={profile.followersCount}
             followingCount={profile.followingCount}
+            onFollowButtonPress={this.handleFollowing}
+            moreButtonOptions={MORE_BUTTON_OPTIONS}
+            onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabNav()}
           <TabScene setActiveTab={(tab) => this.setActiveTab(tab)} />

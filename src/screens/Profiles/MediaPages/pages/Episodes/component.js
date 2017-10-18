@@ -3,13 +3,10 @@ import { FlatList, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia } from 'kitsu/store/media/actions';
-import {
-  TabHeader,
-  TabContainer,
-  MediaRow,
-} from 'kitsu/screens/Profiles/components';
-
-import { styles } from './styles';
+import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
+import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
+import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 
 class Episodes extends Component {
   static propTypes = {
@@ -24,39 +21,26 @@ class Episodes extends Component {
     return data.sort((a, b) => a - b).slice(0, numberOfItems);
   }
 
-  renderListHeader = () => (
-    <TabHeader title="Episodes" contentDark />
-  )
-
-  renderItem = ({ item }) => {
-    const { media } = this.props;
-
-    return (
-      <MediaRow
-        imageVariant="landscapeSmall"
-        title={item.canonicalTitle}
-        summary={media.synopsis}
-        thumbnail={{ uri: item.thumbnail ? item.thumbnail.original : media.posterImage.large }}
-        summaryLines={2}
-      />
-    );
-  }
-
-  renderItemSeperator = () => (
-    <View style={styles.itemSeperator} />
-  )
-
   render() {
-    const { episodes } = this.props.media;
-    const data = this.formatData(episodes);
+    const { media } = this.props;
 
     return (
       <TabContainer light padded>
         <FlatList
-          data={data}
-          renderItem={this.renderItem}
-          ItemSeparatorComponent={this.renderItemSeparator}
-          ListHeaderComponent={this.renderListHeader}
+          data={this.formatData(media.episodes)}
+          renderItem={({ item }) => (
+            <MediaRow
+              imageVariant="landscapeSmall"
+              title={item.canonicalTitle}
+              summary={media.synopsis}
+              thumbnail={{
+                uri: item.thumbnail ? item.thumbnail.original : media.posterImage.large,
+              }}
+              summaryLines={2}
+            />
+          )}
+          ItemSeparatorComponent={() => <RowSeparator />}
+          ListHeaderComponent={() => <TabHeader title="Episodes" contentDark />}
         />
       </TabContainer>
     );

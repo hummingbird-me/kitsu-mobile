@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia } from 'kitsu/store/media/actions';
-import {
-  TabHeader,
-  TabContainer,
-  MediaRow,
-} from 'kitsu/screens/Profiles/components';
-
-import { styles } from './styles';
+import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
+import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
+import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 
 class Franchise extends Component {
   static propTypes = {
@@ -19,23 +16,6 @@ class Franchise extends Component {
   static defaultProps = {
     media: {},
   }
-
-  renderItem = ({ item }) => (
-    <MediaRow
-      title={item.title}
-      summary={item.summary}
-      thumbnail={{ uri: item.thumbnail }}
-      summaryLines={12}
-    />
-  )
-
-  renderItemSeperator = () => (
-    <View style={styles.itemSeperator} />
-  )
-
-  renderHeader = () => (
-    <TabHeader title="Franchise" contentDark />
-  )
 
   render = () => {
     const { media } = this.props;
@@ -50,9 +30,16 @@ class Franchise extends Component {
       <TabContainer light padded>
         <FlatList
           data={data}
-          renderItem={this.renderItem}
-          ItemSeparatorComponent={this.renderItemSeperator}
-          ListHeaderComponent={this.renderHeader}
+          renderItem={({ item }) => (
+            <MediaRow
+              title={item.title}
+              summary={item.summary}
+              thumbnail={{ uri: item.thumbnail }}
+              summaryLines={12}
+            />
+          )}
+          ItemSeparatorComponent={() => <RowSeparator />}
+          ListHeaderComponent={() => <TabHeader title="Franchise" contentDark />}
         />
       </TabContainer>
     );

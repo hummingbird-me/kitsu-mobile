@@ -8,14 +8,11 @@ import navigationOptions from './navigationOptions';
 
 const ProfileStack = DismissableStackNavigator(
   {
-    UserProfile: {
-      screen: ProfileScreens.ProfileScreen,
-    },
     ProfilePages: {
       screen: ProfilePages,
     },
-    Media: {
-      screen: ProfileScreens.MediaScreen,
+    UserProfile: {
+      screen: ProfileScreens.ProfileScreen,
     },
     Character: {
       screen: ProfileScreens.MediaScreen,

@@ -1,0 +1,43 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { View } from 'react-native';
+import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
+import { StyledText } from 'kitsu/components/StyledText';
+import { styles } from './styles';
+
+export const MediaRow = ({
+  imageVariant,
+  title,
+  summary,
+  thumbnail,
+  summaryLines,
+}) => (
+  <View style={styles.row}>
+    <ImageCard
+      noMask
+      variant={imageVariant}
+      source={thumbnail}
+    />
+    <View style={styles.main}>
+      <StyledText color="dark" size="small" bold>{title}</StyledText>
+      <StyledText color="grey" size="xsmall" numberOfLines={summaryLines} style={{ marginTop: 5 }}>{summary}</StyledText>
+    </View>
+  </View>
+);
+
+
+MediaRow.propTypes = {
+  imageVariant: PropTypes.oneOf(['portrait', 'landscape', 'landscapeSmall']),
+  title: PropTypes.string,
+  summary: PropTypes.string,
+  thumbnail: PropTypes.object,
+  summaryLines: PropTypes.number,
+};
+
+MediaRow.defaultProps = {
+  imageVariant: 'portrait',
+  title: '',
+  summary: '',
+  thumbnail: {},
+  summaryLines: 3,
+};

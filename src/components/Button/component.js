@@ -19,22 +19,25 @@ export const Button = ({
   onPress,
   loading,
   disabled,
-}) => (
-  <TouchableOpacity
-    disabled={disabled || loading}
-    onPress={onPress}
-    style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
-  >
-    {loading ? <LoadingComponent />
-      : <View style={styles.contentWrapper}>
-        {icon ? <Icon name={icon} style={[styles.icon, iconStyle]} /> : null}
-        <Text style={[styles.title, titleStyle]}>
-          {title}
-        </Text>
-      </View>
-    }
-  </TouchableOpacity>
-);
+}) => {
+  const Component = onPress ? TouchableOpacity : View;
+  return (
+    <Component
+      disabled={disabled || loading}
+      onPress={onPress}
+      style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
+    >
+      {loading ? <LoadingComponent />
+        : <View style={styles.contentWrapper}>
+          {icon ? <Icon name={icon} style={[styles.icon, iconStyle]} /> : null}
+          <Text style={[styles.title, titleStyle]}>
+            {title}
+          </Text>
+        </View>
+      }
+    </Component>
+  );
+};
 
 Button.propTypes = {
   ...TouchableOpacity.propTypes,

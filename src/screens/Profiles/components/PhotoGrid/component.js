@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import { scene, scenePadding } from 'kitsu/screens/Profiles/constants';
-import { ImageCard } from 'kitsu/screens/Profiles/components';
+import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 
 export class PhotoGrid extends React.Component {
   buildRows = (items, itemsPerRow) => (

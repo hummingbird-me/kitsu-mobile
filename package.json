@@ -35,7 +35,6 @@
     "react-native-fading-slides": "^0.1.4",
     "react-native-fbsdk": "0.6.0",
     "react-native-htmlview": "^0.10.0",
-    "react-native-keyboard-aware-scroll-view": "https://github.com/APSL/react-native-keyboard-aware-scroll-view.git#57a04a2b5b986c5f0a34d306c2f12c802ed1f454",
     "react-native-linear-gradient": "^2.3.0",
     "react-native-modal-picker": "^0.0.16",
     "react-native-multi-slider": "^0.3.5",

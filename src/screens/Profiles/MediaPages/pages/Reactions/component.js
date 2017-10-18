@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { View, SectionList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia, fetchMediaReactions } from 'kitsu/store/media/actions';
-import {
-  ReactionBox,
-  TabHeader,
-  TabContainer,
-} from 'kitsu/screens/Profiles/components';
-import { styles } from './styles';
+import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
+import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
+import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 
 class Reactions extends Component {
   static propTypes = {
@@ -21,44 +19,29 @@ class Reactions extends Component {
     reactions: {},
   }
 
-  handleWriteReaction = () => {
-  }
-
-  renderItem = ({ item }) => {
-    const { media } = this.props;
-
-    return (
-      <ReactionBox
-        reactedMedia={media.canonicalTitle}
-        reaction={item}
-      />
-    );
-  }
-
-  renderListHeader = () => (
-    <TabHeader
-      padded
-      title="Reactions"
-      actionOnPress={this.handleWriteReaction}
-      actionTitle="Write reaction"
-    />
-  )
-
-  renderItemSeparator = () => (
-    <View style={styles.itemSeparator} />
-  )
-
   renderReactionRows = () => {
-    const { reactions } = this.props;
+    const { reactions, media } = this.props;
 
     if (!reactions) return null;
 
     return (
-      <SectionList
-        sections={[{ data: reactions }]}
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={this.renderItemSeparator}
-        ListHeaderComponent={this.renderListHeader}
+      <FlatList
+        data={reactions}
+        renderItem={({ item }) => (
+          <ReactionBox
+            reactedMedia={media.canonicalTitle}
+            reaction={item}
+          />
+        )}
+        ItemSeparatorComponent={() => <RowSeparator />}
+        ListHeaderComponent={() => (
+          <TabHeader
+            padded
+            title="Reactions"
+            actionOnPress={this.handleWriteReaction}
+            actionTitle="Write reaction"
+          />
+        )}
       />
     );
   }

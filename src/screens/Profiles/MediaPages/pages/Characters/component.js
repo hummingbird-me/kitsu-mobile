@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchMedia, fetchMediaCastings } from 'kitsu/store/media/actions';
-import {
-  TabHeader,
-  TabContainer,
-} from 'kitsu/screens/Profiles/components';
-
+import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { PhotoGrid } from 'kitsu/screens/Profiles/components/PhotoGrid';
 
 class Characters extends Component {
