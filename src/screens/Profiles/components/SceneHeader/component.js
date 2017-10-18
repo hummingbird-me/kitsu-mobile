@@ -4,6 +4,7 @@ import { FlatList, TouchableOpacity, View } from 'react-native';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
 import { StyledText } from 'kitsu/components/StyledText';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
@@ -81,6 +82,11 @@ export class SceneHeader extends Component {
       title,
       coverImage,
       posterImage,
+      mainButtonTitle,
+      mainButtonOptions,
+      onMainButtonOptionsSelected,
+      moreButtonOptions,
+      onMoreButtonOptionsSelected,
     } = this.props;
 
     return (
@@ -114,19 +120,25 @@ export class SceneHeader extends Component {
 
             {/* Add to library button & more button */}
             <View style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}>
-              <View style={styles.mainButtonView}>
+              <SelectMenu
+                options={mainButtonOptions}
+                onOptionSelected={onMainButtonOptionsSelected}
+                activeOpacity={0.8}
+                style={styles.mainButtonView}
+              >
                 <Button
                   block
-                  onPress={() => {}}
-                  title="Add to library"
+                  title={mainButtonTitle}
                   style={styles.mainButton}
                 />
-              </View>
-              <View style={styles.moreButton}>
-                <TouchableOpacity onPress={() => {}}>
-                  <Icon name="md-more" style={styles.moreIcon} />
-                </TouchableOpacity>
-              </View>
+              </SelectMenu>
+              <SelectMenu
+                options={moreButtonOptions}
+                onOptionSelected={onMoreButtonOptionsSelected}
+                style={styles.moreButton}
+              >
+                <Icon name="md-more" style={styles.moreIcon} />
+              </SelectMenu>
             </View>
           </View>
         </View>
@@ -191,6 +203,11 @@ SceneHeader.propTypes = {
   followingCount: PropTypes.number,
   ratingRank: PropTypes.string,
   categories: PropTypes.array,
+  mainButtonOptions: PropTypes.array,
+  onMainButtonOptionsSelected: PropTypes.func,
+  moreButtonOptions: PropTypes.array,
+  onMoreButtonOptionsSelected: PropTypes.func,
+  mainButtonTitle: PropTypes.string,
 };
 
 SceneHeader.defaultProps = {
@@ -205,4 +222,9 @@ SceneHeader.defaultProps = {
   followersCount: 0,
   followingCount: 0,
   categories: [],
+  mainButtonOptions: [],
+  onMainButtonOptionsSelected: null,
+  moreButtonOptions: [],
+  onMoreButtonOptionsSelected: null,
+  mainButtonTitle: 'Follow',
 };

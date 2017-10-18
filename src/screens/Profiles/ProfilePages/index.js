@@ -24,12 +24,14 @@ const TAB_ITEMS = [
   { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
 ];
 
+/* eslint-disable global-require */
+
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
-  About: { getScreen: () => require('./pages/About').default},
-  Library: { getScreen: () => require('./pages/Library').default},
-  Groups: { getScreen: () => require('./pages/Groups').default},
-  Reactions: { getScreen: () => require('./pages/Reactions').default},
+  About: { getScreen: () => require('./pages/About').About },
+  Library: { getScreen: () => require('./pages/Library').Library },
+  Groups: { getScreen: () => require('./pages/Groups').Groups },
+  Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
 }, {
   initialRouteName: 'Summary',
 });

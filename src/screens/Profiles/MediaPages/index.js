@@ -9,6 +9,9 @@ import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import Summary from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 
+const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
+const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
+
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
   { key: 'episodes', label: 'Episodes', screen: 'Episodes' },
@@ -53,6 +56,9 @@ class MediaPages extends Component {
     this.setState({ active: tab });
   }
 
+  onMainButtonOptionsSelected = () => {}
+  onMoreButtonOptionsSelected = () => {}
+
   renderTabNav = () => (
     <TabBar>
       {TAB_ITEMS.map(tabItem => (
@@ -84,6 +90,11 @@ class MediaPages extends Component {
             popularityRank={media.popularityRank}
             ratingRank={media.ratingRank}
             categories={media.categories}
+            mainButtonTitle="Add to library"
+            mainButtonOptions={MAIN_BUTTON_OPTIONS}
+            onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
+            moreButtonOptions={MORE_BUTTON_OPTIONS}
+            onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabNav()}
           <TabScene setActiveTab={tab => this.setActiveTab(tab)} />

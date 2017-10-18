@@ -127,8 +127,10 @@ export const styles = StyleSheet.create({
   mainButton: {
     height: 35,
     marginLeft: 0,
+    marginRight: 0,
   },
   moreIcon: {
+    paddingLeft: scenePadding * 2,
     color: colors.grey,
     fontSize: 28,
   },
