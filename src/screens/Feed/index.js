@@ -58,7 +58,7 @@ class Feed extends React.PureComponent {
     </TabBar>
   )
 
-  renderPost = item => (
+  renderPost = ({ item }) => (
     <Post
       onPostPress={this.navigateToPost}
       authorAvatar={defaultAvatar}
