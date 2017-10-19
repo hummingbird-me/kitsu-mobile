@@ -14,11 +14,7 @@ const AuthWrapper = ({ children }) => (
   >
     <View style={styles.stretch}>
       <AnimatedWrapper />
-      <Image
-        style={styles.logo}
-        resizeMode={'contain'}
-        source={slidelogo}
-      />
+      <Image style={styles.logo} resizeMode={'contain'} source={slidelogo} />
     </View>
     {children}
   </KeyboardAwareScrollView>

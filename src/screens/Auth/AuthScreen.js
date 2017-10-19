@@ -204,7 +204,7 @@ class AuthScreen extends React.Component {
         <Modal
           visible={showDateModalIOS}
           title={'Your Birth Date'}
-          bodyStyle={{ backgroundColor: '#ececec' }}
+          bodyStyle={styles.dateModalBody}
           onCancel={this.onDateModalIOSCancel}
           onConfirm={this.onDateModalIOSConfirm}
           onRequestClose={this.onDateModalIOSCancel}
