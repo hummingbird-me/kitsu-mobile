@@ -65,7 +65,7 @@ class About extends Component {
   }
 }
 
-Summary.propTypes = {
+About.propTypes = {
   loading: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
@@ -76,7 +76,7 @@ Summary.propTypes = {
   getUserFeed: PropTypes.func.isRequired,
 };
 
-Summary.defaultProps = {
+About.defaultProps = {
   loading: false,
   navigation: {},
   profile: {},

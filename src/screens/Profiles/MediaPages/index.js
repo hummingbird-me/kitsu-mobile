@@ -52,12 +52,12 @@ class MediaPages extends Component {
 
   state = { active: 'Summary' }
 
+  onMainButtonOptionsSelected = () => {}
+  onMoreButtonOptionsSelected = () => {}
+
   setActiveTab = (tab) => {
     this.setState({ active: tab });
   }
-
-  onMainButtonOptionsSelected = () => {}
-  onMoreButtonOptionsSelected = () => {}
 
   renderTabNav = () => (
     <TabBar>

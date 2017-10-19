@@ -98,7 +98,7 @@ class ProfilePage extends Component {
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabNav()}
-          <TabScene setActiveTab={(tab) => this.setActiveTab(tab)} />
+          <TabScene setActiveTab={tab => this.setActiveTab(tab)} />
         </ScrollView>
       </SceneContainer>
     );
