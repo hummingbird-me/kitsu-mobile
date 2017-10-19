@@ -10,7 +10,8 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
   try {
     const user = await Kitsu.findAll('users', {
       fields: {
-        users: 'id,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,titleLanguagePreference',
+        users:
+          'id,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,titleLanguagePreference',
       },
       filter: { self: true },
     });
@@ -23,13 +24,15 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
 
 export const createUser = (data, nav) => async (dispatch, getState) => {
   dispatch({ type: types.CREATE_USER });
-  const { username, email, password } = data;
+  const { username, email, password, birthday } = data;
   const { id, gender } = getState().auth.fbuser;
   const userObj = {
     name: username,
     email,
     password,
+    birthday,
   };
+  console.log(userObj);
 
   if (id) {
     userObj.facebookId = id;
@@ -60,7 +63,7 @@ export const connectFBUser = () => async (dispatch, getState) => {
         },
       },
     },
-     async (error, fbdata) => {
+    async (error, fbdata) => {
       if (!error) {
         const token = getState().auth.tokens.access_token;
         const currentUser = getState().user.currentUser;
@@ -73,13 +76,13 @@ export const connectFBUser = () => async (dispatch, getState) => {
           console.log(e);
         }
       } else {
-        console.log(error)
+        console.log(error);
         dispatch({ type: types.CONNECT_FBUSER_FAIL, payload: 'Failed to connect Facebook user' });
       }
     },
   );
   new GraphRequestManager().addRequest(infoRequest).start();
-}
+};
 
 export const disconnectFBUser = () => async (dispatch, getState) => {
   dispatch({ type: types.DISCONNECT_FBUSER });
@@ -94,7 +97,7 @@ export const disconnectFBUser = () => async (dispatch, getState) => {
     dispatch({ type: types.DISCONNECT_FBUSER_FAIL, payload: 'Failed to disconnect fb user' });
     console.log(e);
   }
-}
+};
 
 export const updateGeneralSettings = data => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_GENERAL_SETTINGS });

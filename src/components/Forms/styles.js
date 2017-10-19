@@ -6,6 +6,16 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.darkPurple,
   },
+  pickerButton: {
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    alignItems: 'flex-start',
+  },
+  pickerButtonTitle: {
+    color: 'grey',
+    textAlign: 'left',
+    fontSize: 14,
+  },
   buttonsWrapper: {
     flex: 1,
     justifyContent: 'center',

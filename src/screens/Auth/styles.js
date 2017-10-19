@@ -11,7 +11,7 @@ export default StyleSheet.create({
   },
   logo: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 30,
     width: 150,
     height: 42,
     resizeMode: 'contain',
@@ -39,7 +39,8 @@ export default StyleSheet.create({
   },
   forgotTextWrapper: {
     marginHorizontal: 16,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
   },
   forgotDescription: {
     fontSize: 12,
@@ -53,5 +54,8 @@ export default StyleSheet.create({
     color: 'white',
     fontFamily: 'OpenSans',
     textAlign: 'center',
-  }
+  },
+  dateModalBody: {
+    backgroundColor: '#ececec',
+  },
 });
