@@ -9,9 +9,14 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
-import { FEED_DATA, FEED_STREAMS } from './stub';
+import { FEED_DATA } from './stub';
+import { feedStreams } from './feedStreams';
 
 class Feed extends React.PureComponent {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+  }
+
   static navigationOptions = {
     header: null,
   }
@@ -42,7 +47,7 @@ class Feed extends React.PureComponent {
 
   renderFeedFilter = () => (
     <TabBar>
-      {FEED_STREAMS.map(tabItem => (
+      {feedStreams.map(tabItem => (
         <TabBarLink
           key={tabItem.key}
           label={tabItem.label}
@@ -55,6 +60,7 @@ class Feed extends React.PureComponent {
 
   renderPost = item => (
     <Post
+      key={index}
       onPostPress={this.navigateToPost}
       authorAvatar={defaultAvatar}
       authorName="Josh"
@@ -83,9 +89,13 @@ class Feed extends React.PureComponent {
         <View style={{ flex: 1 }}>
           <KeyboardAwareFlatList
             data={FEED_DATA}
-            keyboardDismissMode="on-drag"
             renderItem={this.renderPost}
-            ListHeaderComponent={() => this.renderCreatePostRow()}
+            ListHeaderComponent={
+              <CreatePostButton
+                avatar={defaultAvatar}
+                onPress={this.navigateToCreatePost}
+              />
+            }
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -98,13 +108,5 @@ class Feed extends React.PureComponent {
     );
   }
 }
-
-Feed.propTypes = {
-  navigation: PropTypes.object,
-};
-
-Feed.defaultProps = {
-  navigation: {},
-};
 
 export default connect(() => ({}), { fetchUserFeed })(Feed);

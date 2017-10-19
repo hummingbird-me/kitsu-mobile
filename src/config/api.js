@@ -763,7 +763,7 @@ Kitsu.define(
     topLevelCommentsCount: '',
     editedAt: '',
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
       type: 'users',
     },
   },
