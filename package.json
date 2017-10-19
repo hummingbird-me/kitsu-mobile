@@ -19,7 +19,6 @@
     "lodash": "^4.17.4",
     "lottie-react-native": "^1.1.1",
     "moment": "^2.18.1",
-    "moment-timezone": "^0.5.13",
     "native-base": "2.2.1",
     "prop-types": "^15.5.10",
     "querystring": "^0.2.0",
