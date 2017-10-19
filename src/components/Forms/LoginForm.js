@@ -6,7 +6,15 @@ import { Input } from 'kitsu/components/Input';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
-const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, signingInFacebook, onForgotPassword }) => (
+const LoginForm = ({
+  handleChange,
+  data,
+  onSubmit,
+  loading,
+  onSignInFacebook,
+  signingInFacebook,
+  onForgotPassword,
+}) => (
   <View>
     <Input
       placeholder="Email"
@@ -26,7 +34,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, si
     <Button
       loading={loading}
       title={'Sign in to your account'}
-      onPress={onSubmit}
+      onPress={() => onSubmit()}
       style={{ marginTop: 10 }}
     />
     <Button
@@ -36,10 +44,7 @@ const LoginForm = ({ handleChange, data, onSubmit, loading, onSignInFacebook, si
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
-    <TouchableOpacity
-      style={styles.forgotButton}
-      onPress={onForgotPassword}
-    >
+    <TouchableOpacity style={styles.forgotButton} onPress={onForgotPassword}>
       <Text style={styles.forgotText}>Forgot password</Text>
     </TouchableOpacity>
   </View>
