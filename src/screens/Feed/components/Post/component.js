@@ -190,7 +190,7 @@ export class Post extends Component {
             />
             <PostFooter>
               <PostSection>
-                <Comment comment={comments[0]} />
+                {/* <Comment comment={comments[0]} /> */}
               </PostSection>
               <PostSection>
                 <CommentTextInput />

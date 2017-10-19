@@ -60,7 +60,6 @@ class Feed extends React.PureComponent {
 
   renderPost = item => (
     <Post
-      key={index}
       onPostPress={this.navigateToPost}
       authorAvatar={defaultAvatar}
       authorName="Josh"
@@ -91,7 +90,7 @@ class Feed extends React.PureComponent {
             data={FEED_DATA}
             renderItem={this.renderPost}
             ListHeaderComponent={
-              <CreatePostButton
+              <CreatePostRow
                 avatar={defaultAvatar}
                 onPress={this.navigateToCreatePost}
               />

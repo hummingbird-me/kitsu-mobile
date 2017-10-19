@@ -2395,7 +2395,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@^15.5.2:
+create-react-class@^15.5.2, create-react-class@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.0.tgz#ab448497c26566e1e29413e883207d57cfe7bed4"
   dependencies:
@@ -6706,6 +6706,14 @@ react-native-keyboard-aware-scroll-view@0.2.9:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.2.9.tgz#2a1ae49cfae90a9665b21763c1f8bd03ed5fb92c"
   dependencies:
+    react-timer-mixin "^0.13.3"
+
+"react-native-keyboard-aware-scroll-view@https://github.com/APSL/react-native-keyboard-aware-scroll-view.git#57a04a2b5b986c5f0a34d306c2f12c802ed1f454":
+  version "0.3.0"
+  resolved "https://github.com/APSL/react-native-keyboard-aware-scroll-view.git#57a04a2b5b986c5f0a34d306c2f12c802ed1f454"
+  dependencies:
+    create-react-class "^15.6.0"
+    prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
 
 react-native-linear-gradient@^2.3.0:
