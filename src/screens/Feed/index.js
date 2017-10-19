@@ -31,8 +31,6 @@ class Feed extends React.PureComponent {
     this.setState({ refreshing: false });
   }
 
-  onActionPress = () => {}
-
   setActiveFeed = (feed) => {
     this.setState({ activeFeed: feed });
   }
@@ -45,50 +43,29 @@ class Feed extends React.PureComponent {
     this.props.navigation.navigate('CreatePost');
   }
 
-  renderFeedFilter = () => (
-    <TabBar>
-      {feedStreams.map(tabItem => (
-        <TabBarLink
-          key={tabItem.key}
-          label={tabItem.label}
-          isActive={this.state.activeFeed === tabItem.key}
-          onPress={() => this.setActiveFeed(tabItem.key)}
-        />
-      ))}
-    </TabBar>
-  )
-
-  renderPost = ({ item }) => (
-    <Post
-      onPostPress={this.navigateToPost}
-      authorAvatar={defaultAvatar}
-      authorName="Josh"
-      postTime={item.createdAt}
-      postContent={item.content}
-      postLikesCount={item.postLikesCount}
-      postCommentCount={item.commentsCount}
-      comments={item.comments}
-      onLikePress={this.onActionPress}
-      onSharePress={this.onActionPress}
-      onCommentPress={this.onActionPress}
-    />
-  )
-
-  renderCreatePostRow = () => (
-    <CreatePostRow
-      avatar={defaultAvatar}
-      onPress={this.navigateToCreatePost}
-    />
-  )
-
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: listBackPurple }}>
-        {this.renderFeedFilter()}
+        <TabBar>
+          {feedStreams.map(tabItem => (
+            <TabBarLink
+              key={tabItem.key}
+              label={tabItem.label}
+              isActive={this.state.activeFeed === tabItem.key}
+              onPress={() => this.setActiveFeed(tabItem.key)}
+            />
+          ))}
+        </TabBar>
+
         <View style={{ flex: 1 }}>
           <KeyboardAwareFlatList
             data={FEED_DATA}
-            renderItem={this.renderPost}
+            renderItem={({ item }) => (
+              <Post
+                post={item}
+                onPostPress={this.navigateToPost}
+              />
+            )}
             ListHeaderComponent={
               <CreatePostRow
                 avatar={defaultAvatar}

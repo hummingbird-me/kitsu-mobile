@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import moment from 'moment';
+import { defaultAvatar } from 'kitsu/constants/app';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -10,6 +11,78 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { styles } from './styles';
+
+// Post
+export class Post extends Component {
+  state = {
+    isLiked: false,
+  }
+
+  toggleLike = () => {
+    this.setState({ isLiked: !this.state.isLiked });
+  }
+
+  focusOnCommentInput = () => {
+    this.commentInput.focus();
+  }
+
+  render() {
+    const {
+      createdAt,
+      content,
+      postLikesCount,
+      commentsCount,
+      comments,
+    } = this.props.post;
+
+    const { onPostPress } = this.props;
+
+    return (
+      <TouchableWithoutFeedback onPress={onPostPress}>
+        <View style={styles.wrap}>
+          <PostHeader
+            avatar={defaultAvatar}
+            name="Josh"
+            time={createdAt}
+          />
+
+          <PostMain
+            content={content}
+            likesCount={postLikesCount}
+            commentsCount={commentsCount}
+          />
+
+          <PostActions
+            isLiked={this.state.isLiked}
+            onLikePress={this.toggleLike}
+            onCommentPress={this.focusOnCommentInput}
+            onSharePress={() => {}}
+          />
+
+          <PostFooter>
+            <PostSection>
+              <Comment comment={comments[0]} />
+            </PostSection>
+
+            <PostSection>
+              <CommentTextInput inputRef={(el) => { this.commentInput = el; }} />
+            </PostSection>
+          </PostFooter>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+}
+
+Post.propTypes = {
+  post: PropTypes.object,
+  onPostPress: PropTypes.func,
+};
+
+Post.defaultProps = {
+  post: {},
+  onPostPress: null,
+};
 
 // PostHeader
 export const PostHeader = ({ avatar, name, time, onBackButtonPress }) => {
@@ -117,7 +190,7 @@ PostActionButton.defaultProps = {
   onPress: null,
 };
 
-export const PostAction = ({ isLiked, onLikePress, onCommentPress, onSharePress }) => (
+export const PostActions = ({ isLiked, onLikePress, onCommentPress, onSharePress }) => (
   <View style={styles.postActionRow}>
     <PostActionButton variant="like" onPress={onLikePress} isActive={isLiked} />
     <PostActionButton variant="comment" onPress={onCommentPress} />
@@ -125,13 +198,13 @@ export const PostAction = ({ isLiked, onLikePress, onCommentPress, onSharePress 
   </View>
 );
 
-PostAction.propTypes = {
+PostActions.propTypes = {
   isLiked: PropTypes.bool,
   onLikePress: PropTypes.func,
   onCommentPress: PropTypes.func,
   onSharePress: PropTypes.func,
 };
-PostAction.defaultProps = {
+PostActions.defaultProps = {
   isLiked: false,
   onLikePress: null,
   onCommentPress: null,
@@ -143,92 +216,3 @@ PostAction.defaultProps = {
 export const PostFooter = props => <View style={styles.postFooter} {...props} />;
 export const PostSection = props => <View style={styles.postSection} {...props} />;
 export const PostCommentsSection = props => <View style={styles.postCommentsSection} {...props} />;
-
-
-// Post
-export class Post extends Component {
-  state = {
-    x: '',
-    y: '',
-    width: '',
-    height: '',
-  }
-
-  render() {
-    const {
-      authorAvatar,
-      authorName,
-      postTime,
-      postContent,
-      postLikesCount,
-      postCommentCount,
-      onPostPress,
-      onLikePress,
-      onCommentPress,
-      onSharePress,
-      comments,
-    } = this.props;
-
-    return (
-      <View style={styles.wrap}>
-        <TouchableWithoutFeedback onPress={onPostPress}>
-          <View>
-            <PostHeader
-              avatar={authorAvatar}
-              name={authorName}
-              time={postTime}
-            />
-            <PostMain
-              content={postContent}
-              likesCount={postLikesCount}
-              commentsCount={postCommentCount}
-            />
-            <PostAction
-              onLikePress={onLikePress}
-              onCommentPress={onCommentPress}
-              onSharePress={onSharePress}
-            />
-            <PostFooter>
-              <PostSection>
-                <Comment comment={comments[0]} />
-              </PostSection>
-              <PostSection>
-                <CommentTextInput />
-              </PostSection>
-            </PostFooter>
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    );
-  }
-}
-
-Post.propTypes = {
-  authorAvatar: PropTypes.string,
-  authorName: PropTypes.string,
-  comments: PropTypes.array,
-  onCommentPress: PropTypes.func,
-  onLikePress: PropTypes.func,
-  onPostPress: PropTypes.func,
-  onSharePress: PropTypes.func,
-  postCommentCount: PropTypes.number,
-  postContent: PropTypes.string,
-  postLikesCount: PropTypes.number,
-  postTime: PropTypes.string,
-  onCommentInputFocus: PropTypes.func,
-};
-
-Post.defaultProps = {
-  authorAvatar: null,
-  authorName: null,
-  comments: [],
-  onCommentPress: null,
-  onLikePress: null,
-  onPostPress: null,
-  onSharePress: null,
-  postCommentCount: 0,
-  postContent: null,
-  postLikesCount: 0,
-  postTime: null,
-  onCommentInputFocus: null,
-};

@@ -18,6 +18,7 @@ export class CommentTextInput extends Component {
 
   render() {
     const {
+      inputRef,
       avatar,
       showAvatar,
       placeholder,
@@ -31,6 +32,7 @@ export class CommentTextInput extends Component {
         <Layout.RowMain>
           <View style={styles.textInputBox}>
             <TextInput
+              ref={inputRef}
               style={styles.textInputField}
               onBlur={() => this.handleOnFocus(false)}
               onFocus={() => this.handleOnFocus(true)}
@@ -51,6 +53,7 @@ export class CommentTextInput extends Component {
 }
 
 CommentTextInput.propTypes = {
+  inputRef: PropTypes.func,
   avatar: PropTypes.string,
   placeholder: PropTypes.string,
   showAvatar: PropTypes.bool,
@@ -58,6 +61,7 @@ CommentTextInput.propTypes = {
 };
 
 CommentTextInput.defaultProps = {
+  inputRef: null,
   avatar: null,
   placeholder: 'Write a comment...',
   showAvatar: true,

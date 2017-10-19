@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { KeyboardAvoidingView, FlatList, View, StatusBar, ScrollView } from 'react-native';
 import { defaultAvatar } from 'kitsu/constants/app';
-import { PostHeader, PostMain, PostAction, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
+import { PostHeader, PostMain, PostActions, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { FEED_DATA } from '../stub';
@@ -12,14 +12,22 @@ class PostDetails extends React.Component {
     header: null,
   }
 
-  state = {};
+  state = {
+    isLiked: false,
+  };
 
   componentWillUnmount = () => {
     StatusBar.setBarStyle('light-content');
   }
 
+  toggleLike = () => {
+    this.setState({ isLiked: !this.state.isLiked });
+  }
 
-  onActionPress = () => {}
+  focusOnCommentInput = () => {
+    this.commentInput.focus();
+  }
+
   goBack = () => {
     this.props.navigation.goBack();
   }
@@ -29,12 +37,14 @@ class PostDetails extends React.Component {
     return (
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1, paddingTop: 20, backgroundColor: '#FFFFFF' }}>
         <StatusBar barStyle="dark-content" />
+
         <PostHeader
           avatar={defaultAvatar}
           name="Josh"
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />
+
         <View style={{ flex: 1 }}>
           <ScrollView>
             <PostMain
@@ -42,11 +52,14 @@ class PostDetails extends React.Component {
               likesCount={post.postLikesCount}
               commentsCount={post.commentsCount}
             />
-            <PostAction
-              onLikePress={this.onActionPress}
-              onCommentPress={this.onActionPress}
-              onSharePress={this.onActionPress}
+
+            <PostActions
+              isLiked={this.state.isLiked}
+              onLikePress={this.toggleLike}
+              onCommentPress={this.focusOnCommentInput}
+              onSharePress={() => {}}
             />
+
             <PostCommentsSection>
               <FlatList
                 data={post.comments}
@@ -56,9 +69,10 @@ class PostDetails extends React.Component {
             </PostCommentsSection>
           </ScrollView>
         </View>
+
         <PostFooter>
           <PostSection>
-            <CommentTextInput />
+            <CommentTextInput inputRef={(el) => { this.commentInput = el; }} />
           </PostSection>
         </PostFooter>
       </KeyboardAvoidingView>
