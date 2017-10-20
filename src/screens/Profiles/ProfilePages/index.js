@@ -10,13 +10,15 @@ import {
   fetchUserFeed,
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
+import { Kitsu } from 'kitsu/config/api';
 
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import Summary from 'kitsu/screens/Profiles/ProfilePages/pages/Summary';
 
-const MORE_BUTTON_OPTIONS = ['Block', 'Report Profile', 'Nevermind'];
+// There's no way to Report Profiles at the moment in the API.
+const MORE_BUTTON_OPTIONS = ['Block', /* 'Report Profile', */ 'Nevermind'];
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
@@ -58,7 +60,17 @@ class ProfilePage extends Component {
     this.props.getUserFeed(userId);
   }
 
-  onMoreButtonOptionsSelected = () => {}
+  onMoreButtonOptionsSelected = async (button) => {
+    if (button === 'Block') {
+      await Kitsu.create('blocks', {
+        blocked: { id: this.props.userId },
+        user: { id: this.props.currentUser.id },
+      });
+    } else if (button === 'Report Profile') {
+      // There's no current way to report users from the site.
+      // Once there is, the API call goes here.
+    }
+  }
 
   setActiveTab = (tab) => {
     this.setState({ active: tab });
@@ -106,8 +118,8 @@ class ProfilePage extends Component {
 }
 
 ProfilePage.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  navigation: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
   profile: PropTypes.object.isRequired,
   fetchProfileFavorites: PropTypes.func.isRequired,
   fetchUserFeed: PropTypes.func.isRequired,
@@ -125,8 +137,7 @@ ProfilePage.defaultProps = {
   getUserFeed: {},
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const { navigation } = ownProps;
+const mapStateToProps = (state) => {
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
   const { currentUser } = state.user;
 
