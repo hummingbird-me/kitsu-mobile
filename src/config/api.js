@@ -899,6 +899,16 @@ Kitsu.define(
   { collectionPath: 'group-members' },
 );
 
+Kitsu.define(
+  'groupCategories',
+  {
+    name: '',
+    slug: '',
+    description: '',
+  },
+  { collectionPath: 'group-categories' },
+);
+
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
 };
