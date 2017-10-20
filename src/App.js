@@ -15,6 +15,12 @@ import { markNotifications } from './store/feed/actions';
 // eslint-disable-next-line
 console.disableYellowBox = true;
 
+// If you're using the debugging tools for React Native, the network tab is normally useless
+// because it shows network activity to load the JS bundle only. This line causes it to
+// use the dev tools XMLHttpRequest object if dev tools is running, making the network
+// tab useful again. If dev tools isn't running, this will have no effect.
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+
 class App extends Component {
   componentWillMount() {
     OneSignal.inFocusDisplaying(2);
