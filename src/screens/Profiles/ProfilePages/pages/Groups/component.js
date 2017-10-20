@@ -6,8 +6,6 @@ import {
 } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { Kitsu } from 'kitsu/config/api';
 
-GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-
 class Groups extends PureComponent {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
