@@ -20,7 +20,11 @@ export class Post extends Component {
     isLiked: false,
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
+    this.fetchComments();
+  }
+
+  fetchComments = async () => {
     try {
       const comments = await Kitsu.findAll('comments', {
         filter: {
@@ -30,8 +34,15 @@ export class Post extends Component {
           users: 'avatar,name',
         },
         include: 'user',
-        sort: '-createdAt',
+        sort: 'createdAt',
       });
+
+      // TODO: Comments come in without any structure.
+      // We need to hook them up with parent / child comments,
+      // but Devour doesn't seem to do this correctly:
+      // https://github.com/twg/devour/issues/90
+      // and there's no way for me to access the relationship
+      // data from the raw response from this context.
 
       this.setState({ comments });
     } catch (err) {
@@ -85,13 +96,11 @@ export class Post extends Component {
             {!comments &&
               <Text>Loading...</Text>
             }
-            {comments &&
-              <PostSection>
-                {comments.map(comment =>
-                  <Comment comment={comment} />,
-                )}
+            {comments && comments.map(comment => (
+              <PostSection key={comment.id}>
+                <Comment comment={comment} />
               </PostSection>
-            }
+            ))}
 
             <PostSection>
               <CommentTextInput inputRef={(el) => { this.commentInput = el; }} />

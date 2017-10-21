@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
+import { defaultAvatar } from 'kitsu/constants/app';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-// CommentBubble
-// Todo: make name dynamic
 const CommentBubble = ({ name, content }) => (
   <View style={styles.bubble}>
-    <StyledText size="xxsmall" color="dark" bold>Doaks</StyledText>
+    <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
     <StyledText size="xsmall" color="dark">{content}</StyledText>
   </View>
 );
@@ -24,28 +23,18 @@ CommentBubble.defaultProps = {
   content: null,
 };
 
-export const Comment = ({ comment }) => {
-  const {
-    avatar,
-    name,
-    content,
-    time,
-    showActions,
-    children,
-  } = comment.attributes;
-
-  console.log('==> Comment', comment);
+export const Comment = ({ comment, children }) => {
+  const { content, user } = comment;
+  const { avatar, name } = user;
 
   return (
     <Layout.RowWrap>
-      <Avatar avatar={avatar} size="medium" />
+      <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
       <Layout.RowMain>
         <CommentBubble name={name} content={content} />
-        {showActions && (
-          <View style={styled.commentActions} />
-        )}
+        <View style={styles.commentActions} />
         {children && (
-          <View style={styled.nestedCommentSection}>{children}</View>
+          <View style={styles.nestedCommentSection}>{children}</View>
         )}
       </Layout.RowMain>
     </Layout.RowWrap>
@@ -54,19 +43,16 @@ export const Comment = ({ comment }) => {
 
 
 Comment.propTypes = {
-  avatar: PropTypes.string,
-  name: PropTypes.string,
-  content: PropTypes.string,
-  time: PropTypes.string,
-  showActions: PropTypes.bool,
+  comment: PropTypes.shape({
+    avatar: PropTypes.string,
+    name: PropTypes.string,
+    content: PropTypes.string,
+    time: PropTypes.string,
+    children: PropTypes.array,
+  }).isRequired,
   children: PropTypes.node,
 };
 
 Comment.defaultProps = {
-  avatar: null,
-  name: null,
-  content: null,
-  time: null,
-  showActions: false,
-  children: null,
+  children: [],
 };
