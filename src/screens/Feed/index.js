@@ -79,8 +79,8 @@ class Feed extends React.PureComponent {
     this.setState({ refreshing: false });
   }
 
-  navigateToPost = () => {
-    this.props.navigation.navigate('PostDetails');
+  navigateToPost = (props) => {
+    this.props.navigation.navigate('PostDetails', props);
   }
 
   navigateToCreatePost = () => {

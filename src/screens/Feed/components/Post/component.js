@@ -24,6 +24,13 @@ export class Post extends Component {
     this.fetchComments();
   }
 
+  onPostPress = () => {
+    this.props.onPostPress({
+      post: this.props.post,
+      comments: this.state.comments,
+    });
+  }
+
   fetchComments = async () => {
     try {
       const comments = await Kitsu.findAll('comments', {
@@ -59,8 +66,6 @@ export class Post extends Component {
   }
 
   render() {
-    const { onPostPress } = this.props;
-
     const {
       createdAt,
       content,
@@ -71,7 +76,7 @@ export class Post extends Component {
     const { comments } = this.state;
 
     return (
-      <TouchableWithoutFeedback onPress={onPostPress}>
+      <TouchableWithoutFeedback onPress={this.onPostPress}>
         <View style={styles.wrap}>
           <PostHeader
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
@@ -97,7 +102,7 @@ export class Post extends Component {
               <Text>Loading...</Text>
             }
             {comments && comments.map(comment => (
-              <PostSection key={comment.id}>
+              <PostSection key={`comment:${comment.id}`}>
                 <Comment comment={comment} />
               </PostSection>
             ))}

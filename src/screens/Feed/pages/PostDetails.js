@@ -5,11 +5,14 @@ import { defaultAvatar } from 'kitsu/constants/app';
 import { PostHeader, PostMain, PostActions, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
-import { FEED_DATA } from '../stub';
 
 class PostDetails extends React.Component {
   static navigationOptions = {
     header: null,
+  }
+
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
   }
 
   state = {
@@ -33,14 +36,17 @@ class PostDetails extends React.Component {
   }
 
   render() {
-    const post = FEED_DATA[0];
+    // We expect to have navigated here using react-navigation, and it takes all our props
+    // and jams them over into this crazy thing.
+    const { post, comments } = this.props.navigation.state.params;
+
     return (
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1, paddingTop: 20, backgroundColor: '#FFFFFF' }}>
         <StatusBar barStyle="dark-content" />
 
         <PostHeader
-          avatar={defaultAvatar}
-          name="Josh"
+          avatar={(post.user.avatar && post.user.avatar.medium) || defaultAvatar}
+          name={post.user.name}
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />
@@ -62,7 +68,7 @@ class PostDetails extends React.Component {
 
             <PostCommentsSection>
               <FlatList
-                data={post.comments}
+                data={comments}
                 renderItem={({ item }) => <Comment comment={item} />}
                 ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
               />
@@ -79,13 +85,5 @@ class PostDetails extends React.Component {
     );
   }
 }
-
-PostDetails.propTypes = {
-  navigation: PropTypes.object,
-};
-
-PostDetails.defaultProps = {
-  navigation: {},
-};
 
 export default PostDetails;
