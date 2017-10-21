@@ -679,7 +679,40 @@ Kitsu.define(
   { collectionPath: 'feeds/notifications' },
 );
 
-Kitsu.define('comments', {}, { collectionPath: 'comments' });
+Kitsu.define('comments',
+  {
+    createdAt: '',
+    updatedAt: '',
+    content: '',
+    contentFormatted: '',
+    blocked: '',
+    deletedAt: '',
+    likesCount: '',
+    repliesCount: '',
+    editedAt: '',
+    embed: '',
+    embedUrl: '',
+    user: {
+      jsonApi: 'hasOne',
+    },
+    post: {
+      jsonApi: 'hasOne',
+    },
+    parent: {
+      jsonApi: 'hasOne',
+    },
+    likes: {
+      jsonApi: 'hasMany',
+    },
+    replies: {
+      jsonApi: 'hasMany',
+    },
+    uploads: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'comments' },
+);
 
 Kitsu.define(
   'userFeed',
@@ -742,6 +775,16 @@ Kitsu.define(
     },
   },
   { collectionPath: 'feeds/media_aggr' },
+);
+
+Kitsu.define(
+  'followingFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/timeline' },
 );
 
 Kitsu.define(
