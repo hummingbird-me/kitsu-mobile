@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     fontSize: 10,
   },
   posterImageContainer: {
-    marginHorizontal: 4,
+    marginRight: 4,
   },
   posterImageCard: {
     backgroundColor: colors.lightPurple,

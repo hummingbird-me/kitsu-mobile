@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     borderRadius: 3,
-    height: 40,
+    height: 29,
   },
   searchIcon: {
     position: 'absolute',
