@@ -51,7 +51,7 @@ class Feed extends React.PureComponent {
 
     try {
       const result = await Kitsu.one('followingFeed', this.props.currentUser.id).get({
-        include: 'media,actor,unit,subject,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         page: {
           offset: this.currentPage * PAGE_SIZE,
           limit: PAGE_SIZE,
@@ -67,6 +67,12 @@ class Feed extends React.PureComponent {
       result.forEach((group) => {
         group.activities.forEach((activity) => {
           data.push(activity.subject);
+
+          // Since we don't support comment posts properly yet,
+          // if it's a comment post, just include the actual post as well.
+          if (activity.target && activity.target.length > 0) {
+            data.push(...activity.target);
+          }
         });
       });
 
