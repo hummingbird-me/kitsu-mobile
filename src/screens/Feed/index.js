@@ -22,7 +22,6 @@ class Feed extends React.PureComponent {
     header: null,
   }
 
-
   state = {
     activeFeed: 'follower',
     refreshing: false,
@@ -52,7 +51,7 @@ class Feed extends React.PureComponent {
 
     try {
       const result = await Kitsu.one('followingFeed', this.props.currentUser.id).get({
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include: 'media,actor,unit,subject,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         page: {
           offset: this.currentPage * PAGE_SIZE,
           limit: PAGE_SIZE,
@@ -62,12 +61,12 @@ class Feed extends React.PureComponent {
       this.currentPage += 1;
 
       // Discard the activity groups and activities for now, flattening to
-      // just the target of the activity.
-      const data = reset ? [] : this.state.data;
+      // just the subject of the activity.
+      const data = reset ? [] : [...this.state.data];
 
       result.forEach((group) => {
         group.activities.forEach((activity) => {
-          data.push(...activity.target);
+          data.push(activity.subject);
         });
       });
 
@@ -87,6 +86,23 @@ class Feed extends React.PureComponent {
     this.props.navigation.navigate('CreatePost');
   }
 
+  renderPost = ({ item }) => {
+    // This dispatches based on the type of an entity to the correct
+    // component. If it's not in here it'll just ignore the feed item.
+    switch (item.type) {
+      case 'posts':
+        return (
+          <Post
+            post={item}
+            onPostPress={this.navigateToPost}
+          />
+        );
+      default:
+        console.log(`WARNING: Ignored post type: ${item.type}`);
+        return null;
+    }
+  }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: listBackPurple }}>
@@ -104,17 +120,10 @@ class Feed extends React.PureComponent {
         <View style={{ flex: 1 }}>
           <KeyboardAwareFlatList
             data={this.state.data}
-            renderItem={({ item }) => (
-              <Post
-                post={item}
-                onPostPress={this.navigateToPost}
-              />
-            )}
+            keyExtractor={item => `${item.type}:${item.id}`}
+            renderItem={this.renderPost}
             ListHeaderComponent={
-              <CreatePostRow
-                avatar={defaultAvatar}
-                onPress={this.navigateToCreatePost}
-              />
+              <CreatePostRow onPress={this.navigateToCreatePost} />
             }
             refreshControl={
               <RefreshControl
