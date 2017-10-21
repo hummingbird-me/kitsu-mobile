@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableOpacity, TouchableWithoutFeedback, Text } from 'react-native';
 import moment from 'moment';
+import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
@@ -15,7 +16,27 @@ import { styles } from './styles';
 // Post
 export class Post extends Component {
   state = {
+    comments: [],
     isLiked: false,
+  }
+
+  componentDidMount = async () => {
+    try {
+      const comments = await Kitsu.findAll('comments', {
+        filter: {
+          postId: this.props.post.id,
+        },
+        fields: {
+          users: 'avatar,name',
+        },
+        include: 'user',
+        sort: '-createdAt',
+      });
+
+      this.setState({ comments });
+    } catch (err) {
+      console.log('Error fetching comments: ', err);
+    }
   }
 
   toggleLike = () => {
@@ -27,22 +48,23 @@ export class Post extends Component {
   }
 
   render() {
+    const { onPostPress } = this.props;
+
     const {
       createdAt,
       content,
       postLikesCount,
       commentsCount,
-      comments,
+      user,
     } = this.props.post;
-
-    const { onPostPress } = this.props;
+    const { comments } = this.state;
 
     return (
       <TouchableWithoutFeedback onPress={onPostPress}>
         <View style={styles.wrap}>
           <PostHeader
-            avatar={defaultAvatar}
-            name="Josh"
+            avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
+            name={user.name}
             time={createdAt}
           />
 
@@ -60,9 +82,16 @@ export class Post extends Component {
           />
 
           <PostFooter>
-            <PostSection>
-              <Comment comment={comments[0]} />
-            </PostSection>
+            {!comments &&
+              <Text>Loading...</Text>
+            }
+            {comments &&
+              <PostSection>
+                {comments.map(comment =>
+                  <Comment comment={comment} />,
+                )}
+              </PostSection>
+            }
 
             <PostSection>
               <CommentTextInput inputRef={(el) => { this.commentInput = el; }} />
