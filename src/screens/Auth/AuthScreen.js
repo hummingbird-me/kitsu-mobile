@@ -13,10 +13,12 @@ import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
 import { connect } from 'react-redux';
 import { Modal } from 'kitsu/components/Modal';
+import { Toast } from 'kitsu/components/Toast';
 import SignupForm from 'kitsu/components/Forms/SignupForm';
 import LoginForm from 'kitsu/components/Forms/LoginForm';
 import { loginUser } from 'kitsu/store/auth/actions';
 import { createUser } from 'kitsu/store/user/actions';
+import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
@@ -35,6 +37,8 @@ class AuthScreen extends React.Component {
     birthday: MAXIMUM_DATE,
     isBirthdaySet: false,
     showDateModalIOS: false,
+    toastVisible: false,
+    toastTitle: '',
   };
 
   componentDidMount() {
@@ -47,26 +51,53 @@ class AuthScreen extends React.Component {
     if (nextProps.fbuser.name && nextProps.fbuser.name !== this.props.fbuser.name) {
       this.populateFB(nextProps.fbuser);
     }
+    if (nextProps.signupError && nextProps.signupError[0]) {
+      this.setState({
+        toastVisible: true,
+        toastTitle: nextProps.signupError[0].title,
+      });
+    }
   }
 
   onSubmitSignup = (isFb) => {
     const { navigation } = this.props;
-    const { email, username, password, birthday } = this.state;
-    const ISOBirthday = new Date(moment(birthday).format('YYYY-MM-DD')).toISOString(); // remove offsets caused by timezones.
-    if (isFb) {
-      this.props.loginUser(null, navigation, 'signup');
+    const { email, username, password, confirmPassword, birthday, isBirthdaySet } = this.state;
+    if (
+      isEmpty(email) ||
+      isEmpty(username) ||
+      isEmpty(password) ||
+      isEmpty(confirmPassword) ||
+      !isBirthdaySet
+    ) {
+      this.setState({
+        toastTitle: "Inputs can't be blank",
+        toastVisible: true,
+      });
+    } else if (confirmPassword !== password) {
+      this.setState({
+        toastTitle: 'Passwords do not match',
+        toastVisible: true,
+      });
     } else {
-      this.props.createUser({ email, username, password, birthday: ISOBirthday }, navigation);
+      const ISOBirthday = new Date(moment(birthday).format('YYYY-MM-DD')).toISOString(); // remove offsets caused by timezones.
+      if (isFb) {
+        this.props.loginUser(null, navigation, 'signup');
+      } else {
+        this.props.createUser({ email, username, password, birthday: ISOBirthday }, navigation);
+      }
     }
   };
 
   onSubmitLogin = () => {
     const { username, password } = this.state;
     const { navigation } = this.props;
-    if (username.length > 0 && password.length > 0) {
-      this.props.loginUser({ username, password }, navigation);
+    if (isEmpty(username) || isEmpty(password)) {
+      this.setState({
+        toastTitle: "Inputs can't be blank",
+        toastVisible: true,
+      });
     } else {
-      this.props.loginUser(null, navigation);
+      this.props.loginUser({ username, password }, navigation);
     }
   };
 
@@ -123,6 +154,10 @@ class AuthScreen extends React.Component {
     this.setState({ showDateModalIOS: false });
   };
 
+  onDismiss = () => {
+    this.setState({ toastVisible: false });
+  };
+
   populateFB = (fbuser) => {
     const { name, email } = fbuser;
     if (name) {
@@ -145,7 +180,15 @@ class AuthScreen extends React.Component {
 
   render() {
     const { signingIn, signingUp, loadFBuser } = this.props;
-    const { authType, birthday, isBirthdaySet, loading, showDateModalIOS } = this.state;
+    const {
+      authType,
+      birthday,
+      isBirthdaySet,
+      loading,
+      showDateModalIOS,
+      toastVisible,
+      toastTitle,
+    } = this.state;
     return (
       <View style={styles.container}>
         <AuthWrapper>
@@ -219,6 +262,12 @@ class AuthScreen extends React.Component {
             }}
           />
         </Modal>
+        <Toast
+          visible={toastVisible}
+          title={toastTitle}
+          onDismiss={this.onDismiss}
+          onRequestClose={this.onDismiss}
+        />
       </View>
     );
   }
