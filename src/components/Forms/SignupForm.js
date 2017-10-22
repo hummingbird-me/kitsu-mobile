@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
@@ -15,6 +15,7 @@ const SignupForm = ({
   onBirthdayButtonPressed,
   birthday,
   isBirthdaySet,
+  onPressTerms,
 }) => (
   <View>
     <Input
@@ -64,10 +65,12 @@ const SignupForm = ({
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
-    <Text style={styles.terms}>
-      By creating an account, you agree our{' '}
-      <Text style={styles.termsHightlight}>Terms of Service</Text>
-    </Text>
+    <View style={styles.termsWrapper}>
+      <Text style={styles.terms}>By creating an account, you agree our </Text>
+      <TouchableOpacity onPress={onPressTerms}>
+        <Text style={[styles.terms, styles.termsHightlight]}>Terms of Service</Text>
+      </TouchableOpacity>
+    </View>
   </View>
 );
 
@@ -81,6 +84,7 @@ SignupForm.propTypes = {
   onBirthdayButtonPressed: PropTypes.func.isRequired,
   birthday: PropTypes.string.isRequired,
   isBirthdaySet: PropTypes.bool.isRequired,
+  onPressTerms: PropTypes.func.isRequired,
 };
 
 export default SignupForm;

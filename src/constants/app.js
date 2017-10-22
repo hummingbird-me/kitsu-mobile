@@ -3,3 +3,5 @@ export const defaultAvatar =
 
 export const defaultCover =
   'https://kitsu.io/images/default_cover-7bda2081d0823731a96bbb20b70f4fcf.png';
+
+export const TERMS_URL = 'https://kitsu.io/terms';

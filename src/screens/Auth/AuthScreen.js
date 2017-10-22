@@ -8,6 +8,7 @@ import {
   UIManager,
   DatePickerAndroid,
   DatePickerIOS,
+  Linking,
 } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
@@ -18,6 +19,7 @@ import SignupForm from 'kitsu/components/Forms/SignupForm';
 import LoginForm from 'kitsu/components/Forms/LoginForm';
 import { loginUser } from 'kitsu/store/auth/actions';
 import { createUser } from 'kitsu/store/user/actions';
+import { TERMS_URL } from 'kitsu/constants/app';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import AuthWrapper from './AuthWrapper';
@@ -164,6 +166,10 @@ class AuthScreen extends React.Component {
     this.setState({ toastVisible: false });
   };
 
+  onPressTerms = () => {
+    Linking.openURL(TERMS_URL).catch(err => console.log('An error occurred', err));
+  };
+
   populateFB = (fbuser) => {
     const { name, email } = fbuser;
     if (name) {
@@ -235,6 +241,7 @@ class AuthScreen extends React.Component {
                   birthday={isBirthdaySet ? birthday.toLocaleDateString() : 'Birthday'} // Placeholder
                   isBirthdaySet={isBirthdaySet} // use placeholder styles
                   onBirthdayButtonPressed={this.onBirthdayButtonPressed}
+                  onPressTerms={this.onPressTerms}
                 />
               ) : (
                 <LoginForm
