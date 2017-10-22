@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export default StyleSheet.create({
@@ -11,7 +11,7 @@ export default StyleSheet.create({
   },
   logo: {
     position: 'absolute',
-    bottom: 30,
+    bottom: Platform.select({ ios: 30, android: 20 }),
     width: 150,
     height: 42,
     resizeMode: 'contain',

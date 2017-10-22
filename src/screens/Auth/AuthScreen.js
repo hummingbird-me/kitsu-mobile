@@ -48,13 +48,21 @@ class AuthScreen extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.fbuser.name && nextProps.fbuser.name !== this.props.fbuser.name) {
-      this.populateFB(nextProps.fbuser);
+    const { signingIn, signingUp, loginError, signupError, fbuser } = nextProps;
+    if (fbuser.name && fbuser.name !== this.props.fbuser.name) {
+      this.populateFB(fbuser);
     }
-    if (nextProps.signupError && nextProps.signupError[0]) {
+    // current login/signup process triggers falsy toast
+    if (!signingUp && !signingIn && signupError && signupError[0]) {
       this.setState({
         toastVisible: true,
-        toastTitle: nextProps.signupError[0].title,
+        toastTitle: signupError[0].title,
+      });
+    }
+    if (!signingUp && !signingIn && loginError) {
+      this.setState({
+        toastVisible: true,
+        toastTitle: loginError,
       });
     }
   }
@@ -62,7 +70,9 @@ class AuthScreen extends React.Component {
   onSubmitSignup = (isFb) => {
     const { navigation } = this.props;
     const { email, username, password, confirmPassword, birthday, isBirthdaySet } = this.state;
-    if (
+    if (isFb) {
+      this.props.loginUser(null, navigation, 'signup');
+    } else if (
       isEmpty(email) ||
       isEmpty(username) ||
       isEmpty(password) ||
@@ -80,11 +90,7 @@ class AuthScreen extends React.Component {
       });
     } else {
       const ISOBirthday = new Date(moment(birthday).format('YYYY-MM-DD')).toISOString(); // remove offsets caused by timezones.
-      if (isFb) {
-        this.props.loginUser(null, navigation, 'signup');
-      } else {
-        this.props.createUser({ email, username, password, birthday: ISOBirthday }, navigation);
-      }
+      this.props.createUser({ email, username, password, birthday: ISOBirthday }, navigation);
     }
   };
 
@@ -275,8 +281,8 @@ class AuthScreen extends React.Component {
 
 const mapStateToProps = ({ user, auth }) => {
   const { signingUp, signupError } = user;
-  const { signingIn, loadFBuser, fbuser } = auth;
-  return { signingUp, signingIn, signupError, loadFBuser, fbuser };
+  const { signingIn, loadFBuser, fbuser, loginError } = auth;
+  return { signingUp, signingIn, signupError, loadFBuser, fbuser, loginError };
 };
 
 export default connect(mapStateToProps, { loginUser, createUser })(AuthScreen);
