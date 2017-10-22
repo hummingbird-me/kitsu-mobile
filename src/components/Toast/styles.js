@@ -24,11 +24,4 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     flex: 1,
   },
-  dismissButton: {
-    padding: 4,
-  },
-  icon: {
-    color: colors.white,
-    fontSize: 18,
-  },
 });
