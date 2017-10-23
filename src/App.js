@@ -84,7 +84,11 @@ const RootContainer = ({ badge }) => (
 );
 
 RootContainer.propTypes = {
-  badge: PropTypes.number.isRequired,
+  badge: PropTypes.number,
+};
+
+RootContainer.defaultProps = {
+  badge: 0,
 };
 
 const ConnectedRoot = connect(({ feed }) => ({
