@@ -27,7 +27,7 @@ export const MediaRow = ({
 
 
 MediaRow.propTypes = {
-  imageVariant: PropTypes.oneOf(['portrait', 'landscape', 'landscapeSmall']),
+  imageVariant: PropTypes.oneOf(['square', 'thumbnail', 'portrait', 'landscape', 'landscapeSmall']),
   title: PropTypes.string,
   summary: PropTypes.string,
   thumbnail: PropTypes.object,

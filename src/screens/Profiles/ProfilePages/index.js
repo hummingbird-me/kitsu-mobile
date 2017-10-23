@@ -149,7 +149,7 @@ const mapStateToProps = (state) => {
   //   userId = navigation.state.params.userId;
   // }
 
-  const userId = 5554;
+  const userId = 30787;
 
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];

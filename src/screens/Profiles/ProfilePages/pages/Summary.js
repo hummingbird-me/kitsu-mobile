@@ -103,6 +103,7 @@ class Summary extends Component {
 }
 
 Summary.propTypes = {
+  setActiveTab: PropTypes.func,
   loading: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
@@ -114,6 +115,7 @@ Summary.propTypes = {
 };
 
 Summary.defaultProps = {
+  setActiveTab: null,
   loading: false,
   navigation: {},
   profile: {},
@@ -134,7 +136,7 @@ const mapStateToProps = (state, ownProps) => {
   //   userId = navigation.state.params.userId;
   // }
 
-  const userId = 5554;
+  const userId = 30787;
 
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
