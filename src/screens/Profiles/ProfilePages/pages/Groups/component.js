@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
@@ -10,7 +9,7 @@ import { Kitsu } from 'kitsu/config/api';
 
 class Groups extends PureComponent {
   static propTypes = {
-    currentUser: PropTypes.object.isRequired,
+    userId: PropTypes.number.isRequired,
   }
 
   state = {
@@ -19,14 +18,13 @@ class Groups extends PureComponent {
   }
 
   componentDidMount = async () => {
-    const { userId } = this.props;
     try {
       const data = await Kitsu.findAll('group-members', {
         fields: {
           group: 'slug,name,avatar,tagline,membersCount,category',
         },
         filter: {
-          query_user: userId,
+          query_user: this.props.userId,
         },
         include: 'group.category',
         sort: '-created_at',
@@ -71,10 +69,4 @@ class Groups extends PureComponent {
   }
 }
 
-
-const mapStateToProps = ({ user }) => {
-  const { currentUser } = user;
-  return { currentUser };
-};
-
-export const component = connect(mapStateToProps)(Groups);
+export const component = Groups;
