@@ -23,6 +23,7 @@ export const styles = StyleSheet.create({
     borderColor: lightGrey,
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: scenePadding,
   },
   voteIcon: {
     fontSize: 19,

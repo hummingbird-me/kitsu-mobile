@@ -19,13 +19,14 @@ class Groups extends PureComponent {
   }
 
   componentDidMount = async () => {
+    const { userId } = this.props;
     try {
       const data = await Kitsu.findAll('group-members', {
         fields: {
           group: 'slug,name,avatar,tagline,membersCount,category',
         },
         filter: {
-          query_user: this.props.currentUser.id,
+          query_user: userId,
         },
         include: 'group.category',
         sort: '-created_at',
@@ -49,7 +50,7 @@ class Groups extends PureComponent {
     }
 
     return (
-      <TabContainer light padded>
+      <TabContainer>
         <FlatList
           data={data}
           renderItem={({ item }) => (

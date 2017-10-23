@@ -33,7 +33,7 @@ class Reactions extends Component {
             reaction={item}
           />
         )}
-        ItemSeparatorComponent={() => <RowSeparator />}
+        ItemSeparatorComponent={() => <RowSeparator size="large" />}
         ListHeaderComponent={() => (
           <TabHeader
             padded

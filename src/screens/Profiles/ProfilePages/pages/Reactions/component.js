@@ -39,8 +39,6 @@ class Reactions extends PureComponent {
   render() {
     const { loading, data } = this.state;
 
-    console.log('==> DATA', data);
-
     if (loading) {
       // Return loading state.
       return null;
@@ -48,7 +46,16 @@ class Reactions extends PureComponent {
 
     return (
       <TabContainer>
-
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <ReactionBox
+              reactedMedia={item.anime ? item.anime.canonicalTitle : item.manga.canonicalTitle}
+              reaction={item}
+            />
+          )}
+          ItemSeparatorComponent={() => <RowSeparator size="large" transparent />}
+        />
       </TabContainer>
     );
   }

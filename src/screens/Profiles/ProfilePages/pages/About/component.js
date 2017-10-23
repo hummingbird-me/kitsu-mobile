@@ -18,18 +18,32 @@ import { styles } from './styles';
 const ItemSeparator = () => <View style={{ height: 10 }} />
 
 class About extends Component {
-  componentDidMount() {
-    const { userId } = this.props;
-    this.props.fetchProfile(userId);
-    this.props.fetchUserFeed(userId, 12);
-    this.props.fetchProfileFavorites(userId, 'character');
-    this.props.fetchProfileFavorites(userId, 'manga');
-    this.props.fetchProfileFavorites(userId, 'anime');
-    this.props.getUserFeed(userId);
+  state = {
+    loading: true,
+    data: null,
   }
 
+  componentDidMount = async () => {
+    const { userId } = this.props;
+    try {
+      const data = await Kitsu.findAll('users', {
+        filter: userId,
+      });
+
+      this.setState({
+        data,
+        loading: false,
+      });
+    } catch (err) {
+      console.log('Unhandled error while retrieving user data: ', err);
+    }
+  }
+
+
   render() {
-    const { profile } = this.props;
+    const { loading, data } = this.state;
+    console.log('==> PROFILE', data);
+
     const waifuOrHusbandoComponent = (
       <MediaRow
         imageVariant="thumbnail"
