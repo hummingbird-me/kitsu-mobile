@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
+import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  SceneContainer,
-} from 'kitsu/screens/Profiles/components/SceneContainer';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
+import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
+import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { Kitsu } from 'kitsu/config/api';
 
 class Reactions extends PureComponent {
@@ -38,13 +39,17 @@ class Reactions extends PureComponent {
   render() {
     const { loading, data } = this.state;
 
+    console.log('==> DATA', data);
+
     if (loading) {
       // Return loading state.
       return null;
     }
 
     return (
-      <SceneContainer />
+      <TabContainer>
+
+      </TabContainer>
     );
   }
 }

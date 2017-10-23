@@ -112,9 +112,6 @@ export class SceneHeader extends Component {
       title,
       coverImage,
       posterImage,
-      mainButtonTitle,
-      mainButtonOptions,
-      onMainButtonOptionsSelected,
       moreButtonOptions,
       onMoreButtonOptionsSelected,
     } = this.props;
@@ -131,7 +128,7 @@ export class SceneHeader extends Component {
 
         <View style={[styles.profileHeaderView, styles[`profileHeaderView__${variant}`]]}>
           {/* Profile Poster Image */}
-          <View style={styles.profileImageViewShadow}>
+          <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
             <View style={[styles.profileImageView, styles[`profileImageView__${variant}`]]}>
               <StyledProgressiveImage
                 variant={variant}

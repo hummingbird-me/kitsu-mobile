@@ -34,7 +34,6 @@ export const styles = StyleSheet.create({
   },
 
   profileImageViewShadow: {
-    borderRadius: 6,
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowOffset: {
       width: 1,
@@ -66,12 +65,12 @@ export const styles = StyleSheet.create({
   profileImageView__profile: {
     width: cardSize.square.width,
     height: cardSize.square.height,
-    borderRadius: 6,
+    borderRadius: cardSize.square.width,
   },
   profileImageView__group: {
     width: cardSize.square.width,
     height: cardSize.square.height,
-    borderRadius: cardSize.square.width,
+    borderRadius: 6,
   },
 
 
