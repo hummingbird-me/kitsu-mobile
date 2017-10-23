@@ -10,11 +10,9 @@ import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 
 class Episodes extends Component {
   static propTypes = {
-    media: PropTypes.object.isRequired,
-  }
-
-  static defaultProps = {
-    media: {},
+    media: PropTypes.shape({
+      episodes: PropTypes.array.isRequired,
+    }).isRequired,
   }
 
   formatData(data, numberOfItems = 20) {

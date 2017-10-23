@@ -35,7 +35,7 @@ SectionHeader.propTypes = {
   contentDark: PropTypes.bool,
   onViewAllPress: PropTypes.func,
   title: PropTypes.string,
-  titleAction: PropTypes.element,
+  titleAction: PropTypes.func,
   titleLabel: PropTypes.string,
 };
 
