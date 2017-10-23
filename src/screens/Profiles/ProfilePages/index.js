@@ -92,7 +92,7 @@ class ProfilePage extends Component {
   );
 
   render() {
-    const { profile, entries } = this.props;
+    const { profile, entries, userId } = this.props;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     return (
       <SceneContainer>
@@ -110,7 +110,10 @@ class ProfilePage extends Component {
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabNav()}
-          <TabScene setActiveTab={tab => this.setActiveTab(tab)} />
+          <TabScene
+            setActiveTab={tab => this.setActiveTab(tab)}
+            userId={userId}
+          />
         </ScrollView>
       </SceneContainer>
     );
