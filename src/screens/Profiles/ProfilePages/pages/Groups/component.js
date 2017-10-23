@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import { defaultAvatar } from 'kitsu/constants/app';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
@@ -43,8 +44,7 @@ class Groups extends PureComponent {
     const { loading, data } = this.state;
 
     if (loading) {
-      // Return loading state.
-      return null;
+      return <SceneLoader />;
     }
 
     return (
