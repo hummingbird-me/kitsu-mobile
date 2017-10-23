@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   SceneContainer,
@@ -8,7 +7,7 @@ import { Kitsu } from 'kitsu/config/api';
 
 class Groups extends PureComponent {
   static propTypes = {
-    currentUser: PropTypes.object.isRequired,
+    userId: PropTypes.number.isRequired,
   }
 
   state = {
@@ -23,7 +22,7 @@ class Groups extends PureComponent {
           group: 'slug,name,avatar,tagline,membersCount,category',
         },
         filter: {
-          query_user: this.props.currentUser.id,
+          query_user: this.props.userId,
         },
         include: 'group.category',
         sort: '-created_at',
@@ -52,10 +51,4 @@ class Groups extends PureComponent {
   }
 }
 
-
-const mapStateToProps = ({ user }) => {
-  const { currentUser } = user;
-  return { currentUser };
-};
-
-export const component = connect(mapStateToProps)(Groups);
+export const component = Groups;

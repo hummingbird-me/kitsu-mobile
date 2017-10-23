@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   SceneContainer,
@@ -8,7 +7,7 @@ import { Kitsu } from 'kitsu/config/api';
 
 class Library extends PureComponent {
   static propTypes = {
-    currentUser: PropTypes.object.isRequired,
+    userId: PropTypes.number.isRequired,
   }
 
   state = {
@@ -17,6 +16,8 @@ class Library extends PureComponent {
   }
 
   componentDidMount = async () => {
+    const { userId } = this.props;
+
     try {
       const data = await Kitsu.findAll('libraryEntries', {
         fields: {
@@ -24,7 +25,7 @@ class Library extends PureComponent {
           users: 'id',
         },
         filter: {
-          user_id: this.props.currentUser.id,
+          userId,
           kind: 'anime',
         },
         include: 'anime,user,mediaReaction',
@@ -59,11 +60,4 @@ class Library extends PureComponent {
   }
 }
 
-
-const mapStateToProps = ({ user }) => {
-  const { currentUser } = user;
-  return { currentUser };
-};
-
-export const component = connect(mapStateToProps)(Library);
-
+export const component = Library;
