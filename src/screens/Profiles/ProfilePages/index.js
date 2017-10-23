@@ -48,6 +48,26 @@ class ProfilePage extends Component {
     },
   }
 
+  static propTypes = {
+    currentUser: PropTypes.object.isRequired,
+    userId: PropTypes.number.isRequired,
+    profile: PropTypes.object.isRequired,
+    fetchProfileFavorites: PropTypes.func.isRequired,
+    fetchUserFeed: PropTypes.func.isRequired,
+    fetchProfile: PropTypes.func.isRequired,
+    getUserFeed: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    loading: false,
+    navigation: {},
+    profile: {},
+    fetchProfileFavorites: {},
+    fetchUserFeed: {},
+    fetchProfile: {},
+    getUserFeed: {},
+  }
+
   state = { active: 'Summary' }
 
   componentDidMount() {
@@ -119,26 +139,6 @@ class ProfilePage extends Component {
     );
   }
 }
-
-ProfilePage.propTypes = {
-  currentUser: PropTypes.object.isRequired,
-  userId: PropTypes.string.isRequired,
-  profile: PropTypes.object.isRequired,
-  fetchProfileFavorites: PropTypes.func.isRequired,
-  fetchUserFeed: PropTypes.func.isRequired,
-  fetchProfile: PropTypes.func.isRequired,
-  getUserFeed: PropTypes.func.isRequired,
-};
-
-ProfilePage.defaultProps = {
-  loading: false,
-  navigation: {},
-  profile: {},
-  fetchProfileFavorites: {},
-  fetchUserFeed: {},
-  fetchProfile: {},
-  getUserFeed: {},
-};
 
 const mapStateToProps = (state) => {
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;

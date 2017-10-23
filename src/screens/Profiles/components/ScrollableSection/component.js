@@ -4,6 +4,8 @@ import { View, FlatList } from 'react-native';
 import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
 import { styles } from './styles';
 
+const keyExtractor = (item, index) => index;
+
 export const ScrollableSection = ({
   contentDark,
   title,
@@ -22,12 +24,13 @@ export const ScrollableSection = ({
       contentDark={contentDark}
     />
     <FlatList
-      style={styles.list}
+      data={data}
+      keyExtractor={keyExtractor}
       contentContainerStyle={styles.listContent}
       horizontal
       showsHorizontalScrollIndicator={false}
-      data={data}
       renderItem={renderItem}
+      style={styles.list}
     />
   </View>
 );
