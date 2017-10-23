@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   SceneContainer,
@@ -8,7 +7,7 @@ import { Kitsu } from 'kitsu/config/api';
 
 class Reactions extends PureComponent {
   static propTypes = {
-    currentUser: PropTypes.object.isRequired,
+    userId: PropTypes.number.isRequired,
   }
 
   state = {
@@ -17,11 +16,11 @@ class Reactions extends PureComponent {
   }
 
   componentDidMount = async () => {
+    const { userId } = this.props;
+
     try {
       const data = await Kitsu.findAll('mediaReactions', {
-        filter: {
-          user_id: this.props.currentUser.id,
-        },
+        filter: { userId },
         include: 'anime,user,manga',
         sort: 'upVotesCount',
       });
@@ -49,10 +48,4 @@ class Reactions extends PureComponent {
   }
 }
 
-
-const mapStateToProps = ({ user }) => {
-  const { currentUser } = user;
-  return { currentUser };
-};
-
-export const component = connect(mapStateToProps)(Reactions);
+export const component = Reactions;
