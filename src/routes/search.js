@@ -10,9 +10,6 @@ import navigationOptions from './navigationOptions';
 
 const SearchStack = StackNavigator(
   {
-    MediaPages: {
-      screen: MediaPages,
-    },
     SearchAll: {
       screen: SearchScreen,
     },
@@ -21,6 +18,9 @@ const SearchStack = StackNavigator(
     },
     SearchResults: {
       screen: SearchResults,
+    },
+    MediaPages: {
+      screen: MediaPages,
     },
   },
   {
