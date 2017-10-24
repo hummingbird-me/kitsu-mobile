@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 
+import { Kitsu } from 'kitsu/config/api';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
@@ -11,6 +12,10 @@ import Summary from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
 const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
+
+// TODO: Note we're using this to work around a bug in React Navigation:
+// https://github.com/react-community/react-navigation/issues/143
+export const requests = {};
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
@@ -34,13 +39,16 @@ const TabRoutes = TabRouter({
 
 /* eslint-enable global-require */
 
-class MediaPages extends Component {
+class MediaPages extends PureComponent {
   static propTypes = {
-    media: PropTypes.object.required,
+    navigation: PropTypes.object.isRequired,
+    mediaId: PropTypes.string,
+    mediaType: PropTypes.string,
   }
 
   static defaultProps = {
-    media: {},
+    mediaId: null,
+    mediaType: null,
   }
 
   static navigationOptions = {
@@ -50,13 +58,77 @@ class MediaPages extends Component {
     },
   }
 
-  state = { active: 'Summary' }
+  state = {
+    active: 'Summary',
+    loading: true,
+    media: null,
+    castings: null,
+    mediaReactions: null,
+  }
+
+  componentDidMount = () => {
+    const mediaType = requests.requestedMediaType ||
+      (this.props.navigation.state.params || {}).mediaType ||
+      this.props.mediaType;
+
+    const mediaId = requests.requestedMediaId ||
+      (this.props.navigation.state.params || {}).mediaId ||
+      this.props.mediaId;
+
+    this.fetchMedia(mediaType, mediaId);
+
+    if (requests.requestedMediaId) {
+      delete requests.requestedMediaId;
+    }
+  }
 
   onMainButtonOptionsSelected = () => {}
   onMoreButtonOptionsSelected = () => {}
 
   setActiveTab = (tab) => {
     this.setState({ active: tab });
+  }
+
+  fetchMedia = async (type, id) => {
+    try {
+      const media = await Kitsu.one(type, id).get({
+        include: `categories,mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
+      });
+
+      // Now that we've got the media, everything else can go async together.
+      const promises = [];
+
+      promises.push(Kitsu.findAll('castings', {
+        filter: {
+          mediaId: id,
+          isCharacter: true,
+        },
+        sort: '-featured',
+        include: 'character',
+      }));
+
+      promises.push(Kitsu.findAll('mediaReactions', {
+        filter: {
+          [`${type}Id`]: id,
+        },
+        include: 'user',
+        sort: '-upVotesCount',
+      }));
+
+      const [
+        castings,
+        mediaReactions,
+      ] = await Promise.all(promises);
+
+      this.setState({
+        media,
+        castings,
+        mediaReactions,
+      });
+    } catch (error) {
+      console.log('Error fetching media.', err);
+      this.setState({ error });
+    }
   }
 
   renderTabNav = () => (
@@ -73,8 +145,18 @@ class MediaPages extends Component {
   );
 
   render() {
-    const { media } = this.props;
+    const { error, loading, media } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
+
+    if (loading) {
+      // Return loading state
+      return null;
+    }
+
+    if (error) {
+      // Return error state
+      return null;
+    }
 
     return (
       <SceneContainer>

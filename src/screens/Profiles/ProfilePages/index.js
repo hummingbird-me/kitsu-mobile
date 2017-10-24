@@ -49,6 +49,7 @@ class ProfilePage extends Component {
   }
 
   static propTypes = {
+    navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     userId: PropTypes.number.isRequired,
     profile: PropTypes.object.isRequired,
@@ -112,7 +113,7 @@ class ProfilePage extends Component {
   );
 
   render() {
-    const { profile, entries, userId } = this.props;
+    const { profile, entries, userId, navigation } = this.props;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     return (
       <SceneContainer>
@@ -133,6 +134,7 @@ class ProfilePage extends Component {
           <TabScene
             setActiveTab={tab => this.setActiveTab(tab)}
             userId={userId}
+            navigation={navigation}
           />
         </ScrollView>
       </SceneContainer>
@@ -140,7 +142,8 @@ class ProfilePage extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const { navigation } = ownProps;
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
   const { currentUser } = state.user;
 
@@ -160,6 +163,7 @@ const mapStateToProps = (state) => {
     ({ activities }) => !['comment', 'follow'].includes(activities[0].verb),
   );
   return {
+    navigation,
     userId,
     loading,
     profile: profile[userId] || {},
