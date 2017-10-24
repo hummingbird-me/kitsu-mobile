@@ -51,6 +51,7 @@ class Feed extends React.PureComponent {
     try {
       const result = await Kitsu.one('followingFeed', this.props.currentUser.id).get({
         include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        filter: { kind: 'posts' },
         page: {
           offset: this.currentPage * PAGE_SIZE,
           limit: PAGE_SIZE,
@@ -88,7 +89,9 @@ class Feed extends React.PureComponent {
   }
 
   navigateToCreatePost = () => {
-    this.props.navigation.navigate('CreatePost');
+    this.props.navigation.navigate('CreatePost', {
+      onNewPostCreated: () => this.fetchFeed({ reset: true }),
+    });
   }
 
   renderPost = ({ item }) => {

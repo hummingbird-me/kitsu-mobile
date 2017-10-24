@@ -15,6 +15,11 @@ class CreatePost extends React.PureComponent {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
+    onNewPostCreated: PropTypes.func,
+  }
+
+  static defaultProps = {
+    onNewPostCreated: null,
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -66,6 +71,10 @@ class CreatePost extends React.PureComponent {
       });
     } catch (err) {
       console.error(err);
+    }
+
+    if (this.props.navigation.state.params.onNewPostCreated) {
+      this.props.navigation.state.params.onNewPostCreated();
     }
 
     this.props.navigation.goBack();
