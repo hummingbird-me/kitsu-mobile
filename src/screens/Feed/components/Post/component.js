@@ -183,7 +183,7 @@ export const PostMain = ({ content, images, likesCount, commentsCount }) => (
     {IMAGES.length > 0 && (
       <FlatList
         keyExtractor={({ index }) => index}
-        style={styles.postImagesView}
+        style={[styles.postImagesView, !content && styles.posImagesView__noText]}
         data={IMAGES}
         renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
         ItemSeparatorComponent={() => <PostImageSeparator />}

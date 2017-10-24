@@ -28,6 +28,9 @@ export const styles = StyleSheet.create({
     marginLeft: scenePadding * -1,
     marginRight: scenePadding * -1,
   },
+  posImagesView__noText: {
+    marginTop: 0,
+  },
 
   postStatusRow: {
     flexDirection: 'row',
