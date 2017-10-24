@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { unescape } from 'lodash';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { View, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
@@ -62,7 +63,7 @@ class Feed extends React.PureComponent {
 
       // Discard the activity groups and activities for now, flattening to
       // just the subject of the activity.
-      const data = reset ? [] : [...this.state.data];
+      let data = reset ? [] : [...this.state.data];
 
       result.forEach((group) => {
         group.activities.forEach((activity) => {
@@ -74,6 +75,30 @@ class Feed extends React.PureComponent {
             data.push(...activity.target);
           }
         });
+      });
+
+      // Pull images out of HTML and replace in content.
+      // Regex is the absolutely wrong tool for this job, but we're against a wall on
+      // timings and we should probably just structure actual posts better anyway so
+      // the app actually knows what kind of post they are and gets the content
+      // in the right structure to render them rather than guessing from HTML.
+      const imagePattern = /<img[^>]+src="(.+?)"\/?>/ig;
+      let lastMatch;
+      data = data.map((post) => {
+        const images = [];
+        // eslint-disable-next-line no-cond-assign
+        while ((lastMatch = imagePattern.exec(post.contentFormatted)) !== null) {
+          const imageUri = unescape(lastMatch[1]);
+
+          images.push(imageUri);
+          // eslint-disable-next-line no-param-reassign
+          post.content = post.content.replace(imageUri, '');
+        }
+
+        return {
+          ...post,
+          images,
+        };
       });
 
       this.setState({ data });

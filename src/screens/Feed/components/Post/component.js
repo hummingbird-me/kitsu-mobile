@@ -168,23 +168,17 @@ PostHeader.defaultProps = {
   onBackButtonPress: null,
 };
 
-// Todo: replace IMAGES with images when reat data ready
-const IMAGES = [
-  'https://i-cdn.embed.ly/1/display/crop?height=300&key=fd92ebbc52fc43fb98f69e50e7893c13&url=http%3A%2F%2Fwww.animenewsnetwork.com%2Fthumbnails%2Fcrop600x315%2Fcms%2Fnews%2F123067%2Fscreen-shot-2017-10-23-at-3.51.27-pm.png&width=636',
-  'https://i-cdn.embed.ly/1/display/crop?height=300&key=fd92ebbc52fc43fb98f69e50e7893c13&url=https%3A%2F%2Fblog.sakugabooru.com%2Fwp-content%2Fuploads%2F2017%2F10%2Fvioletevergarden.jpg&width=636',
-];
-
 // PostMain
 export const PostMain = ({ content, images, likesCount, commentsCount }) => (
   <View style={styles.postMain}>
     <View style={styles.postContent}>
       <StyledText color="dark" size="small">{content}</StyledText>
     </View>
-    {IMAGES.length > 0 && (
+    {images && images.length > 0 && (
       <FlatList
         keyExtractor={({ index }) => index}
         style={[styles.postImagesView, !content && styles.posImagesView__noText]}
-        data={IMAGES}
+        data={images}
         renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
         ItemSeparatorComponent={() => <PostImageSeparator />}
       />
