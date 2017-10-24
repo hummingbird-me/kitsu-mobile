@@ -4,6 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import Feed from 'kitsu/screens/Feed';
 import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
 import CreatePost from 'kitsu/screens/Feed/pages/CreatePost';
+import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import homeIcon from 'kitsu/assets/img/tabbar_icons/home.png';
 import navigationOptions from './navigationOptions';
 
@@ -29,6 +30,9 @@ const FeedStack = StackNavigator(
     },
     CreatePost: {
       screen: CreatePost,
+    },
+    MediaPages: {
+      screen: MediaPages,
     },
   },
   {

@@ -19,9 +19,6 @@ const SearchStack = StackNavigator(
     SearchResults: {
       screen: SearchResults,
     },
-    MediaPages: {
-      screen: MediaPages,
-    },
   },
   {
     navigationOptions: () => ({

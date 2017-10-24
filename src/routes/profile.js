@@ -11,15 +11,6 @@ const ProfileStack = DismissableStackNavigator(
     ProfilePages: {
       screen: ProfilePages,
     },
-    UserProfile: {
-      screen: ProfileScreens.ProfileScreen,
-    },
-    Character: {
-      screen: ProfileScreens.MediaScreen,
-    },
-    UserLibrary: {
-      screen: ProfileScreens.UserLibraryScreen,
-    },
     UserLibraryEdit: {
       screen: ProfileScreens.UserLibraryEditScreen,
     },
