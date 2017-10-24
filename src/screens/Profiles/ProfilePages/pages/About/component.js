@@ -4,8 +4,9 @@ import moment from 'moment';
 import { FlatList, View } from 'react-native';
 
 import { Kitsu } from 'kitsu/config/api';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import { styles } from './styles';
 
@@ -40,31 +41,29 @@ class About extends Component {
 
   render() {
     const { loading, data } = this.state;
-    console.log('==> PROFILE', data);
 
     if (loading) {
-      // Return loading state.
-      return null;
+      return <SceneLoader />;
     }
 
     const waifuOrHusbandoComponent = (
       <MediaRow
         imageVariant="thumbnail"
-        title={profile.waifu.name}
-        thumbnail={{ uri: profile.waifu.image && profile.waifu.image.original }}
-        summary={profile.waifu.description}
+        title={data.waifu.name}
+        thumbnail={{ uri: data.waifu.image && data.waifu.image.original }}
+        summary={data.waifu.description}
         summaryLines={2}
       />
     );
     const aboutRows = [
-      { key: 'waifuOrHusbando', label: profile.waifuOrHusbando, contentComponent: waifuOrHusbandoComponent },
-      { key: 'gender', label: 'Gender', content: profile.gender },
-      { key: 'location', label: 'Location', content: profile.location },
-      { key: 'birthday', label: 'Birthday', content: moment(profile.birthday).format('MMMM Do') },
-      { key: 'joinDate', label: 'Join date', content: moment(profile.createdAt).format('MMMM Do, YYYY') },
+      { key: 'waifuOrHusbando', label: data.waifuOrHusbando, contentComponent: waifuOrHusbandoComponent },
+      { key: 'gender', label: 'Gender', content: data.gender },
+      { key: 'location', label: 'Location', content: data.location },
+      { key: 'birthday', label: 'Birthday', content: moment(data.birthday).format('MMMM Do') },
+      { key: 'joinDate', label: 'Join date', content: moment(data.createdAt).format('MMMM Do, YYYY') },
     ];
     return (
-      <SceneContainer>
+      <TabContainer>
         <FlatList
           style={{ marginTop: 10 }}
           data={aboutRows}
@@ -77,7 +76,7 @@ class About extends Component {
           )}
           ItemSeparatorComponent={() => <ItemSeparator />}
         />
-      </SceneContainer>
+      </TabContainer>
     );
   }
 }

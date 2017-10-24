@@ -10,7 +10,6 @@ import { styles } from './styles';
 export const ReactionBox = ({ boxed, reactedMedia, reaction }) => {
   const { user } = reaction;
   const timeStamp = moment(reaction.createdAt).fromNow();
-  console.log('==> REACTION', reaction);
   return (
     <View style={[styles.wrap, boxed && styles.wrap__boxed]}>
       <AvatarHeader

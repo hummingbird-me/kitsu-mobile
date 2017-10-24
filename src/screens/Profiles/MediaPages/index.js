@@ -5,6 +5,7 @@ import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import { Kitsu } from 'kitsu/config/api';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
@@ -56,11 +57,12 @@ class MediaPages extends PureComponent {
       backgroundColor: 'transparent',
       height: 20,
     },
+    headerLeft: null,
   }
 
   state = {
     active: 'Summary',
-    loading: true,
+    loading: false,
     media: null,
     castings: null,
     mediaReactions: null,
@@ -94,6 +96,7 @@ class MediaPages extends PureComponent {
   }
 
   fetchMedia = async (type, id) => {
+    this.setState({ loading: true });
     try {
       const media = await Kitsu.one(type, id).get({
         include: `categories,mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
@@ -125,6 +128,7 @@ class MediaPages extends PureComponent {
       ] = await Promise.all(promises);
 
       this.setState({
+        loading: false,
         media,
         castings,
         mediaReactions,
@@ -152,12 +156,17 @@ class MediaPages extends PureComponent {
     const { error, loading, media } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
 
+    console.log('==> MEDIA PAGE', media);
+
     if (loading) {
-      // Return loading state
-      return null;
+      return (
+        <SceneContainer>
+          <SceneLoader />
+        </SceneContainer>
+      );
     }
 
-    if (error) {
+    if (error || !media) {
       // Return error state
       return null;
     }
@@ -183,19 +192,16 @@ class MediaPages extends PureComponent {
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabNav()}
-          <TabScene setActiveTab={tab => this.setActiveTab(tab)} />
+          <TabScene
+            setActiveTab={tab => this.setActiveTab(tab)}
+            media={media.id}
+            navigation={navigation}
+          />
         </ScrollView>
       </SceneContainer>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  const { media } = state.media;
 
-  return {
-    media: media[12],
-  };
-};
-
-export default connect(mapStateToProps, {})(MediaPages);
+export default MediaPages;
