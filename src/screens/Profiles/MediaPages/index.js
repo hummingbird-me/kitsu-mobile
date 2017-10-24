@@ -77,6 +77,10 @@ class MediaPages extends PureComponent {
 
     this.fetchMedia(mediaType, mediaId);
 
+    if (requests.requestedMediaType) {
+      delete requests.requestedMediaType;
+    }
+
     if (requests.requestedMediaId) {
       delete requests.requestedMediaId;
     }
