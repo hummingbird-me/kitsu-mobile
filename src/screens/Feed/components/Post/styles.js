@@ -23,6 +23,12 @@ export const styles = StyleSheet.create({
     paddingVertical: scenePadding / 2,
   },
 
+  postImagesView: {
+    marginTop: scenePadding * 2,
+    marginLeft: scenePadding * -1,
+    marginRight: scenePadding * -1,
+  },
+
   postStatusRow: {
     flexDirection: 'row',
     alignItems: 'center',

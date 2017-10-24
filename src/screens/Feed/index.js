@@ -5,7 +5,6 @@ import { View, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Kitsu } from 'kitsu/config/api';
-import { defaultAvatar } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
@@ -130,9 +129,7 @@ class Feed extends React.PureComponent {
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
             onEndReachedThreshold={0.5}
-            ListHeaderComponent={
-              <CreatePostRow onPress={this.navigateToCreatePost} />
-            }
+            ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
