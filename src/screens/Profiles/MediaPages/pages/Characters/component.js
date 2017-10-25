@@ -8,11 +8,11 @@ import { PhotoGrid } from 'kitsu/screens/Profiles/components/PhotoGrid';
 
 class Characters extends Component {
   static propTypes = {
-    castings: PropTypes.object.isRequired,
+    castings: PropTypes.array.isRequired,
   }
 
   static defaultProps = {
-    castings: {},
+    castings: null,
   }
 
   renderCharacters = () => {
