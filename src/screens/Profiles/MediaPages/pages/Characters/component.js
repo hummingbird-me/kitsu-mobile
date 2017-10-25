@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { PhotoGrid } from 'kitsu/screens/Profiles/components/PhotoGrid';
 
-class Characters extends Component {
+class Characters extends PureComponent {
   static propTypes = {
     castings: PropTypes.array.isRequired,
   }

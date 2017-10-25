@@ -2,14 +2,13 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView } from 'react-native';
 import { TabRouter } from 'react-navigation';
-import { connect } from 'react-redux';
 
 import { Kitsu } from 'kitsu/config/api';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import Summary from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
+import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
 const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];

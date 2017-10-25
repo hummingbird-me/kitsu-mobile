@@ -1,35 +1,18 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from 'kitsu/store/media/actions';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
 import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 
-class Summary extends Component {
+export class Summary extends PureComponent {
   static propTypes = {
     castings: PropTypes.array.isRequired,
     media: PropTypes.object.isRequired,
-    reactions: PropTypes.array.isRequired,
+    mediaReactions: PropTypes.array.isRequired,
 
-    fetchMediaReactions: PropTypes.func.isRequired,
-    fetchMediaCastings: PropTypes.func.isRequired,
-    fetchMedia: PropTypes.func.isRequired,
     setActiveTab: PropTypes.func.isRequired,
-  }
-
-  static defaultProps = {
-    media: {},
-  }
-
-  componentDidMount() {
-    const mediaId = 12;
-    const type = 'anime';
-    this.props.fetchMediaReactions(mediaId, type);
-    this.props.fetchMediaCastings(mediaId);
-    this.props.fetchMedia(mediaId, type);
   }
 
   navigateTo = (scene) => {
@@ -39,11 +22,11 @@ class Summary extends Component {
   formatData(data, numberOfItems = 12) {
     if (!data) return [];
 
-    return data.sort((a, b) => a - b).slice(0, numberOfItems);
+    return data.sort((a, b) => a.number - b.number).slice(0, numberOfItems);
   }
 
   render() {
-    const { media, castings, reactions } = this.props;
+    const { media, castings, mediaReactions } = this.props;
     const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
     const seriesCount = series.length;
 
@@ -92,7 +75,7 @@ class Summary extends Component {
         <ScrollableSection
           title="Reactions"
           onViewAllPress={() => this.navigateTo('Reactions')}
-          data={this.formatData(reactions)}
+          data={mediaReactions}
           renderItem={({ item }) => (
             <ScrollItem>
               <ReactionBox
@@ -109,7 +92,7 @@ class Summary extends Component {
           contentDark
           title="Characters"
           onViewAllPress={() => this.navigateTo('Characters')}
-          data={this.formatData(castings)}
+          data={castings}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
@@ -127,21 +110,3 @@ class Summary extends Component {
     );
   }
 }
-
-const mapStateToProps = (state) => {
-  const { media, reactions, castings } = state.media;
-
-  const mediaId = 12;
-
-  return {
-    media: media[mediaId],
-    reactions: reactions[mediaId] || [],
-    castings: castings[mediaId] || [],
-  };
-};
-
-export default connect(mapStateToProps, {
-  fetchMedia,
-  fetchMediaReactions,
-  fetchMediaCastings,
-})(Summary);

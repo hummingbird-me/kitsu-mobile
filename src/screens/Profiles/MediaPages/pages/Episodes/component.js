@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
@@ -6,7 +6,7 @@ import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 
-class Episodes extends Component {
+class Episodes extends PureComponent {
   static propTypes = {
     media: PropTypes.shape({
       episodes: PropTypes.array.isRequired,

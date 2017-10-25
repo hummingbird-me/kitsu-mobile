@@ -16,7 +16,6 @@ class Reactions extends PureComponent {
   renderReactionRows = () => {
     const { mediaReactions, media } = this.props;
 
-    debugger;
     if (!mediaReactions) return null;
 
     return (
