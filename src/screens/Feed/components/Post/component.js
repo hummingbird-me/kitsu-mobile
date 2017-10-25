@@ -34,8 +34,14 @@ export class Post extends PureComponent {
     isLiked: false,
   }
 
-  componentDidMount = () => {
+  componentWillMount() {
+    this.mounted = true;
+
     this.fetchComments();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   onPostPress = () => {
@@ -44,6 +50,8 @@ export class Post extends PureComponent {
       comments: this.state.comments,
     });
   }
+
+  mounted = false
 
   fetchComments = async () => {
     try {
@@ -65,7 +73,7 @@ export class Post extends PureComponent {
       // and there's no way for me to access the relationship
       // data from the raw response from this context.
 
-      this.setState({ comments });
+      if (this.mounted) this.setState({ comments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
