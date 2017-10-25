@@ -21,12 +21,14 @@ export class Post extends PureComponent {
     post: PropTypes.object,
     currentUser: PropTypes.object,
     onPostPress: PropTypes.func,
+    navigateToUserProfile: PropTypes.func,
   }
 
   static defaultProps = {
     post: {},
     currentUser: {},
     onPostPress: null,
+    navigateToUserProfile: null,
   }
 
   state = {
@@ -87,6 +89,10 @@ export class Post extends PureComponent {
     this.commentInput.focus();
   }
 
+  navigateToUserProfile = (userId) => {
+    this.prop.navigation.navigate('Profile', { userId });
+  }
+
   render() {
     const {
       createdAt,
@@ -103,6 +109,7 @@ export class Post extends PureComponent {
         <View style={styles.wrap}>
           <PostHeader
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
+            onAvatarPress={() => this.props.navigateToUserProfile(user.id)}
             name={user.name}
             time={createdAt}
           />
@@ -127,7 +134,10 @@ export class Post extends PureComponent {
             }
             {comments && comments.map(comment => (
               <PostSection key={`comment:${comment.id}`}>
-                <Comment comment={comment} />
+                <Comment
+                  comment={comment}
+                  onPress={() => this.props.navigateToUserProfile(comment.user.id)}
+                />
               </PostSection>
             ))}
 
@@ -145,7 +155,7 @@ export class Post extends PureComponent {
 }
 
 // PostHeader
-export const PostHeader = ({ avatar, name, time, onBackButtonPress }) => {
+export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPress }) => {
   const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
   return (
     <View style={styles.postHeader}>
@@ -155,11 +165,13 @@ export const PostHeader = ({ avatar, name, time, onBackButtonPress }) => {
             <Icon name="ios-arrow-back" color={colors.listBackPurple} style={{ fontSize: 28 }} />
           </TouchableOpacity>
         )}
-        <Avatar avatar={avatar} />
-        <Layout.RowMain>
-          <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
-          <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>{postDateTime}</StyledText>
-        </Layout.RowMain>
+        <TouchableOpacity onPress={onAvatarPress} style={styles.userDetailsLink}>
+          <Avatar avatar={avatar} />
+          <Layout.RowMain>
+            <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
+            <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>{postDateTime}</StyledText>
+          </Layout.RowMain>
+        </TouchableOpacity>
         <TouchableOpacity>
           <Icon name="ios-more" color={colors.lightGrey} style={{ fontSize: 32, paddingVertical: 10 }} />
         </TouchableOpacity>
@@ -173,12 +185,14 @@ PostHeader.propTypes = {
   name: PropTypes.string,
   time: PropTypes.string,
   onBackButtonPress: PropTypes.func,
+  onAvatarPress: PropTypes.func,
 };
 PostHeader.defaultProps = {
   avatar: null,
   name: null,
   time: null,
   onBackButtonPress: null,
+  onAvatarPress: null,
 };
 
 // PostMain

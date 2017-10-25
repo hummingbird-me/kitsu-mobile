@@ -119,6 +119,10 @@ class Feed extends React.PureComponent {
     });
   }
 
+  navigateToUserProfile = (userId) => {
+    this.props.navigation.navigate('ProfilePages', userId);
+  }
+
   renderPost = ({ item }) => {
     // This dispatches based on the type of an entity to the correct
     // component. If it's not in here it'll just ignore the feed item.
@@ -129,6 +133,7 @@ class Feed extends React.PureComponent {
             post={item}
             onPostPress={this.navigateToPost}
             currentUser={this.props.currentUser}
+            navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
           />
         );
       default:
