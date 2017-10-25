@@ -1,15 +1,27 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Image } from 'react-native';
 import { styles } from './styles';
 
-export class PostImage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { source: { uri: this.props.uri } };
+export class PostImage extends PureComponent {
+  static propTypes = {
+    uri: PropTypes.string.isRequired,
+    width: PropTypes.number,
+    height: PropTypes.number,
+  };
+
+  static defaultProps = {
+    size: 'default',
+    width: null,
+    height: null,
+  };
+
+  state = {
+    width: 0,
+    height: 0,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Image.getSize(this.props.uri, (width, height) => {
       if (this.props.width && !this.props.height) {
         this.setState({
@@ -31,30 +43,17 @@ export class PostImage extends Component {
   }
 
   render() {
+    const { uri } = this.props;
+    const { width, height } = this.state;
+
     return (
       <Image
         resizeMode="cover"
-        source={this.state.source}
-        style={{
-          height: this.state.height,
-          width: this.state.width,
-        }}
+        source={{ uri }}
+        style={{ width, height }}
       />
     );
   }
 }
-
-
-PostImage.propTypes = {
-  uri: PropTypes.string.isRequired,
-  width: PropTypes.number,
-  height: PropTypes.number,
-};
-
-PostImage.defaultProps = {
-  size: 'default',
-  width: 0,
-  height: 0,
-};
 
 export const PostImageSeparator = () => <View style={styles.separator} />;
