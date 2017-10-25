@@ -16,6 +16,9 @@ const PostStack = StackNavigator(
     PostDetails: {
       screen: PostDetails,
     },
+    MediaPages: {
+      screen: MediaPages,
+    },
   },
   {
     ...navigationOptions(),
@@ -30,9 +33,6 @@ const FeedStack = StackNavigator(
     },
     CreatePost: {
       screen: CreatePost,
-    },
-    MediaPages: {
-      screen: MediaPages,
     },
   },
   {

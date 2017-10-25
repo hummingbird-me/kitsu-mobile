@@ -53,11 +53,7 @@ class MediaPages extends PureComponent {
   }
 
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: 'transparent',
-      height: 20,
-    },
-    headerLeft: null,
+    header: null,
   }
 
   state = {
@@ -155,8 +151,6 @@ class MediaPages extends PureComponent {
   render() {
     const { error, loading, media } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
-
-    console.log('==> MEDIA PAGE', media);
 
     if (loading) {
       return (
