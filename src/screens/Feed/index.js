@@ -128,6 +128,7 @@ class Feed extends React.PureComponent {
           <Post
             post={item}
             onPostPress={this.navigateToPost}
+            currentUser={this.props.currentUser}
           />
         );
       default:

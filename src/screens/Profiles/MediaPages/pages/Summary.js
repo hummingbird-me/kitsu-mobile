@@ -91,8 +91,6 @@ class Summary extends Component {
         {/* Reactions */}
         <ScrollableSection
           title="Reactions"
-          titleLabel="Write reactions"
-          titleAction={() => {}}
           onViewAllPress={() => this.navigateTo('Reactions')}
           data={this.formatData(reactions)}
           renderItem={({ item }) => (

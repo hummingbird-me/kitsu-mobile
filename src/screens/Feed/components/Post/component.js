@@ -112,7 +112,10 @@ export class Post extends Component {
             ))}
 
             <PostSection>
-              <CommentTextInput inputRef={(el) => { this.commentInput = el; }} />
+              <CommentTextInput
+                currentUser={this.props.currentUser}
+                inputRef={(el) => { this.commentInput = el; }}
+              />
             </PostSection>
           </PostFooter>
         </View>
@@ -123,11 +126,13 @@ export class Post extends Component {
 
 Post.propTypes = {
   post: PropTypes.object,
+  currentUser: PropTypes.object,
   onPostPress: PropTypes.func,
 };
 
 Post.defaultProps = {
   post: {},
+  currentUser: {},
   onPostPress: null,
 };
 
