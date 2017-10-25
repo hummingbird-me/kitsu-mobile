@@ -149,7 +149,13 @@ class MediaPages extends PureComponent {
   );
 
   render() {
-    const { error, loading, media } = this.state;
+    const {
+      castings,
+      error,
+      loading,
+      media,
+      mediaReactions,
+    } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
 
     if (loading) {
@@ -188,7 +194,10 @@ class MediaPages extends PureComponent {
           {this.renderTabNav()}
           <TabScene
             setActiveTab={tab => this.setActiveTab(tab)}
-            media={media.id}
+            media={media}
+            mediaId={media.id}
+            mediaReactions={mediaReactions}
+            castings={castings}
             navigation={navigation}
           />
         </ScrollView>
@@ -196,6 +205,5 @@ class MediaPages extends PureComponent {
     );
   }
 }
-
 
 export default MediaPages;
