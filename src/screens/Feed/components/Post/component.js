@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback, Text } from 'react-native';
 import moment from 'moment';
@@ -16,7 +16,19 @@ import { scene } from 'kitsu/screens/Feed/constants';
 import { styles } from './styles';
 
 // Post
-export class Post extends Component {
+export class Post extends PureComponent {
+  static propTypes = {
+    post: PropTypes.object,
+    currentUser: PropTypes.object,
+    onPostPress: PropTypes.func,
+  }
+
+  static defaultProps = {
+    post: {},
+    currentUser: {},
+    onPostPress: null,
+  }
+
   state = {
     comments: [],
     isLiked: false,
@@ -123,18 +135,6 @@ export class Post extends Component {
     );
   }
 }
-
-Post.propTypes = {
-  post: PropTypes.object,
-  currentUser: PropTypes.object,
-  onPostPress: PropTypes.func,
-};
-
-Post.defaultProps = {
-  post: {},
-  currentUser: {},
-  onPostPress: null,
-};
 
 // PostHeader
 export const PostHeader = ({ avatar, name, time, onBackButtonPress }) => {

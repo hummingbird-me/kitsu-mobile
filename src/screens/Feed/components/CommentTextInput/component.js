@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, TextInput, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -7,7 +7,23 @@ import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { styles } from './styles';
 
-export class CommentTextInput extends Component {
+export class CommentTextInput extends PureComponent {
+  static propTypes = {
+    inputRef: PropTypes.func,
+    currentUser: PropTypes.object,
+    placeholderText: PropTypes.string,
+    showAvatar: PropTypes.bool,
+    onSubmit: PropTypes.func,
+  }
+
+  static defaultProps = {
+    inputRef: null,
+    currentUser: {},
+    placeholderText: 'Write a comment...',
+    showAvatar: true,
+    onSubmit: null,
+  }
+
   state = {
     isFocused: false,
   }
@@ -51,19 +67,3 @@ export class CommentTextInput extends Component {
     );
   }
 }
-
-CommentTextInput.propTypes = {
-  inputRef: PropTypes.func,
-  currentUser: PropTypes.object,
-  placeholderText: PropTypes.string,
-  showAvatar: PropTypes.bool,
-  onSubmit: PropTypes.func,
-};
-
-CommentTextInput.defaultProps = {
-  inputRef: null,
-  currentUser: {},
-  placeholderText: 'Write a comment...',
-  showAvatar: true,
-  onSubmit: null,
-};

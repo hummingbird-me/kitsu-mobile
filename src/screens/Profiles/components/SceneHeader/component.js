@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
@@ -11,7 +11,7 @@ import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/Styled
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { styles } from './styles';
 
-export class SceneHeader extends Component {
+export class SceneHeader extends PureComponent {
   state = {
     expanded: false,
   }

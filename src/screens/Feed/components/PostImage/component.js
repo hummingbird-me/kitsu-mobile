@@ -21,8 +21,12 @@ export class PostImage extends PureComponent {
     height: 0,
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    this.mounted = true;
+
     Image.getSize(this.props.uri, (width, height) => {
+      if (!this.mounted) return;
+
       if (this.props.width && !this.props.height) {
         this.setState({
           width: this.props.width,
@@ -41,6 +45,12 @@ export class PostImage extends PureComponent {
       }
     });
   }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  mounted = false
 
   render() {
     const { uri } = this.props;

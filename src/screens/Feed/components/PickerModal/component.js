@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Modal, FlatList, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -77,7 +77,22 @@ PickerRow.defaultProps = {
 
 const PickerRowSeparator = () => <View style={styles.rowPickerSeparator} />;
 
-export class PickerModal extends Component {
+export class PickerModal extends PureComponent {
+  static propTypes = {
+    visible: PropTypes.bool,
+    onCancelPress: PropTypes.func,
+    onDonePress: PropTypes.func,
+    data: PropTypes.array,
+    currentPick: PropTypes.object,
+  }
+  static defaultProps = {
+    visible: false,
+    onCancelPress: null,
+    onDonePress: null,
+    data: [],
+    currentPick: null,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -132,18 +147,3 @@ export class PickerModal extends Component {
     );
   }
 }
-
-PickerModal.propTypes = {
-  visible: PropTypes.bool,
-  onCancelPress: PropTypes.func,
-  onDonePress: PropTypes.func,
-  data: PropTypes.array,
-  currentPick: PropTypes.object,
-};
-PickerModal.defaultProps = {
-  visible: false,
-  onCancelPress: null,
-  onDonePress: null,
-  data: [],
-  currentPick: null,
-};

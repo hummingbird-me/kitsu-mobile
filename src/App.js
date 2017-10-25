@@ -1,5 +1,5 @@
 /* global __DEV__ */
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, StatusBar, Linking } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import identity from 'lodash/identity';
@@ -21,7 +21,7 @@ console.disableYellowBox = true;
 // tab useful again. If dev tools isn't running, this will have no effect.
 GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
-class App extends Component {
+class App extends PureComponent {
   componentWillMount() {
     OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('ids', this.onIds);
