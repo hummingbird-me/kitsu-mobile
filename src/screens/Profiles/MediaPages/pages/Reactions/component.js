@@ -10,7 +10,7 @@ import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 class Reactions extends PureComponent {
   static propTypes = {
     media: PropTypes.object.isRequired,
-    mediaReactions: PropTypes.object.isRequired,
+    mediaReactions: PropTypes.array.isRequired,
   }
 
   renderReactionRows = () => {
