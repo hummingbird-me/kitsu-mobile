@@ -6,7 +6,6 @@ import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { tabRed, listBackPurple } from 'kitsu/constants/colors';
 import SearchStack from './search';
 import NotifStack from './notification';
-import ProfileStack from './profile';
 import FeedStack from './feed';
 import SidebarStack from './sidebar';
 
@@ -15,18 +14,15 @@ const Tabs = TabNavigator(
     Feed: {
       screen: FeedStack,
     },
-    Profile: {
-      screen: ProfileStack,
-    },
+    // Profile: {
+    //   screen: ProfileStack,
+    // },
     Search: {
       screen: SearchStack,
     },
-    // Home: {
-    //   screen: HomeScreen,
-    // },
-    // Feed: {
-    //   screen: HomeScreen,
-    // },
+    Home: {
+      screen: HomeScreen,
+    },
     Notif: {
       screen: NotifStack,
     },
