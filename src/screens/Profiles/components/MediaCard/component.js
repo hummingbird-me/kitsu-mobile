@@ -19,7 +19,16 @@ export const MediaCard = ({ variant, borderRadius, ...props }) => (
 );
 
 MediaCard.propTypes = {
-  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'portraitLarge', 'filled']),
+  variant: PropTypes.oneOf([
+    'landscape',
+    'landscapeLarge',
+    'landscapeSmall',
+    'portrait',
+    'portraitLarge',
+    'portraitSmall',
+    'square',
+    'filled',
+  ]),
   borderRadius: PropTypes.number,
 };
 
