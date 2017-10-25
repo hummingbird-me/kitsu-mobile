@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { fetchMedia } from 'kitsu/store/media/actions';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
@@ -16,16 +14,17 @@ class Episodes extends Component {
   }
 
   formatData(data, numberOfItems = 20) {
-    return data.sort((a, b) => a - b).slice(0, numberOfItems);
+    return data.sort((a, b) => a.number - b.number).slice(0, numberOfItems);
   }
 
   render() {
     const { media } = this.props;
+    const data = this.formatData(media.episodes);
 
     return (
       <TabContainer light padded>
         <FlatList
-          data={this.formatData(media.episodes)}
+          data={data}
           renderItem={({ item }) => (
             <MediaRow
               imageVariant="landscapeSmall"
@@ -45,14 +44,4 @@ class Episodes extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { media } = state.media;
-  const mediaId = 12;
-  return {
-    media: media[mediaId] || {},
-  };
-};
-
-export const component = connect(mapStateToProps, {
-  fetchMedia,
-})(Episodes);
+export const component = Episodes;
