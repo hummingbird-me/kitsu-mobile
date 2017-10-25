@@ -99,39 +99,39 @@ class MediaPages extends PureComponent {
       });
 
       // Now that we've got the media, everything else can go async together.
-      const promises = [];
-
-      promises.push(Kitsu.findAll('castings', {
-        filter: {
-          mediaId: id,
-          isCharacter: true,
-        },
-        sort: '-featured',
-        include: 'character',
-      }));
-
-      promises.push(Kitsu.findAll('mediaReactions', {
-        filter: {
-          [`${type}Id`]: id,
-        },
-        include: 'user',
-        sort: '-upVotesCount',
-      }));
-
       const [
         castings,
         mediaReactions,
-      ] = await Promise.all(promises);
+      ] = await Promise.all([
+        Kitsu.findAll('castings', {
+          filter: {
+            mediaId: id,
+            isCharacter: true,
+          },
+          sort: '-featured',
+          include: 'character',
+        }),
+        Kitsu.findAll('mediaReactions', {
+          filter: {
+            [`${type}Id`]: id,
+          },
+          include: 'user',
+          sort: '-upVotesCount',
+        }),
+      ]);
 
       this.setState({
         loading: false,
-        media,
         castings,
+        media,
         mediaReactions,
       });
     } catch (error) {
       console.log('Error fetching media.', err);
-      this.setState({ error });
+      this.setState({
+        loading: false,
+        error,
+      });
     }
   }
 

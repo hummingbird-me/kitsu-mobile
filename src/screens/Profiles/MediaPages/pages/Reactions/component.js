@@ -1,32 +1,27 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { fetchMedia, fetchMediaReactions } from 'kitsu/store/media/actions';
+
 import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 
-class Reactions extends Component {
+class Reactions extends PureComponent {
   static propTypes = {
     media: PropTypes.object.isRequired,
-    reactions: PropTypes.object.isRequired,
-  }
-
-  static defaultProps = {
-    media: {},
-    reactions: {},
+    mediaReactions: PropTypes.object.isRequired,
   }
 
   renderReactionRows = () => {
-    const { reactions, media } = this.props;
+    const { mediaReactions, media } = this.props;
 
-    if (!reactions) return null;
+    debugger;
+    if (!mediaReactions) return null;
 
     return (
       <FlatList
-        data={reactions}
+        data={mediaReactions}
         renderItem={({ item }) => (
           <ReactionBox
             reactedMedia={media.canonicalTitle}
@@ -55,16 +50,4 @@ class Reactions extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { media, reactions } = state.media;
-  const mediaId = 12;
-  return {
-    media: media[mediaId] || {},
-    reactions: reactions[mediaId] || [],
-  };
-};
-
-export const component = connect(mapStateToProps, {
-  fetchMedia,
-  fetchMediaReactions,
-})(Reactions);
+export const component = Reactions;
