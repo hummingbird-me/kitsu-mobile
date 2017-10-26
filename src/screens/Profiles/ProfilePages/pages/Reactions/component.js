@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';

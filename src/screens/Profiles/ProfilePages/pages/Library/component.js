@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-  SceneContainer,
-} from 'kitsu/screens/Profiles/components/SceneContainer';
+
 import { Kitsu } from 'kitsu/config/api';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 
 class Library extends PureComponent {
   static propTypes = {
