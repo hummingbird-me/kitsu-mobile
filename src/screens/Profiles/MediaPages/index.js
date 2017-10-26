@@ -1,8 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { StatusBar } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
+import { defaultCover } from 'kitsu/constants/app';
+import { listBackPurple } from 'kitsu/constants/colors';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
@@ -148,6 +151,7 @@ class MediaPages extends PureComponent {
 
     return (
       <SceneContainer>
+        <StatusBar barStyle="light-content" />
         <ParallaxScroll
           style={{ flex: 1 }}
           headerHeight={60}
@@ -183,7 +187,6 @@ class MediaPages extends PureComponent {
             moreButtonOptions={MORE_BUTTON_OPTIONS}
             onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
-            onHeaderLeftButtonPress={this.goBack}
           />
           {this.renderTabNav()}
           <TabScene

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Animated, StatusBar } from 'react-native';
+import { StatusBar, SectionList } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -152,11 +152,22 @@ class ProfilePage extends PureComponent {
     </TabBar>
   );
 
-  render() {
+  renderTabScene = () => {
+    const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
     const { navigation } = this.props;
+    return (
+      <TabScene
+        key="tabScene"
+        setActiveTab={tab => this.setActiveTab(tab)}
+        userId={userId}
+        navigation={navigation}
+      />
+    );
+  }
+
+  render() {
     const { error, loading, profile } = this.state;
-    const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
 
     if (loading) {
       return (
@@ -177,7 +188,6 @@ class ProfilePage extends PureComponent {
         <ParallaxScroll
           style={{ flex: 1 }}
           headerHeight={60}
-          stickyHeaderIndices={[1]}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
           renderParallaxBackground={() => (
@@ -206,11 +216,14 @@ class ProfilePage extends PureComponent {
             onFollowButtonPress={this.handleFollowing}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
-          {this.renderTabNav()}
-          <TabScene
-            setActiveTab={tab => this.setActiveTab(tab)}
-            userId={userId}
-            navigation={navigation}
+          <SectionList
+            style={{ flex: 1 }}
+            stickySectionHeadersEnabled
+            renderSectionHeader={({ section }) => section.title}
+            renderItem={({ item }) => item}
+            sections={[
+              { data: [this.renderTabScene()], title: this.renderTabNav() },
+            ]}
           />
         </ParallaxScroll>
       </SceneContainer>
