@@ -89,10 +89,6 @@ export class Post extends PureComponent {
     this.commentInput.focus();
   }
 
-  navigateToUserProfile = (userId) => {
-    this.prop.navigation.navigate('Profile', { userId });
-  }
-
   render() {
     const {
       createdAt,
