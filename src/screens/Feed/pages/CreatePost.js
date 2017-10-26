@@ -90,7 +90,7 @@ class CreatePost extends React.PureComponent {
       >
         <View style={{ flex: 1 }}>
           <PostMeta
-            avatar={currentUser.avatar || defaultAvatar}
+            avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar}
             author={currentUser.name}
             feedTitle={this.state.currentFeed.title}
             onFeedPillPress={() => this.handleFeedPickerModal(true)}

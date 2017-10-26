@@ -17,6 +17,10 @@ export const styles = StyleSheet.create({
     marginLeft: -scenePadding,
     padding: scenePadding,
   },
+  userDetailsLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 
   postMain: {
     paddingHorizontal: scenePadding,
