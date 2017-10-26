@@ -31,7 +31,7 @@ export class Post extends PureComponent {
 
   state = {
     comments: [],
-    isLiked: false,
+    like: null,
   };
 
   componentWillMount() {
@@ -93,16 +93,35 @@ export class Post extends PureComponent {
         },
       });
 
-      const isLiked = likes.length > 0;
+      const like = likes.length && likes[0];
 
-      if (this.mounted) this.setState({ isLiked });
+      if (this.mounted) this.setState({ like });
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
   }
 
-  toggleLike = () => {
-    this.setState({ isLiked: !this.state.isLiked });
+  toggleLike = async () => {
+    const { like } = this.state;
+
+    if (like) {
+      this.setState({ like: null });
+
+      await Kitsu.destroy('postLikes', like.id);
+    } else {
+      const like = await Kitsu.create('postLikes', {
+        post: {
+          id: this.props.post.id,
+          type: 'posts',
+        },
+        user: {
+          id: this.props.currentUser.id,
+          type: 'users',
+        },
+      });
+
+      this.setState({ like });
+    }
   }
 
   focusOnCommentInput = () => {
@@ -138,7 +157,7 @@ export class Post extends PureComponent {
           />
 
           <PostActions
-            isLiked={this.state.isLiked}
+            isLiked={!!this.state.like}
             onLikePress={this.toggleLike}
             onCommentPress={this.focusOnCommentInput}
             onSharePress={() => {}}

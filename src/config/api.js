@@ -835,7 +835,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'post-likes' },
