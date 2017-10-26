@@ -19,7 +19,7 @@ import { StyledText } from 'kitsu/components/StyledText';
 
 // TODO: Note I shouldn't be needed once we can pass params with React Navigation properly.
 // https://github.com/react-community/react-navigation/issues/143
-import { requests } from 'kitsu/screens/Profiles/MediaPages';
+// import { requests } from 'kitsu/screens/Profiles/MediaPages';
 
 class Summary extends PureComponent {
   static propTypes = {
@@ -52,7 +52,7 @@ class Summary extends PureComponent {
     this.props.setActiveTab(scene);
   }
 
-  navigateToMedia = (media) => {
+  navigateToMedia = (media, profileName) => {
     // TODO: Does React Navigation allow us to pass params yet?
     //
     // We need to do two navigate actions here or the params aren't
@@ -75,9 +75,9 @@ class Summary extends PureComponent {
     // But that didn't work either, so...FML.
     //
     // And media pages will clear it up for us once it reads its singleton on mount.
-    requests.requestedMediaId = media.id;
-    requests.requestedMediaType = media.type;
-    this.props.navigation.navigate('MediaPages');
+    // requests.requestedMediaId = media.id;
+    // requests.requestedMediaType = media.type;
+    this.props.navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type, profileName });
   }
 
   formatData(data, numberOfItems = 12) {
@@ -109,7 +109,12 @@ class Summary extends PureComponent {
 
             return (
               <ScrollItem>
-                <TouchableOpacity onPress={() => this.navigateToMedia(item.activities[0].media)}>
+                <TouchableOpacity
+                  onPress={() => this.navigateToMedia(
+                    item.activities[0].media,
+                    this.props.profile.name,
+                  )}
+                >
                   <ImageCard
                     noMask
                     variant="portraitLarge"
@@ -130,8 +135,6 @@ class Summary extends PureComponent {
         {/* Todo KB: get real data */}
         <ScrollableSection
           title="Reactions"
-          titleAction={() => {}}
-          titleLabel="Write reactions"
           onViewAllPress={() => this.navigateTo('Reactions')}
           renderItem={({ item }) => (
             <ScrollItem>
@@ -163,7 +166,7 @@ const mapStateToProps = (state, ownProps) => {
   //   userId = navigation.state.params.userId;
   // }
 
-  const userId = 30787;
+  const userId = 33287;
 
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
