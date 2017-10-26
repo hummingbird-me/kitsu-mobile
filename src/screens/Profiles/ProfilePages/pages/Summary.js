@@ -3,26 +3,28 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
 import capitalize from 'lodash/capitalize';
 
+import { Kitsu } from 'kitsu/config/api';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
 import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { StyledText } from 'kitsu/components/StyledText';
 
-// TODO: Note I shouldn't be needed once we can pass params with React Navigation properly.
-// https://github.com/react-community/react-navigation/issues/143
-// import { requests } from 'kitsu/screens/Profiles/MediaPages';
-
 export default class Summary extends PureComponent {
   static propTypes = {
     setActiveTab: PropTypes.func,
-    userId: PropTypes.number.isRequired,
+    userId: PropTypes.string.isRequired,
     navigation: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
     setActiveTab: null,
+  }
+
+  state = {
     loading: true,
+    libraryActivity: null,
+    error: null,
   }
 
   componentDidMount() {
@@ -33,30 +35,20 @@ export default class Summary extends PureComponent {
     const { userId } = this.props;
 
     try {
-      const library = await Kitsu.findAll('libraryEntries', {
-        fields: {
-          anime: 'slug,posterImage,canonicalTitle,titles,synopsis,subtype,startDate,status,averageRating,popularityRank,ratingRank,episodeCount',
-          users: 'id',
-        },
+      const libraryActivity = await Kitsu.one('userFeed', userId).get({
+        page: { limit: 40 },
         filter: {
-          userId,
-          kind: 'anime',
+          kind: 'media',
         },
-        include: 'anime,user,mediaReaction',
-        page: {
-          // TODO: Connect pagination with flat list
-          offset: 0,
-          limit: 40,
-        },
-        sort: 'status,-progressed_at',
+        include: 'media',
       });
 
       this.setState({
         loading: false,
-        library,
+        libraryActivity,
       });
     } catch (error) {
-      console.log('Error while fetching library entries: ', err);
+      console.log('Error while fetching library entries: ', error);
 
       this.setState({
         loading: false,
@@ -82,7 +74,7 @@ export default class Summary extends PureComponent {
   }
 
   render() {
-    const { loading, error, library } = this.props;
+    const { loading, error, libraryActivity } = this.state;
 
     if (loading) {
       // Return loading state
@@ -101,7 +93,7 @@ export default class Summary extends PureComponent {
           contentDark
           title="Library activity"
           onViewAllPress={() => this.navigateTo('Library')}
-          data={library}
+          data={libraryActivity}
           renderItem={({ item }) => {
             const activity = item.activities[0];
             let caption = '';
