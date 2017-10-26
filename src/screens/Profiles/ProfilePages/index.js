@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
-
+import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import {
   fetchProfile,
   fetchProfileFavorites,
@@ -11,11 +10,15 @@ import {
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
 import { Kitsu } from 'kitsu/config/api';
-
+import { defaultCover } from 'kitsu/constants/app';
+import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
+import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import Summary from 'kitsu/screens/Profiles/ProfilePages/pages/Summary';
+import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 
 // There's no way to Report Profiles at the moment in the API.
 const MORE_BUTTON_OPTIONS = ['Block', /* 'Report Profile', */ 'Nevermind'];
@@ -42,10 +45,7 @@ const TabRoutes = TabRouter({
 
 class ProfilePage extends Component {
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: 'transparent',
-      height: 20,
-    },
+    header: null,
   }
 
   static propTypes = {
@@ -97,6 +97,8 @@ class ProfilePage extends Component {
     this.setState({ active: tab });
   }
 
+  goBack = () => this.props.navigation.goBack();
+
   handleFollowing = () => {}
 
   renderTabNav = () => (
@@ -113,21 +115,38 @@ class ProfilePage extends Component {
   );
 
   render() {
-    const { profile, entries, userId, navigation } = this.props;
+    const { profile, userId, navigation } = this.props;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     return (
       <SceneContainer>
-        <ScrollView stickyHeaderIndices={[1]}>
+        <ParallaxScroll
+          headerHeight={60}
+          isHeaderFixed
+          parallaxHeight={coverImageHeight}
+          renderParallaxBackground={() => (
+            <MaskedImage
+              maskedTop
+              maskedBottom
+              source={{ uri: (profile.coverImage && profile.coverImage.large) || defaultCover }}
+            />
+          )}
+          renderHeader={() => (
+            <CustomHeader
+              leftButtonAction={this.goBack}
+              leftButtonTitle="Back"
+            />
+          )}
+          headerFixedBackgroundColor={listBackPurple}
+        >
           <SceneHeader
             variant="profile"
             title={profile.name}
             description={profile.about}
-            coverImage={profile.coverImage && profile.coverImage.large}
             posterImage={profile.avatar && profile.avatar.large}
             followersCount={profile.followersCount}
             followingCount={profile.followingCount}
-            onFollowButtonPress={this.handleFollowing}
             moreButtonOptions={MORE_BUTTON_OPTIONS}
+            onFollowButtonPress={this.handleFollowing}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabNav()}
@@ -136,7 +155,7 @@ class ProfilePage extends Component {
             userId={userId}
             navigation={navigation}
           />
-        </ScrollView>
+        </ParallaxScroll>
       </SceneContainer>
     );
   }
@@ -152,7 +171,7 @@ const mapStateToProps = (state, ownProps) => {
   //   userId = navigation.state.params.userId;
   // }
 
-  const userId = 30787;
+  const userId = 33287;
 
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
