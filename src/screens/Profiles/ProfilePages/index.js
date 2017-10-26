@@ -1,15 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 
-import {
-  fetchProfile,
-  fetchProfileFavorites,
-  fetchUserFeed,
-} from 'kitsu/store/profile/actions';
-import { getUserFeed } from 'kitsu/store/feed/actions';
 import { Kitsu } from 'kitsu/config/api';
 
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
@@ -20,12 +14,14 @@ import Summary from 'kitsu/screens/Profiles/ProfilePages/pages/Summary';
 // There's no way to Report Profiles at the moment in the API.
 const MORE_BUTTON_OPTIONS = ['Block', /* 'Report Profile', */ 'Nevermind'];
 
+const tabPage = name => ({ key: name.toLowerCase(), label: name, screen: name });
+
 const TAB_ITEMS = [
-  { key: 'summary', label: 'Summary', screen: 'Summary' },
-  { key: 'about', label: 'About', screen: 'About' },
-  { key: 'library', label: 'Library', screen: 'Library' },
-  { key: 'groups', label: 'Groups', screen: 'Groups' },
-  { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
+  tabPage('Summary'),
+  tabPage('About'),
+  tabPage('Library'),
+  tabPage('Groups'),
+  tabPage('Reactions'),
 ];
 
 /* eslint-disable global-require */
@@ -40,7 +36,7 @@ const TabRoutes = TabRouter({
   initialRouteName: 'Summary',
 });
 
-class ProfilePage extends Component {
+class ProfilePage extends PureComponent {
   static navigationOptions = {
     headerStyle: {
       backgroundColor: 'transparent',
@@ -50,35 +46,37 @@ class ProfilePage extends Component {
 
   static propTypes = {
     navigation: PropTypes.object.isRequired,
+    userId: PropTypes.number,
     currentUser: PropTypes.object.isRequired,
-    userId: PropTypes.number.isRequired,
-    profile: PropTypes.object.isRequired,
-    fetchProfileFavorites: PropTypes.func.isRequired,
-    fetchUserFeed: PropTypes.func.isRequired,
-    fetchProfile: PropTypes.func.isRequired,
-    getUserFeed: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    loading: false,
-    navigation: {},
-    profile: {},
-    fetchProfileFavorites: {},
-    fetchUserFeed: {},
-    fetchProfile: {},
-    getUserFeed: {},
+    userId: null,
   }
 
-  state = { active: 'Summary' }
+  state = {
+    active: 'Summary',
+    loading: true,
+    error: null,
+    profile: null,
+    feed: null,
+  }
 
-  componentDidMount() {
-    const { userId } = this.props;
-    this.props.fetchProfile(userId);
-    this.props.fetchUserFeed(userId, 12);
-    this.props.fetchProfileFavorites(userId, 'character');
-    this.props.fetchProfileFavorites(userId, 'manga');
-    this.props.fetchProfileFavorites(userId, 'anime');
-    this.props.getUserFeed(userId);
+  componentWillMount() {
+    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+
+    debugger;
+
+    if (!userId) {
+      this.setState({
+        loading: false,
+        error: 'Missing userId in component.',
+      });
+
+      return;
+    }
+
+    this.loadUserData(userId);
   }
 
   onMoreButtonOptionsSelected = async (button) => {
@@ -97,6 +95,22 @@ class ProfilePage extends Component {
     this.setState({ active: tab });
   }
 
+  loadUserData = async (userId) => {
+    const profile = await Kitsu.one('users', userId, {
+      fields: {
+        users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
+      },
+      include: 'waifu',
+    });
+
+    debugger;
+
+    this.setState({
+      loading: false,
+      profile,
+    });
+  }
+
   handleFollowing = () => {}
 
   renderTabNav = () => (
@@ -113,8 +127,20 @@ class ProfilePage extends Component {
   );
 
   render() {
-    const { profile, entries, userId, navigation } = this.props;
+    const { userId, navigation } = this.props;
+    const { error, loading, profile } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
+
+    if (loading) {
+      // Return loading state.
+      return null;
+    }
+
+    if (error) {
+      // Return error state.
+      return null;
+    }
+
     return (
       <SceneContainer>
         <ScrollView stickyHeaderIndices={[1]}>
@@ -142,47 +168,9 @@ class ProfilePage extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { navigation } = ownProps;
-  const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
-  const { currentUser } = state.user;
-
-  // let userId = currentUser.id;
-  // if (navigation.state.params && navigation.state.params.userId) {
-  //   userId = navigation.state.params.userId;
-  // }
-
-  const userId = 30787;
-
-  const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
-  const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
-  const a = (anime[userId] && anime[userId].map(({ item }) => item)) || [];
-  const l = library[userId] || [];
-  const { userFeed, loadingUserFeed } = state.feed;
-  const filteredFeed = userFeed.filter(
-    ({ activities }) => !['comment', 'follow'].includes(activities[0].verb),
-  );
-  return {
-    navigation,
-    userId,
-    loading,
-    profile: profile[userId] || {},
-    currentUser,
-    favorite: {
-      characters: [...c],
-      manga: [...m],
-      anime: [...a],
-    },
-    entries: [...l],
-    favoritesLoading,
-    userFeed: filteredFeed,
-    loadingUserFeed,
-  };
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  return { currentUser };
 };
 
-export default connect(mapStateToProps, {
-  fetchProfile,
-  fetchProfileFavorites,
-  fetchUserFeed,
-  getUserFeed,
-})(ProfilePage);
+export default connect(mapStateToProps)(ProfilePage);

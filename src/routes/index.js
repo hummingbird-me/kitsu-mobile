@@ -1,6 +1,6 @@
 import SearchStack from './search';
 import NotifStack from './notification';
-import ProfileStack from './profile';
+import QuickUpdateStack from './quickUpdate';
 import FilterStack from './filter';
 import Tabs from './tabs';
 import PostStack from './post';
@@ -10,7 +10,7 @@ import SidebarStack from './sidebar';
 export default {
   SearchStack,
   NotifStack,
-  ProfileStack,
+  QuickUpdateStack,
   FilterStack,
   Tabs,
   PostStack,

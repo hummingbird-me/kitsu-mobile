@@ -1,12 +1,13 @@
 import React from 'react';
 import { TabNavigator } from 'react-navigation';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import HomeScreen from 'kitsu/screens/HomeScreen';
+
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { tabRed, listBackPurple } from 'kitsu/constants/colors';
 import SearchStack from './search';
 import NotifStack from './notification';
-import ProfileStack from './profile';
+import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
 import SidebarStack from './sidebar';
 
@@ -15,16 +16,13 @@ const Tabs = TabNavigator(
     Feed: {
       screen: FeedStack,
     },
-    Profile: {
-      screen: ProfileStack,
+    QuickUpdate: {
+      screen: QuickUpdateStack,
     },
     Search: {
       screen: SearchStack,
     },
     // Home: {
-    //   screen: HomeScreen,
-    // },
-    // Feed: {
     //   screen: HomeScreen,
     // },
     Notif: {
@@ -51,6 +49,10 @@ const Tabs = TabNavigator(
 );
 
 class TabsNav extends React.PureComponent {
+  static propTypes = {
+    fetchCurrentUser: PropTypes.func.isRequired,
+  }
+
   componentWillMount() {
     this.props.fetchCurrentUser();
   }
