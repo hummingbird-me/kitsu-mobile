@@ -5,6 +5,7 @@ import capitalize from 'lodash/capitalize';
 
 import { Kitsu } from 'kitsu/config/api';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
 import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
@@ -61,11 +62,10 @@ export default class Summary extends PureComponent {
     this.props.setActiveTab(scene);
   }
 
-  navigateToMedia = (media, profileName) => {
+  navigateToMedia = (media) => {
     this.props.navigation.navigate('MediaPages', {
       mediaId: media.id,
       mediaType: media.type,
-      profileName,
     });
   }
 
@@ -76,10 +76,7 @@ export default class Summary extends PureComponent {
   render() {
     const { loading, error, libraryActivity } = this.state;
 
-    if (loading) {
-      // Return loading state
-      return null;
-    }
+    if (loading) return <SceneLoader />;
 
     if (error) {
       // Return error state
@@ -108,10 +105,7 @@ export default class Summary extends PureComponent {
             return (
               <ScrollItem>
                 <TouchableOpacity
-                  onPress={() => this.navigateToMedia(
-                    item.activities[0].media,
-                    this.props.profile.name,
-                  )}
+                  onPress={() => this.navigateToMedia(item.activities[0].media)}
                 >
                   <ImageCard
                     noMask

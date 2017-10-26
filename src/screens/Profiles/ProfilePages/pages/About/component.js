@@ -8,13 +8,12 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
-import { styles } from './styles';
 
 const ItemSeparator = () => <View style={{ height: 10 }} />;
 
 class About extends Component {
   static propTypes = {
-    userId: PropTypes.number.isRequired,
+    userId: PropTypes.string.isRequired,
   };
 
   state = {
@@ -42,26 +41,29 @@ class About extends Component {
   render() {
     const { loading, data } = this.state;
 
-    if (loading) {
-      return <SceneLoader />;
-    }
+    if (loading) return <SceneLoader />;
 
-    const waifuOrHusbandoComponent = (
-      <MediaRow
-        imageVariant="thumbnail"
-        title={data.waifu.name}
-        thumbnail={{ uri: data.waifu.image && data.waifu.image.original }}
-        summary={data.waifu.description}
-        summaryLines={2}
-      />
-    );
     const aboutRows = [
-      { key: 'waifuOrHusbando', label: data.waifuOrHusbando, contentComponent: waifuOrHusbandoComponent },
       { key: 'gender', label: 'Gender', content: data.gender },
       { key: 'location', label: 'Location', content: data.location },
       { key: 'birthday', label: 'Birthday', content: moment(data.birthday).format('MMMM Do') },
       { key: 'joinDate', label: 'Join date', content: moment(data.createdAt).format('MMMM Do, YYYY') },
     ];
+
+    if (data.waifu) {
+      const waifuOrHusbandoComponent = (
+        <MediaRow
+          imageVariant="thumbnail"
+          title={data.waifu.name}
+          thumbnail={{ uri: data.waifu.image && data.waifu.image.original }}
+          summary={data.waifu.description}
+          summaryLines={2}
+        />
+      );
+
+      aboutRows.unshift({ key: 'waifuOrHusbando', label: data.waifuOrHusbando, contentComponent: waifuOrHusbandoComponent });
+    }
+
     return (
       <TabContainer>
         <FlatList

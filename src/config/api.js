@@ -140,6 +140,15 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'profileLinks',
+  {
+    createdAt: '',
+    updatedAt: '',
+    url: '',
+  },
+);
+
+Kitsu.define(
   'libraryEntries',
   {
     createdAt: '',

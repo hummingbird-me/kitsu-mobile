@@ -163,7 +163,6 @@ class MediaPages extends PureComponent {
           renderHeader={() => (
             <CustomHeader
               leftButtonAction={this.goBack}
-              leftButtonTitle={this.props.navigation.state.params.profileName}
             />
           )}
           headerFixedBackgroundColor={listBackPurple}
@@ -185,7 +184,6 @@ class MediaPages extends PureComponent {
             onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
             onHeaderLeftButtonPress={this.goBack}
-            headerLeftButtonTitle={this.props.navigation.state.params.profileName}
           />
           {this.renderTabNav()}
           <TabScene
