@@ -18,15 +18,13 @@ import { styles } from './styles';
 // Post
 export class Post extends PureComponent {
   static propTypes = {
-    post: PropTypes.object,
-    currentUser: PropTypes.object,
+    post: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
     onPostPress: PropTypes.func,
     navigateToUserProfile: PropTypes.func,
   }
 
   static defaultProps = {
-    post: {},
-    currentUser: {},
     onPostPress: null,
     navigateToUserProfile: null,
   }
@@ -34,12 +32,13 @@ export class Post extends PureComponent {
   state = {
     comments: [],
     isLiked: false,
-  }
+  };
 
   componentWillMount() {
     this.mounted = true;
 
     this.fetchComments();
+    this.fetchLikes();
   }
 
   componentWillUnmount() {
@@ -78,6 +77,27 @@ export class Post extends PureComponent {
       if (this.mounted) this.setState({ comments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
+    }
+  }
+
+  fetchLikes = async () => {
+    try {
+      const likes = await Kitsu.findAll('postLikes', {
+        filter: {
+          postId: this.props.post.id,
+          userId: this.props.currentUser.id,
+        },
+        include: 'user',
+        page: {
+          limit: 4,
+        },
+      });
+
+      const isLiked = likes.length > 0;
+
+      if (this.mounted) this.setState({ isLiked });
+    } catch (err) {
+      console.log('Error fetching likes: ', err);
     }
   }
 

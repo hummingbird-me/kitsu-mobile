@@ -46,7 +46,7 @@ class Feed extends React.PureComponent {
   fetchFeed = async ({ reset = false } = {}) => {
     this.setState({ refreshing: true });
 
-    const PAGE_SIZE = 20;
+    const PAGE_SIZE = 10;
     if (reset) this.currentPage = 0;
 
     try {
