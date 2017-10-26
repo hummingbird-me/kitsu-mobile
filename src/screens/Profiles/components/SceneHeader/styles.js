@@ -10,10 +10,18 @@ import {
 
 export const styles = StyleSheet.create({
   wrap: {
-    marginTop: -20, // to cover the status bar in iOS
     backgroundColor: '#FFFFFF',
     paddingBottom: spacing.small,
   },
+
+  headerViewMask: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    width: '100%',
+  },
+
   coverImageView: {
     width: '100%',
     height: coverImageHeight,
