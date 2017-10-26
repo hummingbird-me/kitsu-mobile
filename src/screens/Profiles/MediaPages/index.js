@@ -1,21 +1,23 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView } from 'react-native';
 import { TabRouter } from 'react-navigation';
-
+import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
+import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
+import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
+import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
+import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
 const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
 
 // TODO: Note we're using this to work around a bug in React Navigation:
 // https://github.com/react-community/react-navigation/issues/143
-export const requests = {};
+// export const requests = {};
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
@@ -42,13 +44,6 @@ const TabRoutes = TabRouter({
 class MediaPages extends PureComponent {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
-    mediaId: PropTypes.string,
-    mediaType: PropTypes.string,
-  }
-
-  static defaultProps = {
-    mediaId: null,
-    mediaType: null,
   }
 
   static navigationOptions = {
@@ -64,23 +59,24 @@ class MediaPages extends PureComponent {
   }
 
   componentDidMount = () => {
-    const mediaType = requests.requestedMediaType ||
-      (this.props.navigation.state.params || {}).mediaType ||
-      this.props.mediaType;
+    // const mediaType = requests.requestedMediaType ||
+    //   (this.props.navigation.state.params || {}).mediaType ||
+    //   this.props.mediaType;
+    //
+    // const mediaId = requests.requestedMediaId ||
+    //   (this.props.navigation.state.params || {}).mediaId ||
+    //   this.props.mediaId;
 
-    const mediaId = requests.requestedMediaId ||
-      (this.props.navigation.state.params || {}).mediaId ||
-      this.props.mediaId;
-
+    const { mediaId, mediaType } = this.props.navigation.state.params;
     this.fetchMedia(mediaType, mediaId);
 
-    if (requests.requestedMediaType) {
-      delete requests.requestedMediaType;
-    }
-
-    if (requests.requestedMediaId) {
-      delete requests.requestedMediaId;
-    }
+    // if (requests.requestedMediaType) {
+    //   delete requests.requestedMediaType;
+    // }
+    //
+    // if (requests.requestedMediaId) {
+    //   delete requests.requestedMediaId;
+    // }
   }
 
   onMainButtonOptionsSelected = () => {}
@@ -89,6 +85,8 @@ class MediaPages extends PureComponent {
   setActiveTab = (tab) => {
     this.setState({ active: tab });
   }
+
+  goBack = () => this.props.navigation.goBack();
 
   fetchMedia = async (type, id) => {
     this.setState({ loading: true });
@@ -126,7 +124,6 @@ class MediaPages extends PureComponent {
         mediaReactions,
       });
     } catch (error) {
-      console.log('Error fetching media.', err);
       this.setState({
         loading: false,
         error,
@@ -157,6 +154,10 @@ class MediaPages extends PureComponent {
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
 
+    if (error || !media) {
+      return null;
+    }
+
     if (loading) {
       return (
         <SceneContainer>
@@ -165,14 +166,27 @@ class MediaPages extends PureComponent {
       );
     }
 
-    if (error || !media) {
-      // Return error state
-      return null;
-    }
-
     return (
       <SceneContainer>
-        <ScrollView stickyHeaderIndices={[1]}>
+        <ParallaxScroll
+          headerHeight={60}
+          isHeaderFixed
+          parallaxHeight={coverImageHeight}
+          renderParallaxBackground={() => (
+            <MaskedImage
+              maskedTop
+              maskedBottom
+              source={{ uri: (media.coverImage && media.coverImage.original) || defaultCover }}
+            />
+          )}
+          renderHeader={() => (
+            <CustomHeader
+              leftButtonAction={this.goBack}
+              leftButtonTitle={this.props.navigation.state.params.profileName}
+            />
+          )}
+          headerFixedBackgroundColor={listBackPurple}
+        >
           <SceneHeader
             variant="media"
             media={media}
@@ -186,9 +200,11 @@ class MediaPages extends PureComponent {
             categories={media.categories}
             mainButtonTitle="Add to library"
             mainButtonOptions={MAIN_BUTTON_OPTIONS}
-            onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
             moreButtonOptions={MORE_BUTTON_OPTIONS}
+            onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
+            onHeaderLeftButtonPress={this.goBack}
+            headerLeftButtonTitle={this.props.navigation.state.params.profileName}
           />
           {this.renderTabNav()}
           <TabScene
@@ -199,7 +215,7 @@ class MediaPages extends PureComponent {
             castings={castings}
             navigation={navigation}
           />
-        </ScrollView>
+        </ParallaxScroll>
       </SceneContainer>
     );
   }

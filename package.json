@@ -12,6 +12,7 @@
     "storybook": "storybook start -p 7007"
   },
   "dependencies": {
+    "@monterosa/react-native-parallax-scroll": "^1.4.3",
     "algoliasearch": "^3.24.3",
     "base-64": "^0.1.0",
     "client-oauth2": "https://github.com/magneticz/js-client-oauth2.git",
@@ -41,7 +42,8 @@
     "react-native-multi-slider": "^0.3.5",
     "react-native-onesignal": "^3.0.5",
     "react-native-optimized-flatlist": "^1.0.1",
-    "react-native-parallax-scroll-view": "^0.19.0",
+    "react-native-parallax-scroll": "^1.0.3",
+    "react-native-parallax-scroll-view": "latest",
     "react-native-progress": "^3.2.1",
     "react-native-progress-bar": "^0.1.2",
     "react-native-scrollable-tab-view": "0.7.4",

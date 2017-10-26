@@ -25,7 +25,7 @@ const PostStack = StackNavigator(
     },
   },
   {
-    ...navigationOptions(),
+    headerMode: 'none',
     // eslint-disable-next-line react/prop-types
   },
 );

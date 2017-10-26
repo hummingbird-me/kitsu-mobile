@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -110,7 +111,6 @@ export class SceneHeader extends PureComponent {
       variant,
       type,
       title,
-      coverImage,
       posterImage,
       moreButtonOptions,
       onMoreButtonOptionsSelected,
@@ -118,14 +118,6 @@ export class SceneHeader extends PureComponent {
 
     return (
       <View style={styles.wrap}>
-        {/* Profile Cover Image */}
-        <View style={styles.coverImageView}>
-          <MaskedImage
-            maskedBottom
-            source={{ uri: coverImage || defaultCover }}
-          />
-        </View>
-
         <View style={[styles.profileHeaderView, styles[`profileHeaderView__${variant}`]]}>
           {/* Profile Poster Image */}
           <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
@@ -208,41 +200,42 @@ FollowStatus.defaultProps = {
 };
 
 SceneHeader.propTypes = {
-  variant: PropTypes.oneOf(['profile', 'media', 'group']),
-  type: PropTypes.string,
-  title: PropTypes.string,
+  categories: PropTypes.array,
   description: PropTypes.string,
-  coverImage: PropTypes.string,
-  posterImage: PropTypes.string,
-  popularityRank: PropTypes.string,
   followersCount: PropTypes.number,
   followingCount: PropTypes.number,
-  ratingRank: PropTypes.string,
-  categories: PropTypes.array,
   mainButtonOptions: PropTypes.array,
-  onMainButtonOptionsSelected: PropTypes.func,
-  onFollowButtonPress: PropTypes.func,
-  moreButtonOptions: PropTypes.array,
-  onMoreButtonOptionsSelected: PropTypes.func,
   mainButtonTitle: PropTypes.string,
+  moreButtonOptions: PropTypes.array,
+  onFollowButtonPress: PropTypes.func,
+  onMainButtonOptionsSelected: PropTypes.func,
+  onMoreButtonOptionsSelected: PropTypes.func,
+  popularityRank: PropTypes.string,
+  posterImage: PropTypes.string,
+  ratingRank: PropTypes.string,
+  title: PropTypes.string,
+  type: PropTypes.string,
+  variant: PropTypes.oneOf(['profile', 'media', 'group']),
 };
 
 SceneHeader.defaultProps = {
-  variant: 'profile',
-  type: '',
-  title: '',
-  description: '',
+  categories: [],
   coverImage: '',
-  posterImage: '',
-  popularityRank: '',
-  ratingRank: '',
+  description: '',
   followersCount: 0,
   followingCount: 0,
-  categories: [],
+  headerLeftButtonTitle: '',
   mainButtonOptions: [],
-  onMainButtonOptionsSelected: null,
-  onFollowButtonPress: null,
-  moreButtonOptions: [],
-  onMoreButtonOptionsSelected: null,
   mainButtonTitle: 'Follow',
+  moreButtonOptions: [],
+  onFollowButtonPress: null,
+  onHeaderLeftButtonPress: null,
+  onMainButtonOptionsSelected: null,
+  onMoreButtonOptionsSelected: null,
+  popularityRank: '',
+  posterImage: '',
+  ratingRank: '',
+  title: '',
+  type: '',
+  variant: 'profile',
 };
