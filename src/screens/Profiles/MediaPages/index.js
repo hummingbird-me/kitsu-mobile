@@ -154,16 +154,16 @@ class MediaPages extends PureComponent {
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
 
-    if (error || !media) {
-      return null;
-    }
-
     if (loading) {
       return (
         <SceneContainer>
           <SceneLoader />
         </SceneContainer>
       );
+    }
+
+    if (error || !media) {
+      return null;
     }
 
     return (
