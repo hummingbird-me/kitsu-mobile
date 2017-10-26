@@ -27,8 +27,20 @@ export const Comment = ({ comment, onPress, children }) => {
   const { content, user } = comment;
   const { avatar, name } = user;
 
+  const WrapComponent = (props) => {
+    if (onPress) {
+      return (
+        <TouchableOpacity onPress={onPress} {...props} />
+      );
+    }
+
+    return (
+      <View {...props} />
+    );
+  };
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <WrapComponent>
       <Layout.RowWrap>
         <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
         <Layout.RowMain>
@@ -39,7 +51,7 @@ export const Comment = ({ comment, onPress, children }) => {
           )}
         </Layout.RowMain>
       </Layout.RowWrap>
-    </TouchableOpacity>
+    </WrapComponent>
   );
 };
 

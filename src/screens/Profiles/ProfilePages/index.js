@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { StatusBar } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -119,6 +120,7 @@ class ProfilePage extends Component {
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     return (
       <SceneContainer>
+        <StatusBar barStyle="light-content" />
         <ParallaxScroll
           headerHeight={60}
           isHeaderFixed

@@ -136,7 +136,6 @@ export class Post extends PureComponent {
               <PostSection key={`comment:${comment.id}`}>
                 <Comment
                   comment={comment}
-                  onPress={() => this.props.navigateToUserProfile(comment.user.id)}
                 />
               </PostSection>
             ))}

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { unescape } from 'lodash';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { View, RefreshControl } from 'react-native';
+import { View, RefreshControl, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Kitsu } from 'kitsu/config/api';
@@ -145,6 +145,7 @@ class Feed extends React.PureComponent {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: listBackPurple }}>
+        <StatusBar barStyle="light-content" />
         <TabBar>
           {feedStreams.map(tabItem => (
             <TabBarLink

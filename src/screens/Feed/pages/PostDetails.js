@@ -19,10 +19,6 @@ class PostDetails extends React.Component {
     isLiked: false,
   };
 
-  componentWillUnmount = () => {
-    StatusBar.setBarStyle('light-content');
-  }
-
   toggleLike = () => {
     this.setState({ isLiked: !this.state.isLiked });
   }
@@ -33,6 +29,10 @@ class PostDetails extends React.Component {
 
   goBack = () => {
     this.props.navigation.goBack();
+  }
+
+  navigateToUserProfile = (userId) => {
+    this.props.navigation.navigate('ProfilePages', userId);
   }
 
   render() {
@@ -46,6 +46,7 @@ class PostDetails extends React.Component {
 
         <PostHeader
           avatar={(post.user.avatar && post.user.avatar.medium) || defaultAvatar}
+          onAvatarPress={() => this.navigateToUserProfile(post.user.id)}
           name={post.user.name}
           time={post.createdAt}
           onBackButtonPress={this.goBack}
@@ -69,7 +70,12 @@ class PostDetails extends React.Component {
             <PostCommentsSection>
               <FlatList
                 data={comments}
-                renderItem={({ item }) => <Comment comment={item} />}
+                renderItem={({ item }) => (
+                  <Comment
+                    comment={item}
+                    onPress={() => this.navigateToUserProfile(item.user.id)}
+                  />
+                )}
                 ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
               />
             </PostCommentsSection>
