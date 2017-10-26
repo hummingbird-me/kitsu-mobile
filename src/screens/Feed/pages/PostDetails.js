@@ -32,7 +32,7 @@ class PostDetails extends React.Component {
   }
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', userId);
+    this.props.navigation.navigate('ProfilePages', { userId });
   }
 
   render() {

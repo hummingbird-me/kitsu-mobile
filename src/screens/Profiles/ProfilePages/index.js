@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar } from 'react-native';
+import { Animated, StatusBar } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -10,6 +10,7 @@ import { defaultCover } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
@@ -95,6 +96,10 @@ class ProfilePage extends PureComponent {
     this.setState({ active: tab });
   }
 
+  goBack = () => {
+    this.props.navigation.goBack();
+  }
+
   loadUserData = async (userId) => {
     try {
       const users = await Kitsu.findAll('users', {
@@ -154,8 +159,11 @@ class ProfilePage extends PureComponent {
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
 
     if (loading) {
-      // Return loading state.
-      return null;
+      return (
+        <SceneContainer>
+          <SceneLoader />
+        </SceneContainer>
+      );
     }
 
     if (error) {
@@ -167,7 +175,9 @@ class ProfilePage extends PureComponent {
       <SceneContainer>
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
+          style={{ flex: 1 }}
           headerHeight={60}
+          stickyHeaderIndices={[1]}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
           renderParallaxBackground={() => (

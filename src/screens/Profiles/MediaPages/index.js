@@ -149,6 +149,7 @@ class MediaPages extends PureComponent {
     return (
       <SceneContainer>
         <ParallaxScroll
+          style={{ flex: 1 }}
           headerHeight={60}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
