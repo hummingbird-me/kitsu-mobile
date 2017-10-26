@@ -66,8 +66,6 @@ class ProfilePage extends PureComponent {
   componentWillMount() {
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
 
-    debugger;
-
     if (!userId) {
       this.setState({
         loading: false,
@@ -97,17 +95,40 @@ class ProfilePage extends PureComponent {
   }
 
   loadUserData = async (userId) => {
-    const profile = await Kitsu.one('users', userId, {
-      fields: {
-        users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
-      },
-      include: 'waifu',
-    });
+    try {
+      const users = await Kitsu.findAll('users', {
+        filter: {
+          id: userId,
+        },
+        fields: {
+          users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
+        },
+        include: 'waifu',
+      });
 
-    this.setState({
-      loading: false,
-      profile,
-    });
+      if (users.length < 1) {
+        console.log(`Could not locate user with ID ${userId}.`);
+
+        this.setState({
+          loading: false,
+          error: 'Could not find that user.',
+        });
+
+        return;
+      }
+
+      this.setState({
+        loading: false,
+        profile: users[0],
+      });
+    } catch (error) {
+      console.log('Error loading user: ', error);
+
+      this.setState({
+        loading: false,
+        error,
+      });
+    }
   }
 
   handleFollowing = () => {}
@@ -126,7 +147,8 @@ class ProfilePage extends PureComponent {
   );
 
   render() {
-    const { userId, navigation } = this.props;
+    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+    const { navigation } = this.props;
     const { error, loading, profile } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
 

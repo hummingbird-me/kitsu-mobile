@@ -120,7 +120,7 @@ class Feed extends React.PureComponent {
   }
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', userId);
+    this.props.navigation.navigate('ProfilePages', { userId });
   }
 
   renderPost = ({ item }) => {
@@ -136,6 +136,9 @@ class Feed extends React.PureComponent {
             navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
           />
         );
+      case 'comments':
+        // We explicitly don't render these at the moment.
+        return null;
       default:
         console.log(`WARNING: Ignored post type: ${item.type}`);
         return null;

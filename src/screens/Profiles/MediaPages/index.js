@@ -15,10 +15,6 @@ import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
 const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
 
-// TODO: Note we're using this to work around a bug in React Navigation:
-// https://github.com/react-community/react-navigation/issues/143
-// export const requests = {};
-
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
   { key: 'episodes', label: 'Episodes', screen: 'Episodes' },
@@ -59,24 +55,8 @@ class MediaPages extends PureComponent {
   }
 
   componentDidMount = () => {
-    // const mediaType = requests.requestedMediaType ||
-    //   (this.props.navigation.state.params || {}).mediaType ||
-    //   this.props.mediaType;
-    //
-    // const mediaId = requests.requestedMediaId ||
-    //   (this.props.navigation.state.params || {}).mediaId ||
-    //   this.props.mediaId;
-
     const { mediaId, mediaType } = this.props.navigation.state.params;
     this.fetchMedia(mediaType, mediaId);
-
-    // if (requests.requestedMediaType) {
-    //   delete requests.requestedMediaType;
-    // }
-    //
-    // if (requests.requestedMediaId) {
-    //   delete requests.requestedMediaId;
-    // }
   }
 
   onMainButtonOptionsSelected = () => {}
