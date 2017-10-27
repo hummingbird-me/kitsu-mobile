@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { View, Animated } from 'react-native';
 
@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
-export class ProgressiveImage extends React.Component {
+export class ProgressiveImage extends PureComponent {
   static propTypes = {
     backgroundStyle: PropTypes.object,
     children: PropTypes.object,
@@ -33,16 +33,26 @@ export class ProgressiveImage extends React.Component {
   };
 
   onLoad = () => {
-    Animated.timing(this.state.thumbnailOpacity, {
-      toValue: 1,
-      duration: this.props.duration,
-    }).start();
+    if (!this.hasFadedIn) {
+      Animated.timing(this.state.thumbnailOpacity, {
+        toValue: 1,
+        duration: this.props.duration,
+        useNativeDriver: true,
+      }).start();
+
+      this.hasFadedIn = true;
+    }
   };
 
   onLayout = (event) => {
     const { height, width } = event.nativeEvent.layout;
-    this.setState({ height, width });
+
+    if (this.state.height !== height || this.state.width !== width) {
+      this.setState({ height, width });
+    }
   };
+
+  hasFadedIn = false
 
   render() {
     const { thumbnailOpacity } = this.state;
@@ -61,15 +71,14 @@ export class ProgressiveImage extends React.Component {
           />
         )}
 
-        {children &&
-        source.uri && (
-        <LinearGradient
-              colors={['transparent', 'rgba(0,0,0,0.6)']}
-              style={[commonStyles.absoluteFill, style]}
-            >
-              {children}
-            </LinearGradient>
-          )}
+        {children && source.uri &&
+          <LinearGradient
+            colors={['transparent', 'rgba(0,0,0,0.6)']}
+            style={[commonStyles.absoluteFill, style]}
+          >
+            {children}
+          </LinearGradient>
+        }
       </View>
     );
   }
