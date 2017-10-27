@@ -30,6 +30,7 @@ export class Post extends PureComponent {
   }
 
   state = {
+    comment: '',
     comments: [],
     like: null,
   };
@@ -49,7 +50,27 @@ export class Post extends PureComponent {
     this.props.onPostPress({
       post: this.props.post,
       comments: this.state.comments,
+      currentUser: this.props.currentUser,
     });
+  }
+
+  onCommentChanged = comment => this.setState({ comment })
+
+  onSubmitComment = async () => {
+    await Kitsu.create('comments', {
+      content: this.state.comment,
+      post: {
+        id: this.props.post.id,
+        type: 'posts',
+      },
+      user: {
+        id: this.props.currentUser.id,
+        type: 'users',
+      },
+    });
+
+    this.setState({ comment: '' });
+    this.fetchComments();
   }
 
   mounted = false
@@ -102,14 +123,14 @@ export class Post extends PureComponent {
   }
 
   toggleLike = async () => {
-    const { like } = this.state;
+    let { like } = this.state;
 
     if (like) {
       this.setState({ like: null });
 
       await Kitsu.destroy('postLikes', like.id);
     } else {
-      const like = await Kitsu.create('postLikes', {
+      like = await Kitsu.create('postLikes', {
         post: {
           id: this.props.post.id,
           type: 'posts',
@@ -133,11 +154,12 @@ export class Post extends PureComponent {
       createdAt,
       content,
       images,
+      id,
       postLikesCount,
       commentsCount,
       user,
     } = this.props.post;
-    const { comments } = this.state;
+    const { comment, comments } = this.state;
 
     return (
       <TouchableWithoutFeedback onPress={this.onPostPress}>
@@ -167,11 +189,9 @@ export class Post extends PureComponent {
             {!comments &&
               <Text>Loading...</Text>
             }
-            {comments && comments.map(comment => (
-              <PostSection key={`comment:${comment.id}`}>
-                <Comment
-                  comment={comment}
-                />
+            {comments && comments.map(existingComment => (
+              <PostSection key={`post:${id}:comment:${existingComment.id}`}>
+                <Comment comment={existingComment} />
               </PostSection>
             ))}
 
@@ -179,6 +199,9 @@ export class Post extends PureComponent {
               <CommentTextInput
                 currentUser={this.props.currentUser}
                 inputRef={(el) => { this.commentInput = el; }}
+                comment={comment}
+                onCommentChanged={this.onCommentChanged}
+                onSubmit={this.onSubmitComment}
               />
             </PostSection>
           </PostFooter>

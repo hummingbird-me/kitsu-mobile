@@ -22,4 +22,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingLeft: scenePadding * 2,
   },
+  submitButtonIcon: {
+    fontSize: 24,
+  },
 });

@@ -10,26 +10,21 @@ import { styles } from './styles';
 export class CommentTextInput extends PureComponent {
   static propTypes = {
     inputRef: PropTypes.func,
-    currentUser: PropTypes.object,
+    currentUser: PropTypes.object.isRequired,
     placeholderText: PropTypes.string,
     showAvatar: PropTypes.bool,
     onSubmit: PropTypes.func,
+    comment: PropTypes.string,
+    onCommentChanged: PropTypes.func,
   }
 
   static defaultProps = {
     inputRef: null,
-    currentUser: {},
     placeholderText: 'Write a comment...',
     showAvatar: true,
     onSubmit: null,
-  }
-
-  state = {
-    isFocused: false,
-  }
-
-  handleOnFocus = (isFocused) => {
-    this.setState({ isFocused });
+    comment: '',
+    onCommentChanged: null,
   }
 
   render() {
@@ -38,8 +33,9 @@ export class CommentTextInput extends PureComponent {
       currentUser,
       showAvatar,
       placeholderText,
+      comment,
+      onCommentChanged,
       onSubmit,
-      ...props
     } = this.props;
 
     return (
@@ -50,17 +46,16 @@ export class CommentTextInput extends PureComponent {
             <TextInput
               ref={inputRef}
               style={styles.textInputField}
-              onBlur={() => this.handleOnFocus(false)}
-              onFocus={() => this.handleOnFocus(true)}
               placeholder={placeholderText}
               placeholderTextColor={colors.grey}
-              {...props}
+              onChangeText={onCommentChanged}
+              value={comment}
             />
           </View>
         </Layout.RowMain>
-        {this.state.isFocused && (
+        {!!comment && (
           <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
-            <Icon name="md-send" color={colors.blue} style={{ fontSize: 24 }} />
+            <Icon name="md-send" color={colors.blue} style={styles.submitButtonIcon} />
           </TouchableOpacity>
         )}
       </Layout.RowWrap>

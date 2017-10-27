@@ -1,6 +1,8 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
 import { KeyboardAvoidingView, FlatList, View, StatusBar, ScrollView } from 'react-native';
+import { PropTypes } from 'prop-types';
+import { connect } from 'react-redux';
+
 import { defaultAvatar } from 'kitsu/constants/app';
 import { PostHeader, PostMain, PostActions, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
@@ -13,11 +15,18 @@ class PostDetails extends React.Component {
 
   static propTypes = {
     navigation: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
   }
 
   state = {
     isLiked: false,
+    comment: '',
   };
+
+  onCommmentChanged = comment => this.setState({ comment });
+  onSubmitComment = async () => {
+
+  }
 
   toggleLike = () => {
     this.setState({ isLiked: !this.state.isLiked });
@@ -35,10 +44,12 @@ class PostDetails extends React.Component {
     this.props.navigation.navigate('ProfilePages', { userId });
   }
 
+
   render() {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
-    const { post, comments } = this.props.navigation.state.params;
+    const { currentUser, post, comments } = this.props.navigation.state.params;
+    const { comment } = this.state;
 
     return (
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1, paddingTop: 20, backgroundColor: '#FFFFFF' }}>
@@ -84,7 +95,12 @@ class PostDetails extends React.Component {
 
         <PostFooter>
           <PostSection>
-            <CommentTextInput inputRef={(el) => { this.commentInput = el; }} />
+            <CommentTextInput
+              currentUser={currentUser}
+              comment={comment}
+              onCommentChanged={this.onCommentChanged}
+              onSubmit={this.onSubmitComment}
+            />
           </PostSection>
         </PostFooter>
       </KeyboardAvoidingView>
@@ -92,4 +108,9 @@ class PostDetails extends React.Component {
   }
 }
 
-export default PostDetails;
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  return { currentUser };
+};
+
+export default connect(mapStateToProps)(PostDetails);

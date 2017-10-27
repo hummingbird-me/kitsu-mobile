@@ -123,6 +123,8 @@ class Feed extends React.PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   }
 
+  keyExtractor = (item, index) => index
+
   renderPost = ({ item }) => {
     // This dispatches based on the type of an entity to the correct
     // component. If it's not in here it'll just ignore the feed item.
@@ -163,7 +165,7 @@ class Feed extends React.PureComponent {
         <View style={{ flex: 1 }}>
           <KeyboardAwareFlatList
             data={this.state.data}
-            keyExtractor={item => `${item.type}:${item.id}`}
+            keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
             onEndReachedThreshold={0.5}
