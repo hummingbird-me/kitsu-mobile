@@ -50,6 +50,7 @@ export class Post extends PureComponent {
     this.props.onPostPress({
       post: this.props.post,
       comments: this.state.comments,
+      like: this.state.like,
       currentUser: this.props.currentUser,
     });
   }
@@ -253,6 +254,8 @@ PostHeader.defaultProps = {
 };
 
 // PostMain
+const keyExtractor = (item, index) => index;
+
 export const PostMain = ({ content, images, likesCount, commentsCount }) => (
   <View style={styles.postMain}>
     <View style={styles.postContent}>
@@ -260,7 +263,7 @@ export const PostMain = ({ content, images, likesCount, commentsCount }) => (
     </View>
     {images && images.length > 0 && (
       <FlatList
-        keyExtractor={({ index }) => index}
+        keyExtractor={keyExtractor}
         style={[styles.postImagesView, !content && styles.posImagesView__noText]}
         data={images}
         renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
@@ -331,11 +334,11 @@ PostActionButton.defaultProps = {
   onPress: null,
 };
 
-export const PostActions = ({ isLiked, onLikePress, onCommentPress, onSharePress }) => (
+export const PostActions = ({ isLiked, onLikePress, onCommentPress /* , onSharePress */ }) => (
   <View style={styles.postActionRow}>
     <PostActionButton variant="like" onPress={onLikePress} isActive={isLiked} />
     <PostActionButton variant="comment" onPress={onCommentPress} />
-    <PostActionButton variant="share" onPress={onSharePress} />
+    {/* <PostActionButton variant="share" onPress={onSharePress} /> */}
   </View>
 );
 
@@ -343,7 +346,7 @@ PostActions.propTypes = {
   isLiked: PropTypes.bool,
   onLikePress: PropTypes.func,
   onCommentPress: PropTypes.func,
-  onSharePress: PropTypes.func,
+  // onSharePress: PropTypes.func,
 };
 PostActions.defaultProps = {
   isLiked: false,
