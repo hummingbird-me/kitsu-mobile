@@ -27,6 +27,7 @@ export const Avatar = ({ size, avatar }) => (
     <StyledProgressiveImage
       resize="cover"
       source={{ uri: avatar || defaultAvatar }}
+      borderRadius={avatarSizes[size]}
     />
   </View>
 );

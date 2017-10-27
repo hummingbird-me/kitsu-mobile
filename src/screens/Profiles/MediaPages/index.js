@@ -167,6 +167,7 @@ class MediaPages extends PureComponent {
           renderHeader={() => (
             <CustomHeader
               leftButtonAction={this.goBack}
+              leftButtonTitle="Back"
             />
           )}
           headerFixedBackgroundColor={listBackPurple}

@@ -8,5 +8,5 @@ export const styles = StyleSheet.create({
     position: 'relative',
     overflow: 'hidden',
     backgroundColor: '#F1F1F1',
-  }
+  },
 });

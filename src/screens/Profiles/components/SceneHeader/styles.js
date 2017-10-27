@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
   profileHeaderView: {
     flexDirection: 'row',
     paddingHorizontal: scenePadding,
+    overflow: 'visible',
   },
   profileHeaderView__media: {
     marginTop: cardSize.portraitLarge.height * (-0.65),

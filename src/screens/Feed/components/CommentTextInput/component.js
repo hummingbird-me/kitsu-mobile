@@ -50,6 +50,7 @@ export class CommentTextInput extends PureComponent {
               placeholderTextColor={colors.grey}
               onChangeText={onCommentChanged}
               value={comment}
+              underlineColorAndroid="transparent"
             />
           </View>
         </Layout.RowMain>
