@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
+import { cardSize } from 'kitsu/screens/Profiles/constants';
 import { styles } from './styles';
 
 export class SceneHeader extends PureComponent {
@@ -118,6 +119,7 @@ export class SceneHeader extends PureComponent {
 
     return (
       <View style={styles.wrap}>
+        <View style={styles.backgroundPanel} />
         <View style={[styles.profileHeaderView, styles[`profileHeaderView__${variant}`]]}>
           {/* Profile Poster Image */}
           <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
@@ -126,6 +128,7 @@ export class SceneHeader extends PureComponent {
                 variant={variant}
                 resize="cover"
                 source={{ uri: posterImage || defaultAvatar }}
+                borderRadius={variant === 'profile' ? cardSize.square.width : 6}
               />
             </View>
           </View>

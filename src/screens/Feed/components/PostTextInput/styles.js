@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 export const styles = StyleSheet.create({
   postTextInputBox: {
     flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   postTextInputField: {
-    flex: 1,
+    width: '100%',
     fontFamily: 'Open Sans',
     fontSize: 17,
     paddingHorizontal: scenePadding,

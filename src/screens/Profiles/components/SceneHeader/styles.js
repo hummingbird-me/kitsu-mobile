@@ -10,8 +10,20 @@ import {
 
 export const styles = StyleSheet.create({
   wrap: {
-    backgroundColor: '#FFFFFF',
     paddingBottom: spacing.small,
+    overflow: 'visible',
+    marginTop: cardSize.square.height * (-0.5),
+    backgroundColor: 'transparent',
+    position: 'relative',
+  },
+
+  backgroundPanel: {
+    position: 'absolute',
+    top: cardSize.square.height / 2,
+    left: 0,
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#FFFFFF',
   },
 
   headerViewMask: {
@@ -30,16 +42,6 @@ export const styles = StyleSheet.create({
   profileHeaderView: {
     flexDirection: 'row',
     paddingHorizontal: scenePadding,
-    overflow: 'visible',
-  },
-  profileHeaderView__media: {
-    marginTop: cardSize.portraitLarge.height * (-0.65),
-  },
-  profileHeaderView__profile: {
-    marginTop: cardSize.square.height * (-0.5),
-  },
-  profileHeaderView__group: {
-    marginTop: cardSize.square.height * (-0.5),
   },
 
   profileImageViewShadow: {
@@ -144,6 +146,7 @@ export const styles = StyleSheet.create({
   },
 
   descriptionView: {
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: scenePadding,
     marginTop: scenePadding,
   },

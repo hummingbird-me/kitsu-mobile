@@ -106,6 +106,7 @@ class CreatePost extends React.PureComponent {
             autoCorrect={false}
             autoFocus
             returnKeyType="done"
+            underlineColorAndroid="transparent"
           />
         </View>
         <PickerModal
