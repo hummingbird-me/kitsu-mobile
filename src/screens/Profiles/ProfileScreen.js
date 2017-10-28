@@ -547,10 +547,12 @@ const mapStateToProps = (state, ownProps) => {
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
   const { currentUser } = state.user;
 
-  let userId = currentUser.id;
-  if (navigation.state.params && navigation.state.params.userId) {
-    userId = navigation.state.params.userId;
-  }
+  // let userId = currentUser.id;
+  // if (navigation.state.params && navigation.state.params.userId) {
+  //   userId = navigation.state.params.userId;
+  // }
+
+  const userId = 5554;
 
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
@@ -650,11 +652,11 @@ const getInfo = (profile) => {
       if (key === 'followingCount' && value > 0) {
 
         const label = `Following ${value} people`;
-        if (info['6'].label.length > 0) {
-          info['6'].label = `${info['6'].label}, ${label.toLowerCase()}`;
-        } else {
-          info['6'] = { label, icon: 'user' };
-        }
+        // if (info['6'].label.length > 0) {
+        //   info['6'].label = `${info['6'].label}, ${label.toLowerCase()}`;
+        // } else {
+        //   info['6'] = { label, icon: 'user' };
+        // }
       }
     }
   });

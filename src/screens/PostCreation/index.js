@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, KeyboardAvoidingView, TextInput } from 'react-native';
 
 import PostMeta from './postMeta';
@@ -6,7 +6,7 @@ import styles from './styles';
 import NavButton from './navButton';
 import AddToPost from './addToPost';
 
-class PostCreationScreen extends Component {
+class PostCreationScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
 

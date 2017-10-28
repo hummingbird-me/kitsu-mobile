@@ -28,8 +28,8 @@ const Root = StackNavigator(
     SearchFilter: {
       screen: Routes.FilterStack,
     },
-    Profile: {
-      screen: Routes.ProfileStack,
+    QuickUpdate: {
+      screen: Routes.QuickUpdateStack,
     },
     Post: {
       screen: Routes.PostStack,

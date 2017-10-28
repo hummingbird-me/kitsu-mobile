@@ -26,11 +26,15 @@ export const offWhite = '#FAFAFA';
 export const transparentWhite = 'rgba(255, 255, 255, 0.6)'; // signup tabs
 export const imageGrey = '#D8D8D8';
 export const lightGrey = '#CCCCCC';
+export const lightestGrey = '#EEEEEE';
 export const darkGrey = '#696969';
 export const grey = '#808080'; // html grey aka 'grey'
 
 /* yellows */
 export const yellow = '#F0AD4E';
+
+/* orange */
+export const orange = '#D95E40';
 
 /* blacks */
 export const black = '#000000';

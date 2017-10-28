@@ -17,7 +17,6 @@ import {
 } from 'kitsu/screens/Sidebar/';
 import { UserLibraryScreen } from 'kitsu/screens/Profiles/';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common/';
-import ProfileStack from './profile';
 import navigationOptions from './navigationOptions';
 
 const SidebarStack = StackNavigator(
@@ -36,9 +35,6 @@ const SidebarStack = StackNavigator(
     },
     Library: {
       screen: LibraryScreen,
-    },
-    UserProfile: {
-      screen: ProfileStack,
     },
     UserLibraryScreen: {
       screen: UserLibraryScreen,
