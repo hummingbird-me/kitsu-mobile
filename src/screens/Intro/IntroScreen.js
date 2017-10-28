@@ -68,7 +68,7 @@ export default class OnboardingScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <OnboardingHeader style={styles.header} />
+        <IntroHeader style={styles.header} />
         <View style={styles.bodyWrapper}>
           <View style={styles.page}>
             <ScrollView

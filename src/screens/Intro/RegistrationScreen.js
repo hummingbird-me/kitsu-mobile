@@ -6,6 +6,7 @@ import { Button } from 'kitsu/components/Button';
 import { loginUser } from 'kitsu/store/auth/actions';
 import * as colors from 'kitsu/constants/colors';
 import { placeholderImage } from 'kitsu/assets/img/onboarding';
+import { kitsuConfig } from 'kitsu/config/env';
 import { IntroHeader } from './common/';
 import styles from './styles';
 
@@ -33,12 +34,12 @@ class RegistrationScreen extends React.Component {
   fetchTopMedia = async () => {
     // TODO: handle network error.
     try {
-      const topAnime = await fetch('https://kitsu.io/api/edge/trending/anime?limit=10').then(res =>
-        res.json(),
-      );
-      const topManga = await fetch('https://kitsu.io/api/edge/trending/manga?limit=10').then(res =>
-        res.json(),
-      );
+      const topAnime = await fetch(
+        `${kitsuConfig.baseUrl}/edge/trending/anime?limit=10`,
+      ).then(res => res.json());
+      const topManga = await fetch(
+        `${kitsuConfig.baseUrl}/edge/trending/manga?limit=10`,
+      ).then(res => res.json());
       this.setState(
         {
           topAnime: topAnime.data,
@@ -100,11 +101,13 @@ class RegistrationScreen extends React.Component {
     // TODO: as of react native 0.47, flatlist has inverted prop
     return (
       <View style={styles.container}>
-        <OnboardingHeader style={styles.header} />
+        <IntroHeader style={styles.header} />
         <View style={styles.bodyWrapper}>
           <View>
             <FlatList
-              ref={ref => (this.animeList = ref)}
+              ref={(ref) => {
+                this.animeList = ref;
+              }}
               style={[styles.animatedList, { transform: [{ scaleX: -1 }] }]}
               horizontal
               scrollEnabled={false}
@@ -116,7 +119,9 @@ class RegistrationScreen extends React.Component {
               showsHorizontalScrollIndicator={false}
             />
             <FlatList
-              ref={ref => (this.mangaList = ref)}
+              ref={(ref) => {
+                this.mangaList = ref;
+              }}
               horizontal
               scrollEnabled={false}
               style={styles.animatedList}

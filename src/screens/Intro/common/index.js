@@ -1,5 +1,3 @@
-import OnboardingHeader from './OnboardingHeader';
+import IntroHeader from './IntroHeader';
 
-export {
-  OnboardingHeader,
-};
+export { IntroHeader };
