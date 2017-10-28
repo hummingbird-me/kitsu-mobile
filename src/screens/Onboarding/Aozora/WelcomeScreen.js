@@ -13,7 +13,7 @@ const WelcomeScreen = ({ navigation }) => (
       </Text>
       <Button
         style={{ marginHorizontal: 0 }}
-        onPress={() => navigation.navigate('CreateAccountScreen')}
+        onPress={() => navigation.navigate('SelectAccountScreen')}
         title={"Let's get started!"}
         titleStyle={commonStyles.buttonTitleStyle}
       />

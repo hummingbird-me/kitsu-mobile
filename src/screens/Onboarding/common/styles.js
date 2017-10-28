@@ -9,9 +9,10 @@ export const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
   },
   tutorialText: {
+    marginVertical: 16,
     color: colors.white,
     fontFamily: 'OpenSans',
     textAlign: 'center',
