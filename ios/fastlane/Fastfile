@@ -114,7 +114,7 @@ platform :ios do
       xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AdHoc kitsu-san'"
     )
 
-    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io', 'edencakir@gmail.com', 'pjchavarria@gmail.com'] # You can list more emails here
+    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io', 'edencakir@gmail.com', 'pjchavarria@gmail.com', 'bilal@codeinfuse.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     crashlytics(

@@ -99,18 +99,18 @@ export class UserLibraryListCard extends React.Component {
       const {
         currentUser,
         profile,
-        data,
+        libraryEntry,
         libraryStatus,
         libraryType,
         updateUserLibraryEntry,
       } = this.props;
 
       this.props.navigate(USER_LIBRARY_EDIT_SCREEN, {
+        libraryEntry,
         libraryStatus,
         libraryType,
         profile,
         canEdit: profile.id === currentUser.id,
-        libraryEntry: data,
         ratingSystem: currentUser.ratingSystem,
         updateUserLibraryEntry,
       });

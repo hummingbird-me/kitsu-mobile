@@ -771,23 +771,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		17C687FC1F87039800F0BA3F /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				40C1013E41074CFBA8034B60 /* libCodePush.a */,
-				6592628EF114480BA70E7059 /* libRNVectorIcons.a */,
-				025D7DCB646B4EB5B33D71D7 /* libRCTFBSDK.a */,
-				02B0EC9812B94201AB2627F9 /* libLottieReactNative.a */,
-				F51148AA22694F92AB484605 /* libLottie.a */,
-				74F436878F9E4560BCD4200F /* libBVLinearGradient.a */,
-				32B99BDC2D7D4547AD86C3AF /* libRCTActionSheet.a */,
-				DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */,
-				FF0AD57CF1A14A05AB0F02EE /* libRNShimmer.a */,
-				E2221571BBEC4788A0E756DA /* libRCTOneSignal.a */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		34C118031F3D8E2E006AE4D3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -974,7 +957,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				6D33A6C67DF148E09CE537CB /* Frameworks */,
 				D7757FB0234F48C3A09F0799 /* Resources */,
-				17C687FC1F87039800F0BA3F /* Recovered References */,
+				B472871B1F77C47E00F0528A /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -989,6 +972,23 @@
 				2D02E4901E0B4A5D006451C7 /* kitsu_mobile-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B472871B1F77C47E00F0528A /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				40C1013E41074CFBA8034B60 /* libCodePush.a */,
+				6592628EF114480BA70E7059 /* libRNVectorIcons.a */,
+				025D7DCB646B4EB5B33D71D7 /* libRCTFBSDK.a */,
+				02B0EC9812B94201AB2627F9 /* libLottieReactNative.a */,
+				F51148AA22694F92AB484605 /* libLottie.a */,
+				74F436878F9E4560BCD4200F /* libBVLinearGradient.a */,
+				32B99BDC2D7D4547AD86C3AF /* libRCTActionSheet.a */,
+				DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */,
+				FF0AD57CF1A14A05AB0F02EE /* libRNShimmer.a */,
+				E2221571BBEC4788A0E756DA /* libRCTOneSignal.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		D7757FB0234F48C3A09F0799 /* Resources */ = {
@@ -1134,12 +1134,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = VXT6F3A96H;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = VXT6F3A96H;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = 98KG27K553;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1808,7 +1807,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = VXT6F3A96H;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1851,7 +1849,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = VXT6F3A96H;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
@@ -1892,10 +1889,9 @@
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = VXT6F3A96H;
+				DEVELOPMENT_TEAM = 98KG27K553;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1924,10 +1920,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san-thinkmill";
+				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development kitsu-san";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1938,10 +1934,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 5;
-				DEVELOPMENT_TEAM = VXT6F3A96H;
+				DEVELOPMENT_TEAM = 98KG27K553;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1970,10 +1965,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san-thinkmill";
+				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
 				PRODUCT_NAME = kitsu_mobile;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "6fc85f52-7b65-4f2c-a5da-9348bd87906b";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc kitsu-san";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

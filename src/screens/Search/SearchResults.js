@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 });
 
 class SearchResults extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     title: navigation.state.params.label,
     headerLeft: (
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
@@ -28,25 +28,24 @@ class SearchResults extends Component {
     headerRight: (
       <TouchableOpacity
         style={styles.button}
-        onPress={() =>
-          navigation.navigate('SearchFilter', {
+        onPress={() => {
+          screenProps.rootNavigation.navigate('SearchFilter', {
             ...navigation.state.params,
             onApply: (data, state) => {
-              navigation.goBack(null);
-              setTimeout(
-                () =>
-                  navigation.setParams({
-                    filter: data.filter,
-                    sort: data.sort,
-                    default: null,
-                    label: 'Search',
-                    data: state,
-                    fade: data.fade,
-                  }),
-                10,
+              screenProps.rootNavigation.goBack(null);
+              setTimeout(() =>
+                navigation.setParams({
+                  filter: data.filter,
+                  sort: data.sort,
+                  default: null,
+                  label: 'Search',
+                  data: state,
+                  fade: data.fade,
+                }),
               );
             },
-          })}
+          });
+        }}
       >
         <FontAwesomeIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
       </TouchableOpacity>

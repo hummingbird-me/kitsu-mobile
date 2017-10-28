@@ -2,7 +2,7 @@ import { StackNavigator } from 'react-navigation';
 import Routes from './routes';
 
 import { OnboardingScreen, RegistrationScreen } from './screens/Onboarding';
-import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
+import { AuthScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
 import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(
@@ -16,11 +16,8 @@ const Root = StackNavigator(
     Registration: {
       screen: RegistrationScreen,
     },
-    Login: {
-      screen: LoginScreen,
-    },
-    Signup: {
-      screen: SignupScreen,
+    AuthScreen: {
+      screen: AuthScreen,
     },
     Recovery: {
       screen: RecoveryScreen,

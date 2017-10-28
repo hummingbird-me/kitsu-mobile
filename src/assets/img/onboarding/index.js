@@ -1,13 +1,15 @@
-import intro1 from './intro1.png';
-import intro2 from './intro2.png';
-import intro3 from './intro3.png';
-import intro4 from './intro4.png';
+import slide1 from './slide1.png';
+import slide2 from './slide2.png';
+import slide3 from './slide3.png';
+import slide4 from './slide4.png';
+import slidelogo from './slidelogo.png';
 import placeholderImage from './placeholderImage.png';
 
 export {
-  intro1,
-  intro2,
-  intro3,
-  intro4,
+  slide1,
+  slide2,
+  slide3,
+  slide4,
+  slidelogo,
   placeholderImage,
 };

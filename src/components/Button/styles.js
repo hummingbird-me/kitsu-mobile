@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 16,
     backgroundColor: colors.green,
     height: 47,
-    borderRadius: 4,
+    borderRadius: 8,
   },
   buttonDisabled: {
     backgroundColor: colors.buttonDisabledColor,
@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   title: {
     color: colors.white,
     fontFamily: 'OpenSans',
-    lineHeight: 25,
+    lineHeight: Platform.select({ ios: 25, android: 20 }),
     fontSize: 15,
   },
   icon: {
