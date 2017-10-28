@@ -1,7 +1,7 @@
-import OnboardingScreen from './OnboardingScreen';
+import IntroScreen from './IntroScreen';
 import RegistrationScreen from './RegistrationScreen';
 
 export {
-  OnboardingScreen,
+  IntroScreen,
   RegistrationScreen,
 };

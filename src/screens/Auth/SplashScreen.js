@@ -38,7 +38,7 @@ class SplashScreen extends Component {
     } else {
       resetAction = NavigationActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+        actions: [NavigationActions.navigate({ routeName: 'Intro' })],
         key: null,
       });
     }
