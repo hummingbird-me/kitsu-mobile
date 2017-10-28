@@ -601,7 +601,6 @@ class MediaScreen extends Component {
 
   render() {
     const { media, reactions, navigation, currentUser, mediaFeed, loadingMediaFeed } = this.props;
-    console.log(mediaFeed);
     return (
       <Container style={styles.container}>
         <ParallaxScrollView
@@ -616,7 +615,7 @@ class MediaScreen extends Component {
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri: media.coverImage && media.coverImage.original || defaultCover }}
+              source={{ uri: (media.coverImage && media.coverImage.original) || defaultCover }}
             />
           )}
         >

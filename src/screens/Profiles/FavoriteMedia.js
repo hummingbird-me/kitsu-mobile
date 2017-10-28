@@ -114,7 +114,7 @@ FavoriteMedia.propTypes = {
 const mapStateToProps = ({ profile }, ownProps) => {
   const { manga, anime, favoritesLoading } = profile;
   const { navigation: { state: { params: { userId } } } } = ownProps;
-  console.log(anime[userId]);
+  // console.log(anime[userId]);
   const animes = (anime[userId] && anime[userId].map(({ item }) => item)) || [];
   const mangas = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
   return {

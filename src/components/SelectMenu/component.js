@@ -7,6 +7,7 @@ import * as colors from 'kitsu/constants/colors';
 export class SelectMenu extends React.PureComponent {
   static propTypes = {
     cancelButtonIndex: PropTypes.number,
+    activeOpacity: PropTypes.number,
     children: PropTypes.element,
     disabled: PropTypes.bool,
     options: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -20,6 +21,7 @@ export class SelectMenu extends React.PureComponent {
 
   static defaultProps = {
     cancelButtonIndex: -1,
+    activeOpacity: 1,
     children: undefined,
     disabled: false,
     style: null,
@@ -65,7 +67,7 @@ export class SelectMenu extends React.PureComponent {
   render() {
     return (
       <TouchableOpacity
-        activeOpacity={1}
+        activeOpacity={this.props.activeOpacity}
         disabled={this.props.disabled}
         onPress={this.showActionSheet}
         style={this.props.style}

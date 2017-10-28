@@ -38,7 +38,7 @@ class FavoriteCharacter extends Component {
       width = Dimensions.get('window').width / 2;
     }
 
-    console.log(index);
+    // console.log(index);
 
     const image = item.image ? item.image.original : defaultAvatar;
     return (
@@ -140,8 +140,8 @@ const mapStateToProps = ({ profile, media }, ownProps) => {
     characters = (castings[mediaId] && castings[mediaId].map(item => item.character)) || [];
     loading = loadingCastings;
   }
-  console.log(media);
-  console.log(characters);
+  // console.log(media);
+  // console.log(characters);
   return { characters, userId, loading };
 };
 export default connect(mapStateToProps, { fetchProfileFavorites, fetchMediaCastings })(
