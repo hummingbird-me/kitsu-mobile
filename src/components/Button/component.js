@@ -43,7 +43,7 @@ Button.propTypes = {
   ...TouchableOpacity.propTypes,
   style: ViewPropTypes.style,
   title: PropTypes.string.isRequired,
-  titleStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  titleStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
   icon: PropTypes.string,
   iconStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   onPress: PropTypes.func.isRequired,
