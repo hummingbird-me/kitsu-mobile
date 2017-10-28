@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, Dimensions } from 'react-native';
-import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/onboarding/';
+import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/intro/';
 import { Button } from 'kitsu/components/Button';
 import { IntroHeader } from './common/';
 import styles from './styles';

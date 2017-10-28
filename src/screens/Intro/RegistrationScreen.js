@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
 import { loginUser } from 'kitsu/store/auth/actions';
 import * as colors from 'kitsu/constants/colors';
-import { placeholderImage } from 'kitsu/assets/img/onboarding';
+import { placeholderImage } from 'kitsu/assets/img/intro';
 import { kitsuConfig } from 'kitsu/config/env';
 import { IntroHeader } from './common/';
 import styles from './styles';

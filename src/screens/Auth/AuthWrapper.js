@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Platform } from 'react-native';
-import { slidelogo } from 'kitsu/assets/img/onboarding/';
+import { slidelogo } from 'kitsu/assets/img/intro/';
 import AnimatedWrapper from 'kitsu/components/AnimatedWrapper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
