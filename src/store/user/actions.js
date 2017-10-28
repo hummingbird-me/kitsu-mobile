@@ -32,7 +32,6 @@ export const createUser = (data, nav) => async (dispatch, getState) => {
     password,
     birthday,
   };
-  console.log(userObj);
 
   if (id) {
     userObj.facebookId = id;

@@ -24,6 +24,9 @@ export const styles = StyleSheet.create({
     lineHeight: Platform.select({ ios: 25, android: 20 }),
     fontSize: 15,
   },
+  titleBold: {
+    fontWeight: 'bold',
+  },
   icon: {
     fontSize: 20,
     color: colors.white,

@@ -21,7 +21,7 @@ const LoginForm = ({
       autoCapitalize="none"
       autoCorrect={false}
       value={data.username}
-      // keyboardType={'email-address'}
+      keyboardType={'email-address'}
       onChangeText={text => handleChange(text, 'username')}
     />
     <Input

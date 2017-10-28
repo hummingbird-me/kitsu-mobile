@@ -6,6 +6,7 @@ import Tabs from './tabs';
 import PostStack from './post';
 import FeedStack from './feed';
 import SidebarStack from './sidebar';
+import OnboardingStack from './onboarding';
 
 export default {
   SearchStack,
@@ -16,4 +17,5 @@ export default {
   PostStack,
   FeedStack,
   SidebarStack,
+  OnboardingStack,
 };
