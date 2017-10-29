@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
   userDetailsLink: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
 
   postMain: {
