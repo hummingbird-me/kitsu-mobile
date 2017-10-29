@@ -12,9 +12,6 @@ const Root = StackNavigator(
     Intro: {
       screen: IntroScreen,
     },
-    Onboarding: {
-      screen: Routes.OnboardingStack,
-    },
     Registration: {
       screen: RegistrationScreen,
     },
@@ -23,6 +20,9 @@ const Root = StackNavigator(
     },
     Recovery: {
       screen: RecoveryScreen,
+    },
+    Onboarding: {
+      screen: Routes.OnboardingStack,
     },
     Tabs: {
       screen: Routes.Tabs,
