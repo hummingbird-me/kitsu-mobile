@@ -8,19 +8,19 @@ import { styles as commonStyles } from '../common/styles';
 
 const AccountView = ({ style, data, selected, onSelectAccount }) => {
   const { libraryCount, username, profileImageURL, accountType } = data;
-  const selectedRowStyle = selected ? styles.rowSelected : null;
-  const selectedTextStyle = selected ? styles.textSelected : null;
+  const selectedRowStyle = selected ? commonStyles.rowSelected : null;
+  const selectedTextStyle = selected ? commonStyles.textSelected : null;
   return (
     <TouchableOpacity
       onPress={() => onSelectAccount(data.accountType)}
-      style={[styles.rowWrapper, selectedRowStyle, style]}
+      style={[commonStyles.rowWrapper, selectedRowStyle, style]}
     >
       <Image
         style={styles.profileImage}
         source={profileImageURL ? { uri: profileImageURL } : { uri: defaultAvatar }}
       />
       <View style={styles.textWrapper}>
-        <Text style={[styles.username, selectedTextStyle]}>{username}</Text>
+        <Text style={[commonStyles.text, selectedTextStyle]}>{username}</Text>
         <Text style={[styles.libraryCount, selectedTextStyle]}>
           {libraryCount ? `${libraryCount} library entries` : 'Empty Library'}
         </Text>

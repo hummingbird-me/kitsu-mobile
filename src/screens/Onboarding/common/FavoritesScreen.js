@@ -160,7 +160,9 @@ class CreateAccountScreen extends React.Component {
     this.setState({ pills });
   }
 
-  onConfirm = () => {};
+  onConfirm = () => {
+    this.props.navigation.navigate('RatingSystemScreen');
+  };
 
   onPressPill = (pill, index, isSubpill) => {
     const pills = this.state.pills.slice();
@@ -187,6 +189,7 @@ class CreateAccountScreen extends React.Component {
   render() {
     const { pills } = this.state;
     const buttonDisabled = pills.filter(v => v.selected).length < 5;
+    const buttonTitle = buttonDisabled ? 'Pick at least 5' : 'Looks good!';
     return (
       <View style={commonStyles.container}>
         <View style={commonStyles.contentWrapper}>
@@ -215,7 +218,7 @@ class CreateAccountScreen extends React.Component {
             disabled={buttonDisabled}
             style={{ marginHorizontal: 0, marginTop: 36 }}
             onPress={this.onConfirm}
-            title={'Pick at least 5'}
+            title={buttonTitle}
             titleStyle={commonStyles.buttonTitleStyle}
           />
         </View>

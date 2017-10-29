@@ -11,6 +11,34 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  rowWrapper: {
+    minHeight: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 8,
+    padding: 8,
+    borderRadius: 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.lightGrey,
+    backgroundColor: colors.transparent,
+  },
+  rowSelected: {
+    backgroundColor: colors.white,
+  },
+  rowRating: {
+    paddingHorizontal: 14,
+    minHeight: 58,
+    borderRadius: 8,
+  },
+  text: {
+    color: colors.white,
+    fontFamily: 'OpenSans',
+    fontWeight: '600',
+  },
+  textSelected: {
+    color: colors.darkPurple,
+  },
   tutorialText: {
     marginVertical: 16,
     color: colors.white,
@@ -21,5 +49,23 @@ export const styles = StyleSheet.create({
   },
   buttonTitleStyle: {
     fontWeight: '600',
+  },
+  imageSimple: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+    marginHorizontal: 2,
+  },
+  imageRegular: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
+    marginHorizontal: 2,
+  },
+  imageAdvanced: {
+    width: 15,
+    height: 15,
+    resizeMode: 'contain',
+    marginHorizontal: 2,
   },
 });
