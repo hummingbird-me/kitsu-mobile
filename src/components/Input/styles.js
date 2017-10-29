@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
-  wrapper: {
+  container: {
     marginVertical: 4,
     marginHorizontal: 16,
     backgroundColor: colors.white,
