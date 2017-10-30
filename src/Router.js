@@ -7,9 +7,6 @@ import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(
   {
-    WelcomeScreen: {
-      screen: WelcomeScreen,
-    },
     Splash: {
       screen: SplashScreen,
     },

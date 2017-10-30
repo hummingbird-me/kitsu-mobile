@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Button } from 'kitsu/components/Button';
-import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
-import _ from 'lodash';
+import { defaultAvatar } from 'kitsu/constants/app';
+import { upperFirst, toLower } from 'lodash';
 import { kitsu, aozora } from 'kitsu/assets/img/onboarding/';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
@@ -76,7 +76,7 @@ class SelectAccountScreen extends React.Component {
           <Button
             style={{ marginHorizontal: 0, marginTop: 24 }}
             onPress={() => navigate('CreateAccountScreen')}
-            title={`Keep ${_.upperFirst(_.toLower(selectedAccount))} account`}
+            title={`Keep ${upperFirst(toLower(selectedAccount))} account`}
             titleStyle={commonStyles.buttonTitleStyle}
           />
         </View>

@@ -24,6 +24,23 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
   }
 };
 
+export const getAccountConflicts = () => async (dispatch, getState) => {
+  dispatch({ type: types.GET_ACCOUNT_CONFLICTS });
+  const token = getState().auth.tokens.access_token;
+  try {
+    const headers = new Headers();
+    headers.append('Authorization', `Bearer ${token}`);
+    const payload = await fetch('https://staging.kitsu.io/api/edge/users/_conflicts', {
+      method: 'GET',
+      headers,
+    }).then(res => res.json());
+    console.log(payload);
+    dispatch({ type: types.GET_ACCOUNT_CONFLICTS_SUCCESS, payload });
+  } catch (e) {
+    dispatch({ type: types.GET_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
+  }
+};
+
 export const createUser = (data, nav) => async (dispatch, getState) => {
   dispatch({ type: types.CREATE_USER });
   const { username, email, password, birthday } = data;
