@@ -6,6 +6,7 @@ import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { PostHeader, PostMain, PostActions, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 
 export default class PostDetails extends PureComponent {
@@ -165,12 +166,15 @@ export default class PostDetails extends PureComponent {
             />
 
             <PostCommentsSection>
-              <FlatList
-                data={comments}
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderItem}
-                ItemSeparatorComponent={this.renderItemSeperatorComponent}
-              />
+              {!comments && <SceneLoader />}
+              {comments && (
+                <FlatList
+                  data={comments}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderItem}
+                  ItemSeparatorComponent={this.renderItemSeperatorComponent}
+                />
+              )}
             </PostCommentsSection>
           </ScrollView>
         </View>

@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { PostImage, PostImageSeparator } from 'kitsu/screens/Feed/components/PostImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
@@ -188,7 +189,7 @@ export class Post extends PureComponent {
 
           <PostFooter>
             {!comments &&
-              <Text>Loading...</Text>
+              <SceneLoader />
             }
             {comments && comments.map(existingComment => (
               <PostSection key={`post:${id}:comment:${existingComment.id}`}>
