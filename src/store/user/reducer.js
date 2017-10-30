@@ -49,7 +49,25 @@ export const userReducer = (state = INITIAL_STATE, action) => {
     case types.GET_ACCOUNT_CONFLICTS_FAIL:
       return {
         ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case types.RESOLVE_ACCOUNT_CONFLICTS:
+      return {
+        ...state,
         loading: true,
+        error: '',
+      };
+    case types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        conflicts: null,
+      };
+    case types.RESOLVE_ACCOUNT_CONFLICTS_FAIL:
+      return {
+        ...state,
+        loading: false,
         error: action.payload,
       };
     case types.FETCH_NETWORK_FOLLOW:

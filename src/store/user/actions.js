@@ -2,6 +2,7 @@ import { LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fb
 import * as types from 'kitsu/store/types';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';
+import { kitsuConfig } from 'kitsu/config/env';
 
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
@@ -30,14 +31,32 @@ export const getAccountConflicts = () => async (dispatch, getState) => {
   try {
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${token}`);
-    const payload = await fetch('https://staging.kitsu.io/api/edge/users/_conflicts', {
+    const payload = await fetch(`${kitsuConfig.baseUrl}/edge/users/_conflicts`, {
       method: 'GET',
       headers,
     }).then(res => res.json());
-    console.log(payload);
     dispatch({ type: types.GET_ACCOUNT_CONFLICTS_SUCCESS, payload });
   } catch (e) {
     dispatch({ type: types.GET_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
+  }
+};
+
+export const resolveAccountConflicts = account => async (dispatch, getState) => {
+  dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS });
+  const token = getState().auth.tokens.access_token;
+  try {
+    const headers = new Headers();
+    headers.append('Authorization', `Bearer ${token}`);
+    const payload = await fetch(`${kitsuConfig.baseUrl}/edge/users/_conflicts`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        chosen: account,
+      }),
+    }).then(res => res.json());
+    dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS, payload });
+  } catch (e) {
+    dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
   }
 };
 

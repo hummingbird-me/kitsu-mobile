@@ -32,9 +32,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     const user = await fetchCurrentUser()(dispatch, getState);
-    console.log('here', user);
     if (user.status === 'aozora') {
-      console.log('here', user.status);
       getAccountConflicts()(dispatch, getState);
       const onboardingAction = NavigationActions.reset({
         index: 0,
