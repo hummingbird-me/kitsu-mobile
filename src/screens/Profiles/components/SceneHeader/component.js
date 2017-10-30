@@ -118,8 +118,8 @@ export class SceneHeader extends PureComponent {
     } = this.props;
 
     return (
-      <View style={styles.wrap}>
-        <View style={styles.backgroundPanel} />
+      <View style={[styles.container, styles[`container__${variant}`]]}>
+        <View style={[styles.backgroundView, styles[`backgroundView__${variant}`]]} />
         <View style={[styles.profileHeaderView, styles[`profileHeaderView__${variant}`]]}>
           {/* Profile Poster Image */}
           <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
