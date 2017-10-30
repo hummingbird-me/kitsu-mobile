@@ -187,6 +187,8 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     dispatch({
       error,
       type: actions.fetchFail,
+      library: options.library,
+      status: options.status,
     });
   }
 };
