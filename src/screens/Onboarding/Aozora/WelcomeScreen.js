@@ -15,7 +15,8 @@ const WelcomeScreen = ({ navigation }) => (
         <Image style={styles.iceCube} source={iceCube} />
       </Image>
       <Text style={[styles.ps, { marginHorizontal: 24, textAlign: 'center' }]}>
-        Welcome to Kitsu, the new home of the Aozora community. Let{"'"}s break the ice!
+        We{"'"}ll walk you through moving your Aozora content over to Kitsu. This will only take a
+        minute!
       </Text>
       <Button
         onPress={() => navigation.navigate('SelectAccountScreen')}
