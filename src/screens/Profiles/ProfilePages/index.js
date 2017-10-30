@@ -162,6 +162,8 @@ class ProfilePage extends PureComponent {
         setActiveTab={tab => this.setActiveTab(tab)}
         userId={userId}
         navigation={navigation}
+        currentUser={this.props.currentUser}
+        profile={this.state.profile}
       />
     );
   }
