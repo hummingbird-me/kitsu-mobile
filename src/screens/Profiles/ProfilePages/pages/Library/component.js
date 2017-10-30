@@ -226,6 +226,7 @@ class Library extends PureComponent {
             this.renderEmptyList(type, status)
             :
             <FlatList
+              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}
