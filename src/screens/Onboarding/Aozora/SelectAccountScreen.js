@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import _ from 'lodash';
+import { kitsu, aozora } from 'kitsu/assets/img/onboarding/';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
@@ -25,10 +26,7 @@ const AccountView = ({ style, data, selected, onSelectAccount }) => {
           {libraryCount ? `${libraryCount} library entries` : 'Empty Library'}
         </Text>
       </View>
-      <Image
-        style={styles.brandImage}
-        source={accountType ? { uri: defaultCover } : { uri: defaultAvatar }}
-      />
+      <Image style={styles.brandImage} source={accountType === 'kitsu' ? kitsu : aozora} />
     </TouchableOpacity>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { Button } from 'kitsu/components/Button';
-import { OnboardingHeader } from '../common/';
+import { iceBackground, iceCube } from 'kitsu/assets/img/onboarding/';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
@@ -11,6 +11,8 @@ const WelcomeScreen = ({ navigation }) => (
       <Text style={commonStyles.tutorialText}>
         Welcome to Kitsu, the new home of the Aozora community. Let{"'"}s break the ice!
       </Text>
+      <Image source={iceBackground} />
+      <Image source={iceCube} />
       <Button
         style={{ marginHorizontal: 0 }}
         onPress={() => navigation.navigate('SelectAccountScreen')}

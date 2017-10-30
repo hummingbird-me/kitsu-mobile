@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TextInput, ViewPropTypes, Keyboard } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';

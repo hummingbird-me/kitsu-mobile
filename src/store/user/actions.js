@@ -17,8 +17,10 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
     });
     dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
     createOneSignalPlayer(dispatch, getState);
+    return user[0];
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
+    return null;
   }
 };
 
