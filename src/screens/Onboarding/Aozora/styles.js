@@ -1,7 +1,13 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
+  contentWrapper: {
+    flex: 1,
+  },
+  tutorialText: {
+    marginHorizontal: 16,
+  },
   profileImage: {
     width: 40,
     height: 40,
@@ -28,5 +34,17 @@ export const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     textAlign: 'center',
     fontSize: 11,
+  },
+  iceBackground: {
+    width: Dimensions.get('window').width,
+    height: 220,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iceCube: {
+    width: 160,
+    height: 160,
+    resizeMode: 'contain',
+    bottom: -32,
   },
 });

@@ -2,10 +2,14 @@ import { StackNavigator } from 'react-navigation';
 import Routes from './routes';
 import { IntroScreen, RegistrationScreen } from './screens/Intro';
 import { AuthScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
+import { WelcomeScreen } from './screens/Onboarding/Aozora/';
 import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(
   {
+    WelcomeScreen: {
+      screen: WelcomeScreen,
+    },
     Splash: {
       screen: SplashScreen,
     },
