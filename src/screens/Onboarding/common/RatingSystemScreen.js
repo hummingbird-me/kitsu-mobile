@@ -35,7 +35,7 @@ const Regular = () => (
   <View style={{ flexDirection: 'row' }}>
     {Array(5)
       .fill({})
-      .map(() => <Image source={starFilled} style={styles.imageRegular} />)}
+      .map((v, i) => <Image key={i} source={starFilled} style={styles.imageRegular} />)}
   </View>
 );
 
@@ -43,7 +43,7 @@ const Advanced = () => (
   <View style={{ flexDirection: 'row' }}>
     {Array(10)
       .fill({})
-      .map(() => <Image source={starFilled} style={styles.imageAdvanced} />)}
+      .map((v, i) => <Image key={i} source={starFilled} style={styles.imageAdvanced} />)}
   </View>
 );
 
@@ -71,7 +71,7 @@ class RatingSystemSelect extends React.Component {
   };
 
   onConfirm = () => {
-    this.props.navigation.navigate('ImportScreen');
+    this.props.navigation.navigate('ManageLibrary');
   };
 
   render() {
