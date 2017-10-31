@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { Image } from 'react-native';
 
-import Feed from 'kitsu/screens/Feed';
+import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
 import quickUpdateTabBarImage from 'kitsu/assets/img/tabbar_icons/update.png';
 import navigationOptions from './navigationOptions';
 
 const QuickUpdateStack = DismissableStackNavigator(
   {
-    // TODO: This should be quick update, this is a placeholder.
-    FeedActivity: {
-      screen: Feed,
+    QuickUpdate: {
+      screen: QuickUpdateScreen,
     },
   },
   {

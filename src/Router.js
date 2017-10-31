@@ -3,6 +3,7 @@ import Routes from './routes';
 
 import { OnboardingScreen, RegistrationScreen } from './screens/Onboarding';
 import { AuthScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
+import QuickUpdateScreen from './screens/QuickUpdateScreen';
 import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(
