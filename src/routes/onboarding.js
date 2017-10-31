@@ -14,6 +14,9 @@ import navigationOptions from './navigationOptions';
 
 const OnboardingStack = StackNavigator(
   {
+    FavoritesScreen: {
+      screen: FavoritesScreen,
+    },
     WelcomeScreen: {
       screen: WelcomeScreen,
     },

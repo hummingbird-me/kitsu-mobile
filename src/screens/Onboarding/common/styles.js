@@ -68,4 +68,11 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginHorizontal: 2,
   },
+  pillsWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    padding: 4,
+    marginTop: 12,
+  },
 });

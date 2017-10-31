@@ -3,192 +3,235 @@ import { View, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { Pill } from 'kitsu/components/Pill';
 import { styles as commonStyles } from './styles';
+import { connect } from 'react-redux';
+import { Kitsu, setToken } from 'kitsu/config/api';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
-class CreateAccountScreen extends React.Component {
+class FavoritesScreen extends React.Component {
   state = {
-    pills: [
+    categories: [
       {
-        name: 'Action',
+        title: 'Action',
         selected: false,
-        subpills: [
-          {
-            name: 'The Town',
-            selected: false,
-          },
-          {
-            name: 'Captain Phillips',
-            selected: false,
-          },
-          {
-            name: 'Barry Seal',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
+        id: 150,
       },
       {
-        name: 'Adventure',
+        title: 'Adventure',
         selected: false,
-        subpills: [
-          {
-            name: 'Mad Max',
-            selected: false,
-          },
-          {
-            name: 'Matrix',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
+        id: 157,
       },
       {
-        name: 'Comedy',
+        title: 'Comedy',
         selected: false,
-        subpills: [
-          {
-            name: 'Mad Max',
-            selected: false,
-          },
-          {
-            name: 'Matrix',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
+        id: 160,
       },
       {
-        name: 'Sports',
+        title: 'Ecchi',
         selected: false,
-        subpills: [
-          {
-            name: 'Baseball',
-            selected: false,
-          },
-          {
-            name: 'Basketball',
-            selected: false,
-          },
-          {
-            name: 'Card Game',
-            selected: false,
-          },
-          {
-            name: 'Cycling',
-            selected: false,
-          },
-          {
-            name: 'Motorsport',
-            selected: false,
-          },
-          {
-            name: 'Soccer',
-            selected: false,
-          },
-          {
-            name: 'Tennis',
-            selected: false,
-          },
-          {
-            name: 'Volleyball',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
       },
       {
-        name: 'Past',
+        title: 'Fantasy',
         selected: false,
-        subpills: [
-          {
-            name: 'Mad Max',
-            selected: false,
-          },
-          {
-            name: 'Matrix',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
+        id: 156,
       },
       {
-        name: 'Cooking',
+        title: 'Harem',
         selected: false,
-        subpills: [
-          {
-            name: 'Mad Max',
-            selected: false,
-          },
-          {
-            name: 'Matrix',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
+        id: 165,
       },
       {
-        name: 'Revenge',
+        title: 'Psychological',
         selected: false,
-        subpills: [
-          {
-            name: 'Mad Max',
-            selected: false,
-          },
-          {
-            name: 'Matrix',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
+        id: 232,
       },
       {
-        name: 'Magical Girl',
+        title: 'Romance',
         selected: false,
-        subpills: [
-          {
-            name: 'Mad Max',
-            selected: false,
-          },
-          {
-            name: 'Matrix',
-            selected: false,
-          },
-        ],
+        subCategoryLength: 0,
+        id: 164,
+      },
+      {
+        title: 'Science Fiction',
+        selected: false,
+        subCategoryLength: 0,
+        id: 155,
+      },
+      {
+        title: 'Super Power',
+        selected: false,
+        subCategoryLength: 0,
+        id: 47,
+      },
+      {
+        title: 'Fantasy World',
+        selected: false,
+        subCategoryLength: 0,
+        id: 52,
+      },
+      {
+        title: 'Paralel Universe',
+        selected: false,
+        subCategoryLength: 0,
+        id: 147,
+      },
+      {
+        title: 'Past',
+        selected: false,
+        subCategoryLength: 0,
+        id: 49,
+      },
+      {
+        title: 'Coming of Age',
+        selected: false,
+        subCategoryLength: 0,
+        id: 185,
+      },
+      {
+        title: 'Crime',
+        selected: false,
+        subCategoryLength: 0,
+        id: 175,
+      },
+      {
+        title: 'Cooking',
+        selected: false,
+        subCategoryLength: 0,
+        id: 18,
+      },
+      {
+        title: 'Daily Life',
+        selected: false,
+        subCategoryLength: 0,
+        id: 169,
+      },
+      {
+        title: 'Disaster',
+        selected: false,
+        subCategoryLength: 0,
+        id: 176,
+      },
+      {
+        title: 'Friendship',
+        selected: false,
+        subCategoryLength: 0,
+        id: 167,
+      },
+      {
+        title: 'Law and Order',
+        selected: false,
+        subCategoryLength: 0,
+        id: 183,
+      },
+      {
+        title: 'Military',
+        selected: false,
+        subCategoryLength: 0,
+        id: 207,
+      },
+      {
+        title: 'Politics',
+        selected: false,
+        subCategoryLength: 0,
+        id: 171,
+      },
+      {
+        title: 'School Life',
+        selected: false,
+        subCategoryLength: 0,
+        id: 172,
+      },
+      {
+        title: 'Sports',
+        selected: false,
+        subCategoryLength: 0,
+        id: 180,
+      },
+      {
+        title: 'Revenge',
+        selected: false,
+        subCategoryLength: 0,
+        id: 178,
+      },
+      {
+        title: 'Magical Girl',
+        selected: false,
+        subCategoryLength: 0,
+        id: 37,
       },
     ],
   };
 
   componentDidMount() {
-    const pills = this.state.pills.slice();
-    for (let i = 0; i < pills.length; i += 1) {
+    const categories = this.state.categories.slice();
+    for (let i = 0; i < categories.length; i += 1) {
       const index = i % 5;
-      pills[i].color = COLOR_LIST[index];
+      categories[i].color = COLOR_LIST[index];
     }
-    this.setState({ pills });
+    this.setState({ categories });
   }
 
   onConfirm = () => {
     this.props.navigation.navigate('RatingSystemScreen');
   };
 
-  onPressPill = (pill, index, isSubpill) => {
-    const pills = this.state.pills.slice();
-    if (!isSubpill) {
-      if (pill.selected) {
-        pills.splice(index + 1, pill.subpills.length);
+  onPressPill = async (category, index, isSubCategory) => {
+    const categories = this.state.categories.slice();
+    if (!isSubCategory) {
+      if (category.selected) {
+        categories.splice(index + 1, category.subCategoryLength);
       } else {
-        const subpills = pill.subpills;
-        for (let i = 0; i < subpills.length; i += 1) {
-          subpills[i].color = pill.color;
+        let subCategories;
+        try {
+          subCategories = await this.getSubCategories(category.id);
+          categories[index].subCategoryLength = subCategories.length;
+          for (let i = 0; i < subCategories.length; i += 1) {
+            subCategories[i].color = category.color;
+            subCategories[i].isSubCategory = true;
+          }
+          categories.splice(index + 1, 0, ...subCategories);
+        } catch (e) {
+          console.log(e);
         }
-        pills.splice(index + 1, 0, ...subpills);
       }
     }
-    pills[index].selected = !pill.selected;
+    categories[index].selected = !category.selected;
 
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    this.setState({ pills });
+    this.setState({ categories });
+  };
+
+  getSubCategories = async (parentId) => {
+    const token = this.props.accessToken;
+    setToken(token);
+    try {
+      const categories = await Kitsu.findAll('categories', {
+        fields: {
+          categories: 'id,title',
+        },
+        filter: {
+          parent_id: parentId,
+        },
+      });
+      return categories;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   };
 
   render() {
-    const { pills } = this.state;
-    const buttonDisabled = pills.filter(v => v.selected).length < 5;
+    const { categories } = this.state;
+    const buttonDisabled = categories.filter(v => v.selected).length < 5;
     const buttonTitle = buttonDisabled ? 'Pick at least 5' : 'Looks good!';
     return (
       <View style={commonStyles.container}>
@@ -196,21 +239,14 @@ class CreateAccountScreen extends React.Component {
           <Text style={commonStyles.tutorialText}>
             Tap categories you like, we’ll use these to help you find new anime and manga.
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              padding: 4,
-              marginTop: 12,
-            }}
-          >
-            {pills.map((v, i) => (
+          <View style={styles.pillsWrapper}>
+            {categories.map((v, i) => (
               <Pill
+                key={`${v.title + i}`}
                 selected={v.selected}
-                onPress={() => this.onPressPill(v, i, !v.subpills)}
+                onPress={() => this.onPressPill(v, i, v.isSubCategory)}
                 color={v.color}
-                name={v.name}
+                title={v.title}
               />
             ))}
           </View>
@@ -227,4 +263,9 @@ class CreateAccountScreen extends React.Component {
   }
 }
 
-export default CreateAccountScreen;
+const mapStateToProps = ({ auth, user }) => ({
+  accessToken: auth.tokens.access_token,
+  currentUser: user.currentUser,
+});
+
+export default connect(mapStateToProps, {})(FavoritesScreen);

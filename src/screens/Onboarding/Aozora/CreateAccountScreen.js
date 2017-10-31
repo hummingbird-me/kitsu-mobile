@@ -2,12 +2,15 @@ import React from 'react';
 import { View, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { Input } from 'kitsu/components/Input';
+import { connect } from 'react-redux';
+import { updateGeneralSettings } from 'kitsu/store/user/actions';
+import isEmpty from 'lodash/isEmpty';
 import { styles as commonStyles } from '../common/styles';
 
 class CreateAccountScreen extends React.Component {
   state = {
-    email: '',
-    username: '',
+    email: this.props.currentUser.email,
+    username: this.props.currentUser.name,
     password: '',
     confirmPassword: '',
     usernameConfirmed: false,
@@ -20,7 +23,19 @@ class CreateAccountScreen extends React.Component {
   onConfirm = () => {
     const { usernameConfirmed } = this.state;
     if (usernameConfirmed) {
-      this.props.navigation.navigate('FavoritesScreen');
+      const { username, email, password, confirmPassword } = this.state;
+      const { currentUser, navigation } = this.props;
+      const valuesToUpdate = {
+        ...((username !== currentUser.name && { name: username }) || {}),
+        ...((email !== currentUser.email && { email }) || {}),
+        ...((password === confirmPassword && { password }) || {}),
+      };
+      console.log('values to update', valuesToUpdate);
+      if (!isEmpty(valuesToUpdate)) {
+        this.props.updateGeneralSettings(valuesToUpdate);
+        this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
+      }
+      navigation.navigate('FavoritesScreen');
     } else {
       if (Platform.OS === 'android') {
         UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -88,4 +103,8 @@ class CreateAccountScreen extends React.Component {
   }
 }
 
-export default CreateAccountScreen;
+const mapStateToProps = ({ user }) => {
+  const { loading, error, currentUser, conflicts: accounts } = user;
+  return { loading, error, currentUser, accounts };
+};
+export default connect(mapStateToProps, { updateGeneralSettings })(CreateAccountScreen);

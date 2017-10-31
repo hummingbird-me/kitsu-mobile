@@ -47,16 +47,20 @@ export const resolveAccountConflicts = account => async (dispatch, getState) => 
   try {
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${token}`);
+    headers.append('Content-Type', 'application/json');
+    const body = JSON.stringify({
+      chosen: account,
+    });
     const payload = await fetch(`${kitsuConfig.baseUrl}/edge/users/_conflicts`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({
-        chosen: account,
-      }),
+      body,
     }).then(res => res.json());
     dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS, payload });
+    return true;
   } catch (e) {
     dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
+    return false;
   }
 };
 

@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { iceBackground, iceCube } from 'kitsu/assets/img/onboarding/';
+import { connect } from 'react-redux';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
-const WelcomeScreen = ({ navigation }) => (
+const WelcomeScreen = ({ navigation, accounts }) => (
   <View style={commonStyles.container}>
     <View style={styles.contentWrapper}>
       <Text style={[commonStyles.tutorialText, styles.tutorialText]}>
@@ -19,7 +20,14 @@ const WelcomeScreen = ({ navigation }) => (
         minute!
       </Text>
       <Button
-        onPress={() => navigation.navigate('SelectAccountScreen')}
+        onPress={() => {
+          if (accounts.kitsu) {
+            // if there is kitsu, we have conflict.
+            navigation.navigate('SelectAccountScreen');
+          } else {
+            navigation.navigate('CreateAccountScreen');
+          }
+        }}
         title={"Let's get started!"}
         titleStyle={commonStyles.buttonTitleStyle}
       />
@@ -27,4 +35,8 @@ const WelcomeScreen = ({ navigation }) => (
   </View>
 );
 
-export default WelcomeScreen;
+const mapStateToProps = ({ user }) => {
+  const { loading, error, conflicts: accounts } = user;
+  return { loading, error, accounts };
+};
+export default connect(mapStateToProps, null)(WelcomeScreen);

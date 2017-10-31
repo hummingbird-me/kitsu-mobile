@@ -1,14 +1,12 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Button } from 'kitsu/components/Button';
-import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
+import { upperFirst, toLower } from 'lodash';
 import awful from 'kitsu/assets/img/ratings/awful.png';
 import good from 'kitsu/assets/img/ratings/good.png';
 import great from 'kitsu/assets/img/ratings/great.png';
 import meh from 'kitsu/assets/img/ratings/meh.png';
 import starFilled from 'kitsu/assets/img/ratings/star.png';
-import starEmpty from 'kitsu/assets/img/ratings/no-rating-star.png';
-import _ from 'lodash';
 import { styles } from './styles';
 
 const getRatingSystem = (type) => {
@@ -57,7 +55,7 @@ const RatingSystem = ({ style, type, selected, onSelectSystem }) => {
       onPress={() => onSelectSystem(type)}
       style={[styles.rowWrapper, styles.rowRating, selectedRowStyle, style]}
     >
-      <Text style={[styles.text, selectedTextStyle]}>{_.upperFirst(_.toLower(type))}</Text>
+      <Text style={[styles.text, selectedTextStyle]}>{upperFirst(toLower(type))}</Text>
       {getRatingSystem(type)}
     </TouchableOpacity>
   );
@@ -72,8 +70,11 @@ class RatingSystemSelect extends React.Component {
     this.setState({ selectedSystem: accountType });
   };
 
+  onConfirm = () => {
+    this.props.navigation.navigate('ImportScreen');
+  };
+
   render() {
-    const { navigate } = this.props.navigation;
     const { selectedSystem } = this.state;
     return (
       <View style={styles.container}>
@@ -99,8 +100,8 @@ class RatingSystemSelect extends React.Component {
           />
           <Button
             style={{ marginHorizontal: 0, marginTop: 32 }}
-            onPress={() => navigate('SelectAccountScreen')}
-            title={`Use ${_.upperFirst(_.toLower(selectedSystem))} Ratings`}
+            onPress={this.onConfirm}
+            title={`Use ${upperFirst(toLower(selectedSystem))} Ratings`}
             titleStyle={styles.buttonTitleStyle}
           />
         </View>
