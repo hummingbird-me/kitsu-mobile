@@ -46,7 +46,7 @@ const ANIME_FIELDS = [
 class QuickUpdate extends Component {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired,
+    // onClose: PropTypes.func.isRequired,
   };
 
   state = {
@@ -252,7 +252,8 @@ class QuickUpdate extends Component {
       onEndEditing={this.showHeader}
       onViewDiscussion={this.viewDiscussion}
       onMarkComplete={this.markComplete}
-    />);
+    />
+  );
 
   render() {
     const {
@@ -305,14 +306,14 @@ class QuickUpdate extends Component {
           sliderWidth={Dimensions.get('window').width}
           itemWidth={Dimensions.get('window').width * 0.85}
           itemHeight={900}
-          style={styles.carousel}
+          slideStyle={styles.carousel}
           onSnapToItem={this.carouselItemChanged}
         />
 
         {/* Close Button */}
-        <TouchableOpacity style={styles.closeButton} onPress={this.props.onClose}>
+        {/* <TouchableOpacity style={styles.closeButton} onPress={this.props.onClose}>
           <Icon name="ios-close" size={70} color="white" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }

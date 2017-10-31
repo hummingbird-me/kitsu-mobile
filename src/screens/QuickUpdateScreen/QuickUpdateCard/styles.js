@@ -6,9 +6,9 @@ const styles = StyleSheet.create({
   wrapper: {
     flexGrow: 1,
     alignItems: 'center',
-    minWidth: Dimensions.get('window').width * 0.85,
-    minHeight: Dimensions.get('window').height - 150,
     marginBottom: 70,
+    minHeight: Dimensions.get('window').height - 150,
+    width: Dimensions.get('window').width * 0.85,
   },
   shadow: {
     // Android
@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     position: 'absolute',
+    backgroundColor: colors.white,
     top: 80,
     left: 0,
     right: 0,
