@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { Pill } from 'kitsu/components/Pill';
-import { styles as commonStyles } from './styles';
+import { styles } from './styles';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 
@@ -234,9 +234,9 @@ class FavoritesScreen extends React.Component {
     const buttonDisabled = categories.filter(v => v.selected).length < 5;
     const buttonTitle = buttonDisabled ? 'Pick at least 5' : 'Looks good!';
     return (
-      <View style={commonStyles.container}>
-        <View style={commonStyles.contentWrapper}>
-          <Text style={commonStyles.tutorialText}>
+      <View style={styles.container}>
+        <View style={styles.contentWrapper}>
+          <Text style={styles.tutorialText}>
             Tap categories you like, we’ll use these to help you find new anime and manga.
           </Text>
           <View style={styles.pillsWrapper}>
@@ -255,7 +255,7 @@ class FavoritesScreen extends React.Component {
             style={{ marginHorizontal: 0, marginTop: 36 }}
             onPress={this.onConfirm}
             title={buttonTitle}
-            titleStyle={commonStyles.buttonTitleStyle}
+            titleStyle={styles.buttonTitleStyle}
           />
         </View>
       </View>
