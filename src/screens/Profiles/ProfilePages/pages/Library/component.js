@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { Kitsu } from 'kitsu/config/api';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { LibraryHeader, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
@@ -109,6 +108,7 @@ class Library extends PureComponent {
         ratingTwenty={item.ratingTwenty}
         ratingSystem={currentUser.ratingSystem}
         style={index === 0 ? styles.posterImageCardFirstChild : null}
+        navigate={this.props.navigation.navigate}
       />
     );
   }
@@ -182,7 +182,7 @@ class Library extends PureComponent {
   }
 
   renderLists = (type) => {
-    const { navigation } = this.props;
+    const { navigation, profile } = this.props;
     const { data } = this.state;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
@@ -194,19 +194,19 @@ class Library extends PureComponent {
 
     return listOrder.map((currentList, index) => {
       const { status } = currentList;
-      const { newData, fetchMore, loading } = data[type][status];
+      const filteredData = data.filter(item => item.status === status);
 
       const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
-      const emptyItemsToAdd = countForMaxWidth - newData.length;
-      const dataFilled = newData.slice();
+      const emptyItemsToAdd = countForMaxWidth - filteredData.length;
+      const dataFilled = filteredData.slice();
 
-      if (!loading && emptyItemsToAdd > 0) {
+      if (emptyItemsToAdd > 0) {
         for (let x = 0; x < emptyItemsToAdd; x += 1) {
           dataFilled.push({ id: x, type: 'empty-item' });
         }
       }
 
-      const renderData = emptyItemsToAdd > 0 ? dataFilled : newData;
+      const renderData = emptyItemsToAdd > 0 ? dataFilled : filteredData;
       const listStyle = index === listOrder.length - 1 ? styles.listLastChild : null;
       return (
         <View key={`${status}-${type}`} style={listStyle}>
@@ -215,32 +215,21 @@ class Library extends PureComponent {
             libraryType={type}
             listTitle={currentList[type]}
             navigation={navigation}
-            profile={this.props.profile}
+            profile={profile}
           />
 
-          {loading && !newData.length &&
-            this.renderLoadingList()
-          }
-
-          {!loading && !newData.length ?
-            this.renderEmptyList(type, status)
-            :
-            <FlatList
-              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
-              horizontal
-              data={renderData}
-              initialNumToRender={countForMaxWidth}
-              initialScrollIndex={0}
-              getItemLayout={getItemLayout}
-              keyExtractor={idExtractor}
-              onEndReached={fetchMore}
-              onEndReachedThreshold={0.5}
-              removeClippedSubviews={false}
-              renderItem={this.renderItem}
-              scrollEnabled={data.length >= countForCurrentWidth}
-              showsHorizontalScrollIndicator={false}
-            />
-          }
+          <FlatList
+            horizontal
+            data={renderData}
+            initialNumToRender={countForMaxWidth}
+            initialScrollIndex={0}
+            getItemLayout={getItemLayout}
+            keyExtractor={idExtractor}
+            removeClippedSubviews={false}
+            renderItem={this.renderItem}
+            scrollEnabled={filteredData.length >= countForCurrentWidth}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
       );
     });
@@ -248,23 +237,23 @@ class Library extends PureComponent {
 
   render() {
     const { loading, data } = this.state;
-    const { profile, navigation } = this.props.profile;
+    const { profile, navigation } = this.props;
 
-    if (loading) return <SceneLoader />;
+    if (loading || !data) return <SceneLoader />;
 
     return (
-      <TabContainer>
+      <View style={styles.container}>
         <ScrollableTabView locked renderTabBar={renderScrollTabBar}>
-          <ScrollView key="Anime" tabLabel="Anime" id="anime">
+          <View key="Anime" tabLabel="Anime" id="anime">
             <UserLibrarySearchBox navigation={navigation} profile={profile} />
             {this.renderLists('anime')}
-          </ScrollView>
-          <ScrollView key="Manga" tabLabel="Manga" id="manga">
+          </View>
+          <View key="Manga" tabLabel="Manga" id="manga">
             <UserLibrarySearchBox navigation={navigation} profile={profile} />
             {this.renderLists('manga')}
-          </ScrollView>
+          </View>
         </ScrollableTabView>
-      </TabContainer>
+      </View>
     );
   }
 }
