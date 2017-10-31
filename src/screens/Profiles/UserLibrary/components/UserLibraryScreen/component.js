@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
-import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
+import { LibraryHeader, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
-import { SearchBox } from 'kitsu/components/SearchBox';
 import { commonStyles } from 'kitsu/common/styles';
 import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
+import { Spinner } from 'native-base';
 import { styles } from './styles';
 import * as constants from './constants';
 
-const MINIMUM_SEARCH_TERM_LENGTH = 3;
 const renderScrollTabBar = () => <ScrollableTabBar />;
 
 const getItemLayout = (_data, index) => {
@@ -73,10 +71,6 @@ export class UserLibraryScreenComponent extends React.Component {
     };
   };
 
-  state = {
-    searchTerm: this.props.userLibrary.searchTerm,
-  };
-
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
     const { countForMaxWidth } = getCardVisibilityCounts();
@@ -85,32 +79,6 @@ export class UserLibraryScreenComponent extends React.Component {
       this.props.fetchUserLibrary({ userId: profile.id, limit: countForMaxWidth });
     }
   }
-
-  onSearchTermChanged = (searchTerm) => {
-    this.setState({ searchTerm });
-    const { userLibrary } = this.props;
-    const isSearching = userLibrary.searchTerm.length !== 0;
-
-    if (searchTerm.length >= MINIMUM_SEARCH_TERM_LENGTH && !isSearching) {
-      this.debouncedSearch();
-    } else if (isSearching && searchTerm.length === 0) {
-      this.debouncedFetch();
-    }
-  }
-
-  debouncedFetch = debounce(() => {
-    const { profile } = this.props.navigation.state.params;
-    this.props.fetchUserLibrary({ userId: profile.id });
-  }, 100);
-
-  debouncedSearch = debounce(() => {
-    const { profile } = this.props.navigation.state.params;
-    const { searchTerm } = this.state;
-    this.props.fetchUserLibrary({
-      searchTerm,
-      userId: profile.id,
-    });
-  }, 100);
 
   renderEmptyItem() {
     return <View style={styles.emptyPosterImageCard} />;
@@ -162,14 +130,13 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   renderEmptyList = (type, status) => {
-    const { searchTerm } = this.state;
     const { currentUser, navigation } = this.props;
     const { profile } = navigation.state.params;
     const messageMapping = {
       current: { anime: 'watching', manga: 'reading' },
       planned: { anime: 'planned', manga: 'planned' },
       completed: { anime: 'complete', manga: 'complete' },
-      onHold: { anime: 'on hold', manga: 'on hold' },
+      on_hold: { anime: 'on hold', manga: 'on hold' },
       dropped: { anime: 'dropped', manga: 'dropped' },
     };
 
@@ -185,7 +152,7 @@ export class UserLibraryScreenComponent extends React.Component {
           styles.browseText,
         ]}
         >
-          {`${messagePrefix} marked any ${type}${searchTerm.length ? ' matching your search' : ''} as ${messageMapping[status][type]} yet!`}
+          {`${messagePrefix} marked any ${type} as ${messageMapping[status][type]} yet!`}
         </Text>
         <TouchableOpacity style={styles.browseButton}>
           <Text style={[commonStyles.text, commonStyles.colorWhite]}>
@@ -196,17 +163,32 @@ export class UserLibraryScreenComponent extends React.Component {
     );
   };
 
+  renderFetchingMoreSpinner = (type, status) => {
+    const { userLibrary } = this.props;
+    const { data, loading } = userLibrary[type][status];
+
+    if (loading && data.length) {
+      return (
+        <View style={styles.listLoadingSpinnerContainer}>
+          <Spinner color="white" />
+        </View>
+      );
+    }
+
+    return null;
+  }
+
   renderLists = (type) => {
     const { userLibrary, navigation } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
       { status: 'completed', anime: 'Completed', manga: 'Completed' },
-      { status: 'onHold', anime: 'On Hold', manga: 'On Hold' },
+      { status: 'on_hold', anime: 'On Hold', manga: 'On Hold' },
       { status: 'dropped', anime: 'Dropped', manga: 'Dropped' },
     ];
 
-    return listOrder.map((currentList) => {
+    return listOrder.map((currentList, index) => {
       const { status } = currentList;
       const { data, fetchMore, loading } = userLibrary[type][status];
 
@@ -221,9 +203,9 @@ export class UserLibraryScreenComponent extends React.Component {
       }
 
       const renderData = emptyItemsToAdd > 0 ? dataFilled : data;
-
+      const listStyle = index === listOrder.length - 1 ? styles.listLastChild : null;
       return (
-        <View key={`${status}-${type}`}>
+        <View key={`${status}-${type}`} style={listStyle}>
           <LibraryHeader
             libraryStatus={status}
             libraryType={type}
@@ -232,12 +214,15 @@ export class UserLibraryScreenComponent extends React.Component {
             profile={navigation.state.params.profile}
           />
 
-          {loading && this.renderLoadingList()}
+          {loading && !data.length &&
+            this.renderLoadingList()
+          }
 
           {!loading && !data.length ?
             this.renderEmptyList(type, status)
             :
             <FlatList
+              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}
@@ -258,25 +243,17 @@ export class UserLibraryScreenComponent extends React.Component {
   }
 
   render() {
-    const searchBox = (
-      <SearchBox
-        style={styles.searchBox}
-        onChangeText={this.onSearchTermChanged}
-        placeholder="Search Library"
-        searchIconOffset={120}
-        value={this.state.searchTerm}
-      />
-    );
+    const { profile } = this.props.navigation.state.params;
 
     return (
       <View style={styles.container}>
         <ScrollableTabView locked renderTabBar={renderScrollTabBar}>
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
-            {searchBox}
+            <UserLibrarySearchBox navigation={this.props.navigation} profile={profile} />
             {this.renderLists('anime')}
           </ScrollView>
           <ScrollView key="Manga" tabLabel="Manga" id="manga">
-            {searchBox}
+            <UserLibrarySearchBox navigation={this.props.navigation} profile={profile} />
             {this.renderLists('manga')}
           </ScrollView>
         </ScrollableTabView>

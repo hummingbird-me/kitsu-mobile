@@ -40,14 +40,18 @@ export const styles = StyleSheet.create({
     marginHorizontal: 4,
     width: constants.POSTER_CARD_WIDTH,
   },
+  listLastChild: {
+    marginBottom: 12,
+  },
+  listLoadingSpinnerContainer: {
+    ...flattenCommon('centerCenter'),
+    height: constants.POSTER_CARD_HEIGHT,
+    width: constants.POSTER_CARD_WIDTH / 2,
+  },
   posterImageCardFirstChild: {
     marginLeft: 12,
   },
   posterImageLoading: {
     backgroundColor: colors.lightPurple,
-  },
-  searchBox: {
-    height: 35,
-    marginHorizontal: 10,
   },
 });

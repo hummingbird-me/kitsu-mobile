@@ -13,7 +13,8 @@ import { connect } from 'react-redux';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { Col, Grid } from 'react-native-easy-grid';
-import _ from 'lodash';
+import forOwn from 'lodash/forOwn';
+import capitalize from 'lodash/capitalize';
 import moment from 'moment';
 import CustomHeader from 'kitsu/components/CustomHeader';
 import CardStatus from 'kitsu/components/Card/CardStatus';
@@ -115,7 +116,7 @@ class ProfileScreen extends Component {
         if (activity.verb === 'progressed') {
           caption = `${activity.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${activity.progress}`;
         } else if (activity.verb === 'updated') {
-          caption = `${_.capitalize(activity.status.replace('_', ' '))}`;
+          caption = `${capitalize(activity.status.replace('_', ' '))}`;
         } else if (activity.verb === 'rated') {
           caption = `Rated: ${activity.rating}`;
         }
@@ -168,7 +169,7 @@ class ProfileScreen extends Component {
   renderInfoBlock = () => {
     const { profile, loading, navigation } = this.props;
     const infos = [];
-    _.forOwn(getInfo(profile), (item, key) => {
+    forOwn(getInfo(profile), (item, key) => {
       infos.push(
         this.wrapTouchable(
           <View
@@ -546,10 +547,12 @@ const mapStateToProps = (state, ownProps) => {
   const { profile, loading, character, manga, anime, library, favoritesLoading } = state.profile;
   const { currentUser } = state.user;
 
-  let userId = currentUser.id;
-  if (navigation.state.params && navigation.state.params.userId) {
-    userId = navigation.state.params.userId;
-  }
+  // let userId = currentUser.id;
+  // if (navigation.state.params && navigation.state.params.userId) {
+  //   userId = navigation.state.params.userId;
+  // }
+
+  const userId = 5554;
 
   const c = (character[userId] && character[userId].map(({ item }) => item)) || [];
   const m = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
@@ -610,7 +613,7 @@ ProfileScreen.propTypes = {
 
 const getInfo = (profile) => {
   const info = {};
-  _.forOwn(profile, (value, key) => {
+  forOwn(profile, (value, key) => {
     if (value) {
       if (key === 'waifuOrHusbando') {
         let image = '';
@@ -649,11 +652,11 @@ const getInfo = (profile) => {
       if (key === 'followingCount' && value > 0) {
 
         const label = `Following ${value} people`;
-        if (info['6'].label.length > 0) {
-          info['6'].label = `${info['6'].label}, ${label.toLowerCase()}`;
-        } else {
-          info['6'] = { label, icon: 'user' };
-        }
+        // if (info['6'].label.length > 0) {
+        //   info['6'].label = `${info['6'].label}, ${label.toLowerCase()}`;
+        // } else {
+        //   info['6'] = { label, icon: 'user' };
+        // }
       }
     }
   });

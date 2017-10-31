@@ -4,11 +4,15 @@ import { connect } from 'react-redux';
 import { Button, Container, Content, Icon, Left, Right, Footer } from 'native-base';
 import PropTypes from 'prop-types';
 import ModalPicker from 'react-native-modal-picker';
-import _ from 'lodash';
+import forOwn from 'lodash/forOwn';
+import isObjectLike from 'lodash/isObjectLike';
+import isEmpty from 'lodash/isEmpty';
+import values from 'lodash/values';
 import { getStreamers } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 
 class SearchFilter extends Component {
+
   static navigationOptions = () => ({
     title: 'Filter',
     tabBarVisible: false,
@@ -18,13 +22,11 @@ class SearchFilter extends Component {
     ...defaultState,
   };
 
-  componentWillMount() {
-    const { data } = this.props.navigation.state.params;
-    this.setState({ ...data });
-  }
-
   componentDidMount() {
-    this.props.getStreamers();
+    const { data } = this.props.navigation.state.params;
+    this.setState({ ...data }, () => {
+      this.props.getStreamers();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -44,9 +46,9 @@ class SearchFilter extends Component {
       filter: {},
       sort: {},
     };
-    _.forOwn(this.state, (value, key) => {
+    forOwn(this.state, (value, key) => {
       let cond = '';
-      if (Boolean(value) && _.isObjectLike(value) && !_.isEmpty(value)) {
+      if (Boolean(value) && isObjectLike(value) && !isEmpty(value)) {
         switch (key) {
           case 'avail':
             if (value.key === 'All') break;
@@ -207,7 +209,7 @@ class SearchFilter extends Component {
             onPressFilterButton: (data) => {
               navigation.goBack(null);
               this.setState({ categoriesRaw: data });
-              this.setState({ categories: _.values(data).filter(a => a) });
+              this.setState({ categories: values(data).filter(a => a) });
             },
           })}
       >

@@ -1,11 +1,12 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { View, Animated } from 'react-native';
+
 import LinearGradient from 'react-native-linear-gradient';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
-export class ProgressiveImage extends React.Component {
+export class ProgressiveImage extends PureComponent {
   static propTypes = {
     backgroundStyle: PropTypes.object,
     children: PropTypes.object,
@@ -13,6 +14,7 @@ export class ProgressiveImage extends React.Component {
     style: PropTypes.any,
     resizeMode: PropTypes.string,
     source: PropTypes.object.isRequired,
+    defaultSource: PropTypes.number,
   };
 
   static defaultProps = {
@@ -21,6 +23,7 @@ export class ProgressiveImage extends React.Component {
     duration: 300,
     style: undefined,
     resizeMode: 'cover',
+    defaultSource: undefined,
   };
 
   state = {
@@ -30,32 +33,43 @@ export class ProgressiveImage extends React.Component {
   };
 
   onLoad = () => {
-    Animated.timing(this.state.thumbnailOpacity, {
-      toValue: 1,
-      duration: this.props.duration,
-    }).start();
+    if (!this.hasFadedIn) {
+      Animated.timing(this.state.thumbnailOpacity, {
+        toValue: 1,
+        duration: this.props.duration,
+        useNativeDriver: true,
+      }).start();
+
+      this.hasFadedIn = true;
+    }
   };
 
   onLayout = (event) => {
     const { height, width } = event.nativeEvent.layout;
-    this.setState({ height, width });
-  }
+
+    if (this.state.height !== height || this.state.width !== width) {
+      this.setState({ height, width });
+    }
+  };
+
+  hasFadedIn = false
 
   render() {
     const { thumbnailOpacity } = this.state;
-    const { backgroundStyle, children, style, resizeMode, source } = this.props;
+    const { backgroundStyle, children, style, resizeMode, source, defaultSource } = this.props;
 
     return (
-      <View style={[styles.imageBackground, backgroundStyle, style]} >
-        {source.uri &&
+      <View style={[styles.imageBackground, backgroundStyle, style]}>
+        {source.uri && (
           <Animated.Image
             onLoad={this.onLoad}
             onLayout={this.onLayout}
             resizeMode={resizeMode}
             source={source}
+            defaultSource={defaultSource}
             style={[style, { opacity: thumbnailOpacity }]}
           />
-        }
+        )}
 
         {children && source.uri &&
           <LinearGradient

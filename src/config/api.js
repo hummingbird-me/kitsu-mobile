@@ -45,7 +45,6 @@ Kitsu.define(
     email: '',
     avatar: '',
     about: '',
-    bio: '',
     createdAt: '',
     website: '',
     birthday: '',
@@ -83,6 +82,7 @@ Kitsu.define(
     previousEmail: '',
     confirmed: '',
     password: '',
+    slug: '',
     waifu: {
       jsonApi: 'hasOne',
       type: 'characters',
@@ -136,6 +136,15 @@ Kitsu.define(
     },
   },
   { collectionPath: 'users' },
+);
+
+Kitsu.define(
+  'profileLinks',
+  {
+    createdAt: '',
+    updatedAt: '',
+    url: '',
+  },
 );
 
 Kitsu.define(
@@ -679,7 +688,40 @@ Kitsu.define(
   { collectionPath: 'feeds/notifications' },
 );
 
-Kitsu.define('comments', {}, { collectionPath: 'comments' });
+Kitsu.define('comments',
+  {
+    createdAt: '',
+    updatedAt: '',
+    content: '',
+    contentFormatted: '',
+    blocked: '',
+    deletedAt: '',
+    likesCount: '',
+    repliesCount: '',
+    editedAt: '',
+    embed: '',
+    embedUrl: '',
+    user: {
+      jsonApi: 'hasOne',
+    },
+    post: {
+      jsonApi: 'hasOne',
+    },
+    parent: {
+      jsonApi: 'hasOne',
+    },
+    likes: {
+      jsonApi: 'hasMany',
+    },
+    replies: {
+      jsonApi: 'hasMany',
+    },
+    uploads: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'comments' },
+);
 
 Kitsu.define(
   'userFeed',
@@ -745,25 +787,37 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'followingFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/timeline' },
+);
+
+Kitsu.define(
   'posts',
   {
-    link: '',
-    title: '',
+    blocked: '',
     commentsCount: '',
-    pastNames: '',
     content: '',
     contentFormatted: '',
+    createdAt: '',
+    deletedAt: '',
+    embed: '',
+    embedUrl: '',
+    editedAt: '',
+    link: '',
+    nsfw: '',
+    pastNames: '',
     postLikesCount: '',
     spoiler: '',
-    nsfw: '',
-    blocked: '',
-    deletedAt: '',
-    createdAt: '',
-    updatedAt: '',
+    title: '',
     topLevelCommentsCount: '',
-    editedAt: '',
+    updatedAt: '',
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
       type: 'users',
     },
   },
@@ -780,7 +834,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'post-likes' },
@@ -897,6 +951,16 @@ Kitsu.define(
     },
   },
   { collectionPath: 'group-members' },
+);
+
+Kitsu.define(
+  'groupCategories',
+  {
+    name: '',
+    slug: '',
+    description: '',
+  },
+  { collectionPath: 'group-categories' },
 );
 
 export const setToken = (token) => {

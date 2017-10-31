@@ -14,32 +14,34 @@ export const loginUser = (data, nav, screen) => async (dispatch) => {
   });
 
   if (data) {
-    const user = await auth.owner.getToken(data.username, data.password);
-    tokens = user.data;
+    try {
+      const user = await auth.owner.getToken(data.username, data.password);
+      tokens = user.data;
+    } catch (e) {
+      console.log(e);
+    }
   } else {
-    const userFb = await loginUserFb(dispatch);
-    if (userFb.status !== 401) {
-      tokens = await userFb.json();
-    } else if (screen !== 'signup') {
-      nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
+    try {
+      const userFb = await loginUserFb(dispatch);
+      if (userFb.status !== 401) {
+        tokens = await userFb.json();
+      } else if (screen !== 'signup') {
+        nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
+
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     nav.dispatch(loginAction);
   } else {
     dispatch({
       type: types.LOGIN_USER_FAIL,
-      payload: null,
+      payload: 'Wrong credentials',
     });
   }
-  // } catch (e) {
-  //   console.log(e);
-  //   dispatch({
-  //     type: types.LOGIN_USER_FAIL,
-  //     payload: 'Wrong credentials',
-  //   });
-  // }
 };
 
 const loginUserFb = async (dispatch) => {

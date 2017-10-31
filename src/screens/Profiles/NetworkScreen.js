@@ -17,6 +17,8 @@ import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { fetchNetwork } from 'kitsu/store/profile/actions';
 import { defaultAvatar } from 'kitsu/constants/app';
 
+const renderTabBar = () => <ScrollableTabBar />;
+
 const { width } = Dimensions.get('window');
 class NetworkScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -178,7 +180,7 @@ class NetworkScreen extends Component {
     const { followed, follower, profile, networkLoading } = this.props;
     return (
       <Container>
-        <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
+        <ScrollableTabView renderTabBar={renderTabBar}>
           <View
             tabLabel={`Following · ${profile.followingCount}`}
             style={{ paddingTop: 0, backgroundColor: 'white' }}
@@ -213,8 +215,8 @@ const mapStateToProps = (state, ownProps) => {
   const { followed, follower, profile, networkLoading } = state.profile;
   const { ifollow, currentUser } = state.user;
   const userId = ownProps.navigation.state.params && ownProps.navigation.state.params.userId;
-  console.log(userId);
-  console.log(profile);
+  // console.log(userId);
+  // console.log(profile);
 
   return { followed, follower, ifollow, profile: profile[userId], currentUser, networkLoading };
 };

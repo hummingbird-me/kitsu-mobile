@@ -61,7 +61,7 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
     const posts = results
       .sort(item => item.activities[0].verb === 'post')
       .map(item => item.activities[0].subject.id);
-    console.log(posts);
+    // console.log(posts);
     const postLikes = await Kitsu.findAll('postLikes', {
       fields: {
         users: 'avatar,name',
@@ -78,8 +78,8 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
       acc[item.post.id] = [...curr, ...item.user];
       return acc;
     }, {});
-    console.log(likesMap);
-    console.log(postLikes);
+    // console.log(likesMap);
+    // console.log(postLikes);
     const resultsWithLikes = results.map((item) => {
       if (item.activities[0].verb === 'post' && likesMap[item.activities[0].subject.id]) {
         item.activities.likes = likesMap[item.activities[0].subject.id];
@@ -123,8 +123,8 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
 };
 
 export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispatch, getState) => {
-  console.log(mediaId, type);
-  console.log(cursor);
+  // console.log(mediaId, type);
+  // console.log(cursor);
   dispatch({ type: types.GET_MEDIA_FEED, payload: Boolean(cursor) });
   try {
     const results = await Kitsu.one('mediaFeed', `${_.capitalize(type)}-${mediaId}`).get({
@@ -172,7 +172,7 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
 export const seenNotifications = arr => async (dispatch, getState) => {
   const { id } = getState().user.profile;
   const results = await Kitsu.one('activityGroups', id).all('_seen').post(arr);
-  console.log(results);
+  // console.log(results);
 };
 
 export const markNotifications = (id, token, notifs) => {

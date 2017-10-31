@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 import { TextInput, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { commonStyles } from 'kitsu/common/styles';
-import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
 export class SearchBox extends React.PureComponent {
@@ -26,7 +25,7 @@ export class SearchBox extends React.PureComponent {
   };
 
   render() {
-    const { defaultValue, onChangeText, placeholder, searchIconOffset, value } = this.props;
+    const { searchIconOffset, value, ...restProps } = this.props;
 
     return (
       <View style={[styles.searchContainer, this.props.style]}>
@@ -40,13 +39,10 @@ export class SearchBox extends React.PureComponent {
           ]}
         />
         <TextInput
-          {...this.props}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
+          {...restProps}
+          value={value}
           style={[commonStyles.text, styles.input]}
           underlineColorAndroid="transparent"
-          defaultValue={defaultValue}
-          value={value}
           autoCapitalize={'none'}
           autoCorrect={false}
           keyboardAppearance={'dark'}

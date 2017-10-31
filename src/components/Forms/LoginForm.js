@@ -1,86 +1,52 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Form, Input, Item, Button, Spinner } from 'native-base';
+import { Button } from 'kitsu/components/Button/';
+import { Input } from 'kitsu/components/Input';
 import * as colors from 'kitsu/constants/colors';
-import CustomIcon from 'kitsu/components/Icon';
+import styles from './styles';
 
-
-const LoginForm = ({ handleChange, data, onSubmit, loading }) => (
+const LoginForm = ({
+  handleChange,
+  data,
+  onSubmit,
+  loading,
+  onSignInFacebook,
+  signingInFacebook,
+  onForgotPassword,
+}) => (
   <View>
-    <Form style={{ padding: 20, paddingLeft: 10 }}>
-      <Item
-        style={{
-          borderBottomColor: 'rgba(255,255,255,0.2)',
-          borderBottomWidth: 0.5,
-        }}
-      >
-        <View style={{ width: 25, justifyContent: 'center', alignItems: 'center' }}>
-          <CustomIcon name="mail-icon" size={13} color="white" styles={{ opacity: 0.5 }} />
-        </View>
-        <Input
-          placeholder="Email or Username"
-          placeholderTextColor="rgba(255,255,254,0.5)"
-          autoCapitalize="none"
-          value={data.username}
-          onChangeText={text => handleChange(text, 'username')}
-          style={{
-            fontSize: 15,
-            fontFamily: 'OpenSans',
-            color: 'rgba(255,255,255,0.7)',
-          }}
-        />
-      </Item>
-      <Item
-        style={{
-          borderBottomColor: 'rgba(255,255,255,0.2)',
-          borderBottomWidth: 0.5,
-          paddingTop: 10,
-        }}
-      >
-        <View style={{ width: 25, justifyContent: 'center', alignItems: 'center' }}>
-          <CustomIcon name="password-icon" size={18} color="white" styles={{ opacity: 0.5 }} />
-        </View>
-        <Input
-          placeholder="Password"
-          placeholderTextColor="rgba(255,255,255,0.5)"
-          secureTextEntry
-          value={data.password}
-          onChangeText={text => handleChange(text, 'password')}
-          autoCapitalize="none"
-          style={{
-            fontSize: 15,
-            fontFamily: 'OpenSans',
-            color: 'rgba(255,255,255,0.7)',
-          }}
-        />
-      </Item>
-    </Form>
-    <View style={{ padding: 10, paddingLeft: 25, paddingRight: 25 }}>
-      <Button
-        block
-        disabled={loading}
-        onPress={onSubmit}
-        style={{
-          backgroundColor: colors.green,
-          height: 47,
-          borderRadius: 3,
-        }}
-      >
-        {loading
-          ? <Spinner size="small" color="rgba(255,255,255,0.4)" />
-          : <Text
-            style={{
-              color: colors.white,
-              fontFamily: 'OpenSans-Semibold',
-              lineHeight: 20,
-              fontSize: 15,
-            }}
-          >
-              Sign in to your account
-            </Text>}
-      </Button>
-    </View>
+    <Input
+      placeholder="Email"
+      autoCapitalize="none"
+      autoCorrect={false}
+      value={data.username}
+      // keyboardType={'email-address'}
+      onChangeText={text => handleChange(text, 'username')}
+    />
+    <Input
+      placeholder="Password"
+      secureTextEntry
+      value={data.password}
+      onChangeText={text => handleChange(text, 'password')}
+      autoCapitalize="none"
+    />
+    <Button
+      loading={loading}
+      title={'Sign in to your account'}
+      onPress={() => onSubmit()}
+      style={{ marginTop: 10 }}
+    />
+    <Button
+      style={styles.buttonFacebook}
+      title={'Login with Facebook'}
+      icon={'facebook-official'}
+      loading={signingInFacebook}
+      onPress={onSignInFacebook}
+    />
+    <TouchableOpacity style={styles.forgotButton} onPress={onForgotPassword}>
+      <Text style={styles.forgotText}>Forgot password</Text>
+    </TouchableOpacity>
   </View>
 );
 
@@ -89,5 +55,8 @@ LoginForm.propTypes = {
   data: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  signingInFacebook: PropTypes.bool.isRequired,
+  onSignInFacebook: PropTypes.func.isRequired,
+  onForgotPassword: PropTypes.func.isRequired,
 };
 export default LoginForm;

@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
-import { commonStyles } from 'kitsu/common/styles';
+import { commonStyles, flattenCommon } from 'kitsu/common/styles';
+
+const MENU_BUTTON_WIDTH = 24;
 
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderColor: colors.lightGrey,
-    flexDirection: 'row',
     padding: 10,
   },
   content: {
@@ -17,15 +18,37 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 10,
   },
+  horizontalRule: {
+    borderColor: colors.lightGrey,
+    flex: 1,
+    borderTopWidth: 1,
+    margin: 5,
+  },
   menuButton: {
-    width: 24,
+    width: MENU_BUTTON_WIDTH,
+  },
+  menuButtonContainer: {
+    marginLeft: 'auto',
+  },
+  metaDataContainer: {
+    flexDirection: 'row',
+  },
+  moved: {
+    ...flattenCommon('centerCenter'),
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  movedText: {
+    color: colors.grey,
+  },
+  movedToText: {
+    fontWeight: '600',
+    color: colors.grey,
   },
   posterImage: {
-    width: 65,
-    height: 75,
     borderRadius: 4,
   },
-  progressBarBackgroun: {
+  progressBarBackground: {
     backgroundColor: colors.lightGrey,
   },
   progressContainer: {
@@ -67,5 +90,6 @@ export const styles = StyleSheet.create({
   },
   titleText: {
     ...StyleSheet.flatten(commonStyles.text),
+    marginRight: MENU_BUTTON_WIDTH + 2, // for padding
   },
 });

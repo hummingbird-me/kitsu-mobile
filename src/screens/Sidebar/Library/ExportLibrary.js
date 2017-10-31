@@ -72,6 +72,10 @@ class ExportLibrary extends React.Component {
     hasAccount: false,
     linkedAccount: {},
     libraryEntryLogs: [],
+    totalEntryLogs: null,
+    pageIndex: 1,
+    pageLimit: 10,
+    loadingMore: false,
     username: '',
     password: '',
   }
@@ -139,16 +143,17 @@ class ExportLibrary extends React.Component {
         user: { id },
         filter: { kind: 'my-anime-list' },
       });
-      const hasAccount = linkedAccounts[0] !== undefined;
+      const hasAccount = typeof linkedAccounts[0] !== 'undefined';
       // show form if user has no linked accounts. else, load the data and fetch
       // entry logs.
-      if (hasAccount) {
-        this.fetchLibraryEntryLogs();
-      }
       this.setState({
         linkedAccount: linkedAccounts[0],
         loading: hasAccount,
         hasAccount,
+      }, () => {
+        if (hasAccount) {
+          this.fetchLibraryEntryLogs();
+        }
       });
     } catch (e) {
       this.setState({
@@ -161,20 +166,22 @@ class ExportLibrary extends React.Component {
 
   fetchLibraryEntryLogs = async () => {
     const { accessToken } = this.props;
-    const { linkedAccount } = this.state;
+    const { linkedAccount, pageLimit } = this.state;
     setToken(accessToken);
+    // console.log(accessToken, linkedAccount);
     try {
       const libraryEntryLogs = await Kitsu.findAll('libraryEntryLogs', {
         filter: { linked_account_id: linkedAccount.id },
-        fields: {
-          media: 'canonicalTitle,titles,posterImage,slug',
-        },
-        sort: 'created_at',
+        fields: { media: 'canonicalTitle,titles,posterImage,slug' },
+        page: { limit: pageLimit },
+        sort: '-created_at',
         include: 'media',
       });
       this.setState({
         libraryEntryLogs,
+        totalEntryLogs: libraryEntryLogs.meta.count,
         loading: false,
+        pageIndex: 1,
         hasAccount: true,
       });
     } catch (e) {
@@ -183,6 +190,43 @@ class ExportLibrary extends React.Component {
         loading: false,
         hasAccount: false,
       });
+    }
+  }
+
+  loadMoreEntryLogs = async () => {
+    const { loadingMore, pageLimit, pageIndex, totalEntryLogs, linkedAccount } = this.state;
+    const hasMore = totalEntryLogs / pageLimit > pageIndex;
+    if (!loadingMore && hasMore) {
+      const { accessToken, currentUser } = this.props;
+      const { id } = currentUser;
+      setToken(accessToken);
+      this.setState({ loadingMore: true });
+      try {
+        const libraryEntryLogs = await Kitsu.findAll('libraryEntryLogs', {
+          filter: { linked_account_id: linkedAccount.id },
+          fields: { media: 'canonicalTitle,titles,posterImage,slug' },
+          page: {
+            limit: pageLimit,
+            offset: pageLimit * pageIndex,
+          },
+          sort: '-created_at',
+          include: 'media',
+        });
+        this.setState({
+          libraryEntryLogs: this.state.libraryEntryLogs.concat(libraryEntryLogs),
+          loading: false,
+          loadingMore: false,
+          pageIndex: pageIndex + 1,
+          hasAccount: true,
+        });
+      } catch (e) {
+        this.setState({
+          error: e,
+          loading: false,
+          loadingMore: false,
+          hasAccount: false,
+        });
+      }
     }
   }
 
@@ -287,6 +331,8 @@ class ExportLibrary extends React.Component {
           }}
           ItemSeparatorComponent={this.renderItemSeparatorComponent}
           removeClippedSubviews={false}
+          onEndReached={this.loadMoreEntryLogs}
+          onEndReachedThreshold={0.3}
           // ListEmptyComponent={<Text> No Library exports </Text>}
         />
       </View>

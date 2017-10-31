@@ -4,7 +4,14 @@ import MediaScreen from './MediaScreen';
 import NetworkScreen from './NetworkScreen';
 import ProfileScreen from './ProfileScreen';
 
-export { UserLibraryScreen, UserLibraryListScreen } from './UserLibrary';
+export {
+  User,
+  UserLibraryEditScreen,
+  UserLibraryListScreen,
+  UserLibraryScreen,
+  UserLibrarySearchScreen,
+} from './UserLibrary';
+
 export {
   FavoriteCharacters,
   FavoriteMedia,

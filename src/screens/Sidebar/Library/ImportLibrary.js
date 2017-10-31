@@ -76,6 +76,10 @@ class ImportLibrary extends React.Component {
   state = {
     imports: [],
     loading: true,
+    totalImports: null,
+    pageIndex: 1,
+    pageLimit: 10,
+    loadingMore: false,
   };
 
   componentDidMount() {
@@ -94,9 +98,12 @@ class ImportLibrary extends React.Component {
     try {
       const imports = await Kitsu.findAll('listImports', {
         filter: { user_id: id },
+        page: { limit: 20 },
       });
       this.setState({
         imports,
+        pageIndex: 1,
+        totalImports: imports.meta.count,
         loading: false,
       });
     } catch (e) {
@@ -106,6 +113,38 @@ class ImportLibrary extends React.Component {
       });
     }
   };
+
+  loadMoreImports = async () => {
+    const { loadingMore, pageLimit, pageIndex, totalImports } = this.state;
+    const hasMore = totalImports / pageLimit > pageIndex;
+    if (!loadingMore && hasMore) {
+      const { accessToken, currentUser } = this.props;
+      const { id } = currentUser;
+      setToken(accessToken);
+      this.setState({ loadingMore: true });
+      try {
+        const imports = await Kitsu.findAll('listImports', {
+          filter: { user_id: id },
+          page: {
+            limit: pageLimit,
+            offset: pageIndex * pageLimit,
+          },
+        });
+        this.setState({
+          imports: this.state.imports.concat(imports),
+          pageIndex: pageIndex + 1,
+          loading: false,
+          loadingMore: false,
+        });
+      } catch (e) {
+        this.setState({
+          error: e,
+          loading: false,
+          loadingMore: false,
+        });
+      }
+    }
+  }
 
   renderItemSeparatorComponent() {
     return (
@@ -161,6 +200,8 @@ class ImportLibrary extends React.Component {
           )}
           ItemSeparatorComponent={this.renderItemSeparatorComponent}
           removeClippedSubviews={false}
+          onEndReached={this.loadMoreImports}
+          onEndReachedThreshold={0.3}
           // ListEmptyComponent={<ActivityIndicator color={'white'} />}
         />
       </View>

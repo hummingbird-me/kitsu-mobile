@@ -7,6 +7,8 @@ import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 
+const renderTabBar = () => <ScrollableTabBar />;
+
 class FavoriteMedia extends Component {
   static navigationOptions = (props) => {
     const { profile } = props.navigation.state.params;
@@ -90,7 +92,7 @@ class FavoriteMedia extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <ScrollableTabView renderTabBar={() => <ScrollableTabBar />}>
+        <ScrollableTabView renderTabBar={renderTabBar}>
           <View tabLabel="Anime" style={{ padding: 5, paddingTop: 0, backgroundColor: 'white' }}>
             {this.renderTab('anime')}
           </View>
@@ -112,7 +114,7 @@ FavoriteMedia.propTypes = {
 const mapStateToProps = ({ profile }, ownProps) => {
   const { manga, anime, favoritesLoading } = profile;
   const { navigation: { state: { params: { userId } } } } = ownProps;
-  console.log(anime[userId]);
+  // console.log(anime[userId]);
   const animes = (anime[userId] && anime[userId].map(({ item }) => item)) || [];
   const mangas = (manga[userId] && manga[userId].map(({ item }) => item)) || [];
   return {

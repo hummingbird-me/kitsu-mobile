@@ -39,7 +39,7 @@ class ImportDetail extends React.Component {
       });
     } catch (e) {
       // TODO: we may have crashes here.
-      console.log('failed import', e);
+      // console.log('failed import', e);
       this.setState({
         showModal: true,
         errMessage: e && e[0].title,

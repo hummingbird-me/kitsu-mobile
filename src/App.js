@@ -1,8 +1,8 @@
 /* global __DEV__ */
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, StatusBar, Linking } from 'react-native';
 import { Provider, connect } from 'react-redux';
-import { identity } from 'lodash';
+import identity from 'lodash/identity';
 
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
@@ -15,7 +15,13 @@ import { markNotifications } from './store/feed/actions';
 // eslint-disable-next-line
 console.disableYellowBox = true;
 
-class App extends Component {
+// If you're using the debugging tools for React Native, the network tab is normally useless
+// because it shows network activity to load the JS bundle only. This line causes it to
+// use the dev tools XMLHttpRequest object if dev tools is running, making the network
+// tab useful again. If dev tools isn't running, this will have no effect.
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+
+class App extends PureComponent {
   componentWillMount() {
     OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('ids', this.onIds);
@@ -78,7 +84,11 @@ const RootContainer = ({ badge }) => (
 );
 
 RootContainer.propTypes = {
-  badge: PropTypes.number.isRequired,
+  badge: PropTypes.number,
+};
+
+RootContainer.defaultProps = {
+  badge: 0,
 };
 
 const ConnectedRoot = connect(({ feed }) => ({
