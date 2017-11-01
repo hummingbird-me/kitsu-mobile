@@ -2,6 +2,7 @@ import { StackNavigator } from 'react-navigation';
 import Routes from './routes';
 import { IntroScreen, RegistrationScreen } from './screens/Intro';
 import { AuthScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
+import QuickUpdateScreen from './screens/QuickUpdateScreen';
 import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(

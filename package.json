@@ -5,7 +5,8 @@
   "scripts": {
     "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" yarn start",
     "lint": "eslint ./src",
-    "reset": "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
+    "reset":
+      "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start:reset": "yarn start --reset-cache",
     "test": "jest",
@@ -88,8 +89,6 @@
     "preset": "react-native"
   },
   "rnpm": {
-    "assets": [
-      "src/assets/fonts"
-    ]
+    "assets": ["src/assets/fonts"]
   }
 }
