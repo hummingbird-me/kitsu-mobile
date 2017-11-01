@@ -16,8 +16,8 @@ import navigationOptions from './navigationOptions';
 
 const OnboardingStack = StackNavigator(
   {
-    RatingSystemScreen: {
-      screen: RatingSystemScreen,
+    RateScreen: {
+      screen: RateScreen,
     },
     WelcomeScreen: {
       screen: WelcomeScreen,

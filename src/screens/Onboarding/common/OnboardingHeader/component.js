@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, Image, ViewPropTypes } from 'react-native';
+import { View, TouchableOpacity, Image, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import PropTypes from 'prop-types';
 import kitsuLogo from 'kitsu/assets/img/kitsu-logo.png';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
@@ -25,8 +26,10 @@ export const OnboardingHeader = ({ navigation, backEnabled, style, componentRigh
 
 OnboardingHeader.propTypes = {
   style: ViewPropTypes.style,
+  backEnabled: PropTypes.bool,
 };
 
 OnboardingHeader.defaultProps = {
   style: null,
+  backEnabled: false,
 };
