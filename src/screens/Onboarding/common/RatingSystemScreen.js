@@ -71,7 +71,7 @@ class RatingSystemSelect extends React.Component {
   };
 
   onConfirm = () => {
-    this.props.navigation.navigate('ManageLibrary');
+    this.props.navigation.navigate('ManageLibrary', { account: 'kitsu' });
   };
 
   render() {

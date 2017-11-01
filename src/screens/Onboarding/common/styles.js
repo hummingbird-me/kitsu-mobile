@@ -47,8 +47,17 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
+  buttonSecondary: {
+    backgroundColor: colors.transparent,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.lightGrey,
+  },
   buttonTitleStyle: {
     fontWeight: '600',
+  },
+  buttonSecondaryTitle: {
+    fontWeight: '600',
+    color: colors.grey,
   },
   imageSimple: {
     width: 30,

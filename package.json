@@ -5,8 +5,7 @@
   "scripts": {
     "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" yarn start",
     "lint": "eslint ./src",
-    "reset":
-      "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
+    "reset": "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start:reset": "yarn start --reset-cache",
     "test": "jest",
@@ -48,7 +47,7 @@
     "react-native-progress-bar": "^0.1.2",
     "react-native-scrollable-tab-view": "0.7.4",
     "react-native-shimmer": "^0.2.1",
-    "react-native-snap-carousel": "^2.1.4",
+    "react-native-snap-carousel": "^3.3.4",
     "react-native-swipeable": "^0.4.0",
     "react-native-tab-view": "^0.0.69",
     "react-native-vector-icons": "^4.1.1",
@@ -89,6 +88,8 @@
     "preset": "react-native"
   },
   "rnpm": {
-    "assets": ["src/assets/fonts"]
+    "assets": [
+      "src/assets/fonts"
+    ]
   }
 }
