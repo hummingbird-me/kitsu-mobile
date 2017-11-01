@@ -9,13 +9,15 @@ import {
   FavoritesScreen,
   ManageLibrary,
   RatingSystemScreen,
+  ImportLibrary,
+  ImportDetail,
 } from 'kitsu/screens/Onboarding/';
 import navigationOptions from './navigationOptions';
 
 const OnboardingStack = StackNavigator(
   {
-    FavoritesScreen: {
-      screen: FavoritesScreen,
+    RatingSystemScreen: {
+      screen: RatingSystemScreen,
     },
     WelcomeScreen: {
       screen: WelcomeScreen,
@@ -37,6 +39,12 @@ const OnboardingStack = StackNavigator(
     },
     ManageLibrary: {
       screen: ManageLibrary,
+    },
+    ImportLibrary: {
+      screen: ImportLibrary,
+    },
+    ImportDetail: {
+      screen: ImportDetail,
     },
     RatingSystemScreen: {
       screen: RatingSystemScreen,

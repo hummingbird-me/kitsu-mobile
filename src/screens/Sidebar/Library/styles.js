@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   cardLogo: {
     width: 120,
     height: 40,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   inputWrapper: {
     flexDirection: 'row',

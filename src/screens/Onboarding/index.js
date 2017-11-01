@@ -1,5 +1,5 @@
 import { CreateAccountScreen, SelectAccountScreen, WelcomeScreen } from './Aozora';
-import { RateScreen } from './Kitsu';
+import { RateScreen, ImportLibrary, ImportDetail } from './Kitsu';
 import { OnboardingHeader, FavoritesScreen, ManageLibrary, RatingSystemScreen } from './common';
 
 export {
@@ -7,6 +7,8 @@ export {
   SelectAccountScreen,
   WelcomeScreen,
   RateScreen,
+  ImportLibrary,
+  ImportDetail,
   OnboardingHeader,
   FavoritesScreen,
   ManageLibrary,

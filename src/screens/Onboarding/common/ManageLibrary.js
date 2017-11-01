@@ -28,7 +28,7 @@ const onPress = (navigation, buttonIndex) => {
     if (account === 'aozora') {
       navigation.navigate('');
     }
-    navigation.navigate('RateScreen');
+    navigation.navigate('ImportLibrary');
   } else {
     if (account === 'aozora') {
       navigation.navigate('');
