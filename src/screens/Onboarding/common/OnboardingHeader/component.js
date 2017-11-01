@@ -1,12 +1,24 @@
 import React from 'react';
-import { View, Image, ViewPropTypes } from 'react-native';
+import { View, TouchableOpacity, Text, Image, ViewPropTypes } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import kitsuLogo from 'kitsu/assets/img/kitsu-logo.png';
+import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
-export const OnboardingHeader = ({ style }) => (
+export const OnboardingHeader = ({ navigation, backEnabled, style, componentRight }) => (
   <View style={[styles.absolute, style]}>
     <View style={styles.headerContainer}>
+      <View style={{ width: 30 }}>
+        {backEnabled ? (
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Icon name="ios-arrow-back" color={colors.white} size={26} />
+          </TouchableOpacity>
+        ) : (
+          <View />
+        )}
+      </View>
       <Image style={styles.logo} source={kitsuLogo} />
+      <View style={{ width: 30 }}>{componentRight}</View>
     </View>
   </View>
 );

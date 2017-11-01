@@ -28,37 +28,45 @@ const onPress = (navigation, buttonIndex) => {
     if (account === 'aozora') {
       navigation.navigate('');
     }
-    navigation.navigate('ImportLibrary');
+    navigation.navigate('RateScreen');
   } else {
     if (account === 'aozora') {
       navigation.navigate('');
     }
-
-    navigation.navigate('');
+    navigation.navigate('ImportLibrary');
   }
 };
 
-const ManageLibrary = ({ navigation, accounts }) => (
-  <View style={styles.container}>
-    <View style={styles.contentWrapper}>
-      <Text style={[styles.tutorialText, styles.tutorialText]}>
-        {getTitle(navigation.state.params.account)}
-      </Text>
-      <Button
-        style={{ marginTop: 24 }}
-        onPress={() => onPress(navigation, 0)}
-        title={getButtonTitle(navigation.state.params.account, 0)}
-        titleStyle={styles.buttonTitleStyle}
-      />
-      <Button
-        style={styles.buttonSecondary}
-        onPress={() => onPress(navigation, 1)}
-        title={getButtonTitle(navigation.state.params.account, 1)}
-        titleStyle={styles.buttonSecondaryTitle}
-      />
-    </View>
-  </View>
-);
+class ManageLibrary extends React.Component {
+  static navigationOptions = {
+    backEnabled: true,
+  };
+
+  render() {
+    const { navigation, accounts } = this.props;
+    return (
+      <View style={styles.container}>
+        <View style={styles.contentWrapper}>
+          <Text style={[styles.tutorialText, styles.tutorialText]}>
+            {getTitle(navigation.state.params.account)}
+          </Text>
+          <Button
+            style={{ marginTop: 24 }}
+            onPress={() => onPress(navigation, 0)}
+            title={getButtonTitle(navigation.state.params.account, 0)}
+            titleStyle={styles.buttonTitleStyle}
+          />
+          <Button
+            style={styles.buttonSecondary}
+            onPress={() => onPress(navigation, 1)}
+            title={getButtonTitle(navigation.state.params.account, 1)}
+            titleStyle={styles.buttonSecondaryTitle}
+          />
+        </View>
+      </View>
+    );
+  }
+}
 
 const mapStateToProps = ({ user }) => {
   const { loading, error, conflicts: accounts } = user;

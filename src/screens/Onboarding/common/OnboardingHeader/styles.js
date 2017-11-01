@@ -15,7 +15,15 @@ export default StyleSheet.create({
     flexDirection: 'row',
     paddingTop: 30,
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  backButton: {
+    marginTop: 3,
+    marginLeft: 8,
+    paddingHorizontal: 4,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   logo: {
     width: 120,

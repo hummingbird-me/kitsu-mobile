@@ -13,6 +13,10 @@ const MediaItem = ({ style, onPress, image }) => (
 );
 
 class ImportLibrary extends React.Component {
+  static navigationOptions = {
+    backEnabled: true,
+  };
+
   state = {};
 
   onMediaItemPressed = (title, image) => {

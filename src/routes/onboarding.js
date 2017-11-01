@@ -53,12 +53,16 @@ const OnboardingStack = StackNavigator(
   {
     navigationOptions: ({ navigation }) => ({
       ...navigationOptions(null),
-      header: ({ getScreenDetails, scene }) => (
-        <OnboardingHeader
-          navigation={navigation}
-          headerTitle={getScreenDetails(scene).options.title}
-        />
-      ),
+      header: ({ getScreenDetails, scene }) => {
+        const { backEnabled, componentRight } = getScreenDetails(scene).options;
+        return (
+          <OnboardingHeader
+            navigation={navigation}
+            backEnabled={backEnabled}
+            componentRight={componentRight}
+          />
+        );
+      },
     }),
   },
 );

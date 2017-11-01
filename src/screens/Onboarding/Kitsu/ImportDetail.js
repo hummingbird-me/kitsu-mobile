@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, TextInput, Text, Modal } from 'react-native';
+import { View, Image, TextInput, Text } from 'react-native';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
@@ -9,8 +9,11 @@ import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
 class ImportDetail extends React.Component {
+  static navigationOptions = {
+    backEnabled: true,
+  };
+
   state = {
-    showModal: false,
     errMessage: null,
     loading: false,
     username: '',
@@ -30,7 +33,6 @@ class ImportDetail extends React.Component {
         kind,
       });
       this.setState({
-        showModal: true,
         loading: false,
         errMessage: res.errorMessage,
       });
@@ -38,7 +40,6 @@ class ImportDetail extends React.Component {
       // TODO: we may have crashes here.
       // console.log('failed import', e);
       this.setState({
-        showModal: true,
         errMessage: e && e[0].title,
         loading: false,
       });
@@ -50,9 +51,8 @@ class ImportDetail extends React.Component {
   };
 
   render() {
-    const { navigation } = this.props;
     const { loading, username } = this.state;
-    const item = navigation.state.params.item;
+    const item = this.props.navigation.state.params.item;
     return (
       <View style={commonStyles.container}>
         <View style={styles.card}>
