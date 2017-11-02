@@ -74,11 +74,22 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  imageSimpleShadow: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    zIndex: 99,
+    marginHorizontal: 2,
+  },
   imageSimple: {
     width: 50,
     height: 50,
-    marginHorizontal: 4,
     resizeMode: 'contain',
+    marginHorizontal: 2,
+  },
+  imageSimpleShadowBackground: {
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   title: {
     fontFamily: 'OpenSans',
@@ -107,5 +118,53 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     backgroundColor: colors.transparent,
+  },
+  ratingWrapper: {},
+  modalStarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: '34%',
+  },
+  modalRatingText: {
+    color: 'rgb(255, 218, 168)',
+    fontSize: 40,
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    marginLeft: 12,
+  },
+  modalNoRatingText: {
+    color: colors.lightGrey,
+    fontSize: 20,
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    minHeight: 36,
+    textAlignVertical: 'center',
+  },
+  modalSlider: {
+    marginHorizontal: 30,
+  },
+  textStar: {
+    color: colors.yellow,
+    fontWeight: '700',
+  },
+  textNotRated: {
+    color: colors.lightGrey,
+    fontWeight: '700',
+  },
+  textAwful: {
+    color: colors.red,
+    fontWeight: '700',
+  },
+  textMeh: {
+    color: colors.yellow,
+    fontWeight: '700',
+  },
+  textGood: {
+    color: colors.green,
+    fontWeight: '700',
+  },
+  textGreat: {
+    color: colors.blue,
+    fontWeight: '700',
   },
 });

@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { Button } from 'kitsu/components/Button';
+import { connect } from 'react-redux';
 import { upperFirst, toLower } from 'lodash';
+import { Button } from 'kitsu/components/Button';
 import awful from 'kitsu/assets/img/ratings/awful.png';
 import good from 'kitsu/assets/img/ratings/good.png';
 import great from 'kitsu/assets/img/ratings/great.png';
 import meh from 'kitsu/assets/img/ratings/meh.png';
 import starFilled from 'kitsu/assets/img/ratings/star.png';
+import { updateLibrarySettings } from 'kitsu/store/user/actions/';
 import { styles } from './styles';
 
 const getRatingSystem = (type) => {
@@ -61,21 +63,26 @@ const RatingSystem = ({ style, type, selected, onSelectSystem }) => {
   );
 };
 
-class RatingSystemSelect extends React.Component {
+class RatingSystemScreen extends React.Component {
   state = {
-    selectedSystem: 'simple',
+    ratingSystem: 'simple',
   };
 
   onSelectSystem = (accountType) => {
-    this.setState({ selectedSystem: accountType });
+    this.setState({ ratingSystem: accountType });
   };
 
-  onConfirm = () => {
-    this.props.navigation.navigate('ManageLibrary', { account: 'kitsu' });
+  onConfirm = async () => {
+    const { ratingSystem } = this.state;
+    const success = await this.props.updateLibrarySettings({ ratingSystem });
+    if (success) {
+      this.props.navigation.navigate('ManageLibrary', { account: 'kitsu' });
+    }
   };
 
   render() {
-    const { selectedSystem } = this.state;
+    const { ratingSystem } = this.state;
+    const { loading } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
@@ -85,23 +92,24 @@ class RatingSystemSelect extends React.Component {
           <RatingSystem
             style={{ marginTop: 24 }}
             type={'simple'}
-            selected={selectedSystem === 'simple'}
+            selected={ratingSystem === 'simple'}
             onSelectSystem={this.onSelectSystem}
           />
           <RatingSystem
             type={'regular'}
-            selected={selectedSystem === 'regular'}
+            selected={ratingSystem === 'regular'}
             onSelectSystem={this.onSelectSystem}
           />
           <RatingSystem
             type={'advanced'}
-            selected={selectedSystem === 'advanced'}
+            selected={ratingSystem === 'advanced'}
             onSelectSystem={this.onSelectSystem}
           />
           <Button
+            loading={loading}
             style={{ marginHorizontal: 0, marginTop: 32 }}
             onPress={this.onConfirm}
-            title={`Use ${upperFirst(toLower(selectedSystem))} Ratings`}
+            title={`Use ${upperFirst(toLower(ratingSystem))} Ratings`}
             titleStyle={styles.buttonTitleStyle}
           />
         </View>
@@ -109,5 +117,8 @@ class RatingSystemSelect extends React.Component {
     );
   }
 }
-
-export default RatingSystemSelect;
+const mapStateToProps = ({ user }) => {
+  const { loading, error } = user;
+  return { loading, error };
+};
+export default connect(mapStateToProps, { updateLibrarySettings })(RatingSystemScreen);

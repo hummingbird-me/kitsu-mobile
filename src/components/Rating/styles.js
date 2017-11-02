@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
     fontSize: 60,
     fontFamily: 'OpenSans',
     fontWeight: '700',
-    marginLeft: 12,
+    marginLeft: 16,
   },
   modalNoRatingText: {
     color: colors.lightGrey,

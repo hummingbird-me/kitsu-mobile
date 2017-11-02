@@ -1,4 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
+import * as colors from 'kitsu/constants/colors';
 
 export default StyleSheet.create({
   absolute: {
@@ -23,11 +24,25 @@ export default StyleSheet.create({
     paddingHorizontal: 4,
     backgroundColor: 'transparent',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   logo: {
     width: 120,
     height: 32,
     resizeMode: 'contain',
+  },
+  buttonRight: {
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 8,
+  },
+  buttonRightText: {
+    fontFamily: 'OpenSans',
+    fontSize: 13,
+    color: colors.lightestGrey,
+    backgroundColor: colors.transparent,
+  },
+  buttonRightEnabled: {
+    color: colors.yellow,
   },
 });

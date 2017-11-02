@@ -16,8 +16,8 @@ import navigationOptions from './navigationOptions';
 
 const OnboardingStack = StackNavigator(
   {
-    RateScreen: {
-      screen: RateScreen,
+    RatingSystemScreen: {
+      screen: RatingSystemScreen,
     },
     WelcomeScreen: {
       screen: WelcomeScreen,
@@ -54,12 +54,15 @@ const OnboardingStack = StackNavigator(
     navigationOptions: ({ navigation }) => ({
       ...navigationOptions(null),
       header: ({ getScreenDetails, scene }) => {
-        const { backEnabled, componentRight } = getScreenDetails(scene).options;
+        const { backEnabled } = getScreenDetails(scene).options;
+        const { params } = navigation.state;
         return (
           <OnboardingHeader
             navigation={navigation}
             backEnabled={backEnabled}
-            componentRight={componentRight}
+            buttonRightText={params && params.buttonRightText}
+            buttonRightEnabled={params && params.buttonRightEnabled}
+            buttonRightOnPress={params && params.buttonRightOnPress}
           />
         );
       },

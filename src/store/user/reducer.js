@@ -166,7 +166,8 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         currentUser: {
           ...state.currentUser,
           ratingSystem: action.payload.ratingSystem,
-          titleLanguagePreference: action.payload.titleLanguagePreference,
+          titleLanguagePreference:
+            action.payload.titleLanguagePreference || state.currentUser.titleLanguagePreference,
         },
       };
     case types.UPDATE_LIBRARY_SETTINGS_FAIL:
