@@ -15,30 +15,36 @@ class SplashScreen extends Component {
 
   componentDidMount() {
     this.animation.play();
-    const { isAuthenticated } = this.props;
+    const { isAuthenticated, conflicts } = this.props;
     if (this.props.rehydratedAt) {
-      this.init(isAuthenticated);
+      this.init(isAuthenticated, conflicts);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isAuthenticated } = nextProps;
-    this.init(isAuthenticated);
+    const { isAuthenticated, conflicts } = nextProps;
+    this.init(isAuthenticated, conflicts);
   }
 
-  init(authorized) {
+  init(authorized, conflicts) {
     const { dispatch } = this.props.navigation;
     let resetAction = null;
-    if (authorized) {
+    if (authorized && !conflicts) {
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
         key: null,
       });
-    } else {
+    } else if (authorized) {
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+        key: null,
+      });
+    } else {
+      resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Intro' })],
         key: null,
       });
     }
@@ -72,9 +78,10 @@ class SplashScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, user }) => {
   const { isAuthenticated, rehydratedAt } = auth;
-  return { isAuthenticated, rehydratedAt };
+  const { conflicts } = user;
+  return { isAuthenticated, rehydratedAt, conflicts };
 };
 
 SplashScreen.propTypes = {

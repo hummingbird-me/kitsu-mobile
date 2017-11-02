@@ -2,6 +2,7 @@ import { LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fb
 import * as types from 'kitsu/store/types';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';
+import { kitsuConfig } from 'kitsu/config/env';
 
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
@@ -11,14 +12,55 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
     const user = await Kitsu.findAll('users', {
       fields: {
         users:
-          'id,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,titleLanguagePreference',
+          'id,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,titleLanguagePreference,status',
       },
       filter: { self: true },
     });
     dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
     createOneSignalPlayer(dispatch, getState);
+    return user[0];
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
+    return null;
+  }
+};
+
+export const getAccountConflicts = () => async (dispatch, getState) => {
+  dispatch({ type: types.GET_ACCOUNT_CONFLICTS });
+  const token = getState().auth.tokens.access_token;
+  try {
+    const headers = new Headers();
+    headers.append('Authorization', `Bearer ${token}`);
+    const payload = await fetch(`${kitsuConfig.baseUrl}/edge/users/_conflicts`, {
+      method: 'GET',
+      headers,
+    }).then(res => res.json());
+    dispatch({ type: types.GET_ACCOUNT_CONFLICTS_SUCCESS, payload });
+  } catch (e) {
+    dispatch({ type: types.GET_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
+  }
+};
+
+export const resolveAccountConflicts = account => async (dispatch, getState) => {
+  dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS });
+  const token = getState().auth.tokens.access_token;
+  try {
+    const headers = new Headers();
+    headers.append('Authorization', `Bearer ${token}`);
+    headers.append('Content-Type', 'application/json');
+    const body = JSON.stringify({
+      chosen: account,
+    });
+    const payload = await fetch(`${kitsuConfig.baseUrl}/edge/users/_conflicts`, {
+      method: 'POST',
+      headers,
+      body,
+    }).then(res => res.json());
+    dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS, payload });
+    return true;
+  } catch (e) {
+    dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
+    return false;
   }
 };
 
@@ -32,7 +74,6 @@ export const createUser = (data, nav) => async (dispatch, getState) => {
     password,
     birthday,
   };
-  console.log(userObj);
 
   if (id) {
     userObj.facebookId = id;
@@ -120,15 +161,16 @@ export const updateLibrarySettings = data => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_LIBRARY_SETTINGS });
   const { user, auth } = getState();
   const { id } = user.currentUser;
-  const { ratingSystem, titleLanguagePreference } = data;
   const token = auth.tokens.access_token;
   setToken(token);
   try {
-    await Kitsu.update('users', { id, ratingSystem, titleLanguagePreference });
+    await Kitsu.update('users', { id, ...data });
     dispatch({ type: types.UPDATE_LIBRARY_SETTINGS_SUCCESS, payload: data });
+    return true;
   } catch (e) {
     dispatch({ type: types.UPDATE_LIBRARY_SETTINGS_FAIL });
   }
+  return false;
 };
 
 const createOneSignalPlayer = async (dispatch, getState) => {

@@ -6857,7 +6857,7 @@ react-native-side-menu@^0.20.1:
   version "0.20.3"
   resolved "https://registry.yarnpkg.com/react-native-side-menu/-/react-native-side-menu-0.20.3.tgz#5dffe3e237018360ed081433d505ea454cba9ca4"
 
-react-native-snap-carousel@^3.0.0:
+react-native-snap-carousel@^3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-3.3.4.tgz#40a7763ec40bed325cfade836e7f306c4a0a2541"
   dependencies:

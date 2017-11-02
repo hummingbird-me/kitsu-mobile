@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, TextInput, ViewPropTypes, Keyboard } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-export const Input = ({ style, ...otherProps }) => (
-  <View style={styles.wrapper}>
+export const Input = ({ style, containerStyle, ...otherProps }) => (
+  <View style={[styles.container, containerStyle]}>
     <TextInput
       {...otherProps}
       style={[styles.input, style]}
@@ -21,9 +20,9 @@ export const Input = ({ style, ...otherProps }) => (
 Input.propTypes = {
   ...TextInput.propTypes,
   style: ViewPropTypes.style,
-  wrapperStyle: ViewPropTypes.style,
+  containerStyle: ViewPropTypes.style,
 };
 Input.defaultProps = {
   style: null,
-  wrapperStyle: null,
+  containerStyle: null,
 };

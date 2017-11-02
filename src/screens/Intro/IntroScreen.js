@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, ScrollView, Dimensions } from 'react-native';
-import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/onboarding/';
+import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/intro/';
 import { Button } from 'kitsu/components/Button';
-import { OnboardingHeader } from './common/';
+import { IntroHeader } from './common/';
 import styles from './styles';
 import Step from './Step';
 import Dot from './Dot';
@@ -48,26 +48,27 @@ export default class OnboardingScreen extends React.Component {
 
   handleScroll = ({ nativeEvent: { contentOffset: { x } } }) => {
     const SCREEN_WIDTH = Dimensions.get('window').width;
-    const position = (x / SCREEN_WIDTH);
-    if (!this.navigating && position > (INTROS.length - 2) + 0.05) {
+    const position = x / SCREEN_WIDTH;
+    if (!this.navigating && position > INTROS.length - 2 + 0.05) {
       this.props.navigation.navigate('Registration');
       this.navigating = true; // prevent triggering navigate twice.
     } else {
       // abs for -x direction values: prevent -1 value for step
       this.setState({ step: Math.floor(Math.abs(x) / SCREEN_WIDTH) });
     }
-  }
+  };
 
   renderStep = () => INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
 
-  renderDots = () => INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
+  renderDots = () =>
+    INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
 
   render() {
     const { navigate } = this.props.navigation;
 
     return (
       <View style={styles.container}>
-        <OnboardingHeader style={styles.header} />
+        <IntroHeader style={styles.header} />
         <View style={styles.bodyWrapper}>
           <View style={styles.page}>
             <ScrollView
@@ -82,9 +83,7 @@ export default class OnboardingScreen extends React.Component {
             </ScrollView>
           </View>
           <View style={styles.buttonsWrapper}>
-            <View style={styles.dotContainer}>
-              {this.renderDots()}
-            </View>
+            <View style={styles.dotContainer}>{this.renderDots()}</View>
             <Button
               style={styles.getStartedButton}
               title={'Get Started'}
@@ -97,4 +96,3 @@ export default class OnboardingScreen extends React.Component {
     );
   }
 }
-

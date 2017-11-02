@@ -19,6 +19,7 @@ export const Button = ({
   onPress,
   loading,
   disabled,
+  bold,
 }) => {
   const Component = onPress ? TouchableOpacity : View;
   return (
@@ -27,14 +28,14 @@ export const Button = ({
       onPress={onPress}
       style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
     >
-      {loading ? <LoadingComponent />
-        : <View style={styles.contentWrapper}>
+      {loading ? (
+        <LoadingComponent />
+      ) : (
+        <View style={styles.contentWrapper}>
           {icon ? <Icon name={icon} style={[styles.icon, iconStyle]} /> : null}
-          <Text style={[styles.title, titleStyle]}>
-            {title}
-          </Text>
+          <Text style={[styles.title, titleStyle, bold ? styles.titleBold : null]}>{title}</Text>
         </View>
-      }
+      )}
     </Component>
   );
 };
@@ -49,6 +50,7 @@ Button.propTypes = {
   onPress: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   disabled: PropTypes.bool,
+  bold: PropTypes.bool,
 };
 Button.defaultProps = {
   style: null,
@@ -58,4 +60,5 @@ Button.defaultProps = {
   iconStyle: null,
   loading: false,
   disabled: false,
+  bold: false,
 };

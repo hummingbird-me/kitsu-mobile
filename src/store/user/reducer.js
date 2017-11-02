@@ -3,6 +3,7 @@ import * as types from 'kitsu/store/types';
 
 const INITIAL_STATE = {
   currentUser: {},
+  conflicts: null,
   loading: false,
   error: '',
   signingUp: false,
@@ -33,6 +34,42 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         error: action.payload,
       };
+    case types.GET_ACCOUNT_CONFLICTS:
+      return {
+        ...state,
+        loading: true,
+        error: '',
+      };
+    case types.GET_ACCOUNT_CONFLICTS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        conflicts: action.payload,
+      };
+    case types.GET_ACCOUNT_CONFLICTS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case types.RESOLVE_ACCOUNT_CONFLICTS:
+      return {
+        ...state,
+        loading: true,
+        error: '',
+      };
+    case types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        conflicts: null,
+      };
+    case types.RESOLVE_ACCOUNT_CONFLICTS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     case types.FETCH_NETWORK_FOLLOW:
       return {
         ...state,
@@ -57,7 +94,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         signingUp: false,
         signupError: action.payload,
       };
-      case types.CONNECT_FBUSER:
+    case types.CONNECT_FBUSER:
       return {
         ...state,
         loading: true,
@@ -69,7 +106,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         currentUser: {
           ...state.currentUser,
           facebookId: action.payload,
-        }
+        },
       };
     case types.CONNECT_FBUSER_FAIL:
       return {
@@ -89,7 +126,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         currentUser: {
           ...state.currentUser,
           facebookId: null,
-        }
+        },
       };
     case types.DISCONNECT_FBUSER_FAIL:
       return {
@@ -115,7 +152,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: '', //TODO: handle the error ~ Toast?
+        error: '', // TODO: handle the error ~ Toast?
       };
     case types.UPDATE_LIBRARY_SETTINGS:
       return {
@@ -129,14 +166,15 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         currentUser: {
           ...state.currentUser,
           ratingSystem: action.payload.ratingSystem,
-          titleLanguagePreference: action.payload.titleLanguagePreference,
+          titleLanguagePreference:
+            action.payload.titleLanguagePreference || state.currentUser.titleLanguagePreference,
         },
       };
     case types.UPDATE_LIBRARY_SETTINGS_FAIL:
       return {
         ...state,
         loading: false,
-        error: '', //TODO: handle the error ~ Toast?
+        error: '', // TODO: handle the error ~ Toast?
       };
     case types.ONESIGNAL_ID_RECEIVED:
       return {

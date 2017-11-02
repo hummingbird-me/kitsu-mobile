@@ -2,16 +2,12 @@ import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbs
 import { NavigationActions } from 'react-navigation';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
+import { fetchCurrentUser, getAccountConflicts } from 'kitsu/store/user/actions';
 import * as types from 'kitsu/store/types';
 
-export const loginUser = (data, nav, screen) => async (dispatch) => {
+export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
-
-  const loginAction = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-  });
 
   if (data) {
     try {
@@ -35,7 +31,21 @@ export const loginUser = (data, nav, screen) => async (dispatch) => {
 
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
-    nav.dispatch(loginAction);
+    const user = await fetchCurrentUser()(dispatch, getState);
+    if (user.status === 'aozora') {
+      getAccountConflicts()(dispatch, getState);
+      const onboardingAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+      });
+      nav.dispatch(onboardingAction);
+    } else {
+      const loginAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+      });
+      nav.dispatch(loginAction);
+    }
   } else {
     dispatch({
       type: types.LOGIN_USER_FAIL,
