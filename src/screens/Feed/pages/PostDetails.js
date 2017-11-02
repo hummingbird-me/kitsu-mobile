@@ -25,6 +25,12 @@ export default class PostDetails extends PureComponent {
       comment: '',
       comments: [...props.navigation.state.params.comments],
       like: props.navigation.state.params.like,
+      taggedMedia: {
+        media: {
+          canonicalTitle: 'Made in Abyss',
+        },
+        episode: 1,
+      },
     };
   }
 
@@ -136,7 +142,7 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, like } = this.state;
+    const { comment, comments, like, taggedMedia } = this.state;
 
     return (
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1, paddingTop: 20, backgroundColor: '#FFFFFF' }}>
@@ -156,6 +162,7 @@ export default class PostDetails extends PureComponent {
               content={post.content}
               likesCount={post.postLikesCount}
               commentsCount={comments.length}
+              taggedMedia={taggedMedia}
             />
 
             <PostActions

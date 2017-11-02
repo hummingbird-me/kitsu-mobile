@@ -123,6 +123,10 @@ class Feed extends React.PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   }
 
+  navigateToMedia = ({ mediaId, mediaType }) => {
+    this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
+  }
+
   keyExtractor = (item, index) => index
 
   renderPost = ({ item }) => {
@@ -136,6 +140,7 @@ class Feed extends React.PureComponent {
             onPostPress={this.navigateToPost}
             currentUser={this.props.currentUser}
             navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
+            navigateToMedia={(mediaId, mediaType) => this.navigateToMedia(mediaId, mediaType)}
           />
         );
       case 'comments':

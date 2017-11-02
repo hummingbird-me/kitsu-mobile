@@ -7,23 +7,7 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-const CommentBubble = ({ name, content }) => (
-  <View style={styles.bubble}>
-    <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
-    <StyledText size="xsmall" color="dark">{content}</StyledText>
-  </View>
-);
-
-CommentBubble.propTypes = {
-  name: PropTypes.string,
-  content: PropTypes.string,
-};
-CommentBubble.defaultProps = {
-  name: null,
-  content: null,
-};
-
-export const Comment = ({ comment, onPress, children }) => {
+export const Comment = ({ comment, onPress, insideFeed, children }) => {
   const { content, user } = comment;
   const { avatar, name } = user;
 
@@ -44,7 +28,12 @@ export const Comment = ({ comment, onPress, children }) => {
       <Layout.RowWrap>
         <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
         <Layout.RowMain>
-          <CommentBubble name={name} content={content} />
+          <View style={styles.bubble}>
+            <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
+            <StyledText size="xsmall" color="dark" numberOfLines={insideFeed && 2}>
+              {content}
+            </StyledText>
+          </View>
           <View style={styles.commentActions} />
           {children && (
             <View style={styles.nestedCommentSection}>{children}</View>
@@ -65,10 +54,12 @@ Comment.propTypes = {
     children: PropTypes.array,
   }).isRequired,
   children: PropTypes.node,
+  insideFeed: PropTypes.bool,
   onPress: PropTypes.func,
 };
 
 Comment.defaultProps = {
   children: [],
+  insideFeed: false,
   onPress: null,
 };
