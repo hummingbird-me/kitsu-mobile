@@ -205,7 +205,7 @@ export class Post extends PureComponent {
             }
             {(comments && latestComment) && (
               <PostSection>
-                <Comment comment={latestComment} insideFeed />
+                <Comment comment={latestComment} isTruncated />
               </PostSection>
             )}
 
