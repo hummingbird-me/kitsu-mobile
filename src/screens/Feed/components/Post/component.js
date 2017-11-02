@@ -23,12 +23,12 @@ export class Post extends PureComponent {
     post: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     onPostPress: PropTypes.func,
-    navigateToUserProfile: PropTypes.func,
+    navigation: PropTypes.func,
   }
 
   static defaultProps = {
     onPostPress: null,
-    navigateToUserProfile: null,
+    navigation: null,
   }
 
   state = {
@@ -162,6 +162,7 @@ export class Post extends PureComponent {
   }
 
   render() {
+    const { navigation } = this.props;
     const {
       createdAt,
       content,
@@ -177,7 +178,7 @@ export class Post extends PureComponent {
         <View style={styles.wrap}>
           <PostHeader
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
-            onAvatarPress={() => this.props.navigateToUserProfile(user.id)}
+            onAvatarPress={() => navigation.navigate('ProfilePages', user.id)}
             name={user.name}
             time={createdAt}
           />
@@ -188,6 +189,7 @@ export class Post extends PureComponent {
             likesCount={postLikesCount}
             commentsCount={commentsCount}
             taggedMedia={taggedMedia}
+            navigation={navigation}
           />
 
           <PostActions
@@ -276,18 +278,24 @@ PostHeader.defaultProps = {
 const keyExtractor = (item, index) => index;
 
 // Media Tag
-export const MediaTag = ({ media, episode }) => (
+export const MediaTag = ({ media, episode, navigation }) => (
   <View style={styles.mediaTagView}>
-    <View style={styles.mediaTag}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
+      style={styles.mediaTag}
+    >
       <StyledText color="green" size="xxsmall">{media.canonicalTitle}</StyledText>
-    </View>
+    </TouchableOpacity>
     {episode && (
-      <View style={styles.episodeTagView}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
+        style={styles.episodeTagView}
+      >
         <View style={styles.episodeTagLine} />
         <View style={styles.mediaTag}>
           <StyledText color="green" size="xxsmall">{`E ${episode}`}</StyledText>
         </View>
-      </View>
+      </TouchableOpacity>
     )}
   </View>
 );
@@ -297,13 +305,22 @@ MediaTag.propTypes = {
     canonicalTitle: PropTypes.string,
   }).isRequired,
   episode: PropTypes.number,
+  navigation: PropTypes.func,
 };
 
 MediaTag.defaultProps = {
   episode: null,
+  navigation: null,
 };
 
-export const PostMain = ({ content, images, likesCount, commentsCount, taggedMedia }) => (
+export const PostMain = ({
+  content,
+  images,
+  likesCount,
+  commentsCount,
+  taggedMedia,
+  navigation,
+}) => (
   <View style={styles.postMain}>
     <View style={styles.postContent}>
       <StyledText color="dark" size="small">{content}</StyledText>
@@ -321,6 +338,7 @@ export const PostMain = ({ content, images, likesCount, commentsCount, taggedMed
       <MediaTag
         media={taggedMedia.media}
         episode={taggedMedia.episode}
+        navigation={navigation}
       />
     )}
     <View style={styles.postStatusRow}>
@@ -340,6 +358,7 @@ PostMain.propTypes = {
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
   taggedMedia: PropTypes.object,
+  navigation: PropTypes.func,
 };
 PostMain.defaultProps = {
   content: null,
@@ -347,6 +366,7 @@ PostMain.defaultProps = {
   likesCount: 0,
   commentsCount: 0,
   taggedMedia: null,
+  navigation: null,
 };
 
 const actionButtonLabels = {

@@ -140,7 +140,7 @@ class Feed extends React.PureComponent {
             onPostPress={this.navigateToPost}
             currentUser={this.props.currentUser}
             navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
-            navigateToMedia={(mediaId, mediaType) => this.navigateToMedia(mediaId, mediaType)}
+            navigation={this.props.navigation}
           />
         );
       case 'comments':

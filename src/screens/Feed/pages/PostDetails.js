@@ -163,6 +163,7 @@ export default class PostDetails extends PureComponent {
               likesCount={post.postLikesCount}
               commentsCount={comments.length}
               taggedMedia={taggedMedia}
+              navigation={this.props.navigation}
             />
 
             <PostActions
