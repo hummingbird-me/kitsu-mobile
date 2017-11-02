@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
+import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Kitsu } from 'kitsu/config/api';
@@ -91,13 +92,16 @@ const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged }) => (
 );
 
 class RateScreen extends React.Component {
+  static navigationOptions = {
+    backEnabled: true,
+  };
+
   state = {
     currentIndex: 0,
     topAnime: [],
     ratingTwenty: 0,
     ratedCount: 0,
     selected: null,
-    backEnabled: true,
   };
 
   componentWillMount() {
@@ -109,11 +113,11 @@ class RateScreen extends React.Component {
   }
 
   onSwipe = (index) => {
-    const { currentIndex, topAnime, ratingTwenty } = this.state;
+    const { currentIndex, topAnime, ratingTwenty, selected } = this.state;
     let ratedCount = this.state.ratedCount;
     const animes = topAnime.slice();
     animes[currentIndex].rating = ratingTwenty;
-    if (ratingTwenty) {
+    if (ratingTwenty || selected) {
       ratedCount += 1;
       this.updateHeaderButton(ratedCount);
     }
@@ -133,7 +137,11 @@ class RateScreen extends React.Component {
   };
 
   onDone = () => {
-    console.log('im done');
+    const navigateTabs = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+    });
+    this.props.navigation.dispatch(navigateTabs);
   };
 
   updateHeaderButton = (ratedCount = 0) => {

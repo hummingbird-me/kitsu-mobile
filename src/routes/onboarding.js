@@ -13,12 +13,10 @@ import {
   ImportDetail,
 } from 'kitsu/screens/Onboarding/';
 import navigationOptions from './navigationOptions';
+import Tabs from './tabs';
 
 const OnboardingStack = StackNavigator(
   {
-    RatingSystemScreen: {
-      screen: RatingSystemScreen,
-    },
     WelcomeScreen: {
       screen: WelcomeScreen,
     },
@@ -49,13 +47,18 @@ const OnboardingStack = StackNavigator(
     RatingSystemScreen: {
       screen: RatingSystemScreen,
     },
+    Tabs: {
+      screen: Tabs,
+    },
   },
   {
     navigationOptions: ({ navigation }) => ({
       ...navigationOptions(null),
       header: ({ getScreenDetails, scene }) => {
+        console.log(navigation.state, scene);
         const { backEnabled } = getScreenDetails(scene).options;
         const { params } = navigation.state;
+        if (navigation.state.routeName === 'Tabs') return null;
         return (
           <OnboardingHeader
             navigation={navigation}
