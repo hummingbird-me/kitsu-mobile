@@ -28,11 +28,11 @@ class FavoritesScreen extends React.Component {
         subCategoryLength: 0,
         id: 160,
       },
-      {
-        title: 'Ecchi',
-        selected: false,
-        subCategoryLength: 0,
-      },
+      // {
+      //   title: 'Ecchi',
+      //   selected: false,
+      //   subCategoryLength: 0,
+      // },
       {
         title: 'Fantasy',
         selected: false,
