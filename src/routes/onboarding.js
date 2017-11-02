@@ -55,7 +55,6 @@ const OnboardingStack = StackNavigator(
     navigationOptions: ({ navigation }) => ({
       ...navigationOptions(null),
       header: ({ getScreenDetails, scene }) => {
-        console.log(navigation.state, scene);
         const { backEnabled } = getScreenDetails(scene).options;
         const { params } = navigation.state;
         if (navigation.state.routeName === 'Tabs') return null;

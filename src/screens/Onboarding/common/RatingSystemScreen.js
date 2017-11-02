@@ -75,8 +75,12 @@ class RatingSystemScreen extends React.Component {
   onConfirm = async () => {
     const { ratingSystem } = this.state;
     const success = await this.props.updateLibrarySettings({ ratingSystem });
+    const { navigate, state } = this.props.navigation;
+    console.log(state.params.selected);
     if (success) {
-      this.props.navigation.navigate('ManageLibrary', { account: 'kitsu' });
+      navigate('ManageLibrary', {
+        account: state.params.account,
+      });
     }
   };
 

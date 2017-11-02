@@ -98,7 +98,7 @@ class RateScreen extends React.Component {
 
   state = {
     currentIndex: 0,
-    topAnime: [],
+    topMedia: [],
     ratingTwenty: 0,
     ratedCount: 0,
     selected: null,
@@ -113,9 +113,9 @@ class RateScreen extends React.Component {
   }
 
   onSwipe = (index) => {
-    const { currentIndex, topAnime, ratingTwenty, selected } = this.state;
+    const { currentIndex, topMedia, ratingTwenty, selected } = this.state;
     let ratedCount = this.state.ratedCount;
-    const animes = topAnime.slice();
+    const animes = topMedia.slice();
     animes[currentIndex].rating = ratingTwenty;
     if (ratingTwenty || selected) {
       ratedCount += 1;
@@ -137,11 +137,19 @@ class RateScreen extends React.Component {
   };
 
   onDone = () => {
-    const navigateTabs = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-    });
-    this.props.navigation.dispatch(navigateTabs);
+    const { account, type } = this.props.navigation.state.params;
+    if ((account === 'kitsu' && type === 'manga') || account === 'aozora') {
+      const navigateTabs = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+      });
+      this.props.navigation.dispatch(navigateTabs);
+    } else {
+      this.props.navigation.navigate('ManageLibrary', {
+        account,
+        origin: true,
+      });
+    }
   };
 
   updateHeaderButton = (ratedCount = 0) => {
@@ -154,19 +162,19 @@ class RateScreen extends React.Component {
   };
 
   fetchTrendingMedia = async () => {
+    const { type } = this.props.navigation.state.params;
     try {
-      const topAnime = await Kitsu.findAll('anime', {
+      const topMedia = await Kitsu.findAll(type, {
         fields: {
-          anime: 'posterImage,titles',
+          [type]: 'posterImage,titles',
         },
         page: {
           limit: 10,
         },
         sort: '-averageRating',
       });
-      console.log(topAnime);
       this.setState({
-        topAnime,
+        topMedia,
       });
     } catch (e) {
       console.log(e);
@@ -192,7 +200,7 @@ class RateScreen extends React.Component {
 
   render() {
     const { ratingSystem } = this.props;
-    const { topAnime, currentIndex, ratingTwenty, selected } = this.state;
+    const { topMedia, currentIndex, ratingTwenty, selected } = this.state;
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>Rate the anime you{"'"}ve seen</Text>
@@ -208,7 +216,7 @@ class RateScreen extends React.Component {
             ref={(c) => {
               this.carousel = c;
             }}
-            data={topAnime}
+            data={topMedia}
             renderItem={this.renderItem}
             sliderWidth={Dimensions.get('window').width}
             itemWidth={260}

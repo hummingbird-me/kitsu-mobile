@@ -42,7 +42,9 @@ class SelectAccountScreen extends React.Component {
   onConfirm = async () => {
     const success = this.props.resolveAccountConflicts(this.state.selectedAccount);
     if (success) {
-      this.props.navigation.navigate('CreateAccountScreen');
+      this.props.navigation.navigate('CreateAccountScreen', {
+        account: this.state.selectedAccount,
+      });
     }
   };
 

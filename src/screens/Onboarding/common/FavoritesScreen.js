@@ -178,7 +178,9 @@ class FavoritesScreen extends React.Component {
   }
 
   onConfirm = () => {
-    this.props.navigation.navigate('RatingSystemScreen');
+    this.props.navigation.navigate('RatingSystemScreen', {
+      account: this.props.navigation.state.params.account,
+    });
   };
 
   onPressPill = async (category, index, isSubCategory) => {

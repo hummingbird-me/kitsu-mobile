@@ -35,7 +35,7 @@ class CreateAccountScreen extends React.Component {
         this.props.updateGeneralSettings(valuesToUpdate);
         this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
       }
-      navigation.navigate('FavoritesScreen');
+      navigation.navigate('FavoritesScreen', { account: navigation.state.params.account });
     } else {
       if (Platform.OS === 'android') {
         UIManager.setLayoutAnimationEnabledExperimental(true);
