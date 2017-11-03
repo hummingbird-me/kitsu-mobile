@@ -178,7 +178,7 @@ export class Post extends PureComponent {
         <View style={styles.wrap}>
           <PostHeader
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
-            onAvatarPress={() => navigation.navigate('ProfilePages', user.id)}
+            onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
             name={user.name}
             time={createdAt}
           />
