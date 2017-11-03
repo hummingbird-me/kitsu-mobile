@@ -132,11 +132,12 @@ export default class PostDetails extends PureComponent {
   renderItem = ({ item }) => (
     <Comment
       comment={item}
-      onPress={() => this.navigateToUserProfile(item.user.id)}
+      onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+      onReplyPress={this.focusOnCommentInput}
     />
   )
 
-  renderItemSeperatorComponent = () => <View style={{ height: 10 }} />
+  renderItemSeperatorComponent = () => <View style={{ height: 17 }} />
 
   render() {
     // We expect to have navigated here using react-navigation, and it takes all our props
