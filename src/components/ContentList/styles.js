@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
   },
   contentListHeaderText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '400',
     fontFamily: 'OpenSans',
     color: '#392F39',
   },
@@ -33,12 +33,12 @@ export const styles = StyleSheet.create({
   },
   contentListActionLinkText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '400',
     fontFamily: 'OpenSans',
     color: '#392F39',
   },
   linkIcon: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '200',
     fontFamily: 'OpenSans',
     paddingLeft: 4,
