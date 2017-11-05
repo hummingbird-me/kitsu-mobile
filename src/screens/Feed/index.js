@@ -198,7 +198,7 @@ class Feed extends React.PureComponent {
             keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
-            onEndReachedThreshold={0.9}
+            onEndReachedThreshold={0.6}
             ListHeaderComponent={(<CreatePostRow onPress={this.navigateToCreatePost} />)}
             refreshControl={(
               <RefreshControl
