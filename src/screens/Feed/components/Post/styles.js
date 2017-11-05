@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
   userDetailsLink: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
 
   postMain: {
@@ -71,5 +72,27 @@ export const styles = StyleSheet.create({
     padding: scenePadding,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.lightGrey,
+  },
+
+  mediaTagView: {
+    marginTop: scenePadding * 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  mediaTag: {
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.green,
+  },
+  episodeTagView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  episodeTagLine: {
+    height: StyleSheet.hairlineWidth,
+    width: 10,
+    backgroundColor: colors.green,
   },
 });

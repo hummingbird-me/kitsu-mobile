@@ -1,13 +1,15 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback, Text } from 'react-native';
+import { FlatList, Image, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { PostImage, PostImageSeparator } from 'kitsu/screens/Feed/components/PostImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
@@ -21,18 +23,25 @@ export class Post extends PureComponent {
     post: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     onPostPress: PropTypes.func,
-    navigateToUserProfile: PropTypes.func,
+    navigation: PropTypes.func,
   }
 
   static defaultProps = {
     onPostPress: null,
-    navigateToUserProfile: null,
+    navigation: null,
   }
 
   state = {
     comment: '',
     comments: [],
+    latestComment: null,
     like: null,
+    taggedMedia: {
+      media: {
+        canonicalTitle: 'Made in Abyss',
+      },
+      episode: 1,
+    },
   };
 
   componentWillMount() {
@@ -96,7 +105,9 @@ export class Post extends PureComponent {
       // and there's no way for me to access the relationship
       // data from the raw response from this context.
 
-      if (this.mounted) this.setState({ comments });
+      const latestComment = comments.length && comments[0];
+
+      if (this.mounted) this.setState({ latestComment, comments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -151,23 +162,23 @@ export class Post extends PureComponent {
   }
 
   render() {
+    const { navigation } = this.props;
     const {
       createdAt,
       content,
       images,
-      id,
       postLikesCount,
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, comments } = this.state;
+    const { comment, latestComment, comments, taggedMedia } = this.state;
 
     return (
       <TouchableWithoutFeedback onPress={this.onPostPress}>
         <View style={styles.wrap}>
           <PostHeader
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
-            onAvatarPress={() => this.props.navigateToUserProfile(user.id)}
+            onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
             name={user.name}
             time={createdAt}
           />
@@ -177,6 +188,8 @@ export class Post extends PureComponent {
             images={images}
             likesCount={postLikesCount}
             commentsCount={commentsCount}
+            taggedMedia={taggedMedia}
+            navigation={navigation}
           />
 
           <PostActions
@@ -188,13 +201,13 @@ export class Post extends PureComponent {
 
           <PostFooter>
             {!comments &&
-              <Text>Loading...</Text>
+              <SceneLoader />
             }
-            {comments && comments.map(existingComment => (
-              <PostSection key={`post:${id}:comment:${existingComment.id}`}>
-                <Comment comment={existingComment} />
+            {(comments && latestComment) && (
+              <PostSection>
+                <Comment comment={latestComment} isTruncated />
               </PostSection>
-            ))}
+            )}
 
             <PostSection>
               <CommentTextInput
@@ -215,6 +228,7 @@ export class Post extends PureComponent {
 // PostHeader
 export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPress }) => {
   const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
+  const ACTION_OPTIONS = ['Copy link to post', 'Follow post', `Hide post from ${name}`, 'Report Post', `Block ${name}`, 'Never mind'];
   return (
     <View style={styles.postHeader}>
       <Layout.RowWrap alignItems="center">
@@ -223,6 +237,7 @@ export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPres
             <Icon name="ios-arrow-back" color={colors.listBackPurple} style={{ fontSize: 28 }} />
           </TouchableOpacity>
         )}
+
         <TouchableOpacity onPress={onAvatarPress} style={styles.userDetailsLink}>
           <Avatar avatar={avatar} />
           <Layout.RowMain>
@@ -230,9 +245,15 @@ export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPres
             <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>{postDateTime}</StyledText>
           </Layout.RowMain>
         </TouchableOpacity>
-        <TouchableOpacity>
+
+        {/* Todo KB: hook up with real action for each options */}
+        <SelectMenu
+          options={ACTION_OPTIONS}
+          onOptionSelected={() => {}}
+          activeOpacity={0.8}
+        >
           <Icon name="ios-more" color={colors.lightGrey} style={{ fontSize: 32, paddingVertical: 10 }} />
-        </TouchableOpacity>
+        </SelectMenu>
       </Layout.RowWrap>
     </View>
   );
@@ -256,7 +277,50 @@ PostHeader.defaultProps = {
 // PostMain
 const keyExtractor = (item, index) => index;
 
-export const PostMain = ({ content, images, likesCount, commentsCount }) => (
+// Media Tag
+export const MediaTag = ({ media, episode, navigation }) => (
+  <View style={styles.mediaTagView}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
+      style={styles.mediaTag}
+    >
+      <StyledText color="green" size="xxsmall">{media.canonicalTitle}</StyledText>
+    </TouchableOpacity>
+    {episode && (
+      <TouchableOpacity
+        onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
+        style={styles.episodeTagView}
+      >
+        <View style={styles.episodeTagLine} />
+        <View style={styles.mediaTag}>
+          <StyledText color="green" size="xxsmall">{`E ${episode}`}</StyledText>
+        </View>
+      </TouchableOpacity>
+    )}
+  </View>
+);
+
+MediaTag.propTypes = {
+  media: PropTypes.shape({
+    canonicalTitle: PropTypes.string,
+  }).isRequired,
+  episode: PropTypes.number,
+  navigation: PropTypes.func,
+};
+
+MediaTag.defaultProps = {
+  episode: null,
+  navigation: null,
+};
+
+export const PostMain = ({
+  content,
+  images,
+  likesCount,
+  commentsCount,
+  taggedMedia,
+  navigation,
+}) => (
   <View style={styles.postMain}>
     <View style={styles.postContent}>
       <StyledText color="dark" size="small">{content}</StyledText>
@@ -268,6 +332,13 @@ export const PostMain = ({ content, images, likesCount, commentsCount }) => (
         data={images}
         renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
         ItemSeparatorComponent={() => <PostImageSeparator />}
+      />
+    )}
+    {taggedMedia && (
+      <MediaTag
+        media={taggedMedia.media}
+        episode={taggedMedia.episode}
+        navigation={navigation}
       />
     )}
     <View style={styles.postStatusRow}>
@@ -286,45 +357,55 @@ PostMain.propTypes = {
   images: PropTypes.array,
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
+  taggedMedia: PropTypes.object,
+  navigation: PropTypes.func,
 };
 PostMain.defaultProps = {
   content: null,
   images: [],
   likesCount: 0,
   commentsCount: 0,
+  taggedMedia: null,
+  navigation: null,
 };
 
-
-// PostAction
-const actionButtonIcons = {
-  like: 'ios-heart-outline',
-  comment: 'ios-text-outline',
-  share: 'ios-redo-outline',
-};
 const actionButtonLabels = {
   like: 'Like',
+  liked: 'Liked',
   comment: 'Comment',
   share: 'Share',
 };
-export const PostActionButton = ({ variant, isActive, onPress }) => (
-  <TouchableOpacity onPress={onPress} style={styles.postActionButton}>
-    <Icon
-      name={actionButtonIcons[variant]}
-      color={isActive ? 'red' : 'grey'}
-      style={{ fontSize: 18 }}
-    />
-    <StyledText
-      size="xsmall"
-      color={isActive ? 'red' : 'grey'}
-      textStyle={{ marginLeft: 10 }}
-    >
-      {actionButtonLabels[variant]}
-    </StyledText>
-  </TouchableOpacity>
-);
+
+
+/* eslint-disable global-require */
+export const PostActionButton = ({ variant, isActive, onPress }) => {
+  const icons = {
+    like: require('kitsu/assets/img/feed/heart.png'),
+    liked: require('kitsu/assets/img/feed/heart__active.png'),
+    comment: require('kitsu/assets/img/feed/comment.png'),
+    share: require('kitsu/assets/img/feed/share.png'),
+  };
+
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.postActionButton}>
+      <Image
+        source={icons[variant]}
+        resizeMode="cover"
+        style={{ width: 20, height: 18 }}
+      />
+      <StyledText
+        size="xsmall"
+        color={isActive ? 'red' : 'grey'}
+        textStyle={{ marginLeft: 10 }}
+      >
+        {actionButtonLabels[variant]}
+      </StyledText>
+    </TouchableOpacity>
+  );
+};
 
 PostActionButton.propTypes = {
-  variant: PropTypes.oneOf(['like', 'comment', 'share']),
+  variant: PropTypes.oneOf(['like', 'liked', 'comment', 'share']),
   isActive: PropTypes.bool,
   onPress: PropTypes.func,
 };
@@ -336,7 +417,7 @@ PostActionButton.defaultProps = {
 
 export const PostActions = ({ isLiked, onLikePress, onCommentPress /* , onSharePress */ }) => (
   <View style={styles.postActionRow}>
-    <PostActionButton variant="like" onPress={onLikePress} isActive={isLiked} />
+    <PostActionButton variant={isLiked ? 'liked' : 'like'} onPress={onLikePress} isActive={isLiked} />
     <PostActionButton variant="comment" onPress={onCommentPress} />
     {/* <PostActionButton variant="share" onPress={onSharePress} /> */}
   </View>

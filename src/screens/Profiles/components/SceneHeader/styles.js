@@ -9,34 +9,38 @@ import {
 } from 'kitsu/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
-  wrap: {
+  container: {
     paddingBottom: spacing.small,
     overflow: 'visible',
-    marginTop: cardSize.square.height * (-0.5),
     backgroundColor: 'transparent',
     position: 'relative',
   },
 
-  backgroundPanel: {
+  container__profile: {
+    marginTop: cardSize.square.height * (-0.5),
+  },
+  container__group: {
+    marginTop: cardSize.square.height * (-0.5),
+  },
+  container__media: {
+    marginTop: cardSize.portraitLarge.height * (-0.65),
+  },
+
+  backgroundView: {
     position: 'absolute',
-    top: cardSize.square.height / 2,
     left: 0,
     height: '100%',
     width: '100%',
     backgroundColor: '#FFFFFF',
   },
-
-  headerViewMask: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    width: '100%',
+  backgroundView__profile: {
+    top: cardSize.square.height * 0.5,
   },
-
-  coverImageView: {
-    width: '100%',
-    height: coverImageHeight,
+  backgroundView__group: {
+    top: cardSize.square.height * 0.5,
+  },
+  backgroundView__media: {
+    top: cardSize.portraitLarge.height * 0.65,
   },
 
   profileHeaderView: {

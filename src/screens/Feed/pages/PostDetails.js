@@ -6,6 +6,7 @@ import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { PostHeader, PostMain, PostActions, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 
 export default class PostDetails extends PureComponent {
@@ -24,6 +25,12 @@ export default class PostDetails extends PureComponent {
       comment: '',
       comments: [...props.navigation.state.params.comments],
       like: props.navigation.state.params.like,
+      taggedMedia: {
+        media: {
+          canonicalTitle: 'Made in Abyss',
+        },
+        episode: 1,
+      },
     };
   }
 
@@ -125,17 +132,18 @@ export default class PostDetails extends PureComponent {
   renderItem = ({ item }) => (
     <Comment
       comment={item}
-      onPress={() => this.navigateToUserProfile(item.user.id)}
+      onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+      onReplyPress={this.focusOnCommentInput}
     />
   )
 
-  renderItemSeperatorComponent = () => <View style={{ height: 10 }} />
+  renderItemSeperatorComponent = () => <View style={{ height: 17 }} />
 
   render() {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, like } = this.state;
+    const { comment, comments, like, taggedMedia } = this.state;
 
     return (
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1, paddingTop: 20, backgroundColor: '#FFFFFF' }}>
@@ -155,6 +163,8 @@ export default class PostDetails extends PureComponent {
               content={post.content}
               likesCount={post.postLikesCount}
               commentsCount={comments.length}
+              taggedMedia={taggedMedia}
+              navigation={this.props.navigation}
             />
 
             <PostActions
@@ -165,12 +175,15 @@ export default class PostDetails extends PureComponent {
             />
 
             <PostCommentsSection>
-              <FlatList
-                data={comments}
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderItem}
-                ItemSeparatorComponent={this.renderItemSeperatorComponent}
-              />
+              {!comments && <SceneLoader />}
+              {comments && (
+                <FlatList
+                  data={comments}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderItem}
+                  ItemSeparatorComponent={this.renderItemSeperatorComponent}
+                />
+              )}
             </PostCommentsSection>
           </ScrollView>
         </View>
