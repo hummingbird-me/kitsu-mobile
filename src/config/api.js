@@ -817,9 +817,20 @@ Kitsu.define(
     title: '',
     topLevelCommentsCount: '',
     updatedAt: '',
+    media: {
+      jsonApi: 'hasOne',
+    },
+    spoiledUnit: {
+      jsonApi: 'hasOne',
+    },
+    targetUser: {
+      jsonApi: 'hasOne',
+    },
+    targetGroup: {
+      jsonApi: 'hasOne',
+    },
     user: {
       jsonApi: 'hasOne',
-      type: 'users',
     },
   },
   { collectionPath: 'posts' },
