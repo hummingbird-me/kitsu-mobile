@@ -1,8 +1,8 @@
 import React from 'react';
+import { RefreshControl, StatusBar, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { unescape } from 'lodash';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { View, RefreshControl, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Kitsu } from 'kitsu/config/api';
@@ -41,25 +41,26 @@ class Feed extends React.PureComponent {
     this.fetchFeed({ reset: true });
   }
 
-  currentPage = 0
+  cursor = undefined
 
   fetchFeed = async ({ reset = false } = {}) => {
     this.setState({ refreshing: true });
-
-    const PAGE_SIZE = 10;
-    if (reset) this.currentPage = 0;
+    const PAGE_SIZE = 5;
+    if (reset) this.cursor = undefined;
 
     try {
       const result = await Kitsu.one('followingFeed', this.props.currentUser.id).get({
         include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
         page: {
-          offset: this.currentPage * PAGE_SIZE,
+          cursor: this.cursor,
           limit: PAGE_SIZE,
         },
       });
 
-      this.currentPage += 1;
+      // I need to read the cursor value out of the 'next' link in the result.
+      const url = new URL(result.links.next);
+      this.cursor = url.searchParams.get('page[cursor]');
 
       // Discard the activity groups and activities for now, flattening to
       // just the subject of the activity.
@@ -173,7 +174,7 @@ class Feed extends React.PureComponent {
             keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
-            onEndReachedThreshold={0.5}
+            onEndReachedThreshold={100}
             ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
             refreshControl={
               <RefreshControl
