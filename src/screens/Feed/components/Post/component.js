@@ -23,12 +23,11 @@ export class Post extends PureComponent {
     post: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     onPostPress: PropTypes.func,
-    navigation: PropTypes.func,
+    navigation: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
     onPostPress: null,
-    navigation: null,
   }
 
   state = {
@@ -87,6 +86,8 @@ export class Post extends PureComponent {
 
   fetchComments = async () => {
     try {
+      // We go ahead and fetch the comments so if the user wants to view detail
+      // they can do so without a refetch.
       const comments = await Kitsu.findAll('comments', {
         filter: {
           postId: this.props.post.id,
@@ -105,7 +106,7 @@ export class Post extends PureComponent {
       // and there's no way for me to access the relationship
       // data from the raw response from this context.
 
-      const latestComment = comments.length && comments[0];
+      const latestComment = comments[comments.length - 1];
 
       if (this.mounted) this.setState({ latestComment, comments });
     } catch (err) {
@@ -171,7 +172,7 @@ export class Post extends PureComponent {
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComment, comments, taggedMedia } = this.state;
+    const { comment, latestComment, taggedMedia } = this.state;
 
     return (
       <TouchableWithoutFeedback onPress={this.onPostPress}>
@@ -200,10 +201,10 @@ export class Post extends PureComponent {
           />
 
           <PostFooter>
-            {!comments &&
+            {!latestComment &&
               <SceneLoader />
             }
-            {(comments && latestComment) && (
+            {latestComment && (
               <PostSection>
                 <Comment comment={latestComment} isTruncated />
               </PostSection>
@@ -305,12 +306,11 @@ MediaTag.propTypes = {
     canonicalTitle: PropTypes.string,
   }).isRequired,
   episode: PropTypes.number,
-  navigation: PropTypes.func,
+  navigation: PropTypes.object.isRequired,
 };
 
 MediaTag.defaultProps = {
   episode: null,
-  navigation: null,
 };
 
 export const PostMain = ({
@@ -358,7 +358,7 @@ PostMain.propTypes = {
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
   taggedMedia: PropTypes.object,
-  navigation: PropTypes.func,
+  navigation: PropTypes.object.isRequired,
 };
 PostMain.defaultProps = {
   content: null,
@@ -366,7 +366,6 @@ PostMain.defaultProps = {
   likesCount: 0,
   commentsCount: 0,
   taggedMedia: null,
-  navigation: null,
 };
 
 const actionButtonLabels = {

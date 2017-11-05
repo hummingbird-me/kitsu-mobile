@@ -50,7 +50,7 @@ export class Comment extends PureComponent {
         <Layout.RowMain>
           <View style={styles.bubble}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
-            <StyledText size="xsmall" color="dark" numberOfLines={isTruncated && 2}>
+            <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
               {content}
             </StyledText>
           </View>
