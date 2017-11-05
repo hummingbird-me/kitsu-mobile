@@ -201,7 +201,7 @@ export class Post extends PureComponent {
           />
 
           <PostFooter>
-            {!latestComment &&
+            {commentsCount > 0 && !latestComment &&
               <SceneLoader />
             }
             {latestComment && (
