@@ -589,6 +589,9 @@ Kitsu.define(
     updatedAt: '',
     editedAt: '',
     deletedAt: '',
+    drama: {
+      jsonApi: 'hasOne',
+    },
     libraryEntry: {
       jsonApi: 'hasOne',
     },
@@ -600,6 +603,9 @@ Kitsu.define(
     },
     manga: {
       jsonApi: 'hasOne',
+    },
+    votes: {
+      jsonApi: 'hasMany',
     },
   },
   { collectionPath: 'media-reactions' },
