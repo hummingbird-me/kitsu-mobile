@@ -35,12 +35,6 @@ export class Post extends PureComponent {
     comments: [],
     latestComment: null,
     like: null,
-    taggedMedia: {
-      media: {
-        canonicalTitle: 'Made in Abyss',
-      },
-      episode: 1,
-    },
   };
 
   componentWillMount() {
@@ -168,11 +162,13 @@ export class Post extends PureComponent {
       createdAt,
       content,
       images,
+      media,
+      spoiledUnit,
       postLikesCount,
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComment, taggedMedia } = this.state;
+    const { comment, latestComment } = this.state;
 
     return (
       <TouchableWithoutFeedback onPress={this.onPostPress}>
@@ -189,7 +185,8 @@ export class Post extends PureComponent {
             images={images}
             likesCount={postLikesCount}
             commentsCount={commentsCount}
-            taggedMedia={taggedMedia}
+            taggedMedia={media}
+            taggedEpisode={spoiledUnit}
             navigation={navigation}
           />
 
@@ -275,9 +272,6 @@ PostHeader.defaultProps = {
   onAvatarPress: null,
 };
 
-// PostMain
-const keyExtractor = (item, index) => index;
-
 // Media Tag
 export const MediaTag = ({ media, episode, navigation }) => (
   <View style={styles.mediaTagView}>
@@ -294,7 +288,7 @@ export const MediaTag = ({ media, episode, navigation }) => (
       >
         <View style={styles.episodeTagLine} />
         <View style={styles.mediaTag}>
-          <StyledText color="green" size="xxsmall">{`E ${episode}`}</StyledText>
+          <StyledText color="green" size="xxsmall">{`E ${episode.number}`}</StyledText>
         </View>
       </TouchableOpacity>
     )}
@@ -313,12 +307,16 @@ MediaTag.defaultProps = {
   episode: null,
 };
 
+// PostMain
+const keyExtractor = (item, index) => index;
+
 export const PostMain = ({
   content,
   images,
   likesCount,
   commentsCount,
   taggedMedia,
+  taggedEpisode,
   navigation,
 }) => (
   <View style={styles.postMain}>
@@ -336,8 +334,8 @@ export const PostMain = ({
     )}
     {taggedMedia && (
       <MediaTag
-        media={taggedMedia.media}
-        episode={taggedMedia.episode}
+        media={taggedMedia}
+        episode={taggedEpisode}
         navigation={navigation}
       />
     )}
@@ -358,6 +356,7 @@ PostMain.propTypes = {
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
   taggedMedia: PropTypes.object,
+  taggedEpisode: PropTypes.object,
   navigation: PropTypes.object.isRequired,
 };
 PostMain.defaultProps = {
@@ -366,6 +365,7 @@ PostMain.defaultProps = {
   likesCount: 0,
   commentsCount: 0,
   taggedMedia: null,
+  taggedEpisode: null,
 };
 
 const actionButtonLabels = {
