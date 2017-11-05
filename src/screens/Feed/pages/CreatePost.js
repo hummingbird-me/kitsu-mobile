@@ -27,6 +27,11 @@ class CreatePost extends React.PureComponent {
 
     return {
       title: 'Create Post',
+      headerTitleStyle: {
+        alignSelf: 'center',
+        color: '#FFFFFF',
+        fontSize: 15,
+      },
       headerLeft: <HeaderButton onPress={() => navigation.goBack()} title="Cancel" />,
       headerRight: <HeaderButton highlighted onPress={params.handlePressPost} title="Post" />,
     };

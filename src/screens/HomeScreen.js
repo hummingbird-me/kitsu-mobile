@@ -74,7 +74,7 @@ class HomeScreen extends Component {
               Logged In Profile
             </Text>
           </Button>
-          <Button onPress={() => navigation.navigate('UserLibrary', {
+          <Button onPress={() => navigation.navigate('UserLibraryScreen', {
             profile: {
               id: 5554,
               name: 'Nuck',

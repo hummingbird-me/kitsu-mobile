@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 export const styles = StyleSheet.create({
   bubble: {
@@ -9,5 +8,23 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 20,
     backgroundColor: colors.lightestGrey,
+  },
+  commentActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 14,
+    paddingTop: 5,
+  },
+  commentActionItem: {
+    marginLeft: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  likeIcon: {
+    color: colors.grey,
+    marginRight: 3,
+  },
+  likeIcon__active: {
+    color: colors.red,
   },
 });

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 70,
-    paddingTop: 20,
+    paddingTop: Platform.OS === 'ios' ? 20 : 0,
     backgroundColor: colors.listBackPurple,
   },
   modalButton: {

@@ -534,6 +534,7 @@ Kitsu.define(
     canonicalTitle: '',
     seasonNumber: '',
     number: '',
+    relativeNumber: '',
     titles: '',
     updatedAt: '',
     synopsis: '',
@@ -589,6 +590,9 @@ Kitsu.define(
     updatedAt: '',
     editedAt: '',
     deletedAt: '',
+    drama: {
+      jsonApi: 'hasOne',
+    },
     libraryEntry: {
       jsonApi: 'hasOne',
     },
@@ -600,6 +604,9 @@ Kitsu.define(
     },
     manga: {
       jsonApi: 'hasOne',
+    },
+    votes: {
+      jsonApi: 'hasMany',
     },
   },
   { collectionPath: 'media-reactions' },
@@ -814,12 +821,24 @@ Kitsu.define(
     pastNames: '',
     postLikesCount: '',
     spoiler: '',
+    targetInterest: '',
     title: '',
     topLevelCommentsCount: '',
     updatedAt: '',
+    media: {
+      jsonApi: 'hasOne',
+    },
+    spoiledUnit: {
+      jsonApi: 'hasOne',
+    },
+    targetUser: {
+      jsonApi: 'hasOne',
+    },
+    targetGroup: {
+      jsonApi: 'hasOne',
+    },
     user: {
       jsonApi: 'hasOne',
-      type: 'users',
     },
   },
   { collectionPath: 'posts' },
