@@ -37,7 +37,7 @@ export class Post extends PureComponent {
     like: null,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.mounted = true;
 
     this.fetchComments();

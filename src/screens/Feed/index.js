@@ -23,7 +23,7 @@ class Feed extends React.PureComponent {
   }
 
   state = {
-    activeFeed: 'follower',
+    activeFeed: 'followingFeed',
     refreshing: false,
     data: [],
   }
@@ -32,24 +32,45 @@ class Feed extends React.PureComponent {
     this.fetchFeed();
   }
 
-  onRefresh = () => {
-    this.fetchFeed({ reset: true });
+  onRefresh = async () => {
+    this.setState({ refreshing: true });
+    await this.fetchFeed({ reset: true });
+    this.setState({ refreshing: false });
   }
 
-  setActiveFeed = (feed) => {
-    this.setState({ activeFeed: feed });
-    this.fetchFeed({ reset: true });
+  setActiveFeed = (activeFeed) => {
+    this.setState({
+      activeFeed,
+      data: [],
+      refreshing: true,
+    }, () => {
+      this.fetchFeed({ reset: true });
+    });
   }
 
   cursor = undefined
 
   fetchFeed = async ({ reset = false } = {}) => {
-    this.setState({ refreshing: true });
     const PAGE_SIZE = 5;
+
     if (reset) this.cursor = undefined;
 
     try {
-      const result = await Kitsu.one('followingFeed', this.props.currentUser.id).get({
+      // Following Feed example URL:
+      // /api/edge/feeds/timeline/160571
+      let subPath = this.props.currentUser.id;
+
+      if (this.state.activeFeed === 'animeFeed') {
+        // Anime Feed Example URL:
+        // /api/edge/feeds/interest_timeline/160571-Anime
+        subPath += '-Anime';
+      } else if (this.state.activeFeed === 'mangaFeed') {
+        // Manga Feed Example URL:
+        // /api/edge/feeds/interest_timeline/160571-Manga
+        subPath += '-Manga';
+      }
+
+      const result = await Kitsu.one(this.state.activeFeed, subPath).get({
         include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
         page: {
@@ -103,11 +124,14 @@ class Feed extends React.PureComponent {
       });
 
       this.setState({ data });
-    } catch (err) {
-      console.log('Error while refreshing following feed: ', err);
-    }
+    } catch (error) {
+      console.log('Error while refreshing following feed: ', error);
 
-    this.setState({ refreshing: false });
+      this.setState({
+        data: [],
+        error,
+      });
+    }
   }
 
   navigateToPost = (props) => {
@@ -174,7 +198,7 @@ class Feed extends React.PureComponent {
             keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
-            onEndReachedThreshold={100}
+            onEndReachedThreshold={0.6}
             ListHeaderComponent={(<CreatePostRow onPress={this.navigateToCreatePost} />)}
             refreshControl={(
               <RefreshControl

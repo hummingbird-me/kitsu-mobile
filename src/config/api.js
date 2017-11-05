@@ -805,6 +805,26 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'animeFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/interest_timeline' },
+);
+
+Kitsu.define(
+  'mangaFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/interest_timeline' },
+);
+
+Kitsu.define(
   'posts',
   {
     blocked: '',

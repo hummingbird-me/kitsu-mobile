@@ -145,6 +145,15 @@ export default class PostDetails extends PureComponent {
     const { currentUser, post } = this.props.navigation.state.params;
     const { comment, comments, like, taggedMedia } = this.state;
 
+    const {
+      content,
+      images,
+      postLikesCount,
+      commentsCount,
+      media,
+      spoiledUnit,
+    } = post;
+
     return (
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1, paddingTop: 20, backgroundColor: '#FFFFFF' }}>
         <StatusBar barStyle="dark-content" />
@@ -160,11 +169,13 @@ export default class PostDetails extends PureComponent {
         <View style={{ flex: 1 }}>
           <ScrollView>
             <PostMain
-              content={post.content}
-              likesCount={post.postLikesCount}
-              commentsCount={comments.length}
-              taggedMedia={taggedMedia}
-              navigation={this.props.navigation}
+              content={content}
+              images={images}
+              likesCount={postLikesCount}
+              commentsCount={commentsCount}
+              taggedMedia={media}
+              taggedEpisode={spoiledUnit}
+              navigation={navigation}
             />
 
             <PostActions

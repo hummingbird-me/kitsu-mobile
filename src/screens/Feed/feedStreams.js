@@ -1,18 +1,18 @@
 export const feedStreams = [
   {
-    key: 'follower',
+    key: 'followingFeed',
     label: 'Following',
     title: 'Follower Feed',
     description: 'Shared with all of your followers',
   },
   {
-    key: 'anime',
+    key: 'animeFeed',
     label: 'Anime',
     title: 'Anime Feed',
     description: 'Shared with your followers and all anime fans',
   },
   {
-    key: 'manga',
+    key: 'mangaFeed',
     label: 'Manga',
     title: 'Manga Feed',
     description: 'Shared with your followers and all manga fans',
