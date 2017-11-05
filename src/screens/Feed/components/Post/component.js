@@ -297,9 +297,11 @@ export const MediaTag = ({ media, episode, navigation }) => (
 
 MediaTag.propTypes = {
   media: PropTypes.shape({
-    canonicalTitle: PropTypes.string,
+    canonicalTitle: PropTypes.string.isRequired,
   }).isRequired,
-  episode: PropTypes.number,
+  episode: PropTypes.shape({
+    number: PropTypes.number.isRequired,
+  }),
   navigation: PropTypes.object.isRequired,
 };
 
