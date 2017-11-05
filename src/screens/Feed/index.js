@@ -51,7 +51,7 @@ class Feed extends React.PureComponent {
   cursor = undefined
 
   fetchFeed = async ({ reset = false } = {}) => {
-    const PAGE_SIZE = 5;
+    const PAGE_SIZE = 10;
 
     if (reset) this.cursor = undefined;
 
@@ -105,6 +105,8 @@ class Feed extends React.PureComponent {
       // the app actually knows what kind of post they are and gets the content
       // in the right structure to render them rather than guessing from HTML.
       const imagePattern = /<img[^>]+src="(.+?)"\/?>/ig;
+      const videoPattern = /<a href="(.+?youtube.+?)".+?>.+?<\/a>/ig;
+
       let lastMatch;
       data = data.map((post) => {
         const images = [];
@@ -115,6 +117,18 @@ class Feed extends React.PureComponent {
           images.push(imageUri);
           // eslint-disable-next-line no-param-reassign
           post.content = post.content.replace(imageUri, '');
+        }
+
+        // If they're embedding a video the URL will show up in the content.
+        // Remove it there too.
+        if (post.embed && post.embed.video && post.embed.video.url) {
+          // eslint-disable-next-line no-cond-assign
+          while ((lastMatch = videoPattern.exec(post.contentFormatted)) !== null) {
+            const videoUri = unescape(lastMatch[1]);
+
+            // eslint-disable-next-line no-param-reassign
+            post.content = post.content.replace(videoUri, '');
+          }
         }
 
         return {

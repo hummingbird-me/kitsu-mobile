@@ -6903,9 +6903,9 @@ react-native-vector-icons@~4.1.1:
     prop-types "^15.5.8"
     yargs "^6.3.0"
 
-react-native-youtube@^1.0.0-alpha.4:
-  version "1.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/react-native-youtube/-/react-native-youtube-1.0.0-beta.3.tgz#0dc51c943cd92868c1457880d78dd5ba72b6001a"
+react-native-youtube@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-youtube/-/react-native-youtube-1.0.1.tgz#8d6ee69d88b913b4fa23ed64f99ae8812507745f"
   dependencies:
     prop-types "^15.5.0"
 

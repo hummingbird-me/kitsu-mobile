@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { FlatList, Image, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/Ionicons';
+import YouTube from 'react-native-youtube';
+
 import moment from 'moment';
+
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
-import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -162,6 +165,7 @@ export class Post extends PureComponent {
       createdAt,
       content,
       images,
+      embed,
       media,
       spoiledUnit,
       postLikesCount,
@@ -171,54 +175,56 @@ export class Post extends PureComponent {
     const { comment, latestComment } = this.state;
 
     return (
-      <TouchableWithoutFeedback onPress={this.onPostPress}>
-        <View style={styles.wrap}>
+      <View style={styles.wrap}>
+        <TouchableWithoutFeedback onPress={this.onPostPress}>
           <PostHeader
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
             onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
             name={user.name}
             time={createdAt}
           />
+        </TouchableWithoutFeedback>
 
-          <PostMain
-            content={content}
-            images={images}
-            likesCount={postLikesCount}
-            commentsCount={commentsCount}
-            taggedMedia={media}
-            taggedEpisode={spoiledUnit}
-            navigation={navigation}
-          />
+        <PostMain
+          content={content}
+          images={images}
+          embed={embed}
+          likesCount={postLikesCount}
+          commentsCount={commentsCount}
+          taggedMedia={media}
+          taggedEpisode={spoiledUnit}
+          navigation={navigation}
+          onPress={this.onPostPress}
+        />
 
-          <PostActions
-            isLiked={!!this.state.like}
-            onLikePress={this.toggleLike}
-            onCommentPress={this.focusOnCommentInput}
-            onSharePress={() => {}}
-          />
+        <PostActions
+          isLiked={!!this.state.like}
+          onLikePress={this.toggleLike}
+          onCommentPress={this.focusOnCommentInput}
+          onSharePress={() => {}}
+        />
 
-          <PostFooter>
-            {commentsCount > 0 && !latestComment &&
-              <SceneLoader />
-            }
-            {latestComment && (
-              <PostSection>
-                <Comment comment={latestComment} isTruncated />
-              </PostSection>
-            )}
-
+        <PostFooter>
+          {commentsCount > 0 && !latestComment &&
+            <SceneLoader />
+          }
+          {latestComment && (
             <PostSection>
-              <CommentTextInput
-                currentUser={this.props.currentUser}
-                inputRef={(el) => { this.commentInput = el; }}
-                comment={comment}
-                onCommentChanged={this.onCommentChanged}
-                onSubmit={this.onSubmitComment}
-              />
+              <Comment comment={latestComment} isTruncated />
             </PostSection>
-          </PostFooter>
-        </View>
-      </TouchableWithoutFeedback>
+          )}
+
+          <PostSection>
+            <CommentTextInput
+              currentUser={this.props.currentUser}
+              inputRef={(el) => { this.commentInput = el; }}
+              comment={comment}
+              onCommentChanged={this.onCommentChanged}
+              onSubmit={this.onSubmitComment}
+            />
+          </PostSection>
+        </PostFooter>
+      </View>
     );
   }
 }
@@ -315,59 +321,83 @@ const keyExtractor = (item, index) => index;
 export const PostMain = ({
   content,
   images,
+  embed,
   likesCount,
   commentsCount,
   taggedMedia,
   taggedEpisode,
   navigation,
-}) => (
-  <View style={styles.postMain}>
-    <View style={styles.postContent}>
-      <StyledText color="dark" size="small">{content}</StyledText>
-    </View>
-    {images && images.length > 0 && (
-      <FlatList
-        keyExtractor={keyExtractor}
-        style={[styles.postImagesView, !content && styles.posImagesView__noText]}
-        data={images}
-        renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
-        ItemSeparatorComponent={() => <PostImageSeparator />}
-      />
-    )}
-    {taggedMedia && (
-      <MediaTag
-        media={taggedMedia}
-        episode={taggedEpisode}
-        navigation={navigation}
-      />
-    )}
-    <View style={styles.postStatusRow}>
-      <View style={styles.postStatus}>
-        <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+  onPress,
+}) => {
+  let youTubeVideoId = null;
+  if (embed && embed.video && embed.site_name === 'YouTube') {
+    const chunks = embed.video.url.split('/');
+    youTubeVideoId = chunks[chunks.length - 1];
+  }
+
+  return (
+    <View style={styles.postMain}>
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={styles.postContent}>
+          <StyledText color="dark" size="small">{content}</StyledText>
+        </View>
+      </TouchableWithoutFeedback>
+      {images && images.length > 0 && (
+        <FlatList
+          keyExtractor={keyExtractor}
+          style={[styles.postImagesView, !content && styles.posImagesView__noText]}
+          data={images}
+          renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
+          ItemSeparatorComponent={() => <PostImageSeparator />}
+        />
+      )}
+      {youTubeVideoId && (
+        <YouTube
+          videoId={youTubeVideoId}
+          modestBranding
+          rel={false}
+          style={styles.youTubeEmbed}
+        />
+      )}
+      {taggedMedia && (
+        <MediaTag
+          media={taggedMedia}
+          episode={taggedEpisode}
+          navigation={navigation}
+        />
+      )}
+      <View style={styles.postStatusRow}>
+        <View style={styles.postStatus}>
+          <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+        </View>
+        <View style={styles.postStatus}>
+          <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
+        </View>
       </View>
-      <View style={styles.postStatus}>
-        <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
-      </View>
     </View>
-  </View>
-);
+  );
+};
 
 PostMain.propTypes = {
   content: PropTypes.string,
   images: PropTypes.array,
+  embed: PropTypes.object,
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
   taggedMedia: PropTypes.object,
   taggedEpisode: PropTypes.object,
   navigation: PropTypes.object.isRequired,
+  onPress: PropTypes.func,
 };
 PostMain.defaultProps = {
   content: null,
   images: [],
+  embed: null,
   likesCount: 0,
   commentsCount: 0,
   taggedMedia: null,
   taggedEpisode: null,
+  onPress: null,
 };
 
 const actionButtonLabels = {

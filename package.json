@@ -5,8 +5,7 @@
   "scripts": {
     "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" yarn start",
     "lint": "eslint ./src",
-    "reset":
-      "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
+    "reset": "watchman watch-del-all && rm -rf $TMDIR/react-* && rm -rf node_modules && yarn cache clean",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start:reset": "yarn start --reset-cache",
     "test": "jest",
@@ -52,7 +51,7 @@
     "react-native-swipeable": "^0.4.0",
     "react-native-tab-view": "^0.0.69",
     "react-native-vector-icons": "^4.1.1",
-    "react-native-youtube": "^1.0.0-alpha.4",
+    "react-native-youtube": "^1.0.1",
     "react-navigation": "^1.0.0-beta.9",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
@@ -89,6 +88,8 @@
     "preset": "react-native"
   },
   "rnpm": {
-    "assets": ["src/assets/fonts"]
+    "assets": [
+      "src/assets/fonts"
+    ]
   }
 }

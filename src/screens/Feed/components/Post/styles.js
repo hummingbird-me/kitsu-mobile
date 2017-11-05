@@ -95,4 +95,8 @@ export const styles = StyleSheet.create({
     width: 10,
     backgroundColor: colors.green,
   },
+  youTubeEmbed: {
+    alignSelf: 'stretch',
+    height: 300,
+  },
 });
