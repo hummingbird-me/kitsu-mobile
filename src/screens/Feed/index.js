@@ -175,13 +175,13 @@ class Feed extends React.PureComponent {
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
             onEndReachedThreshold={100}
-            ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
-            refreshControl={
+            ListHeaderComponent={(<CreatePostRow onPress={this.navigateToCreatePost} />)}
+            refreshControl={(
               <RefreshControl
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefresh}
               />
-            }
+            )}
           />
         </View>
       </View>
