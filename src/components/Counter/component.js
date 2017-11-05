@@ -91,6 +91,7 @@ export class Counter extends React.PureComponent {
           {this.state.manualEditMode
             ? (
               <TextInput
+                autoFocus
                 style={styles.manualEditTextInput}
                 defaultValue={this.state.value.toString()}
                 placeholder={this.state.value.toString()}

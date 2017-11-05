@@ -14,7 +14,7 @@ const TextSize = {
 const ImageSize = {
   Tiny: 10,
   Small: 20,
-  Normal: 50,
+  Normal: 30,
 };
 
 function displayRatingFromTwenty(ratingTwenty, type) {
