@@ -20,6 +20,9 @@ import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput
 import { scene } from 'kitsu/screens/Feed/constants';
 import { styles } from './styles';
 
+import { Spoiler } from './PostOverlays/Spoiler';
+import { NotSafeForWork } from './PostOverlays/NotSafeForWork';
+
 // Post
 export class Post extends PureComponent {
   static propTypes = {
@@ -38,6 +41,7 @@ export class Post extends PureComponent {
     comments: [],
     latestComment: null,
     like: null,
+    overlayRemoved: false,
   };
 
   componentDidMount() {
@@ -159,6 +163,12 @@ export class Post extends PureComponent {
     this.commentInput.focus();
   }
 
+  toggleOverlay = () => {
+    this.setState({
+      overlayRemoved: !this.state.overlayRemoved,
+    });
+  }
+
   render() {
     const { navigation } = this.props;
     const {
@@ -167,12 +177,36 @@ export class Post extends PureComponent {
       images,
       embed,
       media,
+      nsfw,
+      spoiler,
       spoiledUnit,
       postLikesCount,
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComment } = this.state;
+    const { comment, latestComment, overlayRemoved } = this.state;
+
+    let postBody = null;
+
+    if (spoiler && !overlayRemoved) {
+      postBody = <Spoiler onPress={this.toggleOverlay} />;
+    } else if (nsfw && !overlayRemoved) {
+      postBody = <NotSafeForWork onPress={this.toggleOverlay} />;
+    } else {
+      postBody = (
+        <PostMain
+          content={content}
+          images={images}
+          embed={embed}
+          likesCount={postLikesCount}
+          commentsCount={commentsCount}
+          taggedMedia={media}
+          taggedEpisode={spoiledUnit}
+          navigation={navigation}
+          onPress={this.onPostPress}
+        />
+      );
+    }
 
     return (
       <View style={styles.wrap}>
@@ -185,17 +219,7 @@ export class Post extends PureComponent {
           />
         </TouchableWithoutFeedback>
 
-        <PostMain
-          content={content}
-          images={images}
-          embed={embed}
-          likesCount={postLikesCount}
-          commentsCount={commentsCount}
-          taggedMedia={media}
-          taggedEpisode={spoiledUnit}
-          navigation={navigation}
-          onPress={this.onPostPress}
-        />
+        {postBody}
 
         <PostActions
           isLiked={!!this.state.like}
