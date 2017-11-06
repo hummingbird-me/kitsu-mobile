@@ -59,7 +59,7 @@
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
     "tcomb-form-native": "^0.6.8",
-    "url": "^0.11.0"
+    "url-parse": "^1.2.0"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.2.12",

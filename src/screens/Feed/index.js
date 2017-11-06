@@ -1,9 +1,10 @@
 import React from 'react';
 import { RefreshControl, StatusBar, View } from 'react-native';
+import { connect } from 'react-redux';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
 import { unescape } from 'lodash';
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { connect } from 'react-redux';
+import URL from 'url-parse';
 
 import { Kitsu } from 'kitsu/config/api';
 import { listBackPurple } from 'kitsu/constants/colors';
@@ -80,8 +81,8 @@ class Feed extends React.PureComponent {
       });
 
       // I need to read the cursor value out of the 'next' link in the result.
-      const url = new URL(result.links.next);
-      this.cursor = url.searchParams.get('page[cursor]');
+      const url = new URL(result.links.next, true);
+      this.cursor = url.query['page[cursor]'];
 
       // Discard the activity groups and activities for now, flattening to
       // just the subject of the activity.
