@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
+import { View, ScrollView, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { Pill } from 'kitsu/components/Pill';
-import { styles } from './styles';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
+import { styles } from './styles';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
 class FavoritesScreen extends React.Component {
@@ -184,32 +184,82 @@ class FavoritesScreen extends React.Component {
   };
 
   onPressPill = async (category, index, isSubCategory) => {
-    const categories = this.state.categories.slice();
-    if (!isSubCategory) {
-      if (category.selected) {
-        categories.splice(index + 1, category.subCategoryLength);
-      } else {
-        let subCategories;
-        try {
-          subCategories = await this.getSubCategories(category.id);
-          categories[index].subCategoryLength = subCategories.length;
-          for (let i = 0; i < subCategories.length; i += 1) {
-            subCategories[i].color = category.color;
-            subCategories[i].isSubCategory = true;
+    let categories = null;
+    if (category.selected) {
+      categories = await this.onRemoveFavorite(category.favoritesId, index);
+    } else {
+      categories = await this.onFaveCategory(category.id, index);
+    }
+    if (categories) {
+      if (!isSubCategory) {
+        if (category.selected) {
+          const start = index + 1;
+          for (let i = start; i < start + category.subCategoryLength; i += 1) {
+            if (categories[i].favoritesId) {
+              this.onRemoveFavorite(categories[i].favoritesId, i);
+            }
           }
-          categories.splice(index + 1, 0, ...subCategories);
-        } catch (e) {
-          console.log(e);
+          categories.splice(start, category.subCategoryLength);
+        } else {
+          let subCategories;
+          try {
+            subCategories = await this.getSubCategories(category.id);
+            categories[index].subCategoryLength = subCategories.length;
+            for (let i = 0; i < subCategories.length; i += 1) {
+              subCategories[i].color = category.color;
+              subCategories[i].isSubCategory = true;
+            }
+            categories.splice(index + 1, 0, ...subCategories);
+          } catch (e) {
+            console.log(e);
+          }
         }
       }
-    }
-    categories[index].selected = !category.selected;
+      categories[index].selected = !category.selected;
 
-    if (Platform.OS === 'android') {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
+      if (Platform.OS === 'android') {
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+      }
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      this.setState({ categories });
     }
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    this.setState({ categories });
+  };
+
+  onFaveCategory = async (id, index) => {
+    const { id: userId } = this.props.currentUser;
+    try {
+      const res = await Kitsu.create('categoryFavorites', {
+        category: {
+          id,
+        },
+        user: {
+          id: userId,
+        },
+      });
+      const categories = this.state.categories.slice();
+      categories[index].favoritesId = res.id;
+      return categories;
+    } catch (e) {
+      console.log(e);
+    }
+    return null;
+  };
+
+  onRemoveFavorite = async (id, index) => {
+    if (id) {
+      setToken(this.props.accessToken);
+      try {
+        await Kitsu.destroy('categoryFavorites', id);
+        const categories = this.state.categories.slice();
+        categories[index].favoritesId = null;
+        return categories;
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log('id doesnt exist', id, index);
+    }
+    return null;
   };
 
   getSubCategories = async (parentId) => {
@@ -241,24 +291,29 @@ class FavoritesScreen extends React.Component {
           <Text style={styles.tutorialText}>
             Tap categories you like, we’ll use these to help you find new anime and manga.
           </Text>
-          <View style={styles.pillsWrapper}>
-            {categories.map((v, i) => (
-              <Pill
-                key={`${v.title + i}`}
-                selected={v.selected}
-                onPress={() => this.onPressPill(v, i, v.isSubCategory)}
-                color={v.color}
-                title={v.title}
-              />
-            ))}
-          </View>
-          <Button
-            disabled={buttonDisabled}
-            style={{ marginHorizontal: 0, marginTop: 36 }}
-            onPress={this.onConfirm}
-            title={buttonTitle}
-            titleStyle={styles.buttonTitleStyle}
-          />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
+          >
+            <View style={styles.pillsWrapper}>
+              {categories.map((v, i) => (
+                <Pill
+                  key={`${v.title + i}`}
+                  selected={v.selected}
+                  onPress={() => this.onPressPill(v, i, v.isSubCategory)}
+                  color={v.color}
+                  title={v.title}
+                />
+              ))}
+            </View>
+            <Button
+              disabled={buttonDisabled}
+              style={{ marginHorizontal: 0, marginTop: 36 }}
+              onPress={this.onConfirm}
+              title={buttonTitle}
+              titleStyle={styles.buttonTitleStyle}
+            />
+          </ScrollView>
         </View>
       </View>
     );

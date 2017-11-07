@@ -139,14 +139,11 @@ Kitsu.define(
   { collectionPath: 'users' },
 );
 
-Kitsu.define(
-  'profileLinks',
-  {
-    createdAt: '',
-    updatedAt: '',
-    url: '',
-  },
-);
+Kitsu.define('profileLinks', {
+  createdAt: '',
+  updatedAt: '',
+  url: '',
+});
 
 Kitsu.define(
   'libraryEntries',
@@ -660,6 +657,25 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'categoryFavorites',
+  {
+    createdAt: '',
+    updatedAt: '',
+    id: '',
+    type: '',
+    category: {
+      jsonApi: 'hasOne',
+      type: 'categories',
+    },
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'category-favorites' },
+);
+
+Kitsu.define(
   'activities',
   {
     status: '',
@@ -697,7 +713,8 @@ Kitsu.define(
   { collectionPath: 'feeds/notifications' },
 );
 
-Kitsu.define('comments',
+Kitsu.define(
+  'comments',
   {
     createdAt: '',
     updatedAt: '',
