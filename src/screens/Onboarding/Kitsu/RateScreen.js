@@ -62,7 +62,7 @@ const SimpleRating = ({ disabled, onRate, selected }) => (
   </View>
 );
 
-const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged }) => (
+const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged, onSlidingComplete }) => (
   <View>
     {/* Star, 4.5 */
       ratingTwenty ? (
@@ -86,6 +86,7 @@ const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged }) => (
       minimumTrackTintColor={colors.tabRed}
       maximumTrackTintColor={'rgb(43, 33, 32)'}
       onValueChange={sliderValueChanged}
+      onSlidingComplete={onSlidingComplete}
       style={styles.modalSlider}
     />
   </View>
@@ -140,15 +141,42 @@ class RateScreen extends React.Component {
       // toggle
       this.setState({ selected: null, ratingTwenty: null });
     } else {
-      this.setState(
-        { selected: rating, ratingTwenty: getRatingTwentyForText(rating, 'simple') },
-        this.onRate,
-      );
+      const ratingTwenty = getRatingTwentyForText(rating, 'simple');
+      this.setState({ selected: rating, ratingTwenty });
+      this.rate(ratingTwenty);
     }
   };
 
-  onRate = async () => {
-    const { ratingTwenty, currentIndex, topMedia } = this.state;
+  onSlidingComplete = (ratingTwenty) => {
+    if (ratingTwenty > 0.5) {
+      this.setState({ ratingTwenty });
+      this.rate(ratingTwenty);
+    } else {
+      this.setState({ ratingTwenty: 0 });
+      this.rate(null);
+    }
+  };
+
+  onDone = () => {
+    const { account, type } = this.props.navigation.state.params;
+    // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
+    // origin flag set true to indicate the text should be for the next media, manga.
+    if ((account === 'kitsu' && type === 'manga') || account === 'aozora') {
+      const navigateTabs = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+      });
+      this.props.navigation.dispatch(navigateTabs);
+    } else {
+      this.props.navigation.navigate('ManageLibrary', {
+        account,
+        origin: true,
+      });
+    }
+  };
+
+  rate = async (ratingTwenty) => {
+    const { currentIndex, topMedia } = this.state;
     const { accessToken, userId } = this.props;
     setToken(accessToken);
 
@@ -192,24 +220,6 @@ class RateScreen extends React.Component {
     }
   };
 
-  onDone = () => {
-    const { account, type } = this.props.navigation.state.params;
-    // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
-    // origin flag set true to indicate the text should be for the next media, manga.
-    if ((account === 'kitsu' && type === 'manga') || account === 'aozora') {
-      const navigateTabs = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-      });
-      this.props.navigation.dispatch(navigateTabs);
-    } else {
-      this.props.navigation.navigate('ManageLibrary', {
-        account,
-        origin: true,
-      });
-    }
-  };
-
   updateHeaderButton = (ratedCount = 0) => {
     const target = 5 - ratedCount;
     this.props.navigation.setParams({
@@ -246,7 +256,6 @@ class RateScreen extends React.Component {
   };
 
   sliderValueChanged = (ratingTwenty) => {
-    const { ratingSystem } = this.props;
     if (ratingTwenty > 0.5) {
       this.setState({ ratingTwenty });
     } else {
@@ -292,6 +301,7 @@ class RateScreen extends React.Component {
         ) : (
           <StarRating
             sliderValueChanged={this.sliderValueChanged}
+            onSlidingComplete={this.onSlidingComplete}
             ratingTwenty={ratingTwenty}
             ratingSystem={ratingSystem}
           />
@@ -327,6 +337,7 @@ function getSimpleTextForRatingTwenty(rating) {
   } else if (rating <= 20) {
     return 'great';
   }
+  return null;
 }
 
 function getRatingTwentyForText(text, type) {

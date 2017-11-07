@@ -196,6 +196,9 @@ class FavoritesScreen extends React.Component {
           const start = index + 1;
           for (let i = start; i < start + category.subCategoryLength; i += 1) {
             if (categories[i].favoritesId) {
+              // also remove subpills if they're selected as well.
+              // there is no way to unfave them at once.
+              // there is also no error checking for this request.
               this.onRemoveFavorite(categories[i].favoritesId, i);
             }
           }
@@ -203,12 +206,14 @@ class FavoritesScreen extends React.Component {
         } else {
           let subCategories;
           try {
+            // select the category and get subcategories of it
             subCategories = await this.getSubCategories(category.id);
             categories[index].subCategoryLength = subCategories.length;
             for (let i = 0; i < subCategories.length; i += 1) {
               subCategories[i].color = category.color;
               subCategories[i].isSubCategory = true;
             }
+            // append subcategories to current array
             categories.splice(index + 1, 0, ...subCategories);
           } catch (e) {
             console.log(e);
@@ -222,6 +227,9 @@ class FavoritesScreen extends React.Component {
       }
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       this.setState({ categories });
+    } else {
+      // TODO: handle network errors here.
+      console.log('network request failed somehow.');
     }
   };
 
