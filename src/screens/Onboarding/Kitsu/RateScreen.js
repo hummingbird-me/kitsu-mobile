@@ -10,6 +10,7 @@ import {
   Platform,
   UIManager,
   LayoutAnimation,
+  ActivityIndicator,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
@@ -103,6 +104,9 @@ class RateScreen extends React.Component {
     ratingTwenty: 0,
     ratedCount: 0,
     selected: null,
+    pageIndex: 1,
+    pageLimit: 10,
+    loadingMore: false,
   };
 
   componentWillMount() {
@@ -114,7 +118,7 @@ class RateScreen extends React.Component {
   }
 
   onSwipe = (index) => {
-    const { currentIndex, topMedia, ratingTwenty, selected } = this.state;
+    const { currentIndex, topMedia, ratingTwenty } = this.state;
     let ratedCount = this.state.ratedCount;
     const updatedTopMedia = topMedia.slice();
     if (ratingTwenty) {
@@ -122,7 +126,9 @@ class RateScreen extends React.Component {
       ratedCount += 1;
       this.updateHeaderButton(ratedCount);
     }
-    console.log(topMedia[index].ratingTwenty);
+    if (index >= topMedia.length - 4) {
+      this.loadMoreMedia();
+    }
     this.setState({
       currentIndex: index,
       topMedia: updatedTopMedia,
@@ -182,6 +188,14 @@ class RateScreen extends React.Component {
 
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
+
+    // I'm not creative today.
+    const updatedTopMedia = topMedia.slice();
+    updatedTopMedia[currentIndex].isRating = true;
+    this.setState({
+      topMedia: updatedTopMedia,
+    });
+
     try {
       let response = null;
       if (libraryEntryId) {
@@ -208,15 +222,20 @@ class RateScreen extends React.Component {
           },
         });
       }
-      const updatedTopMedia = topMedia.slice();
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].ratingTwenty = ratingTwenty;
       updatedTopMedia[currentIndex].status = 'completed';
+      updatedTopMedia[currentIndex].isRating = false;
       this.setState({
         topMedia: updatedTopMedia,
       });
+      this.carousel.snapToNext();
     } catch (e) {
       console.log(e, 'error patching rating');
+      updatedTopMedia[currentIndex].isRating = false;
+      this.setState({
+        topMedia: updatedTopMedia,
+      });
     }
   };
 
@@ -249,9 +268,44 @@ class RateScreen extends React.Component {
       }));
       this.setState({
         topMedia,
+        pageIndex: 1,
       });
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  loadMoreMedia = async () => {
+    const { loadingMore, pageLimit, pageIndex } = this.state;
+    const { type } = this.props.navigation.state.params;
+    if (!loadingMore) {
+      this.setState({ loadingMore: true });
+      try {
+        let topMedia = await Kitsu.findAll(type, {
+          fields: {
+            [type]: 'posterImage,titles',
+          },
+          page: {
+            limit: pageLimit,
+            offset: pageIndex * pageLimit,
+          },
+          sort: '-averageRating',
+        });
+        topMedia = topMedia.map(v => ({
+          ...v,
+          status: null,
+          ratingTwenty: null,
+          libraryEntryId: null,
+          isRating: false,
+        }));
+        this.setState({
+          loadingMore: false,
+          pageIndex: pageIndex + 1,
+          topMedia: this.state.topMedia.concat(topMedia),
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -265,9 +319,22 @@ class RateScreen extends React.Component {
 
   renderItem = ({ item }) => (
     <Image style={styles.poster} source={{ uri: item.posterImage.large }}>
-      <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterContainer}>
-        <Text style={styles.showTitle}>{item.titles.en}</Text>
-      </LinearGradient>
+      {item.isRating ? (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ActivityIndicator color={'white'} size={'large'} />
+        </View>
+      ) : (
+        <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterContainer}>
+          <Text style={styles.showTitle}>{item.titles.en}</Text>
+        </LinearGradient>
+      )}
     </Image>
   );
 
