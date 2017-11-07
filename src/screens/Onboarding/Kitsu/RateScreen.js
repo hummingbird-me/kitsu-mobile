@@ -120,22 +120,13 @@ class RateScreen extends React.Component {
   }
 
   onSwipe = (index) => {
-    const { currentIndex, topMedia, ratingTwenty } = this.state;
-    let ratedCount = this.state.ratedCount;
-    const updatedTopMedia = topMedia.slice();
-    if (ratingTwenty) {
-      updatedTopMedia[currentIndex].rating = ratingTwenty;
-      ratedCount += 1;
-      this.updateHeaderButton(ratedCount);
-    }
+    const { topMedia } = this.state;
     if (index >= topMedia.length - 4) {
       this.loadMoreMedia();
     }
     this.setState({
       currentIndex: index,
-      topMedia: updatedTopMedia,
       ratingTwenty: topMedia[index].ratingTwenty,
-      ratedCount,
       selected: getSimpleTextForRatingTwenty(topMedia[index].ratingTwenty),
       wantToWatch: topMedia[index].status === 'planned',
       loadingWtW: false,
@@ -239,8 +230,17 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = ratingTwenty;
       updatedTopMedia[currentIndex].status = 'completed';
       updatedTopMedia[currentIndex].isRating = false;
+      let ratedCount = 0;
+      // eslint-disable-next-line
+      for (let media of updatedTopMedia) {
+        if (media.ratingTwenty) {
+          ratedCount += 1;
+        }
+      }
+      this.updateHeaderButton(ratedCount);
       this.setState({
         topMedia: updatedTopMedia,
+        ratedCount,
       });
       this.carousel.snapToNext();
     } catch (e) {
