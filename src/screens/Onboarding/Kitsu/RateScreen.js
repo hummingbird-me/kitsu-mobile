@@ -16,7 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
-import { Kitsu } from 'kitsu/config/api';
+import { Kitsu, setToken } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
@@ -97,8 +97,8 @@ class RateScreen extends React.Component {
   };
 
   state = {
-    currentIndex: 0,
     topMedia: [],
+    currentIndex: 0,
     ratingTwenty: 0,
     ratedCount: 0,
     selected: null,
@@ -115,13 +115,20 @@ class RateScreen extends React.Component {
   onSwipe = (index) => {
     const { currentIndex, topMedia, ratingTwenty, selected } = this.state;
     let ratedCount = this.state.ratedCount;
-    const animes = topMedia.slice();
-    animes[currentIndex].rating = ratingTwenty;
-    if (ratingTwenty || selected) {
+    const updatedTopMedia = topMedia.slice();
+    if (ratingTwenty) {
+      updatedTopMedia[currentIndex].rating = ratingTwenty;
       ratedCount += 1;
       this.updateHeaderButton(ratedCount);
     }
-    this.setState({ currentIndex: index, ratingTwenty: 0, ratedCount, selected: null });
+    console.log(topMedia[index].ratingTwenty);
+    this.setState({
+      currentIndex: index,
+      topMedia: updatedTopMedia,
+      ratingTwenty: topMedia[index].ratingTwenty,
+      ratedCount,
+      selected: getSimpleTextForRatingTwenty(topMedia[index].ratingTwenty),
+    });
   };
 
   onRateSimple = (rating) => {
@@ -130,14 +137,65 @@ class RateScreen extends React.Component {
     }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     if (this.state.selected === rating) {
-      this.setState({ selected: null });
+      // toggle
+      this.setState({ selected: null, ratingTwenty: null });
     } else {
-      this.setState({ selected: rating });
+      this.setState(
+        { selected: rating, ratingTwenty: getRatingTwentyForText(rating, 'simple') },
+        this.onRate,
+      );
+    }
+  };
+
+  onRate = async () => {
+    const { ratingTwenty, currentIndex, topMedia } = this.state;
+    const { accessToken, userId } = this.props;
+    setToken(accessToken);
+
+    const id = topMedia[currentIndex].id;
+    const libraryEntryId = topMedia[currentIndex].libraryEntryId;
+    try {
+      let response = null;
+      if (libraryEntryId) {
+        // patch the previous rating
+        response = await Kitsu.update('libraryEntries', {
+          ratingTwenty,
+          id: libraryEntryId,
+          anime: {
+            id,
+          },
+          user: {
+            id: userId,
+          },
+        });
+      } else {
+        response = await Kitsu.create('libraryEntries', {
+          status: 'completed',
+          ratingTwenty,
+          anime: {
+            id,
+          },
+          user: {
+            id: userId,
+          },
+        });
+      }
+      const updatedTopMedia = topMedia.slice();
+      updatedTopMedia[currentIndex].libraryEntryId = response.id;
+      updatedTopMedia[currentIndex].ratingTwenty = ratingTwenty;
+      updatedTopMedia[currentIndex].status = 'completed';
+      this.setState({
+        topMedia: updatedTopMedia,
+      });
+    } catch (e) {
+      console.log(e, 'error patching rating');
     }
   };
 
   onDone = () => {
     const { account, type } = this.props.navigation.state.params;
+    // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
+    // origin flag set true to indicate the text should be for the next media, manga.
     if ((account === 'kitsu' && type === 'manga') || account === 'aozora') {
       const navigateTabs = NavigationActions.reset({
         index: 0,
@@ -164,7 +222,7 @@ class RateScreen extends React.Component {
   fetchTrendingMedia = async () => {
     const { type } = this.props.navigation.state.params;
     try {
-      const topMedia = await Kitsu.findAll(type, {
+      let topMedia = await Kitsu.findAll(type, {
         fields: {
           [type]: 'posterImage,titles',
         },
@@ -173,6 +231,12 @@ class RateScreen extends React.Component {
         },
         sort: '-averageRating',
       });
+      topMedia = topMedia.map(v => ({
+        ...v,
+        status: null,
+        ratingTwenty: null,
+        libraryEntryId: null,
+      }));
       this.setState({
         topMedia,
       });
@@ -242,6 +306,48 @@ class RateScreen extends React.Component {
   }
 }
 
+const mapStateToProps = ({ auth, user }) => {
+  const { loading, error, currentUser } = user;
+  const { ratingSystem, id: userId } = currentUser;
+  const { access_token: accessToken } = auth.tokens;
+  return { loading, error, accessToken, userId, ratingSystem };
+};
+
+export default connect(mapStateToProps, null)(RateScreen);
+
+function getSimpleTextForRatingTwenty(rating) {
+  if (!rating) {
+    return null;
+  } else if (rating <= 5) {
+    return 'awful';
+  } else if (rating <= 9) {
+    return 'meh';
+  } else if (rating <= 15) {
+    return 'good';
+  } else if (rating <= 20) {
+    return 'great';
+  }
+}
+
+function getRatingTwentyForText(text, type) {
+  if (type !== 'simple') {
+    throw new Error('This function should only be used in simple ratings.');
+  }
+
+  switch (text) {
+    case 'awful':
+      return 2;
+    case 'meh':
+      return 8;
+    case 'good':
+      return 14;
+    case 'great':
+      return 20;
+    default:
+      throw new Error(`Unknown text while determining simple rating type: "${text}"`);
+  }
+}
+
 function displayRatingFromTwenty(ratingTwenty, type) {
   if (type === 'regular') {
     return Math.round(ratingTwenty / 2) / 2;
@@ -287,10 +393,3 @@ function getRatingTwentyProperties(ratingTwenty, type) {
 
   return ratingProperties;
 }
-
-const mapStateToProps = ({ user }) => {
-  const { loading, error, currentUser } = user;
-  const { ratingSystem } = currentUser;
-  return { loading, error, ratingSystem };
-};
-export default connect(mapStateToProps, null)(RateScreen);

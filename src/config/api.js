@@ -172,6 +172,7 @@ Kitsu.define(
     },
     anime: {
       jsonApi: 'hasOne',
+      type: 'anime',
     },
     manga: {
       jsonApi: 'hasOne',
