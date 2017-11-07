@@ -105,13 +105,13 @@ export const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonWatchlist: {
-    width: 140,
+    minWidth: 140,
     backgroundColor: colors.transparent,
     borderRadius: 8,
     borderColor: colors.grey,
     borderWidth: StyleSheet.hairlineWidth,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
   buttonWatchlistTitle: {
     color: colors.white,
@@ -166,5 +166,11 @@ export const styles = StyleSheet.create({
   textGreat: {
     color: colors.blue,
     fontWeight: '700',
+  },
+  loadingWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.7)',
   },
 });

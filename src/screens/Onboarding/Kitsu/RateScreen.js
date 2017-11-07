@@ -80,7 +80,7 @@ const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged, onSlidingC
       )}
     {/* Slider */}
     <Slider
-      minimumValue={0}
+      minimumValue={ratingSystem === 'regular' ? 0 : 1}
       maximumValue={20}
       step={ratingSystem === 'regular' ? 2 : 1}
       value={ratingTwenty}
@@ -107,6 +107,8 @@ class RateScreen extends React.Component {
     pageIndex: 1,
     pageLimit: 10,
     loadingMore: false,
+    wantToWatch: false,
+    loadingWtW: false, // want to watch button loading state.
   };
 
   componentWillMount() {
@@ -135,6 +137,8 @@ class RateScreen extends React.Component {
       ratingTwenty: topMedia[index].ratingTwenty,
       ratedCount,
       selected: getSimpleTextForRatingTwenty(topMedia[index].ratingTwenty),
+      wantToWatch: topMedia[index].status === 'planned',
+      loadingWtW: false,
     });
   };
 
@@ -154,7 +158,9 @@ class RateScreen extends React.Component {
   };
 
   onSlidingComplete = (ratingTwenty) => {
-    if (ratingTwenty > 0.5) {
+    const { ratingSystem } = this.props;
+    if ((ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
+    (ratingSystem === 'advanced' && ratingTwenty >= 1.5)) {
       this.setState({ ratingTwenty });
       this.rate(ratingTwenty);
     } else {
@@ -181,15 +187,22 @@ class RateScreen extends React.Component {
     }
   };
 
+  onPressWantToWatch = () => {
+    const { wantToWatch } = this.state;
+    if (!wantToWatch) {
+      this.addToWatchlist();
+    } else {
+      this.removeFromWatchlist();
+    }
+  };
+
   rate = async (ratingTwenty) => {
     const { currentIndex, topMedia } = this.state;
     const { accessToken, userId } = this.props;
-    setToken(accessToken);
-
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
+    setToken(accessToken);
 
-    // I'm not creative today.
     const updatedTopMedia = topMedia.slice();
     updatedTopMedia[currentIndex].isRating = true;
     this.setState({
@@ -239,6 +252,81 @@ class RateScreen extends React.Component {
     }
   };
 
+  addToWatchlist = async () => {
+    const { currentIndex, topMedia } = this.state;
+    const { accessToken, userId } = this.props;
+    const libraryEntryId = topMedia[currentIndex].libraryEntryId;
+    const id = topMedia[currentIndex].id;
+    setToken(accessToken);
+
+    this.setState({ loadingWtW: true });
+    try {
+      let response = null;
+      if (libraryEntryId) {
+        response = await Kitsu.update('libraryEntries', {
+          status: 'planned',
+          id: libraryEntryId,
+          anime: {
+            id,
+          },
+          user: {
+            id: userId,
+          },
+        });
+      } else {
+        response = await Kitsu.create('libraryEntries', {
+          status: 'planned',
+          anime: {
+            id,
+          },
+          user: {
+            id: userId,
+          },
+        });
+      }
+
+      const updatedTopMedia = topMedia.slice();
+      updatedTopMedia[currentIndex].ratingTwenty = null;
+      updatedTopMedia[currentIndex].libraryEntryId = response.id;
+      updatedTopMedia[currentIndex].status = 'planned';
+      this.setState({
+        topMedia: updatedTopMedia,
+        wantToWatch: true,
+        loadingWtW: false,
+        ratingTwenty: null,
+        selected: null,
+      });
+    } catch (e) {
+      this.setState({ loadingWtW: false });
+      console.log(e, 'error adding to watchlist');
+    }
+  };
+
+  removeFromWatchlist = async () => {
+    const { currentIndex, topMedia } = this.state;
+    const { accessToken, userId } = this.props;
+    setToken(accessToken);
+    this.setState({ loadingWtW: true });
+    try {
+      const { libraryEntryId } = topMedia[currentIndex];
+      await Kitsu.destroy('libraryEntries', libraryEntryId);
+      const updatedTopMedia = topMedia.slice();
+      updatedTopMedia[currentIndex].libraryEntryId = null;
+      updatedTopMedia[currentIndex].status = null;
+      updatedTopMedia[currentIndex].ratingTwenty = null;
+      this.setState({
+        topMedia: updatedTopMedia,
+        wantToWatch: false,
+        loadingWtW: false,
+        ratingTwenty: null,
+        selected: null,
+      });
+    } catch (e) {
+      this.setState({ loadingWtW: false });
+      console.log(e, 'error removing from watchlist');
+    }
+  };
+
   updateHeaderButton = (ratedCount = 0) => {
     const target = 5 - ratedCount;
     this.props.navigation.setParams({
@@ -265,6 +353,7 @@ class RateScreen extends React.Component {
         status: null,
         ratingTwenty: null,
         libraryEntryId: null,
+        isRating: false,
       }));
       this.setState({
         topMedia,
@@ -310,24 +399,37 @@ class RateScreen extends React.Component {
   };
 
   sliderValueChanged = (ratingTwenty) => {
-    if (ratingTwenty > 0.5) {
+    const { ratingSystem } = this.props;
+    if ((ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
+    (ratingSystem === 'advanced' && ratingTwenty >= 1.5)) {
       this.setState({ ratingTwenty });
     } else {
       this.setState({ ratingTwenty: 0 });
     }
   };
 
+  renderRatingComponents = () => {
+    const { ratingSystem } = this.props;
+    const { ratingTwenty, selected, wantToWatch } = this.state;
+    if (wantToWatch) {
+      return <View />;
+    }
+    return (ratingSystem === 'simple' ? (
+      <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
+    ) : (
+      <StarRating
+        sliderValueChanged={this.sliderValueChanged}
+        onSlidingComplete={this.onSlidingComplete}
+        ratingTwenty={ratingTwenty}
+        ratingSystem={ratingSystem}
+      />
+    ));
+  }
+
   renderItem = ({ item }) => (
     <Image style={styles.poster} source={{ uri: item.posterImage.large }}>
       {item.isRating ? (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+        <View style={styles.loadingWrapper}>
           <ActivityIndicator color={'white'} size={'large'} />
         </View>
       ) : (
@@ -339,8 +441,7 @@ class RateScreen extends React.Component {
   );
 
   render() {
-    const { ratingSystem } = this.props;
-    const { topMedia, currentIndex, ratingTwenty, selected } = this.state;
+    const { topMedia, wantToWatch, loadingWtW } = this.state;
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>Rate the anime you{"'"}ve seen</Text>
@@ -363,19 +464,16 @@ class RateScreen extends React.Component {
             onSnapToItem={this.onSwipe}
           />
         </View>
-        {ratingSystem === 'simple' ? (
-          <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
-        ) : (
-          <StarRating
-            sliderValueChanged={this.sliderValueChanged}
-            onSlidingComplete={this.onSlidingComplete}
-            ratingTwenty={ratingTwenty}
-            ratingSystem={ratingSystem}
-          />
-        )}
+        {this.renderRatingComponents()}
         <View style={styles.buttonWatchlistWrapper}>
-          <TouchableOpacity style={styles.buttonWatchlist}>
-            <Text style={styles.buttonWatchlistTitle}>Want to watch</Text>
+          <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
+            {loadingWtW ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={styles.buttonWatchlistTitle}>
+                {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
