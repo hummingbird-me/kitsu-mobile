@@ -104,8 +104,10 @@ class SelectAccountScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { loading, error, conflicts: accounts } = user;
+const mapStateToProps = ({ onboarding, user }) => {
+  const { conflicts: accounts } = onboarding;
+  const { loading, error } = user;
   return { loading, error, accounts };
 };
+
 export default connect(mapStateToProps, { resolveAccountConflicts })(SelectAccountScreen);

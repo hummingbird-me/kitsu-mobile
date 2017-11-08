@@ -3,7 +3,6 @@ import * as types from 'kitsu/store/types';
 
 const INITIAL_STATE = {
   currentUser: {},
-  conflicts: null,
   loading: false,
   error: '',
   signingUp: false,
@@ -29,42 +28,6 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         error: '',
       };
     case types.FETCH_CURRENT_USER_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-    case types.GET_ACCOUNT_CONFLICTS:
-      return {
-        ...state,
-        loading: true,
-        error: '',
-      };
-    case types.GET_ACCOUNT_CONFLICTS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        conflicts: action.payload,
-      };
-    case types.GET_ACCOUNT_CONFLICTS_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-    case types.RESOLVE_ACCOUNT_CONFLICTS:
-      return {
-        ...state,
-        loading: true,
-        error: '',
-      };
-    case types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        conflicts: null,
-      };
-    case types.RESOLVE_ACCOUNT_CONFLICTS_FAIL:
       return {
         ...state,
         loading: false,

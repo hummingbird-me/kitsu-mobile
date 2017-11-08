@@ -103,8 +103,9 @@ class CreateAccountScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { loading, error, currentUser, conflicts: accounts } = user;
+const mapStateToProps = ({ onboarding, user }) => {
+  const { conflicts: accounts } = onboarding;
+  const { loading, error, currentUser } = user;
   return { loading, error, currentUser, accounts };
 };
 export default connect(mapStateToProps, { updateGeneralSettings })(CreateAccountScreen);

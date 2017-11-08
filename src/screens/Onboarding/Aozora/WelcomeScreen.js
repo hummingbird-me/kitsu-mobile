@@ -35,8 +35,9 @@ const WelcomeScreen = ({ navigation, accounts }) => (
   </View>
 );
 
-const mapStateToProps = ({ user }) => {
-  const { loading, error, conflicts: accounts } = user;
+const mapStateToProps = ({ onboarding, user }) => {
+  const { conflicts: accounts } = onboarding;
+  const { loading, error } = user;
   return { loading, error, accounts };
 };
 export default connect(mapStateToProps, null)(WelcomeScreen);
