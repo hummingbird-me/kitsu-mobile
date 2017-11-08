@@ -71,6 +71,7 @@ class CreatePost extends React.PureComponent {
         content,
         targetInterest,
         user: {
+          type: 'users',
           id: currentUserId,
         },
       });
