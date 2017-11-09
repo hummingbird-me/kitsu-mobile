@@ -1,10 +1,10 @@
 import * as types from 'kitsu/store/types';
 
 const initialState = {
-  lastScreenName: 'WelcomeScreen',
+  screenName: 'WelcomeScreen', // continue where user left off
   conflicts: null,
   selectedAccount: '', // select acc screen
-  alreadyRatedAnime: false, // library selection
+  hasRatedAnimes: false, // kitsu user library selection
   topMedia: [], // rate screen data
   favoriteCategories: [], // favorite categories data
   loading: false,
@@ -13,6 +13,31 @@ const initialState = {
 
 export const appReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.SET_SCREEN_NAME:
+      return {
+        ...state,
+        screenName: action.payload,
+      };
+    case types.SET_SELECTED_ACCOUNT:
+      return {
+        ...state,
+        selectedAccount: action.payload,
+      };
+    case types.UPDATE_TOP_MEDIA:
+      return {
+        ...state,
+        topMedia: action.payload,
+      };
+    case types.UPDATE_FAVORITES:
+      return {
+        ...state,
+        favoriteCategories: action.payload,
+      };
+    case types.RATE_ANIMES:
+      return {
+        ...state,
+        hasRatedAnimes: true,
+      };
     case types.GET_ACCOUNT_CONFLICTS:
       return {
         ...state,

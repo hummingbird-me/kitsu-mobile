@@ -1,6 +1,26 @@
 import * as types from 'kitsu/store/types';
 import { kitsuConfig } from 'kitsu/config/env';
 
+export const setScreenName = screenName => (dispatch) => {
+  dispatch({ type: types.SET_SCREEN_NAME, payload: screenName });
+};
+
+export const setSelectedAccount = account => (dispatch) => {
+  dispatch({ type: types.SET_SELECTED_ACCOUNT, payload: account });
+};
+
+export const updateTopMedia = media => (dispatch) => {
+  dispatch({ type: types.UPDATE_TOP_MEDIA, payload: media });
+};
+
+export const updateFavorites = favs => (dispatch) => {
+  dispatch({ type: types.UPDATE_FAVORITES, payload: favs });
+};
+
+export const rateAnimes = () => (dispatch) => {
+  dispatch({ type: types.RATE_ANIMES });
+};
+
 export const getAccountConflicts = () => async (dispatch, getState) => {
   dispatch({ type: types.GET_ACCOUNT_CONFLICTS });
   const token = getState().auth.tokens.access_token;

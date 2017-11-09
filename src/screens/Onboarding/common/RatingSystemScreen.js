@@ -10,6 +10,7 @@ import meh from 'kitsu/assets/img/ratings/meh.png';
 import starFilled from 'kitsu/assets/img/ratings/star.png';
 import { fox } from 'kitsu/assets/img/onboarding/';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
+import { setScreenName } from 'kitsu/store/onboarding/actions';
 import { styles } from './styles';
 
 const getRatingSystem = (type) => {
@@ -78,9 +79,8 @@ class RatingSystemScreen extends React.Component {
     const success = await this.props.updateLibrarySettings({ ratingSystem });
     const { navigate, state } = this.props.navigation;
     if (success) {
-      navigate('ManageLibrary', {
-        account: state.params.account,
-      });
+      this.props.setScreenName('ManageLibrary');
+      navigate('ManageLibrary');
     }
   };
 

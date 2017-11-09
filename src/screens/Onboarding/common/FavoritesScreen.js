@@ -4,6 +4,7 @@ import { Button } from 'kitsu/components/Button';
 import { Pill } from 'kitsu/components/Pill';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
+import { setScreenName } from 'kitsu/store/onboarding/actions';
 import { styles } from './styles';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
@@ -178,9 +179,8 @@ class FavoritesScreen extends React.Component {
   }
 
   onConfirm = () => {
-    this.props.navigation.navigate('RatingSystemScreen', {
-      account: this.props.navigation.state.params.account,
-    });
+    this.props.setScreenName('RatingSystemScreen');
+    this.props.navigation.navigate('RatingSystemScreen');
   };
 
   onPressPill = async (category, index, isSubCategory) => {
@@ -333,4 +333,4 @@ const mapStateToProps = ({ auth, user }) => ({
   currentUser: user.currentUser,
 });
 
-export default connect(mapStateToProps, {})(FavoritesScreen);
+export default connect(mapStateToProps, { setScreenName })(FavoritesScreen);
