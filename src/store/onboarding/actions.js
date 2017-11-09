@@ -1,6 +1,10 @@
 import * as types from 'kitsu/store/types';
 import { kitsuConfig } from 'kitsu/config/env';
 
+export const completeOnboarding = () => (dispatch) => {
+  dispatch({ type: types.COMPLETE_ONBOARDING });
+};
+
 export const setScreenName = screenName => (dispatch) => {
   dispatch({ type: types.SET_SCREEN_NAME, payload: screenName });
 };

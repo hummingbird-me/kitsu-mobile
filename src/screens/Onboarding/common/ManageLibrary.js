@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationActions } from 'react-navigation';
+import { completeOnboarding } from 'kitsu/store/onboarding/actions';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
 import { styles } from './styles';
@@ -27,7 +28,7 @@ const getButtonTitle = (selectedAccount, hasRatedAnimes, buttonIndex) => {
   return 'Import MyAnimelist or Anilist account';
 };
 
-const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex) => {
+const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex, completeOnboarding) => {
   if (buttonIndex === 0) {
     if (selectedAccount === 'aozora') {
       navigation.navigate('RateScreen', { type: 'manga', selectedAccount });
@@ -37,6 +38,7 @@ const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex) => {
       navigation.navigate('RateScreen', { type: 'anime', selectedAccount });
     }
   } else if (selectedAccount === 'aozora' || (selectedAccount === 'kitsu' && hasRatedAnimes)) {
+    completeOnboarding();
     const navigateTabs = NavigationActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
@@ -52,6 +54,10 @@ class ManageLibrary extends React.Component {
     backEnabled: true,
   };
 
+  completeOnboarding = () => {
+    this.props.completeOnboarding();
+  };
+
   render() {
     const { navigation, hasRatedAnimes, selectedAccount, accounts } = this.props;
     return (
@@ -62,13 +68,15 @@ class ManageLibrary extends React.Component {
           </Text>
           <Button
             style={{ marginTop: 24 }}
-            onPress={() => onPress(navigation, selectedAccount, hasRatedAnimes, 0)}
+            onPress={() =>
+              onPress(navigation, selectedAccount, hasRatedAnimes, 0, this.completeOnboarding)}
             title={getButtonTitle(selectedAccount, hasRatedAnimes, 0)}
             titleStyle={styles.buttonTitleStyle}
           />
           <Button
             style={styles.buttonSecondary}
-            onPress={() => onPress(navigation, selectedAccount, hasRatedAnimes, 1)}
+            onPress={() =>
+              onPress(navigation, selectedAccount, hasRatedAnimes, 1, this.completeOnboarding)}
             title={getButtonTitle(selectedAccount, hasRatedAnimes, 1)}
             titleStyle={styles.buttonSecondaryTitle}
           />
@@ -89,4 +97,4 @@ const mapStateToProps = ({ onboarding, user }) => {
     selectedAccount,
   };
 };
-export default connect(mapStateToProps, null)(ManageLibrary);
+export default connect(mapStateToProps, { completeOnboarding })(ManageLibrary);

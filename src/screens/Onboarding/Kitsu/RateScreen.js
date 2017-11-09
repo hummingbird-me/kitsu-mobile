@@ -18,7 +18,7 @@ import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { updateTopMedia, rateAnimes } from 'kitsu/store/onboarding/actions';
+import { updateTopMedia, rateAnimes, completeOnboarding } from 'kitsu/store/onboarding/actions';
 import * as colors from 'kitsu/constants/colors';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
@@ -161,10 +161,11 @@ class RateScreen extends React.Component {
   };
 
   onDone = () => {
-    const { selectedAccount, hasRatedAnimes } = this.props;
+    const { selectedAccount, hasRatedAnimes, completeOnboarding } = this.props;
     // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
     // origin flag set true to indicate the text should be for the next media, manga.
     if ((selectedAccount === 'kitsu' && hasRatedAnimes) || selectedAccount === 'aozora') {
+      this.props.completeOnboarding();
       const navigateTabs = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
@@ -484,7 +485,7 @@ const mapStateToProps = ({ onboarding, auth, user }) => {
   return { loading, selectedAccount, hasRatedAnimes, error, topMedia, accessToken, userId, ratingSystem };
 };
 
-export default connect(mapStateToProps, { updateTopMedia, rateAnimes })(RateScreen);
+export default connect(mapStateToProps, { updateTopMedia, rateAnimes, completeOnboarding })(RateScreen);
 
 function getSimpleTextForRatingTwenty(rating) {
   if (!rating) {

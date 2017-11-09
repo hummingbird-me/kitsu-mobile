@@ -36,7 +36,6 @@ class SplashScreen extends Component {
         key: null,
       });
     } else if (authorized) {
-      console.log('hey')
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
