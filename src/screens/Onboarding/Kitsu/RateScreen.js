@@ -18,6 +18,7 @@ import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
+import { updateTopMedia, rateAnimes } from 'kitsu/store/onboarding/actions';
 import * as colors from 'kitsu/constants/colors';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
@@ -99,7 +100,6 @@ class RateScreen extends React.Component {
   };
 
   state = {
-    topMedia: [],
     currentIndex: 0,
     ratingTwenty: 0,
     ratedCount: 0,
@@ -120,7 +120,7 @@ class RateScreen extends React.Component {
   }
 
   onSwipe = (index) => {
-    const { topMedia } = this.state;
+    const { topMedia } = this.props;
     if (index >= topMedia.length - 4) {
       this.loadMoreMedia();
     }
@@ -161,20 +161,18 @@ class RateScreen extends React.Component {
   };
 
   onDone = () => {
-    const { account, type } = this.props.navigation.state.params;
+    const { selectedAccount, hasRatedAnimes } = this.props;
     // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
     // origin flag set true to indicate the text should be for the next media, manga.
-    if ((account === 'kitsu' && type === 'manga') || account === 'aozora') {
+    if ((selectedAccount === 'kitsu' && hasRatedAnimes) || selectedAccount === 'aozora') {
       const navigateTabs = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
       });
       this.props.navigation.dispatch(navigateTabs);
     } else {
-      this.props.navigation.navigate('ManageLibrary', {
-        account,
-        origin: true,
-      });
+      this.props.navigation.navigate('ManageLibrary');
+      this.props.rateAnimes();
     }
   };
 
@@ -188,17 +186,15 @@ class RateScreen extends React.Component {
   };
 
   rate = async (ratingTwenty) => {
-    const { currentIndex, topMedia } = this.state;
-    const { accessToken, userId } = this.props;
+    const { currentIndex } = this.state;
+    const { accessToken, topMedia, userId } = this.props;
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     setToken(accessToken);
 
     const updatedTopMedia = topMedia.slice();
     updatedTopMedia[currentIndex].isRating = true;
-    this.setState({
-      topMedia: updatedTopMedia,
-    });
+    this.props.updateTopMedia(updatedTopMedia);
 
     try {
       let response = null;
@@ -238,23 +234,21 @@ class RateScreen extends React.Component {
         }
       }
       this.updateHeaderButton(ratedCount);
+      this.props.updateTopMedia(updatedTopMedia);
       this.setState({
-        topMedia: updatedTopMedia,
         ratedCount,
       });
       this.carousel.snapToNext();
     } catch (e) {
       console.log(e, 'error patching rating');
       updatedTopMedia[currentIndex].isRating = false;
-      this.setState({
-        topMedia: updatedTopMedia,
-      });
+      this.props.updateTopMedia(updatedTopMedia);
     }
   };
 
   addToWatchlist = async () => {
-    const { currentIndex, topMedia } = this.state;
-    const { accessToken, userId } = this.props;
+    const { currentIndex } = this.state;
+    const { accessToken, topMedia, userId } = this.props;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     const id = topMedia[currentIndex].id;
     setToken(accessToken);
@@ -289,8 +283,8 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].status = 'planned';
+      this.props.updateTopMedia(updatedTopMedia);
       this.setState({
-        topMedia: updatedTopMedia,
         wantToWatch: true,
         loadingWtW: false,
         ratingTwenty: null,
@@ -303,8 +297,8 @@ class RateScreen extends React.Component {
   };
 
   removeFromWatchlist = async () => {
-    const { currentIndex, topMedia } = this.state;
-    const { accessToken, userId } = this.props;
+    const { currentIndex } = this.state;
+    const { accessToken, topMedia } = this.props;
     setToken(accessToken);
     this.setState({ loadingWtW: true });
     try {
@@ -314,8 +308,8 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].libraryEntryId = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].ratingTwenty = null;
+      this.props.updateTopMedia(updatedTopMedia);
       this.setState({
-        topMedia: updatedTopMedia,
         wantToWatch: false,
         loadingWtW: false,
         ratingTwenty: null,
@@ -355,8 +349,8 @@ class RateScreen extends React.Component {
         libraryEntryId: null,
         isRating: false,
       }));
+      this.props.updateTopMedia(topMedia);
       this.setState({
-        topMedia,
         pageIndex: 1,
       });
     } catch (e) {
@@ -390,8 +384,8 @@ class RateScreen extends React.Component {
         this.setState({
           loadingMore: false,
           pageIndex: pageIndex + 1,
-          topMedia: this.state.topMedia.concat(topMedia),
         });
+        this.props.updateTopMedia(this.props.topMedia.concat(topMedia));
       } catch (e) {
         console.log(e);
       }
@@ -441,7 +435,8 @@ class RateScreen extends React.Component {
   );
 
   render() {
-    const { topMedia, wantToWatch, loadingWtW } = this.state;
+    const { topMedia } = this.props;
+    const { wantToWatch, loadingWtW } = this.state;
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>Rate the anime you{"'"}ve seen</Text>
@@ -481,14 +476,15 @@ class RateScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ auth, user }) => {
+const mapStateToProps = ({ onboarding, auth, user }) => {
+  const { topMedia, selectedAccount, hasRatedAnimes } = onboarding;
   const { loading, error, currentUser } = user;
   const { ratingSystem, id: userId } = currentUser;
   const { access_token: accessToken } = auth.tokens;
-  return { loading, error, accessToken, userId, ratingSystem };
+  return { loading, selectedAccount, hasRatedAnimes, error, topMedia, accessToken, userId, ratingSystem };
 };
 
-export default connect(mapStateToProps, null)(RateScreen);
+export default connect(mapStateToProps, { updateTopMedia, rateAnimes })(RateScreen);
 
 function getSimpleTextForRatingTwenty(rating) {
   if (!rating) {

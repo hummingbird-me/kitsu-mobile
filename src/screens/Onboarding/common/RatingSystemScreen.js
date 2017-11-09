@@ -77,10 +77,8 @@ class RatingSystemScreen extends React.Component {
   onConfirm = async () => {
     const { ratingSystem } = this.state;
     const success = await this.props.updateLibrarySettings({ ratingSystem });
-    console.log(success);
     if (success) {
-      console.log('hehe');
-      this.props.setScreenName('ManageLibrary');
+      // this.props.setScreenName('ManageLibrary');
       this.props.navigation.navigate('ManageLibrary');
     }
   };
