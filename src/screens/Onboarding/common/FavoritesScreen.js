@@ -4,178 +4,21 @@ import { Button } from 'kitsu/components/Button';
 import { Pill } from 'kitsu/components/Pill';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { setScreenName } from 'kitsu/store/onboarding/actions';
+import { setScreenName, updateFavorites } from 'kitsu/store/onboarding/actions';
 import { styles } from './styles';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
 class FavoritesScreen extends React.Component {
-  state = {
-    categories: [
-      {
-        title: 'Action',
-        selected: false,
-        subCategoryLength: 0,
-        id: 150,
-      },
-      {
-        title: 'Adventure',
-        selected: false,
-        subCategoryLength: 0,
-        id: 157,
-      },
-      {
-        title: 'Comedy',
-        selected: false,
-        subCategoryLength: 0,
-        id: 160,
-      },
-      // {
-      //   title: 'Ecchi',
-      //   selected: false,
-      //   subCategoryLength: 0,
-      // },
-      {
-        title: 'Fantasy',
-        selected: false,
-        subCategoryLength: 0,
-        id: 156,
-      },
-      {
-        title: 'Harem',
-        selected: false,
-        subCategoryLength: 0,
-        id: 165,
-      },
-      {
-        title: 'Psychological',
-        selected: false,
-        subCategoryLength: 0,
-        id: 232,
-      },
-      {
-        title: 'Romance',
-        selected: false,
-        subCategoryLength: 0,
-        id: 164,
-      },
-      {
-        title: 'Science Fiction',
-        selected: false,
-        subCategoryLength: 0,
-        id: 155,
-      },
-      {
-        title: 'Super Power',
-        selected: false,
-        subCategoryLength: 0,
-        id: 47,
-      },
-      {
-        title: 'Fantasy World',
-        selected: false,
-        subCategoryLength: 0,
-        id: 52,
-      },
-      {
-        title: 'Paralel Universe',
-        selected: false,
-        subCategoryLength: 0,
-        id: 147,
-      },
-      {
-        title: 'Past',
-        selected: false,
-        subCategoryLength: 0,
-        id: 49,
-      },
-      {
-        title: 'Coming of Age',
-        selected: false,
-        subCategoryLength: 0,
-        id: 185,
-      },
-      {
-        title: 'Crime',
-        selected: false,
-        subCategoryLength: 0,
-        id: 175,
-      },
-      {
-        title: 'Cooking',
-        selected: false,
-        subCategoryLength: 0,
-        id: 18,
-      },
-      {
-        title: 'Daily Life',
-        selected: false,
-        subCategoryLength: 0,
-        id: 169,
-      },
-      {
-        title: 'Disaster',
-        selected: false,
-        subCategoryLength: 0,
-        id: 176,
-      },
-      {
-        title: 'Friendship',
-        selected: false,
-        subCategoryLength: 0,
-        id: 167,
-      },
-      {
-        title: 'Law and Order',
-        selected: false,
-        subCategoryLength: 0,
-        id: 183,
-      },
-      {
-        title: 'Military',
-        selected: false,
-        subCategoryLength: 0,
-        id: 207,
-      },
-      {
-        title: 'Politics',
-        selected: false,
-        subCategoryLength: 0,
-        id: 171,
-      },
-      {
-        title: 'School Life',
-        selected: false,
-        subCategoryLength: 0,
-        id: 172,
-      },
-      {
-        title: 'Sports',
-        selected: false,
-        subCategoryLength: 0,
-        id: 180,
-      },
-      {
-        title: 'Revenge',
-        selected: false,
-        subCategoryLength: 0,
-        id: 178,
-      },
-      {
-        title: 'Magical Girl',
-        selected: false,
-        subCategoryLength: 0,
-        id: 37,
-      },
-    ],
-  };
-
   componentDidMount() {
-    const categories = this.state.categories.slice();
+    const categories = this.props.favoriteCategories.slice();
     for (let i = 0; i < categories.length; i += 1) {
       const index = i % 5;
-      categories[i].color = COLOR_LIST[index];
+      // set colors if pills are not colored yet.
+      if (!categories[i].color) {
+        categories[i].color = COLOR_LIST[index];
+      }
     }
-    this.setState({ categories });
+    this.props.updateFavorites(categories);
   }
 
   onConfirm = () => {
@@ -226,7 +69,7 @@ class FavoritesScreen extends React.Component {
         UIManager.setLayoutAnimationEnabledExperimental(true);
       }
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      this.setState({ categories });
+      this.props.updateFavorites(categories);
     } else {
       // TODO: handle network errors here.
       console.log('network request failed somehow.');
@@ -244,7 +87,7 @@ class FavoritesScreen extends React.Component {
           id: userId,
         },
       });
-      const categories = this.state.categories.slice();
+      const categories = this.props.favoriteCategories.slice();
       categories[index].favoritesId = res.id;
       return categories;
     } catch (e) {
@@ -258,7 +101,7 @@ class FavoritesScreen extends React.Component {
       setToken(this.props.accessToken);
       try {
         await Kitsu.destroy('categoryFavorites', id);
-        const categories = this.state.categories.slice();
+        const categories = this.props.favoriteCategories.slice();
         categories[index].favoritesId = null;
         return categories;
       } catch (e) {
@@ -290,7 +133,7 @@ class FavoritesScreen extends React.Component {
   };
 
   render() {
-    const { categories } = this.state;
+    const { favoriteCategories: categories } = this.props;
     const buttonDisabled = categories.filter(v => v.selected).length < 5;
     const buttonTitle = buttonDisabled ? 'Pick at least 5' : 'Looks good!';
     return (
@@ -306,7 +149,7 @@ class FavoritesScreen extends React.Component {
             <View style={styles.pillsWrapper}>
               {categories.map((v, i) => (
                 <Pill
-                  key={`${v.title + i}`}
+                  key={v.id}
                   selected={v.selected}
                   onPress={() => this.onPressPill(v, i, v.isSubCategory)}
                   color={v.color}
@@ -328,9 +171,10 @@ class FavoritesScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ auth, user }) => ({
+const mapStateToProps = ({ onboarding, auth, user }) => ({
+  favoriteCategories: onboarding.favoriteCategories,
   accessToken: auth.tokens.access_token,
   currentUser: user.currentUser,
 });
 
-export default connect(mapStateToProps, { setScreenName })(FavoritesScreen);
+export default connect(mapStateToProps, { setScreenName, updateFavorites })(FavoritesScreen);

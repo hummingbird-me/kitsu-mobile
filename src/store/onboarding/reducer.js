@@ -1,4 +1,5 @@
 import * as types from 'kitsu/store/types';
+import favoriteCategories from './favoriteCategories';
 
 const initialState = {
   screenName: 'WelcomeScreen', // continue where user left off
@@ -6,12 +7,12 @@ const initialState = {
   selectedAccount: '', // select acc screen
   hasRatedAnimes: false, // kitsu user library selection
   topMedia: [], // rate screen data
-  favoriteCategories: [], // favorite categories data
+  favoriteCategories, // favorite categories data
   loading: false,
   error: '',
 };
 
-export const appReducer = (state = initialState, action) => {
+export const onboardingReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.SET_SCREEN_NAME:
       return {

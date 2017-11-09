@@ -67,7 +67,7 @@ const RatingSystem = ({ style, type, selected, onSelectSystem }) => {
 
 class RatingSystemScreen extends React.Component {
   state = {
-    ratingSystem: 'simple',
+    ratingSystem: this.props.currentUser.ratingSystem,
   };
 
   onSelectSystem = (accountType) => {
@@ -77,10 +77,11 @@ class RatingSystemScreen extends React.Component {
   onConfirm = async () => {
     const { ratingSystem } = this.state;
     const success = await this.props.updateLibrarySettings({ ratingSystem });
-    const { navigate, state } = this.props.navigation;
+    console.log(success);
     if (success) {
+      console.log('hehe');
       this.props.setScreenName('ManageLibrary');
-      navigate('ManageLibrary');
+      this.props.navigation.navigate('ManageLibrary');
     }
   };
 
@@ -137,7 +138,7 @@ class RatingSystemScreen extends React.Component {
                 fontSize: 12,
               }}
             >
-              Don't worry, you can change this later!
+              Don{'"'}t worry, you can change this later!
             </Text>
           </View>
         </View>
@@ -146,7 +147,9 @@ class RatingSystemScreen extends React.Component {
   }
 }
 const mapStateToProps = ({ user }) => {
-  const { loading, error } = user;
-  return { loading, error };
+  const { loading, currentUser, error } = user;
+  return { loading, currentUser, error };
 };
-export default connect(mapStateToProps, { updateLibrarySettings })(RatingSystemScreen);
+export default connect(mapStateToProps, { updateLibrarySettings, setScreenName })(
+  RatingSystemScreen,
+);
