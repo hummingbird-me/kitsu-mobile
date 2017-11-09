@@ -24,10 +24,10 @@ const getButtonTitle = (selectedAccount, hasRatedAnimes, buttonIndex) => {
   if (selectedAccount === 'aozora' || (selectedAccount === 'kitsu' && hasRatedAnimes)) {
     return 'Skip for now';
   }
-  return 'Import Myanimelist or Anilist account';
+  return 'Import MyAnimelist or Anilist account';
 };
 
-const onPress = (selectedAccount, hasRatedAnimes, buttonIndex) => {
+const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex) => {
   if (buttonIndex === 0) {
     if (selectedAccount === 'aozora') {
       navigation.navigate('RateScreen', { type: 'manga', selectedAccount });
@@ -62,13 +62,13 @@ class ManageLibrary extends React.Component {
           </Text>
           <Button
             style={{ marginTop: 24 }}
-            onPress={() => onPress(selectedAccount, hasRatedAnimes, 0)}
+            onPress={() => onPress(navigation, selectedAccount, hasRatedAnimes, 0)}
             title={getButtonTitle(selectedAccount, hasRatedAnimes, 0)}
             titleStyle={styles.buttonTitleStyle}
           />
           <Button
             style={styles.buttonSecondary}
-            onPress={() => onPress(selectedAccount, hasRatedAnimes, 1)}
+            onPress={() => onPress(navigation, selectedAccount, hasRatedAnimes, 1)}
             title={getButtonTitle(selectedAccount, hasRatedAnimes, 1)}
             titleStyle={styles.buttonSecondaryTitle}
           />

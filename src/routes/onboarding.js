@@ -72,4 +72,9 @@ const OnboardingStack = StackNavigator(
   },
 );
 
-export default OnboardingStack;
+class Onboarding extends React.PureComponent {
+  render() {
+    return <OnboardingStack screenProps={{ rootNavigation: this.props.navigation }} />;
+  }
+}
+export default Onboarding;

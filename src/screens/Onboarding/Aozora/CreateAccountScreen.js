@@ -4,6 +4,7 @@ import { Button } from 'kitsu/components/Button';
 import { Input } from 'kitsu/components/Input';
 import { connect } from 'react-redux';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
+import { setScreenName } from 'kitsu/store/onboarding/actions';
 import isEmpty from 'lodash/isEmpty';
 import { styles as commonStyles } from '../common/styles';
 
@@ -34,6 +35,7 @@ class CreateAccountScreen extends React.Component {
       if (!isEmpty(valuesToUpdate)) {
         this.props.updateGeneralSettings(valuesToUpdate);
         this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
+        this.props.setScreenName('FavoritesScreen');
         navigation.navigate('FavoritesScreen');
       }
     } else {
@@ -108,4 +110,6 @@ const mapStateToProps = ({ onboarding, user }) => {
   const { loading, error, currentUser } = user;
   return { loading, error, currentUser, accounts };
 };
-export default connect(mapStateToProps, { updateGeneralSettings })(CreateAccountScreen);
+export default connect(mapStateToProps, { updateGeneralSettings, setScreenName })(
+  CreateAccountScreen,
+);

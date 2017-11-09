@@ -2,8 +2,9 @@ import * as types from 'kitsu/store/types';
 import favoriteCategories from './favoriteCategories';
 
 const initialState = {
-  screenName: 'WelcomeScreen', // continue where user left off
+  completed: false,
   conflicts: null,
+  screenName: null, // continue where user left off
   selectedAccount: '', // select acc screen
   hasRatedAnimes: false, // kitsu user library selection
   topMedia: [], // rate screen data
@@ -75,6 +76,8 @@ export const onboardingReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
+    case types.LOGOUT_USER:
+      return initialState;
     default:
       return state;
   }
