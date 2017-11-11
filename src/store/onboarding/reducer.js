@@ -7,7 +7,6 @@ const initialState = {
   screenName: null, // continue where user left off
   selectedAccount: '', // select acc screen
   hasRatedAnimes: false, // kitsu user library selection
-  topMedia: [], // rate screen data
   favoriteCategories, // favorite categories data
   loading: false,
   error: '',
@@ -18,6 +17,7 @@ export const onboardingReducer = (state = initialState, action) => {
     case types.COMPLETE_ONBOARDING:
       return {
         ...initialState,
+        favoriteCategories: [],
         completed: true,
       };
     case types.SET_SCREEN_NAME:
@@ -29,11 +29,6 @@ export const onboardingReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedAccount: action.payload,
-      };
-    case types.UPDATE_TOP_MEDIA:
-      return {
-        ...state,
-        topMedia: action.payload,
       };
     case types.UPDATE_FAVORITES:
       return {

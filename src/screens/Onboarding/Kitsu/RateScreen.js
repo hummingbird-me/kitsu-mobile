@@ -18,7 +18,7 @@ import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { updateTopMedia, rateAnimes, completeOnboarding } from 'kitsu/store/onboarding/actions';
+import { rateAnimes, completeOnboarding } from 'kitsu/store/onboarding/actions';
 import * as colors from 'kitsu/constants/colors';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
@@ -100,27 +100,25 @@ class RateScreen extends React.Component {
   };
 
   state = {
+    topMedia: [],
     currentIndex: 0,
     ratingTwenty: 0,
     ratedCount: 0,
     selected: null,
-    pageIndex: 1,
+    pageIndex: 0,
     pageLimit: 10,
+    fetching: true,
     loadingMore: false,
     wantToWatch: false,
     loadingWtW: false, // want to watch button loading state.
   };
 
-  componentWillMount() {
-    this.updateHeaderButton();
-  }
-
   componentDidMount() {
-    this.fetchTrendingMedia();
+    this.loadInitialMedia();
   }
 
   onSwipe = (index) => {
-    const { topMedia } = this.props;
+    const { topMedia } = this.state;
     if (index >= topMedia.length - 4) {
       this.loadMoreMedia();
     }
@@ -134,10 +132,7 @@ class RateScreen extends React.Component {
   };
 
   onRateSimple = (rating) => {
-    if (Platform.OS === 'android') {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    this.prepareAnimation();
     if (this.state.selected === rating) {
       // toggle
       this.setState({ selected: null, ratingTwenty: null });
@@ -150,8 +145,10 @@ class RateScreen extends React.Component {
 
   onSlidingComplete = (ratingTwenty) => {
     const { ratingSystem } = this.props;
-    if ((ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
-    (ratingSystem === 'advanced' && ratingTwenty >= 1.5)) {
+    if (
+      (ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
+      (ratingSystem === 'advanced' && ratingTwenty >= 1.5)
+    ) {
       this.setState({ ratingTwenty });
       this.rate(ratingTwenty);
     } else {
@@ -163,7 +160,7 @@ class RateScreen extends React.Component {
   onDone = () => {
     const { selectedAccount, hasRatedAnimes, completeOnboarding } = this.props;
     // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
-    // origin flag set true to indicate the text should be for the next media, manga.
+    // hasRatedAnimes flag set true to indicate the text should be for the next media: Manga.
     if ((selectedAccount === 'kitsu' && hasRatedAnimes) || selectedAccount === 'aozora') {
       this.props.completeOnboarding();
       const navigateTabs = NavigationActions.reset({
@@ -187,15 +184,17 @@ class RateScreen extends React.Component {
   };
 
   rate = async (ratingTwenty) => {
-    const { currentIndex } = this.state;
-    const { accessToken, topMedia, userId } = this.props;
+    const { currentIndex, topMedia } = this.state;
+    const { accessToken, userId } = this.props;
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     setToken(accessToken);
 
-    const updatedTopMedia = topMedia.slice();
+    let updatedTopMedia = topMedia.slice();
     updatedTopMedia[currentIndex].isRating = true;
-    this.props.updateTopMedia(updatedTopMedia);
+    this.setState({
+      topMedia: updatedTopMedia,
+    });
 
     try {
       let response = null;
@@ -223,6 +222,7 @@ class RateScreen extends React.Component {
           },
         });
       }
+      updatedTopMedia = updatedTopMedia.slice();
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].ratingTwenty = ratingTwenty;
       updatedTopMedia[currentIndex].status = 'completed';
@@ -235,21 +235,24 @@ class RateScreen extends React.Component {
         }
       }
       this.updateHeaderButton(ratedCount);
-      this.props.updateTopMedia(updatedTopMedia);
       this.setState({
         ratedCount,
+        topMedia: updatedTopMedia,
       });
       this.carousel.snapToNext();
     } catch (e) {
       console.log(e, 'error patching rating');
+      updatedTopMedia = updatedTopMedia.slice();
       updatedTopMedia[currentIndex].isRating = false;
-      this.props.updateTopMedia(updatedTopMedia);
+      this.setState({
+        topMedia: updatedTopMedia,
+      });
     }
   };
 
   addToWatchlist = async () => {
-    const { currentIndex } = this.state;
-    const { accessToken, topMedia, userId } = this.props;
+    const { currentIndex, topMedia } = this.state;
+    const { accessToken, userId } = this.props;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     const id = topMedia[currentIndex].id;
     setToken(accessToken);
@@ -284,8 +287,9 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].status = 'planned';
-      this.props.updateTopMedia(updatedTopMedia);
+      this.prepareAnimation();
       this.setState({
+        topMedia: updatedTopMedia,
         wantToWatch: true,
         loadingWtW: false,
         ratingTwenty: null,
@@ -298,8 +302,8 @@ class RateScreen extends React.Component {
   };
 
   removeFromWatchlist = async () => {
-    const { currentIndex } = this.state;
-    const { accessToken, topMedia } = this.props;
+    const { currentIndex, topMedia } = this.state;
+    const { accessToken } = this.props;
     setToken(accessToken);
     this.setState({ loadingWtW: true });
     try {
@@ -309,8 +313,9 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].libraryEntryId = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].ratingTwenty = null;
-      this.props.updateTopMedia(updatedTopMedia);
+      this.prepareAnimation();
       this.setState({
+        topMedia: updatedTopMedia,
         wantToWatch: false,
         loadingWtW: false,
         ratingTwenty: null,
@@ -331,28 +336,17 @@ class RateScreen extends React.Component {
     });
   };
 
-  fetchTrendingMedia = async () => {
-    const { type } = this.props.navigation.state.params;
+  loadInitialMedia = async () => {
     try {
-      let topMedia = await Kitsu.findAll(type, {
-        fields: {
-          [type]: 'posterImage,titles',
-        },
-        page: {
-          limit: 10,
-        },
-        sort: '-averageRating',
-      });
-      topMedia = topMedia.map(v => ({
-        ...v,
-        status: null,
-        ratingTwenty: null,
-        libraryEntryId: null,
-        isRating: false,
-      }));
-      this.props.updateTopMedia(topMedia);
+      const topMedia = await this.fetchMedia();
+      console.log(topMedia);
+      const ratingTwenty = topMedia[0].ratingTwenty;
       this.setState({
+        topMedia,
+        selected: ratingTwenty && getSimpleTextForRatingTwenty(ratingTwenty),
+        ratingTwenty,
         pageIndex: 1,
+        fetching: false,
       });
     } catch (e) {
       console.log(e);
@@ -360,56 +354,98 @@ class RateScreen extends React.Component {
   };
 
   loadMoreMedia = async () => {
-    const { loadingMore, pageLimit, pageIndex } = this.state;
-    const { type } = this.props.navigation.state.params;
+    const { loadingMore, pageIndex } = this.state;
     if (!loadingMore) {
       this.setState({ loadingMore: true });
       try {
-        let topMedia = await Kitsu.findAll(type, {
-          fields: {
-            [type]: 'posterImage,titles',
-          },
-          page: {
-            limit: pageLimit,
-            offset: pageIndex * pageLimit,
-          },
-          sort: '-averageRating',
-        });
-        topMedia = topMedia.map(v => ({
-          ...v,
-          status: null,
-          ratingTwenty: null,
-          libraryEntryId: null,
-          isRating: false,
-        }));
+        const topMedia = await this.fetchMedia();
         this.setState({
           loadingMore: false,
           pageIndex: pageIndex + 1,
+          topMedia: this.state.topMedia.concat(topMedia),
         });
-        this.props.updateTopMedia(this.props.topMedia.concat(topMedia));
       } catch (e) {
         console.log(e);
       }
     }
   };
 
+  fetchMedia = async () => {
+    const { type } = this.props.navigation.state.params;
+    const { userId } = this.props;
+    const { pageLimit, pageIndex } = this.state;
+    let ratedCount = this.state.ratedCount;
+
+    let topMedia = await Kitsu.findAll(type, {
+      fields: {
+        [type]: 'posterImage,titles',
+      },
+      page: {
+        limit: pageLimit,
+        offset: pageIndex * pageLimit,
+      },
+      sort: '-averageRating',
+    });
+
+    topMedia = await Promise.all(
+      topMedia.map(async (media) => {
+        const response = await Kitsu.findAll('libraryEntries', {
+          fields: {
+            libraryEntries: 'ratingTwenty,status',
+          },
+          filter: {
+            user_id: userId,
+            anime_id: media.id,
+          },
+          page: {
+            limit: 1,
+          },
+        });
+        if (response[0] && response[0].ratingTwenty) {
+          ratedCount += 1;
+        }
+        return {
+          ratingTwenty: null,
+          status: null,
+          libraryEntryId: response[0] && response[0].id,
+          isRating: false,
+          ...response[0],
+          ...media, // media comes after, overriding anime id
+        };
+      }),
+    );
+
+    this.updateHeaderButton(ratedCount);
+    this.setState({ ratedCount });
+    return topMedia;
+  };
+
   sliderValueChanged = (ratingTwenty) => {
     const { ratingSystem } = this.props;
-    if ((ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
-    (ratingSystem === 'advanced' && ratingTwenty >= 1.5)) {
+    if (
+      (ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
+      (ratingSystem === 'advanced' && ratingTwenty >= 1.5)
+    ) {
       this.setState({ ratingTwenty });
     } else {
       this.setState({ ratingTwenty: 0 });
     }
   };
 
+  prepareAnimation = () => {
+    if (Platform.OS === 'android') {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  };
+
   renderRatingComponents = () => {
     const { ratingSystem } = this.props;
     const { ratingTwenty, selected, wantToWatch } = this.state;
     if (wantToWatch) {
-      return <View />;
+      return <View style={{ height: 50 }} />;
     }
-    return (ratingSystem === 'simple' ? (
+    return ratingSystem === 'simple' ? (
       <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
     ) : (
       <StarRating
@@ -418,8 +454,8 @@ class RateScreen extends React.Component {
         ratingTwenty={ratingTwenty}
         ratingSystem={ratingSystem}
       />
-    ));
-  }
+    );
+  };
 
   renderItem = ({ item }) => (
     <Image style={styles.poster} source={{ uri: item.posterImage.large }}>
@@ -436,8 +472,14 @@ class RateScreen extends React.Component {
   );
 
   render() {
-    const { topMedia } = this.props;
-    const { wantToWatch, loadingWtW } = this.state;
+    const { wantToWatch, topMedia, loadingWtW, fetching } = this.state;
+    if (fetching) {
+      return (
+        <View style={[commonStyles.container, { alignItems: 'center' }]}>
+          <ActivityIndicator style={{ marginTop: 80 }} color="white" size="large" />
+        </View>
+      );
+    }
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>Rate the anime you{"'"}ve seen</Text>
@@ -478,14 +520,22 @@ class RateScreen extends React.Component {
 }
 
 const mapStateToProps = ({ onboarding, auth, user }) => {
-  const { topMedia, selectedAccount, hasRatedAnimes } = onboarding;
+  const { selectedAccount, hasRatedAnimes } = onboarding;
   const { loading, error, currentUser } = user;
   const { ratingSystem, id: userId } = currentUser;
   const { access_token: accessToken } = auth.tokens;
-  return { loading, selectedAccount, hasRatedAnimes, error, topMedia, accessToken, userId, ratingSystem };
+  return {
+    loading,
+    selectedAccount,
+    hasRatedAnimes,
+    error,
+    accessToken,
+    userId,
+    ratingSystem,
+  };
 };
 
-export default connect(mapStateToProps, { updateTopMedia, rateAnimes, completeOnboarding })(RateScreen);
+export default connect(mapStateToProps, { rateAnimes, completeOnboarding })(RateScreen);
 
 function getSimpleTextForRatingTwenty(rating) {
   if (!rating) {

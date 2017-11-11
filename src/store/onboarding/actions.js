@@ -13,10 +13,6 @@ export const setSelectedAccount = account => (dispatch) => {
   dispatch({ type: types.SET_SELECTED_ACCOUNT, payload: account });
 };
 
-export const updateTopMedia = media => (dispatch) => {
-  dispatch({ type: types.UPDATE_TOP_MEDIA, payload: media });
-};
-
 export const updateFavorites = favs => (dispatch) => {
   dispatch({ type: types.UPDATE_FAVORITES, payload: favs });
 };
