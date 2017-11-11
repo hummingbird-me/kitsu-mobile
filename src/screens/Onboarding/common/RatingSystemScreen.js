@@ -79,7 +79,9 @@ class RatingSystemScreen extends React.Component {
     const success = await this.props.updateLibrarySettings({ ratingSystem });
     if (success) {
       // this.props.setScreenName('ManageLibrary');
-      this.props.navigation.navigate('ManageLibrary');
+      this.props.navigation.navigate('ManageLibrary', {
+        hasRatedAnimes: this.props.selectedAccount === 'aozora',
+      });
     }
   };
 
@@ -144,9 +146,10 @@ class RatingSystemScreen extends React.Component {
     );
   }
 }
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ onboarding, user }) => {
+  const { selectedAccount } = onboarding;
   const { loading, currentUser, error } = user;
-  return { loading, currentUser, error };
+  return { loading, currentUser, selectedAccount, error };
 };
 export default connect(mapStateToProps, { updateLibrarySettings, setScreenName })(
   RatingSystemScreen,

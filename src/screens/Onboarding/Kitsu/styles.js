@@ -51,8 +51,17 @@ export const styles = StyleSheet.create({
     height: 50,
     fontSize: 14,
   },
+  line: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.darkGrey,
+    marginVertical: 10,
+  },
+  carouselWrapper: {
+    height: 380,
+    marginTop: 10,
+  },
   poster: {
-    width: 260,
+    width: 260, // should match carousel component itemWidth prop value.
     height: 360,
     borderRadius: 8,
     justifyContent: 'flex-end',

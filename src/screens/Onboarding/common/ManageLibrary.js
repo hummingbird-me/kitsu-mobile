@@ -31,11 +31,11 @@ const getButtonTitle = (selectedAccount, hasRatedAnimes, buttonIndex) => {
 const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex, completeOnboarding) => {
   if (buttonIndex === 0) {
     if (selectedAccount === 'aozora') {
-      navigation.navigate('RateScreen', { type: 'manga', selectedAccount });
+      navigation.navigate('RateScreen', { type: 'manga', selectedAccount, hasRatedAnimes: true });
     } else if (hasRatedAnimes) {
-      navigation.navigate('RateScreen', { type: 'manga', selectedAccount });
+      navigation.navigate('RateScreen', { type: 'manga', selectedAccount, hasRatedAnimes: true });
     } else {
-      navigation.navigate('RateScreen', { type: 'anime', selectedAccount });
+      navigation.navigate('RateScreen', { type: 'anime', selectedAccount, hasRatedAnimes: false });
     }
   } else if (selectedAccount === 'aozora' || (selectedAccount === 'kitsu' && hasRatedAnimes)) {
     completeOnboarding();
@@ -59,7 +59,8 @@ class ManageLibrary extends React.Component {
   };
 
   render() {
-    const { navigation, hasRatedAnimes, selectedAccount, accounts } = this.props;
+    const { navigation, selectedAccount, accounts } = this.props;
+    const { hasRatedAnimes } = navigation.state.params;
     return (
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
@@ -87,13 +88,12 @@ class ManageLibrary extends React.Component {
 }
 
 const mapStateToProps = ({ onboarding, user }) => {
-  const { conflicts: accounts, hasRatedAnimes, selectedAccount } = onboarding;
+  const { conflicts: accounts, selectedAccount } = onboarding;
   const { loading, error } = user;
   return {
     loading,
     error,
     accounts,
-    hasRatedAnimes,
     selectedAccount,
   };
 };

@@ -18,7 +18,7 @@ import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { rateAnimes, completeOnboarding } from 'kitsu/store/onboarding/actions';
+import { completeOnboarding } from 'kitsu/store/onboarding/actions';
 import * as colors from 'kitsu/constants/colors';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
@@ -158,7 +158,8 @@ class RateScreen extends React.Component {
   };
 
   onDone = () => {
-    const { selectedAccount, hasRatedAnimes, completeOnboarding } = this.props;
+    const { selectedAccount, completeOnboarding } = this.props;
+    const { hasRatedAnimes } = this.props.navigation.state.params;
     // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
     // hasRatedAnimes flag set true to indicate the text should be for the next media: Manga.
     if ((selectedAccount === 'kitsu' && hasRatedAnimes) || selectedAccount === 'aozora') {
@@ -169,8 +170,7 @@ class RateScreen extends React.Component {
       });
       this.props.navigation.dispatch(navigateTabs);
     } else {
-      this.props.navigation.navigate('ManageLibrary');
-      this.props.rateAnimes();
+      this.props.navigation.navigate('ManageLibrary', { hasRatedAnimes: true });
     }
   };
 
@@ -339,7 +339,6 @@ class RateScreen extends React.Component {
   loadInitialMedia = async () => {
     try {
       const topMedia = await this.fetchMedia();
-      console.log(topMedia);
       const ratingTwenty = topMedia[0].ratingTwenty;
       this.setState({
         topMedia,
@@ -483,14 +482,8 @@ class RateScreen extends React.Component {
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>Rate the anime you{"'"}ve seen</Text>
-        <View
-          style={{
-            height: StyleSheet.hairlineWidth,
-            backgroundColor: colors.darkGrey,
-            marginVertical: 10,
-          }}
-        />
-        <View style={{ height: 380, marginTop: 10 }}>
+        <View style={styles.line} />
+        <View style={styles.carouselWrapper}>
           <Carousel
             ref={(c) => {
               this.carousel = c;
@@ -520,14 +513,13 @@ class RateScreen extends React.Component {
 }
 
 const mapStateToProps = ({ onboarding, auth, user }) => {
-  const { selectedAccount, hasRatedAnimes } = onboarding;
+  const { selectedAccount } = onboarding;
   const { loading, error, currentUser } = user;
   const { ratingSystem, id: userId } = currentUser;
   const { access_token: accessToken } = auth.tokens;
   return {
     loading,
     selectedAccount,
-    hasRatedAnimes,
     error,
     accessToken,
     userId,
@@ -535,7 +527,7 @@ const mapStateToProps = ({ onboarding, auth, user }) => {
   };
 };
 
-export default connect(mapStateToProps, { rateAnimes, completeOnboarding })(RateScreen);
+export default connect(mapStateToProps, { completeOnboarding })(RateScreen);
 
 function getSimpleTextForRatingTwenty(rating) {
   if (!rating) {
