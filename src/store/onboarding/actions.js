@@ -1,8 +1,25 @@
 import * as types from 'kitsu/store/types';
+import { NavigationActions } from 'react-navigation';
 import { kitsuConfig } from 'kitsu/config/env';
+import { Kitsu, setToken } from 'kitsu/config/api';
 
-export const completeOnboarding = () => (dispatch) => {
+export const completeOnboarding = navigation => async (dispatch, getState) => {
   dispatch({ type: types.COMPLETE_ONBOARDING });
+  const { user, auth } = getState();
+  const { id } = user.currentUser;
+  const token = auth.tokens.access_token;
+  setToken(token);
+  try {
+    await Kitsu.update('users', { id, status: 'registered' });
+    dispatch({ type: types.COMPLETE_ONBOARDING_SUCCESS });
+    const navigateTabs = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+    });
+    navigation.dispatch(navigateTabs);
+  } catch (e) {
+    dispatch({ type: types.COMPLETE_ONBOARDING_FAIL, payload: e });
+  }
 };
 
 export const setScreenName = screenName => (dispatch) => {
@@ -15,10 +32,6 @@ export const setSelectedAccount = account => (dispatch) => {
 
 export const updateFavorites = favs => (dispatch) => {
   dispatch({ type: types.UPDATE_FAVORITES, payload: favs });
-};
-
-export const rateAnimes = () => (dispatch) => {
-  dispatch({ type: types.RATE_ANIMES });
 };
 
 export const getAccountConflicts = () => async (dispatch, getState) => {

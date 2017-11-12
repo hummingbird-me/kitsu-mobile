@@ -6,7 +6,6 @@ const initialState = {
   conflicts: null,
   screenName: null, // continue where user left off
   selectedAccount: '', // select acc screen
-  hasRatedAnimes: false, // kitsu user library selection
   favoriteCategories, // favorite categories data
   loading: false,
   error: '',
@@ -34,11 +33,6 @@ export const onboardingReducer = (state = initialState, action) => {
       return {
         ...state,
         favoriteCategories: action.payload,
-      };
-    case types.RATE_ANIMES:
-      return {
-        ...state,
-        hasRatedAnimes: true,
       };
     case types.GET_ACCOUNT_CONFLICTS:
       return {

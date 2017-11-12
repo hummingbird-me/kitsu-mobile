@@ -84,7 +84,7 @@ const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged, onSlidingC
       minimumValue={ratingSystem === 'regular' ? 0 : 1}
       maximumValue={20}
       step={ratingSystem === 'regular' ? 2 : 1}
-      value={ratingTwenty}
+      value={ratingTwenty || 0}
       minimumTrackTintColor={colors.tabRed}
       maximumTrackTintColor={'rgb(43, 33, 32)'}
       onValueChange={sliderValueChanged}
@@ -472,6 +472,7 @@ class RateScreen extends React.Component {
 
   render() {
     const { wantToWatch, topMedia, loadingWtW, fetching } = this.state;
+    console.log(topMedia);
     if (fetching) {
       return (
         <View style={[commonStyles.container, { alignItems: 'center' }]}>

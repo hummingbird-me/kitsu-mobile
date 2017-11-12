@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Image, TextInput, Text } from 'react-native';
+import { View, Image, TextInput, Text, Modal } from 'react-native';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { Button } from 'kitsu/components/Button';
 import { ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { completeOnboarding } from 'kitsu/store/onboarding/actions';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
@@ -14,6 +15,7 @@ class ImportDetail extends React.Component {
   };
 
   state = {
+    showModal: false,
     errMessage: null,
     loading: false,
     username: '',
@@ -24,7 +26,7 @@ class ImportDetail extends React.Component {
     const item = navigation.state.params.item;
     setToken(accessToken);
     const kind = item.title === 'MyAnimeList' ? 'my-anime-list' : 'anilist';
-    this.setState({ loading: true });
+    this.setState({ loading: true, errMessage: null });
     try {
       const res = await Kitsu.create('listImports', {
         user: { id: currentUser.id },
@@ -33,25 +35,40 @@ class ImportDetail extends React.Component {
         kind,
       });
       this.setState({
+        showModal: true,
         loading: false,
         errMessage: res.errorMessage,
       });
     } catch (e) {
       // TODO: we may have crashes here.
-      // console.log('failed import', e);
+      console.log('failed import', e);
       this.setState({
+        showModal: true,
         errMessage: e && e[0].title,
         loading: false,
       });
     }
   };
 
-  onFinish = (navigation) => {
-    // TODO: fetch import list when went back.
+  onFinish = () => {
+    this.setState(
+      {
+        showModal: false,
+      },
+      !this.state.errMessage // determines modal button behavior
+        ? () => {
+          this.props.completeOnboarding(this.props.navigation);
+        }
+        : null,
+    );
+  };
+
+  onCloseModal = () => {
+    this.setState({ showModal: false });
   };
 
   render() {
-    const { loading, username } = this.state;
+    const { loading, username, errMessage } = this.state;
     const item = this.props.navigation.state.params.item;
     return (
       <View style={commonStyles.container}>
@@ -85,6 +102,50 @@ class ImportDetail extends React.Component {
           title={`Start ${item.title} Import`}
           loading={loading}
         />
+        <Modal
+          animationType={'fade'}
+          visible={this.state.showModal}
+          transparent
+          onRequestClose={this.onCloseModal}
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              alignItems: 'center',
+            }}
+          >
+            <View style={[styles.card, { marginTop: 100, padding: 8 }]}>
+              {!errMessage ? (
+                <View>
+                  <Text style={styles.importModalTitle}>
+                    Hang tight! We{"'"}re importing your data!
+                  </Text>
+                  <Text style={styles.importModalText}>
+                    Your {item.title} import will continue in the background. We{"'"}ll send you a
+                    notification when your import has completed!
+                  </Text>
+                </View>
+              ) : (
+                <View>
+                  <Text style={styles.importModalTitle}>Bummer!</Text>
+                  <Text
+                    style={[
+                      styles.importModalText,
+                      {
+                        marginBottom: 4,
+                        minWidth: 240,
+                      },
+                    ]}
+                  >
+                    {errMessage}
+                  </Text>
+                </View>
+              )}
+              <Button onPress={this.onFinish} title={'Done'} loading={loading} />
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -95,4 +156,4 @@ const mapStateToProps = ({ auth, user }) => ({
   accessToken: auth.tokens.access_token,
 });
 
-export default connect(mapStateToProps, {})(ImportDetail);
+export default connect(mapStateToProps, { completeOnboarding })(ImportDetail);

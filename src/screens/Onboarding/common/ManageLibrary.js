@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
@@ -28,7 +27,7 @@ const getButtonTitle = (selectedAccount, hasRatedAnimes, buttonIndex) => {
   return 'Import MyAnimelist or Anilist account';
 };
 
-const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex, completeOnboarding) => {
+const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex, _completeOnboarding) => {
   if (buttonIndex === 0) {
     if (selectedAccount === 'aozora') {
       navigation.navigate('RateScreen', { type: 'manga', selectedAccount, hasRatedAnimes: true });
@@ -38,12 +37,7 @@ const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex, compl
       navigation.navigate('RateScreen', { type: 'anime', selectedAccount, hasRatedAnimes: false });
     }
   } else if (selectedAccount === 'aozora' || (selectedAccount === 'kitsu' && hasRatedAnimes)) {
-    completeOnboarding();
-    const navigateTabs = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-    });
-    navigation.dispatch(navigateTabs);
+    _completeOnboarding();
   } else {
     navigation.navigate('ImportLibrary');
   }
@@ -55,7 +49,7 @@ class ManageLibrary extends React.Component {
   };
 
   completeOnboarding = () => {
-    this.props.completeOnboarding();
+    this.props.completeOnboarding(this.props.navigation);
   };
 
   render() {
