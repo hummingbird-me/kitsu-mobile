@@ -68,7 +68,7 @@ class ImportDetail extends React.Component {
   };
 
   render() {
-    const { loading, username, errMessage } = this.state;
+    const { loading, username, errMessage, showModal } = this.state;
     const item = this.props.navigation.state.params.item;
     return (
       <View style={commonStyles.container}>
@@ -104,7 +104,7 @@ class ImportDetail extends React.Component {
         />
         <Modal
           animationType={'fade'}
-          visible={this.state.showModal}
+          visible={showModal}
           transparent
           onRequestClose={this.onCloseModal}
         >
