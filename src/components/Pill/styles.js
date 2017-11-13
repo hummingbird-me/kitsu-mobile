@@ -16,6 +16,13 @@ export const styles = StyleSheet.create({
   containerSelected: {
     backgroundColor: colors.offBlack,
   },
+  contentWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 40,
+  },
   row: {
     flexDirection: 'row',
   },
