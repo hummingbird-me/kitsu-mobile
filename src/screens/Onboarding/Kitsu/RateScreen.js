@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  StyleSheet,
   Slider,
   Text,
   Image,
@@ -20,6 +19,10 @@ import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
 import * as colors from 'kitsu/constants/colors';
+import awful from 'kitsu/assets/img/ratings/awful.png';
+import meh from 'kitsu/assets/img/ratings/meh.png';
+import good from 'kitsu/assets/img/ratings/good.png';
+import great from 'kitsu/assets/img/ratings/great.png';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
 
@@ -32,7 +35,7 @@ const SimpleRating = ({ disabled, onRate, selected }) => (
           selected && selected !== 'awful' && styles.imageSimpleShadowBackground,
         ]}
       />
-      <Image source={require('kitsu/assets/img/ratings/awful.png')} style={styles.imageSimple} />
+      <Image source={awful} style={styles.imageSimple} />
     </TouchableOpacity>
     <TouchableOpacity onPress={() => onRate('meh')} disabled={disabled}>
       <View
@@ -41,7 +44,7 @@ const SimpleRating = ({ disabled, onRate, selected }) => (
           selected && selected !== 'meh' && styles.imageSimpleShadowBackground,
         ]}
       />
-      <Image source={require('kitsu/assets/img/ratings/meh.png')} style={styles.imageSimple} />
+      <Image source={meh} style={styles.imageSimple} />
     </TouchableOpacity>
     <TouchableOpacity onPress={() => onRate('good')} disabled={disabled}>
       <View
@@ -50,7 +53,7 @@ const SimpleRating = ({ disabled, onRate, selected }) => (
           selected && selected !== 'good' && styles.imageSimpleShadowBackground,
         ]}
       />
-      <Image source={require('kitsu/assets/img/ratings/good.png')} style={styles.imageSimple} />
+      <Image source={good} style={styles.imageSimple} />
     </TouchableOpacity>
     <TouchableOpacity onPress={() => onRate('great')} disabled={disabled}>
       <View
@@ -59,7 +62,7 @@ const SimpleRating = ({ disabled, onRate, selected }) => (
           selected && selected !== 'great' && styles.imageSimpleShadowBackground,
         ]}
       />
-      <Image source={require('kitsu/assets/img/ratings/great.png')} style={styles.imageSimple} />
+      <Image source={great} style={styles.imageSimple} />
     </TouchableOpacity>
   </View>
 );
@@ -472,7 +475,6 @@ class RateScreen extends React.Component {
 
   render() {
     const { wantToWatch, topMedia, loadingWtW, fetching } = this.state;
-    console.log(topMedia);
     if (fetching) {
       return (
         <View style={[commonStyles.container, { alignItems: 'center' }]}>
