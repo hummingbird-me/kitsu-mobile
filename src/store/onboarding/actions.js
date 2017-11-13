@@ -11,12 +11,12 @@ export const completeOnboarding = navigation => async (dispatch, getState) => {
   setToken(token);
   try {
     await Kitsu.update('users', { id, status: 'registered' });
-    dispatch({ type: types.COMPLETE_ONBOARDING_SUCCESS });
     const navigateTabs = NavigationActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
     });
     navigation.dispatch(navigateTabs);
+    dispatch({ type: types.COMPLETE_ONBOARDING_SUCCESS });
   } catch (e) {
     dispatch({ type: types.COMPLETE_ONBOARDING_FAIL, payload: e });
   }

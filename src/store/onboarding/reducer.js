@@ -15,9 +15,21 @@ export const onboardingReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.COMPLETE_ONBOARDING:
       return {
+        ...state,
+        loading: true,
+      };
+    case types.COMPLETE_ONBOARDING_SUCCESS:
+      return {
         ...initialState,
         favoriteCategories: [],
         completed: true,
+        loading: false,
+      };
+    case types.COMPLETE_ONBOARDING_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
       };
     case types.SET_SCREEN_NAME:
       return {
