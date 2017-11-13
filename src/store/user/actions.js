@@ -81,7 +81,7 @@ export const createUser = (data, nav) => async (dispatch, getState) => {
   }
   try {
     await Kitsu.create('users', userObj);
-    loginUser(data, nav)(dispatch);
+    loginUser(data, nav)(dispatch, getState);
 
     // TODO: Add user object to redux
     dispatch({ type: types.CREATE_USER_SUCCESS, payload: {} });

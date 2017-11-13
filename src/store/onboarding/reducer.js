@@ -13,6 +13,12 @@ const initialState = {
 
 export const onboardingReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.SET_ONBOARDING_COMPLETE: // used to invoke right after login
+      return {
+        ...state,
+        favoriteCategories: [],
+        completed: true,
+      };
     case types.COMPLETE_ONBOARDING:
       return {
         ...state,

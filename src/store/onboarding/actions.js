@@ -3,6 +3,10 @@ import { NavigationActions } from 'react-navigation';
 import { kitsuConfig } from 'kitsu/config/env';
 import { Kitsu, setToken } from 'kitsu/config/api';
 
+export const setOnboardingComplete = () => async (dispatch) => {
+  dispatch({ type: types.SET_ONBOARDING_COMPLETE });
+};
+
 export const completeOnboarding = navigation => async (dispatch, getState) => {
   dispatch({ type: types.COMPLETE_ONBOARDING });
   const { user, auth } = getState();
