@@ -65,19 +65,12 @@ class ImportDetail extends React.Component {
     return (
       <View style={styles.containerStyle}>
         <View>
-          <View
-            style={styles.card}
-          >
+          <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <Image
-                  source={item.image}
-                  style={styles.cardLogo}
-                />
+                <Image source={item.image} style={styles.cardLogo} />
               </View>
-              <Text
-                style={styles.cardText}
-              >
+              <Text style={styles.cardText}>
                 Enter your username below to import your existing anime and manga progress.
               </Text>
             </View>
@@ -110,25 +103,18 @@ class ImportDetail extends React.Component {
               alignItems: 'center',
             }}
           >
-            <View
-              style={[styles.card, { marginTop: 100 }]}
-            >
-              {!errMessage
-                ? <View>
-                  <Text style={styles.modalTitle}>
-                      Hang tight! We{"'"}re importing your data!
-                    </Text>
+            <View style={[styles.card, { marginTop: 100 }]}>
+              {!errMessage ? (
+                <View>
+                  <Text style={styles.modalTitle}>Hang tight! We{"'"}re importing your data!</Text>
                   <Text style={styles.modalText}>
-                      Your {item.title}
-                      import will continue in the background. We
-                      {"'"}
-                      ll send you a notification when your import has completed!
-                    </Text>
+                    Your {item.title} import will continue in the background. We{"'"}ll send you a
+                    notification when your import has completed!
+                  </Text>
                 </View>
-                : <View>
-                  <Text style={styles.modalTitle}>
-                      Bummer!
-                    </Text>
+              ) : (
+                <View>
+                  <Text style={styles.modalTitle}>Bummer!</Text>
                   <Text
                     style={[
                       styles.modalText,
@@ -140,7 +126,8 @@ class ImportDetail extends React.Component {
                   >
                     {errMessage}
                   </Text>
-                </View>}
+                </View>
+              )}
               <SidebarButton
                 style={{ marginTop: 0 }}
                 onPress={() => this.onFinish(navigation)}

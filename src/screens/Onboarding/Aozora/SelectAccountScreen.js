@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { kitsu as kitsuLogo, aozora as aozoraLogo } from 'kitsu/assets/img/onboarding/';
-import { resolveAccountConflicts } from 'kitsu/store/user/actions';
+import {
+  resolveAccountConflicts,
+  setSelectedAccount,
+  setScreenName,
+} from 'kitsu/store/onboarding/actions';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
@@ -40,11 +44,12 @@ class SelectAccountScreen extends React.Component {
   };
 
   onConfirm = async () => {
-    const success = this.props.resolveAccountConflicts(this.state.selectedAccount);
+    const { selectedAccount } = this.state;
+    const success = this.props.resolveAccountConflicts(selectedAccount);
     if (success) {
-      this.props.navigation.navigate('CreateAccountScreen', {
-        account: this.state.selectedAccount,
-      });
+      this.props.setSelectedAccount(selectedAccount);
+      this.props.setScreenName('CreateAccountScreen');
+      this.props.navigation.navigate('CreateAccountScreen');
     }
   };
 
@@ -104,8 +109,14 @@ class SelectAccountScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { loading, error, conflicts: accounts } = user;
+const mapStateToProps = ({ onboarding, user }) => {
+  const { conflicts: accounts } = onboarding;
+  const { loading, error } = user;
   return { loading, error, accounts };
 };
-export default connect(mapStateToProps, { resolveAccountConflicts })(SelectAccountScreen);
+
+export default connect(mapStateToProps, {
+  resolveAccountConflicts,
+  setSelectedAccount,
+  setScreenName,
+})(SelectAccountScreen);

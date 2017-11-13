@@ -51,8 +51,17 @@ export const styles = StyleSheet.create({
     height: 50,
     fontSize: 14,
   },
+  line: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.darkGrey,
+    marginVertical: 10,
+  },
+  carouselWrapper: {
+    height: 380,
+    marginTop: 10,
+  },
   poster: {
-    width: 260,
+    width: 260, // should match carousel component itemWidth prop value.
     height: 360,
     borderRadius: 8,
     justifyContent: 'flex-end',
@@ -105,13 +114,13 @@ export const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonWatchlist: {
-    width: 140,
+    minWidth: 140,
     backgroundColor: colors.transparent,
     borderRadius: 8,
     borderColor: colors.grey,
     borderWidth: StyleSheet.hairlineWidth,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
   buttonWatchlistTitle: {
     color: colors.white,
@@ -166,5 +175,24 @@ export const styles = StyleSheet.create({
   textGreat: {
     color: colors.blue,
     fontWeight: '700',
+  },
+  loadingWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  importModalTitle: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingVertical: 8,
+    fontSize: 14,
+  },
+  importModalText: {
+    textAlign: 'center',
+    paddingHorizontal: 12,
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    marginBottom: 8,
   },
 });

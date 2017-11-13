@@ -2,7 +2,8 @@ import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbs
 import { NavigationActions } from 'react-navigation';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
-import { fetchCurrentUser, getAccountConflicts } from 'kitsu/store/user/actions';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboarding/actions';
 import * as types from 'kitsu/store/types';
 
 export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
@@ -40,6 +41,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       });
       nav.dispatch(onboardingAction);
     } else {
+      setOnboardingComplete()(dispatch, getState);
       const loginAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
