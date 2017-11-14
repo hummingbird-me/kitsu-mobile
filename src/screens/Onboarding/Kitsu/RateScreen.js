@@ -252,6 +252,9 @@ class RateScreen extends React.Component {
         mediaTotalDuration,
         topMedia: updatedTopMedia,
       });
+      if (currentIndex + 1 >= updatedTopMedia.length - 4) {
+        this.loadMoreMedia();
+      }
       this.carousel.snapToNext();
     } catch (e) {
       console.log(e, 'error patching rating');
@@ -259,6 +262,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].isRating = false;
       this.setState({
         topMedia: updatedTopMedia,
+        ratingTwenty: updatedTopMedia[currentIndex].ratingTwenty,
       });
     }
   };
@@ -604,7 +608,7 @@ class RateScreen extends React.Component {
             data={topMedia}
             renderItem={this.renderItem}
             sliderWidth={Dimensions.get('window').width}
-            itemWidth={260}
+            itemWidth={Dimensions.get('window').width * 80 / 100}
             onSnapToItem={this.onSwipe}
           />
         </View>

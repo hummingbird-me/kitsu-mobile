@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -57,12 +57,12 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
   },
   carouselWrapper: {
-    height: 380,
+    height: Dimensions.get('window').height * 56 / 100 + 20,
     marginTop: 10,
   },
   poster: {
-    width: 260, // should match carousel component itemWidth prop value.
-    height: 360,
+    width: Dimensions.get('window').width * 80 / 100, // should match carousel component itemWidth prop value.
+    height: Dimensions.get('window').height * 56 / 100,
     borderRadius: 8,
     justifyContent: 'flex-end',
   },
