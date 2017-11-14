@@ -107,6 +107,7 @@ class RateScreen extends React.Component {
     currentIndex: 0,
     ratingTwenty: 0,
     ratedCount: 0,
+    mediaTotalDuration: 0,
     selected: null,
     pageIndex: 0,
     pageLimit: 10,
@@ -139,6 +140,7 @@ class RateScreen extends React.Component {
     if (this.state.selected === rating) {
       // toggle
       this.setState({ selected: null, ratingTwenty: null });
+      this.removeRating();
     } else {
       const ratingTwenty = getRatingTwentyForText(rating, 'simple');
       this.setState({ selected: rating, ratingTwenty });
@@ -156,7 +158,7 @@ class RateScreen extends React.Component {
       this.rate(ratingTwenty);
     } else {
       this.setState({ ratingTwenty: 0 });
-      this.rate(null);
+      this.removeRating(null);
     }
   };
 
@@ -231,15 +233,23 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].status = 'completed';
       updatedTopMedia[currentIndex].isRating = false;
       let ratedCount = 0;
-      // eslint-disable-next-line
-      for (let media of updatedTopMedia) {
+      let mediaTotalDuration = 0;
+
+      // TODO: SHOULD AVOID USING LOOPS
+      for (const media of updatedTopMedia) {
         if (media.ratingTwenty) {
           ratedCount += 1;
+          if (media.episodeLength && media.episodeCount) {
+            mediaTotalDuration += media.episodeLength * media.episodeCount;
+          }
         }
+        console.log(media.titles.en, media.episodeLength, media.episodeCount);
       }
+      console.log('media total duration', mediaTotalDuration);
       this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
+        mediaTotalDuration,
         topMedia: updatedTopMedia,
       });
       this.carousel.snapToNext();
@@ -252,6 +262,67 @@ class RateScreen extends React.Component {
       });
     }
   };
+
+  removeRating = async () => {
+    const { currentIndex, topMedia } = this.state;
+    const { accessToken, userId } = this.props;
+    const id = topMedia[currentIndex].id;
+    const libraryEntryId = topMedia[currentIndex].libraryEntryId;
+    setToken(accessToken);
+
+    let updatedTopMedia = topMedia.slice();
+    updatedTopMedia[currentIndex].isRating = true;
+    this.setState({
+      topMedia: updatedTopMedia,
+    });
+
+    try {
+      let response = null;
+      // patch the previous rating
+      response = await Kitsu.update('libraryEntries', {
+        ratingTwenty: null,
+        id: libraryEntryId,
+        anime: {
+          id,
+        },
+        user: {
+          id: userId,
+        },
+      });
+      updatedTopMedia = updatedTopMedia.slice();
+      updatedTopMedia[currentIndex].libraryEntryId = response.id;
+      updatedTopMedia[currentIndex].ratingTwenty = null;
+      updatedTopMedia[currentIndex].status = null;
+      updatedTopMedia[currentIndex].isRating = false;
+      let ratedCount = 0;
+      let mediaTotalDuration = 0;
+
+      // TODO: SHOULD AVOID USING LOOPS
+      for (const media of updatedTopMedia) {
+        if (media.ratingTwenty) {
+          ratedCount += 1;
+          if (media.episodeLength && media.episodeCount) {
+            mediaTotalDuration += media.episodeLength * media.episodeCount;
+          }
+        }
+        console.log(media.titles.en, media.episodeLength, media.episodeCount);
+      }
+      console.log('media total duration', mediaTotalDuration);
+      this.updateHeaderButton(ratedCount);
+      this.setState({
+        ratedCount,
+        mediaTotalDuration,
+        topMedia: updatedTopMedia,
+      });
+    } catch (e) {
+      console.log(e, 'error patching rating');
+      updatedTopMedia = updatedTopMedia.slice();
+      updatedTopMedia[currentIndex].isRating = false;
+      this.setState({
+        topMedia: updatedTopMedia,
+      });
+    }
+  }
 
   addToWatchlist = async () => {
     const { currentIndex, topMedia } = this.state;
@@ -290,8 +361,21 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].status = 'planned';
+      let ratedCount = 0;
+      let mediaTotalDuration = 0;
+      for (const media of updatedTopMedia) {
+        if (media.ratingTwenty) {
+          ratedCount += 1;
+          if (media.episodeLength && media.episodeCount) {
+            mediaTotalDuration += media.episodeLength * media.episodeCount;
+          }
+        }
+        console.log(media.titles.en, media.episodeLength, media.episodeCount);
+      }
       this.prepareAnimation();
       this.setState({
+        ratedCount,
+        mediaTotalDuration,
         topMedia: updatedTopMedia,
         wantToWatch: true,
         loadingWtW: false,
@@ -316,8 +400,21 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].libraryEntryId = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].ratingTwenty = null;
+      let ratedCount = 0;
+      let mediaTotalDuration = 0;
+      for (const media of updatedTopMedia) {
+        if (media.ratingTwenty) {
+          ratedCount += 1;
+          if (media.episodeLength && media.episodeCount) {
+            mediaTotalDuration += media.episodeLength * media.episodeCount;
+          }
+        }
+        console.log(media.titles.en, media.episodeLength, media.episodeCount);
+      }
       this.prepareAnimation();
       this.setState({
+        ratedCount,
+        mediaTotalDuration,
         topMedia: updatedTopMedia,
         wantToWatch: false,
         loadingWtW: false,
@@ -377,10 +474,11 @@ class RateScreen extends React.Component {
     const { userId } = this.props;
     const { pageLimit, pageIndex } = this.state;
     let ratedCount = this.state.ratedCount;
+    let mediaTotalDuration = this.state.mediaTotalDuration;
 
     let topMedia = await Kitsu.findAll(type, {
       fields: {
-        [type]: 'posterImage,titles',
+        [type]: 'posterImage,titles,episodeCount,episodeLength',
       },
       page: {
         limit: pageLimit,
@@ -405,6 +503,9 @@ class RateScreen extends React.Component {
         });
         if (response[0] && response[0].ratingTwenty) {
           ratedCount += 1;
+          if (media.episodeLength && media.episodeCount) {
+            mediaTotalDuration += media.episodeLength * media.episodeCount;
+          }
         }
         return {
           ratingTwenty: null,
@@ -418,7 +519,7 @@ class RateScreen extends React.Component {
     );
 
     this.updateHeaderButton(ratedCount);
-    this.setState({ ratedCount });
+    this.setState({ ratedCount, mediaTotalDuration });
     return topMedia;
   };
 
@@ -474,7 +575,14 @@ class RateScreen extends React.Component {
   );
 
   render() {
-    const { wantToWatch, topMedia, loadingWtW, fetching } = this.state;
+    const {
+      wantToWatch,
+      topMedia,
+      loadingWtW,
+      fetching,
+      ratingTwenty,
+      mediaTotalDuration,
+    } = this.state;
     if (fetching) {
       return (
         <View style={[commonStyles.container, { alignItems: 'center' }]}>
@@ -484,7 +592,9 @@ class RateScreen extends React.Component {
     }
     return (
       <View style={commonStyles.container}>
-        <Text style={styles.title}>Rate the anime you{"'"}ve seen</Text>
+        <Text style={styles.title}>
+          {ratingTwenty ? formatTime(mediaTotalDuration) : "Rate the anime you've seen"}
+        </Text>
         <View style={styles.line} />
         <View style={styles.carouselWrapper}>
           <Carousel
@@ -531,6 +641,25 @@ const mapStateToProps = ({ onboarding, auth, user }) => {
 };
 
 export default connect(mapStateToProps, { completeOnboarding })(RateScreen);
+
+function formatTime(minutes) {
+  const t = minutes * 60 * 1000;
+  const cd = 24 * 60 * 60 * 1000;
+  const ch = 60 * 60 * 1000;
+  let d = Math.floor(t / cd);
+  let h = Math.floor((t - d * cd) / ch);
+  let m = Math.round((t - d * cd - h * ch) / 60000);
+  pad = n => (n < 10 ? `0${n}` : n);
+  if (m === 60) {
+    h += 1;
+    m = 0;
+  }
+  if (h === 24) {
+    d += 1;
+    h = 0;
+  }
+  return `${d} days, ${h} hours, ${m} minutes`;
+}
 
 function getSimpleTextForRatingTwenty(rating) {
   if (!rating) {
