@@ -593,7 +593,7 @@ class RateScreen extends React.Component {
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>
-          {ratingTwenty ? formatTime(mediaTotalDuration) : "Rate the anime you've seen"}
+          {ratingTwenty ? `${formatTime(mediaTotalDuration)} spent watching anime` : "Rate the anime you've seen"}
         </Text>
         <View style={styles.line} />
         <View style={styles.carouselWrapper}>
@@ -658,7 +658,21 @@ function formatTime(minutes) {
     d += 1;
     h = 0;
   }
-  return `${d} days, ${h} hours, ${m} minutes`;
+  let dayText = 'days';
+  let hourText = 'hours';
+  if (d === 1) {
+    dayText = 'day';
+  }
+  if (h === 1) {
+    hourText = 'hour';
+  }
+  if (d === 0) {
+    return `${h} ${hourText}`;
+  }
+  if (h === 0) {
+    return `${d} ${dayText}`;
+  }
+  return `${d} ${dayText}, ${h} ${hourText}`;
 }
 
 function getSimpleTextForRatingTwenty(rating) {
