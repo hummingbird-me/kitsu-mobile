@@ -33,8 +33,14 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     const user = await fetchCurrentUser()(dispatch, getState);
-    if (user.status === 'aozora') {
-      getAccountConflicts()(dispatch, getState);
+    if (screen === 'signup') {
+      const onboardingAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+      });
+      nav.dispatch(onboardingAction);
+    } else if (user.status === 'aozora') {
+      await getAccountConflicts()(dispatch, getState);
       const onboardingAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
