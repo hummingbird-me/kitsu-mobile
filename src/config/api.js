@@ -45,7 +45,6 @@ Kitsu.define(
     email: '',
     avatar: '',
     about: '',
-    bio: '',
     createdAt: '',
     website: '',
     birthday: '',
@@ -83,6 +82,8 @@ Kitsu.define(
     previousEmail: '',
     confirmed: '',
     password: '',
+    slug: '',
+    status: '',
     waifu: {
       jsonApi: 'hasOne',
       type: 'characters',
@@ -138,6 +139,12 @@ Kitsu.define(
   { collectionPath: 'users' },
 );
 
+Kitsu.define('profileLinks', {
+  createdAt: '',
+  updatedAt: '',
+  url: '',
+});
+
 Kitsu.define(
   'libraryEntries',
   {
@@ -162,6 +169,7 @@ Kitsu.define(
     },
     anime: {
       jsonApi: 'hasOne',
+      type: 'anime',
     },
     manga: {
       jsonApi: 'hasOne',
@@ -524,6 +532,7 @@ Kitsu.define(
     canonicalTitle: '',
     seasonNumber: '',
     number: '',
+    relativeNumber: '',
     titles: '',
     updatedAt: '',
     synopsis: '',
@@ -579,6 +588,9 @@ Kitsu.define(
     updatedAt: '',
     editedAt: '',
     deletedAt: '',
+    drama: {
+      jsonApi: 'hasOne',
+    },
     libraryEntry: {
       jsonApi: 'hasOne',
     },
@@ -590,6 +602,9 @@ Kitsu.define(
     },
     manga: {
       jsonApi: 'hasOne',
+    },
+    votes: {
+      jsonApi: 'hasMany',
     },
   },
   { collectionPath: 'media-reactions' },
@@ -642,6 +657,25 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'categoryFavorites',
+  {
+    createdAt: '',
+    updatedAt: '',
+    id: '',
+    type: '',
+    category: {
+      jsonApi: 'hasOne',
+      type: 'categories',
+    },
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users',
+    },
+  },
+  { collectionPath: 'category-favorites' },
+);
+
+Kitsu.define(
   'activities',
   {
     status: '',
@@ -679,7 +713,41 @@ Kitsu.define(
   { collectionPath: 'feeds/notifications' },
 );
 
-Kitsu.define('comments', {}, { collectionPath: 'comments' });
+Kitsu.define(
+  'comments',
+  {
+    createdAt: '',
+    updatedAt: '',
+    content: '',
+    contentFormatted: '',
+    blocked: '',
+    deletedAt: '',
+    likesCount: '',
+    repliesCount: '',
+    editedAt: '',
+    embed: '',
+    embedUrl: '',
+    user: {
+      jsonApi: 'hasOne',
+    },
+    post: {
+      jsonApi: 'hasOne',
+    },
+    parent: {
+      jsonApi: 'hasOne',
+    },
+    likes: {
+      jsonApi: 'hasMany',
+    },
+    replies: {
+      jsonApi: 'hasMany',
+    },
+    uploads: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'comments' },
+);
 
 Kitsu.define(
   'userFeed',
@@ -745,26 +813,70 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'followingFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/timeline' },
+);
+
+Kitsu.define(
+  'animeFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/interest_timeline' },
+);
+
+Kitsu.define(
+  'mangaFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/interest_timeline' },
+);
+
+Kitsu.define(
   'posts',
   {
-    link: '',
-    title: '',
+    blocked: '',
     commentsCount: '',
-    pastNames: '',
     content: '',
     contentFormatted: '',
+    createdAt: '',
+    deletedAt: '',
+    embed: '',
+    embedUrl: '',
+    editedAt: '',
+    link: '',
+    nsfw: '',
+    pastNames: '',
     postLikesCount: '',
     spoiler: '',
-    nsfw: '',
-    blocked: '',
-    deletedAt: '',
-    createdAt: '',
-    updatedAt: '',
+    targetInterest: '',
+    title: '',
     topLevelCommentsCount: '',
-    editedAt: '',
+    updatedAt: '',
+    media: {
+      jsonApi: 'hasOne',
+    },
+    spoiledUnit: {
+      jsonApi: 'hasOne',
+    },
+    targetUser: {
+      jsonApi: 'hasOne',
+    },
+    targetGroup: {
+      jsonApi: 'hasOne',
+    },
     user: {
-      jsonApi: 'hasMany',
-      type: 'users',
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'posts' },
@@ -780,7 +892,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'post-likes' },
@@ -897,6 +1009,16 @@ Kitsu.define(
     },
   },
   { collectionPath: 'group-members' },
+);
+
+Kitsu.define(
+  'groupCategories',
+  {
+    name: '',
+    slug: '',
+    description: '',
+  },
+  { collectionPath: 'group-categories' },
 );
 
 export const setToken = (token) => {

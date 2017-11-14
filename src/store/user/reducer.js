@@ -57,6 +57,46 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         signingUp: false,
         signupError: action.payload,
       };
+    case types.CONNECT_FBUSER:
+      return {
+        ...state,
+        loading: true,
+      };
+    case types.CONNECT_FBUSER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentUser: {
+          ...state.currentUser,
+          facebookId: action.payload,
+        },
+      };
+    case types.CONNECT_FBUSER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case types.DISCONNECT_FBUSER:
+      return {
+        ...state,
+        loading: true,
+      };
+    case types.DISCONNECT_FBUSER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentUser: {
+          ...state.currentUser,
+          facebookId: null,
+        },
+      };
+    case types.DISCONNECT_FBUSER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     case types.UPDATE_GENERAL_SETTINGS:
       return {
         ...state,
@@ -75,7 +115,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: '', //TODO: handle the error ~ Toast?
+        error: '', // TODO: handle the error ~ Toast?
       };
     case types.UPDATE_LIBRARY_SETTINGS:
       return {
@@ -89,14 +129,15 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         currentUser: {
           ...state.currentUser,
           ratingSystem: action.payload.ratingSystem,
-          titleLanguagePreference: action.payload.titleLanguagePreference,
+          titleLanguagePreference:
+            action.payload.titleLanguagePreference || state.currentUser.titleLanguagePreference,
         },
       };
     case types.UPDATE_LIBRARY_SETTINGS_FAIL:
       return {
         ...state,
         loading: false,
-        error: '', //TODO: handle the error ~ Toast?
+        error: '', // TODO: handle the error ~ Toast?
       };
     case types.ONESIGNAL_ID_RECEIVED:
       return {

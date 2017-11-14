@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import React, { PureComponent } from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
 
-export default class MediaFilter extends Component {
+export default class MediaFilter extends PureComponent {
   static propTypes = {
     filterContext: PropTypes.string,
     onPress: PropTypes.func,
@@ -27,7 +27,7 @@ export default class MediaFilter extends Component {
   }
 }
 
-const styles = {
+const styles = StyleSheet.create({
   wrapper: {
     justifyContent: 'center',
     width: '120%', // We need to overflow our parent, as we're actually wider than we technically should be.
@@ -47,4 +47,4 @@ const styles = {
     fontWeight: '600',
     textAlign: 'center',
   },
-};
+});

@@ -1,8 +1,8 @@
 import { StackNavigator } from 'react-navigation';
 import Routes from './routes';
-
-import { OnboardingScreen, RegistrationScreen } from './screens/Onboarding';
-import { LoginScreen, SignupScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
+import { IntroScreen, RegistrationScreen } from './screens/Intro';
+import { AuthScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
+import QuickUpdateScreen from './screens/QuickUpdateScreen';
 import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(
@@ -10,20 +10,20 @@ const Root = StackNavigator(
     Splash: {
       screen: SplashScreen,
     },
-    Onboarding: {
-      screen: OnboardingScreen,
+    Intro: {
+      screen: IntroScreen,
     },
     Registration: {
       screen: RegistrationScreen,
     },
-    Login: {
-      screen: LoginScreen,
-    },
-    Signup: {
-      screen: SignupScreen,
+    AuthScreen: {
+      screen: AuthScreen,
     },
     Recovery: {
       screen: RecoveryScreen,
+    },
+    Onboarding: {
+      screen: Routes.OnboardingStack,
     },
     Tabs: {
       screen: Routes.Tabs,
@@ -31,8 +31,8 @@ const Root = StackNavigator(
     SearchFilter: {
       screen: Routes.FilterStack,
     },
-    Profile: {
-      screen: Routes.ProfileStack,
+    QuickUpdate: {
+      screen: Routes.QuickUpdateStack,
     },
     Post: {
       screen: Routes.PostStack,

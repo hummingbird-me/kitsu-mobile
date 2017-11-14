@@ -17,7 +17,7 @@ const FilterStack = StackNavigator(
     },
   },
   {
-    navigationOptions: navigationOptions(undefined, -10),
+    navigationOptions: navigationOptions(),
   },
 );
 

@@ -215,8 +215,8 @@ const mapStateToProps = (state, ownProps) => {
   const { followed, follower, profile, networkLoading } = state.profile;
   const { ifollow, currentUser } = state.user;
   const userId = ownProps.navigation.state.params && ownProps.navigation.state.params.userId;
-  console.log(userId);
-  console.log(profile);
+  // console.log(userId);
+  // console.log(profile);
 
   return { followed, follower, ifollow, profile: profile[userId], currentUser, networkLoading };
 };

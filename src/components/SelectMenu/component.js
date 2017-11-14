@@ -1,12 +1,13 @@
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import ActionSheet from 'react-native-actionsheet';
 import * as colors from 'kitsu/constants/colors';
 
-export class SelectMenu extends PureComponent {
+export class SelectMenu extends React.PureComponent {
   static propTypes = {
     cancelButtonIndex: PropTypes.number,
+    activeOpacity: PropTypes.number,
     children: PropTypes.element,
     disabled: PropTypes.bool,
     options: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -20,23 +21,12 @@ export class SelectMenu extends PureComponent {
 
   static defaultProps = {
     cancelButtonIndex: -1,
+    activeOpacity: 1,
     children: undefined,
     disabled: false,
     style: null,
     tintColor: colors.black,
   };
-
-  constructor(props) {
-    super(props);
-
-    this.displayOptions = props.options.map((option) => {
-      if (typeof option === 'string') {
-        return option.charAt(0).toUpperCase() + option.slice(1);
-      }
-
-      return option.text;
-    });
-  }
 
   getCancelButtonIndex() {
     return this.props.cancelButtonIndex > -1
@@ -47,6 +37,14 @@ export class SelectMenu extends PureComponent {
   setActionSheet = (component) => {
     this.ActionSheet = component;
   };
+
+  displayOptions = () => this.props.options.map((option) => {
+    if (typeof option === 'string') {
+      return option.charAt(0).toUpperCase() + option.slice(1);
+    }
+
+    return option.text;
+  });
 
   handleFilterChange = (selectedIndex) => {
     const cancelButtonIndex = this.getCancelButtonIndex();
@@ -69,7 +67,7 @@ export class SelectMenu extends PureComponent {
   render() {
     return (
       <TouchableOpacity
-        activeOpacity={1}
+        activeOpacity={this.props.activeOpacity}
         disabled={this.props.disabled}
         onPress={this.showActionSheet}
         style={this.props.style}
@@ -78,7 +76,7 @@ export class SelectMenu extends PureComponent {
         <ActionSheet
           cancelButtonIndex={this.getCancelButtonIndex()}
           onPress={this.handleFilterChange}
-          options={this.displayOptions}
+          options={this.displayOptions()}
           ref={this.setActionSheet}
           tintColor={this.props.tintColor}
         />

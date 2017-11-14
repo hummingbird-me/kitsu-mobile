@@ -12,7 +12,10 @@ import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import defaultCover from 'kitsu/assets/img/default_cover.png';
-import { defaultAvatar as defaultGroupAvatar, defaultCover as defaultCoverUri } from 'kitsu/constants/app';
+import {
+  defaultAvatar as defaultGroupAvatar,
+  defaultCover as defaultCoverUri,
+} from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
@@ -36,7 +39,7 @@ class SidebarScreen extends React.Component {
 
   state = {
     showAllGroups: false,
-  }
+  };
 
   componentDidMount() {
     this.props.fetchGroupMemberships();
@@ -48,7 +51,7 @@ class SidebarScreen extends React.Component {
 
   onSeeMoreButtonPressed = () => {
     this.setState({ showAllGroups: true });
-  }
+  };
 
   navigateUserProfile = () => {
     this.props.navigation.navigate('UserProfile');
@@ -60,22 +63,29 @@ class SidebarScreen extends React.Component {
 
   renderSectionFooter = ({ section }) => {
     const { groupMemberships } = this.props;
-    if (section.key === 'groups' && !this.state.showAllGroups && groupMemberships && groupMemberships.length > 3) {
+    if (
+      section.key === 'groups' &&
+      !this.state.showAllGroups &&
+      groupMemberships &&
+      groupMemberships.length > 3
+    ) {
       return (
         <View style={{ marginBottom: 20 }}>
           <ItemSeparator underlineImage={false} />
-          <TouchableOpacity activeOpacity={0.6} style={[styles.item, { paddingVertical: 8 }]} onPress={this.onSeeMoreButtonPressed}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={[styles.item, { paddingVertical: 8 }]}
+            onPress={this.onSeeMoreButtonPressed}
+          >
             <Text style={[styles.linkText, { marginLeft: 26 }]}>See More...</Text>
           </TouchableOpacity>
         </View>
       );
     }
-    return (
-      <View height={20} />
-    );
+    return <View height={20} />;
   };
 
-  renderListHeaderComponent = () => <View height={20} />
+  renderListHeaderComponent = () => <View height={20} />;
 
   renderListFooterComponent = () => (
     <TouchableOpacity
@@ -100,9 +110,9 @@ class SidebarScreen extends React.Component {
         Log Out
       </Text>
     </TouchableOpacity>
-  )
+  );
 
-  renderItemSeparatorComponent = () => <ItemSeparator />
+  renderItemSeparatorComponent = () => <ItemSeparator />;
 
   renderSectionSeparatorComponent = () => null;
 
@@ -110,8 +120,9 @@ class SidebarScreen extends React.Component {
     const { navigation, currentUser, groupMemberships, accessToken } = this.props;
     const { showAllGroups } = this.state;
     const { name, avatar, coverImage } = currentUser;
-    const groupsData = (groupMemberships && (showAllGroups ? groupMemberships : groupMemberships.slice(0, 3))) || [];
-    let sectionListData = [
+    const groupsData =
+      (groupMemberships && (showAllGroups ? groupMemberships : groupMemberships.slice(0, 3))) || [];
+    const sectionListData = [
       {
         key: 'shortcuts',
         data: [{ title: 'View Library', image: library, target: 'UserLibraryScreen' }],
@@ -141,13 +152,25 @@ class SidebarScreen extends React.Component {
                   navigation.navigate(item.target);
                   break;
                 case 'ReportBugs':
-                  navigation.navigate(item.target, { title: item.title, type: 'bugReport', token: accessToken });
+                  navigation.navigate(item.target, {
+                    title: item.title,
+                    type: 'bugReport',
+                    token: accessToken,
+                  });
                   break;
                 case 'SuggestFeatures':
-                  navigation.navigate(item.target, { title: item.title, type: 'featureRequest', token: accessToken });
+                  navigation.navigate(item.target, {
+                    title: item.title,
+                    type: 'featureRequest',
+                    token: accessToken,
+                  });
                   break;
                 case 'DatabaseRequests':
-                  navigation.navigate(item.target, { title: item.title, type: 'databaseRequest', token: accessToken });
+                  navigation.navigate(item.target, {
+                    title: item.title,
+                    type: 'databaseRequest',
+                    token: accessToken,
+                  });
                   break;
                 case 'mailto':
                   Linking.openURL('mailto:josh@kitsu.io');

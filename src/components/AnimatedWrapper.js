@@ -1,24 +1,18 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Dimensions } from 'react-native';
 import { Image } from 'react-native-animatable';
 
-class AnimatedWrapped extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      ind: 0,
-      scale: 1,
-    };
-
-    this.startAnimation = this.startAnimation.bind(this);
+export default class AnimatedWrapped extends PureComponent {
+  state = {
+    ind: 0,
+    scale: 1,
   }
 
   componentDidMount() {
     this.startAnimation();
   }
 
-  startAnimation() {
+  startAnimation = () => {
     const s1 = this.state.scale || 1;
     const s2 = s1 === 1 ? 1.1 : 1;
     const tx2 = (Math.floor(Math.random() * 6) - 3) * 2;
@@ -58,7 +52,7 @@ class AnimatedWrapped extends Component {
         style={{
           flex: 1,
           alignItems: 'center',
-          height: 174,
+          height: 450,
           overflow: 'hidden',
           backgroundColor: '#372836',
         }}
@@ -68,7 +62,7 @@ class AnimatedWrapped extends Component {
           style={{
             opacity: 0.4,
             width: Dimensions.get('window').width,
-            height: 174,
+            height: 450,
           }}
           resizeMode="cover"
           source={images[ind]}
@@ -87,5 +81,3 @@ const images = [
   require('../assets/img/posters/deatnote.jpg'),
 ];
 /* eslint-enable global-require */
-
-export default AnimatedWrapped;

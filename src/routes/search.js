@@ -4,6 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import SearchScreen from 'kitsu/screens/Search/SearchScreen';
 import SearchCategory from 'kitsu/screens/Search/SearchCategory';
 import SearchResults from 'kitsu/screens/Search/SearchResults';
+import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import search from 'kitsu/assets/img/tabbar_icons/search.png';
 import navigationOptions from './navigationOptions';
 
@@ -21,7 +22,7 @@ const SearchStack = StackNavigator(
   },
   {
     navigationOptions: () => ({
-      ...navigationOptions(),
+      ...navigationOptions(75),
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
         <Image source={search} style={{ tintColor, width: 21, height: 21 }} />

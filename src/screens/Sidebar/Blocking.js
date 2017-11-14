@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { InstantSearch } from 'react-instantsearch/native';
-import { connectInfiniteHits } from 'react-instantsearch/connectors';
+import { connectInfiniteHits, connectSearchBox } from 'react-instantsearch/connectors';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import { InstantSearchBox } from 'kitsu/components/SearchBox';
+import { SearchBox } from 'kitsu/components/SearchBox';
 import { Feedback } from 'kitsu/components/Feedback';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
@@ -92,6 +92,17 @@ const Hits = connectInfiniteHits(({ hits, hasMore, refine, onPress }) => (
   <BlockingResultList hits={hits} hasMore={hasMore} refine={refine} onPress={onPress} />
 ));
 
+const InstantSearchBox = connectSearchBox(
+  ({ refine, currentRefinement, placeholder, searchIconOffset, style }) => (
+    <SearchBox
+      onChangeText={refine}
+      value={currentRefinement}
+      placeholder={placeholder}
+      searchIconOffset={searchIconOffset}
+      style={style}
+    />
+  ));
+
 class Blocking extends React.Component {
   static navigationOptions = {
     title: 'Blocking',
@@ -100,6 +111,10 @@ class Blocking extends React.Component {
   state = {
     loading: true,
     blocks: [],
+    totalBlocks: null,
+    pageIndex: 1,
+    pageLimit: 10,
+    loadingMore: false,
     searchState: {},
     error: '',
   };
@@ -112,6 +127,7 @@ class Blocking extends React.Component {
     this.setState({
       error: (e && e[0] && e[0].title) || 'Something went wrong',
       loading: false,
+      loadingMore: false,
     }, this.feedback.show);
   }
 
@@ -133,10 +149,9 @@ class Blocking extends React.Component {
   };
 
   onUnblockUser = async (user) => {
-    const token = this.props.accessToken;
     const { blocks } = this.state;
     const { id } = user;
-    setToken(token);
+    setToken(this.props.accessToken);
     this.setState({ loading: true });
     try {
       await Kitsu.destroy('blocks', id);
@@ -150,22 +165,50 @@ class Blocking extends React.Component {
   };
 
   fetchUserBlocks = async () => {
-    const token = this.props.accessToken;
-    const { id } = this.props.currentUser;
-    setToken(token);
+    const { accessToken, currentUser } = this.props;
+    setToken(accessToken);
     try {
       const blocks = await Kitsu.findAll('blocks', {
-        filter: { user: id },
+        filter: { user: currentUser.id },
         include: 'blocked',
       });
       this.setState({
         blocks,
+        pageIndex: 1,
+        totalBlocks: blocks.meta.count,
         loading: false,
       });
     } catch (e) {
       this.onError(e);
     }
   };
+
+  loadMoreBlocks = async () => {
+    const { loadingMore, pageLimit, pageIndex, totalBlocks } = this.state;
+    const hasMore = totalBlocks / pageLimit > pageIndex;
+    if (!loadingMore && hasMore) {
+      const { accessToken, currentUser } = this.props;
+      setToken(accessToken);
+      this.setState({ loadingMore: true });
+      try {
+        const blocks = await Kitsu.findAll('blocks', {
+          filter: { user: currentUser.id },
+          include: 'blocked',
+          page: {
+            limit: pageLimit,
+            offset: pageIndex * pageLimit,
+          },
+        });
+        this.setState({
+          loadingMore: false,
+          blocks: this.state.blocks.concat(blocks),
+          pageIndex: pageIndex + 1,
+        });
+      } catch (e) {
+        this.onError(e);
+      }
+    }
+  }
 
   handleSearchStateChange = (searchState) => {
     if (searchState.query === '') {
@@ -190,7 +233,11 @@ class Blocking extends React.Component {
       item={item.blocked}
       onPress={() => this.onUnblockUser(item)}
     />
-  )
+  );
+
+  renderItemSeparatorComponent = () => (
+    <ItemSeparator />
+  );
 
   renderListEmptyComponent = () => (
     <Text style={styles.emptyText}>
@@ -230,14 +277,16 @@ class Blocking extends React.Component {
         {loading
           ? <ActivityIndicator style={{ marginTop: 8 }} color={'white'} />
           :
-          <View>
+          <View style={{ flex: 1 }}>
             <SidebarTitle title={listTitle} />
             <FlatList
               data={blocks}
               keyExtractor={item => item.blocked.id}
               renderItem={this.renderBlocksItem}
-              ItemSeparatorComponent={() => <ItemSeparator />}
+              ItemSeparatorComponent={this.renderItemSeparatorComponent}
               removeClippedSubviews={false}
+              onEndReached={this.loadMoreBlocks}
+              onEndReachedThreshold={0.3}
             />
           </View>}
       </View>

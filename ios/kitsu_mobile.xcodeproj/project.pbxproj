@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -958,7 +957,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				6D33A6C67DF148E09CE537CB /* Frameworks */,
 				D7757FB0234F48C3A09F0799 /* Resources */,
-				B49CFD671F792E6F0049EE7B /* Recovered References */,
+				B472871B1F77C47E00F0528A /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -975,7 +974,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B49CFD671F792E6F0049EE7B /* Recovered References */ = {
+		B472871B1F77C47E00F0528A /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				40C1013E41074CFBA8034B60 /* libCodePush.a */,

@@ -18,9 +18,9 @@ export const MediaCard = ({
   style,
 }) => {
   const onPress = () => {
-    navigate('Media', {
+    navigate('MediaPages', {
       mediaId: mediaData.id,
-      type: mediaData.type,
+      mediaType: mediaData.type,
     });
   };
 

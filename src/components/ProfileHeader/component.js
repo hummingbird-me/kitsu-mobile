@@ -37,7 +37,7 @@ export const ProfileHeader = (
       <View style={styles.headerWrapper}>
         <View style={[styles.header]}>
           {/* if there is no follow button, render the absolute-centered header first
-          so that the back button still lays over top of it.*/}
+          so that the back button still lays over top of it. */}
           {!showFollowButton && (
             <View style={styles.titleOnlyContainer}>
               <Text style={[
@@ -67,9 +67,9 @@ export const ProfileHeader = (
           </TouchableOpacity>
 
           {showFollowButton && (
-          <TouchableOpacity transparent style={styles.followButton} onPress={goBack}>
-            <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
-          </TouchableOpacity>
+            <TouchableOpacity transparent style={styles.followButton} onPress={goBack}>
+              <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
+            </TouchableOpacity>
           )}
         </View>
       </View>

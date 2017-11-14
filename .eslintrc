@@ -14,8 +14,8 @@
       1,
       {
         "ignoreRefs": false,
-        "allowArrowFunctions": false,
-        "allowBind": false
+        "allowArrowFunctions": true,
+        "allowBind": true
       }
     ],
     "no-use-before-define": [

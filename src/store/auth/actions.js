@@ -2,44 +2,64 @@ import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbs
 import { NavigationActions } from 'react-navigation';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboarding/actions';
 import * as types from 'kitsu/store/types';
 
-export const loginUser = (data, nav, screen) => async (dispatch) => {
+export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
 
-  const loginAction = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-  });
-
   if (data) {
-    const user = await auth.owner.getToken(data.username, data.password);
-    tokens = user.data;
+    try {
+      const user = await auth.owner.getToken(data.username, data.password);
+      tokens = user.data;
+    } catch (e) {
+      console.log(e);
+    }
   } else {
-    const userFb = await loginUserFb(dispatch);
-    if (userFb.status !== 401) {
-      tokens = await userFb.json();
-    } else if (screen !== 'signup') {
-      nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
+    try {
+      const userFb = await loginUserFb(dispatch);
+      if (userFb.status !== 401) {
+        tokens = await userFb.json();
+      } else if (screen !== 'signup') {
+        nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
+
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
-    nav.dispatch(loginAction);
+    const user = await fetchCurrentUser()(dispatch, getState);
+    if (screen === 'signup') {
+      const onboardingAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+      });
+      nav.dispatch(onboardingAction);
+    } else if (user.status === 'aozora') {
+      await getAccountConflicts()(dispatch, getState);
+      const onboardingAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+      });
+      nav.dispatch(onboardingAction);
+    } else {
+      setOnboardingComplete()(dispatch, getState);
+      const loginAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+      });
+      nav.dispatch(loginAction);
+    }
   } else {
     dispatch({
       type: types.LOGIN_USER_FAIL,
-      payload: null,
+      payload: 'Wrong credentials',
     });
   }
-  // } catch (e) {
-  //   console.log(e);
-  //   dispatch({
-  //     type: types.LOGIN_USER_FAIL,
-  //     payload: 'Wrong credentials',
-  //   });
-  // }
 };
 
 const loginUserFb = async (dispatch) => {

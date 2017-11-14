@@ -118,7 +118,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
   const filter = {
     userId: options.userId,
-    status: options.status === 'onHold' ? 'on_hold' : options.status,
+    status: options.status,
     kind: options.library,
   };
 
@@ -153,7 +153,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       fields: {
         anime: 'canonicalTitle,posterImage,episodeCount',
         manga: 'canonicalTitle,posterImage,chapterCount',
-        libraryEntries: 'anime,manga,progress,ratingTwenty,status',
+        libraryEntries: 'anime,finishedAt,manga,notes,private,progress,ratingTwenty,reconsumeCount,startedAt,status',
       },
       filter,
       include: 'anime,manga',
@@ -187,6 +187,8 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     dispatch({
       error,
       type: actions.fetchFail,
+      library: options.library,
+      status: options.status,
     });
   }
 };
@@ -221,16 +223,19 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
 
   try {
     await Promise.all([
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'completed' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'onHold' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'planned' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'completed' })(dispatch, getState),
+    ]);
+
+    await Promise.all([
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'on_hold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'onHold' })(dispatch, getState),
       fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'planned' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'completed' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'on_hold' })(dispatch, getState),
+      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
     ]);
 
     dispatch({
@@ -307,17 +312,14 @@ export const updateUserLibraryEntry = (
 
   try {
     const updateEntry = { ...newLibraryEntry };
-    if (updateEntry.status === 'onHold') {
-      updateEntry.status = 'on_hold';
-    }
 
     // optimistically update state
     dispatch({
       libraryStatus,
       libraryType,
 
-      previousLibraryStatus: previousLibraryEntry.status === 'on_hold' ? 'onHold' : previousLibraryEntry.status,
-      newLibraryStatus: newLibraryEntry.status === 'on_hold' ? 'onHold' : newLibraryEntry.status,
+      previousLibraryStatus: previousLibraryEntry.status,
+      newLibraryStatus: newLibraryEntry.status,
 
       previousLibraryEntry,
       newLibraryEntry: updateEntry,
@@ -335,6 +337,17 @@ export const updateUserLibrarySearchEntry = (
   libraryType, libraryStatus, newLibraryEntry,
 ) => async (dispatch, getState) => {
   updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
+};
+
+export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch) => {
+  await Kitsu.destroy('libraryEntries', id);
+
+  dispatch({
+    type: types.DELETE_USER_LIBRARY_ENTRY,
+    id,
+    libraryStatus,
+    libraryType,
+  });
 };
 
 export function updateLibrarySearchTerm(searchTerm) {
