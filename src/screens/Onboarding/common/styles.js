@@ -47,6 +47,9 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
+  button: {
+    marginHorizontal: 0,
+  },
   buttonSecondary: {
     backgroundColor: colors.transparent,
     borderWidth: StyleSheet.hairlineWidth,

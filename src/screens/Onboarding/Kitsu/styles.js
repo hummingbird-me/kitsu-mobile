@@ -57,16 +57,16 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
   },
   carouselWrapper: {
-    height: Dimensions.get('window').height * 56 / 100 + 20,
+    height: Dimensions.get('window').height * 0.58,
     marginTop: 10,
   },
   poster: {
-    width: Dimensions.get('window').width * 80 / 100, // should match carousel component itemWidth prop value.
-    height: Dimensions.get('window').height * 56 / 100,
+    width: Dimensions.get('window').width * 0.7, // should match carousel component itemWidth prop value.
+    height: Dimensions.get('window').height * 0.58,
     borderRadius: 8,
     justifyContent: 'flex-end',
   },
-  posterContainer: {
+  posterInnerContainer: {
     height: 180,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -76,6 +76,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     color: colors.white,
     fontWeight: '600',
+    textAlign: 'center',
     backgroundColor: 'transparent',
   },
   ratingRow: {
@@ -85,17 +86,17 @@ export const styles = StyleSheet.create({
   },
   imageSimpleShadow: {
     position: 'absolute',
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     zIndex: 99,
-    marginHorizontal: 2,
+    marginHorizontal: 3,
   },
   imageSimple: {
-    width: 50,
-    height: 50,
+    width: 54,
+    height: 54,
     resizeMode: 'contain',
-    marginHorizontal: 2,
+    marginHorizontal: 3,
   },
   imageSimpleShadowBackground: {
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -111,7 +112,6 @@ export const styles = StyleSheet.create({
   },
   buttonWatchlistWrapper: {
     alignItems: 'center',
-    marginTop: 20,
   },
   buttonWatchlist: {
     minWidth: 140,
@@ -128,7 +128,9 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: colors.transparent,
   },
-  ratingWrapper: {},
+  ratingWrapper: {
+    marginVertical: 20,
+  },
   modalStarRow: {
     flexDirection: 'row',
     alignItems: 'center',

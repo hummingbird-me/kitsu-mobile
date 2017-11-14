@@ -10,6 +10,7 @@ import {
   UIManager,
   LayoutAnimation,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
@@ -326,7 +327,7 @@ class RateScreen extends React.Component {
         topMedia: updatedTopMedia,
       });
     }
-  }
+  };
 
   addToWatchlist = async () => {
     const { currentIndex, topMedia } = this.state;
@@ -565,13 +566,16 @@ class RateScreen extends React.Component {
   };
 
   renderItem = ({ item }) => (
-    <Image style={styles.poster} source={{ uri: item.posterImage.large }}>
+    <Image
+      style={styles.poster}
+      source={{ uri: item.posterImage.large }}
+    >
       {item.isRating ? (
         <View style={styles.loadingWrapper}>
           <ActivityIndicator color={'white'} size={'large'} />
         </View>
       ) : (
-        <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterContainer}>
+        <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterInnerContainer}>
           <Text style={styles.showTitle}>{item.titles.en}</Text>
         </LinearGradient>
       )}
@@ -579,6 +583,8 @@ class RateScreen extends React.Component {
   );
 
   render() {
+    const Wrapper = ScrollView;
+    const { ratingSystem } = this.props;
     const {
       wantToWatch,
       topMedia,
@@ -597,33 +603,41 @@ class RateScreen extends React.Component {
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>
-          {ratingTwenty ? `${formatTime(mediaTotalDuration)} spent watching anime` : "Rate the anime you've seen"}
+          {ratingTwenty ? (
+            `${formatTime(mediaTotalDuration)} spent watching anime`
+          ) : (
+            "Rate the anime you've seen"
+          )}
         </Text>
         <View style={styles.line} />
-        <View style={styles.carouselWrapper}>
-          <Carousel
-            ref={(c) => {
-              this.carousel = c;
-            }}
-            data={topMedia}
-            renderItem={this.renderItem}
-            sliderWidth={Dimensions.get('window').width}
-            itemWidth={Dimensions.get('window').width * 80 / 100}
-            onSnapToItem={this.onSwipe}
-          />
-        </View>
-        {this.renderRatingComponents()}
-        <View style={styles.buttonWatchlistWrapper}>
-          <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
-            {loadingWtW ? (
-              <ActivityIndicator />
-            ) : (
-              <Text style={styles.buttonWatchlistTitle}>
-                {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
-              </Text>
-            )}
-          </TouchableOpacity>
-        </View>
+        <Wrapper contentContainerStyle={{ paddingBottom: 30 }}>
+          <View style={styles.carouselWrapper}>
+            <Carousel
+              ref={(c) => {
+                this.carousel = c;
+              }}
+              data={topMedia}
+              renderItem={this.renderItem}
+              sliderWidth={Dimensions.get('window').width}
+              itemWidth={Dimensions.get('window').width * 0.70}
+              onSnapToItem={this.onSwipe}
+            />
+          </View>
+          <View style={styles.ratingWrapper}>
+            {this.renderRatingComponents()}
+          </View>
+          <View style={styles.buttonWatchlistWrapper}>
+            <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
+              {loadingWtW ? (
+                <ActivityIndicator />
+              ) : (
+                <Text style={styles.buttonWatchlistTitle}>
+                  {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </Wrapper>
       </View>
     );
   }
