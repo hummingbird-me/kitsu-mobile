@@ -4,8 +4,9 @@ import { TouchableOpacity } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-export const HeaderButton = ({ highlighted, title, onPress }) => (
+export const HeaderButton = ({ disabled, highlighted, title, onPress }) => (
   <TouchableOpacity
+    disabled={disabled}
     style={styles.headerButton}
     onPress={onPress}
   >
@@ -15,12 +16,14 @@ export const HeaderButton = ({ highlighted, title, onPress }) => (
 
 
 HeaderButton.propTypes = {
+  disabled: PropTypes.bool,
   title: PropTypes.string,
   highlighted: PropTypes.bool,
   onPress: PropTypes.func,
 };
 
 HeaderButton.defaultProps = {
+  disabled: false,
   title: null,
   highlighted: false,
   onPress: null,

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { KeyboardAvoidingView, View } from 'react-native';
 import { connect } from 'react-redux';
+
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -33,7 +34,14 @@ class CreatePost extends React.PureComponent {
         fontSize: 15,
       },
       headerLeft: <HeaderButton onPress={() => navigation.goBack()} title="Cancel" />,
-      headerRight: <HeaderButton highlighted onPress={params.handlePressPost} title="Post" />,
+      headerRight: (
+        <HeaderButton
+          highlighted
+          disabled={params.busy}
+          onPress={params.handlePressPost}
+          title="Post"
+        />
+      ),
     };
   };
 
@@ -46,6 +54,7 @@ class CreatePost extends React.PureComponent {
   componentDidMount() {
     this.props.navigation.setParams({
       handlePressPost: this.handlePressPost,
+      busy: false,
     });
   }
 
@@ -60,6 +69,11 @@ class CreatePost extends React.PureComponent {
   }
 
   handlePressPost = async () => {
+    const { navigation } = this.props;
+    if (navigation.state.params.busy) return;
+
+    navigation.setParams({ busy: true });
+
     const currentUserId = this.props.currentUser.id;
     const { content, currentFeed } = this.state;
     // Target interest is either 'anime', 'manga', or blank depending
@@ -71,6 +85,7 @@ class CreatePost extends React.PureComponent {
         content,
         targetInterest,
         user: {
+          type: 'users',
           id: currentUserId,
         },
       });
@@ -82,8 +97,9 @@ class CreatePost extends React.PureComponent {
       this.props.navigation.state.params.onNewPostCreated();
     }
 
+    this.props.navigation.setParams({ busy: false });
     this.props.navigation.goBack();
-  };
+  }
 
   render() {
     const { currentUser } = this.props;
