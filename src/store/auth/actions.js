@@ -2,7 +2,8 @@ import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbs
 import { NavigationActions } from 'react-navigation';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
-import { fetchCurrentUser, getAccountConflicts } from 'kitsu/store/user/actions';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboarding/actions';
 import * as types from 'kitsu/store/types';
 
 export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
@@ -32,14 +33,21 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     const user = await fetchCurrentUser()(dispatch, getState);
-    if (user.status === 'aozora') {
-      getAccountConflicts()(dispatch, getState);
+    if (screen === 'signup') {
+      const onboardingAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+      });
+      nav.dispatch(onboardingAction);
+    } else if (user.status === 'aozora') {
+      await getAccountConflicts()(dispatch, getState);
       const onboardingAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
       });
       nav.dispatch(onboardingAction);
     } else {
+      setOnboardingComplete()(dispatch, getState);
       const loginAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],

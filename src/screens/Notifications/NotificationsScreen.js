@@ -1,14 +1,18 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { PureComponent } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
+import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
+import { styles } from './styles';
 
-class NotificationsScreen extends Component {
-  static navigationOptions = ({ screenProps }) => ({
+const isMentioned = (arr, id) => arr.includes(id);
+
+class NotificationsScreen extends PureComponent {
+  static navigationOptions = () => ({
     title: 'Notifications',
     headerStyle: {
       backgroundColor: colors.darkPurple,
@@ -17,19 +21,15 @@ class NotificationsScreen extends Component {
     },
   });
 
-  state = {
-    offset: 0,
-  }
-
   componentDidMount() {
     this.props.getNotifications();
   }
 
-  loadMore = () => {
-    // const offset = this.state.offset + 30;
-    // this.props.getNotifications(offset);
-    // this.setState({ offset });
-  }
+  handleActionBtnPress = () => {
+    if (Platform.OS === 'ios') {
+      OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
+    }
+  };
 
   renderText = (activity) => {
     const { currentUser: { id } } = this.props;
@@ -68,70 +68,89 @@ class NotificationsScreen extends Component {
       default:
         return <Text>made an action</Text>;
     }
-  }
+  };
 
   renderItem = ({ item }) => {
     const activity = item.activities[0];
+
     let others = null;
     if (item.activities.length > 1) {
-      others = item.activities.length === 2
-        ? (<Text style={{ color: '#FF300A', fontWeight: '500' }}>
-          {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
-        </Text>)
-        : (<Text>
-          <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
-        </Text>);
+      others =
+        item.activities.length === 2 ? (
+          <Text style={{ color: '#FF300A', fontWeight: '500' }}>
+            {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
+          </Text>
+        ) : (
+          <Text>
+            <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
+          </Text>
+        );
     }
-    const ava = activity.actor && activity.actor.avatar
-      ? activity.actor.avatar.tiny
-      : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
+    const ava =
+      activity.actor && activity.actor.avatar
+        ? activity.actor.avatar.tiny
+        : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity button style={{ ...styles.parentItem, padding: 5 }}>
-        <View style={{ justifyContent: 'center', paddingLeft: 5, paddingRight: 10, width: 25 }}>
-          {!item.isRead && <Icon name="circle" style={{ fontSize: 8, color: '#FF102E' }} />}
+      <TouchableOpacity style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
+        <View style={styles.iconContainer}>
+          <Icon name="circle" style={styles.icon} />
         </View>
-        <View style={{ alignItems: 'center', flexDirection: 'row', flex: 1 }}>
+        <View style={styles.detailsContainer}>
           <View style={{ paddingRight: 10 }}>
-            <Image style={{ width: 32, height: 32, borderRadius: 16 }} source={{ uri: ava }} />
+            <Image style={styles.userAvatar} source={{ uri: ava }} />
           </View>
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
-              <Text style={{ fontFamily: 'OpenSans', fontSize: 12, fontWeight: '400' }}>
-                <Text style={{ color: '#FF300A', fontWeight: '500' }}>
-                  {activity.actor && activity.actor.name}{' '}
-                </Text>
+          <View style={styles.activityContainer}>
+            <View style={styles.activityTextContainer}>
+              <Text style={[styles.activityText, styles.activityTextHighlight]}>
+                {activity.actor && activity.actor.name}{' '}
+              </Text>
+              <Text style={styles.activityText}>
                 {others && <Text>and {others}</Text>}
                 {this.renderText(activity)}
               </Text>
             </View>
-            <View style={{ justifyContent: 'flex-start' }}>
-              <Text style={{ fontSize: 10, color: '#919191' }}>
-                {moment(activity.time).fromNow()}
-              </Text>
+            <View style={styles.activityMetaContainer}>
+              <Text style={styles.activityMetaText}>{moment(activity.time).fromNow()}</Text>
             </View>
           </View>
         </View>
       </TouchableOpacity>
     );
-  }
+  };
+
+  renderItemSeperator = () => <View style={styles.itemSeperator} />;
+
+  renderHeader = () => {
+    if (!this.props.pushNotificationEnabled) {
+      return (
+        <View style={styles.noticeContainer}>
+          <Text style={styles.noticeText}>Kitsu is better with notifications!</Text>
+          <TouchableOpacity style={styles.actionButton} onPress={this.handleActionBtnPress}>
+            <Text style={styles.actionButtonText}>Turn on notifications</Text>
+          </TouchableOpacity>
+          <Icon name="close" style={styles.closeIcon} />
+        </View>
+      );
+    }
+    return <View />;
+  };
 
   render() {
-    const { notifications, loadingNotifications } = this.props;
+    const { notifications, loadingNotifications, getNotifications } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
-        <FlatList
-          removeClippedSubviews={false}
-          data={notifications}
-          renderItem={this.renderItem}
-          onEndReached={() => this.loadMore()}
-          keyExtractor={item => item.id}
-          onEndReachedThreshold={0.5}
-          initialNumToRender={30}
-          refreshing={loadingNotifications}
-          onRefresh={() => this.props.getNotifications()}
-        />
-      </View>
+      <FlatList
+        ListHeaderComponent={this.renderHeader}
+        removeClippedSubviews={false}
+        data={notifications}
+        renderItem={this.renderItem}
+        keyExtractor={item => item.id}
+        ItemSeparatorComponent={this.renderItemSeperator}
+        initialNumToRender={10}
+        refreshing={loadingNotifications}
+        onRefresh={getNotifications}
+        style={styles.container}
+      />
     );
   }
 }
@@ -143,36 +162,17 @@ NotificationsScreen.propTypes = {
   loadingNotifications: PropTypes.bool.isRequired,
 };
 
-const isMentioned = (arr, id) => arr.includes(id);
-
-const styles = {
-  outerText: {
-    color: 'black',
-    fontFamily: 'OpenSans',
-    fontSize: 16,
-    lineHeight: 18,
-    fontWeight: 'bold',
-  },
-  innerText: {
-    color: 'black',
-    fontFamily: 'OpenSans',
-    fontSize: 12,
-    lineHeight: 12,
-    fontWeight: '600',
-  },
-  parentItem: {
-    height: 65,
-    flexDirection: 'row',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: '#EEEEEE',
-    backgroundColor: '#FAFAFA',
-  },
-};
-
-const mapStateToProps = ({ feed, user }) => {
+const mapStateToProps = ({ feed, user, app }) => {
   const { notifications, notificationsUnseen, loadingNotifications } = feed;
   const { currentUser } = user;
-  return { notifications, notificationsUnseen, loadingNotifications, currentUser };
+  const { pushNotificationEnabled } = app;
+  return {
+    notifications,
+    notificationsUnseen,
+    loadingNotifications,
+    currentUser,
+    pushNotificationEnabled,
+  };
 };
 export default connect(mapStateToProps, { getNotifications, seenNotifications })(
   NotificationsScreen,

@@ -8,7 +8,9 @@ import good from 'kitsu/assets/img/ratings/good.png';
 import great from 'kitsu/assets/img/ratings/great.png';
 import meh from 'kitsu/assets/img/ratings/meh.png';
 import starFilled from 'kitsu/assets/img/ratings/star.png';
+import { fox } from 'kitsu/assets/img/onboarding/';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
+import { setScreenName } from 'kitsu/store/onboarding/actions';
 import { styles } from './styles';
 
 const getRatingSystem = (type) => {
@@ -65,7 +67,7 @@ const RatingSystem = ({ style, type, selected, onSelectSystem }) => {
 
 class RatingSystemScreen extends React.Component {
   state = {
-    ratingSystem: 'simple',
+    ratingSystem: this.props.currentUser.ratingSystem,
   };
 
   onSelectSystem = (accountType) => {
@@ -75,11 +77,10 @@ class RatingSystemScreen extends React.Component {
   onConfirm = async () => {
     const { ratingSystem } = this.state;
     const success = await this.props.updateLibrarySettings({ ratingSystem });
-    const { navigate, state } = this.props.navigation;
-    console.log(state.params.selected);
     if (success) {
-      navigate('ManageLibrary', {
-        account: state.params.account,
+      // this.props.setScreenName('ManageLibrary');
+      this.props.navigation.navigate('ManageLibrary', {
+        hasRatedAnimes: this.props.selectedAccount === 'aozora',
       });
     }
   };
@@ -117,12 +118,39 @@ class RatingSystemScreen extends React.Component {
             titleStyle={styles.buttonTitleStyle}
           />
         </View>
+        <View style={{ flexDirection: 'row' }}>
+          <Image source={fox} style={{ width: 50, height: 50, zIndex: 2 }} />
+          <View
+            style={{
+              left: -10,
+              bottom: -8,
+              height: 32,
+              padding: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 16,
+              backgroundColor: '#4f414e',
+            }}
+          >
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 12,
+              }}
+            >
+              Don{'"'}t worry, you can change this later!
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
 }
-const mapStateToProps = ({ user }) => {
-  const { loading, error } = user;
-  return { loading, error };
+const mapStateToProps = ({ onboarding, user }) => {
+  const { selectedAccount } = onboarding;
+  const { loading, currentUser, error } = user;
+  return { loading, currentUser, selectedAccount, error };
 };
-export default connect(mapStateToProps, { updateLibrarySettings })(RatingSystemScreen);
+export default connect(mapStateToProps, { updateLibrarySettings, setScreenName })(
+  RatingSystemScreen,
+);

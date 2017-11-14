@@ -15,21 +15,21 @@ class SplashScreen extends Component {
 
   componentDidMount() {
     this.animation.play();
-    const { isAuthenticated, conflicts } = this.props;
+    const { isAuthenticated, completed } = this.props;
     if (this.props.rehydratedAt) {
-      this.init(isAuthenticated, conflicts);
+      this.init(isAuthenticated, completed);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, conflicts } = nextProps;
-    this.init(isAuthenticated, conflicts);
+    const { isAuthenticated, completed } = nextProps;
+    this.init(isAuthenticated, completed);
   }
 
-  init(authorized, conflicts) {
+  init(authorized, completed) {
     const { dispatch } = this.props.navigation;
     let resetAction = null;
-    if (authorized && !conflicts) {
+    if (authorized && completed) {
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
@@ -78,10 +78,10 @@ class SplashScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, user }) => {
+const mapStateToProps = ({ auth, onboarding }) => {
   const { isAuthenticated, rehydratedAt } = auth;
-  const { conflicts } = user;
-  return { isAuthenticated, rehydratedAt, conflicts };
+  const { completed } = onboarding;
+  return { isAuthenticated, rehydratedAt, completed };
 };
 
 SplashScreen.propTypes = {
