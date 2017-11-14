@@ -51,7 +51,7 @@
                                                       settings:@{
                                                         kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNotification),
                                                         // enable this to cancel auto prompt for permission
-                                                        // kOSSettingsKeyAutoPrompt: @false
+                                                         kOSSettingsKeyAutoPrompt: @false
                                                       }];
 
   return YES;

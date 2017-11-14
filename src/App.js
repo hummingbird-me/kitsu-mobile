@@ -25,17 +25,27 @@ class App extends PureComponent {
   componentWillMount() {
     OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.addEventListener('registered', this.onPNRegistered);
     Linking.addEventListener('url', this.onUrl);
+  }
+
+  componentDidMount() {
+    OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
   }
 
   componentWillUnmount() {
     OneSignal.removeEventListener('ids', this.onIds);
+    OneSignal.removeEventListener('registered', this.onPNRegistered);
     Linking.removeEventListener('url', this.onUrl);
   }
 
   onIds(device) {
     store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: device.userId });
   }
+
+  onPNRegistered = (notificationData) => {
+    console.log('device registered', notificationData);
+  };
 
   onUrl({ url }) {
     const { pathname, searchParams } = new URL(url);
@@ -79,7 +89,12 @@ class App extends PureComponent {
 const RootContainer = ({ badge }) => (
   <View style={{ flex: 1 }}>
     <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-    <Root ref={(nav) => { this.navigation = nav; }} screenProps={{ badge }} />
+    <Root
+      ref={(nav) => {
+        this.navigation = nav;
+      }}
+      screenProps={{ badge }}
+    />
   </View>
 );
 

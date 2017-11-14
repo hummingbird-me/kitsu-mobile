@@ -2,6 +2,7 @@ import * as types from 'kitsu/store/types';
 
 const initialState = {
   algoliaKeys: {},
+  pushNotificationEnabled: false,
 };
 
 export const appReducer = (state = initialState, action) => {
