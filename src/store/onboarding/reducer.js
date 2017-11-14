@@ -5,7 +5,7 @@ const initialState = {
   completed: false,
   conflicts: null,
   screenName: null, // continue where user left off
-  selectedAccount: '', // select acc screen
+  selectedAccount: 'kitsu', // set kitsu for sign up
   favoriteCategories, // favorite categories data
   loading: false,
   error: '',

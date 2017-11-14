@@ -11,8 +11,11 @@ class WelcomeScreen extends React.Component {
   onPress = () => {
     const { screenName, navigation, accounts } = this.props;
     if (screenName === null) {
-      if (accounts.kitsu) {
-        // if there is kitsu, we have conflict.
+      if (!accounts) {
+        // probably user signup
+        navigation.navigate('FavoritesScreen');
+      } else if (accounts.kitsu && accounts.aozora) {
+        // if there is aozora, we have conflict.
         navigation.navigate('SelectAccountScreen');
       } else {
         navigation.navigate('CreateAccountScreen');
