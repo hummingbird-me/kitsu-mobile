@@ -40,7 +40,7 @@ export class Summary extends PureComponent {
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
-                subtitle="Ep. 1 of 12"
+                subtitle={`Ep. ${item.number} of ${media.episodeCount}`}
                 title={item.canonicalTitle}
                 variant="landscapeLarge"
                 source={{
