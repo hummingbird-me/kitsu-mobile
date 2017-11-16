@@ -15,7 +15,7 @@ export const appReducer = (state = initialState, action) => {
     case types.ONESIGNAL_ID_RECEIVED:
       return {
         ...state,
-        pushNotificationEnabled: false,
+        pushNotificationEnabled: true,
       };
     default:
       return state;
