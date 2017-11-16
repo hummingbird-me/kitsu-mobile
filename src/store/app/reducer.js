@@ -12,6 +12,11 @@ export const appReducer = (state = initialState, action) => {
         ...state,
         algoliaKeys: action.payload,
       };
+    case types.ONESIGNAL_ID_RECEIVED:
+      return {
+        ...state,
+        pushNotificationEnabled: false,
+      };
     default:
       return state;
   }
