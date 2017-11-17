@@ -583,7 +583,6 @@ class RateScreen extends React.Component {
   );
 
   render() {
-    const Wrapper = ScrollView;
     const { ratingSystem } = this.props;
     const {
       wantToWatch,
@@ -610,7 +609,7 @@ class RateScreen extends React.Component {
           )}
         </Text>
         <View style={styles.line} />
-        <Wrapper contentContainerStyle={{ paddingBottom: 30 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
           <View style={styles.carouselWrapper}>
             <Carousel
               ref={(c) => {
@@ -637,7 +636,7 @@ class RateScreen extends React.Component {
               )}
             </TouchableOpacity>
           </View>
-        </Wrapper>
+        </ScrollView>
       </View>
     );
   }
