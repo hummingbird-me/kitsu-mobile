@@ -3,10 +3,10 @@ import { RefreshControl, StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
-import { unescape } from 'lodash';
 import URL from 'url-parse';
 
 import { Kitsu } from 'kitsu/config/api';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
@@ -86,57 +86,8 @@ class Feed extends React.PureComponent {
 
       // Discard the activity groups and activities for now, flattening to
       // just the subject of the activity.
-      let data = reset ? [] : [...this.state.data];
-
-      result.forEach((group) => {
-        group.activities.forEach((activity) => {
-          data.push(activity.subject);
-
-          // Since we don't support comment posts properly yet,
-          // if it's a comment post, just include the actual post as well.
-          if (activity.target && activity.target.length > 0) {
-            data.push(...activity.target);
-          }
-        });
-      });
-
-      // Pull images out of HTML and replace in content.
-      // Regex is the absolutely wrong tool for this job, but we're against a wall on
-      // timings and we should probably just structure actual posts better anyway so
-      // the app actually knows what kind of post they are and gets the content
-      // in the right structure to render them rather than guessing from HTML.
-      const imagePattern = /<img[^>]+src="(.+?)"\/?>/ig;
-      const videoPattern = /<a href="(.+?youtube.+?)".+?>.+?<\/a>/ig;
-
-      let lastMatch;
-      data = data.map((post) => {
-        const images = [];
-        // eslint-disable-next-line no-cond-assign
-        while ((lastMatch = imagePattern.exec(post.contentFormatted)) !== null) {
-          const imageUri = unescape(lastMatch[1]);
-
-          images.push(imageUri);
-          // eslint-disable-next-line no-param-reassign
-          post.content = post.content.replace(imageUri, '');
-        }
-
-        // If they're embedding a video the URL will show up in the content.
-        // Remove it there too.
-        if (post.embed && post.embed.video && post.embed.video.url) {
-          // eslint-disable-next-line no-cond-assign
-          while ((lastMatch = videoPattern.exec(post.contentFormatted)) !== null) {
-            const videoUri = unescape(lastMatch[1]);
-
-            // eslint-disable-next-line no-param-reassign
-            post.content = post.content.replace(videoUri, '');
-          }
-        }
-
-        return {
-          ...post,
-          images,
-        };
-      });
+      const newPosts = preprocessFeed(result);
+      const data = reset ? [...newPosts] : [...this.state.data, ...newPosts];
 
       this.setState({ data });
     } catch (error) {
