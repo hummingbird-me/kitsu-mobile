@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
 import notificationIcon from 'kitsu/assets/img/tabbar_icons/notification.png';
@@ -14,21 +14,22 @@ const NotifStack = StackNavigator(
   },
   {
     navigationOptions: ({ screenProps }) => ({
-      ...navigationOptions(83),
+      ...navigationOptions(
+        Platform.select({ ios: 64, android: 74 }),
+        Platform.select({ ios: 0, android: 20 }),
+        {
+          shadowOpacity: 0,
+        },
+      ),
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
         <View>
           {screenProps &&
-            screenProps.badge > 0 &&
-            <View
-              style={styles.textWrapper}
-            >
-              <Text
-                style={styles.text}
-              >
-                {screenProps.badge}
-              </Text>
-            </View>}
+          screenProps.badge > 0 && (
+          <View style={styles.textWrapper}>
+                <Text style={styles.text}>{screenProps.badge}</Text>
+              </View>
+            )}
           <Image source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
         </View>
       ),

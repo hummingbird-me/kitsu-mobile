@@ -52,6 +52,7 @@ const OnboardingStack = StackNavigator(
     },
   },
   {
+    mode: 'card',
     navigationOptions: ({ navigation }) => ({
       ...navigationOptions(null),
       header: ({ getScreenDetails, scene }) => {
