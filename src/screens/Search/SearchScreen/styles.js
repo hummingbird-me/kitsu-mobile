@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
   searchBox: {
     marginHorizontal: 10,
     marginBottom: 10,
+    justifyContent: 'center',
   },
   tabBar: {
     backgroundColor: colors.listBackPurple,

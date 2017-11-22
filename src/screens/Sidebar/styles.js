@@ -1,11 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
   containerStyle: {
     flex: 1,
     backgroundColor: colors.listBackPurple,
-    paddingTop: 77,
+    paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
   headerCoverImage: {
     height: 100,
@@ -16,7 +16,8 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.grey,
   },
-  valueText: { // TODO: Find a better name for this and remove margin to generalize more.
+  valueText: {
+    // TODO: Find a better name for this and remove margin to generalize more.
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginTop: 4,
@@ -95,7 +96,6 @@ export const styles = StyleSheet.create({
     color: 'grey',
   },
 });
-
 
 export const flatten = (...additionalStyles) => {
   const includedStyles = additionalStyles.map(style => styles[style]);
