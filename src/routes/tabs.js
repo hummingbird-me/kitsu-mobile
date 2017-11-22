@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { tabRed, listBackPurple } from 'kitsu/constants/colors';
 import HomeScreen from 'kitsu/screens/HomeScreen';
 import SearchStack from './search';
@@ -52,10 +53,11 @@ const Tabs = TabNavigator(
 class TabsNav extends React.PureComponent {
   static propTypes = {
     fetchCurrentUser: PropTypes.func.isRequired,
-  }
+  };
 
   componentWillMount() {
     this.props.fetchCurrentUser();
+    this.props.fetchAlgoliaKeys();
   }
 
   render() {
@@ -65,4 +67,4 @@ class TabsNav extends React.PureComponent {
 
 const mapper = () => ({});
 
-export default connect(mapper, { fetchCurrentUser })(TabsNav);
+export default connect(mapper, { fetchCurrentUser, fetchAlgoliaKeys })(TabsNav);
