@@ -14,11 +14,6 @@ const isMentioned = (arr, id) => arr.includes(id);
 class NotificationsScreen extends PureComponent {
   static navigationOptions = () => ({
     title: 'Notifications',
-    headerStyle: {
-      backgroundColor: colors.darkPurple,
-      shadowOpacity: 0,
-      height: 64,
-    },
   });
 
   componentDidMount() {

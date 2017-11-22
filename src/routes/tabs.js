@@ -36,14 +36,20 @@ const Tabs = TabNavigator(
   },
   {
     lazy: true,
+    tabBarPosition: 'bottom',
     tabBarOptions: {
       activeTintColor: tabRed,
       inactiveBackgroundColor: listBackPurple,
       activeBackgroundColor: listBackPurple,
       showLabel: false,
+      showIcon: true,
       style: {
         height: 44.96,
         borderTopWidth: 0,
+        backgroundColor: listBackPurple,
+      },
+      indicatorStyle: {
+        backgroundColor: tabRed,
       },
       backgroundColor: listBackPurple,
     },

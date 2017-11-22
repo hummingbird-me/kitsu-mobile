@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 import * as colors from 'kitsu/constants/colors';
 
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   header: {
+    marginTop: Platform.select({ ios: 0, android: 20 }),
     height: 70,
     flexDirection: 'row',
     backgroundColor: 'transparent',
