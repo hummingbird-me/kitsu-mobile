@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Easing, View, ViewPropTypes } from 'react-native';
+import { Animated, View, ViewPropTypes } from 'react-native';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
@@ -27,6 +27,12 @@ export class ProgressBar extends React.Component {
     this.update(nextProps.fillPercentage);
   }
 
+  update(fillPercentage) {
+    Animated.timing(this.state.fillPercentage, {
+      toValue: fillPercentage,
+    }).start();
+  }
+
   render() {
     const fillStyle = {
       height: this.props.height,
@@ -48,11 +54,5 @@ export class ProgressBar extends React.Component {
         <Animated.View style={fillStyle} />
       </View>
     );
-  }
-
-  update(fillPercentage) {
-    Animated.timing(this.state.fillPercentage, {
-      toValue: fillPercentage,
-    }).start();
   }
 }
