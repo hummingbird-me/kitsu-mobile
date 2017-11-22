@@ -17,39 +17,42 @@ class Feed extends React.PureComponent {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
-  }
+  };
 
   static navigationOptions = {
     header: null,
-  }
+  };
 
   state = {
     activeFeed: 'followingFeed',
     refreshing: false,
     data: [],
-  }
+  };
 
   componentDidMount = () => {
     this.fetchFeed();
-  }
+  };
 
   onRefresh = async () => {
     this.setState({ refreshing: true });
     await this.fetchFeed({ reset: true });
     this.setState({ refreshing: false });
-  }
+  };
 
   setActiveFeed = (activeFeed) => {
-    this.setState({
-      activeFeed,
-      data: [],
-      refreshing: true,
-    }, () => {
-      this.fetchFeed({ reset: true });
-    });
-  }
+    this.setState(
+      {
+        activeFeed,
+        data: [],
+        refreshing: true,
+      },
+      () => {
+        this.fetchFeed({ reset: true });
+      },
+    );
+  };
 
-  cursor = undefined
+  cursor = undefined;
 
   fetchFeed = async ({ reset = false } = {}) => {
     const PAGE_SIZE = 10;
@@ -72,7 +75,8 @@ class Feed extends React.PureComponent {
       }
 
       const result = await Kitsu.one(this.state.activeFeed, subPath).get({
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include:
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
         page: {
           cursor: this.cursor,
@@ -98,27 +102,27 @@ class Feed extends React.PureComponent {
         error,
       });
     }
-  }
+  };
 
   navigateToPost = (props) => {
     this.props.navigation.navigate('PostDetails', props);
-  }
+  };
 
   navigateToCreatePost = () => {
     this.props.navigation.navigate('CreatePost', {
       onNewPostCreated: () => this.fetchFeed({ reset: true }),
     });
-  }
+  };
 
   navigateToUserProfile = (userId) => {
     this.props.navigation.navigate('ProfilePages', { userId });
-  }
+  };
 
   navigateToMedia = ({ mediaId, mediaType }) => {
     this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
-  }
+  };
 
-  keyExtractor = (item, index) => index
+  keyExtractor = (item, index) => index;
 
   renderPost = ({ item }) => {
     // This dispatches based on the type of an entity to the correct
@@ -141,7 +145,7 @@ class Feed extends React.PureComponent {
         console.log(`WARNING: Ignored post type: ${item.type}`);
         return null;
     }
-  }
+  };
 
   render() {
     return (
@@ -165,13 +169,10 @@ class Feed extends React.PureComponent {
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
             onEndReachedThreshold={0.6}
-            ListHeaderComponent={(<CreatePostRow onPress={this.navigateToCreatePost} />)}
-            refreshControl={(
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />
-            )}
+            ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
+            refreshControl={
+              <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+            }
           />
         </View>
       </View>

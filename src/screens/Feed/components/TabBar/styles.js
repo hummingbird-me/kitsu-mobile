@@ -5,7 +5,7 @@ import { scenePadding } from 'kitsu/screens/Feed/constants';
 export const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    paddingTop: 20,
     paddingHorizontal: scenePadding,
     backgroundColor: colors.listBackPurple,
     alignItems: 'center',

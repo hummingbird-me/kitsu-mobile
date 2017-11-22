@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
-const TABBAR_HEIGHT = 60;
+const TABBAR_HEIGHT = Platform.select({ ios: 60, android: 50 });
 
 export const styles = StyleSheet.create({
   container: {
@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
   searchBox: {
     marginHorizontal: 10,
     marginBottom: 10,
+    justifyContent: 'center',
   },
   tabBar: {
     backgroundColor: colors.listBackPurple,
@@ -36,8 +37,9 @@ export const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 0.1,
     shadowRadius: StyleSheet.hairlineWidth,
-    marginRight: 28,
-    marginLeft: 28,
+    marginTop: Platform.select({ ios: 0, android: 20 }),
+    marginBottom: 10,
+    justifyContent: 'center',
   },
   tabBarItem: {
     height: 27,
