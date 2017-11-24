@@ -99,11 +99,11 @@ const loginUserFb = async (dispatch) => {
 };
 
 export const logoutUser = nav => (dispatch) => {
+  dispatch({ type: types.LOGOUT_USER });
   const loginAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Registration' })],
     key: null,
   });
   nav.dispatch(loginAction);
-  dispatch({ type: types.LOGOUT_USER });
 };
