@@ -102,7 +102,7 @@ export const logoutUser = nav => (dispatch) => {
   dispatch({ type: types.LOGOUT_USER });
   const loginAction = NavigationActions.reset({
     index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'Registration' })],
+    actions: [NavigationActions.navigate({ routeName: 'Intro' })],
     key: null,
   });
   nav.dispatch(loginAction);
