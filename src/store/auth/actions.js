@@ -101,7 +101,7 @@ const loginUserFb = async (dispatch) => {
 export const logoutUser = nav => (dispatch) => {
   const loginAction = NavigationActions.reset({
     index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'Login' })],
+    actions: [NavigationActions.navigate({ routeName: 'Registration' })],
     key: null,
   });
   nav.dispatch(loginAction);

@@ -40,7 +40,7 @@ class SidebarScreen extends React.Component {
   }
 
   onLogoutButtonPressed = () => {
-    this.props.logoutUser(this.props.navigation);
+    this.props.logoutUser(this.props.screenProps.rootNavigation);
   };
 
   onSeeMoreButtonPressed = () => {
