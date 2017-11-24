@@ -1,9 +1,3 @@
-/*
-  // TODO
-  - reorganize styles -> generalize text component styles ( valueText )
-  - work on ListEmptyItems after react native upgrade
-*/
-
 import React from 'react';
 import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
@@ -90,21 +84,12 @@ class SidebarScreen extends React.Component {
   renderListFooterComponent = () => (
     <TouchableOpacity
       onPress={this.onLogoutButtonPressed}
-      style={{
-        marginTop: 20,
-        marginBottom: 40,
-        padding: 12,
-        backgroundColor: colors.white,
-        alignItems: 'center',
-      }}
+      style={styles.logoutButton}
     >
       <Text
         style={[
           commonStyles.text,
-          {
-            fontWeight: '500',
-            color: colors.activeRed,
-          },
+          styles.logoutButtonText,
         ]}
       >
         Log Out
@@ -225,31 +210,20 @@ class SidebarScreen extends React.Component {
           >
             <TouchableOpacity
               activeOpacity={0.6}
-              style={{
-                marginTop: 12,
-                marginHorizontal: 12,
-                padding: 8,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
+              style={styles.userProfileButton}
               onPress={this.navigateUserProfile}
             >
               <Image
-                style={{ width: 40, height: 40, borderRadius: 20 }}
+                style={styles.userProfileImage}
                 source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
               />
-              <View style={{ marginLeft: 12, backgroundColor: 'transparent' }}>
+              <View style={styles.userProfileTextWrapper}>
                 <Text
-                  style={{
-                    fontFamily: 'OpenSans',
-                    color: colors.white,
-                    fontSize: 14,
-                    fontWeight: '600',
-                  }}
+                  style={styles.userProfileName}
                 >
                   {name}
                 </Text>
-                <Text style={{ fontFamily: 'OpenSans', color: colors.white, fontSize: 10 }}>
+                <Text style={styles.userProfileDetailsText}>
                   view profile
                 </Text>
               </View>
