@@ -8,12 +8,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     borderRadius: 3,
-    height: 29,
+    height: 40,
   },
   searchIcon: {
     position: 'absolute',
     backgroundColor: 'transparent',
-    padding: 10,
+    paddingHorizontal: 10,
   },
   searchIconFocus: {
     left: 0,
@@ -23,6 +23,5 @@ export const styles = StyleSheet.create({
     flex: 1,
     color: colors.black,
     textAlign: 'center',
-    paddingVertical: 10,
   },
 });

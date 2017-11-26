@@ -90,9 +90,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: 'rgb(236, 236, 236)',
   },
-  progressBar: {
-    marginHorizontal: 12,
-    marginVertical: 10,
+  progressBarContainer: {
+    marginHorizontal: 10,
+    marginTop: 12,
+    marginBottom: 16,
   },
   seriesDescriptionRow: {
     flexDirection: 'row',

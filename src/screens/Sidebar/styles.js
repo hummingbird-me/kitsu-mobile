@@ -1,11 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
   containerStyle: {
     flex: 1,
     backgroundColor: colors.listBackPurple,
-    paddingTop: 77,
+    paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
   headerCoverImage: {
     height: 100,
@@ -16,7 +16,8 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.grey,
   },
-  valueText: { // TODO: Find a better name for this and remove margin to generalize more.
+  valueText: {
+    // TODO: Find a better name for this and remove margin to generalize more.
     fontFamily: 'OpenSans',
     fontSize: 12,
     marginTop: 4,
@@ -94,8 +95,45 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: 'grey',
   },
+  logoutButton: {
+    marginTop: 20,
+    marginBottom: 40,
+    padding: 12,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    fontWeight: '500',
+    color: colors.activeRed,
+  },
+  userProfileButton: {
+    marginTop: 12,
+    marginHorizontal: 12,
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userProfileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  userProfileTextWrapper: {
+    marginLeft: 12,
+    backgroundColor: 'transparent',
+  },
+  userProfileName: {
+    fontFamily: 'OpenSans',
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  userProfileDetailsText: {
+    fontFamily: 'OpenSans',
+    color: colors.white,
+    fontSize: 10,
+  },
 });
-
 
 export const flatten = (...additionalStyles) => {
   const includedStyles = additionalStyles.map(style => styles[style]);

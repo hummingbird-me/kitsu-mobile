@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image } from 'react-native';
+import { Image, Platform } from 'react-native';
 
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
@@ -14,7 +14,7 @@ const QuickUpdateStack = DismissableStackNavigator(
   },
   {
     navigationOptions: () => ({
-      ...navigationOptions(50, -10),
+      ...navigationOptions(50, Platform.select({ ios: -10, android: 20 })),
       header: null,
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (

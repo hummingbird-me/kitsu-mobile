@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, Platform } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import SearchScreen from 'kitsu/screens/Search/SearchScreen';
 import SearchCategory from 'kitsu/screens/Search/SearchCategory';
@@ -22,7 +22,7 @@ const SearchStack = StackNavigator(
   },
   {
     navigationOptions: () => ({
-      ...navigationOptions(75),
+      ...navigationOptions(75, Platform.select({ ios: 0, android: 20 })),
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
         <Image source={search} style={{ tintColor, width: 21, height: 21 }} />
