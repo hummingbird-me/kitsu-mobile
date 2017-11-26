@@ -12,7 +12,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
 
   if (data) {
     try {
-      const user = await auth.owner.getToken(data.username, data.password);
+      const user = await auth.owner.getToken(data.email, data.password);
       tokens = user.data;
     } catch (e) {
       console.log(e);
