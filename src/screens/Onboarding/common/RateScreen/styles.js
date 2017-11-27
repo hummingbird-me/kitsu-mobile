@@ -142,17 +142,4 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',
   },
-  importModalTitle: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    paddingVertical: 8,
-    fontSize: 14,
-  },
-  importModalText: {
-    textAlign: 'center',
-    paddingHorizontal: 12,
-    fontFamily: 'OpenSans',
-    fontSize: 12,
-    marginBottom: 8,
-  },
 });

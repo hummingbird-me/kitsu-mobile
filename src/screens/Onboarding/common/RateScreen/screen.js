@@ -157,20 +157,8 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = ratingTwenty;
       updatedTopMedia[currentIndex].status = 'completed';
       updatedTopMedia[currentIndex].isRating = false;
-      let ratedCount = 0;
-      let mediaTotalDuration = 0;
-
-      // TODO: SHOULD AVOID USING LOOPS
-      for (const media of updatedTopMedia) {
-        if (media.ratingTwenty) {
-          ratedCount += 1;
-          if (media.episodeLength && media.episodeCount) {
-            mediaTotalDuration += media.episodeLength * media.episodeCount;
-          }
-        }
-        console.log(media.titles.en, media.episodeLength, media.episodeCount);
-      }
-      console.log('media total duration', mediaTotalDuration);
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
+      // console.log('media total duration', mediaTotalDuration);
       this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
@@ -223,20 +211,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].isRating = false;
-      let ratedCount = 0;
-      let mediaTotalDuration = 0;
-
-      // TODO: SHOULD AVOID USING LOOPS
-      for (const media of updatedTopMedia) {
-        if (media.ratingTwenty) {
-          ratedCount += 1;
-          if (media.episodeLength && media.episodeCount) {
-            mediaTotalDuration += media.episodeLength * media.episodeCount;
-          }
-        }
-        console.log(media.titles.en, media.episodeLength, media.episodeCount);
-      }
-      console.log('media total duration', mediaTotalDuration);
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
@@ -290,17 +265,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].status = 'planned';
-      let ratedCount = 0;
-      let mediaTotalDuration = 0;
-      for (const media of updatedTopMedia) {
-        if (media.ratingTwenty) {
-          ratedCount += 1;
-          if (media.episodeLength && media.episodeCount) {
-            mediaTotalDuration += media.episodeLength * media.episodeCount;
-          }
-        }
-        console.log(media.titles.en, media.episodeLength, media.episodeCount);
-      }
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
       this.setState({
         ratedCount,
@@ -329,17 +294,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].libraryEntryId = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].ratingTwenty = null;
-      let ratedCount = 0;
-      let mediaTotalDuration = 0;
-      for (const media of updatedTopMedia) {
-        if (media.ratingTwenty) {
-          ratedCount += 1;
-          if (media.episodeLength && media.episodeCount) {
-            mediaTotalDuration += media.episodeLength * media.episodeCount;
-          }
-        }
-        console.log(media.titles.en, media.episodeLength, media.episodeCount);
-      }
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
       this.setState({
         ratedCount,
@@ -452,6 +407,26 @@ class RateScreen extends React.Component {
     return topMedia;
   };
 
+  calculateDurationCount = (updatedTopMedia) => {
+    // Calculates the total episode duration and the # of watched media.
+    let ratedCount = 0;
+    let mediaTotalDuration = 0;
+    // eslint-disable-next-line
+    for (const media of updatedTopMedia) {
+      if (media.ratingTwenty) {
+        ratedCount += 1;
+        if (media.episodeLength && media.episodeCount) {
+          mediaTotalDuration += media.episodeLength * media.episodeCount;
+        }
+      }
+      // console.log(media.titles.en, media.episodeLength, media.episodeCount);
+    }
+    return {
+      ratedCount,
+      mediaTotalDuration,
+    };
+  }
+
   sliderValueChanged = (ratingTwenty) => {
     const { ratingSystem } = this.props;
     if (
@@ -546,7 +521,7 @@ class RateScreen extends React.Component {
               onSnapToItem={this.onSwipe}
             />
           </View>
-          <View style={styles.ratingWrapper}>
+          <View style={[styles.ratingWrapper, { marginVertical: ratingSystem === 'simple' ? 20 : 8 }]}>
             {this.renderRatingComponents()}
           </View>
           <View style={styles.buttonWatchlistWrapper}>
@@ -586,9 +561,7 @@ export default connect(mapStateToProps, { completeOnboarding })(RateScreen);
 function formatTime(minutes) {
   const t = minutes * 60 * 1000;
   const cd = 24 * 60 * 60 * 1000;
-  const cm = 30 * 24 * 60 * 60 * 1000;
   const ch = 60 * 60 * 1000;
-  let M = Math.floor(t / cm);
   let d = Math.floor(t / cd);
   let h = Math.floor((t - d * cd) / ch);
   let m = Math.round((t - d * cd - h * ch) / 60000);
@@ -650,16 +623,4 @@ function getRatingTwentyForText(text, type) {
     default:
       throw new Error(`Unknown text while determining simple rating type: "${text}"`);
   }
-}
-
-function displayRatingFromTwenty(ratingTwenty, type) {
-  if (type === 'regular') {
-    return Math.round(ratingTwenty / 2) / 2;
-  } else if (type === 'advanced') {
-    return ratingTwenty / 2;
-  } else if (type === 'simple') {
-    return ratingTwenty;
-  }
-
-  throw new Error(`Unknown rating type ${type}.`);
 }

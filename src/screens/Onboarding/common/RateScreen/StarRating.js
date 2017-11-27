@@ -76,3 +76,16 @@ function getRatingTwentyProperties(ratingTwenty, type) {
 
   return ratingProperties;
 }
+
+function displayRatingFromTwenty(ratingTwenty, type) {
+  if (type === 'regular') {
+    return Math.round(ratingTwenty / 2) / 2;
+  } else if (type === 'advanced') {
+    return ratingTwenty / 2;
+  } else if (type === 'simple') {
+    return ratingTwenty;
+  }
+
+  throw new Error(`Unknown rating type ${type}.`);
+}
+
