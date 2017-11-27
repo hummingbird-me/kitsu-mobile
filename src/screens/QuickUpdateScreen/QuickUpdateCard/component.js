@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { ActivityIndicator, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import ProgressBar from 'kitsu/components/ProgressBar';
+import { ProgressBar } from 'kitsu/components/ProgressBar';
 import PropTypes from 'prop-types';
 
 import QuickUpdateEditor from '../QuickUpdateEditor';
@@ -131,10 +131,12 @@ export default class QuickUpdateCard extends PureComponent {
           <View style={styles.cardHeaderArea}>
             <View style={styles.cardContent}>
               {/* Progress Bar */}
-              <ProgressBar
-                progress={data.item.progress / anime.episodeCount}
-                style={styles.progressBar}
-              />
+              <View style={styles.progressBarContainer}>
+                <ProgressBar
+                  height={6}
+                  fillPercentage={(progress / anime.episodeCount) * 100}
+                />
+              </View>
               {/* Series Description */}
               <View style={styles.seriesDescriptionRow}>
                 <Image source={{ uri: squareImage }} style={styles.avatarImage} />

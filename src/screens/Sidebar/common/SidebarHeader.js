@@ -14,22 +14,13 @@ const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
       style={styles.header}
       source={{ uri: (coverImage && coverImage.large) || defaultCoverUri }}
     >
-      <View
-        style={styles.headerContainer}
-      >
+      <View style={styles.headerContainer}>
         <View style={{ width: 30 }}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
             <Icon name="ios-arrow-back" color={colors.white} size={22} />
           </TouchableOpacity>
         </View>
-        <Text
-          style={styles.title}
-        >
-          {headerTitle}
-        </Text>
+        <Text style={styles.title}>{headerTitle}</Text>
         <View style={{ width: 30 }}>
           <View />
         </View>
@@ -57,7 +48,7 @@ const styles = {
     right: 0,
   },
   header: {
-    height: 77 + Platform.select({ ios: 0, android: 4 }),
+    height: Platform.select({ ios: 77, android: 72 }),
   },
   headerContainer: {
     flex: 1,

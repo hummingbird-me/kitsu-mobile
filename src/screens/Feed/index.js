@@ -3,10 +3,10 @@ import { RefreshControl, StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
-import { unescape } from 'lodash';
 import URL from 'url-parse';
 
 import { Kitsu } from 'kitsu/config/api';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
@@ -17,39 +17,42 @@ class Feed extends React.PureComponent {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
-  }
+  };
 
   static navigationOptions = {
     header: null,
-  }
+  };
 
   state = {
     activeFeed: 'followingFeed',
     refreshing: false,
     data: [],
-  }
+  };
 
   componentDidMount = () => {
     this.fetchFeed();
-  }
+  };
 
   onRefresh = async () => {
     this.setState({ refreshing: true });
     await this.fetchFeed({ reset: true });
     this.setState({ refreshing: false });
-  }
+  };
 
   setActiveFeed = (activeFeed) => {
-    this.setState({
-      activeFeed,
-      data: [],
-      refreshing: true,
-    }, () => {
-      this.fetchFeed({ reset: true });
-    });
-  }
+    this.setState(
+      {
+        activeFeed,
+        data: [],
+        refreshing: true,
+      },
+      () => {
+        this.fetchFeed({ reset: true });
+      },
+    );
+  };
 
-  cursor = undefined
+  cursor = undefined;
 
   fetchFeed = async ({ reset = false } = {}) => {
     const PAGE_SIZE = 10;
@@ -72,7 +75,8 @@ class Feed extends React.PureComponent {
       }
 
       const result = await Kitsu.one(this.state.activeFeed, subPath).get({
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include:
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
         page: {
           cursor: this.cursor,
@@ -86,57 +90,8 @@ class Feed extends React.PureComponent {
 
       // Discard the activity groups and activities for now, flattening to
       // just the subject of the activity.
-      let data = reset ? [] : [...this.state.data];
-
-      result.forEach((group) => {
-        group.activities.forEach((activity) => {
-          data.push(activity.subject);
-
-          // Since we don't support comment posts properly yet,
-          // if it's a comment post, just include the actual post as well.
-          if (activity.target && activity.target.length > 0) {
-            data.push(...activity.target);
-          }
-        });
-      });
-
-      // Pull images out of HTML and replace in content.
-      // Regex is the absolutely wrong tool for this job, but we're against a wall on
-      // timings and we should probably just structure actual posts better anyway so
-      // the app actually knows what kind of post they are and gets the content
-      // in the right structure to render them rather than guessing from HTML.
-      const imagePattern = /<img[^>]+src="(.+?)"\/?>/ig;
-      const videoPattern = /<a href="(.+?youtube.+?)".+?>.+?<\/a>/ig;
-
-      let lastMatch;
-      data = data.map((post) => {
-        const images = [];
-        // eslint-disable-next-line no-cond-assign
-        while ((lastMatch = imagePattern.exec(post.contentFormatted)) !== null) {
-          const imageUri = unescape(lastMatch[1]);
-
-          images.push(imageUri);
-          // eslint-disable-next-line no-param-reassign
-          post.content = post.content.replace(imageUri, '');
-        }
-
-        // If they're embedding a video the URL will show up in the content.
-        // Remove it there too.
-        if (post.embed && post.embed.video && post.embed.video.url) {
-          // eslint-disable-next-line no-cond-assign
-          while ((lastMatch = videoPattern.exec(post.contentFormatted)) !== null) {
-            const videoUri = unescape(lastMatch[1]);
-
-            // eslint-disable-next-line no-param-reassign
-            post.content = post.content.replace(videoUri, '');
-          }
-        }
-
-        return {
-          ...post,
-          images,
-        };
-      });
+      const newPosts = preprocessFeed(result);
+      const data = reset ? [...newPosts] : [...this.state.data, ...newPosts];
 
       this.setState({ data });
     } catch (error) {
@@ -147,27 +102,27 @@ class Feed extends React.PureComponent {
         error,
       });
     }
-  }
+  };
 
   navigateToPost = (props) => {
     this.props.navigation.navigate('PostDetails', props);
-  }
+  };
 
   navigateToCreatePost = () => {
     this.props.navigation.navigate('CreatePost', {
       onNewPostCreated: () => this.fetchFeed({ reset: true }),
     });
-  }
+  };
 
   navigateToUserProfile = (userId) => {
     this.props.navigation.navigate('ProfilePages', { userId });
-  }
+  };
 
   navigateToMedia = ({ mediaId, mediaType }) => {
     this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
-  }
+  };
 
-  keyExtractor = (item, index) => index
+  keyExtractor = (item, index) => index;
 
   renderPost = ({ item }) => {
     // This dispatches based on the type of an entity to the correct
@@ -190,7 +145,7 @@ class Feed extends React.PureComponent {
         console.log(`WARNING: Ignored post type: ${item.type}`);
         return null;
     }
-  }
+  };
 
   render() {
     return (
@@ -214,13 +169,10 @@ class Feed extends React.PureComponent {
             renderItem={this.renderPost}
             onEndReached={this.fetchFeed}
             onEndReachedThreshold={0.6}
-            ListHeaderComponent={(<CreatePostRow onPress={this.navigateToCreatePost} />)}
-            refreshControl={(
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />
-            )}
+            ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
+            refreshControl={
+              <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+            }
           />
         </View>
       </View>

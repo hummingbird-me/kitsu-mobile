@@ -12,7 +12,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
 
   if (data) {
     try {
-      const user = await auth.owner.getToken(data.username, data.password);
+      const user = await auth.owner.getToken(data.email, data.password);
       tokens = user.data;
     } catch (e) {
       console.log(e);
@@ -99,11 +99,11 @@ const loginUserFb = async (dispatch) => {
 };
 
 export const logoutUser = nav => (dispatch) => {
+  dispatch({ type: types.LOGOUT_USER });
   const loginAction = NavigationActions.reset({
     index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'Login' })],
+    actions: [NavigationActions.navigate({ routeName: 'Intro' })],
     key: null,
   });
   nav.dispatch(loginAction);
-  dispatch({ type: types.LOGOUT_USER });
 };

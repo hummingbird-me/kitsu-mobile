@@ -777,36 +777,11 @@ Kitsu.define(
   },
   { collectionPath: 'feeds/user_aggr' },
 );
-
 Kitsu.define(
   'mediaFeed',
   {
-    status: '',
-    streamId: '',
-    foreignId: '',
-    progress: '',
-    replyToType: '',
-    replyToUser: '',
-    nineteenScale: '',
-    mentionedUsers: '',
-    verb: '',
-    time: '',
-    rating: '',
-    targetInterest: '',
-    actor: {
+    activityGroups: {
       jsonApi: 'hasMany',
-    },
-    user: {
-      jsonApi: 'hasMany',
-    },
-    target: {
-      jsonApi: 'hasMany',
-    },
-    targetUser: {
-      jsonApi: 'hasMany',
-    },
-    media: {
-      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'feeds/media_aggr' },
