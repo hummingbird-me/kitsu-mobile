@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Slider,
   Text,
   Image,
   TouchableOpacity,
@@ -15,88 +14,13 @@ import {
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import { NavigationActions } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
-import * as colors from 'kitsu/constants/colors';
-import awful from 'kitsu/assets/img/ratings/awful.png';
-import meh from 'kitsu/assets/img/ratings/meh.png';
-import good from 'kitsu/assets/img/ratings/good.png';
-import great from 'kitsu/assets/img/ratings/great.png';
-import { styles as commonStyles } from '../common/styles';
+import { styles as commonStyles } from '../styles';
 import { styles } from './styles';
-
-const SimpleRating = ({ disabled, onRate, selected }) => (
-  <View style={styles.ratingRow}>
-    <TouchableOpacity onPress={() => onRate('awful')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'awful' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={awful} style={styles.imageSimple} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => onRate('meh')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'meh' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={meh} style={styles.imageSimple} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => onRate('good')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'good' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={good} style={styles.imageSimple} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => onRate('great')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'great' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={great} style={styles.imageSimple} />
-    </TouchableOpacity>
-  </View>
-);
-
-const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged, onSlidingComplete }) => (
-  <View>
-    {/* Star, 4.5 */
-      ratingTwenty ? (
-        <View style={styles.modalStarRow}>
-          <Icon name="star" size={46} color={colors.yellow} />
-          <Text style={styles.modalRatingText}>
-            {getRatingTwentyProperties(ratingTwenty, ratingSystem).text}
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.modalStarRow}>
-          <Text style={styles.modalNoRatingText}>Slide to rate</Text>
-        </View>
-      )}
-    {/* Slider */}
-    <Slider
-      minimumValue={ratingSystem === 'regular' ? 0 : 1}
-      maximumValue={20}
-      step={ratingSystem === 'regular' ? 2 : 1}
-      value={ratingTwenty || 0}
-      minimumTrackTintColor={colors.tabRed}
-      maximumTrackTintColor={'rgb(43, 33, 32)'}
-      onValueChange={sliderValueChanged}
-      onSlidingComplete={onSlidingComplete}
-      style={styles.modalSlider}
-    />
-  </View>
-);
+import { SimpleRating } from './SimpleRating';
+import { StarRating } from './StarRating';
 
 class RateScreen extends React.Component {
   static navigationOptions = {
@@ -437,7 +361,7 @@ class RateScreen extends React.Component {
     this.props.navigation.setParams({
       buttonRightText: target > 0 ? `Rate ${target}` : "I'm done",
       buttonRightEnabled: !(target > 0),
-      buttonRightOnPress: target > 0 ? () => {} : this.onDone,
+      buttonRightOnPress: target > 0 ? () => { } : this.onDone,
     });
   };
 
@@ -556,13 +480,13 @@ class RateScreen extends React.Component {
     return ratingSystem === 'simple' ? (
       <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
     ) : (
-      <StarRating
-        sliderValueChanged={this.sliderValueChanged}
-        onSlidingComplete={this.onSlidingComplete}
-        ratingTwenty={ratingTwenty}
-        ratingSystem={ratingSystem}
-      />
-    );
+        <StarRating
+          sliderValueChanged={this.sliderValueChanged}
+          onSlidingComplete={this.onSlidingComplete}
+          ratingTwenty={ratingTwenty}
+          ratingSystem={ratingSystem}
+        />
+      );
   };
 
   renderItem = ({ item }) => (
@@ -575,10 +499,10 @@ class RateScreen extends React.Component {
           <ActivityIndicator color={'white'} size={'large'} />
         </View>
       ) : (
-        <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterInnerContainer}>
-          <Text style={styles.showTitle}>{item.titles.en}</Text>
-        </LinearGradient>
-      )}
+          <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterInnerContainer}>
+            <Text style={styles.showTitle}>{item.titles.en}</Text>
+          </LinearGradient>
+        )}
     </Image>
   );
 
@@ -605,8 +529,8 @@ class RateScreen extends React.Component {
           {ratingTwenty ? (
             `${formatTime(mediaTotalDuration)} spent watching anime`
           ) : (
-            "Rate the anime you've seen"
-          )}
+              "Rate the anime you've seen"
+            )}
         </Text>
         <View style={styles.line} />
         <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
@@ -630,10 +554,10 @@ class RateScreen extends React.Component {
               {loadingWtW ? (
                 <ActivityIndicator />
               ) : (
-                <Text style={styles.buttonWatchlistTitle}>
-                  {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
-                </Text>
-              )}
+                  <Text style={styles.buttonWatchlistTitle}>
+                    {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
+                  </Text>
+                )}
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -662,7 +586,9 @@ export default connect(mapStateToProps, { completeOnboarding })(RateScreen);
 function formatTime(minutes) {
   const t = minutes * 60 * 1000;
   const cd = 24 * 60 * 60 * 1000;
+  const cm = 30 * 24 * 60 * 60 * 1000;
   const ch = 60 * 60 * 1000;
+  let M = Math.floor(t / cm);
   let d = Math.floor(t / cd);
   let h = Math.floor((t - d * cd) / ch);
   let m = Math.round((t - d * cd - h * ch) / 60000);
@@ -736,38 +662,4 @@ function displayRatingFromTwenty(ratingTwenty, type) {
   }
 
   throw new Error(`Unknown rating type ${type}.`);
-}
-
-function getRatingTwentyProperties(ratingTwenty, type) {
-  const ratingProperties = {};
-  const rating = displayRatingFromTwenty(ratingTwenty, type);
-
-  switch (type) {
-    case 'advanced':
-      ratingProperties.text = rating >= 10 ? rating : rating.toFixed(1);
-      ratingProperties.textStyle = styles.textStar;
-      break;
-    case 'regular':
-      ratingProperties.text = rating >= 5 ? rating : rating.toFixed(1);
-      ratingProperties.textStyle = styles.textStar;
-      break;
-    case 'simple':
-    default:
-      if (rating < 6) {
-        ratingProperties.text = 'AWFUL';
-        ratingProperties.textStyle = styles.textAwful;
-      } else if (rating < 10) {
-        ratingProperties.text = 'MEH';
-        ratingProperties.textStyle = styles.textMeh;
-      } else if (rating < 16) {
-        ratingProperties.text = 'GOOD';
-        ratingProperties.textStyle = styles.textGood;
-      } else {
-        ratingProperties.text = 'GREAT';
-        ratingProperties.textStyle = styles.textGreat;
-      }
-      break;
-  }
-
-  return ratingProperties;
 }
