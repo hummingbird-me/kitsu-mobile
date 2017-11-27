@@ -48,7 +48,7 @@ class SidebarScreen extends React.Component {
   };
 
   navigateUserProfile = () => {
-    this.props.navigation.navigate('UserProfile');
+    this.props.navigation.navigate('ProfilePages', { userId: this.props.userId });
   };
 
   renderSectionHeader = ({ section }) => (
@@ -249,6 +249,7 @@ class SidebarScreen extends React.Component {
 const mapStateToProps = ({ auth, user, groups }) => ({
   accessToken: auth.tokens.access_token,
   currentUser: user.currentUser,
+  userId: user.currentUser.id,
   groupMemberships: groups.groupMemberships,
 });
 
