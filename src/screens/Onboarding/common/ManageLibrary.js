@@ -62,14 +62,14 @@ class ManageLibrary extends React.Component {
             {getTitle(selectedAccount, hasRatedAnimes)}
           </Text>
           <Button
-            style={{ marginTop: 24 }}
+            style={[styles.button, { marginTop: 24 }]}
             onPress={() =>
               onPress(navigation, selectedAccount, hasRatedAnimes, 0, this.completeOnboarding)}
             title={getButtonTitle(selectedAccount, hasRatedAnimes, 0)}
             titleStyle={styles.buttonTitleStyle}
           />
           <Button
-            style={styles.buttonSecondary}
+            style={[styles.button, styles.buttonSecondary]}
             onPress={() =>
               onPress(navigation, selectedAccount, hasRatedAnimes, 1, this.completeOnboarding)}
             title={getButtonTitle(selectedAccount, hasRatedAnimes, 1)}

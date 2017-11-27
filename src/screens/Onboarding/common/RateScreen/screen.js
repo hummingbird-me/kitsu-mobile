@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Slider,
   Text,
   Image,
   TouchableOpacity,
@@ -10,92 +9,18 @@ import {
   UIManager,
   LayoutAnimation,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import { NavigationActions } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
-import * as colors from 'kitsu/constants/colors';
-import awful from 'kitsu/assets/img/ratings/awful.png';
-import meh from 'kitsu/assets/img/ratings/meh.png';
-import good from 'kitsu/assets/img/ratings/good.png';
-import great from 'kitsu/assets/img/ratings/great.png';
-import { styles as commonStyles } from '../common/styles';
+import { styles as commonStyles } from '../styles';
 import { styles } from './styles';
-
-const SimpleRating = ({ disabled, onRate, selected }) => (
-  <View style={styles.ratingRow}>
-    <TouchableOpacity onPress={() => onRate('awful')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'awful' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={awful} style={styles.imageSimple} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => onRate('meh')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'meh' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={meh} style={styles.imageSimple} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => onRate('good')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'good' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={good} style={styles.imageSimple} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => onRate('great')} disabled={disabled}>
-      <View
-        style={[
-          styles.imageSimpleShadow,
-          selected && selected !== 'great' && styles.imageSimpleShadowBackground,
-        ]}
-      />
-      <Image source={great} style={styles.imageSimple} />
-    </TouchableOpacity>
-  </View>
-);
-
-const StarRating = ({ ratingTwenty, ratingSystem, sliderValueChanged, onSlidingComplete }) => (
-  <View>
-    {/* Star, 4.5 */
-      ratingTwenty ? (
-        <View style={styles.modalStarRow}>
-          <Icon name="star" size={46} color={colors.yellow} />
-          <Text style={styles.modalRatingText}>
-            {getRatingTwentyProperties(ratingTwenty, ratingSystem).text}
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.modalStarRow}>
-          <Text style={styles.modalNoRatingText}>Slide to rate</Text>
-        </View>
-      )}
-    {/* Slider */}
-    <Slider
-      minimumValue={ratingSystem === 'regular' ? 0 : 1}
-      maximumValue={20}
-      step={ratingSystem === 'regular' ? 2 : 1}
-      value={ratingTwenty || 0}
-      minimumTrackTintColor={colors.tabRed}
-      maximumTrackTintColor={'rgb(43, 33, 32)'}
-      onValueChange={sliderValueChanged}
-      onSlidingComplete={onSlidingComplete}
-      style={styles.modalSlider}
-    />
-  </View>
-);
+import { SimpleRating } from './SimpleRating';
+import { StarRating } from './StarRating';
 
 class RateScreen extends React.Component {
   static navigationOptions = {
@@ -107,6 +32,7 @@ class RateScreen extends React.Component {
     currentIndex: 0,
     ratingTwenty: 0,
     ratedCount: 0,
+    mediaTotalDuration: 0,
     selected: null,
     pageIndex: 0,
     pageLimit: 10,
@@ -139,6 +65,7 @@ class RateScreen extends React.Component {
     if (this.state.selected === rating) {
       // toggle
       this.setState({ selected: null, ratingTwenty: null });
+      this.removeRating();
     } else {
       const ratingTwenty = getRatingTwentyForText(rating, 'simple');
       this.setState({ selected: rating, ratingTwenty });
@@ -156,7 +83,7 @@ class RateScreen extends React.Component {
       this.rate(ratingTwenty);
     } else {
       this.setState({ ratingTwenty: 0 });
-      this.rate(null);
+      this.removeRating(null);
     }
   };
 
@@ -230,19 +157,67 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = ratingTwenty;
       updatedTopMedia[currentIndex].status = 'completed';
       updatedTopMedia[currentIndex].isRating = false;
-      let ratedCount = 0;
-      // eslint-disable-next-line
-      for (let media of updatedTopMedia) {
-        if (media.ratingTwenty) {
-          ratedCount += 1;
-        }
-      }
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
+      // console.log('media total duration', mediaTotalDuration);
       this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
+        mediaTotalDuration,
         topMedia: updatedTopMedia,
       });
+      if (currentIndex + 1 >= updatedTopMedia.length - 4) {
+        this.loadMoreMedia();
+      }
       this.carousel.snapToNext();
+    } catch (e) {
+      console.log(e, 'error patching rating');
+      updatedTopMedia = updatedTopMedia.slice();
+      updatedTopMedia[currentIndex].isRating = false;
+      this.setState({
+        topMedia: updatedTopMedia,
+        ratingTwenty: updatedTopMedia[currentIndex].ratingTwenty,
+      });
+    }
+  };
+
+  removeRating = async () => {
+    const { currentIndex, topMedia } = this.state;
+    const { accessToken, userId } = this.props;
+    const id = topMedia[currentIndex].id;
+    const libraryEntryId = topMedia[currentIndex].libraryEntryId;
+    setToken(accessToken);
+
+    let updatedTopMedia = topMedia.slice();
+    updatedTopMedia[currentIndex].isRating = true;
+    this.setState({
+      topMedia: updatedTopMedia,
+    });
+
+    try {
+      let response = null;
+      // patch the previous rating
+      response = await Kitsu.update('libraryEntries', {
+        ratingTwenty: null,
+        id: libraryEntryId,
+        anime: {
+          id,
+        },
+        user: {
+          id: userId,
+        },
+      });
+      updatedTopMedia = updatedTopMedia.slice();
+      updatedTopMedia[currentIndex].libraryEntryId = response.id;
+      updatedTopMedia[currentIndex].ratingTwenty = null;
+      updatedTopMedia[currentIndex].status = null;
+      updatedTopMedia[currentIndex].isRating = false;
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
+      this.updateHeaderButton(ratedCount);
+      this.setState({
+        ratedCount,
+        mediaTotalDuration,
+        topMedia: updatedTopMedia,
+      });
     } catch (e) {
       console.log(e, 'error patching rating');
       updatedTopMedia = updatedTopMedia.slice();
@@ -290,8 +265,11 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].status = 'planned';
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
       this.setState({
+        ratedCount,
+        mediaTotalDuration,
         topMedia: updatedTopMedia,
         wantToWatch: true,
         loadingWtW: false,
@@ -316,8 +294,11 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].libraryEntryId = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].ratingTwenty = null;
+      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
       this.setState({
+        ratedCount,
+        mediaTotalDuration,
         topMedia: updatedTopMedia,
         wantToWatch: false,
         loadingWtW: false,
@@ -335,7 +316,7 @@ class RateScreen extends React.Component {
     this.props.navigation.setParams({
       buttonRightText: target > 0 ? `Rate ${target}` : "I'm done",
       buttonRightEnabled: !(target > 0),
-      buttonRightOnPress: target > 0 ? () => {} : this.onDone,
+      buttonRightOnPress: target > 0 ? () => { } : this.onDone,
     });
   };
 
@@ -377,10 +358,11 @@ class RateScreen extends React.Component {
     const { userId } = this.props;
     const { pageLimit, pageIndex } = this.state;
     let ratedCount = this.state.ratedCount;
+    let mediaTotalDuration = this.state.mediaTotalDuration;
 
     let topMedia = await Kitsu.findAll(type, {
       fields: {
-        [type]: 'posterImage,titles',
+        [type]: 'posterImage,titles,episodeCount,episodeLength',
       },
       page: {
         limit: pageLimit,
@@ -405,6 +387,9 @@ class RateScreen extends React.Component {
         });
         if (response[0] && response[0].ratingTwenty) {
           ratedCount += 1;
+          if (media.episodeLength && media.episodeCount) {
+            mediaTotalDuration += media.episodeLength * media.episodeCount;
+          }
         }
         return {
           ratingTwenty: null,
@@ -418,9 +403,29 @@ class RateScreen extends React.Component {
     );
 
     this.updateHeaderButton(ratedCount);
-    this.setState({ ratedCount });
+    this.setState({ ratedCount, mediaTotalDuration });
     return topMedia;
   };
+
+  calculateDurationCount = (updatedTopMedia) => {
+    // Calculates the total episode duration and the # of watched media.
+    let ratedCount = 0;
+    let mediaTotalDuration = 0;
+    // eslint-disable-next-line
+    for (const media of updatedTopMedia) {
+      if (media.ratingTwenty) {
+        ratedCount += 1;
+        if (media.episodeLength && media.episodeCount) {
+          mediaTotalDuration += media.episodeLength * media.episodeCount;
+        }
+      }
+      // console.log(media.titles.en, media.episodeLength, media.episodeCount);
+    }
+    return {
+      ratedCount,
+      mediaTotalDuration,
+    };
+  }
 
   sliderValueChanged = (ratingTwenty) => {
     const { ratingSystem } = this.props;
@@ -450,31 +455,42 @@ class RateScreen extends React.Component {
     return ratingSystem === 'simple' ? (
       <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
     ) : (
-      <StarRating
-        sliderValueChanged={this.sliderValueChanged}
-        onSlidingComplete={this.onSlidingComplete}
-        ratingTwenty={ratingTwenty}
-        ratingSystem={ratingSystem}
-      />
-    );
+        <StarRating
+          sliderValueChanged={this.sliderValueChanged}
+          onSlidingComplete={this.onSlidingComplete}
+          ratingTwenty={ratingTwenty}
+          ratingSystem={ratingSystem}
+        />
+      );
   };
 
   renderItem = ({ item }) => (
-    <Image style={styles.poster} source={{ uri: item.posterImage.large }}>
+    <Image
+      style={styles.poster}
+      source={{ uri: item.posterImage.large }}
+    >
       {item.isRating ? (
         <View style={styles.loadingWrapper}>
           <ActivityIndicator color={'white'} size={'large'} />
         </View>
       ) : (
-        <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterContainer}>
-          <Text style={styles.showTitle}>{item.titles.en}</Text>
-        </LinearGradient>
-      )}
+          <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterInnerContainer}>
+            <Text style={styles.showTitle}>{item.titles.en}</Text>
+          </LinearGradient>
+        )}
     </Image>
   );
 
   render() {
-    const { wantToWatch, topMedia, loadingWtW, fetching } = this.state;
+    const { ratingSystem } = this.props;
+    const {
+      wantToWatch,
+      topMedia,
+      loadingWtW,
+      fetching,
+      ratingTwenty,
+      mediaTotalDuration,
+    } = this.state;
     if (fetching) {
       return (
         <View style={[commonStyles.container, { alignItems: 'center' }]}>
@@ -484,32 +500,42 @@ class RateScreen extends React.Component {
     }
     return (
       <View style={commonStyles.container}>
-        <Text style={styles.title}>Rate the anime you{"'"}ve seen</Text>
-        <View style={styles.line} />
-        <View style={styles.carouselWrapper}>
-          <Carousel
-            ref={(c) => {
-              this.carousel = c;
-            }}
-            data={topMedia}
-            renderItem={this.renderItem}
-            sliderWidth={Dimensions.get('window').width}
-            itemWidth={260}
-            onSnapToItem={this.onSwipe}
-          />
-        </View>
-        {this.renderRatingComponents()}
-        <View style={styles.buttonWatchlistWrapper}>
-          <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
-            {loadingWtW ? (
-              <ActivityIndicator />
-            ) : (
-              <Text style={styles.buttonWatchlistTitle}>
-                {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
-              </Text>
+        <Text style={styles.title}>
+          {ratingTwenty ? (
+            `${formatTime(mediaTotalDuration)} spent watching anime`
+          ) : (
+              "Rate the anime you've seen"
             )}
-          </TouchableOpacity>
-        </View>
+        </Text>
+        <View style={styles.line} />
+        <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+          <View style={styles.carouselWrapper}>
+            <Carousel
+              ref={(c) => {
+                this.carousel = c;
+              }}
+              data={topMedia}
+              renderItem={this.renderItem}
+              sliderWidth={Dimensions.get('window').width}
+              itemWidth={Dimensions.get('window').width * 0.70}
+              onSnapToItem={this.onSwipe}
+            />
+          </View>
+          <View style={[styles.ratingWrapper, { marginVertical: ratingSystem === 'simple' ? 20 : 8 }]}>
+            {this.renderRatingComponents()}
+          </View>
+          <View style={styles.buttonWatchlistWrapper}>
+            <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
+              {loadingWtW ? (
+                <ActivityIndicator />
+              ) : (
+                  <Text style={styles.buttonWatchlistTitle}>
+                    {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
+                  </Text>
+                )}
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -531,6 +557,39 @@ const mapStateToProps = ({ onboarding, auth, user }) => {
 };
 
 export default connect(mapStateToProps, { completeOnboarding })(RateScreen);
+
+function formatTime(minutes) {
+  const t = minutes * 60 * 1000;
+  const cd = 24 * 60 * 60 * 1000;
+  const ch = 60 * 60 * 1000;
+  let d = Math.floor(t / cd);
+  let h = Math.floor((t - d * cd) / ch);
+  let m = Math.round((t - d * cd - h * ch) / 60000);
+  pad = n => (n < 10 ? `0${n}` : n);
+  if (m === 60) {
+    h += 1;
+    m = 0;
+  }
+  if (h === 24) {
+    d += 1;
+    h = 0;
+  }
+  let dayText = 'days';
+  let hourText = 'hours';
+  if (d === 1) {
+    dayText = 'day';
+  }
+  if (h === 1) {
+    hourText = 'hour';
+  }
+  if (d === 0) {
+    return `${h} ${hourText}`;
+  }
+  if (h === 0) {
+    return `${d} ${dayText}`;
+  }
+  return `${d} ${dayText}, ${h} ${hourText}`;
+}
 
 function getSimpleTextForRatingTwenty(rating) {
   if (!rating) {
@@ -564,50 +623,4 @@ function getRatingTwentyForText(text, type) {
     default:
       throw new Error(`Unknown text while determining simple rating type: "${text}"`);
   }
-}
-
-function displayRatingFromTwenty(ratingTwenty, type) {
-  if (type === 'regular') {
-    return Math.round(ratingTwenty / 2) / 2;
-  } else if (type === 'advanced') {
-    return ratingTwenty / 2;
-  } else if (type === 'simple') {
-    return ratingTwenty;
-  }
-
-  throw new Error(`Unknown rating type ${type}.`);
-}
-
-function getRatingTwentyProperties(ratingTwenty, type) {
-  const ratingProperties = {};
-  const rating = displayRatingFromTwenty(ratingTwenty, type);
-
-  switch (type) {
-    case 'advanced':
-      ratingProperties.text = rating >= 10 ? rating : rating.toFixed(1);
-      ratingProperties.textStyle = styles.textStar;
-      break;
-    case 'regular':
-      ratingProperties.text = rating >= 5 ? rating : rating.toFixed(1);
-      ratingProperties.textStyle = styles.textStar;
-      break;
-    case 'simple':
-    default:
-      if (rating < 6) {
-        ratingProperties.text = 'AWFUL';
-        ratingProperties.textStyle = styles.textAwful;
-      } else if (rating < 10) {
-        ratingProperties.text = 'MEH';
-        ratingProperties.textStyle = styles.textMeh;
-      } else if (rating < 16) {
-        ratingProperties.text = 'GOOD';
-        ratingProperties.textStyle = styles.textGood;
-      } else {
-        ratingProperties.text = 'GREAT';
-        ratingProperties.textStyle = styles.textGreat;
-      }
-      break;
-  }
-
-  return ratingProperties;
 }
