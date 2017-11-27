@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
-
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
@@ -12,6 +11,7 @@ import { followUser } from 'kitsu/store/user/actions';
 import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
 import { SearchBox } from 'kitsu/components/SearchBox';
+import { StyledText } from 'kitsu/components/StyledText';
 
 import { styles } from './styles';
 
@@ -118,8 +118,8 @@ class SearchScreen extends Component {
         return activeQuery ? (
           <ResultsList hits={hits} onPress={this.navigateToMedia} />
         ) : (
-          <TopsList active={route.key} mounted navigation={navigation} />
-        );
+            <TopsList active={route.key} mounted navigation={navigation} />
+          );
       }
     }
   };
@@ -127,15 +127,11 @@ class SearchScreen extends Component {
   renderIndicator = () => <View />;
 
   renderLabel = ({ route }) => {
-    const labelTextStyle = [styles.tabBarText];
     const activeRoute = this.state.routes[this.state.index];
-    if (route.key === activeRoute.key) {
-      labelTextStyle.push(styles.tabBarTextActive);
-    }
 
     return (
       <View style={styles.tabBarItem}>
-        <Text style={labelTextStyle}>{route.title}</Text>
+        <StyledText color={route.key === activeRoute.key ? 'orange' : 'grey'} size="xsmall" bold>{route.title}</StyledText>
       </View>
     );
   };

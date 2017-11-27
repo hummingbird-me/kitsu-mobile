@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
-const TABBAR_HEIGHT = Platform.select({ ios: 60, android: 50 });
+const TABBAR_HEIGHT = Platform.select({ ios: 62, android: 52 });
 
 export const styles = StyleSheet.create({
   container: {
@@ -38,12 +38,11 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: StyleSheet.hairlineWidth,
     marginTop: Platform.select({ ios: 0, android: 20 }),
-    marginBottom: 10,
     justifyContent: 'center',
   },
   tabBarItem: {
     height: 27,
-    marginTop: 0,
+    marginTop: 8,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
