@@ -97,15 +97,15 @@ class AuthScreen extends React.Component {
   };
 
   onSubmitLogin = () => {
-    const { username, password } = this.state;
+    const { email, password } = this.state;
     const { navigation } = this.props;
-    if (isEmpty(username) || isEmpty(password)) {
+    if (isEmpty(email) || isEmpty(password)) {
       this.setState({
         toastTitle: "Inputs can't be blank",
         toastVisible: true,
       });
     } else {
-      this.props.loginUser({ username, password }, navigation);
+      this.props.loginUser({ email, password }, navigation);
     }
   };
 

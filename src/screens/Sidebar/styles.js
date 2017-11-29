@@ -95,6 +95,44 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: 'grey',
   },
+  logoutButton: {
+    marginTop: 20,
+    marginBottom: 40,
+    padding: 12,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    fontWeight: '500',
+    color: colors.activeRed,
+  },
+  userProfileButton: {
+    marginTop: 12,
+    marginHorizontal: 12,
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userProfileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  userProfileTextWrapper: {
+    marginLeft: 12,
+    backgroundColor: 'transparent',
+  },
+  userProfileName: {
+    fontFamily: 'OpenSans',
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  userProfileDetailsText: {
+    fontFamily: 'OpenSans',
+    color: colors.white,
+    fontSize: 10,
+  },
 });
 
 export const flatten = (...additionalStyles) => {

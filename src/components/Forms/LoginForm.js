@@ -20,9 +20,9 @@ const LoginForm = ({
       placeholder="Email"
       autoCapitalize="none"
       autoCorrect={false}
-      value={data.username}
+      value={data.email}
       keyboardType={'email-address'}
-      onChangeText={text => handleChange(text, 'username')}
+      onChangeText={text => handleChange(text, 'email')}
     />
     <Input
       placeholder="Password"

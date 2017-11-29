@@ -49,9 +49,9 @@ class NotificationsScreen extends PureComponent {
         } else {
           text = 'replied to';
           if (target && target[0].user) {
-            if (target[0].user[0].id === actor.id) {
+            if (target[0].user.id === actor.id) {
               text = `${text} their`;
-            } else if (target[0].user[0].id === id) {
+            } else if (target[0].user.id === id) {
               text = `${text} your`;
             }
           } else {
@@ -76,10 +76,10 @@ class NotificationsScreen extends PureComponent {
             {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
           </Text>
         ) : (
-          <Text>
-            <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
-          </Text>
-        );
+            <Text>
+              <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
+            </Text>
+          );
     }
     const ava =
       activity.actor && activity.actor.avatar
