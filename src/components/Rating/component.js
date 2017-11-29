@@ -105,24 +105,22 @@ export class Rating extends PureComponent {
     viewType: 'select',
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state.ratingTwenty = props.rating;
-  }
-
   state = {
     inlineFacesVisible: false,
     modalVisible: false,
-    ratingTwenty: 20,
+    ratingTwenty: this.props.rating,
   }
 
   onModalClosed = () => {
     this.cancel();
   }
 
+  setSimpleRating = (ratingTwenty) => {
+    this.setState({ ratingTwenty });
+  }
+
   toggleModal = (selectedButton) => {
-    const { ratingSystem, viewType } = this.props;
+    const { ratingSystem } = this.props;
 
     // If there's a specific simple system rating we can action, just do that, otherwise
     // go down to the two modals.
@@ -132,6 +130,8 @@ export class Rating extends PureComponent {
         modalVisible: false,
         ratingTwenty,
       });
+
+      this.props.onRatingChanged(ratingTwenty);
     } else {
       // All other modes get the modal, which should render itself correctly
       // based on our ratingSystem prop.
@@ -286,57 +286,66 @@ export class Rating extends PureComponent {
           </View>
         </TouchableOpacity>
 
-        {ratingSystem !== 'simple'
-          && <Modal
-            animationType="slide"
-            visible={this.state.modalVisible}
-            onRequestClose={this.onModalClosed}
-            transparent
-          >
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                {/* Cancel, Slide / Tap to Rate, Done */}
-                <TouchableOpacity onPress={this.cancel}>
-                  <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>Cancel</Text>
-                </TouchableOpacity>
-                <Text style={styles.modalHeaderText}>
-                  {ratingSystem === 'simple' ? 'Tap' : 'Slide'} to Rate</Text>
-                <TouchableOpacity onPress={this.confirm}>
-                  <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>Done</Text>
-                </TouchableOpacity>
-              </View>
+        <Modal
+          animationType="slide"
+          visible={this.state.modalVisible}
+          onRequestClose={this.onModalClosed}
+          transparent
+        >
+          <View style={ratingSystem === 'simple' ? styles.modalContentSimple : styles.modalContent}>
+            <View style={styles.modalHeader}>
+              {/* Cancel, Slide / Tap to Rate, Done */}
+              <TouchableOpacity onPress={this.cancel}>
+                <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>Cancel</Text>
+              </TouchableOpacity>
+              <Text style={styles.modalHeaderText}>
+                {ratingSystem === 'simple' ? 'Tap' : 'Slide'} to Rate</Text>
+              <TouchableOpacity onPress={this.confirm}>
+                <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>Done</Text>
+              </TouchableOpacity>
+            </View>
 
-              <View style={styles.modalBody}>
-                { /* Star, 4.5 */
-                  ratingTwenty ?
-                    <View style={styles.modalStarRow}>
-                      <Icon name="star" size={65} color={colors.yellow} />
-                      <Text style={styles.modalRatingText}>
-                        {getRatingTwentyProperties(ratingTwenty, ratingSystem).text}
-                      </Text>
-                    </View>
-                    :
-                    <View style={styles.modalStarRow}>
-                      <Text style={styles.modalNoRatingText}>
-                        No Rating
-                      </Text>
-                    </View>
-                }
-                {/* Slider */}
-                <Slider
-                  minimumValue={ratingSystem === 'regular' ? 0 : 1}
-                  maximumValue={20}
-                  step={ratingSystem === 'regular' ? 2 : 1}
-                  value={ratingTwenty}
-                  minimumTrackTintColor={colors.tabRed}
-                  maximumTrackTintColor={'rgb(43, 33, 32)'}
-                  onValueChange={this.sliderValueChanged}
-                  style={styles.modalSlider}
+            {ratingSystem === 'simple' &&
+              <View style={styles.modalBodySimple} >
+                <Rating
+                  rating={this.state.ratingTwenty}
+                  onRatingChanged={this.setSimpleRating}
                 />
               </View>
+            }
+
+            {ratingSystem !== 'simple' &&
+            <View style={styles.modalBody}>
+              { /* Star, 4.5 */
+                ratingTwenty ?
+                  <View style={styles.modalStarRow}>
+                    <Icon name="star" size={65} color={colors.yellow} />
+                    <Text style={styles.modalRatingText}>
+                      {getRatingTwentyProperties(ratingTwenty, ratingSystem).text}
+                    </Text>
+                  </View>
+                  :
+                  <View style={styles.modalStarRow}>
+                    <Text style={styles.modalNoRatingText}>
+                      No Rating
+                    </Text>
+                  </View>
+              }
+              {/* Slider */}
+              <Slider
+                minimumValue={ratingSystem === 'regular' ? 0 : 1}
+                maximumValue={20}
+                step={ratingSystem === 'regular' ? 2 : 1}
+                value={ratingTwenty}
+                minimumTrackTintColor={colors.tabRed}
+                maximumTrackTintColor={'rgb(43, 33, 32)'}
+                onValueChange={this.sliderValueChanged}
+                style={styles.modalSlider}
+              />
             </View>
-          </Modal>
-        }
+            }
+          </View>
+        </Modal>
       </View>
     );
   }
