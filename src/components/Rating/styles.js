@@ -23,6 +23,14 @@ export const styles = StyleSheet.create({
     bottom: 0,
     height: 250,
   },
+  modalContentSimple: {
+    position: 'absolute',
+    backgroundColor: colors.listBackPurple,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 125,
+  },
   modalHeader: {
     flex: 1,
     flexDirection: 'row',
@@ -50,6 +58,12 @@ export const styles = StyleSheet.create({
   modalBody: {
     flexGrow: 1,
     justifyContent: 'center',
+    backgroundColor: colors.listBackPurple,
+  },
+  modalBodySimple: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
     backgroundColor: colors.listBackPurple,
   },
   modalStarRow: {
