@@ -50,7 +50,6 @@ class NotificationsScreen extends PureComponent {
           text = 'mentioned you in a comment.';
         } else {
           text = 'replied to';
-          console.log(target);
           if (target && target[0] && target[0].user) {
             if (target[0].user.id === actor.id) {
               text = `${text} their`;
