@@ -41,6 +41,8 @@ class NotificationsScreen extends PureComponent {
         return <Text>liked your comment.</Text>;
       case 'invited':
         return <Text>invited you to a group.</Text>;
+      case 'vote':
+        return <Text>liked your reaction.</Text>;
       case 'comment':
         if (id === replyToUser.split(':')[1]) {
           text = `replied to your ${replyToType}.`;
@@ -61,7 +63,7 @@ class NotificationsScreen extends PureComponent {
         }
         return <Text>{text}</Text>;
       default:
-        return <Text>made an action</Text>;
+        return <Text>made an action.</Text>;
     }
   };
 
