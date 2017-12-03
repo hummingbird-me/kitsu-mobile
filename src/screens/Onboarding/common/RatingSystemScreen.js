@@ -138,7 +138,7 @@ class RatingSystemScreen extends React.Component {
                 fontSize: 12,
               }}
             >
-              Don{'"'}t worry, you can change this later!
+              Don{"'"}t worry, you can change this later!
             </Text>
           </View>
         </View>

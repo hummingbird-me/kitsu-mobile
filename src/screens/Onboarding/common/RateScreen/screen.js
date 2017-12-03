@@ -455,31 +455,34 @@ class RateScreen extends React.Component {
     return ratingSystem === 'simple' ? (
       <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
     ) : (
-        <StarRating
-          sliderValueChanged={this.sliderValueChanged}
-          onSlidingComplete={this.onSlidingComplete}
-          ratingTwenty={ratingTwenty}
-          ratingSystem={ratingSystem}
-        />
-      );
+      <StarRating
+        sliderValueChanged={this.sliderValueChanged}
+        onSlidingComplete={this.onSlidingComplete}
+        ratingTwenty={ratingTwenty}
+        ratingSystem={ratingSystem}
+      />
+    );
   };
 
-  renderItem = ({ item }) => (
-    <Image
-      style={styles.poster}
-      source={{ uri: item.posterImage.large }}
-    >
-      {item.isRating ? (
-        <View style={styles.loadingWrapper}>
-          <ActivityIndicator color={'white'} size={'large'} />
-        </View>
-      ) : (
+  renderItem = ({ item }) => {
+    const { posterImage, titles } = item;
+    return (
+      <Image
+        style={styles.poster}
+        source={{ uri: posterImage.large }}
+      >
+        {item.isRating ? (
+          <View style={styles.loadingWrapper}>
+            <ActivityIndicator color={'white'} size={'large'} />
+          </View>
+        ) : (
           <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterInnerContainer}>
-            <Text style={styles.showTitle}>{item.titles.en}</Text>
+            <Text style={styles.showTitle}>{titles.en || titles.en_us || titles.en_jp || titles.ja_jp}</Text>
           </LinearGradient>
         )}
-    </Image>
-  );
+      </Image>
+    );
+  };
 
   render() {
     const { ratingSystem } = this.props;
@@ -491,6 +494,7 @@ class RateScreen extends React.Component {
       ratingTwenty,
       mediaTotalDuration,
     } = this.state;
+    console.log(topMedia)
     if (fetching) {
       return (
         <View style={[commonStyles.container, { alignItems: 'center' }]}>
@@ -504,8 +508,8 @@ class RateScreen extends React.Component {
           {ratingTwenty ? (
             `${formatTime(mediaTotalDuration)} spent watching anime`
           ) : (
-              "Rate the anime you've seen"
-            )}
+            "Rate the anime you've seen"
+          )}
         </Text>
         <View style={styles.line} />
         <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
@@ -529,10 +533,10 @@ class RateScreen extends React.Component {
               {loadingWtW ? (
                 <ActivityIndicator />
               ) : (
-                  <Text style={styles.buttonWatchlistTitle}>
-                    {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
-                  </Text>
-                )}
+                <Text style={styles.buttonWatchlistTitle}>
+                  {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </ScrollView>
