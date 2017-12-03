@@ -494,7 +494,6 @@ class RateScreen extends React.Component {
       ratingTwenty,
       mediaTotalDuration,
     } = this.state;
-    console.log(topMedia)
     if (fetching) {
       return (
         <View style={[commonStyles.container, { alignItems: 'center' }]}>
