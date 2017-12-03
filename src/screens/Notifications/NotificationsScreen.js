@@ -41,6 +41,8 @@ class NotificationsScreen extends PureComponent {
         return <Text>liked your comment.</Text>;
       case 'invited':
         return <Text>invited you to a group.</Text>;
+      case 'vote':
+        return <Text>liked your reaction.</Text>;
       case 'comment':
         if (id === replyToUser.split(':')[1]) {
           text = `replied to your ${replyToType}.`;
@@ -48,7 +50,7 @@ class NotificationsScreen extends PureComponent {
           text = 'mentioned you in a comment.';
         } else {
           text = 'replied to';
-          if (target && target[0].user) {
+          if (target && target[0] && target[0].user) {
             if (target[0].user.id === actor.id) {
               text = `${text} their`;
             } else if (target[0].user.id === id) {
@@ -61,7 +63,7 @@ class NotificationsScreen extends PureComponent {
         }
         return <Text>{text}</Text>;
       default:
-        return <Text>made an action</Text>;
+        return <Text>made an action.</Text>;
     }
   };
 
@@ -72,12 +74,12 @@ class NotificationsScreen extends PureComponent {
     if (item.activities.length > 1) {
       others =
         item.activities.length === 2 ? (
-          <Text style={{ color: '#FF300A', fontWeight: '500' }}>
+          <Text style={{ color: '#333', fontWeight: '500' }}>
             {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
           </Text>
         ) : (
             <Text>
-              <Text style={{ fontWeight: '600' }}>{item.activities.length - 1}</Text> others{' '}
+              {item.activities.length - 1} others{' '}
             </Text>
           );
     }
@@ -89,7 +91,7 @@ class NotificationsScreen extends PureComponent {
     return (
       <TouchableOpacity style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
         <View style={styles.iconContainer}>
-          <Icon name="circle" style={styles.icon} />
+          <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={{ paddingRight: 10 }}>
