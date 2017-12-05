@@ -35,8 +35,8 @@ const TabRoutes = TabRouter({
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
   Franchise: { getScreen: () => require('./pages/Franchise').Franchise },
 }, {
-    initialRouteName: 'Summary',
-  });
+  initialRouteName: 'Summary',
+});
 
 /* eslint-enable global-require */
 
