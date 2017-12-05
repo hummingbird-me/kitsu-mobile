@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { search } from 'kitsu/store/anime/actions';
-import { ResultsList } from './Lists';
 import * as colors from 'kitsu/constants/colors';
+import { ResultsList } from './Lists';
 
 const styles = StyleSheet.create({
   button: {

@@ -35,8 +35,8 @@ const TabRoutes = TabRouter({
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
   Franchise: { getScreen: () => require('./pages/Franchise').Franchise },
 }, {
-  initialRouteName: 'Summary',
-});
+    initialRouteName: 'Summary',
+  });
 
 /* eslint-enable global-require */
 
@@ -62,8 +62,8 @@ class MediaPages extends PureComponent {
     this.fetchMedia(mediaType, mediaId);
   }
 
-  onMainButtonOptionsSelected = () => {}
-  onMoreButtonOptionsSelected = () => {}
+  onMainButtonOptionsSelected = () => { }
+  onMoreButtonOptionsSelected = () => { }
 
   setActiveTab = (tab) => {
     this.setState({ active: tab });
@@ -77,7 +77,6 @@ class MediaPages extends PureComponent {
       const media = await Kitsu.one(type, id).get({
         include: `categories,mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
       });
-
       // Now that we've got the media, everything else can go async together.
       const [
         castings,
