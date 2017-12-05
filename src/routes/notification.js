@@ -4,6 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
 import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
+import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import notificationIcon from 'kitsu/assets/img/tabbar_icons/notification.png';
 import * as colors from 'kitsu/constants/colors';
 import navigationOptions from './navigationOptions';
@@ -18,6 +19,9 @@ const NotifStack = StackNavigator(
     },
     ProfilePages: {
       screen: ProfilePages,
+    },
+    MediaPages: {
+      screen: MediaPages,
     },
   },
   {

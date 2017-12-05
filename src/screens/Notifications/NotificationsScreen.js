@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
+import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 import { styles } from './styles';
@@ -20,30 +21,58 @@ class NotificationsScreen extends PureComponent {
     this.props.getNotifications();
   }
 
-  onNotificationPressed = (activity) => {
+  onNotificationPressed = async (activity) => {
+    console.log(activity);
     const { target, verb } = activity;
     const { currentUser, navigation } = this.props;
     switch (verb) {
       case 'follow':
-        navigation.navigate('ProfilePages', { userId: currentUser.userId });
+        navigation.navigate('ProfilePages', { userId: currentUser.id });
         break;
       case 'invited':
+        break;
       case 'vote':
+        try {
+          const response = await this.fetchMediaReactions(target[0].id);
+          this.props.navigation.navigate('MediaPages', {
+            mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
+            type: response.anime ? 'anime' : 'manga',
+          });
+        } catch (e) {
+          console.log(e);
+        }
         break;
       case 'post':
       case 'post_like':
       case 'comment_like':
       case 'comment':
-        navigation.navigate('PostDetails', {
-          post: target[0],
-          comments: null,
-          like: null,
-          currentUser,
-        });
+        if (target.length !== 0) {
+          navigation.navigate('PostDetails', {
+            post: target[0],
+            comments: null,
+            like: null,
+            currentUser,
+          });
+        }
         break;
       default:
         break;
     }
+  }
+
+  fetchMediaReactions = async (mediaId) => {
+    // temporary request to fetch mediareactions & to navigate corresponding
+    // media screen. (since we don't have mediareactions screen right now)
+    let reactions = null;
+    try {
+      reactions = await Kitsu.find('mediaReactions', mediaId, {
+        include: 'user,anime,manga',
+      });
+      console.log(reactions);
+    } catch (e) {
+      console.log(e);
+    }
+    return reactions;
   }
 
   handleActionBtnPress = () => {
