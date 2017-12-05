@@ -173,7 +173,7 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, like, taggedMedia } = this.state;
+    const { comment, comments, like } = this.state;
 
     const {
       content,
@@ -212,7 +212,7 @@ export default class PostDetails extends PureComponent {
               isLiked={!!like}
               onLikePress={this.toggleLike}
               onCommentPress={this.focusOnCommentInput}
-              onSharePress={() => { }}
+              onSharePress={() => {}}
             />
 
             <PostCommentsSection>

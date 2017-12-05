@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
-import * as colors from 'kitsu/constants/colors';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 import { styles } from './styles';
 
@@ -124,10 +123,10 @@ class NotificationsScreen extends PureComponent {
             {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
           </Text>
         ) : (
-            <Text>
-              {item.activities.length - 1} others{' '}
-            </Text>
-          );
+          <Text>
+            {item.activities.length - 1} others{' '}
+          </Text>
+        );
     }
     const ava =
       activity.actor && activity.actor.avatar

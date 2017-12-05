@@ -118,8 +118,8 @@ class SearchScreen extends Component {
         return activeQuery ? (
           <ResultsList hits={hits} onPress={this.navigateToMedia} />
         ) : (
-            <TopsList active={route.key} mounted navigation={navigation} />
-          );
+          <TopsList active={route.key} mounted navigation={navigation} />
+        );
       }
     }
   };
