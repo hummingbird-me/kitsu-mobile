@@ -23,7 +23,7 @@ export default class PostDetails extends PureComponent {
 
     this.state = {
       comment: '',
-      comments: [...props.navigation.state.params.comments],
+      comments: props.navigation.state.params.comments && [...props.navigation.state.params.comments],
       like: props.navigation.state.params.like,
       taggedMedia: {
         media: {
@@ -32,6 +32,14 @@ export default class PostDetails extends PureComponent {
         episode: 1,
       },
     };
+  }
+
+  componentDidMount() {
+    const { comments, like } = this.props.navigation.state.params;
+    if (!comments || !like) {
+      this.fetchComments();
+      this.fetchLikes();
+    }
   }
 
   onCommentChanged = comment => this.setState({ comment })
@@ -105,9 +113,31 @@ export default class PostDetails extends PureComponent {
       // and there's no way for me to access the relationship
       // data from the raw response from this context.
 
-      if (this.mounted) this.setState({ comments });
+      this.setState({ comments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
+    }
+  }
+
+  fetchLikes = async () => {
+    const { currentUser, post } = this.props.navigation.state.params;
+    try {
+      const likes = await Kitsu.findAll('postLikes', {
+        filter: {
+          postId: post.id,
+          userId: currentUser.id,
+        },
+        include: 'user',
+        page: {
+          limit: 4,
+        },
+      });
+
+      const like = likes.length && likes[0];
+
+      this.setState({ like });
+    } catch (err) {
+      console.log('Error fetching likes: ', err);
     }
   }
 
@@ -182,7 +212,7 @@ export default class PostDetails extends PureComponent {
               isLiked={!!like}
               onLikePress={this.toggleLike}
               onCommentPress={this.focusOnCommentInput}
-              onSharePress={() => {}}
+              onSharePress={() => { }}
             />
 
             <PostCommentsSection>

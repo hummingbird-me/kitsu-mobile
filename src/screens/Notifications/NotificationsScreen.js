@@ -20,6 +20,32 @@ class NotificationsScreen extends PureComponent {
     this.props.getNotifications();
   }
 
+  onNotificationPressed = (activity) => {
+    const { target, verb } = activity;
+    const { currentUser, navigation } = this.props;
+    switch (verb) {
+      case 'follow':
+        navigation.navigate('ProfilePages', { userId: currentUser.userId });
+        break;
+      case 'invited':
+      case 'vote':
+        break;
+      case 'post':
+      case 'post_like':
+      case 'comment_like':
+      case 'comment':
+        navigation.navigate('PostDetails', {
+          post: target[0],
+          comments: null,
+          like: null,
+          currentUser,
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   handleActionBtnPress = () => {
     if (Platform.OS === 'ios') {
       OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
@@ -89,7 +115,7 @@ class NotificationsScreen extends PureComponent {
         : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
+      <TouchableOpacity onPress={() => this.onNotificationPressed(activity)} style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
         <View style={styles.iconContainer}>
           <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
         </View>
