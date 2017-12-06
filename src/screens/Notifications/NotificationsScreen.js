@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
-import * as colors from 'kitsu/constants/colors';
+import { Kitsu } from 'kitsu/config/api';
 import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
 import { styles } from './styles';
 
@@ -19,6 +19,51 @@ class NotificationsScreen extends PureComponent {
   componentDidMount() {
     this.props.getNotifications();
   }
+
+  onNotificationPressed = async (activity) => {
+    console.log(activity);
+    const { target, verb, actor } = activity;
+    const { currentUser, navigation } = this.props;
+    switch (verb) {
+      case 'follow':
+        navigation.navigate('ProfilePages', { userId: actor.id || currentUser.id });
+        break;
+      case 'invited':
+        break;
+      case 'vote':
+        try {
+          const response = await this.fetchMediaReactions(target[0].id);
+          navigation.navigate('MediaPages', {
+            mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
+            mediaType: response.anime ? 'anime' : 'manga',
+          });
+        } catch (e) {
+          console.log(e);
+        }
+        break;
+      case 'post':
+      case 'post_like':
+      case 'comment_like':
+      case 'comment':
+        if (target.length !== 0) {
+          navigation.navigate('PostDetails', {
+            post: target[0],
+            comments: null,
+            like: null,
+            currentUser,
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  // temporary request to fetch mediareactions & to navigate corresponding
+  // media screen. (since we don't have mediareactions screen right now)
+  fetchMediaReactions = async mediaId => Kitsu.find('mediaReactions', mediaId, {
+    include: 'user,anime,manga',
+  });
 
   handleActionBtnPress = () => {
     if (Platform.OS === 'ios') {
@@ -78,10 +123,10 @@ class NotificationsScreen extends PureComponent {
             {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
           </Text>
         ) : (
-            <Text>
-              {item.activities.length - 1} others{' '}
-            </Text>
-          );
+          <Text>
+            {item.activities.length - 1} others{' '}
+          </Text>
+        );
     }
     const ava =
       activity.actor && activity.actor.avatar
@@ -89,7 +134,7 @@ class NotificationsScreen extends PureComponent {
         : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
+      <TouchableOpacity onPress={() => this.onNotificationPressed(activity)} style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
         <View style={styles.iconContainer}>
           <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
         </View>
