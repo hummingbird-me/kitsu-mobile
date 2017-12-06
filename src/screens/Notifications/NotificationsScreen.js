@@ -21,7 +21,6 @@ class NotificationsScreen extends PureComponent {
   }
 
   onNotificationPressed = async (activity) => {
-    console.log(activity);
     const { target, verb, actor } = activity;
     const { currentUser, navigation } = this.props;
     switch (verb) {
