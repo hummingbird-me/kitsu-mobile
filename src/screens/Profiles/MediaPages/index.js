@@ -136,7 +136,6 @@ class MediaPages extends PureComponent {
       mediaReactions,
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
-
     if (loading) {
       return (
         <SceneContainer>

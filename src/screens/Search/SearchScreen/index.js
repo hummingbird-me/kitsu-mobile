@@ -78,7 +78,7 @@ class SearchScreen extends Component {
   navigateToMedia = (media) => {
     this.props.navigation.navigate('MediaPages', {
       mediaId: media.id,
-      type: media.type,
+      mediaType: media.kind,
     });
   };
 
