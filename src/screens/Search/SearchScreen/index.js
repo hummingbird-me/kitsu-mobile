@@ -76,7 +76,7 @@ class SearchScreen extends Component {
   handleIndexChange = index => this.setState({ index });
 
   navigateToMedia = (media) => {
-    this.props.navigation.navigate('Media', {
+    this.props.navigation.navigate('MediaPages', {
       mediaId: media.id,
       type: media.type,
     });
