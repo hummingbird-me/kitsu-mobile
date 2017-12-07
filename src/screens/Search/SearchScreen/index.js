@@ -112,7 +112,7 @@ class SearchScreen extends Component {
     const hits = this.state.searchResults[route.key];
     switch (route.key) {
       case 'users': {
-        return <UsersList hits={hits} onFollow={followUser} onData={captureUsersData} />;
+        return <UsersList hits={hits} onFollow={followUser} onData={captureUsersData} navigation={navigation} />;
       }
       default: {
         return activeQuery ? (
