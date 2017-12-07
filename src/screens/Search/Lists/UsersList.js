@@ -81,12 +81,12 @@ const User = ({ navigation, user, onFollow }) => {
           <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>
         </View>
       </View>
-      <View style={styles.userRightSection}>
+      {/* <View style={styles.userRightSection}>
         <TouchableHighlight style={styles.actionButton} onPress={() => onFollow(user.id)}>
           <Text style={styles.actionButtonText}>Follow</Text>
         </TouchableHighlight>
         <FontAwesome name="ellipsis-v" size={20} style={styles.moreIcon} />
-      </View>
+  </View> */}
     </TouchableOpacity>
   );
 };
