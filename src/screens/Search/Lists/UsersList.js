@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableHighlight } from 'react-native';
+import { View, TouchableOpacity, Text, FlatList, StyleSheet, Image, TouchableHighlight } from 'react-native';
 import * as PropTypes from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
@@ -65,11 +65,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const User = ({ user, onFollow }) => {
+const onUserPress = (navigation, userId) => {
+  navigation.navigate('ProfilePages', { userId });
+};
+
+const User = ({ navigation, user, onFollow }) => {
   const userAvatar = user.avatar ? { uri: user.avatar.small } : DEFAULT_AVATAR;
   const followerTxt = user.followersCount > 1 ? 'followers' : 'follower';
   return (
-    <View style={styles.userContainer}>
+    <TouchableOpacity onPress={() => onUserPress(navigation, user.id)} activeOpacity={0.6} style={styles.userContainer}>
       <View style={styles.userLeftSection}>
         <Image source={userAvatar} style={styles.userAvatar} />
         <View style={styles.userMetaContainer}>
@@ -77,22 +81,23 @@ const User = ({ user, onFollow }) => {
           <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>
         </View>
       </View>
-      <View style={styles.userRightSection}>
+      {/* <View style={styles.userRightSection}>
         <TouchableHighlight style={styles.actionButton} onPress={() => onFollow(user.id)}>
           <Text style={styles.actionButtonText}>Follow</Text>
         </TouchableHighlight>
         <FontAwesome name="ellipsis-v" size={20} style={styles.moreIcon} />
-      </View>
-    </View>
+  </View> */}
+    </TouchableOpacity>
   );
 };
 
 User.propTypes = {
-  user: PropTypes.object,
-  onFollow: PropTypes.func,
+  user: PropTypes.object.isRequired,
+  onFollow: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired,
 };
 
-const UsersList = ({ hits, onFollow, onData }) => {
+const UsersList = ({ hits, onFollow, onData, navigation }) => {
   // Send users data to reducer to maintain single source of truth
   onData(hits);
 
@@ -103,7 +108,7 @@ const UsersList = ({ hits, onFollow, onData }) => {
       style={styles.container}
       scrollEnabled
       contentContainerStyle={styles.userList}
-      renderItem={({ item }) => <User key={`${item.name}`} user={item} onFollow={onFollow} />}
+      renderItem={({ item }) => <User key={`${item.name}`} navigation={navigation} user={item} onFollow={onFollow} />}
     />
   );
 };
@@ -112,6 +117,7 @@ UsersList.propTypes = {
   hits: PropTypes.array,
   onFollow: PropTypes.func.isRequired,
   onData: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired,
 };
 
 UsersList.defaultProps = {
