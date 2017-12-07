@@ -1,3 +1,15 @@
+# Kitsu Mobile
+
+---
+**<p align="center">This is our mobile repository. It contains the React Native app.<br />Check out the [meta], [client], [server] and [api docs] repositories.</p>**
+
+[meta]:https://github.com/hummingbird-me/hummingbird
+[client]:https://github.com/hummingbird-me/hummingbird-client
+[server]:https://github.com/hummingbird-me/hummingbird-server
+[api docs]:https://github.com/hummingbird-me/hummingbird-client
+
+---
+
 ## Installation
 
 ### Prerequsites
