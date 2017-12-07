@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { tabRed, listBackPurple } from 'kitsu/constants/colors';
-import HomeScreen from 'kitsu/screens/HomeScreen';
 import SearchStack from './search';
 import NotifStack from './notification';
 import QuickUpdateStack from './quickUpdate';
@@ -25,9 +24,6 @@ const Tabs = TabNavigator(
     Search: {
       screen: SearchStack,
     },
-    // Home: {
-    //   screen: HomeScreen,
-    // },
     Notif: {
       screen: NotifStack,
     },

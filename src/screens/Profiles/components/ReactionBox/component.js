@@ -10,6 +10,10 @@ import { styles } from './styles';
 export const ReactionBox = ({ boxed, reactedMedia, reaction }) => {
   const { user } = reaction;
   const timeStamp = moment(reaction.createdAt).fromNow();
+  // TODO: we somehow get user null which cause error ~ resulting in empty view
+  // @media page. here is a temporary fix:
+  // console.log('reaction box', user); // null.
+  if (!user) return <View />;
   return (
     <View style={[styles.wrap, boxed && styles.wrap__boxed]}>
       <AvatarHeader
