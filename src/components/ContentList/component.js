@@ -13,6 +13,7 @@ export const ContentList = ({ title, data, onPress, dark = false, ...props }) =>
       horizontal
       removeClippedSubviews={false}
       data={data}
+      ListHeaderComponent={() => <View style={{ width: 10 }} />}
       renderItem={({ item }) => <ItemRenderer item={item} {...props} />}
     />
   </View>

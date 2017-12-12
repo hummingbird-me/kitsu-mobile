@@ -3,7 +3,8 @@ import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
   contentListContainer: {
-    padding: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   darkBg: {
     backgroundColor: colors.lightPurple,
@@ -19,6 +20,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   contentListHeaderText: {
     fontSize: 12,
