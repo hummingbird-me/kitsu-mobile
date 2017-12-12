@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TouchableOpacity, View, ViewPropTypes } from 'react-native';
+import { Text, TouchableOpacity, View, ViewPropTypes, ActivityIndicator } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
@@ -16,12 +16,15 @@ export const MediaCard = ({
   ratingTwenty,
   ratingSystem,
   style,
+  loading,
 }) => {
   const onPress = () => {
-    navigate('MediaPages', {
-      mediaId: mediaData.id,
-      mediaType: mediaData.type,
-    });
+    if (mediaData.id && mediaData.type) {
+      navigate('MediaPages', {
+        mediaId: mediaData.id,
+        mediaType: mediaData.type,
+      });
+    }
   };
 
   return (
@@ -54,6 +57,13 @@ export const MediaCard = ({
             style={styles.rating}
           />
         )}
+
+        {loading &&
+          <View style={styles.loading}>
+            <ActivityIndicator color={'rgba(255,255,255,0.6)'} />
+          </View>
+        }
+
       </View>
     </TouchableOpacity>
   );
@@ -69,6 +79,7 @@ MediaCard.propTypes = {
   ratingTwenty: PropTypes.number,
   ratingSystem: PropTypes.string,
   style: ViewPropTypes.style,
+  loading: PropTypes.boolean,
 };
 
 MediaCard.defaultProps = {
@@ -78,4 +89,5 @@ MediaCard.defaultProps = {
   ratingTwenty: undefined,
   ratingSystem: 'simple',
   style: null,
+  loading: false,
 };
