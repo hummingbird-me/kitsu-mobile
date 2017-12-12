@@ -81,6 +81,10 @@ class TopsList extends PureComponent {
     return data;
   }
 
+  isEmpty(array) {
+    return (array === undefined || array.length === 0);
+  }
+
   handleViewAllPress = (title, type) => {
     this.props.navigation.navigate('SearchResults', {
       label: title,
@@ -189,11 +193,15 @@ class TopsList extends PureComponent {
       },
     ];
 
+    // Loading data is just an array of strings
+    // We don't care about how it's represented
+    const loadingData = Array(5).fill(0).map(i => i.toString());
+
     const listData = [
       {
         title: `Top Airing ${activeLabel}`,
-        data: data.topAiring,
-        type: 'topAiring',
+        data: this.isEmpty(data.topAiring) ? loadingData : data.topAiring,
+        type: this.isEmpty(data.topAiring) ? 'loading' : 'topAiring',
       },
       {
         title: `${activeLabel} By Streaming`,
@@ -203,8 +211,8 @@ class TopsList extends PureComponent {
       },
       {
         title: `Top Upcoming ${activeLabel}`,
-        data: data.topUpcoming,
-        type: 'topUpcoming',
+        data: this.isEmpty(data.topUpcoming) ? loadingData : data.topUpcoming,
+        type: this.isEmpty(data.topUpcoming) ? 'loading' : 'topUpcoming',
       },
       {
         title: `${activeLabel} By Seasons`,
@@ -214,8 +222,8 @@ class TopsList extends PureComponent {
       },
       {
         title: `Highest Rated ${activeLabel}`,
-        data: data.highest,
-        type: 'highest',
+        data: this.isEmpty(data.highest) ? loadingData : data.highest,
+        type: this.isEmpty(data.highest) ? 'loading' : 'highest',
       },
       {
         title: `${activeLabel} By Categeory`,
@@ -225,8 +233,8 @@ class TopsList extends PureComponent {
       },
       {
         title: `Most Popular ${activeLabel}`,
-        data: data.popular,
-        type: 'popular',
+        data: this.isEmpty(data.popular) ? loadingData : data.popular,
+        type: this.isEmpty(data.popular) ? 'loading' : 'popular',
       },
     ];
     return (

@@ -28,7 +28,7 @@ export const MediaCard = ({
   };
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={!loading && onPress}>
       <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
         {mediaData.posterImage ? (
           <ProgressiveImage
