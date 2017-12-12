@@ -16,6 +16,71 @@ class TopsList extends PureComponent {
     this.props.getDefaults('topUpcoming', active);
   }
 
+  /**
+   * Get the season corresponding to the given month
+   * @param  {Int} month The integer month (1 - 12)
+   * @return {String} The season (Winter, Spring, Summer, Fall).
+   */
+  getSeason(month) {
+    // Make sure month is an integer in 1 - 12
+    const normalised = ((month - 1) % 12) + 1;
+    if (normalised >= 1 && normalised <= 3) {
+      return 'Winter';
+    } else if (normalised >= 4 && normalised <= 6) {
+      return 'Spring';
+    } else if (normalised >= 7 && normalised <= 9) {
+      return 'Summer';
+    }
+    return 'Fall';
+  }
+
+  getSeasonsData() {
+    // This will only show the past 2 year worth of seasons
+    // The rest should be viewable in 'View All'
+    const curMonth = new Date().getMonth() + 1;
+    const curYear = new Date().getFullYear();
+    const minYear = curYear - 2;
+    const data = [];
+
+    const seasons = ['Fall', 'Summer', 'Spring', 'Winter'];
+
+    // Get the data object for the given season and year
+    const getData = (season, year) => {
+      const images = {
+        Winter: require('kitsu/assets/img/seasons/Winter.png'),
+        Spring: require('kitsu/assets/img/seasons/Spring.png'),
+        Summer: require('kitsu/assets/img/seasons/Summer.png'),
+        Fall: require('kitsu/assets/img/seasons/Fall.png'),
+      };
+
+      return {
+        title: `${season} ${year}`,
+        image: images[season],
+      };
+    };
+
+    const curSeason = this.getSeason(curMonth);
+
+    // Add the next season to the data
+    const nextSeason = this.getSeason(curMonth + 3);
+    const nextSeasonYear = curSeason === 'Fall' ? curYear + 1 : curYear;
+    data.push(getData(nextSeason, nextSeasonYear));
+
+    // Add all the seasons up to the current season in the current year
+    for (let i = seasons.indexOf(curSeason); i < 4; i += 1) {
+      data.push(getData(seasons[i], curYear));
+    }
+
+    // All all the seasons from previous years
+    for (let year = curYear - 1; year >= minYear; year -= 1) {
+      seasons.forEach((season) => {
+        data.push(getData(season, year));
+      });
+    }
+
+    return data;
+  }
+
   handleViewAllPress = (title, type) => {
     this.props.navigation.navigate('SearchResults', {
       label: title,
@@ -52,24 +117,7 @@ class TopsList extends PureComponent {
       },
     ];
 
-    const seasonsData = [
-      {
-        title: 'Fall 2017',
-        image: require('kitsu/assets/img/seasons/Fall.png'),
-      },
-      {
-        title: 'Summer 2017',
-        image: require('kitsu/assets/img/seasons/Summer.png'),
-      },
-      {
-        title: 'Spring 2017',
-        image: require('kitsu/assets/img/seasons/Spring.png'),
-      },
-      {
-        title: 'Winter 2017',
-        image: require('kitsu/assets/img/seasons/Winter.png'),
-      },
-    ];
+    const seasonsData = this.getSeasonsData();
 
     const animeData = [
       {
