@@ -85,7 +85,13 @@ class TopsList extends PureComponent {
     return (array === undefined || array.length === 0);
   }
 
-  handleViewAllPress = (title, type) => {
+  handleViewAllPress = (title, type, action) => {
+    if (action === 'season') {
+      this.props.navigation.navigate('SeasonScreen', {
+        label: 'Seasons',
+      });
+      return;
+    }
     this.props.navigation.navigate('SearchResults', {
       label: title,
       default: type,
@@ -93,37 +99,8 @@ class TopsList extends PureComponent {
     });
   };
 
-  render() {
-    const { active, navigation: { navigate } } = this.props;
-    const data = this.props[active] || {};
-    const activeLabel = upperFirst(active);
-
-    const streamingServices = [
-      {
-        name: 'netflix',
-        image: require('kitsu/assets/img/streaming-services/netflix.png'),
-      },
-      {
-        name: 'hulu',
-        image: require('kitsu/assets/img/streaming-services/hulu.png'),
-      },
-      {
-        name: 'crunchyroll',
-        image: require('kitsu/assets/img/streaming-services/crunchyroll.png'),
-      },
-      {
-        name: 'funimation',
-        image: require('kitsu/assets/img/streaming-services/funimation.png'),
-      },
-      {
-        name: 'viewster',
-        image: require('kitsu/assets/img/streaming-services/viewster.png'),
-      },
-    ];
-
-    const seasonsData = this.getSeasonsData();
-
-    const animeData = [
+  getAnimeCategories() {
+    return [
       {
         title: 'Action',
         image: require('kitsu/assets/img/anime-categories/Action.png'),
@@ -157,8 +134,10 @@ class TopsList extends PureComponent {
         image: require('kitsu/assets/img/anime-categories/Sports.png'),
       },
     ];
+  }
 
-    const mangaData = [
+  getMangaCategories() {
+    return [
       {
         title: 'Action',
         image: require('kitsu/assets/img/manga-categories/Action.png'),
@@ -192,51 +171,118 @@ class TopsList extends PureComponent {
         image: require('kitsu/assets/img/manga-categories/Sports.png'),
       },
     ];
+  }
+
+  /**
+   * Get the list data for the given media type.
+   * @param  {String} type `Anime` or `Manga`.
+   * @param  {Dictionary} data The props data.
+   * @return {Array}  An array for the given media type.
+   */
+  getListData(type, data) {
+    const seasons = this.getSeasonsData();
+    const seasonsData = {
+      title: `${type} By Seasons`,
+      data: seasons,
+      dark: true,
+      type: 'static',
+      action: 'season',
+    };
+
+    const streamingServices = [
+      {
+        name: 'netflix',
+        image: require('kitsu/assets/img/streaming-services/netflix.png'),
+      },
+      {
+        name: 'hulu',
+        image: require('kitsu/assets/img/streaming-services/hulu.png'),
+      },
+      {
+        name: 'crunchyroll',
+        image: require('kitsu/assets/img/streaming-services/crunchyroll.png'),
+      },
+      {
+        name: 'funimation',
+        image: require('kitsu/assets/img/streaming-services/funimation.png'),
+      },
+      {
+        name: 'viewster',
+        image: require('kitsu/assets/img/streaming-services/viewster.png'),
+      },
+    ];
+    const streamingData = {
+      title: `${type} By Streaming`,
+      dark: true,
+      data: streamingServices,
+      type: 'static',
+      showViewAll: false,
+    };
+
+    // Because react doesn't allow dynamic image loading, we have to do it this way :(
+    const categoryData = {
+      title: `${type} By Categeory`,
+      data: (type === 'Anime') ? this.getAnimeCategories() : this.getMangaCategories(),
+      dark: true,
+      type: 'static',
+      showViewAll: false,
+    };
 
     // Loading data is just an array of strings
     // We don't care about how it's represented
     const loadingData = Array(5).fill(0).map(i => i.toString());
 
-    const listData = [
-      {
-        title: `Top Airing ${activeLabel}`,
-        data: this.isEmpty(data.topAiring) ? loadingData : data.topAiring,
-        type: this.isEmpty(data.topAiring) ? 'loading' : 'topAiring',
-      },
-      {
-        title: `${activeLabel} By Streaming`,
-        dark: true,
-        data: streamingServices,
-        type: 'static',
-      },
-      {
-        title: `Top Upcoming ${activeLabel}`,
-        data: this.isEmpty(data.topUpcoming) ? loadingData : data.topUpcoming,
-        type: this.isEmpty(data.topUpcoming) ? 'loading' : 'topUpcoming',
-      },
-      {
-        title: `${activeLabel} By Seasons`,
-        data: seasonsData,
-        dark: true,
-        type: 'static',
-      },
-      {
-        title: `Highest Rated ${activeLabel}`,
-        data: this.isEmpty(data.highest) ? loadingData : data.highest,
-        type: this.isEmpty(data.highest) ? 'loading' : 'highest',
-      },
-      {
-        title: `${activeLabel} By Categeory`,
-        data: active === 'anime' ? animeData : mangaData,
-        dark: true,
-        type: 'static',
-      },
-      {
-        title: `Most Popular ${activeLabel}`,
-        data: this.isEmpty(data.popular) ? loadingData : data.popular,
-        type: this.isEmpty(data.popular) ? 'loading' : 'popular',
-      },
+    const topData = {
+      title: (type === 'Anime') ? `Top Airing ${type}` : `Top Publishing ${type}`,
+      data: this.isEmpty(data.topAiring) ? loadingData : data.topAiring,
+      type: this.isEmpty(data.topAiring) ? 'loading' : 'topAiring',
+    };
+
+    const upcomingData = {
+      title: `Top Upcoming ${type}`,
+      data: this.isEmpty(data.topUpcoming) ? loadingData : data.topUpcoming,
+      type: this.isEmpty(data.topUpcoming) ? 'loading' : 'topUpcoming',
+    };
+
+    const highestRatedData = {
+      title: `Highest Rated ${type}`,
+      data: this.isEmpty(data.highest) ? loadingData : data.highest,
+      type: this.isEmpty(data.highest) ? 'loading' : 'highest',
+    };
+
+    const mostPopularData = {
+      title: `Most Popular ${type}`,
+      data: this.isEmpty(data.popular) ? loadingData : data.popular,
+      type: this.isEmpty(data.popular) ? 'loading' : 'popular',
+    };
+
+    const animeData = [
+      topData,
+      streamingData,
+      upcomingData,
+      seasonsData,
+      highestRatedData,
+      categoryData,
+      mostPopularData,
     ];
+
+    const mangaData = [
+      topData,
+      highestRatedData,
+      categoryData,
+      mostPopularData,
+    ];
+
+    return (type === 'Anime') ? animeData : mangaData;
+  }
+
+  render() {
+    const { active, navigation: { navigate } } = this.props;
+    const data = this.props[active] || {};
+    const activeLabel = upperFirst(active);
+
+    const listData = this.getListData(activeLabel, data);
+
     return (
       <ScrollView style={styles.scrollContainer}>
         {listData.map(listItem => (
@@ -244,7 +290,7 @@ class TopsList extends PureComponent {
             {...listItem}
             key={listItem.name || listItem.title}
             navigate={navigate}
-            onPress={() => this.handleViewAllPress(listItem.title, listItem.type)}
+            onPress={() => this.handleViewAllPress(listItem.title, listItem.type, listItem.action)}
           />
         ))}
       </ScrollView>

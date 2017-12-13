@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, Image } from 'react-native';
 import { MediaCard } from 'kitsu/components/MediaCard';
-import { View } from 'react-native';
 import { styles } from './styles';
 
 const MEDIA_CARD_DIMENSIONS = { width: 100, height: 150 };
