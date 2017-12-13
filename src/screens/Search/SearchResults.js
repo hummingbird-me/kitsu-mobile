@@ -89,6 +89,7 @@ class SearchResults extends Component {
   };
 
   render() {
+    const { params } = this.props.navigation.state;
     const data =
       this.props.results.length > 0
         ? this.props.results
@@ -103,11 +104,9 @@ class SearchResults extends Component {
         onRefresh={this.refresh}
         refreshing={this.state.loading}
         onPress={(media) => {
-          this.props.navigation.navigate('Media', {
-            mediaId: 12,
-            type: 'anime',
-            // mediaId: media.id,
-            // type: media.type,
+          this.props.navigation.navigate('MediaPages', {
+            mediaId: media.id,
+            mediaType: media.type,
           });
         }}
         style={styles.list}
