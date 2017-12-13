@@ -16,5 +16,6 @@ export const ItemRenderer = ({ item, type, ...props }) => {
   if (type === 'static') {
     return <LandscapeMediaCard {...item} />;
   }
-  return <MediaCard cardDimensions={MEDIA_CARD_DIMENSIONS} mediaData={item} {...props} />;
+
+  return <MediaCard cardDimensions={MEDIA_CARD_DIMENSIONS} mediaData={item} loading={type === 'loading'} {...props} />;
 };

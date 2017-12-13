@@ -4,6 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import SearchScreen from 'kitsu/screens/Search/SearchScreen';
 import SearchCategory from 'kitsu/screens/Search/SearchCategory';
 import SearchResults from 'kitsu/screens/Search/SearchResults';
+import SeasonScreen from 'kitsu/screens/Search/SeasonScreen';
 import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import search from 'kitsu/assets/img/tabbar_icons/search.png';
@@ -19,6 +20,9 @@ const SearchStack = StackNavigator(
     },
     SearchResults: {
       screen: SearchResults,
+    },
+    SeasonScreen: {
+      screen: SeasonScreen,
     },
     MediaPages: {
       screen: MediaPages,
