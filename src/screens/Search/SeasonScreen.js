@@ -4,6 +4,7 @@ import { ContentList } from 'kitsu/components/ContentList';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
+import { showSeasonResults } from './SearchNavigationHelper';
 
 const styles = StyleSheet.create({
   button: {
@@ -49,17 +50,14 @@ class SeasonScreen extends PureComponent {
     seasons.forEach((season) => {
       data.push({
         ...season,
-        onPress: () => { this.handleSeasonPress(season, year); },
+        onPress: () => { showSeasonResults(this.props.navigation, season.title, year); },
       });
     });
 
     return data;
   }
 
-  handleSeasonPress(season, year) {
-    // TODO: Hookup search page by season here
-    console.log(`${season.title} ${year}`);
-  }
+
 
   render() {
     const { maxYear, minYear, navigation: { navigate } } = this.props;

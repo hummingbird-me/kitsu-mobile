@@ -14,7 +14,7 @@ class FilterSub extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.title || navigation.state.params.label,
     headerLeft: (
-      <Button transparent color="white" onPress={navigation.goBack}>
+      <Button transparent color="white" onPress={() => navigation.goBack()}>
         <Icon name="arrow-back" style={{ color: 'white' }} />
       </Button>
     ),
