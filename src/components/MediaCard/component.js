@@ -28,7 +28,7 @@ export const MediaCard = ({
   };
 
   return (
-    <TouchableOpacity onPress={!loading && onPress}>
+    <TouchableOpacity onPress={onPress} disabled={loading}>
       <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
         {mediaData.posterImage ? (
           <ProgressiveImage
@@ -79,7 +79,7 @@ MediaCard.propTypes = {
   ratingTwenty: PropTypes.number,
   ratingSystem: PropTypes.string,
   style: ViewPropTypes.style,
-  loading: PropTypes.boolean,
+  loading: PropTypes.bool,
 };
 
 MediaCard.defaultProps = {

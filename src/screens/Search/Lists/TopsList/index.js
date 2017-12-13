@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { upperFirst } from 'lodash';
+import { upperFirst, isEmpty } from 'lodash';
 import { getDefaults, getCategories } from 'kitsu/store/anime/actions';
 import { ContentList } from 'kitsu/components/ContentList';
 import { styles } from './styles';
@@ -80,24 +80,6 @@ class TopsList extends PureComponent {
 
     return data;
   }
-
-  isEmpty(array) {
-    return (array === undefined || array.length === 0);
-  }
-
-  handleViewAllPress = (title, type, action) => {
-    if (action === 'season') {
-      this.props.navigation.navigate('SeasonScreen', {
-        label: 'Seasons',
-      });
-      return;
-    }
-    this.props.navigation.navigate('SearchResults', {
-      label: title,
-      default: type,
-      active: this.props.active,
-    });
-  };
 
   getAnimeCategories() {
     return [
@@ -234,26 +216,26 @@ class TopsList extends PureComponent {
 
     const topData = {
       title: (type === 'Anime') ? `Top Airing ${type}` : `Top Publishing ${type}`,
-      data: this.isEmpty(data.topAiring) ? loadingData : data.topAiring,
-      type: this.isEmpty(data.topAiring) ? 'loading' : 'topAiring',
+      data: isEmpty(data.topAiring) ? loadingData : data.topAiring,
+      type: isEmpty(data.topAiring) ? 'loading' : 'topAiring',
     };
 
     const upcomingData = {
       title: `Top Upcoming ${type}`,
-      data: this.isEmpty(data.topUpcoming) ? loadingData : data.topUpcoming,
-      type: this.isEmpty(data.topUpcoming) ? 'loading' : 'topUpcoming',
+      data: isEmpty(data.topUpcoming) ? loadingData : data.topUpcoming,
+      type: isEmpty(data.topUpcoming) ? 'loading' : 'topUpcoming',
     };
 
     const highestRatedData = {
       title: `Highest Rated ${type}`,
-      data: this.isEmpty(data.highest) ? loadingData : data.highest,
-      type: this.isEmpty(data.highest) ? 'loading' : 'highest',
+      data: isEmpty(data.highest) ? loadingData : data.highest,
+      type: isEmpty(data.highest) ? 'loading' : 'highest',
     };
 
     const mostPopularData = {
       title: `Most Popular ${type}`,
-      data: this.isEmpty(data.popular) ? loadingData : data.popular,
-      type: this.isEmpty(data.popular) ? 'loading' : 'popular',
+      data: isEmpty(data.popular) ? loadingData : data.popular,
+      type: isEmpty(data.popular) ? 'loading' : 'popular',
     };
 
     const animeData = [
@@ -275,6 +257,20 @@ class TopsList extends PureComponent {
 
     return (type === 'Anime') ? animeData : mangaData;
   }
+
+  handleViewAllPress = (title, type, action) => {
+    if (action === 'season') {
+      this.props.navigation.navigate('SeasonScreen', {
+        label: 'Seasons',
+      });
+      return;
+    }
+    this.props.navigation.navigate('SearchResults', {
+      label: title,
+      default: type,
+      active: this.props.active,
+    });
+  };
 
   render() {
     const { active, navigation: { navigate } } = this.props;
