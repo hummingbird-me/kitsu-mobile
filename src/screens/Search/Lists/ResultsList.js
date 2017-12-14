@@ -4,7 +4,7 @@ import * as PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 
-const IMAGE_SIZE = { height: 125, width: 91 };
+const IMAGE_SIZE = { width: 110, height: 160 };
 
 const styles = StyleSheet.create({
   container: { backgroundColor: '#FAFAFA' },
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     height: '20%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 3,
   },
   titleText: {
     color: 'white',
@@ -24,6 +25,17 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: 'OpenSans',
     padding: 2,
+  },
+  touchCountainer: {
+    flex: 1,
+    alignContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  viewContainer: {
+    marginVertical: 5,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 
@@ -37,7 +49,7 @@ const ResultsList = ({ hits, onPress, ...props }) => (
       index,
     })}
     initialNumToRender={10}
-    numColumns={4}
+    numColumns={3}
     scrollEnabled
     contentContainerStyle={styles.list}
     renderItem={e => renderItem(e, onPress)}
@@ -59,26 +71,29 @@ const renderItem = ({ item }, onPress) => {
   if (item.titles) {
     title = item.titles.en || item.titles.en_jp;
   }
-  const { width } = Dimensions.get('window');
-  const imageWidth = (width - 10) / 3;
-  const imageHeight = 180;
+
+  const imageWidth = IMAGE_SIZE.width;
+  const imageHeight = IMAGE_SIZE.height;
 
   return (
-    <TouchableOpacity onPress={() => onPress(item)} style={{ padding: 2 }}>
-      <ProgressiveImage
-        source={{ uri: imageSource }}
-        style={{
-          height: imageHeight,
-          width: imageWidth,
-        }}
-      />
-      {title && (
-        <LinearGradient colors={['transparent', 'black']} style={styles.linearGradient}>
-          <Text style={styles.titleText} numberOfLines={1} ellipsizeMode="tail">
-            {title}
-          </Text>
-        </LinearGradient>
-      )}
+    <TouchableOpacity onPress={() => onPress(item)} style={styles.touchCountainer}>
+      <View style={[styles.viewContainer, { width: imageWidth }]}>
+        <ProgressiveImage
+          source={{ uri: imageSource }}
+          style={{
+            height: imageHeight,
+            width: imageWidth,
+            borderRadius: 3,
+          }}
+        />
+        {title && (
+          <LinearGradient colors={['transparent', 'black']} style={styles.linearGradient}>
+            <Text style={styles.titleText} numberOfLines={1} ellipsizeMode="tail">
+              {title}
+            </Text>
+          </LinearGradient>
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
