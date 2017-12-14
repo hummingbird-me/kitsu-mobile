@@ -18,11 +18,11 @@ const Tabs = TabNavigator(
     Feed: {
       screen: FeedStack,
     },
-    QuickUpdate: {
-      screen: QuickUpdateStack,
-    },
     Search: {
       screen: SearchStack,
+    },
+    QuickUpdate: {
+      screen: QuickUpdateStack,
     },
     Notif: {
       screen: NotifStack,
