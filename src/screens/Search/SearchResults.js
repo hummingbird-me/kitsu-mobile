@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { search } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 import { ResultsList } from './Lists';
 
 const styles = StyleSheet.create({
-  button: {
-    padding: 10,
-  },
   list: {
     backgroundColor: colors.darkPurple,
     paddingHorizontal: 4,
@@ -19,16 +17,12 @@ const styles = StyleSheet.create({
 
 class SearchResults extends Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
-    title: navigation.state.params.label,
-    headerLeft: (
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <FontAwesomeIcon name="chevron-left" style={{ color: 'white' }} />
-      </TouchableOpacity>
-    ),
-    headerRight: (
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
+    header: () => (
+      <NavigationHeader
+        navigation={navigation}
+        title={navigation.state.params.label}
+        rightIcon="sliders"
+        rightAction={() => (
           screenProps.rootNavigation.navigate('SearchFilter', {
             ...navigation.state.params,
             onApply: (data, state) => {
@@ -44,11 +38,9 @@ class SearchResults extends Component {
                 }),
               );
             },
-          });
-        }}
-      >
-        <FontAwesomeIcon name="sliders" style={{ color: 'white', fontSize: 16 }} />
-      </TouchableOpacity>
+          })
+        )}
+      />
     ),
   });
 
