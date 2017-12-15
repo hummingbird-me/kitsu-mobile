@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
     backgroundColor: colors.darkPurple,
     flexDirection: 'row',
-    height: 60,
+    height: 64,
   },
   headerItemText: {
     ...flattenCommon('text'),
@@ -22,19 +22,19 @@ export const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 'auto',
-    paddingLeft: 10,
-    paddingBottom: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   titleContainer: {
     position: 'absolute',
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingBottom: 8,
+    paddingBottom: 10,
   },
   rightContainer: {
     marginLeft: 'auto',
-    paddingRight: 10,
-    paddingBottom: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
 });
