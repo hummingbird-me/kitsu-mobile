@@ -52,7 +52,7 @@ export default class AnimatedWrapped extends PureComponent {
         style={{
           flex: 1,
           alignItems: 'center',
-          height: 450,
+          height: 500,
           overflow: 'hidden',
           backgroundColor: '#372836',
         }}
@@ -62,7 +62,7 @@ export default class AnimatedWrapped extends PureComponent {
           style={{
             opacity: 0.4,
             width: Dimensions.get('window').width,
-            height: 450,
+            height: 500,
           }}
           resizeMode="cover"
           source={images[ind]}
