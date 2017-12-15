@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, Image } from 'react-native';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { styles } from './styles';
 
-const MEDIA_CARD_DIMENSIONS = { width: 110, height: 160 };
+const MEDIA_CARD_DIMENSIONS = { width: 100, height: 150 };
 
 const LandscapeMediaCard = ({ onPress, title, image, ...props }) => (
   <TouchableOpacity onPress={onPress} style={styles.landscapeImageContainer}>
