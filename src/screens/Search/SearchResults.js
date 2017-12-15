@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   },
   list: {
     backgroundColor: colors.darkPurple,
-    paddingHorizontal: 4,
   },
 });
 
@@ -89,7 +88,7 @@ class SearchResults extends Component {
   };
 
   render() {
-    const { params } = this.props.navigation.state;
+    // const { params } = this.props.navigation.state;
     const data =
       this.props.results.length > 0
         ? this.props.results
@@ -99,7 +98,6 @@ class SearchResults extends Component {
     return (
       <ResultsList
         hits={data}
-        numColumns={3}
         onEndReached={this.loadMore}
         onRefresh={this.refresh}
         refreshing={this.state.loading}
