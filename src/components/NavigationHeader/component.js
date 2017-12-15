@@ -1,17 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
-import { SimpleHeader } from './SimpleHeader';
-
-const styles = StyleSheet.create({
-  icon: {
-    fontSize: 20,
-    color: colors.white,
-    paddingHorizontal: 4,
-  },
-});
+import { SimpleHeader } from 'kitsu/components/SimpleHeader';
+import { styles } from './styles';
 
 export const NavigationHeader = ({ navigation, title, leftIcon, rightIcon, ...props }) => (
   <SimpleHeader

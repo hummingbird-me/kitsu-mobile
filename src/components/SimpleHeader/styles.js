@@ -22,19 +22,19 @@ export const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 'auto',
-    paddingLeft: 10,
-    paddingBottom: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   titleContainer: {
     position: 'absolute',
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingBottom: 12,
+    paddingBottom: 10,
   },
   rightContainer: {
     marginLeft: 'auto',
-    paddingRight: 10,
-    paddingBottom: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
 });
