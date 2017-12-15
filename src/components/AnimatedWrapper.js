@@ -6,7 +6,7 @@ export default class AnimatedWrapped extends PureComponent {
   state = {
     ind: 0,
     scale: 1,
-  }
+  };
 
   componentDidMount() {
     this.startAnimation();
@@ -40,11 +40,11 @@ export default class AnimatedWrapped extends PureComponent {
           ),
         animDuration - 10,
       );
-      setTimeout(this.startAnimation, (2 * animDuration) - 400);
+      setTimeout(this.startAnimation, 2 * animDuration - 400);
       const ind = this.state.ind === images.length - 1 ? 0 : this.state.ind + 1;
       this.setState({ ind, scale: s2 });
     }
-  }
+  };
   render() {
     const { ind } = this.state;
     return (
@@ -52,7 +52,7 @@ export default class AnimatedWrapped extends PureComponent {
         style={{
           flex: 1,
           alignItems: 'center',
-          height: 500,
+          height: 600,
           overflow: 'hidden',
           backgroundColor: '#372836',
         }}
@@ -62,7 +62,7 @@ export default class AnimatedWrapped extends PureComponent {
           style={{
             opacity: 0.4,
             width: Dimensions.get('window').width,
-            height: 500,
+            height: 600,
           }}
           resizeMode="cover"
           source={images[ind]}
