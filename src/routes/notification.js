@@ -35,7 +35,7 @@ const NotifStack = StackNavigator(
       ),
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <View>
+        <View style={styles.tabBarIcon}>
           {screenProps &&
             screenProps.badge > 0 && (
               <View style={styles.textWrapper}>

@@ -56,13 +56,14 @@ class NotificationsScreen extends PureComponent {
       default:
         break;
     }
-  }
+  };
 
   // temporary request to fetch mediareactions & to navigate corresponding
   // media screen. (since we don't have mediareactions screen right now)
-  fetchMediaReactions = async mediaId => Kitsu.find('mediaReactions', mediaId, {
-    include: 'user,anime,manga',
-  });
+  fetchMediaReactions = async mediaId =>
+    Kitsu.find('mediaReactions', mediaId, {
+      include: 'user,anime,manga',
+    });
 
   handleActionBtnPress = () => {
     if (Platform.OS === 'ios') {
@@ -122,9 +123,7 @@ class NotificationsScreen extends PureComponent {
             {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
           </Text>
         ) : (
-          <Text>
-            {item.activities.length - 1} others{' '}
-          </Text>
+          <Text>{item.activities.length - 1} others </Text>
         );
     }
     const ava =
@@ -133,7 +132,10 @@ class NotificationsScreen extends PureComponent {
         : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity onPress={() => this.onNotificationPressed(activity)} style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
+      <TouchableOpacity
+        onPress={() => this.onNotificationPressed(activity)}
+        style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}
+      >
         <View style={styles.iconContainer}>
           <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
         </View>
