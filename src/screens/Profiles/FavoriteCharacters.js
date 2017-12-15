@@ -7,14 +7,15 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { fetchProfileFavorites } from 'kitsu/store/profile/actions';
 import { fetchMediaCastings } from 'kitsu/store/media/actions';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 
 class FavoriteCharacter extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.label,
-    headerLeft: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" style={{ color: 'white' }} />
-      </Button>
+    header: (
+      <NavigationHeader
+        navigation={navigation}
+        title={navigation.state.params.label}
+      />
     ),
   });
 

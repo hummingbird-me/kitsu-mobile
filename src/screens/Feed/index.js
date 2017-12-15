@@ -11,6 +11,7 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
+import { isX, paddingX } from 'kitsu/utils/isX';
 import { feedStreams } from './feedStreams';
 
 class Feed extends React.PureComponent {
@@ -149,7 +150,7 @@ class Feed extends React.PureComponent {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: listBackPurple }}>
+      <View style={{ flex: 1, backgroundColor: listBackPurple, paddingTop: isX ? paddingX : 0 }}>
         <StatusBar barStyle="light-content" />
         <TabBar>
           {feedStreams.map(tabItem => (

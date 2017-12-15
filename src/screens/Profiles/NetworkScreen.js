@@ -16,17 +16,18 @@ import AweIcon from 'react-native-vector-icons/FontAwesome';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { fetchNetwork } from 'kitsu/store/profile/actions';
 import { defaultAvatar } from 'kitsu/constants/app';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 
 const renderTabBar = () => <ScrollableTabBar />;
 
 const { width } = Dimensions.get('window');
 class NetworkScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: `${navigation.state.params.name}'s Network`,
-    headerLeft: (
-      <Button transparent color="white" onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" style={{ color: 'white' }} />
-      </Button>
+    header: (
+      <NavigationHeader
+        navigation={navigation}
+        title={`${navigation.state.params.name}'s Network`}
+      />
     ),
   });
 

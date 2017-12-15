@@ -26,6 +26,8 @@ class App extends PureComponent {
     OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.addEventListener('registered', this.onPNRegistered);
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
     Linking.addEventListener('url', this.onUrl);
   }
 
@@ -36,10 +38,13 @@ class App extends PureComponent {
   componentWillUnmount() {
     OneSignal.removeEventListener('ids', this.onIds);
     OneSignal.removeEventListener('registered', this.onPNRegistered);
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
     Linking.removeEventListener('url', this.onUrl);
   }
 
   onIds(device) {
+    console.log(device.userId);
     store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: device.userId });
   }
 
@@ -47,7 +52,20 @@ class App extends PureComponent {
     console.log('device registered', notificationData);
   };
 
-  onUrl({ url }) {
+  onReceived(notification) {
+    console.log('Notification received: ', notification);
+  }
+
+  onOpened(openResult) {
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  }
+
+  onUrl(data) {
+    console.log(data);
+    const { url } = data;
     const { pathname, searchParams } = new URL(url);
     const paths = pathname.split('/').slice(1);
 

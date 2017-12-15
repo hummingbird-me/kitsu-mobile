@@ -1,5 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX } from 'kitsu/utils/isX';
 
 export default StyleSheet.create({
   absolute: {
@@ -14,7 +15,8 @@ export default StyleSheet.create({
   headerContainer: {
     flex: 1,
     flexDirection: 'row',
-    paddingTop: 30,
+    marginTop: 30,
+    paddingTop: isX ? 18 : 0,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
