@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { ContentList } from 'kitsu/components/ContentList';
 import PropTypes from 'prop-types';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 import { showSeasonResults } from './SearchNavigationHelper';
@@ -57,8 +56,6 @@ class SeasonScreen extends PureComponent {
 
     return data;
   }
-
-
 
   render() {
     const { maxYear, minYear, navigation: { navigate } } = this.props;
