@@ -4,6 +4,7 @@ import { ContentList } from 'kitsu/components/ContentList';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 
 const styles = StyleSheet.create({
   button: {
@@ -17,11 +18,11 @@ const styles = StyleSheet.create({
 
 class SeasonScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.label,
-    headerLeft: (
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <FontAwesomeIcon name="chevron-left" style={{ color: 'white' }} />
-      </TouchableOpacity>
+    header: (
+      <NavigationHeader
+        navigation={navigation}
+        title={navigation.state.params.label}
+      />
     ),
   });
 

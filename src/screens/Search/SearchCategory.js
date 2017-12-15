@@ -10,14 +10,15 @@ import { CheckBox } from 'react-native-elements';
 import { getCategories } from 'kitsu/store/anime/actions';
 import { genres } from 'kitsu/utils/genres';
 import * as colors from 'kitsu/constants/colors';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 
 class SearchCategory extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.title || navigation.state.params.label,
-    headerLeft: (
-      <Button transparent color="white" onPress={navigation.goBack}>
-        <Icon name="arrow-back" style={{ color: 'white' }} />
-      </Button>
+    header: (
+      <NavigationHeader
+        navigation={navigation}
+        title={navigation.state.params.title || navigation.state.params.label || 'Category'}
+      />
     ),
     tabBarVisible: false,
   });
@@ -209,7 +210,7 @@ class SearchCategory extends Component {
             borderRadius: 3,
             justifyContent: 'center',
           }}
-          onPress={navigation.goBack}
+          onPress={() => navigation.goBack()}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
             Back

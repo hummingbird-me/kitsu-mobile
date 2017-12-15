@@ -7,16 +7,17 @@ import MultiSlider from 'react-native-multi-slider';
 
 import { getCategories } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 
 const width = Dimensions.get('screen').width - 40;
 
 class FilterSub extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.title || navigation.state.params.label,
-    headerLeft: (
-      <Button transparent color="white" onPress={navigation.goBack}>
-        <Icon name="arrow-back" style={{ color: 'white' }} />
-      </Button>
+    header: (
+      <NavigationHeader
+        navigation={navigation}
+        title={navigation.state.params.title || navigation.state.params.label}
+      />
     ),
     gesturesEnabled: false,
     tabBarVisible: false,
