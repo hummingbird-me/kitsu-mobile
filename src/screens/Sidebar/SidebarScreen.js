@@ -13,6 +13,7 @@ import {
 import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
+import { isX, paddingX } from 'kitsu/utils/isX';
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
 
@@ -82,18 +83,8 @@ class SidebarScreen extends React.Component {
   renderListHeaderComponent = () => <View height={20} />;
 
   renderListFooterComponent = () => (
-    <TouchableOpacity
-      onPress={this.onLogoutButtonPressed}
-      style={styles.logoutButton}
-    >
-      <Text
-        style={[
-          commonStyles.text,
-          styles.logoutButtonText,
-        ]}
-      >
-        Log Out
-      </Text>
+    <TouchableOpacity onPress={this.onLogoutButtonPressed} style={styles.logoutButton}>
+      <Text style={[commonStyles.text, styles.logoutButtonText]}>Log Out</Text>
     </TouchableOpacity>
   );
 
@@ -206,6 +197,7 @@ class SidebarScreen extends React.Component {
             style={{
               flex: 1,
               marginTop: Platform.select({ ios: 20, android: 24 }),
+              paddingTop: isX ? paddingX : 0,
             }}
           >
             <TouchableOpacity
@@ -218,14 +210,8 @@ class SidebarScreen extends React.Component {
                 source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
               />
               <View style={styles.userProfileTextWrapper}>
-                <Text
-                  style={styles.userProfileName}
-                >
-                  {name}
-                </Text>
-                <Text style={styles.userProfileDetailsText}>
-                  view profile
-                </Text>
+                <Text style={styles.userProfileName}>{name}</Text>
+                <Text style={styles.userProfileDetailsText}>view profile</Text>
               </View>
             </TouchableOpacity>
           </View>

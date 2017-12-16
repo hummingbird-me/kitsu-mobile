@@ -1,5 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 const TABBAR_HEIGHT = Platform.select({ ios: 62, android: 54 });
 
@@ -7,6 +8,7 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.listBackPurple,
     flex: 1,
+    paddingTop: isX ? paddingX : 0,
   },
   sceneContainer: {
     flex: 1,

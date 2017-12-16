@@ -10,11 +10,18 @@ import isEmpty from 'lodash/isEmpty';
 import values from 'lodash/values';
 import { getStreamers } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 
 class SearchFilter extends Component {
-
   static navigationOptions = () => ({
-    title: 'Filter',
+    header: (
+      <NavigationHeader
+        navigation={navigation}
+        title="Filter"
+        leftIcon={null}
+        leftAction={null}
+      />
+    ),
     tabBarVisible: false,
   });
 

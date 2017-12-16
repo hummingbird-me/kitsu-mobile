@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { defaultCover as defaultCoverUri } from 'kitsu/constants/app/';
 import * as colors from 'kitsu/constants/colors';
+import { isX, paddingX } from 'kitsu/utils/isX';
 import PropTypes from 'prop-types';
 
 const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
@@ -53,7 +54,8 @@ const styles = {
   headerContainer: {
     flex: 1,
     flexDirection: 'row',
-    paddingTop: 30,
+    paddingVertical: isX ? paddingX / 2 : 0,
+    marginTop: 30,
     alignItems: 'center',
     justifyContent: 'space-between',
   },

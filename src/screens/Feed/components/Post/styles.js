@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-
   postHeader: {
     paddingHorizontal: scenePadding,
     paddingVertical: scenePadding / 2,
