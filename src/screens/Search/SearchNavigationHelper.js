@@ -3,8 +3,8 @@ import { toLower, upperFirst, startCase } from 'lodash';
  * Navigates to SearchResults with the given category and type filter.
  *
  * @param {Object} navigation The navigation object.
- * @param {String} type The type of media (anime or manga).
- * @param {String} category The category name.
+ * @param {string} type The type of media (anime or manga).
+ * @param {string} category The category name.
  */
 function showCategoryResults(navigation, type, category) {
   navigation.navigate('SearchResults', {
@@ -21,7 +21,7 @@ function showCategoryResults(navigation, type, category) {
 /**
  * Navigates to SearchResults with the given streamer filter.
  * @param {Object} navigation The navigation object.
- * @param {String} streamer The streamer name.
+ * @param {string} streamer The streamer name.
  */
 function showStreamerResults(navigation, streamer) {
   navigation.navigate('SearchResults', {
@@ -37,8 +37,8 @@ function showStreamerResults(navigation, streamer) {
 /**
  * Navigates to SearchResults with the given season and year filters.
  * @param {Object} navigation The navigation object
- * @param {String} season The season (Winter, Spring, Summer, Fall)
- * @param {Int} year The year.
+ * @param {string} season The season (Winter, Spring, Summer, Fall)
+ * @param {number} year The year.
  */
 function showSeasonResults(navigation, season, year) {
   navigation.navigate('SearchResults', {

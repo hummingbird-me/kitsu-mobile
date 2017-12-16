@@ -8,9 +8,9 @@ export const isIdForCurrentUser = (id, currentUser) => currentUser.id === id;
  * Get the Best Grid Spacing from the given itemWidths.
  * The best spacing is the one with a margin that is close to minMargin.
  *
- * @param {Array} itemWidths An array of widths. I.e [10, 20, 30]
- * @param {Int} availableWidth The width of the grid/The amount of space we can work with.
- * @param {Int} minMargin The minimum margin to keep between items and around the edges.
+ * @param {number[]} itemWidths An array of widths. I.e [10, 20, 30]
+ * @param {number} availableWidth The width of the grid/The amount of space we can work with.
+ * @param {number} minMargin The minimum margin to keep between items and around the edges.
  * @returns {Object} An object containing the best spacing and the item width associated with it.
  */
 export function getBestGridItemSpacing(itemWidths, availableWidth, minMargin) {
@@ -43,9 +43,9 @@ export function getBestGridItemSpacing(itemWidths, availableWidth, minMargin) {
  * I.e All the items are spaced evenly apart.
  * Take a look at ResultsList.js for an example on how this can be applied.
  *
- * @param {Int} itemWidth The width of the item.
- * @param {Int} availableWidth The width of the grid/The amount of space we can work with.
- * @param {Int} minMargin The minimum margin to keep between items and around the edges.
+ * @param {number} itemWidth The width of the item.
+ * @param {number} availableWidth The width of the grid/The amount of space we can work with.
+ * @param {number} minMargin The minimum margin to keep between items and around the edges.
  * @param {boolean} [distributeExtraToMargin=true]
  *                   Whether any extra space should be distributed evenly to margin.
  * @returns {Object} An object containing the margin, columnCount and extra space remaining.

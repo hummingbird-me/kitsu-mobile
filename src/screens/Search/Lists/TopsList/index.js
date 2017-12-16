@@ -19,8 +19,8 @@ class TopsList extends PureComponent {
 
   /**
    * Get the season corresponding to the given month
-   * @param  {Int} month The integer month (1 - 12)
-   * @return {String} The season (Winter, Spring, Summer, Fall).
+   * @param  {number} month The integer month (1 - 12)
+   * @return {string} The season (Winter, Spring, Summer, Fall).
    */
   getSeason(month) {
     // Make sure month is an integer in 1 - 12
@@ -159,9 +159,9 @@ class TopsList extends PureComponent {
 
   /**
    * Get the list data for the given media type.
-   * @param  {String} type `Anime` or `Manga`.
-   * @param  {Dictionary} data The props data.
-   * @return {Array}  An array for the given media type.
+   * @param  {string} type `Anime` or `Manga`.
+   * @param  {Object} data The props data.
+   * @return {Object[]}  An array of data for the given media type.
    */
   getListData(type, data) {
     const seasons = this.getSeasonsData();
