@@ -8,7 +8,7 @@ import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { tabRed, listBackPurple } from 'kitsu/constants/colors';
 import SearchStack from './search';
-import NotifStack from './notification';
+import NotificationsStack from './notification';
 import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
 import SidebarStack from './sidebar';
@@ -24,8 +24,8 @@ const Tabs = TabNavigator(
     QuickUpdate: {
       screen: QuickUpdateStack,
     },
-    Notif: {
-      screen: NotifStack,
+    Notifications: {
+      screen: NotificationsStack,
     },
     Menu: {
       screen: SidebarStack,

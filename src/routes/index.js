@@ -2,6 +2,7 @@ import SearchStack from './search';
 import NotifStack from './notification';
 import FilterStack from './filter';
 import Tabs from './tabs';
+import TabsNotification from './tabsNotification';
 import PostStack from './post';
 import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
@@ -14,6 +15,7 @@ export default {
   QuickUpdateStack,
   FilterStack,
   Tabs,
+  TabsNotification,
   PostStack,
   FeedStack,
   SidebarStack,
