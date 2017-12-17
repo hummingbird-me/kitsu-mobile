@@ -39,7 +39,7 @@ export class Post extends PureComponent {
   state = {
     comment: '',
     comments: [],
-    latestComment: null,
+    latestComments: [],
     like: null,
     overlayRemoved: false,
   };
@@ -101,9 +101,9 @@ export class Post extends PureComponent {
         sort: 'createdAt',
       });
 
-      const latestComment = comments[comments.length - 1];
+      const latestComments = comments.slice(comments.length - 2);
 
-      if (this.mounted) this.setState({ latestComment, comments });
+      if (this.mounted) this.setState({ latestComments, comments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -178,7 +178,7 @@ export class Post extends PureComponent {
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComment, overlayRemoved } = this.state;
+    const { comment, latestComments, overlayRemoved } = this.state;
 
     let postBody = null;
 
@@ -223,12 +223,17 @@ export class Post extends PureComponent {
         />
 
         <PostFooter>
-          {commentsCount > 0 && !latestComment &&
+          {commentsCount > 0 && latestComments.length === 0 &&
             <SceneLoader />
           }
-          {latestComment && (
+          {latestComments.length > 0 && (
             <PostSection>
-              <Comment comment={latestComment} isTruncated />
+              <FlatList
+                data={latestComments}
+                keyExtractor={keyExtractor}
+                renderItem={({ item }) => <Comment comment={item} isTruncated />}
+                ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+              />
             </PostSection>
           )}
 
