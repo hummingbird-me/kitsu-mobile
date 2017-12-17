@@ -73,7 +73,7 @@ class App extends PureComponent {
      * notification.
      *
      * Related issues: react-community/react-navigation
-     *  #1127, #335, #1715,
+     *  #1127, #1715,
      */
     const resetAction = NavigationActions.reset({
       index: 0,
