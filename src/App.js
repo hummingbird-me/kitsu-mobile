@@ -65,7 +65,16 @@ class App extends PureComponent {
     console.log('isActive: ', openResult.notification.isAppInFocus);
     console.log('openResult: ', openResult);
     console.groupEnd();
-    // const { additionalData: { id, type }, body } = openResult.notification.payload;
+
+    /**
+     * Looks like navigating from root router to a nested screen inside the tab
+     * stack is not possible. Created a hacky TabNavigator with initial screen
+     * of Notifications. This way user can navigate to corresponding
+     * notification.
+     *
+     * Related issues: react-community/react-navigation
+     *  #1127, #335, #1715,
+     */
     const resetAction = NavigationActions.reset({
       index: 0,
       key: null,
