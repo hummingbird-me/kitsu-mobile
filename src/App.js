@@ -69,7 +69,7 @@ class App extends PureComponent {
     /**
      * Looks like navigating from root router to a nested screen inside the tab
      * stack is not possible. Created a hacky TabNavigator with initial screen
-     * of Notifications. This way user can navigate to corresponding
+     * of Notifications. This way user can navigate to related
      * notification.
      *
      * Related issues: react-community/react-navigation
