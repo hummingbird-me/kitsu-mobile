@@ -57,10 +57,8 @@ export default class PostDetails extends PureComponent {
 
   componentDidMount() {
     const { comments, like } = this.props.navigation.state.params;
-    if (!comments || !like) {
-      this.fetchComments();
-      this.fetchLikes();
-    }
+    if (!comments) { this.fetchComments(); }
+    if (!like) { this.fetchLikes(); }
   }
 
   onCommentChanged = comment => this.setState({ comment });
