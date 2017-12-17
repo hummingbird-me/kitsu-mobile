@@ -1,5 +1,13 @@
 import React, { PureComponent } from 'react';
-import { KeyboardAvoidingView, FlatList, View, StatusBar, ScrollView } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  FlatList,
+  View,
+  StatusBar,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator
+} from 'react-native';
 import { PropTypes } from 'prop-types';
 
 import { Kitsu } from 'kitsu/config/api';
@@ -16,6 +24,8 @@ import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { StyledText } from 'kitsu/components/StyledText';
+import { listBackPurple } from 'kitsu/constants/colors';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -41,6 +51,7 @@ export default class PostDetails extends PureComponent {
         },
         episode: 1,
       },
+      isLoadingNextPage: false,
     };
   }
 
@@ -71,10 +82,23 @@ export default class PostDetails extends PureComponent {
       });
 
       this.setState({ comment: '' });
-      this.fetchComments();
+      // TODO: Insert new comment into stack
+      // this.fetchComments();
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
+  };
+
+  onPagination = async () => {
+    this.setState({ isLoadingNextPage: true });
+
+    await this.fetchComments({
+      page: {
+        offset: this.state.comments.length,
+      },
+    });
+
+    this.setState({ isLoadingNextPage: false });
   };
 
   toggleLike = async () => {
@@ -101,7 +125,7 @@ export default class PostDetails extends PureComponent {
     }
   };
 
-  fetchComments = async () => {
+  fetchComments = async (requestOptions) => {
     try {
       const { post } = this.props.navigation.state.params;
 
@@ -115,9 +139,10 @@ export default class PostDetails extends PureComponent {
         },
         include: 'user',
         sort: 'createdAt',
+        ...requestOptions,
       });
 
-      this.setState({ comments });
+      this.setState({ comments: [...comments, ...this.state.comments] });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -179,7 +204,8 @@ export default class PostDetails extends PureComponent {
     const { currentUser, post } = this.props.navigation.state.params;
     const { comment, comments, like } = this.state;
 
-    const { content, images, postLikesCount, commentsCount, media, spoiledUnit } = post;
+    const { content, images, postLikesCount, commentsCount,
+            topLevelCommentsCount, media, spoiledUnit } = post;
 
     return (
       <KeyboardAvoidingView
@@ -217,6 +243,12 @@ export default class PostDetails extends PureComponent {
 
             <PostCommentsSection>
               {!comments && <SceneLoader />}
+              {comments && topLevelCommentsCount > comments.length && (
+                <CommentPagination
+                  onPress={this.onPagination}
+                  isLoading={this.state.isLoadingNextPage}
+                />
+              )}
               {comments && (
                 <FlatList
                   data={comments}
@@ -246,3 +278,25 @@ export default class PostDetails extends PureComponent {
     );
   }
 }
+
+export const CommentPagination = ({ onPress, isLoading }) => (
+  <View style={{ marginBottom: 15 }}>
+    {isLoading && (
+      <ActivityIndicator color={listBackPurple} />
+    )}
+    {!isLoading && (
+      <TouchableOpacity onPress={onPress}>
+        <StyledText color="dark" size="xxsmall" bold>Show previous comments</StyledText>
+      </TouchableOpacity>
+    )}
+  </View>
+);
+
+CommentPagination.propTypes = {
+  onPress: PropTypes.func,
+  isLoading: PropTypes.bool
+};
+CommentPagination.defaultProps = {
+  onPress: null,
+  isLoading: false
+};
