@@ -58,6 +58,9 @@ class Feed extends React.PureComponent {
   fetchFeed = async ({ reset = false } = {}) => {
     const PAGE_SIZE = 10;
 
+    if (this.isFetchingFeed) { return; }
+    this.isFetchingFeed = true;
+
     if (reset) this.cursor = undefined;
 
     try {
@@ -102,6 +105,8 @@ class Feed extends React.PureComponent {
         data: [],
         error,
       });
+    } finally {
+      this.isFetchingFeed = false;
     }
   };
 
