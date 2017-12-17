@@ -108,6 +108,7 @@ export default class PostDetails extends PureComponent {
       const comments = await Kitsu.findAll('comments', {
         filter: {
           postId: post.id,
+          parentId: '_none',
         },
         fields: {
           users: 'avatar,name',
@@ -115,13 +116,6 @@ export default class PostDetails extends PureComponent {
         include: 'user',
         sort: 'createdAt',
       });
-
-      // TODO: Comments come in without any structure.
-      // We need to hook them up with parent / child comments,
-      // but Devour doesn't seem to do this correctly:
-      // https://github.com/twg/devour/issues/90
-      // and there's no way for me to access the relationship
-      // data from the raw response from this context.
 
       this.setState({ comments });
     } catch (err) {
