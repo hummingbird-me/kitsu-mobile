@@ -34,6 +34,7 @@ export class Comment extends PureComponent {
     await this.fetchReplies({
       page: {
         offset: this.state.replies.length,
+        limit: 5,
       },
     });
     this.setState({ isLoadingNextPage: false });
@@ -52,6 +53,9 @@ export class Comment extends PureComponent {
         },
         include: 'user',
         sort: 'createdAt',
+        page: {
+          limit: 5
+        },
         ...requestOptions,
       });
 
@@ -176,7 +180,7 @@ export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (
     )}
     {!isLoading && (
       <TouchableOpacity onPress={onPress}>
-        <StyledText color="dark" size="xxsmall" bold>View comments ({repliesCount})</StyledText>
+        <StyledText color="dark" size="xxsmall" bold>View replies ({repliesCount})</StyledText>
       </TouchableOpacity>
     )}
   </View>
