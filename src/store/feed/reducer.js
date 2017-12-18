@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   userFeed: [],
   mediaFeed: [],
   notificationsUnseen: 0,
+  notificationsUnread: 0,
   loadingNotifications: false,
   loadingUserFeed: false,
   loadingMediaFeed: false,
@@ -26,6 +27,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         notifications: action.payload,
         loadingNotifications: false,
         notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
         error: '',
       };
     case types.GET_NOTIFICATIONS_MORE:
@@ -36,6 +38,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         notifications,
         loadingNotifications: false,
         notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
         error: '',
       };
     case types.GET_NOTIFICATIONS_LESS:
@@ -45,6 +48,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         notifications,
         loadingNotifications: false,
         notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
         error: '',
       };
     case types.GET_NOTIFICATIONS_FAIL:
@@ -67,6 +71,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         userFeed: action.payload,
         loadingUserFeed: false,
         notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
         error: '',
       };
     case types.GET_USER_FEED_MORE:
@@ -108,6 +113,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         mediaFeed: action.payload,
         loadingMediaFeed: false,
         notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
         error: '',
       };
     case types.GET_MEDIA_FEED_MORE:

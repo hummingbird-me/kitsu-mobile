@@ -6,13 +6,17 @@ import PropTypes from 'prop-types';
 import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
-import { getNotifications, seenNotifications, markNotifications } from 'kitsu/store/feed/actions';
+import {
+  getNotifications,
+  seenNotifications,
+  markAllNotificationsAsRead,
+} from 'kitsu/store/feed/actions';
 import { styles } from './styles';
 
-const CustomHeader = ({ notificationsUnseen, onMarkAll }) => (
+const CustomHeader = ({ notificationsUnread, onMarkAll }) => (
   <View style={styles.customHeaderWrapper}>
     <Text style={styles.customHeaderText}>Notifications</Text>
-    {notificationsUnseen && (
+    {notificationsUnread > 0 && (
       <TouchableOpacity onPress={onMarkAll} style={styles.customHeaderButton}>
         <Text style={styles.customHeaderButtonText}>Mark all as read</Text>
       </TouchableOpacity>
@@ -21,7 +25,7 @@ const CustomHeader = ({ notificationsUnseen, onMarkAll }) => (
 );
 
 CustomHeader.PropTypes = {
-  notificationsUnseen: PropTypes.bool.isRequired,
+  notificationsUnread: PropTypes.bool.isRequired,
   onMarkAll: PropTypes.func.isRequired,
 };
 
@@ -34,7 +38,7 @@ class NotificationsScreen extends PureComponent {
   });
 
   state = {
-    notificationsUnseen: false,
+    notificationsUnread: false,
   };
 
   componentDidMount() {
@@ -42,8 +46,7 @@ class NotificationsScreen extends PureComponent {
   }
 
   onMarkAll = () => {
-    const notifications = [];
-    this.props.markNotifications(notifications);
+    this.props.markAllNotificationsAsRead();
   };
 
   onNotificationPressed = async (activity) => {
@@ -208,13 +211,13 @@ class NotificationsScreen extends PureComponent {
   render() {
     const {
       notifications,
-      notificationsUnseen,
+      notificationsUnread,
       loadingNotifications,
       getNotifications,
     } = this.props;
     return (
       <View style={styles.container}>
-        <CustomHeader notificationsUnseen={notificationsUnseen} onMarkAll={this.onMarkAll} />
+        <CustomHeader notificationsUnread={notificationsUnread} onMarkAll={this.onMarkAll} />
         <FlatList
           ListHeaderComponent={this.renderHeader}
           removeClippedSubviews={false}
@@ -240,17 +243,19 @@ NotificationsScreen.propTypes = {
 };
 
 const mapStateToProps = ({ feed, user, app }) => {
-  const { notifications, notificationsUnseen, loadingNotifications } = feed;
+  const { notifications, notificationsUnread, loadingNotifications } = feed;
   const { currentUser } = user;
   const { pushNotificationEnabled } = app;
   return {
     notifications,
-    notificationsUnseen,
+    notificationsUnread,
     loadingNotifications,
     currentUser,
     pushNotificationEnabled,
   };
 };
-export default connect(mapStateToProps, { getNotifications, seenNotifications, markNotifications })(
-  NotificationsScreen,
-);
+export default connect(mapStateToProps, {
+  getNotifications,
+  seenNotifications,
+  markAllNotificationsAsRead,
+})(NotificationsScreen);
