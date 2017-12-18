@@ -30,6 +30,7 @@ const TAB_ITEMS = [
 
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
+  // TODO: Change label to Chapters for Manga.
   Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
   Characters: { getScreen: () => require('./pages/Characters').Characters },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
@@ -51,10 +52,11 @@ class MediaPages extends PureComponent {
 
   state = {
     active: 'Summary',
-    loading: false,
+    loading: false, // Check whether basic data is loading
     media: null,
     castings: null,
     mediaReactions: null,
+    additionalLoading: false, // Check whether episodes & Related are loading
   }
 
   componentDidMount = () => {
@@ -75,7 +77,7 @@ class MediaPages extends PureComponent {
    * Fetch the media information
    */
   fetchMedia = async (type, id) => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, additionalLoading: true });
     try {
       // Fetch the media with categories
       const media = await Kitsu.one(type, id).get({
@@ -112,6 +114,7 @@ class MediaPages extends PureComponent {
         // Combine the 2 object that we have
         this.setState({
           media: { ...media, categories: this.state.media.categories },
+          additionalLoading: false,
         });
       });
   };
@@ -165,6 +168,7 @@ class MediaPages extends PureComponent {
       loading,
       media,
       mediaReactions,
+      additionalLoading,
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     if (loading) {
@@ -227,6 +231,7 @@ class MediaPages extends PureComponent {
             mediaReactions={mediaReactions}
             castings={castings}
             navigation={navigation}
+            additionalLoading={additionalLoading}
           />
         </ParallaxScroll>
       </SceneContainer>

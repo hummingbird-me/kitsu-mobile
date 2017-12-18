@@ -20,6 +20,11 @@ class SummaryComponent extends PureComponent {
     mediaReactions: PropTypes.array,
     navigation: PropTypes.object.isRequired,
     setActiveTab: PropTypes.func.isRequired,
+    additionalLoading: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    additionalLoading: false,
   }
 
   static defaultProps = {
@@ -82,23 +87,27 @@ class SummaryComponent extends PureComponent {
   }
 
   render() {
-    const { media, castings, mediaReactions } = this.props;
+    const { media, castings, mediaReactions, additionalLoading } = this.props;
     const { loading, feed } = this.state;
     const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
     const seriesCount = series.length;
+
+    // What is a common name between episode and chapter???
+    const episodePrefix = media.type === 'anime' ? 'Ep.' : 'Ch.';
+    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
 
     return (
       <SceneContainer>
         {/* Episodes */}
         <ScrollableSection
-          title={`Episodes・${seriesCount}`}
+          title={`${media.type === 'anime' ? 'Episodes' : 'Chapters'}・${seriesCount}`}
           onViewAllPress={() => this.navigateTo('Episodes')}
           data={this.formatData(series)}
-          loading={isEmpty(series)}
+          loading={additionalLoading}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
-                subtitle={`Ep. ${item.number} of ${media.episodeCount}`}
+                subtitle={`${episodePrefix} ${item.number} ${episodeSuffix}`}
                 title={item.canonicalTitle}
                 variant="landscapeLarge"
                 source={{
@@ -116,9 +125,7 @@ class SummaryComponent extends PureComponent {
           contentDark
           title="More from this series"
           data={this.formatData(media.mediaRelationships)}
-          // TODO: Not sure if this is the best way
-          // This will be true if a media has no relationships
-          loading={isEmpty(media.mediaRelationships)}
+          loading={additionalLoading}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
