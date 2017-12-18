@@ -67,7 +67,7 @@ export class Post extends PureComponent {
   onCommentChanged = comment => this.setState({ comment })
 
   onSubmitComment = async () => {
-    await Kitsu.create('comments', {
+    const comment = await Kitsu.create('comments', {
       content: this.state.comment,
       post: {
         id: this.props.post.id,
@@ -78,9 +78,13 @@ export class Post extends PureComponent {
         type: 'users',
       },
     });
+    comment.user = this.props.currentUser;
 
-    this.setState({ comment: '' });
-    this.fetchComments();
+    this.setState({
+      comment: '',
+      comments: [...this.state.comments, comment],
+      latestComments: [...this.state.latestComments, comment]
+    });
   }
 
   mounted = false

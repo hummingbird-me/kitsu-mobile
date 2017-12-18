@@ -67,7 +67,7 @@ export default class PostDetails extends PureComponent {
     try {
       const { currentUser, post } = this.props.navigation.state.params;
 
-      await Kitsu.create('comments', {
+      const comment = await Kitsu.create('comments', {
         content: this.state.comment,
         post: {
           id: post.id,
@@ -78,10 +78,9 @@ export default class PostDetails extends PureComponent {
           type: 'users',
         },
       });
+      comment.user = currentUser;
 
-      this.setState({ comment: '' });
-      // TODO: Insert new comment into stack
-      // this.fetchComments();
+      this.setState({ comment: '', comments: [...this.state.comments, comment] });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -89,13 +88,11 @@ export default class PostDetails extends PureComponent {
 
   onPagination = async () => {
     this.setState({ isLoadingNextPage: true });
-
     await this.fetchComments({
       page: {
         offset: this.state.comments.length,
       },
     });
-
     this.setState({ isLoadingNextPage: false });
   };
 
