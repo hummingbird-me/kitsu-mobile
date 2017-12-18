@@ -17,16 +17,72 @@ export class Comment extends PureComponent {
     this.state = {
       isLiked: false,
       likesCount: props.comment.likesCount,
+      like: null,
       replies: [],
       isLoadingNextPage: false,
     };
   }
 
-  toggleLike = () => {
-    this.setState({
-      isLiked: !this.state.isLiked,
-      likesCount: this.state.isLiked ? this.state.likesCount - 1 : this.state.likesCount + 1,
-    });
+  componentDidMount() {
+    this.mounted = true;
+    if (!this.props.isTruncated) {
+      this.fetchLikes();
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  fetchLikes = async () => {
+    const { currentUser, comment } = this.props;
+    try {
+      const likes = await Kitsu.findAll('commentLikes', {
+        filter: {
+          commentId: comment.id,
+          userId: currentUser.id,
+        }
+      });
+
+      const like = likes.length && likes[0];
+      if (this.mounted) this.setState({ like, isLiked: !!like });
+    } catch (err) {
+      console.log('Error fetching likes: ', err);
+    }
+  }
+
+  toggleLike = async () => {
+    try {
+      const { isLiked, likesCount, like } = this.state;
+      const { comment, currentUser } = this.props;
+
+      this.setState({
+        isLiked: !isLiked,
+        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
+      });
+
+      if (like) {
+        await Kitsu.destroy('commentLikes', like.id);
+      } else {
+        const record = await Kitsu.create('commentLikes', {
+          comment: {
+            id: comment.id,
+            type: 'comments',
+          },
+          user: {
+            id: currentUser.id,
+            type: 'users',
+          },
+        });
+        this.setState({ like: record });
+      }
+    } catch (err) {
+      console.log('Error toggling like: ', err);
+      this.setState({
+        isLiked: !isLiked,
+        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
+      });
+    }
   }
 
   onPagination = async () => {
@@ -38,7 +94,7 @@ export class Comment extends PureComponent {
       },
     });
     this.setState({ isLoadingNextPage: false });
-  };
+  }
 
   fetchReplies = async (requestOptions = {}) => {
     try {
@@ -70,10 +126,11 @@ export class Comment extends PureComponent {
   renderItem = ({ item }) => (
     <Comment
       comment={item}
+      currentUser={this.props.currentUser}
       onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
       onReplyPress={() => {}}
     />
-  );
+  )
 
   render() {
     const {
@@ -119,7 +176,7 @@ export class Comment extends PureComponent {
             </View>
           )}
           {!isTruncated && repliesCount > 0 && (
-            <View style={{ marginTop: 15, marginLeft: 15 }}>
+            <View style={styles.nestedComments}>
               {replies.length == 0 && (
                 <ToggleReplies
                   onPress={() => { this.fetchReplies(); }}
@@ -199,7 +256,7 @@ ToggleReplies.defaultProps = {
 };
 
 export const CommentPagination = ({ onPress, isLoading }) => (
-  <View style={{ marginBottom: 15 }}>
+  <View style={{ marginBottom: 14 }}>
     {isLoading && (
       <ActivityIndicator color={listBackPurple} />
     )}

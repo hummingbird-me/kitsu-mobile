@@ -180,13 +180,17 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   };
 
-  renderItem = ({ item }) => (
-    <Comment
-      comment={item}
-      onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
-      onReplyPress={this.focusOnCommentInput}
-    />
-  );
+  renderItem = ({ item }) => {
+    const { currentUser } = this.props.navigation.state.params;
+    return (
+      <Comment
+        comment={item}
+        currentUser={currentUser}
+        onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+        onReplyPress={this.focusOnCommentInput}
+      />
+    );
+  };
 
   renderItemSeperatorComponent = () => <View style={{ height: 17 }} />;
 

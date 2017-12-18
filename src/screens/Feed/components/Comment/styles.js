@@ -27,4 +27,8 @@ export const styles = StyleSheet.create({
   likeIcon__active: {
     color: colors.red,
   },
+  nestedComments: {
+    marginTop: 14,
+    marginLeft: 14
+  },
 });
