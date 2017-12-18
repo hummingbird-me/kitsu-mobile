@@ -15,6 +15,7 @@ export const ContentList = ({ title, data, onPress, dark = false, showViewAll = 
       data={data}
       ListHeaderComponent={() => <View style={{ width: 10 }} />}
       renderItem={({ item }) => <ItemRenderer item={item} {...props} />}
+      keyExtractor={(item, index) => index}
     />
   </View>
 );
