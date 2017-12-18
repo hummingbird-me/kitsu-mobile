@@ -171,11 +171,15 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
 
 export const seenNotifications = arr => async (dispatch, getState) => {
   const { id } = getState().user.profile;
-  const results = await Kitsu.one('activityGroups', id).all('_seen').post(arr);
+  const results = await Kitsu.one('activityGroups', id)
+    .all('_seen')
+    .post(arr);
   // console.log(results);
 };
 
-export const markNotifications = (id, token, notifs) => {
+export const markNotifications = notifs => async (dispatch, getState) => {
+  const { id } = getState().user.currentUser;
+  const token = getState().auth.tokens.access_token;
   fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_read`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },

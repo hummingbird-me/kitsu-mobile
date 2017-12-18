@@ -6,19 +6,45 @@ import PropTypes from 'prop-types';
 import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
-import { getNotifications, seenNotifications } from 'kitsu/store/feed/actions';
+import { getNotifications, seenNotifications, markNotifications } from 'kitsu/store/feed/actions';
 import { styles } from './styles';
+
+const CustomHeader = ({ notificationsUnseen, onMarkAll }) => (
+  <View style={styles.customHeaderWrapper}>
+    <Text style={styles.customHeaderText}>Notifications</Text>
+    {notificationsUnseen && (
+      <TouchableOpacity onPress={onMarkAll} style={styles.customHeaderButton}>
+        <Text style={styles.customHeaderButtonText}>Mark all as read</Text>
+      </TouchableOpacity>
+    )}
+  </View>
+);
+
+CustomHeader.PropTypes = {
+  notificationsUnseen: PropTypes.bool.isRequired,
+  onMarkAll: PropTypes.func.isRequired,
+};
 
 const isMentioned = (arr, id) => arr.includes(id);
 
 class NotificationsScreen extends PureComponent {
   static navigationOptions = () => ({
     title: 'Notifications',
+    header: null,
   });
+
+  state = {
+    notificationsUnseen: false,
+  };
 
   componentDidMount() {
     this.props.getNotifications();
   }
+
+  onMarkAll = () => {
+    const notifications = [];
+    this.props.markNotifications(notifications);
+  };
 
   onNotificationPressed = async (activity) => {
     const { target, verb, actor } = activity;
@@ -180,20 +206,28 @@ class NotificationsScreen extends PureComponent {
   };
 
   render() {
-    const { notifications, loadingNotifications, getNotifications } = this.props;
+    const {
+      notifications,
+      notificationsUnseen,
+      loadingNotifications,
+      getNotifications,
+    } = this.props;
     return (
-      <FlatList
-        ListHeaderComponent={this.renderHeader}
-        removeClippedSubviews={false}
-        data={notifications}
-        renderItem={this.renderItem}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={this.renderItemSeperator}
-        initialNumToRender={10}
-        refreshing={loadingNotifications}
-        onRefresh={getNotifications}
-        style={styles.container}
-      />
+      <View style={styles.container}>
+        <CustomHeader notificationsUnseen={notificationsUnseen} onMarkAll={this.onMarkAll} />
+        <FlatList
+          ListHeaderComponent={this.renderHeader}
+          removeClippedSubviews={false}
+          data={notifications}
+          renderItem={this.renderItem}
+          keyExtractor={item => item.id}
+          ItemSeparatorComponent={this.renderItemSeperator}
+          initialNumToRender={10}
+          refreshing={loadingNotifications}
+          onRefresh={getNotifications}
+          style={styles.container}
+        />
+      </View>
     );
   }
 }
@@ -217,6 +251,6 @@ const mapStateToProps = ({ feed, user, app }) => {
     pushNotificationEnabled,
   };
 };
-export default connect(mapStateToProps, { getNotifications, seenNotifications })(
+export default connect(mapStateToProps, { getNotifications, seenNotifications, markNotifications })(
   NotificationsScreen,
 );
