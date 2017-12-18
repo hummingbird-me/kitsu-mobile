@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
@@ -86,7 +86,9 @@ class SearchScreen extends Component {
     const currentValue = this.state.query[route.key];
 
     return (
-      <View>
+      // Applying the width style stops the view from clipping outside the screen
+      // When the SearchScreen is initially loaded.
+      <View style={{ width: Dimensions.get('screen').width }}>
         <SearchBox
           placeholder={`Search ${route.title}`}
           searchIconOffset={108}
