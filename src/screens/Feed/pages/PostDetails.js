@@ -5,8 +5,7 @@ import {
   View,
   StatusBar,
   ScrollView,
-  TouchableOpacity,
-  ActivityIndicator
+  TouchableOpacity
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 
@@ -22,10 +21,8 @@ import {
 } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import { StyledText } from 'kitsu/components/StyledText';
-import { listBackPurple } from 'kitsu/constants/colors';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -120,7 +117,7 @@ export default class PostDetails extends PureComponent {
     }
   };
 
-  fetchComments = async (requestOptions) => {
+  fetchComments = async (requestOptions = {}) => {
     try {
       const { post } = this.props.navigation.state.params;
 
@@ -273,25 +270,3 @@ export default class PostDetails extends PureComponent {
     );
   }
 }
-
-export const CommentPagination = ({ onPress, isLoading }) => (
-  <View style={{ marginBottom: 15 }}>
-    {isLoading && (
-      <ActivityIndicator color={listBackPurple} />
-    )}
-    {!isLoading && (
-      <TouchableOpacity onPress={onPress}>
-        <StyledText color="dark" size="xxsmall" bold>Show previous comments</StyledText>
-      </TouchableOpacity>
-    )}
-  </View>
-);
-
-CommentPagination.propTypes = {
-  onPress: PropTypes.func,
-  isLoading: PropTypes.bool
-};
-CommentPagination.defaultProps = {
-  onPress: null,
-  isLoading: false
-};
