@@ -10,7 +10,6 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { isEmpty } from 'lodash';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -20,11 +19,11 @@ class SummaryComponent extends PureComponent {
     mediaReactions: PropTypes.array,
     navigation: PropTypes.object.isRequired,
     setActiveTab: PropTypes.func.isRequired,
-    additionalLoading: PropTypes.bool,
+    loadingAdditional: PropTypes.bool,
   }
 
   static defaultProps = {
-    additionalLoading: false,
+    loadingAdditional: false,
   }
 
   static defaultProps = {
@@ -87,7 +86,7 @@ class SummaryComponent extends PureComponent {
   }
 
   render() {
-    const { media, castings, mediaReactions, additionalLoading } = this.props;
+    const { media, castings, mediaReactions, loadingAdditional } = this.props;
     const { loading, feed } = this.state;
     const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
     const seriesCount = series.length;
@@ -103,7 +102,7 @@ class SummaryComponent extends PureComponent {
           title={`${media.type === 'anime' ? 'Episodes' : 'Chapters'}・${seriesCount}`}
           onViewAllPress={() => this.navigateTo('Episodes')}
           data={this.formatData(series)}
-          loading={additionalLoading}
+          loading={loadingAdditional}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
@@ -125,7 +124,7 @@ class SummaryComponent extends PureComponent {
           contentDark
           title="More from this series"
           data={this.formatData(media.mediaRelationships)}
-          loading={additionalLoading}
+          loading={loadingAdditional}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard

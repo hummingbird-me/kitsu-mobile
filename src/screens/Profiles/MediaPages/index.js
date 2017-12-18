@@ -56,7 +56,7 @@ class MediaPages extends PureComponent {
     media: null,
     castings: null,
     mediaReactions: null,
-    additionalLoading: false, // Check whether episodes & Related are loading
+    loadingAdditional: false, // Check whether episodes & Related are loading
   }
 
   componentDidMount = () => {
@@ -77,7 +77,7 @@ class MediaPages extends PureComponent {
    * Fetch the media information
    */
   fetchMedia = async (type, id) => {
-    this.setState({ loading: true, additionalLoading: true });
+    this.setState({ loading: true, loadingAdditional: true });
     try {
       // Fetch the media with categories
       const media = await Kitsu.one(type, id).get({
@@ -114,7 +114,7 @@ class MediaPages extends PureComponent {
         // Combine the 2 object that we have
         this.setState({
           media: { ...media, categories: this.state.media.categories },
-          additionalLoading: false,
+          loadingAdditional: false,
         });
       });
   };
@@ -168,7 +168,7 @@ class MediaPages extends PureComponent {
       loading,
       media,
       mediaReactions,
-      additionalLoading,
+      loadingAdditional,
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     if (loading) {
@@ -231,7 +231,7 @@ class MediaPages extends PureComponent {
             mediaReactions={mediaReactions}
             castings={castings}
             navigation={navigation}
-            additionalLoading={additionalLoading}
+            loadingAdditional={loadingAdditional}
           />
         </ParallaxScroll>
       </SceneContainer>
