@@ -71,47 +71,78 @@ class MediaPages extends PureComponent {
 
   goBack = () => this.props.navigation.goBack();
 
+  /**
+   * Fetch the media information
+   */
   fetchMedia = async (type, id) => {
     this.setState({ loading: true });
     try {
+      // Fetch the media with categories
       const media = await Kitsu.one(type, id).get({
-        include: `categories,mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
+        include: 'categories',
       });
 
-      // Now that we've got the media, everything else can go async together.
-      const [
-        castings,
-        mediaReactions,
-      ] = await Promise.all([
-        Kitsu.findAll('castings', {
-          filter: {
-            mediaId: id,
-            isCharacter: true,
-          },
-          sort: '-featured',
-          include: 'character',
-        }),
-        Kitsu.findAll('mediaReactions', {
-          filter: {
-            [`${type}Id`]: id,
-          },
-          include: 'user',
-          sort: '-upVotesCount',
-        }),
-      ]);
-
+      // Set the initial media info
       this.setState({
         loading: false,
-        castings,
         media,
-        mediaReactions,
       });
+
+      // Lazy load the rest
+      this.fetchEpisodesAndRelated(type, id);
+      this.fetchOther(type, id);
     } catch (error) {
+      // OH NO!
       this.setState({
         loading: false,
         error,
       });
     }
+  }
+
+  /**
+   * Fetch the episodes/chapter and related media types
+   */
+  fetchEpisodesAndRelated = async (type, id) => {
+    // To make this simple, we'll just refetch the media object with these fields.
+    Kitsu.one(type, id).get({
+      include: `mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
+    })
+      .then((media) => {
+        // Combine the 2 object that we have
+        this.setState({
+          media: { ...media, categories: this.state.media.categories },
+        });
+      });
+  };
+
+  /**
+   * Fetch the other media information
+   */
+  fetchOther = async (type, id) => {
+    Promise.all([
+      Kitsu.findAll('castings', {
+        filter: {
+          mediaId: id,
+          isCharacter: true,
+        },
+        sort: '-featured',
+        include: 'character',
+      }),
+      Kitsu.findAll('mediaReactions', {
+        filter: {
+          [`${type}Id`]: id,
+        },
+        include: 'user',
+        sort: '-upVotesCount',
+      }),
+    ])
+      .then(([castings, mediaReactions]) => {
+        this.setState({
+          castings,
+          mediaReactions,
+        });
+      });
   }
 
   renderTabNav = () => (

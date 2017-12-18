@@ -10,15 +10,21 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { isEmpty } from 'lodash';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
-    castings: PropTypes.array.isRequired,
+    castings: PropTypes.array,
     currentUser: PropTypes.object.isRequired,
     media: PropTypes.object.isRequired,
-    mediaReactions: PropTypes.array.isRequired,
+    mediaReactions: PropTypes.array,
     navigation: PropTypes.object.isRequired,
     setActiveTab: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    castings: null,
+    mediaReactions: null,
   }
 
   state = {
@@ -88,6 +94,7 @@ class SummaryComponent extends PureComponent {
           title={`Episodes・${seriesCount}`}
           onViewAllPress={() => this.navigateTo('Episodes')}
           data={this.formatData(series)}
+          loading={isEmpty(series)}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
@@ -109,6 +116,9 @@ class SummaryComponent extends PureComponent {
           contentDark
           title="More from this series"
           data={this.formatData(media.mediaRelationships)}
+          // TODO: Not sure if this is the best way
+          // This will be true if a media has no relationships
+          loading={isEmpty(media.mediaRelationships)}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
@@ -127,6 +137,7 @@ class SummaryComponent extends PureComponent {
           title="Reactions"
           onViewAllPress={() => this.navigateTo('Reactions')}
           data={mediaReactions}
+          loading={mediaReactions === null}
           renderItem={({ item }) => (
             <ScrollItem>
               <ReactionBox
@@ -144,6 +155,7 @@ class SummaryComponent extends PureComponent {
           title="Characters"
           onViewAllPress={() => this.navigateTo('Characters')}
           data={castings}
+          loading={castings === null}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
