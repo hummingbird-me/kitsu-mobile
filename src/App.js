@@ -1,6 +1,7 @@
 /* global __DEV__ */
 import React, { PureComponent } from 'react';
 import { View, StatusBar, Linking } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import identity from 'lodash/identity';
 
@@ -57,10 +58,29 @@ class App extends PureComponent {
   }
 
   onOpened(openResult) {
+    console.group('Opened Notification');
+    console.log('Notification', openResult.notification);
     console.log('Message: ', openResult.notification.payload.body);
     console.log('Data: ', openResult.notification.payload.additionalData);
     console.log('isActive: ', openResult.notification.isAppInFocus);
     console.log('openResult: ', openResult);
+    console.groupEnd();
+
+    /**
+     * Looks like navigating from root router to a nested screen inside the tab
+     * stack is not possible. Created a hacky TabNavigator with initial screen
+     * of Notifications. This way user can navigate to related
+     * notification.
+     *
+     * Related issues: react-community/react-navigation
+     *  #1127, #1715,
+     */
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      key: null,
+      actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
+    });
+    this.navigation.dispatch(resetAction);
   }
 
   onUrl(data) {

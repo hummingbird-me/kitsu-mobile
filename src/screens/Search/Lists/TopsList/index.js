@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { upperFirst, isEmpty } from 'lodash';
 import { getDefaults, getCategories } from 'kitsu/store/anime/actions';
 import { ContentList } from 'kitsu/components/ContentList';
+import { showSeasonResults, showStreamerResults, showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
 import { styles } from './styles';
 
 class TopsList extends PureComponent {
@@ -18,8 +19,8 @@ class TopsList extends PureComponent {
 
   /**
    * Get the season corresponding to the given month
-   * @param  {Int} month The integer month (1 - 12)
-   * @return {String} The season (Winter, Spring, Summer, Fall).
+   * @param  {number} month The integer month (1 - 12)
+   * @return {string} The season (Winter, Spring, Summer, Fall).
    */
   getSeason(month) {
     // Make sure month is an integer in 1 - 12
@@ -56,6 +57,7 @@ class TopsList extends PureComponent {
       return {
         title: `${season} ${year}`,
         image: images[season],
+        onPress: () => showSeasonResults(this.props.navigation, season, year),
       };
     };
 
@@ -157,9 +159,9 @@ class TopsList extends PureComponent {
 
   /**
    * Get the list data for the given media type.
-   * @param  {String} type `Anime` or `Manga`.
-   * @param  {Dictionary} data The props data.
-   * @return {Array}  An array for the given media type.
+   * @param  {string} type `Anime` or `Manga`.
+   * @param  {Object} data The props data.
+   * @return {Object[]}  An array of data for the given media type.
    */
   getListData(type, data) {
     const seasons = this.getSeasonsData();
@@ -192,7 +194,12 @@ class TopsList extends PureComponent {
         name: 'viewster',
         image: require('kitsu/assets/img/streaming-services/viewster.png'),
       },
-    ];
+    ].map(streamer => ({
+      ...streamer,
+      // Add the touch handler for the streamers
+      onPress: () => showStreamerResults(this.props.navigation, streamer.name),
+    }));
+
     const streamingData = {
       title: `${type} By Streaming`,
       dark: true,
@@ -202,17 +209,24 @@ class TopsList extends PureComponent {
     };
 
     // Because react doesn't allow dynamic image loading, we have to do it this way :(
+    const categories = (type === 'Anime') ? this.getAnimeCategories() : this.getMangaCategories();
+
+    // Add the touch handler for the categories
+    const mappedCategories = categories.map(category => ({
+      ...category,
+      onPress: () => showCategoryResults(this.props.navigation, type, category.title),
+    }));
+
     const categoryData = {
       title: `${type} By Categeory`,
-      data: (type === 'Anime') ? this.getAnimeCategories() : this.getMangaCategories(),
+      data: mappedCategories,
       dark: true,
       type: 'static',
       showViewAll: false,
     };
 
-    // Loading data is just an array of strings
-    // We don't care about how it's represented
-    const loadingData = Array(5).fill(0).map(i => i.toString());
+    // Loading data is just an array of empty objects
+    const loadingData = Array(5).fill({});
 
     const topData = {
       title: (type === 'Anime') ? `Top Airing ${type}` : `Top Publishing ${type}`,

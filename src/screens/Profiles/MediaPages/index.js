@@ -174,6 +174,10 @@ class MediaPages extends PureComponent {
     if (loading) {
       return (
         <SceneContainer>
+          <CustomHeader
+            leftButtonAction={this.goBack}
+            leftButtonTitle="Back"
+          />
           <SceneLoader />
         </SceneContainer>
       );
