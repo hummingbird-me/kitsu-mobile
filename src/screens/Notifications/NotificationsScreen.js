@@ -21,7 +21,6 @@ import {
 } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
-import notification from 'kitsu/routes/notification';
 
 const CustomHeader = ({ notificationsUnread, markingRead, onMarkAll }) => (
   <View style={styles.customHeaderWrapper}>
