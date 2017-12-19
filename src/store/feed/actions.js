@@ -181,6 +181,7 @@ export const seenNotifications = arr => async (dispatch, getState) => {
 export const markNotifications = notifs => async (dispatch, getState) => {
   const { id } = getState().user.currentUser;
   const token = getState().auth.tokens.access_token;
+  // this can be rewritten with Devour.
   fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_read`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
@@ -193,11 +194,12 @@ export const markAllNotificationsAsRead = () => async (dispatch, getState) => {
   const token = getState().auth.tokens.access_token;
   dispatch({ type: types.MARK_ALL_AS_READ });
   try {
-    const res = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}?mark=read`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log(res);
+    // hit _read to mark all read.
+    await Kitsu.one('activityGroups', id).get({ mark: 'read' });
+    // get notifications
+    // getNotifications()(dispatch, getState);
+    // or skip that ^, since everything else will remain exactly the same,
+    // console.log(results);
     dispatch({ type: types.MARK_ALL_AS_READ_SUCCESS });
   } catch (e) {
     dispatch({ type: types.MARK_ALL_AS_READ_FAIL });

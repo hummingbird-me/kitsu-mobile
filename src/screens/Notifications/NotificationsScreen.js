@@ -1,5 +1,13 @@
 import React, { PureComponent } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Platform,
+  ActivityIndicator,
+} from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
@@ -11,21 +19,28 @@ import {
   seenNotifications,
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
+import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
+import notification from 'kitsu/routes/notification';
 
-const CustomHeader = ({ notificationsUnread, onMarkAll }) => (
+const CustomHeader = ({ notificationsUnread, markingRead, onMarkAll }) => (
   <View style={styles.customHeaderWrapper}>
     <Text style={styles.customHeaderText}>Notifications</Text>
     {notificationsUnread > 0 && (
-      <TouchableOpacity onPress={onMarkAll} style={styles.customHeaderButton}>
-        <Text style={styles.customHeaderButtonText}>Mark all as read</Text>
+      <TouchableOpacity activeOpacity={0.8} onPress={onMarkAll} style={styles.customHeaderButton}>
+        {markingRead ? (
+          <ActivityIndicator color={colors.offBlack} />
+        ) : (
+          <Text style={styles.customHeaderButtonText}>Mark all as read</Text>
+        )}
       </TouchableOpacity>
     )}
   </View>
 );
 
-CustomHeader.PropTypes = {
+CustomHeader.propTypes = {
   notificationsUnread: PropTypes.bool.isRequired,
+  markingRead: PropTypes.bool.isRequired,
   onMarkAll: PropTypes.func.isRequired,
 };
 
@@ -143,7 +158,6 @@ class NotificationsScreen extends PureComponent {
 
   renderItem = ({ item }) => {
     const activity = item.activities[0];
-
     let others = null;
     if (item.activities.length > 1) {
       others =
@@ -161,29 +175,28 @@ class NotificationsScreen extends PureComponent {
         : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity
-        onPress={() => this.onNotificationPressed(activity)}
-        style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}
-      >
-        <View style={styles.iconContainer}>
-          <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
-        </View>
-        <View style={styles.detailsContainer}>
-          <View style={{ paddingRight: 10 }}>
-            <Image style={styles.userAvatar} source={{ uri: ava }} />
+      <TouchableOpacity onPress={() => this.onNotificationPressed(activity)}>
+        <View style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
+          <View style={styles.iconContainer}>
+            <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
           </View>
-          <View style={styles.activityContainer}>
-            <View style={styles.activityTextContainer}>
-              <Text style={[styles.activityText, styles.activityTextHighlight]}>
-                {activity.actor && activity.actor.name}{' '}
-              </Text>
-              <Text style={styles.activityText}>
-                {others && <Text>and {others}</Text>}
-                {this.renderText(activity)}
-              </Text>
+          <View style={styles.detailsContainer}>
+            <View style={{ paddingRight: 10 }}>
+              <Image style={styles.userAvatar} source={{ uri: ava }} />
             </View>
-            <View style={styles.activityMetaContainer}>
-              <Text style={styles.activityMetaText}>{moment(activity.time).fromNow()}</Text>
+            <View style={styles.activityContainer}>
+              <View style={styles.activityTextContainer}>
+                <Text style={[styles.activityText, styles.activityTextHighlight]}>
+                  {activity.actor && activity.actor.name}{' '}
+                </Text>
+                <Text style={styles.activityText}>
+                  {others && <Text>and {others}</Text>}
+                  {this.renderText(activity)}
+                </Text>
+              </View>
+              <View style={styles.activityMetaContainer}>
+                <Text style={styles.activityMetaText}>{moment(activity.time).fromNow()}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -214,10 +227,16 @@ class NotificationsScreen extends PureComponent {
       notificationsUnread,
       loadingNotifications,
       getNotifications,
+      markingRead,
     } = this.props;
+    console.log(notifications);
     return (
       <View style={styles.container}>
-        <CustomHeader notificationsUnread={notificationsUnread} onMarkAll={this.onMarkAll} />
+        <CustomHeader
+          markingRead={markingRead}
+          notificationsUnread={notificationsUnread}
+          onMarkAll={this.onMarkAll}
+        />
         <FlatList
           ListHeaderComponent={this.renderHeader}
           removeClippedSubviews={false}
@@ -243,7 +262,7 @@ NotificationsScreen.propTypes = {
 };
 
 const mapStateToProps = ({ feed, user, app }) => {
-  const { notifications, notificationsUnread, loadingNotifications } = feed;
+  const { notifications, notificationsUnread, loadingNotifications, markingRead } = feed;
   const { currentUser } = user;
   const { pushNotificationEnabled } = app;
   return {
@@ -252,6 +271,7 @@ const mapStateToProps = ({ feed, user, app }) => {
     loadingNotifications,
     currentUser,
     pushNotificationEnabled,
+    markingRead,
   };
 };
 export default connect(mapStateToProps, {

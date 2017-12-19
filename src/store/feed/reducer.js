@@ -1,11 +1,12 @@
 import * as types from 'kitsu/store/types';
 
 const INITIAL_STATE = {
-  notifications: [],
   userFeed: [],
   mediaFeed: [],
+  notifications: [],
   notificationsUnseen: 0,
   notificationsUnread: 0,
+  markingRead: false,
   loadingNotifications: false,
   loadingUserFeed: false,
   loadingMediaFeed: false,
@@ -16,48 +17,6 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
   let feed = [];
   let filtered = [];
   switch (action.type) {
-    case types.GET_NOTIFICATIONS:
-      return {
-        ...state,
-        loadingNotifications: true,
-      };
-    case types.GET_NOTIFICATIONS_SUCCESS:
-      return {
-        ...state,
-        notifications: action.payload,
-        loadingNotifications: false,
-        notificationsUnseen: action.meta.unseenCount,
-        notificationsUnread: action.meta.unreadCount,
-        error: '',
-      };
-    case types.GET_NOTIFICATIONS_MORE:
-      filtered = state.notifications.filter(value => value.group !== action.payload[0].group);
-      notifications = [...action.payload, ...filtered];
-      return {
-        ...state,
-        notifications,
-        loadingNotifications: false,
-        notificationsUnseen: action.meta.unseenCount,
-        notificationsUnread: action.meta.unreadCount,
-        error: '',
-      };
-    case types.GET_NOTIFICATIONS_LESS:
-      notifications = state.notifications.filter(value => value.id !== action.payload);
-      return {
-        ...state,
-        notifications,
-        loadingNotifications: false,
-        notificationsUnseen: action.meta.unseenCount,
-        notificationsUnread: action.meta.unreadCount,
-        error: '',
-      };
-    case types.GET_NOTIFICATIONS_FAIL:
-      return {
-        ...state,
-        notifications: [],
-        loadingNotifications: false,
-        error: action.payload,
-      };
     case types.GET_USER_FEED:
       const empty = action.payload ? {} : { userFeed: [] };
       return {
@@ -141,6 +100,69 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         mediaFeed: [],
         loadingMediaFeed: false,
         error: action.payload,
+      };
+    case types.GET_NOTIFICATIONS:
+      return {
+        ...state,
+        loadingNotifications: true,
+      };
+    case types.GET_NOTIFICATIONS_SUCCESS:
+      return {
+        ...state,
+        notifications: action.payload,
+        loadingNotifications: false,
+        notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
+        error: '',
+      };
+    case types.GET_NOTIFICATIONS_MORE:
+      filtered = state.notifications.filter(value => value.group !== action.payload[0].group);
+      notifications = [...action.payload, ...filtered];
+      return {
+        ...state,
+        notifications,
+        loadingNotifications: false,
+        notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
+        error: '',
+      };
+    case types.GET_NOTIFICATIONS_LESS:
+      notifications = state.notifications.filter(value => value.id !== action.payload);
+      return {
+        ...state,
+        notifications,
+        loadingNotifications: false,
+        notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
+        error: '',
+      };
+    case types.GET_NOTIFICATIONS_FAIL:
+      return {
+        ...state,
+        notifications: [],
+        loadingNotifications: false,
+        error: action.payload,
+      };
+    case types.MARK_ALL_AS_READ:
+      return {
+        ...state,
+        markingRead: true,
+      };
+    case types.MARK_ALL_AS_READ_SUCCESS:
+      return {
+        ...state,
+        markingRead: false,
+        notificationsUnread: 0,
+        notifications: state.notifications.map(v => ({
+          ...v,
+          isRead: true,
+        })),
+      };
+    case types.MARK_ALL_AS_READ_FAIL:
+      return {
+        ...state,
+        markingRead: false,
+        // error: action.payload,
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;

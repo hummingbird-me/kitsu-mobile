@@ -65,10 +65,14 @@ class TabsNav extends React.PureComponent {
   }
 
   render() {
-    return <Tabs screenProps={{ rootNavigation: this.props.navigation }} />;
+    return (
+      <Tabs screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }} />
+    );
   }
 }
 
-const mapper = () => ({});
+const mapper = ({ feed }) => ({
+  badge: feed.notificationsUnread,
+});
 
 export default connect(mapper, { fetchCurrentUser, fetchAlgoliaKeys })(TabsNav);

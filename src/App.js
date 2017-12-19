@@ -118,7 +118,7 @@ class App extends PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <ConnectedRoot />
+        <RootContainer />
       </Provider>
     );
   }
@@ -131,22 +131,9 @@ const RootContainer = ({ badge }) => (
       ref={(nav) => {
         this.navigation = nav;
       }}
-      screenProps={{ badge }}
     />
   </View>
 );
-
-RootContainer.propTypes = {
-  badge: PropTypes.number,
-};
-
-RootContainer.defaultProps = {
-  badge: 0,
-};
-
-const ConnectedRoot = connect(({ feed }) => ({
-  badge: feed.notificationsUnseen,
-}))(RootContainer);
 
 // Check for Codepush only in production mode (Saves compile time & network calls in development).
 const wrapper = __DEV__ ? identity : codePush;

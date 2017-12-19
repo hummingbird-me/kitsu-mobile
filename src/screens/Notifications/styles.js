@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
   customHeaderWrapper: {
@@ -8,7 +9,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     backgroundColor: colors.darkPurple,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingTop: isX ? paddingX : 10,
+    paddingBottom: 10,
   },
   customHeaderText: {
     fontWeight: 'bold',
@@ -19,6 +22,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   customHeaderButton: {
+    minWidth: 120,
     paddingHorizontal: 8,
     paddingVertical: 4,
     justifyContent: 'center',
@@ -81,10 +85,11 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   parentItem: {
-    flexDirection: 'row',
     backgroundColor: colors.offWhite,
     paddingHorizontal: 8,
     paddingVertical: 12,
+    flexDirection: 'row',
+    flex: 1,
   },
   itemSeperator: {
     borderWidth: 1,

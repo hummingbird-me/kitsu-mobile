@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -7,
     left: 12,
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.red,
     padding: 3,
     borderRadius: 16,
     alignItems: 'center',
