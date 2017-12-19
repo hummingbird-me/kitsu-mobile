@@ -228,7 +228,6 @@ class NotificationsScreen extends PureComponent {
       getNotifications,
       markingRead,
     } = this.props;
-    console.log(notifications);
     return (
       <View style={styles.container}>
         <CustomHeader
