@@ -127,8 +127,8 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
   }
 };
 
-export const getNotifications = (cursor, limit = 30) => async (dispatch, getState) => {
-  dispatch({ type: types.GET_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
+export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getState) => {
+  dispatch({ type: types.FETCH_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
   const { id } = getState().user.currentUser;
   const { notifications } = getState().feed;
   try {
@@ -141,14 +141,14 @@ export const getNotifications = (cursor, limit = 30) => async (dispatch, getStat
     });
     if (cursor) {
       dispatch({
-        type: types.GET_NOTIFICATIONS_SUCCESS,
+        type: types.FETCH_NOTIFICATIONS_SUCCESS,
         payload: [...notifications, ...results],
         meta: results.meta,
         loadingMoreNotifications: false,
       });
       return;
     }
-    dispatch({ type: types.GET_NOTIFICATIONS_SUCCESS, payload: [...results], meta: results.meta });
+    dispatch({ type: types.FETCH_NOTIFICATIONS_SUCCESS, payload: [...results], meta: results.meta });
     const notificationsStream = getStream().feed(
       results.meta.feed.group,
       results.meta.feed.id,
@@ -160,15 +160,15 @@ export const getNotifications = (cursor, limit = 30) => async (dispatch, getStat
         include: 'target.user,target.post,actor',
       });
       if (data.new.length > 0) {
-        dispatch({ type: types.GET_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
+        dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
       }
       if (data.deleted.length > 0) {
-        dispatch({ type: types.GET_NOTIFICATIONS_LESS, payload: data.deleted[0], meta: not.meta });
+        dispatch({ type: types.FETCH_NOTIFICATIONS_LESS, payload: data.deleted[0], meta: not.meta });
       }
     });
   } catch (e) {
     console.log(e);
-    dispatch({ type: types.GET_NOTIFICATIONS_FAIL, payload: e });
+    dispatch({ type: types.FETCH_NOTIFICATIONS_FAIL, payload: e });
   }
 };
 
@@ -203,7 +203,6 @@ export const markNotificationsAsSeen = () => async (dispatch, getState) => {
       },
       body: JSON.stringify(notificationsUnseen),
     }).then(response => response.json());
-    console.log(results);
     dispatch({ type: types.MARK_AS_SEEN_SUCCESS, payload: results.data });
   } catch (e) {
     console.log(e);
@@ -213,7 +212,6 @@ export const markNotificationsAsSeen = () => async (dispatch, getState) => {
 
 export const markAllNotificationsAsRead = () => async (dispatch, getState) => {
   const { id } = getState().user.currentUser;
-  const token = getState().auth.tokens.access_token;
   dispatch({ type: types.MARK_ALL_AS_READ });
   try {
     // hit _read to mark all read.

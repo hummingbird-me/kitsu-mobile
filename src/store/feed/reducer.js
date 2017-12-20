@@ -102,13 +102,13 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         loadingMediaFeed: false,
         error: action.payload,
       };
-    case types.GET_NOTIFICATIONS:
+    case types.FETCH_NOTIFICATIONS:
       return {
         ...state,
         loadingNotifications: true,
         loadingMoreNotifications: action.loadingMoreNotifications,
       };
-    case types.GET_NOTIFICATIONS_SUCCESS:
+    case types.FETCH_NOTIFICATIONS_SUCCESS:
       return {
         ...state,
         notifications: action.payload,
@@ -117,7 +117,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         notificationsUnread: action.meta.unreadCount,
         error: '',
       };
-    case types.GET_NOTIFICATIONS_MORE:
+    case types.FETCH_NOTIFICATIONS_MORE:
       filtered = state.notifications.filter(value => value.group !== action.payload[0].group);
       notifications = [...action.payload, ...filtered];
       return {
@@ -128,7 +128,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         notificationsUnread: action.meta.unreadCount,
         error: '',
       };
-    case types.GET_NOTIFICATIONS_LESS:
+    case types.FETCH_NOTIFICATIONS_LESS:
       notifications = state.notifications.filter(value => value.id !== action.payload);
       return {
         ...state,
@@ -138,7 +138,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         notificationsUnread: action.meta.unreadCount,
         error: '',
       };
-    case types.GET_NOTIFICATIONS_FAIL:
+    case types.FETCH_NOTIFICATIONS_FAIL:
       return {
         ...state,
         notifications: [],

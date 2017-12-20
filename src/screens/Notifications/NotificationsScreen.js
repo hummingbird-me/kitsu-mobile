@@ -15,7 +15,7 @@ import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
 import {
-  getNotifications,
+  fetchNotifications,
   markNotificationsAsSeen,
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
@@ -129,14 +129,15 @@ class NotificationsScreen extends PureComponent {
     });
 
   fetchNotifications = async () => {
-    await this.props.getNotifications();
+    await this.props.fetchNotifications();
     this.props.markNotificationsAsSeen();
   };
 
   fetchMoreNotifications = async () => {
     const { loadingMoreNotifications, notifications } = this.props;
     if (!loadingMoreNotifications) {
-      await this.props.getNotifications(notifications.slice(-1)[0].id);
+      await this.props.fetchNotifications(notifications.slice(-1)[0].id);
+      this.props.markNotificationsAsSeen();
     }
   };
 
@@ -257,7 +258,7 @@ class NotificationsScreen extends PureComponent {
       notifications,
       notificationsUnread,
       loadingNotifications,
-      getNotifications,
+      fetchNotifications,
       markingRead,
     } = this.props;
     return (
@@ -276,7 +277,7 @@ class NotificationsScreen extends PureComponent {
           ItemSeparatorComponent={this.renderItemSeperator}
           initialNumToRender={10}
           refreshing={loadingNotifications}
-          onRefresh={getNotifications}
+          onRefresh={fetchNotifications}
           onEndReached={this.fetchMoreNotifications}
           onEndReachedThreshold={0.3}
           style={styles.container}
@@ -287,7 +288,7 @@ class NotificationsScreen extends PureComponent {
 }
 
 NotificationsScreen.propTypes = {
-  getNotifications: PropTypes.func.isRequired,
+  fetchNotifications: PropTypes.func.isRequired,
   currentUser: PropTypes.object.isRequired,
   notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
@@ -308,7 +309,7 @@ const mapStateToProps = ({ feed, user, app }) => {
   };
 };
 export default connect(mapStateToProps, {
-  getNotifications,
+  fetchNotifications,
   markAllNotificationsAsRead,
   markNotificationsAsSeen,
 })(NotificationsScreen);
