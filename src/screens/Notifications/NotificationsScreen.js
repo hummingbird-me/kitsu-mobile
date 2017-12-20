@@ -313,6 +313,19 @@ export default connect(mapStateToProps, {
   markNotificationsAsSeen,
 })(NotificationsScreen);
 
+
+/**
+ * Parses notification data into usable objects.
+ * Used in in-app notification modal and notification screen render
+ * 
+ * @param {object} activities notification data received from API
+ * @param {number} currentUserId logged in user ID
+ * @returns {object} notificationData
+ *  - @returns {string} actorName notification actor name
+ *  - @returns {string} actorAvatar notification actor avatar URL
+ *  - @returns {string} text notification text (ex: mentioned you.)
+ *  - @returns {string} others other users involved in notification
+ */
 export const parseNotificationData = (activities, currentUserId) => {
   const notificationData = {
     actorName: null,
