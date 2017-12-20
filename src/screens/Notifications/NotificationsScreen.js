@@ -69,9 +69,9 @@ class NotificationsScreen extends PureComponent {
         const now = new Date().getTime();
         const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
         if (previousScene.key !== 'Notifications' || doublePressed) {
+          this.lastTap = null;
           jumpToIndex(scene.index);
           this.fetchNotifications();
-          this.lastTap = null;
         } else {
           this.lastTap = now;
         }

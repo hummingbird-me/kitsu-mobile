@@ -3,6 +3,7 @@ import { Kitsu } from 'kitsu/config/api';
 import { getStream } from 'kitsu/config/stream';
 import { kitsuConfig } from 'kitsu/config/env';
 
+let inAppNotificationTimer = 0;
 const feedInclude =
   'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga';
 
@@ -148,7 +149,11 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       });
       return;
     }
-    dispatch({ type: types.FETCH_NOTIFICATIONS_SUCCESS, payload: [...results], meta: results.meta });
+    dispatch({
+      type: types.FETCH_NOTIFICATIONS_SUCCESS,
+      payload: [...results],
+      meta: results.meta,
+    });
     const notificationsStream = getStream().feed(
       results.meta.feed.group,
       results.meta.feed.id,
@@ -161,15 +166,25 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       });
       if (data.new.length > 0) {
         dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
+        clearTimeout(inAppNotificationTimer);
+        inAppNotificationTimer = setTimeout(() => dismissInAppNotification(dispatch), 3000);
       }
       if (data.deleted.length > 0) {
-        dispatch({ type: types.FETCH_NOTIFICATIONS_LESS, payload: data.deleted[0], meta: not.meta });
+        dispatch({
+          type: types.FETCH_NOTIFICATIONS_LESS,
+          payload: data.deleted[0],
+          meta: not.meta,
+        });
       }
     });
   } catch (e) {
     console.log(e);
     dispatch({ type: types.FETCH_NOTIFICATIONS_FAIL, payload: e });
   }
+};
+
+export const dismissInAppNotification = (dispatch) => {
+  dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION });
 };
 
 export const markNotifications = notifs => async (dispatch, getState) => {

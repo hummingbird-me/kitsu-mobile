@@ -11,6 +11,9 @@ const INITIAL_STATE = {
   loadingMoreNotifications: false,
   loadingUserFeed: false,
   loadingMediaFeed: false,
+  inAppNotification: {
+    visible: false,
+  },
 };
 
 export const feedReducer = (state = INITIAL_STATE, action) => {
@@ -126,6 +129,9 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         loadingNotifications: false,
         notificationsUnseen: action.meta.unseenCount,
         notificationsUnread: action.meta.unreadCount,
+        inAppNotification: {
+          visible: true,
+        },
         error: '',
       };
     case types.FETCH_NOTIFICATIONS_LESS:
@@ -188,6 +194,13 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
         markingRead: false,
         // error: action.payload,
+      };
+    case types.DISMISS_IN_APP_NOTIFICATION:
+      return {
+        ...state,
+        inAppNotification: {
+          visible: false,
+        },
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;

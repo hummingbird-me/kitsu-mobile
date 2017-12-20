@@ -10,6 +10,7 @@ import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
 import store from './store/config';
 import Root from './Router';
+import { NotificationModal } from './components/NotificationModal';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
 
@@ -118,13 +119,13 @@ class App extends PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <RootContainer />
+        <ConnectedRoot />
       </Provider>
     );
   }
 }
 
-const RootContainer = ({ badge }) => (
+const RootContainer = ({ inAppNotification }) => (
   <View style={{ flex: 1 }}>
     <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
     <Root
@@ -132,8 +133,21 @@ const RootContainer = ({ badge }) => (
         this.navigation = nav;
       }}
     />
+    <NotificationModal
+      visible={inAppNotification.visible}
+      message={'You have a new notification'}
+      onDismiss={() => {}}
+    />
   </View>
 );
+
+RootContainer.propTypes = {
+  inAppNotification: PropTypes.object.isRequired,
+};
+
+const ConnectedRoot = connect(({ feed }) => ({
+  inAppNotification: feed.inAppNotification,
+}))(RootContainer);
 
 // Check for Codepush only in production mode (Saves compile time & network calls in development).
 const wrapper = __DEV__ ? identity : codePush;
