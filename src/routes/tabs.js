@@ -57,7 +57,10 @@ const Tabs = TabNavigator(
 
 class TabsNav extends React.PureComponent {
   static propTypes = {
+    navigation: PropTypes.object.isRequired,
     fetchCurrentUser: PropTypes.func.isRequired,
+    fetchAlgoliaKeys: PropTypes.func.isRequired,
+    fetchNotifications: PropTypes.func.isRequired,
   };
 
   componentWillMount() {

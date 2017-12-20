@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
+import { fetchNotifications } from 'kitsu/store/feed/actions';
 import { tabRed, listBackPurple } from 'kitsu/constants/colors';
 import SearchStack from './search';
 import NotificationsStack from './notification';
@@ -72,6 +73,7 @@ class TabsNav extends React.PureComponent {
   componentWillMount() {
     this.props.fetchCurrentUser();
     this.props.fetchAlgoliaKeys();
+    this.props.fetchNotifications();
   }
 
   render() {
@@ -85,4 +87,4 @@ const mapper = ({ feed }) => ({
   badge: feed.notificationsUnseen,
 });
 
-export default connect(mapper, { fetchCurrentUser, fetchAlgoliaKeys })(TabsNav);
+export default connect(mapper, { fetchCurrentUser, fetchAlgoliaKeys, fetchNotifications })(TabsNav);
