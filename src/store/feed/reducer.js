@@ -1,13 +1,20 @@
 import * as types from 'kitsu/store/types';
 
 const INITIAL_STATE = {
-  notifications: [],
   userFeed: [],
   mediaFeed: [],
+  notifications: [],
   notificationsUnseen: 0,
+  notificationsUnread: 0,
+  markingRead: false,
   loadingNotifications: false,
+  loadingMoreNotifications: false,
   loadingUserFeed: false,
   loadingMediaFeed: false,
+  inAppNotification: {
+    visible: false,
+    data: null,
+  },
 };
 
 export const feedReducer = (state = INITIAL_STATE, action) => {
@@ -15,45 +22,6 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
   let feed = [];
   let filtered = [];
   switch (action.type) {
-    case types.GET_NOTIFICATIONS:
-      return {
-        ...state,
-        loadingNotifications: true,
-      };
-    case types.GET_NOTIFICATIONS_SUCCESS:
-      return {
-        ...state,
-        notifications: action.payload,
-        loadingNotifications: false,
-        notificationsUnseen: action.meta.unseenCount,
-        error: '',
-      };
-    case types.GET_NOTIFICATIONS_MORE:
-      filtered = state.notifications.filter(value => value.group !== action.payload[0].group);
-      notifications = [...action.payload, ...filtered];
-      return {
-        ...state,
-        notifications,
-        loadingNotifications: false,
-        notificationsUnseen: action.meta.unseenCount,
-        error: '',
-      };
-    case types.GET_NOTIFICATIONS_LESS:
-      notifications = state.notifications.filter(value => value.id !== action.payload);
-      return {
-        ...state,
-        notifications,
-        loadingNotifications: false,
-        notificationsUnseen: action.meta.unseenCount,
-        error: '',
-      };
-    case types.GET_NOTIFICATIONS_FAIL:
-      return {
-        ...state,
-        notifications: [],
-        loadingNotifications: false,
-        error: action.payload,
-      };
     case types.GET_USER_FEED:
       const empty = action.payload ? {} : { userFeed: [] };
       return {
@@ -67,6 +35,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         userFeed: action.payload,
         loadingUserFeed: false,
         notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
         error: '',
       };
     case types.GET_USER_FEED_MORE:
@@ -108,6 +77,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         mediaFeed: action.payload,
         loadingMediaFeed: false,
         notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
         error: '',
       };
     case types.GET_MEDIA_FEED_MORE:
@@ -135,6 +105,105 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         mediaFeed: [],
         loadingMediaFeed: false,
         error: action.payload,
+      };
+    case types.FETCH_NOTIFICATIONS:
+      return {
+        ...state,
+        loadingNotifications: true,
+        loadingMoreNotifications: action.loadingMoreNotifications,
+      };
+    case types.FETCH_NOTIFICATIONS_SUCCESS:
+      return {
+        ...state,
+        notifications: action.payload,
+        loadingNotifications: false,
+        notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
+        error: '',
+      };
+    case types.FETCH_NOTIFICATIONS_MORE:
+      filtered = state.notifications.filter(value => value.group !== action.payload[0].group);
+      notifications = [...action.payload, ...filtered];
+      return {
+        ...state,
+        notifications,
+        loadingNotifications: false,
+        notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
+        inAppNotification: {
+          visible: true,
+          data: action.payload[0],
+        },
+        error: '',
+      };
+    case types.FETCH_NOTIFICATIONS_LESS:
+      notifications = state.notifications.filter(value => value.id !== action.payload);
+      return {
+        ...state,
+        notifications,
+        loadingNotifications: false,
+        notificationsUnseen: action.meta.unseenCount,
+        notificationsUnread: action.meta.unreadCount,
+        error: '',
+      };
+    case types.FETCH_NOTIFICATIONS_FAIL:
+      return {
+        ...state,
+        notifications: [],
+        loadingNotifications: false,
+        loadingMoreNotifications: false,
+        error: action.payload,
+      };
+    case types.MARK_AS_SEEN:
+      return {
+        ...state,
+      };
+    case types.MARK_AS_SEEN_SUCCESS:
+      // Setting notifications unseen to 0
+      // since response of the `mark seen` is
+      // not immediately changed and therefore
+      // metadata is invalid.
+      return {
+        ...state,
+        notificationsUnseen: 0,
+        notifications: state.notifications.map(v => ({
+          ...v,
+          isSeen: true,
+        })),
+      };
+    case types.MARK_AS_SEEN_FAIL:
+      return {
+        ...state,
+        // error: action.payload,
+      };
+    case types.MARK_ALL_AS_READ:
+      return {
+        ...state,
+        markingRead: true,
+      };
+    case types.MARK_ALL_AS_READ_SUCCESS:
+      return {
+        ...state,
+        markingRead: false,
+        notificationsUnread: 0,
+        notifications: state.notifications.map(v => ({
+          ...v,
+          isRead: true,
+        })),
+      };
+    case types.MARK_ALL_AS_READ_FAIL:
+      return {
+        ...state,
+        markingRead: false,
+        // error: action.payload,
+      };
+    case types.DISMISS_IN_APP_NOTIFICATION:
+      return {
+        ...state,
+        inAppNotification: {
+          visible: false,
+          data: null,
+        },
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;

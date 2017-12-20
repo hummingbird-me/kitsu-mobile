@@ -3,50 +3,9 @@ import { Kitsu } from 'kitsu/config/api';
 import { getStream } from 'kitsu/config/stream';
 import { kitsuConfig } from 'kitsu/config/env';
 
+let inAppNotificationTimer = 0;
 const feedInclude =
   'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga';
-export const getNotifications = (offset = 0) => async (dispatch, getState) => {
-  dispatch({ type: types.GET_NOTIFICATIONS });
-  const { id } = getState().user.currentUser;
-  try {
-    const results = await Kitsu.one('activityGroups', id).get({
-      page: { limit: 30, offset },
-      include: 'target.user,target.post,actor',
-      fields: {
-        activities: 'time,verb,id',
-      },
-    });
-    if (offset > 0) {
-      const { notifications } = getState().feed;
-      dispatch({
-        type: types.GET_NOTIFICATIONS_SUCCESS,
-        payload: [...notifications, ...results],
-        meta: results.meta,
-      });
-      return;
-    }
-    dispatch({ type: types.GET_NOTIFICATIONS_SUCCESS, payload: [...results], meta: results.meta });
-    const notifications = getStream().feed(
-      results.meta.feed.group,
-      results.meta.feed.id,
-      results.meta.feed.token,
-    );
-    notifications.subscribe(async (data) => {
-      const not = await Kitsu.one('activityGroups', id).get({
-        page: { limit: 1 },
-        include: 'target.user,target.post,actor',
-      });
-      if (data.new.length > 0) {
-        dispatch({ type: types.GET_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
-      }
-      if (data.deleted.length > 0) {
-        dispatch({ type: types.GET_NOTIFICATIONS_LESS, payload: data.deleted[0], meta: not.meta });
-      }
-    });
-  } catch (e) {
-    console.log(e);
-  }
-};
 
 export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getState) => {
   dispatch({ type: types.GET_USER_FEED, payload: Boolean(cursor) });
@@ -169,16 +128,116 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
   }
 };
 
-export const seenNotifications = arr => async (dispatch, getState) => {
-  const { id } = getState().user.profile;
-  const results = await Kitsu.one('activityGroups', id).all('_seen').post(arr);
-  // console.log(results);
+export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getState) => {
+  dispatch({ type: types.FETCH_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
+  const { id } = getState().user.currentUser;
+  const { notifications } = getState().feed;
+  try {
+    const results = await Kitsu.one('activityGroups', id).get({
+      page: { limit, cursor },
+      include: 'target.user,target.post,actor',
+      fields: {
+        activities: 'time,verb,id',
+      },
+    });
+    if (cursor) {
+      dispatch({
+        type: types.FETCH_NOTIFICATIONS_SUCCESS,
+        payload: [...notifications, ...results],
+        meta: results.meta,
+        loadingMoreNotifications: false,
+      });
+      return;
+    }
+    dispatch({
+      type: types.FETCH_NOTIFICATIONS_SUCCESS,
+      payload: [...results],
+      meta: results.meta,
+    });
+    const notificationsStream = getStream().feed(
+      results.meta.feed.group,
+      results.meta.feed.id,
+      results.meta.feed.token,
+    );
+    notificationsStream.subscribe(async (data) => {
+      const not = await Kitsu.one('activityGroups', id).get({
+        page: { limit: 1 },
+        include: 'target.user,target.post,actor',
+      });
+      if (data.new.length > 0) {
+        dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
+        clearTimeout(inAppNotificationTimer);
+        inAppNotificationTimer = setTimeout(() => dismissInAppNotification(dispatch), 5000);
+      }
+      if (data.deleted.length > 0) {
+        dispatch({
+          type: types.FETCH_NOTIFICATIONS_LESS,
+          payload: data.deleted[0],
+          meta: not.meta,
+        });
+      }
+    });
+  } catch (e) {
+    console.log(e);
+    dispatch({ type: types.FETCH_NOTIFICATIONS_FAIL, payload: e });
+  }
 };
 
-export const markNotifications = (id, token, notifs) => {
+export const dismissInAppNotification = (dispatch) => {
+  dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION });
+};
+
+export const markNotifications = notifs => async (dispatch, getState) => {
+  const { id } = getState().user.currentUser;
+  const token = getState().auth.tokens.access_token;
+
+  // TODO: this can be rewritten with Devour.
   fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_read`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(notifs),
   });
+};
+
+export const markNotificationsAsSeen = () => async (dispatch, getState) => {
+  const token = getState().auth.tokens.access_token;
+  const { id } = getState().user.currentUser;
+  const { notifications } = getState().feed;
+  const notificationsUnseen = notifications.filter(v => !v.isSeen).map(v => v.id);
+
+  dispatch({ type: types.MARK_AS_SEEN });
+  try {
+    // TODO: Use Devour: Manually fetching results in ugly response,
+    // which also makes reducer more complicated than it should be.
+    const results = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_seen`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.api+json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(notificationsUnseen),
+    }).then(response => response.json());
+    dispatch({ type: types.MARK_AS_SEEN_SUCCESS, payload: results.data });
+  } catch (e) {
+    console.log(e);
+    dispatch({ type: types.MARK_AS_SEEN_FAIL });
+  }
+};
+
+export const markAllNotificationsAsRead = () => async (dispatch, getState) => {
+  const { id } = getState().user.currentUser;
+  dispatch({ type: types.MARK_ALL_AS_READ });
+  try {
+    // hit _read to mark all read.
+    await Kitsu.one('activityGroups', id).get({ mark: 'read' });
+    // get notifications
+    // getNotifications()(dispatch, getState);
+    // or skip that ^, since everything else will remain exactly the same,
+    // console.log(results);
+    dispatch({ type: types.MARK_ALL_AS_READ_SUCCESS });
+  } catch (e) {
+    dispatch({ type: types.MARK_ALL_AS_READ_FAIL });
+    console.log(e);
+  }
 };
