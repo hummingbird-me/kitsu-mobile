@@ -143,6 +143,24 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         loadingNotifications: false,
         error: action.payload,
       };
+    case types.MARK_AS_SEEN:
+      return {
+        ...state,
+      };
+    case types.MARK_AS_SEEN_SUCCESS:
+      return {
+        ...state,
+        notificationsUnseen: action.payload.filter(v => !v.attributes.isSeen).length,
+        notifications: state.notifications.map(v => ({
+          ...v,
+          isSeen: true,
+        })),
+      };
+    case types.MARK_AS_SEEN_FAIL:
+      return {
+        ...state,
+        // error: action.payload,
+      };
     case types.MARK_ALL_AS_READ:
       return {
         ...state,

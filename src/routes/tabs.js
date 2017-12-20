@@ -72,7 +72,7 @@ class TabsNav extends React.PureComponent {
 }
 
 const mapper = ({ feed }) => ({
-  badge: feed.notificationsUnread,
+  badge: feed.notificationsUnseen,
 });
 
 export default connect(mapper, { fetchCurrentUser, fetchAlgoliaKeys })(TabsNav);

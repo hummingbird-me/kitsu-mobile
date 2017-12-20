@@ -170,14 +170,6 @@ export const getNotifications = (offset = 0) => async (dispatch, getState) => {
   }
 };
 
-export const seenNotifications = arr => async (dispatch, getState) => {
-  const { id } = getState().user.profile;
-  const results = await Kitsu.one('activityGroups', id)
-    .all('_seen')
-    .post(arr);
-  // console.log(results);
-};
-
 export const markNotifications = notifs => async (dispatch, getState) => {
   const { id } = getState().user.currentUser;
   const token = getState().auth.tokens.access_token;
@@ -187,6 +179,33 @@ export const markNotifications = notifs => async (dispatch, getState) => {
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(notifs),
   });
+};
+
+export const markNotificationsAsSeen = () => async (dispatch, getState) => {
+  const token = getState().auth.tokens.access_token;
+  const { id } = getState().user.currentUser;
+  const { notifications } = getState().feed;
+  const notificationsUnseen = notifications.filter(v => !v.isSeen).map(v => v.id);
+  console.log(notificationsUnseen);
+  dispatch({ type: types.MARK_AS_SEEN });
+  try {
+    // TODO: Use Devour: Manually fetching results in ugly response,
+    // which also makes reducer more complicated than it should be.
+    const results = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_seen`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.api+json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(notificationsUnseen),
+    }).then(response => response.json());
+    console.log(results);
+    dispatch({ type: types.MARK_AS_SEEN_SUCCESS, payload: results.data });
+  } catch (e) {
+    console.log(e);
+    dispatch({ type: types.MARK_AS_SEEN_FAIL });
+  }
 };
 
 export const markAllNotificationsAsRead = () => async (dispatch, getState) => {

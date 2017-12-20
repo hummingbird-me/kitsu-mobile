@@ -16,7 +16,7 @@ import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
 import {
   getNotifications,
-  seenNotifications,
+  markNotificationsAsSeen,
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
@@ -38,7 +38,7 @@ const CustomHeader = ({ notificationsUnread, markingRead, onMarkAll }) => (
 );
 
 CustomHeader.propTypes = {
-  notificationsUnread: PropTypes.bool.isRequired,
+  notificationsUnread: PropTypes.number.isRequired,
   markingRead: PropTypes.bool.isRequired,
   onMarkAll: PropTypes.func.isRequired,
 };
@@ -55,14 +55,26 @@ class NotificationsScreen extends PureComponent {
     notificationsUnread: false,
   };
 
-  componentDidMount() {
-    this.props.getNotifications();
-  }
+  componentDidMount = async () => {
+    await this.props.getNotifications();
+    this.props.markNotificationsAsSeen();
+  };
 
+  /**
+   * Marks all notifications as read, currently triggered from CustomHeader.
+   *
+   * @memberof NotificationsScreen
+   */
   onMarkAll = () => {
     this.props.markAllNotificationsAsRead();
   };
 
+  /**
+   * Navigates to related screen on user row item press
+   *
+   * @param {Object} activity Activity of notification row data
+   * @memberof NotificationsScreen
+   */
   onNotificationPressed = async (activity) => {
     const { target, verb, actor } = activity;
     const { currentUser, navigation } = this.props;
@@ -101,8 +113,14 @@ class NotificationsScreen extends PureComponent {
     }
   };
 
-  // temporary request to fetch mediareactions & to navigate corresponding
-  // media screen. (since we don't have mediareactions screen right now)
+  /**
+   * Fetches media reaction.
+   * TODO: temporary request to fetch mediareactions & to navigate corresponding
+   * media screen. (since we don't have mediareactions screen right now)
+   *
+   * @param {number} mediaId Media ID of notification target ID.
+   * @memberof NotificationsScreen
+   */
   fetchMediaReactions = async mediaId =>
     Kitsu.find('mediaReactions', mediaId, {
       include: 'user,anime,manga',
@@ -257,6 +275,7 @@ NotificationsScreen.propTypes = {
   currentUser: PropTypes.object.isRequired,
   notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
+  markNotificationsAsSeen: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ feed, user, app }) => {
@@ -274,6 +293,6 @@ const mapStateToProps = ({ feed, user, app }) => {
 };
 export default connect(mapStateToProps, {
   getNotifications,
-  seenNotifications,
   markAllNotificationsAsRead,
+  markNotificationsAsSeen,
 })(NotificationsScreen);
