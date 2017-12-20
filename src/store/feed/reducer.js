@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   loadingMediaFeed: false,
   inAppNotification: {
     visible: false,
+    data: null,
   },
 };
 
@@ -131,6 +132,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         notificationsUnread: action.meta.unreadCount,
         inAppNotification: {
           visible: true,
+          data: action.payload[0],
         },
         error: '',
       };
@@ -200,6 +202,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
         inAppNotification: {
           visible: false,
+          data: null,
         },
       };
     case types.LOGOUT_USER:

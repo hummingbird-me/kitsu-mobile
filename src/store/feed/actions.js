@@ -164,6 +164,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
         page: { limit: 1 },
         include: 'target.user,target.post,actor',
       });
+      console.log(not);
       if (data.new.length > 0) {
         dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
         clearTimeout(inAppNotificationTimer);

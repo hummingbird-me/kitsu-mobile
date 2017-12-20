@@ -135,8 +135,8 @@ const RootContainer = ({ inAppNotification }) => (
     />
     <NotificationModal
       visible={inAppNotification.visible}
-      message={'You have a new notification'}
-      onDismiss={() => {}}
+      data={inAppNotification.data}
+      onRequestClose={() => store.dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION })}
     />
   </View>
 );

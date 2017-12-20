@@ -178,45 +178,9 @@ class NotificationsScreen extends PureComponent {
     }
   };
 
-  renderText = (activity) => {
+  renderText = (activities) => {
     const { currentUser: { id } } = this.props;
-    const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
-    let text = '';
-    switch (activity.verb) {
-      case 'follow':
-        return <Text>followed you.</Text>;
-      case 'post':
-        return <Text>mentioned you in a post.</Text>;
-      case 'post_like':
-        return <Text>liked your post.</Text>;
-      case 'comment_like':
-        return <Text>liked your comment.</Text>;
-      case 'invited':
-        return <Text>invited you to a group.</Text>;
-      case 'vote':
-        return <Text>liked your reaction.</Text>;
-      case 'comment':
-        if (id === replyToUser.split(':')[1]) {
-          text = `replied to your ${replyToType}.`;
-        } else if (isMentioned(mentionedUsers || [], id)) {
-          text = 'mentioned you in a comment.';
-        } else {
-          text = 'replied to';
-          if (target && target[0] && target[0].user) {
-            if (target[0].user.id === actor.id) {
-              text = `${text} their`;
-            } else if (target[0].user.id === id) {
-              text = `${text} your`;
-            }
-          } else {
-            text = `${text} a`;
-          }
-          text = `${text} post.`;
-        }
-        return <Text>{text}</Text>;
-      default:
-        return <Text>made an action.</Text>;
-    }
+    return <Text>{parseNotificationData(activities, id).text}</Text>;
   };
 
   renderItem = ({ item }) => {
@@ -254,7 +218,7 @@ class NotificationsScreen extends PureComponent {
                 </Text>
                 <Text style={styles.activityText}>
                   {others && <Text>and {others}</Text>}
-                  {this.renderText(activity)}
+                  {this.renderText(item.activities)}
                 </Text>
               </View>
               <View style={styles.activityMetaContainer}>
@@ -348,3 +312,71 @@ export default connect(mapStateToProps, {
   markAllNotificationsAsRead,
   markNotificationsAsSeen,
 })(NotificationsScreen);
+
+export const parseNotificationData = (activities, currentUserId) => {
+  const notificationData = {
+    actor: null,
+    text: '',
+    others: null,
+  };
+
+  const activity = activities[0];
+  const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
+
+  // actor
+  notificationData.actor = activity.actor && `${activity.actor.name} `;
+
+  // others
+  if (activities.length > 1) {
+    notificationData.others =
+      activities.length === 2
+        ? activities[1].actor ? activities[1].actor.name : 'Unknown '
+        : `${activities.length - 1} others`;
+  }
+
+  // text
+  switch (activities[0].verb) {
+    case 'follow':
+      notificationData.text = 'followed you.';
+      break;
+    case 'post':
+      notificationData.text = 'mentioned you in a post.';
+      break;
+    case 'post_like':
+      notificationData.text = 'liked your post.';
+      break;
+    case 'comment_like':
+      notificationData.text = 'liked your comment.';
+      break;
+    case 'invited':
+      notificationData.text = 'invited you to a group.';
+      break;
+    case 'vote':
+      notificationData.text = 'liked your reaction.';
+      break;
+    case 'comment':
+      if (currentUserId === replyToUser.split(':')[1]) {
+        notificationData.text = `replied to your ${replyToType}.`;
+      } else if (isMentioned(mentionedUsers || [], currentUserId)) {
+        notificationData.text = 'mentioned you in a comment.';
+      } else {
+        notificationData.text = 'replied to';
+        if (target && target[0] && target[0].user) {
+          if (target[0].user.id === actor.id) {
+            notificationData.text = `${notificationData.text} their`;
+          } else if (target[0].user.id === currentUserId) {
+            notificationData.text = `${notificationData.text} your`;
+          }
+        } else {
+          notificationData.text = `${notificationData.text} a`;
+        }
+        notificationData.text = `${notificationData.text} post.`;
+      }
+      break;
+    default:
+      notificationData.text = 'made an action.';
+      break;
+  }
+
+  return notificationData;
+};

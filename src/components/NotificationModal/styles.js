@@ -22,4 +22,6 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     margin: 10,
   },
+  activityText: { color: '#333', fontFamily: 'OpenSans', fontSize: 12 },
+  activityTextHighlight: { fontWeight: 'bold' },
 });
