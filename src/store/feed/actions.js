@@ -127,33 +127,34 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
   }
 };
 
-export const getNotifications = (offset = 0) => async (dispatch, getState) => {
-  dispatch({ type: types.GET_NOTIFICATIONS });
+export const getNotifications = (cursor, limit = 30) => async (dispatch, getState) => {
+  dispatch({ type: types.GET_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
   const { id } = getState().user.currentUser;
+  const { notifications } = getState().feed;
   try {
     const results = await Kitsu.one('activityGroups', id).get({
-      page: { limit: 30, offset },
+      page: { limit, cursor },
       include: 'target.user,target.post,actor',
       fields: {
         activities: 'time,verb,id',
       },
     });
-    if (offset > 0) {
-      const { notifications } = getState().feed;
+    if (cursor) {
       dispatch({
         type: types.GET_NOTIFICATIONS_SUCCESS,
         payload: [...notifications, ...results],
         meta: results.meta,
+        loadingMoreNotifications: false,
       });
       return;
     }
     dispatch({ type: types.GET_NOTIFICATIONS_SUCCESS, payload: [...results], meta: results.meta });
-    const notifications = getStream().feed(
+    const notificationsStream = getStream().feed(
       results.meta.feed.group,
       results.meta.feed.id,
       results.meta.feed.token,
     );
-    notifications.subscribe(async (data) => {
+    notificationsStream.subscribe(async (data) => {
       const not = await Kitsu.one('activityGroups', id).get({
         page: { limit: 1 },
         include: 'target.user,target.post,actor',
@@ -167,13 +168,15 @@ export const getNotifications = (offset = 0) => async (dispatch, getState) => {
     });
   } catch (e) {
     console.log(e);
+    dispatch({ type: types.GET_NOTIFICATIONS_FAIL, payload: e });
   }
 };
 
 export const markNotifications = notifs => async (dispatch, getState) => {
   const { id } = getState().user.currentUser;
   const token = getState().auth.tokens.access_token;
-  // this can be rewritten with Devour.
+
+  // TODO: this can be rewritten with Devour.
   fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_read`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
@@ -186,7 +189,7 @@ export const markNotificationsAsSeen = () => async (dispatch, getState) => {
   const { id } = getState().user.currentUser;
   const { notifications } = getState().feed;
   const notificationsUnseen = notifications.filter(v => !v.isSeen).map(v => v.id);
-  console.log(notificationsUnseen);
+
   dispatch({ type: types.MARK_AS_SEEN });
   try {
     // TODO: Use Devour: Manually fetching results in ugly response,

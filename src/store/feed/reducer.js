@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   notificationsUnread: 0,
   markingRead: false,
   loadingNotifications: false,
+  loadingMoreNotifications: false,
   loadingUserFeed: false,
   loadingMediaFeed: false,
 };
@@ -105,6 +106,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loadingNotifications: true,
+        loadingMoreNotifications: action.loadingMoreNotifications,
       };
     case types.GET_NOTIFICATIONS_SUCCESS:
       return {
@@ -141,6 +143,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
         notifications: [],
         loadingNotifications: false,
+        loadingMoreNotifications: false,
         error: action.payload,
       };
     case types.MARK_AS_SEEN:

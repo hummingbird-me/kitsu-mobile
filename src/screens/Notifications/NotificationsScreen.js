@@ -55,9 +55,8 @@ class NotificationsScreen extends PureComponent {
     notificationsUnread: false,
   };
 
-  componentDidMount = async () => {
-    await this.props.getNotifications();
-    this.props.markNotificationsAsSeen();
+  componentDidMount = () => {
+    this.fetchNotifications();
   };
 
   /**
@@ -113,6 +112,9 @@ class NotificationsScreen extends PureComponent {
     }
   };
 
+  // Offset for fetching more notifications.
+  offset = 0;
+
   /**
    * Fetches media reaction.
    * TODO: temporary request to fetch mediareactions & to navigate corresponding
@@ -125,6 +127,18 @@ class NotificationsScreen extends PureComponent {
     Kitsu.find('mediaReactions', mediaId, {
       include: 'user,anime,manga',
     });
+
+  fetchNotifications = async () => {
+    await this.props.getNotifications();
+    this.props.markNotificationsAsSeen();
+  };
+
+  fetchMoreNotifications = async () => {
+    const { loadingMoreNotifications, notifications } = this.props;
+    if (!loadingMoreNotifications) {
+      await this.props.getNotifications(notifications.slice(-1)[0].id);
+    }
+  };
 
   handleActionBtnPress = () => {
     if (Platform.OS === 'ios') {
@@ -263,6 +277,8 @@ class NotificationsScreen extends PureComponent {
           initialNumToRender={10}
           refreshing={loadingNotifications}
           onRefresh={getNotifications}
+          onEndReached={this.fetchMoreNotifications}
+          onEndReachedThreshold={0.3}
           style={styles.container}
         />
       </View>
