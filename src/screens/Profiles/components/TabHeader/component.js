@@ -14,7 +14,7 @@ export const TabHeader = ({
 }) => (
   <View style={styles.wrap}>
     <TitleText color={contentDark ? 'dark' : 'lightGrey'}>{title}</TitleText>
-    {(actionTitle && actionOnPress) && (
+    {actionTitle && (
       <TouchableOpacity onPress={actionOnPress}>
         <TitleText color="yellow">{actionTitle}</TitleText>
       </TouchableOpacity>

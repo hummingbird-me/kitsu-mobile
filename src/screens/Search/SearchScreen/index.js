@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Dimensions } from 'react-native';
+import { View, ScrollView, Dimensions, Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
@@ -95,6 +95,7 @@ class SearchScreen extends Component {
           style={styles.searchBox}
           value={currentValue}
           onChangeText={t => this.handleSearchStateChange(route, t)}
+          onSubmitEditing={() => Keyboard.dismiss()}
         />
         <ScrollView
           contentContainerStyle={styles.scrollViewContentContainer}

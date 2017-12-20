@@ -234,7 +234,7 @@ class MediaPages extends PureComponent {
             mediaId={media.id}
             mediaReactions={mediaReactions}
             castings={castings}
-            navigation={navigation}
+            navigation={this.props.navigation}
             loadingAdditional={loadingAdditional}
           />
         </ParallaxScroll>
