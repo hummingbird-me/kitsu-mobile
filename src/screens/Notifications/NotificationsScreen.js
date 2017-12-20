@@ -46,9 +46,10 @@ CustomHeader.propTypes = {
 const isMentioned = (arr, id) => arr.includes(id);
 
 class NotificationsScreen extends PureComponent {
-  static navigationOptions = () => ({
+  static navigationOptions = ({ navigation }) => ({
     title: 'Notifications',
     header: null,
+    tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
   });
 
   state = {
@@ -56,7 +57,16 @@ class NotificationsScreen extends PureComponent {
   };
 
   componentDidMount = () => {
-    this.fetchNotifications();
+    // for once, and listener will invoke afterwards.
+
+    // set a listener for notification tab press.
+    // this is required for updating seen of notifications.
+    this.props.navigation.setParams({
+      tabListener: async ({ scene, jumpToIndex }) => {
+        jumpToIndex(scene.index);
+        this.fetchNotifications();
+      },
+    });
   };
 
   /**
@@ -128,11 +138,20 @@ class NotificationsScreen extends PureComponent {
       include: 'user,anime,manga',
     });
 
+  /**
+   * Fetches notifications and immediately marks them as read.
+   * @memberof NotificationsScreen
+   */
   fetchNotifications = async () => {
     await this.props.fetchNotifications();
     this.props.markNotificationsAsSeen();
   };
 
+  /**
+   * Fetches more notifications and appends them to current state.
+   * loadingMoreNotifications flag is for throtling scroll event.
+   * @memberof NotificationsScreen
+   */
   fetchMoreNotifications = async () => {
     const { loadingMoreNotifications, notifications } = this.props;
     if (!loadingMoreNotifications) {
@@ -293,6 +312,10 @@ NotificationsScreen.propTypes = {
   notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
   markNotificationsAsSeen: PropTypes.func.isRequired,
+  markAllNotificationsAsRead: PropTypes.func.isRequired,
+  notificationsUnread: PropTypes.number.isRequired,
+  markingRead: PropTypes.bool.isRequired,
+  pushNotificationEnabled: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ feed, user, app }) => {

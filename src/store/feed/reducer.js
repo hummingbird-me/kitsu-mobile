@@ -151,9 +151,13 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
       };
     case types.MARK_AS_SEEN_SUCCESS:
+      // Setting notifications unseen to 0
+      // since response of the `mark seen` is
+      // not immediately changed and therefore
+      // metadata is invalid.
       return {
         ...state,
-        notificationsUnseen: action.payload.filter(v => !v.attributes.isSeen).length,
+        notificationsUnseen: 0,
         notifications: state.notifications.map(v => ({
           ...v,
           isSeen: true,
