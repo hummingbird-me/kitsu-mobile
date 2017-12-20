@@ -321,8 +321,6 @@ export const parseNotificationData = (activities, currentUserId) => {
     others: null,
   };
 
-  console.log(activities);
-
   const activity = activities[0];
   const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
 
