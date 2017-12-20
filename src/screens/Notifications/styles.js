@@ -4,13 +4,13 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
   customHeaderWrapper: {
-    height: 64,
+    height: 64 + (isX ? paddingX : 0),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     backgroundColor: colors.darkPurple,
     paddingHorizontal: 10,
-    paddingTop: isX ? paddingX : 10,
+    paddingTop: 10 + (isX ? paddingX : 0),
     paddingBottom: 10,
   },
   customHeaderText: {

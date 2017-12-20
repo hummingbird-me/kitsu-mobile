@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, StatusBar, Modal } from 'react-native';
+import { View, ViewPropTypes, Text, StatusBar, Image, Modal, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/screens/Notifications/NotificationsScreen';
 import { styles } from './styles';
 
 export const NotificationModal = ({ style, visible, onRequestClose, data, ...otherProps }) => {
   if (!data) return null;
-  const { actor, others, text } = parseNotificationData(data.activities);
+  const { actorName, actorAvatar, others, text } = parseNotificationData(data.activities);
+  console.log(actorName, others, text);
 
   return (
     <Modal
@@ -16,18 +17,21 @@ export const NotificationModal = ({ style, visible, onRequestClose, data, ...oth
       onRequestClose={onRequestClose}
       {...otherProps}
     >
-      <View style={styles.modalWrapper}>
+      <TouchableOpacity activeOpacity={1} onPress={onRequestClose} style={styles.modalWrapper}>
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-        <View style={styles.modalContent}>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.modalContent}>
+          <View style={{ paddingRight: 10 }}>
+            <Image style={styles.userAvatar} source={{ uri: actorAvatar }} />
+          </View>
           <Text style={[styles.activityText, styles.activityTextHighlight]}>
-            {actor && actor.name}{' '}
+            {actorName || 'Unknown'}
           </Text>
           <Text style={styles.activityText}>
             {others && <Text>and {others}</Text>}
             <Text style={styles.modalText}>{text}</Text>
           </Text>
-        </View>
-      </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
     </Modal>
   );
 };

@@ -315,16 +315,24 @@ export default connect(mapStateToProps, {
 
 export const parseNotificationData = (activities, currentUserId) => {
   const notificationData = {
-    actor: null,
+    actorName: null,
+    actorAvatar: null,
     text: '',
     others: null,
   };
+
+  console.log(activities);
 
   const activity = activities[0];
   const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
 
   // actor
-  notificationData.actor = activity.actor && `${activity.actor.name} `;
+  notificationData.actorName = actor && `${actor.name} `;
+
+  notificationData.actorAvatar =
+    actor && actor.avatar
+      ? actor.avatar.tiny
+      : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
   // others
   if (activities.length > 1) {

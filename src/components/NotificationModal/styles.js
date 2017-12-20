@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
   modalWrapper: {
@@ -7,21 +8,23 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.transparent,
   },
   modalContent: {
-    height: 80,
+    paddingTop: 20 + (isX ? paddingX : 0),
+    paddingHorizontal: 12,
+    height: 80 + (isX ? paddingX : 0),
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: colors.listBackPurple,
+    backgroundColor: 'rgba(44, 34, 43, 0.95)',
     borderBottomWidth: 1,
     borderBottomColor: 'rgb(46, 34, 45)',
   },
   modalText: {
-    color: colors.white,
+    color: colors.offWhite,
     fontWeight: '700',
     fontFamily: 'OpenSans',
-    fontSize: 14,
+    fontSize: 12,
     margin: 10,
   },
-  activityText: { color: '#333', fontFamily: 'OpenSans', fontSize: 12 },
-  activityTextHighlight: { fontWeight: 'bold' },
+  userAvatar: { width: 40, height: 40, borderRadius: 20 },
+  activityText: { color: colors.white, fontFamily: 'OpenSans', fontSize: 12 },
+  activityTextHighlight: { fontWeight: 'bold', color: colors.tabRed },
 });
