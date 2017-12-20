@@ -22,6 +22,8 @@ import {
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
+const DOUBLE_PRESS_DELAY = 500;
+
 const CustomHeader = ({ notificationsUnread, markingRead, onMarkAll }) => (
   <View style={styles.customHeaderWrapper}>
     <Text style={styles.customHeaderText}>Notifications</Text>
@@ -58,13 +60,21 @@ class NotificationsScreen extends PureComponent {
 
   componentDidMount = () => {
     // for once, and listener will invoke afterwards.
-
+    this.fetchNotifications();
     // set a listener for notification tab press.
     // this is required for updating seen of notifications.
     this.props.navigation.setParams({
-      tabListener: async ({ scene, jumpToIndex }) => {
-        jumpToIndex(scene.index);
-        this.fetchNotifications();
+      tabListener: async ({ previousScene, scene, jumpToIndex }) => {
+        // capture tap events and detect double press to fetch notifications
+        const now = new Date().getTime();
+        const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
+        if (previousScene.key !== 'Notifications' || doublePressed) {
+          jumpToIndex(scene.index);
+          this.fetchNotifications();
+          this.lastTap = null;
+        } else {
+          this.lastTap = now;
+        }
       },
     });
   };
@@ -124,6 +134,8 @@ class NotificationsScreen extends PureComponent {
 
   // Offset for fetching more notifications.
   offset = 0;
+  // Timer for fetching notifications again (double tap on tab)
+  lastTap = null;
 
   /**
    * Fetches media reaction.
