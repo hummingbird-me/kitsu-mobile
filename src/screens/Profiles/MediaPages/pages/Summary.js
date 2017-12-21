@@ -86,6 +86,13 @@ class SummaryComponent extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   }
 
+  navigateToMedia = (type, id) => {
+    this.props.navigation.navigate('MediaPages', {
+      mediaId: id,
+      mediaType: type,
+    });
+  }
+
   render() {
     const { media, castings, mediaReactions, loadingAdditional } = this.props;
     const { loading, feed } = this.state;
@@ -140,6 +147,7 @@ class SummaryComponent extends PureComponent {
                 source={{
                   uri: destination.posterImage && destination.posterImage.original,
                 }}
+                onPress={() => this.navigateToMedia(destination.type, destination.id)}
               />
             </ScrollItem>);
           }}
