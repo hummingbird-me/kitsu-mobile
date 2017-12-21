@@ -106,46 +106,55 @@ class MediaPages extends PureComponent {
    * Fetch the episodes/chapter and related media types
    */
   fetchEpisodesAndRelated = async (type, id) => {
-    // To make this simple, we'll just refetch the media object with these fields.
-    Kitsu.one(type, id).get({
-      include: `mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
-    })
-      .then((media) => {
-        // Combine the 2 object that we have
-        this.setState({
-          media: { ...media, categories: this.state.media.categories },
-          loadingAdditional: false,
-        });
+    try {
+      // To make this simple, we'll just refetch the media object with these fields.
+      const media = await Kitsu.one(type, id).get({
+        include: `mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
       });
+
+      // Combine the 2 object that we have
+      this.setState({
+        media: { ...media, categories: this.state.media.categories },
+        loadingAdditional: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /**
    * Fetch the other media information
    */
   fetchOther = async (type, id) => {
-    Promise.all([
-      Kitsu.findAll('castings', {
-        filter: {
-          mediaId: id,
-          isCharacter: true,
-        },
-        sort: '-featured',
-        include: 'character',
-      }),
-      Kitsu.findAll('mediaReactions', {
-        filter: {
-          [`${type}Id`]: id,
-        },
-        include: 'user',
-        sort: '-upVotesCount',
-      }),
-    ])
-      .then(([castings, mediaReactions]) => {
-        this.setState({
-          castings,
-          mediaReactions,
-        });
+    try {
+      const [
+        castings,
+        mediaReactions,
+      ] = await Promise.all([
+        Kitsu.findAll('castings', {
+          filter: {
+            mediaId: id,
+            isCharacter: true,
+          },
+          sort: '-featured',
+          include: 'character',
+        }),
+        Kitsu.findAll('mediaReactions', {
+          filter: {
+            [`${type}Id`]: id,
+          },
+          include: 'user',
+          sort: '-upVotesCount',
+        }),
+      ]);
+
+      this.setState({
+        castings,
+        mediaReactions,
       });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   renderTabNav = () => (

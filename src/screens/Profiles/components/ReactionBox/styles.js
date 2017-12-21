@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   },
   wrap__boxed: {
     borderRadius: 6,
-    width: Math.max(cardSize.landscapeLarge.width, 280),
+    width: cardSize.landscapeLarge.width,
     height: cardSize.landscapeLarge.height,
   },
   main: {

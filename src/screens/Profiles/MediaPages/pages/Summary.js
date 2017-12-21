@@ -10,7 +10,7 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { upperFirst } from 'lodash';
+import { upperFirst, isNull } from 'lodash';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -158,7 +158,7 @@ class SummaryComponent extends PureComponent {
           title="Reactions"
           onViewAllPress={() => this.navigateTo('Reactions')}
           data={mediaReactions}
-          loading={mediaReactions === null}
+          loading={isNull(mediaReactions)}
           renderItem={({ item }) => (
             <ScrollItem>
               <ReactionBox
@@ -176,7 +176,7 @@ class SummaryComponent extends PureComponent {
           title="Characters"
           onViewAllPress={() => this.navigateTo('Characters')}
           data={castings}
-          loading={castings === null}
+          loading={isNull(castings)}
           renderItem={({ item }) => (
             <ScrollItem spacing={4}>
               <ImageCard
@@ -196,6 +196,7 @@ class SummaryComponent extends PureComponent {
         { !loading &&
           feed.map(item => (
             <Post
+              key={item.id}
               post={item}
               onPostPress={this.navigateToPost}
               currentUser={this.props.currentUser}

@@ -10,7 +10,7 @@ export const AvatarHeader = ({ avatar, title, subtitle, sideElement, boxed }) =>
     <Avatar avatar={avatar} />
     <View style={styles.main}>
       <StyledText color="dark" size="small">{title}</StyledText>
-      <StyledText color="grey" size="xxsmall" numberOfLines={(boxed && 1) || undefined}>{subtitle}</StyledText>
+      <StyledText color="grey" size="xxsmall" numberOfLines={boxed && 1}>{subtitle}</StyledText>
     </View>
     {sideElement && (
       <View style={styles.side}>
@@ -33,5 +33,5 @@ AvatarHeader.defaultProps = {
   title: '',
   subtitle: '',
   sideElement: null,
-  boxed: false,
+  boxed: undefined,
 };

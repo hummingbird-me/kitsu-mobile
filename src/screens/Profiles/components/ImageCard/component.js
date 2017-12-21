@@ -5,7 +5,9 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
 import LinearGradient from 'react-native-linear-gradient';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
+
 
 const paddingOptions = {
   landscapeLarge: 14,
@@ -21,12 +23,12 @@ const TextView = ({ variant, title, subtitle, boldTitle, centerTitle, noMask }) 
   const titleSize = variant === 'landscapeLarge' ? 'default' : 'xsmall';
   const subtitleSize = variant === 'landscapeLarge' ? 'small' : 'xxsmall';
 
-  return (title || subtitle) && (
+  return (!isEmpty(title) || !isEmpty(subtitle)) && (
     <View style={[styles.anchorBottom, { height: '60%' }]}>
       { !noMask && <LinearGradient colors={['transparent', 'rgba(0,0,0,0.9)']} style={styles.linearGradient} />}
       <View style={[styles.anchorBottom, { padding: paddingOptions[variant] }]}>
-        {subtitle && <StyledText color="lightGrey" size={subtitleSize} numberOfLines={1}>{subtitle}</StyledText>}
-        {title &&
+        {!isEmpty(subtitle) && <StyledText color="lightGrey" size={subtitleSize} numberOfLines={1}>{subtitle}</StyledText>}
+        {!isEmpty(title) &&
           (<StyledText
             color="light"
             size={titleSize}
@@ -42,6 +44,24 @@ const TextView = ({ variant, title, subtitle, boldTitle, centerTitle, noMask }) 
       </View>
     </View>
   );
+};
+
+TextView.propTypes = {
+  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'landscapeSmall', 'portraitLarge', 'thumbnail', 'filled']),
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  noMask: PropTypes.bool,
+  boldTitle: PropTypes.bool,
+  centerTitle: PropTypes.bool,
+};
+
+TextView.defaultProps = {
+  variant: 'portrait',
+  title: null,
+  subtitle: null,
+  noMask: false,
+  boldTitle: true,
+  centerTitle: false,
 };
 
 export const ImageCard = ({
