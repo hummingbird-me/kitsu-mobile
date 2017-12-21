@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
   },
   listContent: {
     paddingLeft: scenePadding,
-    marginLeft: -scenePadding,
   },
   loading: {
     position: 'absolute',

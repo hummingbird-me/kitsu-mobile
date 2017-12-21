@@ -10,6 +10,7 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { upperFirst } from 'lodash';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -125,17 +126,23 @@ class SummaryComponent extends PureComponent {
           title="More from this series"
           data={this.formatData(media.mediaRelationships)}
           loading={loadingAdditional}
-          renderItem={({ item }) => (
-            <ScrollItem>
+          renderItem={({ item }) => {
+            const destination = item.destination;
+            const subheading = destination.type === 'anime' ? destination.showType : destination.mangaType;
+
+            return (<ScrollItem spacing={4}>
               <ImageCard
+                centerTitle
+                boldTitle={false}
                 variant="portraitLarge"
-                title={item.destination.canonicalTitle}
+                title={destination.canonicalTitle}
+                subheading={upperFirst(subheading)}
                 source={{
-                  uri: item.destination.posterImage && item.destination.posterImage.original,
+                  uri: destination.posterImage && destination.posterImage.original,
                 }}
               />
-            </ScrollItem>
-          )}
+            </ScrollItem>);
+          }}
         />
 
         {/* Reactions */}
@@ -163,8 +170,10 @@ class SummaryComponent extends PureComponent {
           data={castings}
           loading={castings === null}
           renderItem={({ item }) => (
-            <ScrollItem>
+            <ScrollItem spacing={4}>
               <ImageCard
+                centerTitle
+                boldTitle={false}
                 variant="portrait"
                 title={item.character.name}
                 source={{
