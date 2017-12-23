@@ -32,8 +32,6 @@ TabBar.propTypes = {
 
 TabBar.defaultProps = {
   children: null,
-  autoPadContent: true,
-  minHorizontalPadding: 4,
 };
 
 TabBarLink.propTypes = {

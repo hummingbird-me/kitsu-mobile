@@ -24,12 +24,9 @@ class SummaryComponent extends PureComponent {
   }
 
   static defaultProps = {
-    loadingAdditional: false,
-  }
-
-  static defaultProps = {
     castings: null,
     mediaReactions: null,
+    loadingAdditional: false,
   }
 
   state = {
