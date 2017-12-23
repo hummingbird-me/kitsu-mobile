@@ -16,7 +16,7 @@ import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
 import {
   fetchNotifications,
-  markNotificationsAsSeen,
+  markNotifications,
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
@@ -94,9 +94,10 @@ class NotificationsScreen extends PureComponent {
    * @param {Object} activity Activity of notification row data
    * @memberof NotificationsScreen
    */
-  onNotificationPressed = async (activity) => {
+  onNotificationPressed = async ({ activity, notification }) => {
     const { target, verb, actor } = activity;
     const { currentUser, navigation } = this.props;
+    this.props.markNotifications([notification], 'read');
     switch (verb) {
       case 'follow':
         navigation.navigate('ProfilePages', { userId: actor.id || currentUser.id });
@@ -139,12 +140,11 @@ class NotificationsScreen extends PureComponent {
 
   /**
    * Fetches media reaction.
-   * TODO: temporary request to fetch mediareactions & to navigate corresponding
-   * media screen. (since we don't have mediareactions screen right now)
-   *
    * @param {number} mediaId Media ID of notification target ID.
    * @memberof NotificationsScreen
    */
+  // TODO: temporary request to fetch mediareactions & to navigate corresponding
+  // media screen. (since we don't have mediareactions screen right now)
   fetchMediaReactions = async mediaId =>
     Kitsu.find('mediaReactions', mediaId, {
       include: 'user,anime,manga',
@@ -156,7 +156,7 @@ class NotificationsScreen extends PureComponent {
    */
   fetchNotifications = async () => {
     await this.props.fetchNotifications();
-    this.props.markNotificationsAsSeen();
+    this.props.markNotifications(this.props.notifications, 'seen');
   };
 
   /**
@@ -168,7 +168,7 @@ class NotificationsScreen extends PureComponent {
     const { loadingMoreNotifications, notifications } = this.props;
     if (!loadingMoreNotifications) {
       await this.props.fetchNotifications(notifications.slice(-1)[0].id);
-      this.props.markNotificationsAsSeen();
+      this.props.markNotifications(this.props.notifications, 'seen');
     }
   };
 
@@ -202,7 +202,9 @@ class NotificationsScreen extends PureComponent {
         : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity onPress={() => this.onNotificationPressed(activity)}>
+      <TouchableOpacity
+        onPress={() => this.onNotificationPressed({ notification: item, activity })}
+      >
         <View style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
           <View style={styles.iconContainer}>
             <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
@@ -253,7 +255,6 @@ class NotificationsScreen extends PureComponent {
       notifications,
       notificationsUnread,
       loadingNotifications,
-      fetchNotifications,
       markingRead,
     } = this.props;
     return (
@@ -287,7 +288,7 @@ NotificationsScreen.propTypes = {
   currentUser: PropTypes.object.isRequired,
   notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
-  markNotificationsAsSeen: PropTypes.func.isRequired,
+  markNotifications: PropTypes.func.isRequired,
   markAllNotificationsAsRead: PropTypes.func.isRequired,
   notificationsUnread: PropTypes.number.isRequired,
   markingRead: PropTypes.bool.isRequired,
@@ -310,21 +311,20 @@ const mapStateToProps = ({ feed, user, app }) => {
 export default connect(mapStateToProps, {
   fetchNotifications,
   markAllNotificationsAsRead,
-  markNotificationsAsSeen,
+  markNotifications,
 })(NotificationsScreen);
-
 
 /**
  * Parses notification data into usable objects.
  * Used in in-app notification modal and notification screen render
- * 
+ *
  * @param {object} activities notification data received from API
  * @param {number} currentUserId logged in user ID
  * @returns {object} notificationData
- *  - @returns {string} actorName notification actor name
- *  - @returns {string} actorAvatar notification actor avatar URL
- *  - @returns {string} text notification text (ex: mentioned you.)
- *  - @returns {string} others other users involved in notification
+ *  - {string} notificationData.actorName notification actor name
+ *  - {string} notificationData.actorAvatar notification actor avatar URL
+ *  - {string} notificationData.text notification text (ex: mentioned you.)
+ *  - {string} notificationData.others other users involved in notification
  */
 export const parseNotificationData = (activities, currentUserId) => {
   const notificationData = {
