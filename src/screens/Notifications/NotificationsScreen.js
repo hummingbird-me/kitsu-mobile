@@ -7,6 +7,7 @@ import {
   Image,
   Platform,
   ActivityIndicator,
+  PushNotificationIOS,
 } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -156,7 +157,8 @@ class NotificationsScreen extends PureComponent {
    */
   fetchNotifications = async () => {
     await this.props.fetchNotifications();
-    this.props.markNotifications(this.props.notifications, 'seen');
+    await this.props.markNotifications(this.props.notifications, 'seen');
+    PushNotificationIOS.setApplicationIconBadgeNumber(0);
   };
 
   /**
@@ -251,12 +253,7 @@ class NotificationsScreen extends PureComponent {
   };
 
   render() {
-    const {
-      notifications,
-      notificationsUnread,
-      loadingNotifications,
-      markingRead,
-    } = this.props;
+    const { notifications, notificationsUnread, loadingNotifications, markingRead } = this.props;
     return (
       <View style={styles.container}>
         <CustomHeader
