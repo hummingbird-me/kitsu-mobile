@@ -229,7 +229,7 @@ export class UserLibraryListCard extends React.Component {
                   viewType="single"
                   onRatingChanged={this.onRatingChanged}
                   style={styles.ratingStyle}
-                  rating={libraryEntry.ratingTwenty}
+                  ratingTwenty={libraryEntry.ratingTwenty}
                   ratingSystem={currentUser.ratingSystem}
                 />
               </View>
