@@ -2,7 +2,6 @@ import { StackNavigator } from 'react-navigation';
 import Routes from './routes';
 import { IntroScreen, RegistrationScreen } from './screens/Intro';
 import { AuthScreen, RecoveryScreen, SplashScreen } from './screens/Auth';
-import QuickUpdateScreen from './screens/QuickUpdateScreen';
 import navigationOptions from './routes/navigationOptions';
 
 const Root = StackNavigator(
@@ -27,6 +26,9 @@ const Root = StackNavigator(
     },
     Tabs: {
       screen: Routes.Tabs,
+    },
+    TabsNotification: {
+      screen: Routes.TabsNotification,
     },
     SearchFilter: {
       screen: Routes.FilterStack,

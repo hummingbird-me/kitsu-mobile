@@ -52,7 +52,7 @@
     "react-native-tab-view": "^0.0.69",
     "react-native-vector-icons": "^4.1.1",
     "react-native-youtube": "^1.0.1",
-    "react-navigation": "^1.0.0-beta.9",
+    "react-navigation": "1.0.0-beta.21",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "redux-action-buffer": "^1.0.1",

@@ -1,3 +1,12 @@
+/**
+ * Looks like navigating from root router to a nested screen inside the tab
+ * stack is not possible. Created a hacky TabNavigator with initial screen of
+ * Notifications. This way user can navigate to related notification.
+ *
+ * Related issues: react-community/react-navigation
+ *  #1127, #335, #1715,
+ */
+
 import React from 'react';
 import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
@@ -36,6 +45,7 @@ const Tabs = TabNavigator(
     lazy: true,
     tabBarPosition: 'bottom',
     swipeEnabled: Platform.OS === 'ios',
+    initialRouteName: 'Notifications',
     tabBarOptions: {
       activeTintColor: tabRed,
       inactiveBackgroundColor: listBackPurple,

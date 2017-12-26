@@ -1,4 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
+import { isX, paddingX } from 'kitsu/utils/isX';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -8,7 +9,7 @@ export const styles = StyleSheet.create({
     paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
   headerCoverImage: {
-    height: 100,
+    height: isX ? 100 + paddingX : 100,
     justifyContent: 'center',
   },
   hintText: {

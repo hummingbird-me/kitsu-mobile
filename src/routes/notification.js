@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
+import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
+import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
+import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import notificationIcon from 'kitsu/assets/img/tabbar_icons/notification.png';
 import * as colors from 'kitsu/constants/colors';
 import navigationOptions from './navigationOptions';
@@ -10,6 +13,15 @@ const NotifStack = StackNavigator(
   {
     Notifications: {
       screen: NotificationsScreen,
+    },
+    PostDetails: {
+      screen: PostDetails,
+    },
+    ProfilePages: {
+      screen: ProfilePages,
+    },
+    MediaPages: {
+      screen: MediaPages,
     },
   },
   {
@@ -23,10 +35,10 @@ const NotifStack = StackNavigator(
       ),
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <View>
+        <View style={styles.tabBarIcon}>
           {screenProps &&
-          screenProps.badge > 0 && (
-          <View style={styles.textWrapper}>
+            screenProps.badge > 0 && (
+              <View style={styles.textWrapper}>
                 <Text style={styles.text}>{screenProps.badge}</Text>
               </View>
             )}
@@ -42,7 +54,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -7,
     left: 12,
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.red,
     padding: 3,
     borderRadius: 16,
     alignItems: 'center',

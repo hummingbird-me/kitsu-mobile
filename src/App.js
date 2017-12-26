@@ -1,6 +1,7 @@
 /* global __DEV__ */
 import React, { PureComponent } from 'react';
 import { View, StatusBar, Linking } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import identity from 'lodash/identity';
 
@@ -9,6 +10,7 @@ import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
 import store from './store/config';
 import Root from './Router';
+import { NotificationModal } from './components/NotificationModal';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
 
@@ -26,6 +28,8 @@ class App extends PureComponent {
     OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.addEventListener('registered', this.onPNRegistered);
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
     Linking.addEventListener('url', this.onUrl);
   }
 
@@ -36,10 +40,13 @@ class App extends PureComponent {
   componentWillUnmount() {
     OneSignal.removeEventListener('ids', this.onIds);
     OneSignal.removeEventListener('registered', this.onPNRegistered);
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
     Linking.removeEventListener('url', this.onUrl);
   }
 
   onIds(device) {
+    console.log(device.userId);
     store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: device.userId });
   }
 
@@ -47,7 +54,39 @@ class App extends PureComponent {
     console.log('device registered', notificationData);
   };
 
-  onUrl({ url }) {
+  onReceived(notification) {
+    console.log('Notification received: ', notification);
+  }
+
+  onOpened(openResult) {
+    console.group('Opened Notification');
+    console.log('Notification', openResult.notification);
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+    console.groupEnd();
+
+    /**
+     * Looks like navigating from root router to a nested screen inside the tab
+     * stack is not possible. Created a hacky TabNavigator with initial screen
+     * of Notifications. This way user can navigate to related
+     * notification.
+     *
+     * Related issues: react-community/react-navigation
+     *  #1127, #1715,
+     */
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      key: null,
+      actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
+    });
+    this.navigation.dispatch(resetAction);
+  }
+
+  onUrl(data) {
+    console.log(data);
+    const { url } = data;
     const { pathname, searchParams } = new URL(url);
     const paths = pathname.split('/').slice(1);
 
@@ -86,28 +125,28 @@ class App extends PureComponent {
   }
 }
 
-const RootContainer = ({ badge }) => (
+const RootContainer = ({ inAppNotification }) => (
   <View style={{ flex: 1 }}>
     <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
     <Root
       ref={(nav) => {
         this.navigation = nav;
       }}
-      screenProps={{ badge }}
+    />
+    <NotificationModal
+      visible={inAppNotification.visible}
+      data={inAppNotification.data}
+      onRequestClose={() => store.dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION })}
     />
   </View>
 );
 
 RootContainer.propTypes = {
-  badge: PropTypes.number,
-};
-
-RootContainer.defaultProps = {
-  badge: 0,
+  inAppNotification: PropTypes.object.isRequired,
 };
 
 const ConnectedRoot = connect(({ feed }) => ({
-  badge: feed.notificationsUnseen,
+  inAppNotification: feed.inAppNotification,
 }))(RootContainer);
 
 // Check for Codepush only in production mode (Saves compile time & network calls in development).

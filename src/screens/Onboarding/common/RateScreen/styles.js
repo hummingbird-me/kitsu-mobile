@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
   showTitle: {
     marginBottom: 12,
     fontFamily: 'OpenSans',
+    marginHorizontal: 4,
     color: colors.white,
     fontWeight: '600',
     textAlign: 'center',

@@ -4,26 +4,36 @@ import { PropTypes } from 'prop-types';
 
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
-import { PostHeader, PostMain, PostActions, PostFooter, PostSection, PostCommentsSection } from 'kitsu/screens/Feed/components/Post';
+import {
+  PostHeader,
+  PostMain,
+  PostActions,
+  PostFooter,
+  PostSection,
+  PostCommentsSection,
+} from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
     header: null,
-  }
+  };
 
   static propTypes = {
     navigation: PropTypes.object.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
 
     this.state = {
       comment: '',
-      comments: [...props.navigation.state.params.comments],
+      comments: props.navigation.state.params.comments && [
+        ...props.navigation.state.params.comments,
+      ],
       like: props.navigation.state.params.like,
       taggedMedia: {
         media: {
@@ -34,7 +44,15 @@ export default class PostDetails extends PureComponent {
     };
   }
 
-  onCommentChanged = comment => this.setState({ comment })
+  componentDidMount() {
+    const { comments, like } = this.props.navigation.state.params;
+    if (!comments || !like) {
+      this.fetchComments();
+      this.fetchLikes();
+    }
+  }
+
+  onCommentChanged = comment => this.setState({ comment });
 
   onSubmitComment = async () => {
     try {
@@ -57,7 +75,7 @@ export default class PostDetails extends PureComponent {
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
-  }
+  };
 
   toggleLike = async () => {
     const { currentUser, post } = this.props.navigation.state.params;
@@ -81,7 +99,7 @@ export default class PostDetails extends PureComponent {
 
       this.setState({ like });
     }
-  }
+  };
 
   fetchComments = async () => {
     try {
@@ -105,29 +123,51 @@ export default class PostDetails extends PureComponent {
       // and there's no way for me to access the relationship
       // data from the raw response from this context.
 
-      if (this.mounted) this.setState({ comments });
+      this.setState({ comments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
-  }
+  };
+
+  fetchLikes = async () => {
+    const { currentUser, post } = this.props.navigation.state.params;
+    try {
+      const likes = await Kitsu.findAll('postLikes', {
+        filter: {
+          postId: post.id,
+          userId: currentUser.id,
+        },
+        include: 'user',
+        page: {
+          limit: 4,
+        },
+      });
+
+      const like = likes.length && likes[0];
+
+      this.setState({ like });
+    } catch (err) {
+      console.log('Error fetching likes: ', err);
+    }
+  };
 
   toggleLike = () => {
     this.setState({ isLiked: !this.state.isLiked });
-  }
+  };
 
   focusOnCommentInput = () => {
     this.commentInput.focus();
-  }
+  };
 
   goBack = () => {
     this.props.navigation.goBack();
-  }
+  };
 
-  keyExtractor = (item, index) => index
+  keyExtractor = (item, index) => index;
 
   navigateToUserProfile = (userId) => {
     this.props.navigation.navigate('ProfilePages', { userId });
-  }
+  };
 
   renderItem = ({ item }) => (
     <Comment
@@ -135,27 +175,23 @@ export default class PostDetails extends PureComponent {
       onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
       onReplyPress={this.focusOnCommentInput}
     />
-  )
+  );
 
-  renderItemSeperatorComponent = () => <View style={{ height: 17 }} />
+  renderItemSeperatorComponent = () => <View style={{ height: 17 }} />;
 
   render() {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, like, taggedMedia } = this.state;
+    const { comment, comments, like } = this.state;
 
-    const {
-      content,
-      images,
-      postLikesCount,
-      commentsCount,
-      media,
-      spoiledUnit,
-    } = post;
+    const { content, images, postLikesCount, commentsCount, media, spoiledUnit } = post;
 
     return (
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1, paddingTop: 20, backgroundColor: '#FFFFFF' }}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={{ flex: 1, paddingTop: isX ? paddingX + 20 : 20, backgroundColor: '#FFFFFF' }}
+      >
         <StatusBar barStyle="dark-content" />
 
         <PostHeader
@@ -202,7 +238,9 @@ export default class PostDetails extends PureComponent {
         <PostFooter>
           <PostSection>
             <CommentTextInput
-              inputRef={(el) => { this.commentInput = el; }}
+              inputRef={(el) => {
+                this.commentInput = el;
+              }}
               currentUser={currentUser}
               comment={comment}
               onCommentChanged={this.onCommentChanged}

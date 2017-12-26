@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { connect } from 'react-redux';
@@ -76,9 +76,9 @@ class SearchScreen extends Component {
   handleIndexChange = index => this.setState({ index });
 
   navigateToMedia = (media) => {
-    this.props.navigation.navigate('Media', {
+    this.props.navigation.navigate('MediaPages', {
       mediaId: media.id,
-      type: media.type,
+      mediaType: media.kind,
     });
   };
 
@@ -112,14 +112,14 @@ class SearchScreen extends Component {
     const hits = this.state.searchResults[route.key];
     switch (route.key) {
       case 'users': {
-        return <UsersList hits={hits} onFollow={followUser} onData={captureUsersData} />;
+        return <UsersList hits={hits} onFollow={followUser} onData={captureUsersData} navigation={navigation} />;
       }
       default: {
         return activeQuery ? (
           <ResultsList hits={hits} onPress={this.navigateToMedia} />
         ) : (
-            <TopsList active={route.key} mounted navigation={navigation} />
-          );
+          <TopsList active={route.key} mounted navigation={navigation} />
+        );
       }
     }
   };
