@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { ActivityIndicator, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
+import * as colors from 'kitsu/constants/colors';
 import PropTypes from 'prop-types';
 import QuickUpdateEditor from '../QuickUpdateEditor';
-import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
 export default class QuickUpdateCard extends PureComponent {

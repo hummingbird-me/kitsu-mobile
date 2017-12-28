@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    bottom: 0,
     right: 0,
+    height: '40%',
   },
   faderCover: {
     position: 'absolute',
@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
     right: 10,
   },
   carousel: {
-    flexGrow: 1,
+    flexGrow: 0,
+    zIndex: 5,
   },
   closeButton: {
     alignItems: 'center',

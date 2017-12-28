@@ -18,7 +18,7 @@ import { Kitsu } from 'kitsu/config/api';
 
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
-
+import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
 const LIBRARY_ENTRIES_FIELDS = [
@@ -42,6 +42,8 @@ const ANIME_FIELDS = [
   'status',
   'startDate',
 ];
+
+const CAROUSEL_HEIGHT = 310;
 
 class QuickUpdate extends Component {
   static propTypes = {
@@ -298,16 +300,29 @@ class QuickUpdate extends Component {
         </Animated.View>
 
         {/* Carousel */}
-        <Carousel
-          data={library}
-          renderItem={this.renderItem}
-          sliderWidth={Dimensions.get('window').width}
-          itemWidth={Dimensions.get('window').width * 0.85}
-          itemHeight={500}
-          slideStyle={styles.carousel}
-          onSnapToItem={this.carouselItemChanged}
-        />
-
+        <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+          <Carousel
+            data={library}
+            renderItem={this.renderItem}
+            sliderWidth={Dimensions.get('window').width}
+            itemWidth={Dimensions.get('window').width * 0.85}
+            itemHeight={CAROUSEL_HEIGHT}
+            sliderHeight={CAROUSEL_HEIGHT}
+            containerCustomStyle={styles.carousel}
+            onSnapToItem={this.carouselItemChanged}
+          />
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: colors.listBackPurple,
+              top: -CAROUSEL_HEIGHT / 2,
+              paddingTop: CAROUSEL_HEIGHT / 2,
+              zIndex: 1,
+            }}
+          >
+            <Text>Episode 9 Discussion</Text>
+          </View>
+        </View>
         {/* Close Button */}
         {/* <TouchableOpacity style={styles.closeButton} onPress={this.props.onClose}>
           <Icon name="ios-close" size={70} color="white" />

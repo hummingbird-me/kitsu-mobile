@@ -4,9 +4,9 @@ import * as colors from 'kitsu/constants/colors';
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexGrow: 1,
     alignItems: 'center',
     width: Dimensions.get('window').width * 0.85,
+    height: 310,
   },
   shadow: {
     // Android
