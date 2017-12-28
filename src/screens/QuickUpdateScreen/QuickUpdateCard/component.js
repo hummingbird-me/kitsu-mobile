@@ -142,7 +142,7 @@ export default class QuickUpdateCard extends PureComponent {
 
         {/* Card */}
         <View style={[styles.cardWrapper, styles.shadow]}>
-          <View style={styles.cardContent}>
+          <View style={styles.cardHeaderWrapper}>
             <View style={styles.cardHeaderArea}>
               {/* Series Description */}
               <View style={styles.episodeRow}>

@@ -67,25 +67,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     top: 80,
     width: Dimensions.get('window').width * 0.85,
-    height: 200,
+    height: 198,
     borderRadius: 10,
     zIndex: 3,
   },
-  cardContent: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
+  cardHeaderWrapper: { flex: 1, justifyContent: 'flex-end' },
   cardHeaderArea: {
     backgroundColor: 'rgb(250, 250, 250)',
     borderBottomWidth: 1,
     borderColor: 'rgb(236, 236, 236)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 4,
+    padding: 8,
   },
   episodeRow: {
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'transparent',
     flexDirection: 'row',
+    marginVertical: 4,
   },
   progressBarContainer: {
     marginTop: 8,
@@ -117,11 +115,13 @@ const styles = StyleSheet.create({
   seriesExtraInfo: {
     fontFamily: 'OpenSans',
     color: colors.lightGrey,
-    fontWeight: '100',
+    fontWeight: '300',
+    fontSize: 12,
   },
   seriesNextEpisodeTitle: {
     // inherits from extra info,
     fontWeight: 'bold',
+    color: '#999999',
   },
   placeholderWrapper: {
     flex: 1,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   actionRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 8,
+    marginVertical: 12,
     marginHorizontal: 8,
   },
   button: {
