@@ -49,7 +49,7 @@ export const MediaCard = ({
         {typeof ratingTwenty !== 'undefined' && (
           <Rating
             disabled
-            rating={ratingTwenty}
+            ratingTwenty={ratingTwenty}
             ratingSystem={ratingSystem}
             size="tiny"
             viewType="single"
