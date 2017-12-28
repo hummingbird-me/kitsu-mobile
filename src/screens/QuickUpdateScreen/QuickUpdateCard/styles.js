@@ -6,8 +6,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flexGrow: 1,
     alignItems: 'center',
-    marginBottom: 70,
-    minHeight: Dimensions.get('window').height - 150,
     width: Dimensions.get('window').width * 0.85,
   },
   shadow: {
@@ -29,7 +27,6 @@ const styles = StyleSheet.create({
     right: 10,
     height: 180,
     borderRadius: 10,
-
     zIndex: 4,
   },
   posterImage: {
@@ -37,7 +34,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderRadius: 10,
     justifyContent: 'flex-end',
-    padding: 10,
+    padding: 4,
   },
   posterImageGradient: {
     position: 'absolute',
@@ -45,10 +42,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-  },
-  episodeRow: {
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
   },
   currentEpisodeText: {
     backgroundColor: 'transparent',
@@ -71,54 +64,64 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cardWrapper: {
-    position: 'absolute',
     backgroundColor: colors.white,
     top: 80,
-    left: 0,
-    right: 0,
-    bottom: 30,
+    width: Dimensions.get('window').width * 0.85,
+    height: 200,
     borderRadius: 10,
-    overflow: 'hidden',
-
     zIndex: 3,
   },
   cardContent: {
-    marginTop: 100,
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   cardHeaderArea: {
     backgroundColor: 'rgb(250, 250, 250)',
     borderBottomWidth: 1,
     borderColor: 'rgb(236, 236, 236)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
+  },
+  episodeRow: {
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
   },
   progressBarContainer: {
-    marginHorizontal: 10,
-    marginTop: 12,
-    marginBottom: 16,
+    marginTop: 8,
+    marginBottom: 12,
   },
   seriesDescriptionRow: {
     flexDirection: 'row',
   },
   avatarImage: {
-    width: 50,
-    height: 50,
+    width: 51,
+    height: 72,
     borderRadius: 5,
-    marginHorizontal: 10,
-    marginBottom: 10,
+    marginHorizontal: 4,
+    marginBottom: 4,
   },
   descriptionRow: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginHorizontal: 4,
   },
   seriesTitle: {
     fontFamily: 'OpenSans',
     fontWeight: '700',
     marginRight: 5,
+    color: colors.white,
+    backgroundColor: colors.transparent,
   },
   seriesExtraInfo: {
     fontFamily: 'OpenSans',
     color: colors.lightGrey,
+    fontWeight: '100',
+  },
+  seriesNextEpisodeTitle: {
+    // inherits from extra info,
+    fontWeight: 'bold',
   },
   placeholderWrapper: {
     flex: 1,
@@ -140,8 +143,8 @@ const styles = StyleSheet.create({
   actionRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 14,
-    marginHorizontal: 5,
+    marginVertical: 8,
+    marginHorizontal: 8,
   },
   button: {
     marginHorizontal: 5,
@@ -156,13 +159,9 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     fontSize: 12,
   },
-  discussionButton: {
-    flex: 3,
-    backgroundColor: colors.lightGrey,
-  },
   markWatchedButton: {
-    flex: 5,
-    backgroundColor: colors.lightGreen,
+    flex: 1,
+    backgroundColor: colors.green,
   },
   loadingSpinner: {
     flexGrow: 1,

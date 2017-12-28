@@ -56,7 +56,7 @@ class QuickUpdate extends Component {
     nextUpBackgroundImageUri: undefined,
     faderOpacity: new Animated.Value(1),
     headerOpacity: new Animated.Value(1),
-  }
+  };
 
   componentWillMount() {
     this.fetchLibrary();
@@ -67,10 +67,10 @@ class QuickUpdate extends Component {
 
     return {
       length: width / 5,
-      offset: (width / 5) * index,
+      offset: width / 5 * index,
       index,
     };
-  }
+  };
 
   fetchLibrary = async () => {
     this.setState({ loading: true });
@@ -94,16 +94,19 @@ class QuickUpdate extends Component {
         sort: 'status,-progressed_at,-updated_at',
       });
 
-      this.setState({
-        library,
-        loading: false,
-      }, () => {
-        this.carouselItemChanged(0);
-      });
+      this.setState(
+        {
+          library,
+          loading: false,
+        },
+        () => {
+          this.carouselItemChanged(0);
+        },
+      );
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   refetchLibraryEntry = async (libraryEntry) => {
     const index = this.state.library.indexOf(libraryEntry);
@@ -130,21 +133,23 @@ class QuickUpdate extends Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   filterModeChanged = (filterMode) => {
     this.setState({ filterMode }, () => {
       this.fetchLibrary();
     });
-  }
+  };
 
   // These are requests to change the background image.
   // If they happen at all in parallel it looks awful.
-  imageFadeOperations = []
-  operationInProgress = false
+  imageFadeOperations = [];
+  operationInProgress = false;
 
   ensureAllImageFadeOperationsHandled = async () => {
-    if (this.operationInProgress) { return; }
+    if (this.operationInProgress) {
+      return;
+    }
 
     this.operationInProgress = true;
 
@@ -200,20 +205,20 @@ class QuickUpdate extends Component {
     }
 
     this.operationInProgress = false;
-  }
+  };
 
   carouselItemChanged = (index) => {
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
-  }
+  };
 
   hideHeader = () => {
     this.animateHeaderOpacityTo(0);
-  }
+  };
 
   showHeader = () => {
     this.animateHeaderOpacityTo(1, 500);
-  }
+  };
 
   animateHeaderOpacityTo = (toValue, delay = 0) => {
     const { headerOpacity } = this.state;
@@ -224,7 +229,7 @@ class QuickUpdate extends Component {
       duration: 300,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   markComplete = async (libraryEntry) => {
     const result = await Kitsu.update('libraryEntries', {
@@ -233,17 +238,13 @@ class QuickUpdate extends Component {
     });
 
     if (!result.progress) {
-      Alert.alert(
-        'Error',
-        'Error while updating progress, please try again.',
-        [
-          { text: 'OK', style: 'cancel' },
-        ],
-      );
+      Alert.alert('Error', 'Error while updating progress, please try again.', [
+        { text: 'OK', style: 'cancel' },
+      ]);
     } else {
       this.refetchLibraryEntry(libraryEntry);
     }
-  }
+  };
 
   renderItem = data => (
     <QuickUpdateCard
@@ -277,10 +278,7 @@ class QuickUpdate extends Component {
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <Image
-          source={{ uri: nextUpBackgroundImageUri }}
-          style={styles.backgroundImage}
-        />
+        <Image source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
         <Animated.Image
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
@@ -305,7 +303,7 @@ class QuickUpdate extends Component {
           renderItem={this.renderItem}
           sliderWidth={Dimensions.get('window').width}
           itemWidth={Dimensions.get('window').width * 0.85}
-          itemHeight={900}
+          itemHeight={500}
           slideStyle={styles.carousel}
           onSnapToItem={this.carouselItemChanged}
         />
@@ -324,6 +322,4 @@ const mapStateToProps = ({ user }) => {
   return { currentUser };
 };
 
-
 export default connect(mapStateToProps)(QuickUpdate);
-

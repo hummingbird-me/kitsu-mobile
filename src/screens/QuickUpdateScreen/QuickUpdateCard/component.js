@@ -3,9 +3,8 @@ import { ActivityIndicator, Image, Modal, Text, TouchableOpacity, View } from 'r
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import PropTypes from 'prop-types';
-
 import QuickUpdateEditor from '../QuickUpdateEditor';
-
+import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
 export default class QuickUpdateCard extends PureComponent {
@@ -27,14 +26,14 @@ export default class QuickUpdateCard extends PureComponent {
     onEndEditing: PropTypes.func,
     onMarkComplete: PropTypes.func,
     onViewDiscussion: PropTypes.func,
-  }
+  };
 
   static defaultProps = {
     onBeginEditing: () => {},
     onEndEditing: () => {},
     onMarkComplete: () => {},
     onViewDiscussion: () => {},
-  }
+  };
 
   state = {
     editing: false,
@@ -43,7 +42,7 @@ export default class QuickUpdateCard extends PureComponent {
     // to locate a view with a tag.
     editingUpdateText: null,
     updateText: null,
-  }
+  };
 
   componentWillReceiveProps = (nextProps) => {
     // This means they've likely reloaded the data.
@@ -53,26 +52,26 @@ export default class QuickUpdateCard extends PureComponent {
         updateText: null,
       });
     }
-  }
+  };
 
   onEditorChanged = (editingUpdateText) => {
     this.setState({ editingUpdateText });
-  }
+  };
 
   onViewDiscussion = () => {
     this.props.onViewDiscussion(this.props.data.item);
-  }
+  };
 
   onMarkComplete = () => {
     this.props.onMarkComplete(this.props.data.item);
-  }
+  };
 
   updateTextAndToggle = () => {
     // Restore any previous text, and then toggle the editor.
     this.setState({ updateText: this.state.editingUpdateText }, () => {
       this.toggleEditor();
     });
-  }
+  };
 
   toggleEditor = () => {
     const { loading } = this.props.data;
@@ -89,7 +88,7 @@ export default class QuickUpdateCard extends PureComponent {
       this.setState({ editing: false });
       this.props.onEndEditing();
     }
-  }
+  };
 
   render() {
     const { data } = this.props;
@@ -113,82 +112,67 @@ export default class QuickUpdateCard extends PureComponent {
       <View key={data.item.id} style={styles.wrapper}>
         {/* Episode Landscape Image */}
         <View style={[styles.posterImageWrapper, styles.shadow]}>
-          <Image
-            source={{ uri: landscapeImage }}
-            style={styles.posterImage}
-          >
-            <LinearGradient colors={['transparent', 'rgba(0, 0, 0, 0.8)']} style={styles.posterImageGradient} />
-            <View style={styles.episodeRow}>
-              <Text style={styles.currentEpisodeText}>Ep. {progress}</Text>
-              <Text style={styles.totalEpisodesText}> of {anime.episodeCount}</Text>
+          <Image source={{ uri: landscapeImage }} style={styles.posterImage}>
+            <LinearGradient
+              colors={['transparent', 'rgba(0, 0, 0, 0.8)']}
+              style={styles.posterImageGradient}
+            />
+            <View style={{ flexDirection: 'row' }}>
+              <Image source={{ uri: squareImage }} style={styles.avatarImage} />
+              <View style={styles.descriptionRow}>
+                <Text style={styles.seriesTitle} numberOfLines={1}>
+                  {anime.canonicalTitle}
+                </Text>
+                {/* Progress Bar */}
+                <View style={styles.progressBarContainer}>
+                  <ProgressBar
+                    color={colors.lightGreen}
+                    height={6}
+                    fillPercentage={progress / anime.episodeCount * 100}
+                  />
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={styles.currentEpisodeText}>Ep. {progress}</Text>
+                  <Text style={styles.totalEpisodesText}> of {anime.episodeCount}</Text>
+                </View>
+              </View>
             </View>
-            <Text style={styles.episodeName} numberOfLines={1}>{unit[0].canonicalTitle}</Text>
           </Image>
         </View>
 
         {/* Card */}
         <View style={[styles.cardWrapper, styles.shadow]}>
-          <View style={styles.cardHeaderArea}>
-            <View style={styles.cardContent}>
-              {/* Progress Bar */}
-              <View style={styles.progressBarContainer}>
-                <ProgressBar
-                  height={6}
-                  fillPercentage={(progress / anime.episodeCount) * 100}
-                />
-              </View>
+          <View style={styles.cardContent}>
+            <View style={styles.cardHeaderArea}>
               {/* Series Description */}
-              <View style={styles.seriesDescriptionRow}>
-                <Image source={{ uri: squareImage }} style={styles.avatarImage} />
-                <View style={styles.descriptionRow}>
-                  <Text style={styles.seriesTitle} numberOfLines={1}>{anime.canonicalTitle}</Text>
-                  <Text style={styles.seriesExtraInfo}>Anime • {anime.startDate.split('-')[0]}</Text>
-                </View>
+              <View style={styles.episodeRow}>
+                <Text style={styles.seriesExtraInfo}>
+                  UP NEXT{' '}
+                  <Text style={styles.seriesNextEpisodeTitle}>EP 10 - Shouto Todoroki: Origin</Text>
+                </Text>
               </View>
             </View>
           </View>
-          {
-            loading &&
-            <ActivityIndicator size="large" style={styles.loadingSpinner} />
-          }
-          {
-            !loading &&
-            <TouchableOpacity onPress={this.toggleEditor} style={styles.placeholderWrapper}>
-              <Text
-                style={updateText ? styles.updateText : styles.placeholder}
-              >
-                {updateText || `(Optional) Share your thoughts on Episode ${data.item.progress}`}
-              </Text>
-            </TouchableOpacity>
-          }
+          {loading && <ActivityIndicator size="large" style={styles.loadingSpinner} />}
           {/* Action Row */}
-          {
-            !loading &&
+          {!loading && (
             <View style={styles.actionRow}>
-              <TouchableOpacity
-                onPress={this.onViewDiscussion}
-                style={[styles.button, styles.discussionButton]}
-              >
-                <Text style={styles.buttonText}>View Discussion</Text>
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={this.onMarkComplete}
                 style={[styles.button, styles.markWatchedButton]}
               >
                 <Text style={styles.buttonText}>Mark </Text>
-                <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Episode {data.item.progress}</Text>
+                <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>
+                  Episode {data.item.progress}
+                </Text>
                 <Text style={styles.buttonText}> Watched</Text>
               </TouchableOpacity>
             </View>
-          }
+          )}
         </View>
 
         {/* Editor */}
-        <Modal
-          animationType="slide"
-          transparent
-          visible={editing}
-        >
+        <Modal animationType="slide" transparent visible={editing}>
           <QuickUpdateEditor
             episode={data.item.progress}
             onChange={this.onEditorChanged}
