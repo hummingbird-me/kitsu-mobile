@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexGrow: 1,
+    backgroundColor: colors.listBackPurple,
   },
   backgroundImage: {
     position: 'absolute',
@@ -23,8 +24,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    bottom: 0,
     right: 0,
+    height: '40%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   header: {
@@ -51,9 +52,28 @@ const styles = StyleSheet.create({
     marginTop: isX ? 20 : 0,
     right: 10,
   },
+  contentWrapper: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
   carousel: {
     flexGrow: 0,
     zIndex: 5,
+  },
+  socialContent: {
+    flex: 1,
+    backgroundColor: colors.listBackPurple,
+    zIndex: 1,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.offWhite,
+  },
+  discussionTitle: {
+    color: 'white',
+    fontFamily: 'OpenSans',
+    textAlign: 'center',
+    padding: 16,
   },
   closeButton: {
     alignItems: 'center',

@@ -114,7 +114,7 @@ export default class QuickUpdateCard extends PureComponent {
         <View style={[styles.posterImageWrapper, styles.shadow]}>
           <Image source={{ uri: landscapeImage }} style={styles.posterImage}>
             <LinearGradient
-              colors={['transparent', 'rgba(0, 0, 0, 0.8)']}
+              colors={['transparent', 'rgba(0, 0, 0, 1)']}
               style={styles.posterImageGradient}
             />
             <View style={{ flexDirection: 'row' }}>
@@ -132,7 +132,7 @@ export default class QuickUpdateCard extends PureComponent {
                   />
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.currentEpisodeText}>Ep. {progress}</Text>
+                  <Text style={styles.currentEpisodeText}>EP {progress}</Text>
                   <Text style={styles.totalEpisodesText}> of {anime.episodeCount}</Text>
                 </View>
               </View>

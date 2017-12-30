@@ -6,15 +6,16 @@ import {
   Dimensions,
   Image,
   Text,
-  TouchableOpacity,
+  RefreshControl,
   View,
-  FlatList,
+  StyleSheet,
 } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { Post } from 'kitsu/screens/Feed/components/Post';
+import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
@@ -67,6 +68,8 @@ class QuickUpdate extends Component {
   componentWillMount() {
     this.fetchLibrary();
   }
+
+  onCreatePost = () => {};
 
   getItemLayout = (data, index) => {
     const { width } = Dimensions.get('window');
@@ -306,8 +309,6 @@ class QuickUpdate extends Component {
       discussionsLoading,
     } = this.state;
 
-    console.log('library', library);
-
     if (loading || !library) {
       return (
         <View style={styles.loadingWrapper}>
@@ -339,7 +340,7 @@ class QuickUpdate extends Component {
         </Animated.View>
 
         {/* Carousel */}
-        <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <View style={styles.contentWrapper}>
           <Carousel
             data={library}
             renderItem={this.renderItem}
@@ -350,20 +351,27 @@ class QuickUpdate extends Component {
             containerCustomStyle={styles.carousel}
             onSnapToItem={this.carouselItemChanged}
           />
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: colors.listBackPurple,
-              // top: -CAROUSEL_HEIGHT / 2,
-              // paddingTop: CAROUSEL_HEIGHT / 2,
-              bottom: 0,
-              zIndex: 1,
-            }}
-          >
-            <Text>Episode 9 Discussion</Text>
+          <View style={styles.socialContent}>
+            <View style={styles.separator} />
+            <Text style={styles.discussionTitle}>Episode 9 Discussion</Text>
 
             {!discussionsLoading ? (
-              <FlatList data={discussions} renderItem={this.renderPostItem} />
+              <KeyboardAwareFlatList
+                data={discussions}
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderPostItem}
+                onEndReached={this.fetchFeed}
+                onEndReachedThreshold={0.6}
+                ListHeaderComponent={
+                  <CreatePostRow
+                    title={'What do you think of EP 09?'}
+                    onPress={this.onCreatePost}
+                  />
+                }
+                refreshControl={
+                  <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+                }
+              />
             ) : (
               <ActivityIndicator />
             )}

@@ -47,12 +47,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: colors.white,
     fontFamily: 'OpenSans',
-    fontWeight: '700',
     fontSize: 12,
   },
   totalEpisodesText: {
     backgroundColor: 'transparent',
-    color: colors.white,
+    color: '#999999',
     fontFamily: 'OpenSans',
     fontSize: 12,
   },
@@ -102,12 +101,13 @@ const styles = StyleSheet.create({
   descriptionRow: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     marginHorizontal: 4,
+    marginVertical: 4,
   },
   seriesTitle: {
     fontFamily: 'OpenSans',
-    fontWeight: '700',
+    fontWeight: '600',
     marginRight: 5,
     color: colors.white,
     backgroundColor: colors.transparent,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   seriesExtraInfo: {
     fontFamily: 'OpenSans',
     color: colors.lightGrey,
-    fontWeight: '300',
+    fontWeight: '200',
     fontSize: 12,
   },
   seriesNextEpisodeTitle: {
