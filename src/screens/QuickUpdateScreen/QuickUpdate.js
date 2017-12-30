@@ -8,17 +8,19 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { Post } from 'kitsu/screens/Feed/components/Post';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
+import * as colors from 'kitsu/constants/colors';
 
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
-import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
 const LIBRARY_ENTRIES_FIELDS = [
@@ -53,6 +55,8 @@ class QuickUpdate extends Component {
 
   state = {
     library: null,
+    discussions: null,
+    discussionLoadings: false,
     filterMode: 'all',
     backgroundImageUri: undefined,
     nextUpBackgroundImageUri: undefined,
@@ -72,6 +76,25 @@ class QuickUpdate extends Component {
       offset: width / 5 * index,
       index,
     };
+  };
+
+  fetchDiscussions = async (episodeId) => {
+    this.setState({ discussionsLoading: true });
+    try {
+      const posts = await Kitsu.find('episodeFeed', 66064, {
+        include:
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        filter: { kind: 'posts' },
+        page: {
+          limit: 10,
+        },
+      });
+      console.log('posts', posts);
+      const processed = preprocessFeed(posts);
+      this.setState({ discussions: processed, discussionsLoading: false });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   fetchLibrary = async () => {
@@ -210,8 +233,10 @@ class QuickUpdate extends Component {
   };
 
   carouselItemChanged = (index) => {
+    const { library } = this.state;
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
+    this.fetchDiscussions(library[index].anime.id);
   };
 
   hideHeader = () => {
@@ -248,6 +273,16 @@ class QuickUpdate extends Component {
     }
   };
 
+  renderPostItem = ({ item }) => (
+    <Post
+      post={item}
+      onPostPress={() => {}}
+      currentUser={this.props.currentUser}
+      navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
+      navigation={this.props.navigation}
+    />
+  );
+
   renderItem = data => (
     <QuickUpdateCard
       data={data}
@@ -267,7 +302,11 @@ class QuickUpdate extends Component {
       headerOpacity,
       library,
       loading,
+      discussions,
+      discussionsLoading,
     } = this.state;
+
+    console.log('library', library);
 
     if (loading || !library) {
       return (
@@ -315,12 +354,19 @@ class QuickUpdate extends Component {
             style={{
               flex: 1,
               backgroundColor: colors.listBackPurple,
-              top: -CAROUSEL_HEIGHT / 2,
-              paddingTop: CAROUSEL_HEIGHT / 2,
+              // top: -CAROUSEL_HEIGHT / 2,
+              // paddingTop: CAROUSEL_HEIGHT / 2,
+              bottom: 0,
               zIndex: 1,
             }}
           >
             <Text>Episode 9 Discussion</Text>
+
+            {!discussionsLoading ? (
+              <FlatList data={discussions} renderItem={this.renderPostItem} />
+            ) : (
+              <ActivityIndicator />
+            )}
           </View>
         </View>
         {/* Close Button */}

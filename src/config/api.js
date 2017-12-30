@@ -788,6 +788,16 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'episodeFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/episode_aggr' },
+);
+
+Kitsu.define(
   'followingFeed',
   {
     activityGroups: {
