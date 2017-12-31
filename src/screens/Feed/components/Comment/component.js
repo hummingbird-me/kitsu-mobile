@@ -15,7 +15,6 @@ export class Comment extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isLiked: false,
       likesCount: props.comment.likesCount,
       like: null,
       replies: [],
@@ -45,7 +44,7 @@ export class Comment extends PureComponent {
       });
 
       const like = likes.length && likes[0];
-      if (this.mounted) this.setState({ like, isLiked: !!like });
+      if (this.mounted) this.setState({ like });
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
@@ -53,12 +52,11 @@ export class Comment extends PureComponent {
 
   toggleLike = async () => {
     try {
-      const { isLiked, likesCount, like } = this.state;
+      const { likesCount, like } = this.state;
       const { comment, currentUser } = this.props;
 
       this.setState({
-        isLiked: !isLiked,
-        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
+        likesCount: !!like ? likesCount - 1 : likesCount + 1,
       });
 
       if (like) {
@@ -79,8 +77,7 @@ export class Comment extends PureComponent {
     } catch (err) {
       console.log('Error toggling like: ', err);
       this.setState({
-        isLiked: !isLiked,
-        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
+        likesCount: !!like ? likesCount - 1 : likesCount + 1,
       });
     }
   }
@@ -140,7 +137,7 @@ export class Comment extends PureComponent {
       onReplyPress,
     } = this.props;
 
-    const { isLiked, likesCount, replies } = this.state;
+    const { like, likesCount, replies } = this.state;
 
     const { content, createdAt, user, repliesCount } = comment;
     const { avatar, name } = user;
@@ -164,14 +161,14 @@ export class Comment extends PureComponent {
             <View style={styles.commentActions}>
               <StyledText color="grey" size="xxsmall">{moment(createdAt).fromNow()}</StyledText>
               <TouchableOpacity onPress={this.toggleLike} style={styles.commentActionItem}>
-                <StyledText color="grey" size="xxsmall">{`Like${isLiked ? 'd' : ''}`}</StyledText>
+                <StyledText color="grey" size="xxsmall">{`Like${!!like ? 'd' : ''}`}</StyledText>
               </TouchableOpacity>
               <TouchableOpacity onPress={onReplyPress} style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">Reply</StyledText>
               </TouchableOpacity>
               <View style={styles.commentActionItem}>
-                <Icon name={isLiked ? 'md-heart' : 'md-heart-outline'} style={[styles.likeIcon, isLiked && styles.likeIcon__active]} />
-                <StyledText color={isLiked ? 'red' : 'grey'} size="xxsmall">{likesCount}</StyledText>
+                <Icon name={!!like ? 'md-heart' : 'md-heart-outline'} style={[styles.likeIcon, !!like && styles.likeIcon__active]} />
+                <StyledText color={!!like ? 'red' : 'grey'} size="xxsmall">{likesCount}</StyledText>
               </View>
             </View>
           )}
