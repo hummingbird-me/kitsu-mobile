@@ -130,11 +130,11 @@ export default class PostDetails extends PureComponent {
           users: 'avatar,name',
         },
         include: 'user',
-        sort: 'createdAt',
+        sort: '-createdAt',
         ...requestOptions,
       });
 
-      this.setState({ comments: [...comments, ...this.state.comments] });
+      this.setState({ comments: [...comments.reverse(), ...this.state.comments] });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -160,10 +160,6 @@ export default class PostDetails extends PureComponent {
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
-  };
-
-  toggleLike = () => {
-    this.setState({ isLiked: !this.state.isLiked });
   };
 
   focusOnCommentInput = () => {

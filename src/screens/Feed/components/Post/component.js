@@ -102,12 +102,15 @@ export class Post extends PureComponent {
           users: 'avatar,name',
         },
         include: 'user',
-        sort: 'createdAt',
+        sort: '-createdAt',
       });
 
-      const latestComments = comments.slice(comments.length - 2);
-
-      if (this.mounted) this.setState({ latestComments, comments });
+      if (this.mounted) {
+        this.setState({
+          latestComments: comments.slice(0, 2).reverse(),
+          comments: comments.reverse(),
+        });
+      }
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
