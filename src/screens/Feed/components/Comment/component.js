@@ -105,14 +105,12 @@ export class Comment extends PureComponent {
           users: 'avatar,name',
         },
         include: 'user',
-        sort: 'createdAt',
-        page: {
-          limit: 5
-        },
+        sort: '-createdAt',
+        page: { limit: 5 },
         ...requestOptions,
       });
 
-      this.setState({ replies: [...replies, ...this.state.replies] });
+      this.setState({ replies: [...replies.reverse(), ...this.state.replies] });
     } catch (err) {
       console.log('Error fetching replies: ', err);
     } finally {
