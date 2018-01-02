@@ -30,7 +30,7 @@ export default class QuickUpdateEditor extends PureComponent {
 
   state = {
     headerOpacity: new Animated.Value(0),
-  }
+  };
 
   componentDidMount = () => {
     // Animate the header in after the slide.
@@ -39,10 +39,10 @@ export default class QuickUpdateEditor extends PureComponent {
     Animated.timing(headerOpacity, {
       toValue: 1,
       duration: 300,
-      delay: 500,
+      delay: 200,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   render() {
     const { episode, value, onCancel, onDone } = this.props;

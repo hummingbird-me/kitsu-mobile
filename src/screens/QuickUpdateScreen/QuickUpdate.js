@@ -8,7 +8,7 @@ import {
   Text,
   RefreshControl,
   View,
-  StyleSheet,
+  Modal,
 } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
@@ -19,6 +19,7 @@ import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
+import QuickUpdateEditor from './QuickUpdateEditor';
 
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
@@ -56,6 +57,7 @@ class QuickUpdate extends Component {
 
   state = {
     library: null,
+    currentEpisode: null,
     discussions: null,
     discussionLoadings: false,
     filterMode: 'all',
@@ -63,13 +65,17 @@ class QuickUpdate extends Component {
     nextUpBackgroundImageUri: undefined,
     faderOpacity: new Animated.Value(1),
     headerOpacity: new Animated.Value(1),
+    editorText: '',
+    editing: false,
   };
 
   componentWillMount() {
     this.fetchLibrary();
   }
 
-  onCreatePost = () => {};
+  onEditorChanged = (editorText) => {
+    this.setState({ editorText });
+  };
 
   getItemLayout = (data, index) => {
     const { width } = Dimensions.get('window');
@@ -240,14 +246,15 @@ class QuickUpdate extends Component {
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
     this.fetchDiscussions(library[index].anime.id);
+    this.setState({ currentEpisode: library[index] });
   };
 
   hideHeader = () => {
     this.animateHeaderOpacityTo(0);
   };
 
-  showHeader = () => {
-    this.animateHeaderOpacityTo(1, 500);
+  showHeader = (delay = 500) => {
+    this.animateHeaderOpacityTo(1, delay);
   };
 
   animateHeaderOpacityTo = (toValue, delay = 0) => {
@@ -273,6 +280,31 @@ class QuickUpdate extends Component {
       ]);
     } else {
       this.refetchLibraryEntry(libraryEntry);
+    }
+  };
+
+  updateTextAndToggle = () => {
+    // Restore any previous text, and then toggle the editor.
+    this.setState({ updateText: this.state.editorText }, () => {
+      this.toggleEditor();
+    });
+  };
+
+  toggleEditor = () => {
+    const { editing, updateText } = this.state;
+
+    if (!editing) {
+      this.setState({
+        editing: true,
+        // Need to copy the current updateText over so the dialog shows with the correct text in it.
+        editorText: updateText,
+      });
+      this.hideHeader();
+      // this.props.onBeginEditing();
+    } else {
+      this.setState({ editing: false });
+      this.showHeader(100);
+      // this.props.onEndEditing();
     }
   };
 
@@ -307,6 +339,9 @@ class QuickUpdate extends Component {
       loading,
       discussions,
       discussionsLoading,
+      currentEpisode,
+      editorText,
+      editing,
     } = this.state;
 
     if (loading || !library) {
@@ -365,7 +400,7 @@ class QuickUpdate extends Component {
                 ListHeaderComponent={
                   <CreatePostRow
                     title={'What do you think of EP 09?'}
-                    onPress={this.onCreatePost}
+                    onPress={this.toggleEditor}
                   />
                 }
                 refreshControl={
@@ -377,10 +412,17 @@ class QuickUpdate extends Component {
             )}
           </View>
         </View>
-        {/* Close Button */}
-        {/* <TouchableOpacity style={styles.closeButton} onPress={this.props.onClose}>
-          <Icon name="ios-close" size={70} color="white" />
-        </TouchableOpacity> */}
+
+        {/* Editor */}
+        <Modal animationType="slide" transparent visible={editing}>
+          <QuickUpdateEditor
+            episode={(currentEpisode && currentEpisode.progress) || 0}
+            onChange={this.onEditorChanged}
+            onCancel={this.toggleEditor}
+            onDone={this.updateTextAndToggle}
+            value={editorText}
+          />
+        </Modal>
       </View>
     );
   }

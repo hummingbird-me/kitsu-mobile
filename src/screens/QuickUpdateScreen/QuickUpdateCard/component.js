@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import * as colors from 'kitsu/constants/colors';
 import PropTypes from 'prop-types';
-import QuickUpdateEditor from '../QuickUpdateEditor';
 import styles from './styles';
 
 export default class QuickUpdateCard extends PureComponent {
@@ -171,16 +170,6 @@ export default class QuickUpdateCard extends PureComponent {
           )}
         </View>
 
-        {/* Editor */}
-        <Modal animationType="slide" transparent visible={editing}>
-          <QuickUpdateEditor
-            episode={data.item.progress}
-            onChange={this.onEditorChanged}
-            onCancel={this.toggleEditor}
-            onDone={this.updateTextAndToggle}
-            value={editingUpdateText}
-          />
-        </Modal>
       </View>
     );
   }
