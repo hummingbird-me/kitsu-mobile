@@ -67,6 +67,7 @@ class QuickUpdate extends Component {
     headerOpacity: new Animated.Value(1),
     editorText: '',
     editing: false,
+    refreshing: false,
   };
 
   componentWillMount() {
@@ -341,6 +342,7 @@ class QuickUpdate extends Component {
       currentEpisode,
       editorText,
       editing,
+      refreshing,
     } = this.state;
 
     progress = (currentEpisode && currentEpisode.progress) || 0;
@@ -389,7 +391,10 @@ class QuickUpdate extends Component {
           />
           <View style={styles.socialContent}>
             <View style={styles.separator} />
-            <Text style={styles.discussionTitle}>Episode {progress} Discussion</Text>
+            <Text style={styles.discussionTitle}>
+              <Text style={styles.bold}>Episode {progress} </Text>
+              Discussion
+            </Text>
 
             {!discussionsLoading ? (
               <KeyboardAwareFlatList
@@ -405,7 +410,7 @@ class QuickUpdate extends Component {
                   />
                 }
                 refreshControl={
-                  <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+                  <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
                 }
               />
             ) : (

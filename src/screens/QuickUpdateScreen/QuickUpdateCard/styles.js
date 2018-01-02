@@ -82,11 +82,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
     flexDirection: 'row',
-    marginVertical: 4,
+    marginTop: 4,
+    marginBottom: 2,
   },
   progressBarContainer: {
     marginTop: 8,
-    marginBottom: 12,
+    marginBottom: 6,
     marginRight: 4,
     height: 6,
   },
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
   },
   seriesExtraInfo: {
     fontFamily: 'OpenSans',
-    color: colors.lightGrey,
+    color: colors.grey,
     fontWeight: '200',
     fontSize: 12,
     marginRight: 5,

@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.darkGrey,
   },
   discussionTitle: {
     color: 'white',
@@ -84,6 +84,9 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 80,
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 });
 

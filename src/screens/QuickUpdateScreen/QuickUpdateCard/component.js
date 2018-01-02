@@ -130,7 +130,10 @@ export default class QuickUpdateCard extends PureComponent {
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.currentEpisodeText}>EP {progress}</Text>
-                  <Text style={styles.totalEpisodesText}> of {anime.episodeCount}</Text>
+                  <Text style={styles.totalEpisodesText}>
+                    {' '}
+                    of {anime.episodeCount} {unit[0].canonicalTitle}
+                  </Text>
                 </View>
               </View>
             </View>
