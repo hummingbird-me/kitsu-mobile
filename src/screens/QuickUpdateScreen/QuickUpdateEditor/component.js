@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
+import * as colors from 'kitsu/constants/colors';
 
 import styles from './styles';
-import * as colors from 'kitsu/constants/colors';
 
 const HIT_SLOP = {
   top: 10,

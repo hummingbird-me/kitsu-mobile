@@ -191,7 +191,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
     nextUnit: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'library-entries' },

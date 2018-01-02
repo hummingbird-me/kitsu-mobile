@@ -91,14 +91,12 @@ export default class QuickUpdateCard extends PureComponent {
 
   render() {
     const { data } = this.props;
-    const { loading } = data.item;
-    const { editing, editingUpdateText, updateText } = this.state;
 
     if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
       return null;
     }
-
-    const { anime, progress, unit } = data.item;
+    const { loading, anime, progress, unit, nextUnit } = data.item;
+    const { editing, editingUpdateText, updateText } = this.state;
 
     let landscapeImage = unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original;
     if (!landscapeImage) {
@@ -125,7 +123,7 @@ export default class QuickUpdateCard extends PureComponent {
                 {/* Progress Bar */}
                 <View style={styles.progressBarContainer}>
                   <ProgressBar
-                    color={colors.lightGreen}
+                    backgroundStyle={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
                     height={6}
                     fillPercentage={progress / anime.episodeCount * 100}
                   />
@@ -145,9 +143,11 @@ export default class QuickUpdateCard extends PureComponent {
             <View style={styles.cardHeaderArea}>
               {/* Series Description */}
               <View style={styles.episodeRow}>
-                <Text style={styles.seriesExtraInfo}>
+                <Text style={styles.seriesExtraInfo} numberOfLines={1}>
                   UP NEXT{' '}
-                  <Text style={styles.seriesNextEpisodeTitle}>EP 10 - Shouto Todoroki: Origin</Text>
+                  <Text style={styles.seriesNextEpisodeTitle}>
+                    EP {nextUnit.number} - {nextUnit.canonicalTitle}
+                  </Text>
                 </Text>
               </View>
             </View>
@@ -169,7 +169,6 @@ export default class QuickUpdateCard extends PureComponent {
             </View>
           )}
         </View>
-
       </View>
     );
   }

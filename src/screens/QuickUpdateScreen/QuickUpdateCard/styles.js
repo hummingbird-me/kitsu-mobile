@@ -87,6 +87,8 @@ const styles = StyleSheet.create({
   progressBarContainer: {
     marginTop: 8,
     marginBottom: 12,
+    marginRight: 4,
+    height: 6,
   },
   seriesDescriptionRow: {
     flexDirection: 'row',
@@ -117,6 +119,7 @@ const styles = StyleSheet.create({
     color: colors.lightGrey,
     fontWeight: '200',
     fontSize: 12,
+    marginRight: 5,
   },
   seriesNextEpisodeTitle: {
     // inherits from extra info,

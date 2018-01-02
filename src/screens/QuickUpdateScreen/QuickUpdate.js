@@ -18,7 +18,6 @@ import { Post } from 'kitsu/screens/Feed/components/Post';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
-import * as colors from 'kitsu/constants/colors';
 import QuickUpdateEditor from './QuickUpdateEditor';
 
 import QuickUpdateCard from './QuickUpdateCard';
@@ -30,6 +29,7 @@ const LIBRARY_ENTRIES_FIELDS = [
   'status',
   'rating',
   'unit',
+  'nextUnit',
   'updatedAt',
   'anime',
   'manga',
@@ -90,7 +90,7 @@ class QuickUpdate extends Component {
   fetchDiscussions = async (episodeId) => {
     this.setState({ discussionsLoading: true });
     try {
-      const posts = await Kitsu.find('episodeFeed', 66064, {
+      const posts = await Kitsu.find('episodeFeed', __DEV__ ? 66064 : episodeId, {
         include:
           'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
@@ -123,8 +123,8 @@ class QuickUpdate extends Component {
           user_id: this.props.currentUser.id,
           kind: 'anime',
         },
-        include: 'anime,manga,unit',
-        page: { limit: 40 },
+        include: 'anime,manga,unit,nextUnit',
+        page: { limit: 15 },
         sort: 'status,-progressed_at,-updated_at',
       });
 
@@ -157,7 +157,7 @@ class QuickUpdate extends Component {
           anime: ANIME_FIELDS.join(),
           user: 'id',
         },
-        include: 'anime,manga,unit',
+        include: 'anime,manga,unit,nextUnit',
       });
 
       library = [...this.state.library];
@@ -243,6 +243,7 @@ class QuickUpdate extends Component {
 
   carouselItemChanged = (index) => {
     const { library } = this.state;
+    console.log(library[index]);
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
     this.fetchDiscussions(library[index].anime.id);
@@ -285,9 +286,7 @@ class QuickUpdate extends Component {
 
   updateTextAndToggle = () => {
     // Restore any previous text, and then toggle the editor.
-    this.setState({ updateText: this.state.editorText }, () => {
-      this.toggleEditor();
-    });
+    this.setState({ updateText: this.state.editorText }, this.toggleEditor);
   };
 
   toggleEditor = () => {
@@ -344,6 +343,8 @@ class QuickUpdate extends Component {
       editing,
     } = this.state;
 
+    progress = (currentEpisode && currentEpisode.progress) || 0;
+
     if (loading || !library) {
       return (
         <View style={styles.loadingWrapper}>
@@ -388,7 +389,7 @@ class QuickUpdate extends Component {
           />
           <View style={styles.socialContent}>
             <View style={styles.separator} />
-            <Text style={styles.discussionTitle}>Episode 9 Discussion</Text>
+            <Text style={styles.discussionTitle}>Episode {progress} Discussion</Text>
 
             {!discussionsLoading ? (
               <KeyboardAwareFlatList
@@ -399,7 +400,7 @@ class QuickUpdate extends Component {
                 onEndReachedThreshold={0.6}
                 ListHeaderComponent={
                   <CreatePostRow
-                    title={'What do you think of EP 09?'}
+                    title={`What do you think of EP ${progress}?`}
                     onPress={this.toggleEditor}
                   />
                 }
@@ -416,7 +417,7 @@ class QuickUpdate extends Component {
         {/* Editor */}
         <Modal animationType="slide" transparent visible={editing}>
           <QuickUpdateEditor
-            episode={(currentEpisode && currentEpisode.progress) || 0}
+            episode={progress}
             onChange={this.onEditorChanged}
             onCancel={this.toggleEditor}
             onDone={this.updateTextAndToggle}
