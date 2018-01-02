@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { StyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
@@ -17,7 +18,10 @@ export class Comment extends PureComponent {
     this.state = {
       likesCount: props.comment.likesCount,
       like: null,
+      reply: '',
       replies: [],
+      repliesCount: props.comment.repliesCount,
+      isReplyInputShown: false,
       isLoadingNextPage: false,
     };
   }
@@ -118,12 +122,58 @@ export class Comment extends PureComponent {
     }
   }
 
+  onReplyPress = (mention) => {
+    if (!this.isReplyInputShown) {
+      this.setState({ isReplyInputShown: true });
+    }
+    if (mention && typeof mention === 'string') {
+      this.setState({ reply: `@${mention} ` });
+    }
+    if (this.replyInputRef) {
+      this.replyInputRef.focus();
+    }
+  }
+
+  onReplyChanged = (reply) => { this.setState({ reply }); }
+
+  onSubmitReply = async () => {
+    try {
+      const { currentUser, post, comment } = this.props;
+
+      const reply = await Kitsu.create('comments', {
+        content: this.state.reply,
+        post: {
+          id: post.id,
+          type: 'posts',
+        },
+        parent: {
+          id: comment.id,
+          type: 'comments',
+        },
+        user: {
+          id: currentUser.id,
+          type: 'users',
+        },
+      });
+      reply.user = currentUser;
+
+      this.setState({
+        reply: '',
+        replies: [...this.state.replies, reply],
+        repliesCount: this.state.repliesCount + 1,
+      });
+    } catch (err) {
+      console.log('Error submitting reply: ', err);
+    }
+  }
+
   renderItem = ({ item }) => (
     <Comment
+      post={this.props.post}
       comment={item}
       currentUser={this.props.currentUser}
       onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
-      onReplyPress={() => {}}
+      onReplyPress={() => this.onReplyPress(item.user.name)}
     />
   )
 
@@ -132,12 +182,14 @@ export class Comment extends PureComponent {
       comment,
       isTruncated,
       onAvatarPress,
-      onReplyPress,
     } = this.props;
 
-    const { like, likesCount, replies } = this.state;
+    let { onReplyPress } = this.props;
+    onReplyPress = onReplyPress || this.onReplyPress;
 
-    const { content, createdAt, user, repliesCount } = comment;
+    const { like, likesCount, reply, replies, repliesCount, isReplyInputShown } = this.state;
+
+    const { content, createdAt, user } = comment;
     const { avatar, name } = user;
     const AvatarContainer = props => (
       onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
@@ -155,6 +207,7 @@ export class Comment extends PureComponent {
               {content}
             </StyledText>
           </View>
+
           {!isTruncated && (
             <View style={styles.commentActions}>
               <StyledText color="grey" size="xxsmall">{moment(createdAt).fromNow()}</StyledText>
@@ -170,6 +223,7 @@ export class Comment extends PureComponent {
               </View>
             </View>
           )}
+
           {!isTruncated && repliesCount > 0 && (
             <View style={styles.nestedComments}>
               {replies.length == 0 && (
@@ -197,6 +251,20 @@ export class Comment extends PureComponent {
               )}
             </View>
           )}
+
+          {!isTruncated && isReplyInputShown && (
+            <View style={{ marginTop: 14 }}>
+              <CommentTextInput
+                inputRef={(el) => { this.replyInputRef = el; }}
+                currentUser={this.props.currentUser}
+                autoFocus={true}
+                placeholderText="Write a reply..."
+                comment={reply}
+                onCommentChanged={this.onReplyChanged}
+                onSubmit={this.onSubmitReply}
+              />
+            </View>
+          )}
         </Layout.RowMain>
       </Layout.RowWrap>
     );
@@ -204,6 +272,9 @@ export class Comment extends PureComponent {
 }
 
 Comment.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.string,
+  }).isRequired,
   comment: PropTypes.shape({
     avatar: PropTypes.string,
     name: PropTypes.string,

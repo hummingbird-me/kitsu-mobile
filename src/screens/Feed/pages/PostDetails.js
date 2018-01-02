@@ -79,7 +79,7 @@ export default class PostDetails extends PureComponent {
 
       this.setState({ comment: '', comments: [...this.state.comments, comment] });
     } catch (err) {
-      console.log('Error fetching comments: ', err);
+      console.log('Error submitting comment: ', err);
     }
   };
 
@@ -177,13 +177,13 @@ export default class PostDetails extends PureComponent {
   };
 
   renderItem = ({ item }) => {
-    const { currentUser } = this.props.navigation.state.params;
+    const { currentUser, post } = this.props.navigation.state.params;
     return (
       <Comment
+        post={post}
         comment={item}
         currentUser={currentUser}
         onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
-        onReplyPress={this.focusOnCommentInput}
       />
     );
   };
