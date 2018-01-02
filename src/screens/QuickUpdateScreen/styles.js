@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colors.listBackPurple,
   },
   wrapper: {
     flexGrow: 1,
