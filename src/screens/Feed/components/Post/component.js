@@ -238,7 +238,13 @@ export class Post extends PureComponent {
               <FlatList
                 data={latestComments}
                 keyExtractor={keyExtractor}
-                renderItem={({ item }) => <Comment comment={item} isTruncated />}
+                renderItem={({ item }) => {
+                  return <Comment
+                    comment={item}
+                    onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
+                    isTruncated
+                  />
+                }}
                 ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
               />
             </PostSection>
