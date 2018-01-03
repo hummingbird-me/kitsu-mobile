@@ -18,32 +18,32 @@ export const spacing = {
 
 export const cardSize = {
   portrait: {
-    width: scene.width * 0.28,
-    height: scene.height * 0.2,
+    width: 100,
+    height: 150,
   },
   portraitLarge: {
-    width: scene.width * 0.32,
-    height: scene.height * 0.24,
+    width: 110,
+    height: 165,
   },
   landscape: {
-    width: scene.width * 0.3,
+    width: 240,
     height: 120,
   },
   landscapeLarge: {
-    width: scene.width * 0.75,
+    width: 280,
     height: 140,
   },
   landscapeSmall: {
-    width: scene.width * 0.28,
+    width: 120,
     height: 60,
   },
   square: {
-    height: scene.width * 0.32,
-    width: scene.width * 0.32,
+    width: 110,
+    height: 110,
   },
   thumbnail: {
-    height: scene.width * 0.16,
-    width: scene.width * 0.16,
+    height: 100,
+    width: 100,
   },
   filled: {
     width: '100%',

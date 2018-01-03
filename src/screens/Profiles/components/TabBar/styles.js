@@ -4,12 +4,15 @@ import { scenePadding, borderWidth } from 'kitsu/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   tab: {
-    flexDirection: 'row',
     paddingVertical: scenePadding * 1.25,
     paddingHorizontal: scenePadding,
+    flexGrow: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
     backgroundColor: offWhite,
-    alignItems: 'center',
-    justifyContent: 'space-between',
     borderTopWidth: borderWidth.hairline,
     borderTopColor: lightestGrey,
     shadowColor: 'rgba(0,0,0,0.2)',
@@ -18,5 +21,8 @@ export const styles = StyleSheet.create({
       height: 3,
     },
     shadowOpacity: 0.5,
+  },
+  link: {
+    paddingHorizontal: 10,
   },
 });

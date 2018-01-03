@@ -10,11 +10,12 @@ export const styles = StyleSheet.create({
   },
   posterImageContainer: {
     marginRight: 4,
+    borderRadius: 3,
+    overflow: 'hidden',
   },
   posterImageCard: {
     backgroundColor: colors.lightPurple,
     marginBottom: 2,
-    borderRadius: 3,
   },
   progressBar: {
     marginTop: 2,
