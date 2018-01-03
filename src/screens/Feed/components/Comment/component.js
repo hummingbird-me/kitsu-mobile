@@ -172,7 +172,7 @@ export class Comment extends PureComponent {
       post={this.props.post}
       comment={item}
       currentUser={this.props.currentUser}
-      onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+      onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
       onReplyPress={() => this.onReplyPress(item.user.name)}
     />
   )
@@ -284,6 +284,7 @@ Comment.propTypes = {
     repliesCount: PropTypes.number,
     createdAt: PropTypes.string,
   }).isRequired,
+  navigation: PropTypes.object,
   isTruncated: PropTypes.bool,
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
@@ -295,7 +296,6 @@ Comment.defaultProps = {
   onReplyPress: null,
 };
 
-// TODO: Should change the design on this.
 export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (
   <View>
     {isLoading && (

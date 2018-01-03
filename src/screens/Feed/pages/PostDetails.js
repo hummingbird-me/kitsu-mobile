@@ -183,6 +183,7 @@ export default class PostDetails extends PureComponent {
         post={post}
         comment={item}
         currentUser={currentUser}
+        navigation={this.props.navigation}
         onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
       />
     );
