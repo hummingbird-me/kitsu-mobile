@@ -422,6 +422,7 @@ class QuickUpdate extends Component {
         {/* Editor */}
         <Modal animationType="slide" transparent visible={editing}>
           <QuickUpdateEditor
+            currentEpisode={currentEpisode}
             episode={progress}
             onChange={this.onEditorChanged}
             onCancel={this.toggleEditor}

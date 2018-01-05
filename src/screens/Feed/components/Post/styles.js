@@ -72,28 +72,6 @@ export const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.lightGrey,
   },
-
-  mediaTagView: {
-    marginTop: scenePadding * 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  mediaTag: {
-    paddingHorizontal: 5,
-    paddingVertical: 3,
-    borderRadius: 4,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.green,
-  },
-  episodeTagView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  episodeTagLine: {
-    height: StyleSheet.hairlineWidth,
-    width: 10,
-    backgroundColor: colors.green,
-  },
   youTubeEmbed: {
     alignSelf: 'stretch',
     height: 300,

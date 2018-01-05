@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
-import * as colors from 'kitsu/constants/colors';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -165,7 +164,7 @@ export default class QuickUpdateCard extends PureComponent {
               >
                 <Text style={styles.buttonText}>Mark </Text>
                 <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>
-                  Episode {data.item.progress}
+                  Episode {data.item.progress + 1}
                 </Text>
                 <Text style={styles.buttonText}> Watched</Text>
               </TouchableOpacity>
