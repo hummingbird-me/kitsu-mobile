@@ -1,5 +1,12 @@
 import React, { PureComponent } from 'react';
-import { KeyboardAvoidingView, FlatList, View, StatusBar, ScrollView } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  FlatList,
+  View,
+  StatusBar,
+  ScrollView,
+  TouchableOpacity
+} from 'react-native';
 import { PropTypes } from 'prop-types';
 
 import { Kitsu } from 'kitsu/config/api';
@@ -14,7 +21,7 @@ import {
 } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
 import { isX, paddingX } from 'kitsu/utils/isX';
 
 export default class PostDetails extends PureComponent {
@@ -41,15 +48,14 @@ export default class PostDetails extends PureComponent {
         },
         episode: 1,
       },
+      isLoadingNextPage: false,
     };
   }
 
   componentDidMount() {
     const { comments, like } = this.props.navigation.state.params;
-    if (!comments || !like) {
-      this.fetchComments();
-      this.fetchLikes();
-    }
+    if (!comments) { this.fetchComments(); }
+    if (!like) { this.fetchLikes(); }
   }
 
   onCommentChanged = comment => this.setState({ comment });
@@ -58,7 +64,7 @@ export default class PostDetails extends PureComponent {
     try {
       const { currentUser, post } = this.props.navigation.state.params;
 
-      await Kitsu.create('comments', {
+      const comment = await Kitsu.create('comments', {
         content: this.state.comment,
         post: {
           id: post.id,
@@ -69,12 +75,22 @@ export default class PostDetails extends PureComponent {
           type: 'users',
         },
       });
+      comment.user = currentUser;
 
-      this.setState({ comment: '' });
-      this.fetchComments();
+      this.setState({ comment: '', comments: [...this.state.comments, comment] });
     } catch (err) {
-      console.log('Error fetching comments: ', err);
+      console.log('Error submitting comment: ', err);
     }
+  };
+
+  onPagination = async () => {
+    this.setState({ isLoadingNextPage: true });
+    await this.fetchComments({
+      page: {
+        offset: this.state.comments.length,
+      },
+    });
+    this.setState({ isLoadingNextPage: false });
   };
 
   toggleLike = async () => {
@@ -101,29 +117,24 @@ export default class PostDetails extends PureComponent {
     }
   };
 
-  fetchComments = async () => {
+  fetchComments = async (requestOptions = {}) => {
     try {
       const { post } = this.props.navigation.state.params;
 
       const comments = await Kitsu.findAll('comments', {
         filter: {
           postId: post.id,
+          parentId: '_none',
         },
         fields: {
           users: 'avatar,name',
         },
         include: 'user',
-        sort: 'createdAt',
+        sort: '-createdAt',
+        ...requestOptions,
       });
 
-      // TODO: Comments come in without any structure.
-      // We need to hook them up with parent / child comments,
-      // but Devour doesn't seem to do this correctly:
-      // https://github.com/twg/devour/issues/90
-      // and there's no way for me to access the relationship
-      // data from the raw response from this context.
-
-      this.setState({ comments });
+      this.setState({ comments: [...comments.reverse(), ...this.state.comments] });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -151,10 +162,6 @@ export default class PostDetails extends PureComponent {
     }
   };
 
-  toggleLike = () => {
-    this.setState({ isLiked: !this.state.isLiked });
-  };
-
   focusOnCommentInput = () => {
     this.commentInput.focus();
   };
@@ -169,13 +176,18 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   };
 
-  renderItem = ({ item }) => (
-    <Comment
-      comment={item}
-      onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
-      onReplyPress={this.focusOnCommentInput}
-    />
-  );
+  renderItem = ({ item }) => {
+    const { currentUser, post } = this.props.navigation.state.params;
+    return (
+      <Comment
+        post={post}
+        comment={item}
+        currentUser={currentUser}
+        navigation={this.props.navigation}
+        onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+      />
+    );
+  };
 
   renderItemSeperatorComponent = () => <View style={{ height: 17 }} />;
 
@@ -185,7 +197,8 @@ export default class PostDetails extends PureComponent {
     const { currentUser, post } = this.props.navigation.state.params;
     const { comment, comments, like } = this.state;
 
-    const { content, images, postLikesCount, commentsCount, media, spoiledUnit } = post;
+    const { content, images, postLikesCount, commentsCount,
+            topLevelCommentsCount, media, spoiledUnit } = post;
 
     return (
       <KeyboardAvoidingView
@@ -223,6 +236,12 @@ export default class PostDetails extends PureComponent {
 
             <PostCommentsSection>
               {!comments && <SceneLoader />}
+              {comments && topLevelCommentsCount > comments.length && (
+                <CommentPagination
+                  onPress={this.onPagination}
+                  isLoading={this.state.isLoadingNextPage}
+                />
+              )}
               {comments && (
                 <FlatList
                   data={comments}

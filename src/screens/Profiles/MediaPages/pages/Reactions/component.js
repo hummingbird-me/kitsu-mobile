@@ -27,10 +27,11 @@ class Reactions extends PureComponent {
             reaction={item}
           />
         )}
-        ItemSeparatorComponent={() => <RowSeparator size="large" transparent />}
+        ItemSeparatorComponent={() => <RowSeparator size="medium" />}
         ListHeaderComponent={() => (
           <TabHeader
             padded
+            contentDark
             title="Reactions"
             actionOnPress={this.handleWriteReaction}
             actionTitle="Write reaction"
@@ -42,7 +43,7 @@ class Reactions extends PureComponent {
 
   render() {
     return (
-      <TabContainer>
+      <TabContainer light>
         {this.renderReactionRows()}
       </TabContainer>
     );

@@ -21,6 +21,7 @@ export const ReactionBox = ({ boxed, reactedMedia, reaction }) => {
         title={reactedMedia}
         subtitle={`by ${user.name} ・ ${timeStamp}`}
         sideElement={<UpVoteCountBox upVotesCount={reaction.upVotesCount} />}
+        boxed={boxed}
       />
       <View style={styles.main}>
         <StyledText color="dark" size="small" numberOfLines={boxed && 3}>{reaction.reaction}</StyledText>
@@ -53,6 +54,6 @@ ReactionBox.propTypes = {
 
 ReactionBox.defaultProps = {
   reactedMedia: '',
-  boxed: false,
+  boxed: undefined,
   reaction: {},
 };

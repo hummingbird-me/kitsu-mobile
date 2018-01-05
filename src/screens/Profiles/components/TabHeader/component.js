@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
 const TitleText = props => <StyledText size="xsmall" bold {...props} />;
@@ -14,7 +15,7 @@ export const TabHeader = ({
 }) => (
   <View style={styles.wrap}>
     <TitleText color={contentDark ? 'dark' : 'lightGrey'}>{title}</TitleText>
-    {(actionTitle && actionOnPress) && (
+    {!isEmpty(actionTitle) && (
       <TouchableOpacity onPress={actionOnPress}>
         <TitleText color="yellow">{actionTitle}</TitleText>
       </TouchableOpacity>

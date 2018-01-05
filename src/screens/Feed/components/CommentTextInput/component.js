@@ -11,6 +11,7 @@ export class CommentTextInput extends PureComponent {
   static propTypes = {
     inputRef: PropTypes.func,
     currentUser: PropTypes.object.isRequired,
+    autoFocus: PropTypes.bool,
     placeholderText: PropTypes.string,
     showAvatar: PropTypes.bool,
     onSubmit: PropTypes.func,
@@ -20,6 +21,7 @@ export class CommentTextInput extends PureComponent {
 
   static defaultProps = {
     inputRef: null,
+    autoFocus: false,
     placeholderText: 'Write a comment...',
     showAvatar: true,
     onSubmit: null,
@@ -32,6 +34,7 @@ export class CommentTextInput extends PureComponent {
       inputRef,
       currentUser,
       showAvatar,
+      autoFocus,
       placeholderText,
       comment,
       onCommentChanged,
@@ -46,6 +49,7 @@ export class CommentTextInput extends PureComponent {
             <TextInput
               ref={inputRef}
               style={styles.textInputField}
+              autoFocus={autoFocus}
               placeholder={placeholderText}
               placeholderTextColor={colors.grey}
               onChangeText={onCommentChanged}
