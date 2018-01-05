@@ -6,6 +6,7 @@ export const preprocessFeed = (result) => {
 
   result.forEach((group) => {
     group.activities.forEach((activity) => {
+      if (!activity.subject) { return; }
       data.push(activity.subject);
 
       // Since we don't support comment posts properly yet,

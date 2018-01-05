@@ -39,7 +39,7 @@ export class Post extends PureComponent {
   state = {
     comment: '',
     comments: [],
-    latestComment: null,
+    latestComments: [],
     like: null,
     overlayRemoved: false,
   };
@@ -67,7 +67,7 @@ export class Post extends PureComponent {
   onCommentChanged = comment => this.setState({ comment })
 
   onSubmitComment = async () => {
-    await Kitsu.create('comments', {
+    const comment = await Kitsu.create('comments', {
       content: this.state.comment,
       post: {
         id: this.props.post.id,
@@ -78,9 +78,13 @@ export class Post extends PureComponent {
         type: 'users',
       },
     });
+    comment.user = this.props.currentUser;
 
-    this.setState({ comment: '' });
-    this.fetchComments();
+    this.setState({
+      comment: '',
+      comments: [...this.state.comments, comment],
+      latestComments: [...this.state.latestComments, comment]
+    });
   }
 
   mounted = false
@@ -92,24 +96,21 @@ export class Post extends PureComponent {
       const comments = await Kitsu.findAll('comments', {
         filter: {
           postId: this.props.post.id,
+          parentId: '_none',
         },
         fields: {
           users: 'avatar,name',
         },
         include: 'user',
-        sort: 'createdAt',
+        sort: '-createdAt',
       });
 
-      // TODO: Comments come in without any structure.
-      // We need to hook them up with parent / child comments,
-      // but Devour doesn't seem to do this correctly:
-      // https://github.com/twg/devour/issues/90
-      // and there's no way for me to access the relationship
-      // data from the raw response from this context.
-
-      const latestComment = comments[comments.length - 1];
-
-      if (this.mounted) this.setState({ latestComment, comments });
+      if (this.mounted) {
+        this.setState({
+          latestComments: comments.slice(0, 2).reverse(),
+          comments: comments.reverse(),
+        });
+      }
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -184,7 +185,7 @@ export class Post extends PureComponent {
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComment, overlayRemoved } = this.state;
+    const { comment, latestComments, overlayRemoved } = this.state;
 
     let postBody = null;
 
@@ -229,12 +230,23 @@ export class Post extends PureComponent {
         />
 
         <PostFooter>
-          {commentsCount > 0 && !latestComment &&
+          {commentsCount > 0 && latestComments.length === 0 &&
             <SceneLoader />
           }
-          {latestComment && (
+          {latestComments.length > 0 && (
             <PostSection>
-              <Comment comment={latestComment} isTruncated />
+              <FlatList
+                data={latestComments}
+                keyExtractor={keyExtractor}
+                renderItem={({ item }) => {
+                  return <Comment
+                    comment={item}
+                    onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
+                    isTruncated
+                  />
+                }}
+                ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+              />
             </PostSection>
           )}
 

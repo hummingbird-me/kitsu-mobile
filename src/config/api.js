@@ -750,6 +750,22 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'commentLikes',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    comment: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'comment-likes' },
+);
+
+Kitsu.define(
   'userFeed',
   {
     createdAt: '',
