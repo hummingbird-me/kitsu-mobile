@@ -121,7 +121,7 @@ class NotificationsScreen extends PureComponent {
         if (target.length !== 0) {
           navigation.navigate('PostDetails', {
             post: target[0],
-            comments: null,
+            comments: [],
             like: null,
             currentUser,
           });
@@ -317,7 +317,7 @@ export default connect(mapStateToProps, {
 /**
  * Parses notification data into usable objects.
  * Used in in-app notification modal and notification screen render
- * 
+ *
  * @param {object} activities notification data received from API
  * @param {number} currentUserId logged in user ID
  * @returns {object} notificationData
