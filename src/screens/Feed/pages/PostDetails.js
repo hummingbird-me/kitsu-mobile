@@ -54,7 +54,7 @@ export default class PostDetails extends PureComponent {
 
   componentDidMount() {
     const { comments, like } = this.props.navigation.state.params;
-    if (!comments) { this.fetchComments(); }
+    if (!comments || comments.length === 0) { this.fetchComments(); }
     if (!like) { this.fetchLikes(); }
   }
 
@@ -235,14 +235,14 @@ export default class PostDetails extends PureComponent {
             />
 
             <PostCommentsSection>
-              {!comments && <SceneLoader />}
-              {comments && topLevelCommentsCount > comments.length && (
+              {comments.length === 0 && topLevelCommentsCount > 0 && <SceneLoader />}
+              {comments.length > 0 && topLevelCommentsCount > comments.length && (
                 <CommentPagination
                   onPress={this.onPagination}
                   isLoading={this.state.isLoadingNextPage}
                 />
               )}
-              {comments && (
+              {comments.length > 0 && (
                 <FlatList
                   data={comments}
                   keyExtractor={this.keyExtractor}
