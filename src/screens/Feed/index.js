@@ -7,10 +7,11 @@ import URL from 'url-parse';
 
 import { Kitsu } from 'kitsu/config/api';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { listBackPurple } from 'kitsu/constants/colors';
+import { listBackPurple, offWhite } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { feedStreams } from './feedStreams';
 
@@ -27,6 +28,7 @@ class Feed extends React.PureComponent {
   state = {
     activeFeed: 'followingFeed',
     refreshing: false,
+    isLoadingNextPage: false,
     data: [],
   };
 
@@ -51,6 +53,12 @@ class Feed extends React.PureComponent {
         this.fetchFeed({ reset: true });
       },
     );
+  };
+
+  fetchNextPage = async () => {
+    this.setState({ isLoadingNextPage: true });
+    await this.fetchFeed();
+    this.setState({ isLoadingNextPage: false });
   };
 
   cursor = undefined;
@@ -173,9 +181,14 @@ class Feed extends React.PureComponent {
             data={this.state.data}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
-            onEndReached={this.fetchFeed}
+            onEndReached={this.fetchNextPage}
             onEndReachedThreshold={0.6}
             ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
+            ListFooterComponent={() => {
+              return this.state.isLoadingNextPage && (
+                <SceneLoader color={offWhite} />
+              )
+            }}
             refreshControl={
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
             }
