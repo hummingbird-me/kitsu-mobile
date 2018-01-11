@@ -85,9 +85,11 @@ export class Comment extends PureComponent {
       }
     } catch (err) {
       console.log('Error toggling like: ', err);
+
+      const { isLiked, likesCount } = this.state;
       this.setState({
-        isLiked: !this.state.isLiked,
-        likesCount: this.state.isLiked ? likesCount - 1 : likesCount + 1,
+        isLiked: !isLiked,
+        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
       });
     }
   }
