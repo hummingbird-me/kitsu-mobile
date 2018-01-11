@@ -255,6 +255,7 @@ export class Post extends PureComponent {
                 keyExtractor={keyExtractor}
                 renderItem={({ item }) => {
                   return <Comment
+                    post={this.props.post}
                     comment={item}
                     onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
                     isTruncated
