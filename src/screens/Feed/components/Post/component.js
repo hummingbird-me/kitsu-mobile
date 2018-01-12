@@ -525,7 +525,7 @@ export const PostReplyBanner = ({ name, onClose }) => (
       Replying to {name}
     </StyledText>
     <TouchableOpacity onPress={onClose}>
-      <StyledText size="large" color="darkGrey">X</StyledText>
+      <StyledText size="large" color="grey">X</StyledText>
     </TouchableOpacity>
   </View>
 );

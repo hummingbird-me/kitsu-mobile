@@ -19,7 +19,6 @@ export class Comment extends PureComponent {
       likesCount: props.comment.likesCount,
       isLiked: false,
       like: null,
-      reply: '',
       replies: [],
       repliesCount: props.comment.repliesCount,
       isLoadingNextPage: false,
@@ -129,35 +128,13 @@ export class Comment extends PureComponent {
     }
   }
 
-  onSubmitReply = async () => {
-    try {
-      const { currentUser, post, comment } = this.props;
-
-      const reply = await Kitsu.create('comments', {
-        content: this.state.reply,
-        post: {
-          id: post.id,
-          type: 'posts',
-        },
-        parent: {
-          id: comment.id,
-          type: 'comments',
-        },
-        user: {
-          id: currentUser.id,
-          type: 'users',
-        },
-      });
-      reply.user = currentUser;
-
+  onReplyPress = (item) => {
+    this.props.onReplyPress(item.user.name, (comment) => {
       this.setState({
-        reply: '',
-        replies: [...this.state.replies, reply],
+        replies: [...this.state.replies, comment],
         repliesCount: this.state.repliesCount + 1,
       });
-    } catch (err) {
-      console.log('Error submitting reply: ', err);
-    }
+    });
   }
 
   renderItem = ({ item }) => (
@@ -166,7 +143,7 @@ export class Comment extends PureComponent {
       comment={item}
       currentUser={this.props.currentUser}
       onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
-      onReplyPress={() => this.props.onReplyPress(item.user.name)}
+      onReplyPress={() => this.onReplyPress(item)}
     />
   )
 
@@ -175,10 +152,9 @@ export class Comment extends PureComponent {
       comment,
       isTruncated,
       onAvatarPress,
-      onReplyPress,
     } = this.props;
 
-    const { isLiked, likesCount, reply, replies, repliesCount } = this.state;
+    const { isLiked, likesCount, replies, repliesCount } = this.state;
 
     const { content, createdAt, user } = comment;
     const { avatar, name } = user;
@@ -205,7 +181,7 @@ export class Comment extends PureComponent {
               <TouchableOpacity onPress={this.toggleLike} style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">{`Like${isLiked ? 'd' : ''}`}</StyledText>
               </TouchableOpacity>
-              <TouchableOpacity onPress={onReplyPress} style={styles.commentActionItem}>
+              <TouchableOpacity onPress={() => this.onReplyPress(comment)} style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">Reply</StyledText>
               </TouchableOpacity>
               <View style={styles.commentActionItem}>

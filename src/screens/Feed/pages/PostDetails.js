@@ -69,6 +69,18 @@ export default class PostDetails extends PureComponent {
     try {
       const { currentUser, post } = this.props.navigation.state.params;
 
+      // Check if this is a reply rather than a top-level comment
+      let replyOptions = {};
+      if (this.replyRef) {
+        replyOptions = {
+          parent: {
+            id: this.replyRef.comment.id,
+            type: 'comments',
+          },
+          ...replyOptions,
+        };
+      }
+
       const comment = await Kitsu.create('comments', {
         content: this.state.comment,
         post: {
@@ -79,10 +91,18 @@ export default class PostDetails extends PureComponent {
           id: currentUser.id,
           type: 'users',
         },
+        ...replyOptions,
       });
       comment.user = currentUser;
 
-      this.setState({ comment: '', comments: [...this.state.comments, comment] });
+      this.setState({ comment: '', isReplying: false });
+
+      if (this.replyRef) {
+        this.replyRef.callback(comment);
+        this.replyRef = null;
+      } else {
+        this.setState({ comments: [...this.state.comments, comment] });
+      }
     } catch (err) {
       console.log('Error submitting comment: ', err);
     }
@@ -193,7 +213,7 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   };
 
-  onReplyPress = (comment, username) => {
+  onReplyPress = (comment, username, callback) => {
     let name = username;
     if (typeof username !== 'string') {
       name = comment.user.name;
@@ -202,7 +222,7 @@ export default class PostDetails extends PureComponent {
       comment: `@${name} `,
       isReplying: true,
     });
-    this.replyRef = { comment, name };
+    this.replyRef = { comment, name, callback };
     this.focusOnCommentInput();
   };
 
@@ -215,7 +235,7 @@ export default class PostDetails extends PureComponent {
         currentUser={currentUser}
         navigation={this.props.navigation}
         onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
-        onReplyPress={(username) => this.onReplyPress(item, username)}
+        onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
       />
     );
   };
