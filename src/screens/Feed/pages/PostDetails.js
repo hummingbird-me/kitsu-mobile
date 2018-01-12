@@ -18,10 +18,12 @@ import {
   PostFooter,
   PostSection,
   PostCommentsSection,
+  PostReplyBanner,
 } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
+import { StyledText } from 'kitsu/components/StyledText';
 import { isX, paddingX } from 'kitsu/utils/isX';
 
 export default class PostDetails extends PureComponent {
@@ -51,6 +53,7 @@ export default class PostDetails extends PureComponent {
         episode: 1,
       },
       isLoadingNextPage: false,
+      isReplying: false,
     };
   }
 
@@ -190,6 +193,19 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   };
 
+  onReplyPress = (comment, username) => {
+    let name = username;
+    if (typeof username !== 'string') {
+      name = comment.user.name;
+    }
+    this.setState({
+      comment: `@${name} `,
+      isReplying: true,
+    });
+    this.replyRef = { comment, name };
+    this.focusOnCommentInput();
+  };
+
   renderItem = ({ item }) => {
     const { currentUser, post } = this.props.navigation.state.params;
     return (
@@ -199,6 +215,7 @@ export default class PostDetails extends PureComponent {
         currentUser={currentUser}
         navigation={this.props.navigation}
         onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+        onReplyPress={(username) => this.onReplyPress(item, username)}
       />
     );
   };
@@ -269,6 +286,15 @@ export default class PostDetails extends PureComponent {
         </View>
 
         <PostFooter>
+          {this.state.isReplying && (
+            <PostReplyBanner
+              name={this.replyRef.name}
+              onClose={() => {
+                this.setState({ isReplying: false });
+                this.replyRef = null;
+              }}
+            />
+          )}
           <PostSection>
             <CommentTextInput
               inputRef={(el) => {
