@@ -28,6 +28,7 @@ const LIBRARY_ENTRIES_FIELDS = [
   'progress',
   'status',
   'rating',
+  'ratingTwenty',
   'unit',
   'nextUnit',
   'updatedAt',
@@ -57,7 +58,7 @@ class QuickUpdate extends Component {
 
   state = {
     library: null,
-    currentEpisode: null,
+    currentIndex: null,
     discussions: null,
     discussionLoadings: false,
     filterMode: 'all',
@@ -68,6 +69,7 @@ class QuickUpdate extends Component {
     editorText: '',
     editing: false,
     refreshing: false,
+    ratingSimpleSelected: 0,
   };
 
   componentWillMount() {
@@ -78,6 +80,32 @@ class QuickUpdate extends Component {
     this.setState({ editorText });
   };
 
+  onSlidingComplete = (ratingTwenty) => {
+    const { ratingSystem } = this.props;
+    if (
+      (ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
+      (ratingSystem === 'advanced' && ratingTwenty >= 1.5)
+    ) {
+      this.setState({ ratingTwenty });
+      this.rate(ratingTwenty);
+    } else {
+      this.setState({ ratingTwenty: 0 });
+      this.rate(null); // removes rating
+    }
+  };
+
+  onRateSimple = (rating) => {
+    if (this.state.ratingSimpleSelected === rating) {
+      // toggle
+      this.setState({ ratingSimpleSelected: null });
+      this.rate(null);
+    } else {
+      const ratingTwenty = getRatingTwentyForText(rating, 'simple');
+      this.setState({ ratingSimpleSelected: rating });
+      this.rate(ratingTwenty);
+    }
+  };
+
   getItemLayout = (data, index) => {
     const { width } = Dimensions.get('window');
 
@@ -86,6 +114,42 @@ class QuickUpdate extends Component {
       offset: width / 5 * index,
       index,
     };
+  };
+
+  sliderValueChanged = (ratingTwenty) => {
+    const { ratingSystem } = this.props;
+    const { currentIndex } = this.state;
+    const library = [...this.state.library];
+    if (
+      (ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
+      (ratingSystem === 'advanced' && ratingTwenty >= 1.5)
+    ) {
+      library[currentIndex].ratingTwenty = ratingTwenty;
+    } else {
+      library[currentIndex].ratingTwenty = 0;
+    }
+    this.setState({ library });
+  };
+
+  rate = async (ratingTwenty) => {
+    const { currentIndex, library } = this.state;
+    const entry = library[currentIndex];
+    try {
+      const response = await Kitsu.update('libraryEntries', {
+        ratingTwenty,
+        id: entry.id,
+        anime: {
+          id: entry.anime.id,
+        },
+        user: {
+          id: this.props.currentUser.id,
+        },
+      });
+      console.log('updating', response);
+      this.refetchLibraryEntry(entry);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   fetchDiscussions = async (episodeId) => {
@@ -145,12 +209,13 @@ class QuickUpdate extends Component {
 
   refetchLibraryEntry = async (libraryEntry) => {
     const index = this.state.library.indexOf(libraryEntry);
+    console.log('index', index);
     let library = [...this.state.library];
 
     // Tell the entry it's loading.
     library[index].loading = true;
     this.setState({ library });
-
+    console.log('feching');
     try {
       const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
         fields: {
@@ -160,6 +225,7 @@ class QuickUpdate extends Component {
         },
         include: 'anime,manga,unit,nextUnit',
       });
+      console.log('entry', entry);
 
       library = [...this.state.library];
       library[index] = entry;
@@ -248,7 +314,7 @@ class QuickUpdate extends Component {
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
     this.fetchDiscussions(library[index].anime.id);
-    this.setState({ currentEpisode: library[index] });
+    this.setState({ currentIndex: index });
   };
 
   hideHeader = () => {
@@ -321,6 +387,10 @@ class QuickUpdate extends Component {
   renderItem = data => (
     <QuickUpdateCard
       ratingSystem={this.props.ratingSystem}
+      onRateSimple={this.onRateSimple}
+      ratingSimpleSelected={this.state.ratingSimpleSelected}
+      sliderValueChanged={this.sliderValueChanged}
+      onSlidingComplete={this.onSlidingComplete}
       data={data}
       onBeginEditing={this.hideHeader}
       onEndEditing={this.showHeader}
@@ -340,13 +410,11 @@ class QuickUpdate extends Component {
       loading,
       discussions,
       discussionsLoading,
-      currentEpisode,
+      currentIndex,
       editorText,
       editing,
       refreshing,
     } = this.state;
-
-    progress = (currentEpisode && currentEpisode.progress) || 0;
 
     if (loading || !library) {
       return (
@@ -356,6 +424,9 @@ class QuickUpdate extends Component {
       );
     }
 
+    progress = (library[currentIndex] && library[currentIndex].progress) || 0;
+
+    console.log(library);
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
@@ -423,7 +494,7 @@ class QuickUpdate extends Component {
         {/* Editor */}
         <Modal animationType="slide" transparent visible={editing}>
           <QuickUpdateEditor
-            currentEpisode={currentEpisode}
+            currentEpisode={library[currentIndex]}
             episode={progress}
             onChange={this.onEditorChanged}
             onCancel={this.toggleEditor}
@@ -443,3 +514,22 @@ const mapStateToProps = ({ user }) => {
 };
 
 export default connect(mapStateToProps)(QuickUpdate);
+
+function getRatingTwentyForText(text, type) {
+  if (type !== 'simple') {
+    throw new Error('This function should only be used in simple ratings.');
+  }
+
+  switch (text) {
+    case 'awful':
+      return 2;
+    case 'meh':
+      return 8;
+    case 'good':
+      return 14;
+    case 'great':
+      return 20;
+    default:
+      throw new Error(`Unknown text while determining simple rating type: "${text}"`);
+  }
+}

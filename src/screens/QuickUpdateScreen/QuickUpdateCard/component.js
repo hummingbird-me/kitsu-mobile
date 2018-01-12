@@ -92,21 +92,25 @@ export default class QuickUpdateCard extends PureComponent {
   };
 
   renderRatingComponent = () => {
-    const { ratingSystem } = this.props;
+    const { data, ratingSystem, onRateSimple, sliderValueChanged, onSlidingComplete } = this.props;
     return ratingSystem === 'simple' ? (
-      <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
+      <SimpleRating
+        onRate={onRateSimple}
+        disabled={false}
+        selected={getSimpleTextForRatingTwenty(data.item.ratingTwenty)}
+      />
     ) : (
       <StarRating
-        sliderValueChanged={this.sliderValueChanged}
-        onSlidingComplete={this.onSlidingComplete}
-        ratingTwenty={ratingTwenty}
+        sliderValueChanged={sliderValueChanged}
+        onSlidingComplete={onSlidingComplete}
+        ratingTwenty={data.item.ratingTwenty}
         ratingSystem={ratingSystem}
       />
     );
   };
 
   render() {
-    const { data, ratingSystem } = this.props;
+    const { data } = this.props;
 
     if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
       return null;
@@ -198,4 +202,19 @@ export default class QuickUpdateCard extends PureComponent {
       </View>
     );
   }
+}
+
+function getSimpleTextForRatingTwenty(rating) {
+  if (!rating) {
+    return null;
+  } else if (rating <= 5) {
+    return 'awful';
+  } else if (rating <= 9) {
+    return 'meh';
+  } else if (rating <= 15) {
+    return 'good';
+  } else if (rating <= 20) {
+    return 'great';
+  }
+  return null;
 }
