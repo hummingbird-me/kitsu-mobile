@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
@@ -45,7 +46,7 @@ export default class QuickUpdateEditor extends PureComponent {
   };
 
   render() {
-    const { episode, value, onCancel, onDone } = this.props;
+    const { episode, value, onCancel, onDone, media } = this.props;
     const { headerOpacity } = this.state;
 
     return (
@@ -72,6 +73,11 @@ export default class QuickUpdateEditor extends PureComponent {
             placeholderTextColor={colors.lightGrey}
           />
         </View>
+        {/*<MediaTag
+          media={media.taggedMedia}
+          episode={media.}
+          navigation={navigation}
+        />*/}
       </View>
     );
   }

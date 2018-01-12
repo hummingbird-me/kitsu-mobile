@@ -320,6 +320,7 @@ class QuickUpdate extends Component {
 
   renderItem = data => (
     <QuickUpdateCard
+      ratingSystem={this.props.ratingSystem}
       data={data}
       onBeginEditing={this.hideHeader}
       onEndEditing={this.showHeader}
@@ -437,7 +438,8 @@ class QuickUpdate extends Component {
 
 const mapStateToProps = ({ user }) => {
   const { currentUser } = user;
-  return { currentUser };
+  const { ratingSystem } = currentUser;
+  return { currentUser, ratingSystem };
 };
 
 export default connect(mapStateToProps)(QuickUpdate);

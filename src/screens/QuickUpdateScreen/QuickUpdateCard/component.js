@@ -2,12 +2,15 @@ import React, { PureComponent } from 'react';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
+import { SimpleRating } from 'kitsu/screens/Onboarding/common/RateScreen/SimpleRating';
+import { StarRating } from 'kitsu/screens/Onboarding/common/RateScreen/StarRating';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
 export default class QuickUpdateCard extends PureComponent {
   static propTypes = {
     // TODO: Not yet a complete definition of the things we use in data.
+    ratingSystem: PropTypes.string.isRequired,
     data: PropTypes.shape({
       loading: PropTypes.bool,
       item: PropTypes.shape({
@@ -88,8 +91,22 @@ export default class QuickUpdateCard extends PureComponent {
     }
   };
 
+  renderRatingComponent = () => {
+    const { ratingSystem } = this.props;
+    return ratingSystem === 'simple' ? (
+      <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
+    ) : (
+      <StarRating
+        sliderValueChanged={this.sliderValueChanged}
+        onSlidingComplete={this.onSlidingComplete}
+        ratingTwenty={ratingTwenty}
+        ratingSystem={ratingSystem}
+      />
+    );
+  };
+
   render() {
-    const { data } = this.props;
+    const { data, ratingSystem } = this.props;
 
     if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
       return null;
@@ -101,9 +118,8 @@ export default class QuickUpdateCard extends PureComponent {
     if (!landscapeImage) {
       landscapeImage = anime.posterImage.large;
     }
-
+    console.log(data.item);
     const squareImage = anime.posterImage.small;
-
     return (
       <View key={data.item.id} style={styles.wrapper}>
         {/* Episode Landscape Image */}
@@ -145,12 +161,16 @@ export default class QuickUpdateCard extends PureComponent {
             <View style={styles.cardHeaderArea}>
               {/* Series Description */}
               <View style={styles.episodeRow}>
-                <Text style={styles.seriesExtraInfo} numberOfLines={1}>
-                  UP NEXT{' '}
-                  <Text style={styles.seriesNextEpisodeTitle}>
-                    EP {nextUnit.number} - {nextUnit.canonicalTitle}
+                {nextUnit ? ( // finished ?
+                  <Text style={styles.seriesExtraInfo} numberOfLines={1}>
+                    UP NEXT{' '}
+                    <Text style={styles.seriesNextEpisodeTitle}>
+                      EP {nextUnit.number} - {nextUnit.canonicalTitle}
+                    </Text>
                   </Text>
-                </Text>
+                ) : (
+                  <Text style={styles.seriesNextEpisodeTitle}>Finished!</Text>
+                )}
               </View>
             </View>
           </View>
@@ -158,16 +178,20 @@ export default class QuickUpdateCard extends PureComponent {
           {/* Action Row */}
           {!loading && (
             <View style={styles.actionRow}>
-              <TouchableOpacity
-                onPress={this.onMarkComplete}
-                style={[styles.button, styles.markWatchedButton]}
-              >
-                <Text style={styles.buttonText}>Mark </Text>
-                <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>
-                  Episode {data.item.progress + 1}
-                </Text>
-                <Text style={styles.buttonText}> Watched</Text>
-              </TouchableOpacity>
+              {nextUnit ? ( // finished ?
+                <TouchableOpacity
+                  onPress={this.onMarkComplete}
+                  style={[styles.button, styles.markWatchedButton]}
+                >
+                  <Text style={styles.buttonText}>Mark </Text>
+                  <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>
+                    Episode {data.item.progress + 1}
+                  </Text>
+                  <Text style={styles.buttonText}> Watched</Text>
+                </TouchableOpacity>
+              ) : (
+                this.renderRatingComponent()
+              )}
             </View>
           )}
         </View>

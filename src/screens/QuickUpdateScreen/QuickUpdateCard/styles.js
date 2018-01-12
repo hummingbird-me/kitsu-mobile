@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
   },
   loadingSpinner: {
     flexGrow: 1,
+    marginTop: 8,
   },
 });
 
