@@ -127,6 +127,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#999999',
   },
+  seriesFinishedTitle: {
+    color: '#999999',
+    fontWeight: 'bold',
+    marginTop: 1,
+    fontSize: 12,
+    fontFamily: 'OpenSans',
+    textAlign: 'center',
+  },
   placeholderWrapper: {
     flex: 1,
   },
@@ -147,6 +155,7 @@ const styles = StyleSheet.create({
   actionRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
     marginVertical: 12,
     marginHorizontal: 8,
   },
@@ -162,6 +171,12 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: 'OpenSans',
     fontSize: 12,
+  },
+  seriesCompleteText: {
+    color: colors.darkGrey,
+    fontSize: 10,
+    fontWeight: 'bold',
+    fontFamily: 'OpenSans',
   },
   markWatchedButton: {
     flex: 1,

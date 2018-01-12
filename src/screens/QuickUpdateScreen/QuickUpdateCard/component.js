@@ -95,6 +95,8 @@ export default class QuickUpdateCard extends PureComponent {
     const { data, ratingSystem, onRateSimple, sliderValueChanged, onSlidingComplete } = this.props;
     return ratingSystem === 'simple' ? (
       <SimpleRating
+        imageStyle={{ width: 34, height: 34, marginHorizontal: 1 }}
+        shadowStyle={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
         onRate={onRateSimple}
         disabled={false}
         selected={getSimpleTextForRatingTwenty(data.item.ratingTwenty)}
@@ -173,16 +175,16 @@ export default class QuickUpdateCard extends PureComponent {
                     </Text>
                   </Text>
                 ) : (
-                  <Text style={styles.seriesNextEpisodeTitle}>Finished!</Text>
+                  <Text style={styles.seriesFinishedTitle}>Finished!</Text>
                 )}
               </View>
             </View>
           </View>
           {loading && <ActivityIndicator size="large" style={styles.loadingSpinner} />}
           {/* Action Row */}
-          {!loading && (
-            <View style={styles.actionRow}>
-              {nextUnit ? ( // finished ?
+          {!loading &&
+            (nextUnit ? ( // finished ?
+              <View style={styles.actionRow}>
                 <TouchableOpacity
                   onPress={this.onMarkComplete}
                   style={[styles.button, styles.markWatchedButton]}
@@ -193,14 +195,21 @@ export default class QuickUpdateCard extends PureComponent {
                   </Text>
                   <Text style={styles.buttonText}> Watched</Text>
                 </TouchableOpacity>
-              ) : (
-                <View style={styles.actionRow}>
-                  <Text>Series Complete! Rate it!</Text>
-                  {this.renderRatingComponent()}
-                </View>
-              )}
-            </View>
-          )}
+              </View>
+            ) : (
+              <View
+                style={{
+                  paddingHorizontal: 10,
+                  paddingVertical: 14,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
+                {this.renderRatingComponent()}
+              </View>
+            ))}
         </View>
       </View>
     );
