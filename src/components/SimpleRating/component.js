@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 import awful from 'kitsu/assets/img/ratings/awful.png';
 import meh from 'kitsu/assets/img/ratings/meh.png';
 import good from 'kitsu/assets/img/ratings/good.png';

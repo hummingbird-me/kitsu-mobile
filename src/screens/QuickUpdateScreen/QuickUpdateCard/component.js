@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
-import { SimpleRating } from 'kitsu/screens/Onboarding/common/RateScreen/SimpleRating';
-import { StarRating } from 'kitsu/screens/Onboarding/common/RateScreen/StarRating';
+import { SimpleRating } from 'kitsu/components/SimpleRating';
+import { StarRating } from 'kitsu/components/StarRating';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -194,7 +194,10 @@ export default class QuickUpdateCard extends PureComponent {
                   <Text style={styles.buttonText}> Watched</Text>
                 </TouchableOpacity>
               ) : (
-                this.renderRatingComponent()
+                <View style={styles.actionRow}>
+                  <Text>Series Complete! Rate it!</Text>
+                  {this.renderRatingComponent()}
+                </View>
               )}
             </View>
           )}

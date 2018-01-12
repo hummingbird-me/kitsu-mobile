@@ -388,7 +388,6 @@ class QuickUpdate extends Component {
     <QuickUpdateCard
       ratingSystem={this.props.ratingSystem}
       onRateSimple={this.onRateSimple}
-      ratingSimpleSelected={this.state.ratingSimpleSelected}
       sliderValueChanged={this.sliderValueChanged}
       onSlidingComplete={this.onSlidingComplete}
       data={data}
