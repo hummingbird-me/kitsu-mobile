@@ -22,7 +22,6 @@ export class Comment extends PureComponent {
       reply: '',
       replies: [],
       repliesCount: props.comment.repliesCount,
-      isReplyInputShown: false,
       isLoadingNextPage: false,
     };
   }
@@ -130,20 +129,6 @@ export class Comment extends PureComponent {
     }
   }
 
-  onReplyPress = (mention) => {
-    if (!this.isReplyInputShown) {
-      this.setState({ isReplyInputShown: true });
-    }
-    if (mention && typeof mention === 'string') {
-      this.setState({ reply: `@${mention} ` });
-    }
-    if (this.replyInputRef) {
-      this.replyInputRef.focus();
-    }
-  }
-
-  onReplyChanged = (reply) => { this.setState({ reply }); }
-
   onSubmitReply = async () => {
     try {
       const { currentUser, post, comment } = this.props;
@@ -181,7 +166,7 @@ export class Comment extends PureComponent {
       comment={item}
       currentUser={this.props.currentUser}
       onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
-      onReplyPress={() => this.onReplyPress(item.user.name)}
+      onReplyPress={() => this.props.onReplyPress(item.user.name)}
     />
   )
 
@@ -190,12 +175,10 @@ export class Comment extends PureComponent {
       comment,
       isTruncated,
       onAvatarPress,
+      onReplyPress,
     } = this.props;
 
-    let { onReplyPress } = this.props;
-    onReplyPress = onReplyPress || this.onReplyPress;
-
-    const { isLiked, likesCount, reply, replies, repliesCount, isReplyInputShown } = this.state;
+    const { isLiked, likesCount, reply, replies, repliesCount } = this.state;
 
     const { content, createdAt, user } = comment;
     const { avatar, name } = user;
@@ -257,20 +240,6 @@ export class Comment extends PureComponent {
                   />
                 </View>
               )}
-            </View>
-          )}
-
-          {!isTruncated && isReplyInputShown && (
-            <View style={{ marginTop: 14 }}>
-              <CommentTextInput
-                inputRef={(el) => { this.replyInputRef = el; }}
-                currentUser={this.props.currentUser}
-                autoFocus={true}
-                placeholderText="Write a reply..."
-                comment={reply}
-                onCommentChanged={this.onReplyChanged}
-                onSubmit={this.onSubmitReply}
-              />
             </View>
           )}
         </Layout.RowMain>
