@@ -42,6 +42,8 @@ export class Post extends PureComponent {
     comments: [],
     latestComments: [],
     like: null,
+    isLiked: false,
+    postLikesCount: this.props.post.postLikesCount,
     overlayRemoved: false,
   };
 
@@ -61,6 +63,8 @@ export class Post extends PureComponent {
       post: this.props.post,
       comments: this.state.comments,
       like: this.state.like,
+      isLiked: this.state.isLiked,
+      postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
     });
   }
@@ -125,41 +129,53 @@ export class Post extends PureComponent {
           userId: this.props.currentUser.id,
         },
         include: 'user',
-        page: {
-          limit: 4,
-        },
       });
 
       const like = likes.length && likes[0];
-
-      if (this.mounted) this.setState({ like });
+      if (this.mounted) {
+        this.setState({ like, isLiked: !!like });
+      }
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
   }
 
   toggleLike = async () => {
-    let { like } = this.state;
+    try {
+      const { currentUser, post } = this.props;
+      let { like, isLiked, postLikesCount } = this.state;
 
-    if (like) {
-      this.setState({ like: null });
-
-      await Kitsu.destroy('postLikes', like.id);
-    } else {
-      like = await Kitsu.create('postLikes', {
-        post: {
-          id: this.props.post.id,
-          type: 'posts',
-        },
-        user: {
-          id: this.props.currentUser.id,
-          type: 'users',
-        },
+      this.setState({
+        isLiked: !isLiked,
+        postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
       });
 
-      this.setState({ like });
+      if (like) {
+        await Kitsu.destroy('postLikes', like.id);
+        this.setState({ like: null });
+      } else {
+        like = await Kitsu.create('postLikes', {
+          post: {
+            id: post.id,
+            type: 'posts',
+          },
+          user: {
+            id: currentUser.id,
+            type: 'users',
+          },
+        });
+
+        this.setState({ like });
+      }
+    } catch (err) {
+      console.log('Error toggling like: ', err);
+      const { isLiked, postLikesCount } = this.state;
+      this.setState({
+        isLiked: !isLiked,
+        postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
+      });
     }
-  }
+  };
 
   focusOnCommentInput = () => {
     this.commentInput.focus();
@@ -182,11 +198,10 @@ export class Post extends PureComponent {
       nsfw,
       spoiler,
       spoiledUnit,
-      postLikesCount,
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComments, overlayRemoved } = this.state;
+    const { comment, latestComments, overlayRemoved, postLikesCount } = this.state;
 
     let postBody = null;
 
@@ -224,7 +239,7 @@ export class Post extends PureComponent {
         {postBody}
 
         <PostActions
-          isLiked={!!this.state.like}
+          isLiked={this.state.isLiked}
           onLikePress={this.toggleLike}
           onCommentPress={this.focusOnCommentInput}
           onSharePress={() => {}}
@@ -241,6 +256,7 @@ export class Post extends PureComponent {
                 keyExtractor={keyExtractor}
                 renderItem={({ item }) => {
                   return <Comment
+                    post={this.props.post}
                     comment={item}
                     onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
                     isTruncated

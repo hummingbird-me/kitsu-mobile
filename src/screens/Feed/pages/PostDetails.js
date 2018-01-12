@@ -42,6 +42,8 @@ export default class PostDetails extends PureComponent {
         ...props.navigation.state.params.comments,
       ],
       like: props.navigation.state.params.like,
+      isLiked: props.navigation.state.params.isLiked,
+      postLikesCount: props.navigation.state.params.postLikesCount,
       taggedMedia: {
         media: {
           canonicalTitle: 'Made in Abyss',
@@ -54,7 +56,7 @@ export default class PostDetails extends PureComponent {
 
   componentDidMount() {
     const { comments, like } = this.props.navigation.state.params;
-    if (!comments) { this.fetchComments(); }
+    if (!comments || comments.length === 0) { this.fetchComments(); }
     if (!like) { this.fetchLikes(); }
   }
 
@@ -94,26 +96,38 @@ export default class PostDetails extends PureComponent {
   };
 
   toggleLike = async () => {
-    const { currentUser, post } = this.props.navigation.state.params;
-    let { like } = this.state;
+    try {
+      const { currentUser, post } = this.props.navigation.state.params;
+      let { like, isLiked, postLikesCount } = this.state;
 
-    if (like) {
-      this.setState({ like: null });
-
-      await Kitsu.destroy('postLikes', like.id);
-    } else {
-      like = await Kitsu.create('postLikes', {
-        post: {
-          id: post.id,
-          type: 'posts',
-        },
-        user: {
-          id: currentUser.id,
-          type: 'users',
-        },
+      this.setState({
+        isLiked: !isLiked,
+        postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
       });
 
-      this.setState({ like });
+      if (like) {
+        await Kitsu.destroy('postLikes', like.id);
+        this.setState({ like: null });
+      } else {
+        like = await Kitsu.create('postLikes', {
+          post: {
+            id: post.id,
+            type: 'posts',
+          },
+          user: {
+            id: currentUser.id,
+            type: 'users',
+          },
+        });
+
+        this.setState({ like });
+      }
+    } catch (err) {
+      console.log('Error toggling like: ', err);
+      this.setState({
+        isLiked: !this.state.isLiked,
+        postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
+      });
     }
   };
 
@@ -195,9 +209,9 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, like } = this.state;
+    const { comment, comments, isLiked, postLikesCount } = this.state;
 
-    const { content, images, postLikesCount, commentsCount,
+    const { content, images, commentsCount,
             topLevelCommentsCount, media, spoiledUnit } = post;
 
     return (
@@ -228,21 +242,21 @@ export default class PostDetails extends PureComponent {
             />
 
             <PostActions
-              isLiked={!!like}
+              isLiked={isLiked}
               onLikePress={this.toggleLike}
               onCommentPress={this.focusOnCommentInput}
               onSharePress={() => {}}
             />
 
             <PostCommentsSection>
-              {!comments && <SceneLoader />}
-              {comments && topLevelCommentsCount > comments.length && (
+              {comments.length === 0 && topLevelCommentsCount > 0 && <SceneLoader />}
+              {comments.length > 0 && topLevelCommentsCount > comments.length && (
                 <CommentPagination
                   onPress={this.onPagination}
                   isLoading={this.state.isLoadingNextPage}
                 />
               )}
-              {comments && (
+              {comments.length > 0 && (
                 <FlatList
                   data={comments}
                   keyExtractor={this.keyExtractor}

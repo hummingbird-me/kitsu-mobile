@@ -17,6 +17,7 @@ export class Comment extends PureComponent {
     super(props);
     this.state = {
       likesCount: props.comment.likesCount,
+      isLiked: false,
       like: null,
       reply: '',
       replies: [],
@@ -48,7 +49,9 @@ export class Comment extends PureComponent {
       });
 
       const like = likes.length && likes[0];
-      if (this.mounted) this.setState({ like });
+      if (this.mounted) {
+        this.setState({ like, isLiked: !!like });
+      }
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
@@ -56,15 +59,17 @@ export class Comment extends PureComponent {
 
   toggleLike = async () => {
     try {
-      const { likesCount, like } = this.state;
+      const { likesCount, isLiked, like } = this.state;
       const { comment, currentUser } = this.props;
 
       this.setState({
-        likesCount: !!like ? likesCount - 1 : likesCount + 1,
+        isLiked: !isLiked,
+        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
       });
 
       if (like) {
         await Kitsu.destroy('commentLikes', like.id);
+        this.setState({ like: null });
       } else {
         const record = await Kitsu.create('commentLikes', {
           comment: {
@@ -80,8 +85,11 @@ export class Comment extends PureComponent {
       }
     } catch (err) {
       console.log('Error toggling like: ', err);
+
+      const { isLiked, likesCount } = this.state;
       this.setState({
-        likesCount: !!like ? likesCount - 1 : likesCount + 1,
+        isLiked: !isLiked,
+        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
       });
     }
   }
@@ -187,7 +195,7 @@ export class Comment extends PureComponent {
     let { onReplyPress } = this.props;
     onReplyPress = onReplyPress || this.onReplyPress;
 
-    const { like, likesCount, reply, replies, repliesCount, isReplyInputShown } = this.state;
+    const { isLiked, likesCount, reply, replies, repliesCount, isReplyInputShown } = this.state;
 
     const { content, createdAt, user } = comment;
     const { avatar, name } = user;
@@ -212,14 +220,14 @@ export class Comment extends PureComponent {
             <View style={styles.commentActions}>
               <StyledText color="grey" size="xxsmall">{moment(createdAt).fromNow()}</StyledText>
               <TouchableOpacity onPress={this.toggleLike} style={styles.commentActionItem}>
-                <StyledText color="grey" size="xxsmall">{`Like${!!like ? 'd' : ''}`}</StyledText>
+                <StyledText color="grey" size="xxsmall">{`Like${isLiked ? 'd' : ''}`}</StyledText>
               </TouchableOpacity>
               <TouchableOpacity onPress={onReplyPress} style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">Reply</StyledText>
               </TouchableOpacity>
               <View style={styles.commentActionItem}>
-                <Icon name={!!like ? 'md-heart' : 'md-heart-outline'} style={[styles.likeIcon, !!like && styles.likeIcon__active]} />
-                <StyledText color={!!like ? 'red' : 'grey'} size="xxsmall">{likesCount}</StyledText>
+                <Icon name={isLiked ? 'md-heart' : 'md-heart-outline'} style={[styles.likeIcon, isLiked && styles.likeIcon__active]} />
+                <StyledText color={isLiked ? 'red' : 'grey'} size="xxsmall">{likesCount}</StyledText>
               </View>
             </View>
           )}
