@@ -11,8 +11,8 @@ export const Toast = ({ style, visible, title, onRequestClose, onDismiss, ...oth
     onRequestClose={onRequestClose}
     {...otherProps}
   >
-    <TouchableOpacity activeOpacity={1} style={[styles.modalContainer, style]} onPress={onDismiss}>
-      <View style={styles.contentContainer}>
+    <TouchableOpacity activeOpacity={1} style={styles.modalContainer} onPress={onDismiss}>
+      <View style={[styles.contentContainer, style]}>
         <Text style={styles.title}>{title}</Text>
       </View>
     </TouchableOpacity>

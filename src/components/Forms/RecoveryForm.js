@@ -10,9 +10,8 @@ const RecoveryForm = ({ handleChange, data, onReset, loading }) => (
   <View>
     <Input
       placeholder="E-mail"
-      secureTextEntry
-      value={data.username}
-      onChangeText={text => handleChange(text, 'username')}
+      value={data.email}
+      onChangeText={text => handleChange(text, 'email')}
       autoCapitalize="none"
     />
     <Button

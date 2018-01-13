@@ -6,8 +6,10 @@ import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 import * as colors from 'kitsu/constants/colors';
 import RecoveryForm from 'kitsu/components/Forms/RecoveryForm';
+import { Toast } from 'kitsu/components/Toast';
 import { loginUser } from 'kitsu/store/auth/actions';
 import AuthWrapper from './AuthWrapper';
+import { kitsuConfig } from 'kitsu/config/env';
 import styles from './styles';
 
 class RecoveryScreen extends Component {
@@ -19,13 +21,32 @@ class RecoveryScreen extends Component {
   state = {
     email: '',
     loading: false,
+    toastVisible: false,
+    toastTitle: ''
   };
 
+  onDismiss = () => {
+    this.props.navigation.goBack();
+  }
 
-  onReset = () => {
-    // TODO: implement this function
-    // const { username, password } = this.state;
-    // const { navigation } = this.props;
+  onReset = async () => {
+    if (!this.state.email) { return; }
+    try {
+      await fetch(`${kitsuConfig.baseUrl}/edge/users/_recover`, {
+        method: 'POST',
+        body: JSON.stringify({ username: this.state.email }),
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      }).then((res) => {
+        if (!res.ok) { throw new Error(res); }
+      });
+
+      this.setState({
+        toastVisible: true,
+        toastTitle: 'Your password reset email has been sent.'
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   handleChange = (text, name) => {
@@ -35,6 +56,13 @@ class RecoveryScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Toast
+          visible={this.state.toastVisible}
+          title={this.state.toastTitle}
+          onDismiss={this.onDismiss}
+          onRequestClose={this.onDismiss}
+          style={{ backgroundColor: colors.blue }}
+        />
         <AuthWrapper>
           <View style={styles.forgotTextWrapper}>
             <Text style={styles.forgotTitle}>
