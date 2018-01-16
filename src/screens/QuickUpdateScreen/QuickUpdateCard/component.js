@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
+import { Rating } from 'kitsu/components/Rating';
 import { SimpleRating } from 'kitsu/components/SimpleRating';
 import { StarRating } from 'kitsu/components/StarRating';
 import PropTypes from 'prop-types';
@@ -30,10 +31,10 @@ export default class QuickUpdateCard extends PureComponent {
   };
 
   static defaultProps = {
-    onBeginEditing: () => {},
-    onEndEditing: () => {},
-    onMarkComplete: () => {},
-    onViewDiscussion: () => {},
+    onBeginEditing: () => { },
+    onEndEditing: () => { },
+    onMarkComplete: () => { },
+    onViewDiscussion: () => { },
   };
 
   state = {
@@ -92,21 +93,13 @@ export default class QuickUpdateCard extends PureComponent {
   };
 
   renderRatingComponent = () => {
-    const { data, ratingSystem, onRateSimple, sliderValueChanged, onSlidingComplete } = this.props;
-    return ratingSystem === 'simple' ? (
-      <SimpleRating
-        imageStyle={{ width: 34, height: 34, marginHorizontal: 1 }}
-        shadowStyle={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
-        onRate={onRateSimple}
-        disabled={false}
-        selected={getSimpleTextForRatingTwenty(data.item.ratingTwenty)}
-      />
-    ) : (
-      <StarRating
-        sliderValueChanged={sliderValueChanged}
-        onSlidingComplete={onSlidingComplete}
-        ratingTwenty={data.item.ratingTwenty}
+    const { data, ratingSystem, onRate } = this.props;
+
+    return (
+      <Rating
         ratingSystem={ratingSystem}
+        ratingTwenty={data.item.ratingTwenty}
+        onRatingChanged={onRate}
       />
     );
   };
@@ -175,8 +168,8 @@ export default class QuickUpdateCard extends PureComponent {
                     </Text>
                   </Text>
                 ) : (
-                  <Text style={styles.seriesFinishedTitle}>Finished!</Text>
-                )}
+                    <Text style={styles.seriesFinishedTitle}>Finished!</Text>
+                  )}
               </View>
             </View>
           </View>
@@ -197,19 +190,19 @@ export default class QuickUpdateCard extends PureComponent {
                 </TouchableOpacity>
               </View>
             ) : (
-              <View
-                style={{
-                  paddingHorizontal: 10,
-                  paddingVertical: 14,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
-                {this.renderRatingComponent()}
-              </View>
-            ))}
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    paddingVertical: 14,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
+                  {this.renderRatingComponent()}
+                </View>
+              ))}
         </View>
       </View>
     );

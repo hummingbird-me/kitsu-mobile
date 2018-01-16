@@ -80,31 +80,7 @@ class QuickUpdate extends Component {
     this.setState({ editorText });
   };
 
-  onSlidingComplete = (ratingTwenty) => {
-    const { ratingSystem } = this.props;
-    if (
-      (ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
-      (ratingSystem === 'advanced' && ratingTwenty >= 1.5)
-    ) {
-      this.setState({ ratingTwenty });
-      this.rate(ratingTwenty);
-    } else {
-      this.setState({ ratingTwenty: 0 });
-      this.rate(null); // removes rating
-    }
-  };
-
-  onRateSimple = (rating) => {
-    if (this.state.ratingSimpleSelected === rating) {
-      // toggle
-      this.setState({ ratingSimpleSelected: null });
-      this.rate(null);
-    } else {
-      const ratingTwenty = getRatingTwentyForText(rating, 'simple');
-      this.setState({ ratingSimpleSelected: rating });
-      this.rate(ratingTwenty);
-    }
-  };
+  onRate = (ratingTwenty) => this.rate(ratingTwenty);
 
   getItemLayout = (data, index) => {
     const { width } = Dimensions.get('window');
@@ -114,21 +90,6 @@ class QuickUpdate extends Component {
       offset: width / 5 * index,
       index,
     };
-  };
-
-  sliderValueChanged = (ratingTwenty) => {
-    const { ratingSystem } = this.props;
-    const { currentIndex } = this.state;
-    const library = [...this.state.library];
-    if (
-      (ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
-      (ratingSystem === 'advanced' && ratingTwenty >= 1.5)
-    ) {
-      library[currentIndex].ratingTwenty = ratingTwenty;
-    } else {
-      library[currentIndex].ratingTwenty = 0;
-    }
-    this.setState({ library });
   };
 
   rate = async (ratingTwenty) => {
@@ -377,7 +338,7 @@ class QuickUpdate extends Component {
   renderPostItem = ({ item }) => (
     <Post
       post={item}
-      onPostPress={() => {}}
+      onPostPress={() => { }}
       currentUser={this.props.currentUser}
       navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
       navigation={this.props.navigation}
@@ -387,9 +348,7 @@ class QuickUpdate extends Component {
   renderItem = data => (
     <QuickUpdateCard
       ratingSystem={this.props.ratingSystem}
-      onRateSimple={this.onRateSimple}
-      sliderValueChanged={this.sliderValueChanged}
-      onSlidingComplete={this.onSlidingComplete}
+      onRate={this.onRate}
       data={data}
       onBeginEditing={this.hideHeader}
       onEndEditing={this.showHeader}
@@ -485,8 +444,8 @@ class QuickUpdate extends Component {
                 }
               />
             ) : (
-              <ActivityIndicator />
-            )}
+                <ActivityIndicator />
+              )}
           </View>
         </View>
 
