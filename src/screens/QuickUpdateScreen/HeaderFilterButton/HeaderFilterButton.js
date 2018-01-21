@@ -6,7 +6,7 @@ import ActionSheet from 'react-native-actionsheet';
 
 import styles from './styles';
 
-const OPTIONS = ['all', 'anime', 'manga', 'cancel'];
+const OPTIONS = ['all', 'anime', 'manga', 'nevermind'];
 
 export default class HeaderFilterButton extends PureComponent {
   static propTypes = {

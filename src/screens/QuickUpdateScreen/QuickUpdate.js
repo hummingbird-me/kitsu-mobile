@@ -36,17 +36,19 @@ const LIBRARY_ENTRIES_FIELDS = [
   'manga',
 ];
 
-const ANIME_FIELDS = [
+const MEDIA_FIELDS = [
   'slug',
   'coverImage',
   'posterImage',
-  'episodeCount',
   'canonicalTitle',
   'titles',
   'synopsis',
   'status',
   'startDate',
 ];
+
+const ANIME_FIELDS = [...MEDIA_FIELDS, 'episodeCount'];
+const MANGA_FIELDS = [...MEDIA_FIELDS, 'chapterCount'];
 
 const CAROUSEL_HEIGHT = 310;
 
@@ -134,7 +136,6 @@ class QuickUpdate extends Component {
 
   fetchLibrary = async () => {
     this.setState({ loading: true });
-
     const { filterMode } = this.state;
 
     try {
@@ -142,27 +143,22 @@ class QuickUpdate extends Component {
         fields: {
           libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
           anime: ANIME_FIELDS.join(),
+          manga: MANGA_FIELDS.join(),
           user: 'id',
         },
         filter: {
           status: 'current,planned',
           user_id: this.props.currentUser.id,
-          kind: 'anime',
+          kind: filterMode === 'all' ? undefined : filterMode,
         },
         include: 'anime,manga,unit,nextUnit',
         page: { limit: 15 },
         sort: 'status,-progressed_at,-updated_at',
       });
 
-      this.setState(
-        {
-          library,
-          loading: false,
-        },
-        () => {
-          this.carouselItemChanged(0);
-        },
-      );
+      this.setState({ library, loading: false }, () => {
+        this.carouselItemChanged(0);
+      });
     } catch (e) {
       console.log(e);
     }
