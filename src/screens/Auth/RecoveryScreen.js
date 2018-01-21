@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
-import { Button } from 'native-base';
 import { connect } from 'react-redux';
-import { NavigationActions } from 'react-navigation';
 import * as colors from 'kitsu/constants/colors';
 import RecoveryForm from 'kitsu/components/Forms/RecoveryForm';
 import { Toast } from 'kitsu/components/Toast';
