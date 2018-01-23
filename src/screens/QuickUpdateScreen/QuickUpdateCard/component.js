@@ -21,7 +21,14 @@ export default class QuickUpdateCard extends PureComponent {
           posterImage: PropTypes.shape({
             large: PropTypes.string.isRequired,
           }),
-        }).isRequired,
+        }),
+        manga: PropTypes.shape({
+          canonicalTitle: PropTypes.string.isRequired,
+          id: PropTypes.string.isRequired,
+          posterImage: PropTypes.shape({
+            large: PropTypes.string.isRequired,
+          }),
+        }),
       }).isRequired,
     }).isRequired,
     onBeginEditing: PropTypes.func,
@@ -107,18 +114,20 @@ export default class QuickUpdateCard extends PureComponent {
   render() {
     const { data } = this.props;
 
-    if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
+    if (!data || !data.item || (!data.item.anime && !data.item.manga) || !data.item.unit || !data.item.unit.length) {
       return null;
     }
-    const { loading, anime, progress, unit, nextUnit } = data.item;
+    const { loading, anime, manga, progress, unit, nextUnit } = data.item;
     const { editing, editingUpdateText, updateText } = this.state;
+
+    const media = anime || manga;
+    const unitCount = media.episodeCount || media.chapterCount;
 
     let landscapeImage = unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original;
     if (!landscapeImage) {
-      landscapeImage = anime.posterImage.large;
+      landscapeImage = media.posterImage.large;
     }
-    console.log(data.item);
-    const squareImage = anime.posterImage.small;
+    const squareImage = media.posterImage.small;
     return (
       <View key={data.item.id} style={styles.wrapper}>
         {/* Episode Landscape Image */}
@@ -132,21 +141,25 @@ export default class QuickUpdateCard extends PureComponent {
               <Image source={{ uri: squareImage }} style={styles.avatarImage} />
               <View style={styles.descriptionRow}>
                 <Text style={styles.seriesTitle} numberOfLines={1}>
-                  {anime.canonicalTitle}
+                  {media.canonicalTitle}
                 </Text>
                 {/* Progress Bar */}
                 <View style={styles.progressBarContainer}>
                   <ProgressBar
                     backgroundStyle={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
                     height={6}
-                    fillPercentage={progress / anime.episodeCount * 100}
+                    fillPercentage={progress / unitCount * 100}
                   />
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.currentEpisodeText}>EP {progress}</Text>
+                  <Text style={styles.currentEpisodeText}>
+                    {media.type === 'anime' ? 'EP' : 'CH'}
+                    {' '}
+                    {progress}
+                  </Text>
                   <Text style={styles.totalEpisodesText}>
                     {' '}
-                    of {anime.episodeCount} {unit[0].canonicalTitle}
+                    of {unitCount} {unit[0].canonicalTitle}
                   </Text>
                 </View>
               </View>
@@ -164,7 +177,9 @@ export default class QuickUpdateCard extends PureComponent {
                   <Text style={styles.seriesExtraInfo} numberOfLines={1}>
                     UP NEXT{' '}
                     <Text style={styles.seriesNextEpisodeTitle}>
-                      EP {nextUnit.number} - {nextUnit.canonicalTitle}
+                      {media.type === 'anime' ? 'EP' : 'CH'}
+                      {' '}
+                      {nextUnit.number} - {nextUnit.canonicalTitle}
                     </Text>
                   </Text>
                 ) : (
@@ -184,7 +199,9 @@ export default class QuickUpdateCard extends PureComponent {
                 >
                   <Text style={styles.buttonText}>Mark </Text>
                   <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>
-                    Episode {data.item.progress + 1}
+                    {media.type === 'anime' ? 'Episode' : 'Chapter'}
+                    {' '}
+                    {data.item.progress + 1}
                   </Text>
                   <Text style={styles.buttonText}> Watched</Text>
                 </TouchableOpacity>

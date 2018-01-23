@@ -32,8 +32,6 @@ const LIBRARY_ENTRIES_FIELDS = [
   'unit',
   'nextUnit',
   'updatedAt',
-  'anime',
-  'manga',
 ];
 
 const MEDIA_FIELDS = [
@@ -108,7 +106,6 @@ class QuickUpdate extends Component {
           id: this.props.currentUser.id,
         },
       });
-      console.log('updating', response);
       this.refetchLibraryEntry(entry);
     } catch (e) {
       console.log(e);
@@ -118,7 +115,7 @@ class QuickUpdate extends Component {
   fetchDiscussions = async (episodeId) => {
     this.setState({ discussionsLoading: true });
     try {
-      const posts = await Kitsu.find('episodeFeed', __DEV__ ? 66064 : episodeId, {
+      const posts = await Kitsu.find('episodeFeed', episodeId, {
         include:
           'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
@@ -126,7 +123,6 @@ class QuickUpdate extends Component {
           limit: 10,
         },
       });
-      console.log('posts', posts);
       const processed = preprocessFeed(posts);
       this.setState({ discussions: processed, discussionsLoading: false });
     } catch (e) {
@@ -136,26 +132,37 @@ class QuickUpdate extends Component {
 
   fetchLibrary = async () => {
     this.setState({ loading: true });
-    const { filterMode } = this.state;
+    let { filterMode } = this.state;
+    filterMode = filterMode === 'all' ? undefined : filterMode;
 
     try {
+      const fields = {
+        libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
+        user: 'id'
+      };
+
+      if (filterMode === undefined) {
+        fields.anime = ANIME_FIELDS.join();
+        fields.manga = MANGA_FIELDS.join();
+        fields.libraryEntries = [fields.libraryEntries, 'anime', 'manga'].join()
+      } else {
+        // TODO: Fix
+        fields[filterMode] = filterMode === 'anime' ? ANIME_FIELDS.join() : MANGA_FIELDS.join();
+        fields.libraryEntries = [fields.libraryEntries, filterMode].join()
+      }
+
+      const includes = filterMode || 'anime,manga';
       const library = await Kitsu.findAll('libraryEntries', {
-        fields: {
-          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
-          anime: ANIME_FIELDS.join(),
-          manga: MANGA_FIELDS.join(),
-          user: 'id',
-        },
+        fields,
         filter: {
           status: 'current,planned',
           user_id: this.props.currentUser.id,
-          kind: filterMode === 'all' ? undefined : filterMode,
+          kind: filterMode
         },
-        include: 'anime,manga,unit,nextUnit',
+        include: `${includes},unit,nextUnit`,
         page: { limit: 15 },
         sort: 'status,-progressed_at,-updated_at',
       });
-
       this.setState({ library, loading: false }, () => {
         this.carouselItemChanged(0);
       });
@@ -166,13 +173,11 @@ class QuickUpdate extends Component {
 
   refetchLibraryEntry = async (libraryEntry) => {
     const index = this.state.library.indexOf(libraryEntry);
-    console.log('index', index);
     let library = [...this.state.library];
 
     // Tell the entry it's loading.
     library[index].loading = true;
     this.setState({ library });
-    console.log('feching');
     try {
       const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
         fields: {
@@ -182,7 +187,6 @@ class QuickUpdate extends Component {
         },
         include: 'anime,manga,unit,nextUnit',
       });
-      console.log('entry', entry);
 
       library = [...this.state.library];
       library[index] = entry;
@@ -194,6 +198,7 @@ class QuickUpdate extends Component {
   };
 
   filterModeChanged = (filterMode) => {
+    if (filterMode === 'nevermind') { return; }
     this.setState({ filterMode }, () => {
       this.fetchLibrary();
     });
@@ -213,7 +218,8 @@ class QuickUpdate extends Component {
 
     while (this.imageFadeOperations.length > 0) {
       const index = this.imageFadeOperations.pop();
-      const newBackgroundImage = this.state.library[index].anime.coverImage.original;
+      const media = getMedia(this.state.library[index]);
+      const newBackgroundImage = media.coverImage.original;
 
       // Clear any remaining ones, they're now irrelevant.
       this.imageFadeOperations.length = 0;
@@ -267,10 +273,10 @@ class QuickUpdate extends Component {
 
   carouselItemChanged = (index) => {
     const { library } = this.state;
-    console.log(library[index]);
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
-    this.fetchDiscussions(library[index].anime.id);
+    const media = getMedia(library[index]);
+    this.fetchDiscussions(media.id);
     this.setState({ currentIndex: index });
   };
 
@@ -378,9 +384,10 @@ class QuickUpdate extends Component {
       );
     }
 
-    progress = (library[currentIndex] && library[currentIndex].progress) || 0;
+    const entry = library[currentIndex];
+    const progress = (entry && entry.progress) || 0;
+    const media = entry && (entry.anime || entry.manga);
 
-    console.log(library);
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
@@ -418,7 +425,12 @@ class QuickUpdate extends Component {
           <View style={styles.socialContent}>
             <View style={styles.separator} />
             <Text style={styles.discussionTitle}>
-              <Text style={styles.bold}>Episode {progress} </Text>
+              <Text style={styles.bold}>
+                {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
+                {' '}
+                {progress}
+                {' '}
+              </Text>
               Discussion
             </Text>
 
@@ -431,7 +443,7 @@ class QuickUpdate extends Component {
                 onEndReachedThreshold={0.6}
                 ListHeaderComponent={
                   <CreatePostRow
-                    title={`What do you think of EP ${progress}?`}
+                    title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
                     onPress={this.toggleEditor}
                   />
                 }
@@ -468,6 +480,10 @@ const mapStateToProps = ({ user }) => {
 };
 
 export default connect(mapStateToProps)(QuickUpdate);
+
+function getMedia(entry) {
+  return entry.anime || entry.manga;
+}
 
 function getRatingTwentyForText(text, type) {
   if (type !== 'simple') {
