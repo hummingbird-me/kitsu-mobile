@@ -1,5 +1,4 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

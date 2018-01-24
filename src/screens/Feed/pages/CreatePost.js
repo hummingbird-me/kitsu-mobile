@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { KeyboardAvoidingView, View } from 'react-native';
 import { connect } from 'react-redux';
-
+import indexOf from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -69,6 +69,8 @@ class CreatePost extends React.PureComponent {
   }
 
   handlePressPost = async () => {
+    // TODO: Show user error if it occurs.
+    // TODO: Pass back post object.
     const { navigation } = this.props;
     if (navigation.state.params.busy) return;
 
@@ -76,9 +78,12 @@ class CreatePost extends React.PureComponent {
 
     const currentUserId = this.props.currentUser.id;
     const { content, currentFeed } = this.state;
+
     // Target interest is either 'anime', 'manga', or blank depending
     // on the feed we want to post to.
-    const targetInterest = currentFeed.key !== 'follower' ? currentFeed.key : undefined;
+    const ignoredTargetFeeds = ['followingFeed', 'globalFeed'];
+    const currentFeedIndex = indexOf(ignoredTargetFeeds, currentFeed.key);
+    const targetInterest = currentFeedIndex !== -1 ? currentFeed.key : undefined;
 
     try {
       await Kitsu.create('posts', {
