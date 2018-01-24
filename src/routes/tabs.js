@@ -35,7 +35,7 @@ const Tabs = TabNavigator(
   {
     lazy: true,
     tabBarPosition: 'bottom',
-    swipeEnabled: Platform.OS === 'ios',
+    swipeEnabled: false,
     tabBarOptions: {
       activeTintColor: tabRed,
       inactiveBackgroundColor: listBackPurple,
