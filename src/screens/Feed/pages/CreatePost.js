@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { KeyboardAvoidingView, View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import indexOf from 'lodash';
+import { indexOf, isNull } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -38,6 +38,7 @@ class CreatePost extends React.PureComponent {
         <HeaderButton
           highlighted
           disabled={params.busy}
+          loading={params.busy}
           onPress={params.handlePressPost}
           title="Post"
         />
@@ -49,6 +50,7 @@ class CreatePost extends React.PureComponent {
     feedPickerModalIsVisible: false,
     content: '',
     currentFeed: feedStreams[0],
+    error: null,
   };
 
   componentDidMount() {
@@ -69,12 +71,11 @@ class CreatePost extends React.PureComponent {
   }
 
   handlePressPost = async () => {
-    // TODO: Show user error if it occurs.
-    // TODO: Pass back post object.
     const { navigation } = this.props;
     if (navigation.state.params.busy) return;
 
     navigation.setParams({ busy: true });
+    this.setState({ error: null });
 
     const currentUserId = this.props.currentUser.id;
     const { content, currentFeed } = this.state;
@@ -86,7 +87,7 @@ class CreatePost extends React.PureComponent {
     const targetInterest = currentFeedIndex !== -1 ? currentFeed.key : undefined;
 
     try {
-      await Kitsu.create('posts', {
+      const post = await Kitsu.create('posts', {
         content,
         targetInterest,
         user: {
@@ -94,20 +95,25 @@ class CreatePost extends React.PureComponent {
           id: currentUserId,
         },
       });
+
+      if (this.props.navigation.state.params.onNewPostCreated) {
+        this.props.navigation.state.params.onNewPostCreated(post);
+      }
     } catch (err) {
+      const string = (e && e[0].detail) || 'Failed to create post.';
+      this.setState({ error: string });
       console.error(err);
     }
 
-    if (this.props.navigation.state.params.onNewPostCreated) {
-      this.props.navigation.state.params.onNewPostCreated();
-    }
-
     this.props.navigation.setParams({ busy: false });
-    this.props.navigation.goBack();
+
+    // Take user back to the feeds
+    if (isNull(this.state.error)) this.props.navigation.goBack();
   }
 
   render() {
     const { currentUser } = this.props;
+    const { error } = this.state;
 
     return (
       <KeyboardAvoidingView
@@ -115,6 +121,14 @@ class CreatePost extends React.PureComponent {
         style={{ flex: 1, backgroundColor: '#FFFFFF' }}
       >
         <View style={{ flex: 1 }}>
+          { /* Error */}
+          {error &&
+            <View style={{ padding: 6, backgroundColor: '#CC6549' }}>
+              <Text style={{ color: 'white' }}>
+                An Error Occurred. {error}
+              </Text>
+            </View>
+          }
           <PostMeta
             avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar}
             author={currentUser.name}

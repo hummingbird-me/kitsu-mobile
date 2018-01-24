@@ -418,14 +418,16 @@ export const PostMain = ({
           navigation={navigation}
         />
       )}
-      <View style={styles.postStatusRow}>
-        <View style={styles.postStatus}>
-          <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={styles.postStatusRow}>
+          <View style={styles.postStatus}>
+            <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+          </View>
+          <View style={styles.postStatus}>
+            <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
+          </View>
         </View>
-        <View style={styles.postStatus}>
-          <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
