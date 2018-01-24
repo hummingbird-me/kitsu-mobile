@@ -30,18 +30,27 @@ class WelcomeScreen extends React.Component {
     }
   };
   render() {
+    const { accounts } = this.props;
+
+    const title = !accounts ?
+      "Welcome to Kitsu, the home of all things weeb! Let's break the ice!" :
+      "Welcome to Kitsu, the new home of the Aozora community. Let's break the ice!";
+
+    const subtitle = !accounts ?
+      "We'll walk you through setting up your account. This will only take a minute!" :
+      "We'll walk you through moving your Aozora content over to Kitsu. This will only take a minute!";
+
     return (
       <View style={commonStyles.container}>
         <View style={styles.contentWrapper}>
           <Text style={[commonStyles.tutorialText, styles.tutorialText]}>
-            Welcome to Kitsu, the new home of the Aozora community. Let{"'"}s break the ice!
+            {title}
           </Text>
           <Image resizeMode="contain" style={styles.iceBackground} source={iceBackground}>
             <Image style={styles.iceCube} source={iceCube} />
           </Image>
           <Text style={[styles.ps, { marginHorizontal: 24, textAlign: 'center' }]}>
-            We{"'"}ll walk you through moving your Aozora content over to Kitsu. This will only take
-            a minute!
+            {subtitle}
           </Text>
           <Button
             onPress={this.onPress}
