@@ -1,11 +1,12 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { statusBarHeight } from 'kitsu/constants/app';
 
 export const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
-    paddingTop: 20,
+    paddingTop: statusBarHeight,
     paddingHorizontal: scenePadding,
     backgroundColor: colors.listBackPurple,
     alignItems: 'center',
@@ -13,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   tabStyle: {
     flex: 1,
-    height: 40,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },

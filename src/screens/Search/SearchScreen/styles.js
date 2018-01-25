@@ -1,8 +1,9 @@
 import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { statusBarHeight } from 'kitsu/constants/app';
 
-const TABBAR_HEIGHT = Platform.select({ ios: 62, android: 54 });
+const TABBAR_HEIGHT = 43 + statusBarHeight;
 
 export const styles = StyleSheet.create({
   container: {
@@ -23,6 +24,7 @@ export const styles = StyleSheet.create({
   searchBox: {
     marginHorizontal: 10,
     marginBottom: 10,
+    marginTop: 2,
     justifyContent: 'center',
   },
   tabBar: {
@@ -32,26 +34,19 @@ export const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderLeftWidth: 0,
     height: TABBAR_HEIGHT,
-    paddingRight: 5,
-    paddingLeft: 5,
-    paddingTop: 10,
-    paddingBottom: 10,
+    justifyContent: 'flex-end',
     shadowColor: 'black',
-    shadowOpacity: 0.1,
-    shadowRadius: StyleSheet.hairlineWidth,
-    marginTop: 0,
-    justifyContent: 'center',
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginVertical: 0,
   },
   tabBarItem: {
-    height: 27,
-    marginTop: Platform.select({ ios: 8, android: 6 }),
+    height: 28,
+  },
+  textContainer: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    borderBottomWidth: 0,
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
+    alignItems: 'center',
   },
   tabBarTextActive: {
     color: colors.red,

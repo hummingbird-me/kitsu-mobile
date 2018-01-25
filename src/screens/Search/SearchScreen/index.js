@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
-
 import { followUser } from 'kitsu/store/user/actions';
 import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
@@ -127,14 +126,18 @@ class SearchScreen extends Component {
     }
   };
 
-  renderIndicator = () => <View />;
+  renderIndicator = () => null;
 
   renderLabel = ({ route }) => {
     const activeRoute = this.state.routes[this.state.index];
 
     return (
       <View style={styles.tabBarItem}>
-        <StyledText color={route.key === activeRoute.key ? 'orange' : 'grey'} size="xsmall" bold>{route.title}</StyledText>
+        <View style={styles.textContainer}>
+          <StyledText color={route.key === activeRoute.key ? 'orange' : 'grey'} size="xsmall" bold>
+            {route.title}
+          </StyledText>
+        </View>
       </View>
     );
   };

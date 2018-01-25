@@ -1,21 +1,10 @@
-import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
-import * as colors from 'kitsu/constants/colors';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
-
-const CustomStatusBar = ({ backgroundColor, ...props }) => (
-  <View style={{ backgroundColor }}>
-    <StatusBar translucent backgroundColor={backgroundColor} {...props} />
-  </View>
-);
-
-CustomStatusBar.propTypes = {
-  backgroundColor: PropTypes.string.isRequired,
-};
 
 export const ProfileHeader = (
   { profile, showCoverImage, showFollowButton, showProfileImage, title, onClickBack },
@@ -26,7 +15,6 @@ export const ProfileHeader = (
 
   return (
     <View style={styles.headerContainer}>
-      <CustomStatusBar backgroundColor={colors.darkPurple} />
       {showCoverImage &&
         <Image
           style={commonStyles.absoluteFill}

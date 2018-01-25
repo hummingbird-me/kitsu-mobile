@@ -7,8 +7,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 70,
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    // Height is 44 for android because the modal doesn't cover the status bar
+    // If it does in the future then the height would be 44 + Status bar height
+    height: Platform.select({ ios: 64, android: 44 }),
+    paddingTop: Platform.select({ ios: 20, android: 0 }),
     backgroundColor: colors.listBackPurple,
   },
   modalButton: {

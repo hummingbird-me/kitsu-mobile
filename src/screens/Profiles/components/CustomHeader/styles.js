@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { statusBarHeight } from 'kitsu/constants/app';
 
 export const styles = StyleSheet.create({
   headerView: {
@@ -7,7 +8,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingTop: 20,
-    height: 60,
+    height: 44 + statusBarHeight,
     justifyContent: 'space-between',
     position: 'relative',
     zIndex: 99,

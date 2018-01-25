@@ -1,4 +1,7 @@
 import { kitsuConfig } from 'kitsu/config/env';
+import { Platform, StatusBar } from 'react-native';
+
+export const statusBarHeight = Platform.select({ ios: 20, android: StatusBar.currentHeight });
 
 export const defaultAvatar = `${kitsuConfig.assetsUrl}/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png`;
 
