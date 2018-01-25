@@ -41,10 +41,18 @@ const Tabs = TabNavigator(
       activeBackgroundColor: listBackPurple,
       showLabel: false,
       showIcon: true,
+      iconStyle: {
+        width: 44,
+        height: 44,
+      },
       style: {
         height: 44.96,
         borderTopWidth: 0,
         backgroundColor: listBackPurple,
+      },
+      tabStyle: {
+        height: 44.96,
+        borderTopWidth: 0,
       },
       indicatorStyle: {
         backgroundColor: tabRed,
