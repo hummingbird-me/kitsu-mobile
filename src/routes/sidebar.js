@@ -15,8 +15,8 @@ import {
   ExportLibrary,
   CannyBoard,
 } from 'kitsu/screens/Sidebar/';
-import { UserLibraryScreen } from 'kitsu/screens/Profiles/';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
+import * as ProfileScreens from 'kitsu/screens/Profiles';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common/';
 import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import navigationOptions from './navigationOptions';
@@ -46,7 +46,16 @@ const SidebarStack = StackNavigator(
       screen: ProfilePages,
     },
     UserLibraryScreen: {
-      screen: UserLibraryScreen,
+      screen: ProfileScreens.UserLibraryScreen,
+    },
+    UserLibraryEdit: {
+      screen: ProfileScreens.UserLibraryEditScreen,
+    },
+    UserLibraryList: {
+      screen: ProfileScreens.UserLibraryListScreen,
+    },
+    UserLibrarySearch: {
+      screen: ProfileScreens.UserLibrarySearchScreen,
     },
     Blocking: {
       screen: Blocking,
