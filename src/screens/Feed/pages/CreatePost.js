@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { KeyboardAvoidingView, View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { indexOf, isNull } from 'lodash';
+import { indexOf, isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -50,7 +50,7 @@ class CreatePost extends React.PureComponent {
     feedPickerModalIsVisible: false,
     content: '',
     currentFeed: feedStreams[0],
-    error: null,
+    error: '',
   };
 
   componentDidMount() {
@@ -75,7 +75,7 @@ class CreatePost extends React.PureComponent {
     if (navigation.state.params.busy) return;
 
     navigation.setParams({ busy: true });
-    this.setState({ error: null });
+    this.setState({ error: '' });
 
     const currentUserId = this.props.currentUser.id;
     const { content, currentFeed } = this.state;
@@ -108,7 +108,7 @@ class CreatePost extends React.PureComponent {
     this.props.navigation.setParams({ busy: false });
 
     // Take user back to the feeds
-    if (isNull(this.state.error)) this.props.navigation.goBack();
+    if (isEmpty(this.state.error)) this.props.navigation.goBack();
   }
 
   render() {
@@ -122,7 +122,7 @@ class CreatePost extends React.PureComponent {
       >
         <View style={{ flex: 1 }}>
           { /* Error */}
-          {error &&
+          {!isEmpty(error) &&
             <View style={{ padding: 6, backgroundColor: '#CC6549' }}>
               <Text style={{ color: 'white' }}>
                 An Error Occurred. {error}
