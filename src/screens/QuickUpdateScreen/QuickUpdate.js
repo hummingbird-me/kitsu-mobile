@@ -14,6 +14,7 @@ import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
+import URL from 'url-parse';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
@@ -61,6 +62,7 @@ class QuickUpdate extends Component {
     currentIndex: null,
     discussions: null,
     discussionsLoading: false,
+    isLoadingNextPage: false,
     filterMode: 'all',
     backgroundImageUri: undefined,
     nextUpBackgroundImageUri: undefined,
@@ -95,12 +97,15 @@ class QuickUpdate extends Component {
   rate = async (ratingTwenty) => {
     const { currentIndex, library } = this.state;
     const entry = library[currentIndex];
+    const media = getMedia(entry);
+    const mediaType = entry.anime ? 'anime' : 'manga';
     try {
       const response = await Kitsu.update('libraryEntries', {
         ratingTwenty,
         id: entry.id,
-        anime: {
-          id: entry.anime.id,
+        [mediaType]: {
+          id: media.id,
+          type: mediaType
         },
         user: {
           id: this.props.currentUser.id,
@@ -112,23 +117,44 @@ class QuickUpdate extends Component {
     }
   };
 
+  cursor = undefined
+  resetFeed = () => {
+    this.cursor = undefined;
+    this.setState({ discussions: null });
+  };
+
   fetchDiscussions = async (entry) => {
     this.setState({ discussionsLoading: true });
     try {
       const [unit] = entry.unit;
+      const cursor = (this.state.discussions || [])
       const posts = await Kitsu.find('episodeFeed', unit.id, {
         include:
           'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
         page: {
           limit: 10,
+          cursor: this.cursor
         },
       });
+
+      // I need to read the cursor value out of the 'next' link in the result.
+      const url = new URL(posts.links.next, true);
+      this.cursor = url.query['page[cursor]'];
+
       const processed = preprocessFeed(posts);
-      this.setState({ discussions: processed, discussionsLoading: false });
+      const discussions = [...(this.state.discussions || []), ...processed];
+      this.setState({ discussions, discussionsLoading: false });
     } catch (e) {
       console.log(e);
     }
+  };
+
+  fetchNextPage = async (entry) => {
+    if (this.state.isLoadingNextPage || !this.cursor) { return; }
+    this.setState({ isLoadingNextPage: true });
+    await this.fetchDiscussions(entry);
+    this.setState({ isLoadingNextPage: false });
   };
 
   fetchLibrary = async () => {
@@ -178,6 +204,8 @@ class QuickUpdate extends Component {
       library[index] = entry;
 
       this.setState({ library });
+
+      this.resetFeed();
       this.fetchDiscussions(entry);
     } catch (e) {
       console.log(e);
@@ -264,6 +292,7 @@ class QuickUpdate extends Component {
     this.ensureAllImageFadeOperationsHandled();
     const entry = library[index];
     if (entry.progress > 0) {
+      this.resetFeed();
       this.fetchDiscussions(entry);
     }
     this.setState({ currentIndex: index });
@@ -359,6 +388,7 @@ class QuickUpdate extends Component {
       loading,
       discussions,
       discussionsLoading,
+      isLoadingNextPage,
       currentIndex,
       editorText,
       editing,
@@ -426,12 +456,12 @@ class QuickUpdate extends Component {
                 Discussion
               </Text>
 
-              {!discussionsLoading ? (
+              {(!discussionsLoading || isLoadingNextPage) ? (
                 <KeyboardAwareFlatList
                   data={discussions}
                   keyExtractor={this.keyExtractor}
                   renderItem={this.renderPostItem}
-                  onEndReached={() => discussions.length && this.fetchDiscussions(entry)}
+                  onEndReached={() => discussions.length && this.fetchNextPage(entry)}
                   onEndReachedThreshold={0.6}
                   ListHeaderComponent={
                     <CreatePostRow
@@ -439,6 +469,11 @@ class QuickUpdate extends Component {
                       onPress={this.toggleEditor}
                     />
                   }
+                  ListFooterComponent={() => {
+                    return isLoadingNextPage && (
+                      <ActivityIndicator />
+                    )
+                  }}
                   refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
                   }
