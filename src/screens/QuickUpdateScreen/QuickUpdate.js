@@ -137,21 +137,7 @@ class QuickUpdate extends Component {
     filterMode = filterMode === 'all' ? undefined : filterMode;
 
     try {
-      const fields = {
-        libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
-        user: 'id'
-      };
-
-      if (filterMode === undefined) {
-        fields.anime = ANIME_FIELDS.join();
-        fields.manga = MANGA_FIELDS.join();
-        fields.libraryEntries = [fields.libraryEntries, 'anime', 'manga'].join()
-      } else {
-        // TODO: Fix
-        fields[filterMode] = filterMode === 'anime' ? ANIME_FIELDS.join() : MANGA_FIELDS.join();
-        fields.libraryEntries = [fields.libraryEntries, filterMode].join()
-      }
-
+      const fields = getRequestFields(filterMode);
       const includes = filterMode || 'anime,manga';
       const library = await Kitsu.findAll('libraryEntries', {
         fields,
@@ -180,19 +166,19 @@ class QuickUpdate extends Component {
     library[index].loading = true;
     this.setState({ library });
     try {
+      const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
+      const fields = getRequestFields(filterMode);
+      const includes = filterMode || 'anime,manga';
       const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
-        fields: {
-          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
-          anime: ANIME_FIELDS.join(),
-          user: 'id',
-        },
-        include: 'anime,manga,unit,nextUnit',
+        fields,
+        include: `${includes},unit,nextUnit`,
       });
 
       library = [...this.state.library];
       library[index] = entry;
 
       this.setState({ library });
+      this.fetchDiscussions(entry);
     } catch (e) {
       console.log(e);
     }
@@ -487,6 +473,23 @@ const mapStateToProps = ({ user }) => {
 };
 
 export default connect(mapStateToProps)(QuickUpdate);
+
+function getRequestFields(filterMode) {
+  const fields = {
+    libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
+    user: 'id'
+  };
+
+  if (filterMode === undefined) {
+    fields.anime = ANIME_FIELDS.join();
+    fields.manga = MANGA_FIELDS.join();
+    fields.libraryEntries = [fields.libraryEntries, 'anime', 'manga'].join()
+  } else {
+    fields[filterMode] = filterMode === 'anime' ? ANIME_FIELDS.join() : MANGA_FIELDS.join();
+    fields.libraryEntries = [fields.libraryEntries, filterMode].join()
+  }
+  return fields;
+}
 
 function getMedia(entry) {
   return entry.anime || entry.manga;
