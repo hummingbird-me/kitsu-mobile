@@ -60,7 +60,7 @@ class QuickUpdate extends Component {
     library: null,
     currentIndex: null,
     discussions: null,
-    discussionLoadings: false,
+    discussionsLoading: false,
     filterMode: 'all',
     backgroundImageUri: undefined,
     nextUpBackgroundImageUri: undefined,
@@ -112,10 +112,11 @@ class QuickUpdate extends Component {
     }
   };
 
-  fetchDiscussions = async (episodeId) => {
+  fetchDiscussions = async (entry) => {
     this.setState({ discussionsLoading: true });
     try {
-      const posts = await Kitsu.find('episodeFeed', episodeId, {
+      const [unit] = entry.unit;
+      const posts = await Kitsu.find('episodeFeed', unit.id, {
         include:
           'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
@@ -275,8 +276,10 @@ class QuickUpdate extends Component {
     const { library } = this.state;
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
-    const media = getMedia(library[index]);
-    this.fetchDiscussions(media.id);
+    const entry = library[index];
+    if (entry.progress > 0) {
+      this.fetchDiscussions(entry);
+    }
     this.setState({ currentIndex: index });
   };
 
@@ -422,39 +425,43 @@ class QuickUpdate extends Component {
             containerCustomStyle={styles.carousel}
             onSnapToItem={this.carouselItemChanged}
           />
-          <View style={styles.socialContent}>
-            <View style={styles.separator} />
-            <Text style={styles.discussionTitle}>
-              <Text style={styles.bold}>
-                {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
-                {' '}
-                {progress}
-                {' '}
-              </Text>
-              Discussion
-            </Text>
 
-            {!discussionsLoading ? (
-              <KeyboardAwareFlatList
-                data={discussions}
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderPostItem}
-                onEndReached={this.fetchFeed}
-                onEndReachedThreshold={0.6}
-                ListHeaderComponent={
-                  <CreatePostRow
-                    title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
-                    onPress={this.toggleEditor}
-                  />
-                }
-                refreshControl={
-                  <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
-                }
-              />
-            ) : (
-                <ActivityIndicator />
-              )}
-          </View>
+          {/* Feed */}
+          {progress > 0 && (
+            <View style={styles.socialContent}>
+              <View style={styles.separator} />
+              <Text style={styles.discussionTitle}>
+                <Text style={styles.bold}>
+                  {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
+                  {' '}
+                  {progress}
+                  {' '}
+                </Text>
+                Discussion
+              </Text>
+
+              {!discussionsLoading ? (
+                <KeyboardAwareFlatList
+                  data={discussions}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderPostItem}
+                  onEndReached={() => discussions.length && this.fetchDiscussions(entry)}
+                  onEndReachedThreshold={0.6}
+                  ListHeaderComponent={
+                    <CreatePostRow
+                      title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
+                      onPress={this.toggleEditor}
+                    />
+                  }
+                  refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
+                  }
+                />
+              ) : (
+                  <ActivityIndicator />
+                )}
+            </View>
+          )}
         </View>
 
         {/* Editor */}
