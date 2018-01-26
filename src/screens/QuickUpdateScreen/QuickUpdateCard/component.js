@@ -113,12 +113,18 @@ export default class QuickUpdateCard extends PureComponent {
 
   render() {
     const { data } = this.props;
-
-    if (!data || !data.item || (!data.item.anime && !data.item.manga) || !data.item.unit || !data.item.unit.length) {
+    if (!data || !data.item || (!data.item.anime && !data.item.manga)) {
       return null;
     }
-    const { loading, anime, manga, progress, unit, nextUnit } = data.item;
+
+    let { unit } = data.item;
+    const { loading, anime, manga, progress, nextUnit } = data.item;
     const { editing, editingUpdateText, updateText } = this.state;
+
+    // Might be a new entry and referencing a non-existent unit for episode 0
+    if ((!unit || !unit.length) && nextUnit) {
+      unit = [nextUnit];
+    }
 
     const media = anime || manga;
     const unitCount = media.episodeCount || media.chapterCount;
@@ -151,17 +157,24 @@ export default class QuickUpdateCard extends PureComponent {
                     fillPercentage={progress / unitCount * 100}
                   />
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.currentEpisodeText}>
-                    {media.type === 'anime' ? 'EP' : 'CH'}
-                    {' '}
-                    {progress}
-                  </Text>
-                  <Text style={styles.totalEpisodesText}>
-                    {' '}
-                    of {unitCount} {unit[0].canonicalTitle}
-                  </Text>
-                </View>
+                {/* Progress State */}
+                {progress > 0 ? (
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.currentEpisodeText}>
+                      {media.type === 'anime' ? 'EP' : 'CH'}
+                      {' '}
+                      {progress}
+                    </Text>
+                    <Text style={styles.totalEpisodesText}>
+                      {' '}
+                      of {unitCount} {unit[0].canonicalTitle}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.totalEpisodesText}>Not Started</Text>
+                  </View>
+                )}
               </View>
             </View>
           </Image>
