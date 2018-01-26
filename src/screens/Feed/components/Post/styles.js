@@ -64,6 +64,14 @@ export const styles = StyleSheet.create({
     borderTopColor: colors.lightGrey,
     backgroundColor: colors.offWhite,
   },
+  postReplyBanner: {
+    backgroundColor: colors.lightestGrey,
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   postSection: {
     padding: scenePadding,
   },
