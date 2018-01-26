@@ -519,6 +519,26 @@ PostActions.defaultProps = {
   onSharePress: null,
 };
 
+export const PostReplyBanner = ({ name, onClose }) => (
+  <View style={styles.postReplyBanner}>
+    <StyledText size="xsmall" color="grey">
+      Replying to {name}
+    </StyledText>
+    <TouchableOpacity onPress={onClose}>
+      <StyledText size="large" color="grey">X</StyledText>
+    </TouchableOpacity>
+  </View>
+);
+
+PostReplyBanner.propTypes = {
+  name: PropTypes.string,
+  onClose: PropTypes.func,
+};
+PostReplyBanner.defaultProps = {
+  name: '',
+  onClose: null,
+};
+
 
 // Post Footer
 export const PostFooter = props => <View style={styles.postFooter} {...props} />;

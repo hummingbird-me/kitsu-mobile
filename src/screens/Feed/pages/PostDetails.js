@@ -18,10 +18,12 @@ import {
   PostFooter,
   PostSection,
   PostCommentsSection,
+  PostReplyBanner,
 } from 'kitsu/screens/Feed/components/Post';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
+import { StyledText } from 'kitsu/components/StyledText';
 import { isX, paddingX } from 'kitsu/utils/isX';
 
 export default class PostDetails extends PureComponent {
@@ -51,6 +53,7 @@ export default class PostDetails extends PureComponent {
         episode: 1,
       },
       isLoadingNextPage: false,
+      isReplying: false,
     };
   }
 
@@ -66,6 +69,18 @@ export default class PostDetails extends PureComponent {
     try {
       const { currentUser, post } = this.props.navigation.state.params;
 
+      // Check if this is a reply rather than a top-level comment
+      let replyOptions = {};
+      if (this.replyRef) {
+        replyOptions = {
+          parent: {
+            id: this.replyRef.comment.id,
+            type: 'comments',
+          },
+          ...replyOptions,
+        };
+      }
+
       const comment = await Kitsu.create('comments', {
         content: this.state.comment,
         post: {
@@ -76,10 +91,18 @@ export default class PostDetails extends PureComponent {
           id: currentUser.id,
           type: 'users',
         },
+        ...replyOptions,
       });
       comment.user = currentUser;
 
-      this.setState({ comment: '', comments: [...this.state.comments, comment] });
+      this.setState({ comment: '', isReplying: false });
+
+      if (this.replyRef) {
+        this.replyRef.callback(comment);
+        this.replyRef = null;
+      } else {
+        this.setState({ comments: [...this.state.comments, comment] });
+      }
     } catch (err) {
       console.log('Error submitting comment: ', err);
     }
@@ -190,6 +213,19 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   };
 
+  onReplyPress = (comment, username, callback) => {
+    let name = username;
+    if (typeof username !== 'string') {
+      name = comment.user.name;
+    }
+    this.setState({
+      comment: `@${name} `,
+      isReplying: true,
+    });
+    this.replyRef = { comment, name, callback };
+    this.focusOnCommentInput();
+  };
+
   renderItem = ({ item }) => {
     const { currentUser, post } = this.props.navigation.state.params;
     return (
@@ -199,6 +235,7 @@ export default class PostDetails extends PureComponent {
         currentUser={currentUser}
         navigation={this.props.navigation}
         onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+        onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
       />
     );
   };
@@ -269,6 +306,15 @@ export default class PostDetails extends PureComponent {
         </View>
 
         <PostFooter>
+          {this.state.isReplying && (
+            <PostReplyBanner
+              name={this.replyRef.name}
+              onClose={() => {
+                this.setState({ isReplying: false });
+                this.replyRef = null;
+              }}
+            />
+          )}
           <PostSection>
             <CommentTextInput
               inputRef={(el) => {
