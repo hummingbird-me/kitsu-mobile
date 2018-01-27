@@ -65,7 +65,7 @@ export default [
     id: 52,
   },
   {
-    title: 'Paralel Universe',
+    title: 'Parallel Universe',
     selected: false,
     subCategoryLength: 0,
     id: 147,

@@ -84,6 +84,10 @@ class Feed extends React.PureComponent {
         // Manga Feed Example URL:
         // /api/edge/feeds/interest_timeline/160571-Manga
         subPath += '-Manga';
+      } else if (this.state.activeFeed === 'globalFeed') {
+        // Global feed
+        // /api/edge/feeds/global/global
+        subPath = 'global';
       }
 
       const result = await Kitsu.one(this.state.activeFeed, subPath).get({
@@ -105,9 +109,12 @@ class Feed extends React.PureComponent {
       const newPosts = preprocessFeed(result);
       const data = reset ? [...newPosts] : [...this.state.data, ...newPosts];
 
-      this.setState({ data });
+      this.setState({
+        data,
+        refreshing: false,
+      });
     } catch (error) {
-      console.log('Error while refreshing following feed: ', error);
+      console.log(`Error while refreshing ${this.state.activeFeed}: `, error);
 
       this.setState({
         data: [],

@@ -6,6 +6,12 @@ export const feedStreams = [
     description: 'Shared with all of your followers',
   },
   {
+    key: 'globalFeed',
+    label: 'Global',
+    title: 'Global Feed',
+    description: 'Shared with everyone',
+  },
+  {
     key: 'animeFeed',
     label: 'Anime',
     title: 'Anime Feed',

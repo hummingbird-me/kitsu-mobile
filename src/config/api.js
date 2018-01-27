@@ -814,6 +814,16 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'globalFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/global' },
+);
+
+Kitsu.define(
   'followingFeed',
   {
     activityGroups: {
