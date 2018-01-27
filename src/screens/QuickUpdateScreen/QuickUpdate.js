@@ -481,12 +481,6 @@ class QuickUpdate extends Component {
                   renderItem={this.renderPostItem}
                   onEndReached={() => discussions.length && this.fetchNextPage(entry)}
                   onEndReachedThreshold={0.6}
-                  ListEmptyComponent={
-                    <CreatePostRow
-                      title={`Start a discussion. What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
-                      onPress={this.toggleEditor}
-                    />
-                  }
                   ListHeaderComponent={
                     <CreatePostRow
                       title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
