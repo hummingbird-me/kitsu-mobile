@@ -69,7 +69,7 @@ export default class QuickUpdateEditor extends PureComponent {
             value={value}
             style={styles.editor}
             onChangeText={this.props.onChange}
-            placeholder={`Share your thoughts on Episode ${episode}`}
+            placeholder={`(Optional) Share your thoughts on Episode ${episode}`}
             placeholderTextColor={colors.lightGrey}
           />
           <MediaTag

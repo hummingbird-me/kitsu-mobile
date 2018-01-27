@@ -878,6 +878,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     spoiledUnit: {
+      type: 'episodes',
       jsonApi: 'hasOne',
     },
     targetUser: {
@@ -887,6 +888,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     user: {
+      type: 'users',
       jsonApi: 'hasOne',
     },
   },

@@ -118,9 +118,9 @@ class QuickUpdate extends Component {
   };
 
   cursor = undefined
-  resetFeed = () => {
+  resetFeed = (cb) => {
     this.cursor = undefined;
-    this.setState({ discussions: null });
+    this.setState({ discussions: null }, cb);
   };
 
   fetchDiscussions = async (entry) => {
@@ -147,6 +147,8 @@ class QuickUpdate extends Component {
       this.setState({ discussions, discussionsLoading: false });
     } catch (e) {
       console.log(e);
+      // Something went wrong, stop the spinner.
+      this.setState({ discussions: [], discussionsLoading: false });
     }
   };
 
@@ -348,9 +350,27 @@ class QuickUpdate extends Component {
     }
   };
 
-  updateTextAndToggle = () => {
+  updateTextAndToggle = async () => {
     // Restore any previous text, and then toggle the editor.
-    this.setState({ updateText: this.state.editorText }, this.toggleEditor);
+    const { library, currentIndex, editorText } = this.state;
+    const { currentUser } = this.props;
+    const current = library[currentIndex];
+    try {
+      await Kitsu.create('posts', {
+        content: editorText,
+        media: {
+          id: getMedia(current).id, type: current.anime ? 'anime' : 'manga',
+        },
+        spoiledUnit: { id: current.unit[0].id },
+        user: { id: currentUser.id },
+      });
+      this.resetFeed(() => {
+        this.fetchDiscussions(current);
+        this.setState({ updateText: editorText }, this.toggleEditor);
+      });
+    } catch (e) {
+      console.warn('Can not submit discussion post: ', e);
+    }
   };
 
   toggleEditor = () => {
@@ -420,7 +440,6 @@ class QuickUpdate extends Component {
     }
 
     const entry = library[currentIndex];
-    console.log(entry);
     const progress = (entry && entry.progress) || 0;
     const media = entry && (entry.anime || entry.manga);
 
