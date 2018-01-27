@@ -127,14 +127,13 @@ class QuickUpdate extends Component {
     this.setState({ discussionsLoading: true });
     try {
       const [unit] = entry.unit;
-      const cursor = this.cursor || (this.state.discussions || []);
       const posts = await Kitsu.find('episodeFeed', unit.id, {
         include:
           'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
         page: {
           limit: 10,
-          cursor,
+          cursor: this.cursor,
         },
       });
 
@@ -352,6 +351,7 @@ class QuickUpdate extends Component {
 
   updateTextAndToggle = async () => {
     // Restore any previous text, and then toggle the editor.
+    this.setState({ discussionsLoading: true }, this.toggleEditor);
     const { library, currentIndex, editorText } = this.state;
     const { currentUser } = this.props;
     const current = library[currentIndex];
@@ -366,7 +366,7 @@ class QuickUpdate extends Component {
       });
       this.resetFeed(() => {
         this.fetchDiscussions(current);
-        this.setState({ updateText: editorText }, this.toggleEditor);
+        this.setState({ updateText: editorText });
       });
     } catch (e) {
       console.warn('Can not submit discussion post: ', e);
