@@ -1,13 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
   headerView: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    paddingTop: 20,
-    height: 60,
+    paddingTop: statusBarHeight + (isX ? paddingX : 0),
+    height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
     justifyContent: 'space-between',
     position: 'relative',
     zIndex: 99,
@@ -16,6 +18,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    height: navigationBarHeight,
   },
   buttonView__left: {
     justifyContent: 'flex-start',

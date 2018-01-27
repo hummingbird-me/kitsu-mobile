@@ -4,7 +4,7 @@ import { StatusBar } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
-import { defaultCover } from 'kitsu/constants/app';
+import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
@@ -14,7 +14,9 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
+const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
 const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
 
@@ -201,7 +203,7 @@ class MediaPages extends PureComponent {
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
           style={{ flex: 1 }}
-          headerHeight={60}
+          headerHeight={HEADER_HEIGHT}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
           renderParallaxBackground={() => (

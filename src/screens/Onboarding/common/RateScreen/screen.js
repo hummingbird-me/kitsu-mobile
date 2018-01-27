@@ -491,7 +491,7 @@ class RateScreen extends React.Component {
       topMedia,
       loadingWtW,
       fetching,
-      ratingTwenty,
+      ratedCount,
       mediaTotalDuration,
     } = this.state;
     if (fetching) {
@@ -504,7 +504,7 @@ class RateScreen extends React.Component {
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>
-          {ratingTwenty ? (
+          {ratedCount > 0 ? (
             `${formatTime(mediaTotalDuration)} spent watching anime`
           ) : (
             "Rate the anime you've seen"
