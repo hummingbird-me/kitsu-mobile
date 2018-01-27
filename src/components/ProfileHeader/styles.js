@@ -1,10 +1,9 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
-import { statusBarHeight } from 'kitsu/constants/app';
+import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { isX, paddingX } from 'kitsu/utils/isX';
 
-const NAVIGATION_HEIGHT = 44;
-const HEADER_NAVIGATION_IMAGE_HEIGHT = NAVIGATION_HEIGHT + statusBarHeight + (isX ? paddingX : 0);
+const HEADER_NAVIGATION_IMAGE_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
 export const styles = StyleSheet.create({
   backButton: {
@@ -27,7 +26,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: NAVIGATION_HEIGHT,
+    height: navigationBarHeight,
   },
   headerContainer: {
     backgroundColor: colors.darkPurple,
