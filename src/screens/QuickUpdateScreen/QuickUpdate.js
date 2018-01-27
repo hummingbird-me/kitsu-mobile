@@ -178,13 +178,11 @@ class QuickUpdate extends Component {
 
   refetchLibraryEntry = async (libraryEntry) => {
     const index = this.state.library.indexOf(libraryEntry);
-    console.log('index', index);
     let library = [...this.state.library];
 
     // Tell the entry it's loading.
     library[index].loading = true;
     this.setState({ library });
-    console.log('feching');
     try {
       const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
         fields: {
@@ -194,7 +192,6 @@ class QuickUpdate extends Component {
         },
         include: 'anime,manga,unit,nextUnit',
       });
-      console.log('entry', entry);
 
       library = [...this.state.library];
       library[index] = entry;
@@ -225,7 +222,8 @@ class QuickUpdate extends Component {
 
     while (this.imageFadeOperations.length > 0) {
       const index = this.imageFadeOperations.pop();
-      const newBackgroundImage = this.state.library[index].anime.coverImage.original;
+      const data = this.state.library[index].anime;
+      const newBackgroundImage = (data.coverImage && data.coverImage.original) || data.posterImage.original;
 
       // Clear any remaining ones, they're now irrelevant.
       this.imageFadeOperations.length = 0;
@@ -247,6 +245,7 @@ class QuickUpdate extends Component {
         // Otherwise we need to do a fade.
         // Load the new image.
         this.setState({ nextUpBackgroundImageUri: newBackgroundImage });
+        console.log('set new bg image', index, newBackgroundImage);
 
         // After a short delay fade out the old one.
         Animated.timing(faderOpacity, {
@@ -279,7 +278,7 @@ class QuickUpdate extends Component {
 
   carouselItemChanged = (index) => {
     const { library } = this.state;
-    console.log(library[index]);
+    console.log('Library item on swipe: ', library[index]);
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
     this.fetchDiscussions(library[index].anime.id);
@@ -392,7 +391,7 @@ class QuickUpdate extends Component {
 
     progress = (library[currentIndex] && library[currentIndex].progress) || 0;
 
-    console.log(library);
+    console.log('Library data before render: ', library, nextUpBackgroundImageUri);
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}

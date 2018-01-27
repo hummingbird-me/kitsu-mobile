@@ -106,18 +106,16 @@ export default class QuickUpdateCard extends PureComponent {
 
   render() {
     const { data } = this.props;
-
-    if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
+    console.log('Quick Update Card Data: ', data);
+    if (!data || !data.item || !data.item.anime) {
+      console.warn('Missing Quick Update Card data!');
       return null;
     }
     const { loading, anime, progress, unit, nextUnit } = data.item;
     const { editing, editingUpdateText, updateText } = this.state;
 
-    let landscapeImage = unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original;
-    if (!landscapeImage) {
-      landscapeImage = anime.posterImage.large;
-    }
-    console.log(data.item);
+    const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) || anime.posterImage.large;
+
     const squareImage = anime.posterImage.small;
     return (
       <View key={data.item.id} style={styles.wrapper}>
@@ -146,7 +144,7 @@ export default class QuickUpdateCard extends PureComponent {
                   <Text style={styles.currentEpisodeText}>EP {progress}</Text>
                   <Text style={styles.totalEpisodesText}>
                     {' '}
-                    of {anime.episodeCount} {unit[0].canonicalTitle}
+                    of {anime.episodeCount} {(unit && unit.length && unit[0].canonicalTitle) || ''}
                   </Text>
                 </View>
               </View>
