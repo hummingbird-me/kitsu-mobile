@@ -69,7 +69,7 @@ const FeedStack = StackNavigator(
         ...options.headerStyle,
         // This may look weird but it's the only way to make the modal status bars look normal
         // On ios it auto adds status bar height, where as on android it doesnt :/
-        height: Platform.select({ ios: navigationBarHeight, android: navigationBarHeight + statusBarHeight }),
+        height: navigationBarHeight + Platform.select({ ios: 0, android: statusBarHeight }),
         paddingTop: Platform.select({ ios: 0, android: statusBarHeight }),
       },
       // eslint-disable-next-line react/prop-types

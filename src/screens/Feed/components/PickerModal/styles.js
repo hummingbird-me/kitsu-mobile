@@ -11,10 +11,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     // Height is different for android because the modal doesn't cover the status bar
     // If it does in the future then the height would be the nav bar height + Status bar height
-    height: Platform.select({
-      ios: navigationBarHeight + statusBarHeight,
-      android: navigationBarHeight,
-    }) + (isX ? paddingX : 0),
+    height: navigationBarHeight + (isX ? paddingX : 0) + Platform.select({
+      ios: statusBarHeight,
+      android: 0,
+    }),
     paddingTop: Platform.select({ ios: statusBarHeight, android: 0 }) + (isX ? paddingX : 0),
     backgroundColor: colors.listBackPurple,
   },
