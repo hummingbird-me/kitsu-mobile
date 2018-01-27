@@ -154,15 +154,23 @@ class QuickUpdate extends Component {
         sort: 'status,-progressed_at,-updated_at',
       });
 
-      this.setState(
-        {
-          library,
-          loading: false,
-        },
-        () => {
-          this.carouselItemChanged(0);
-        },
-      );
+      // See else statement, api may return
+      // library = [meta: Object, links: Object]
+      if (library.length !== 0) {
+        this.setState(
+          {
+            library,
+            loading: false,
+          },
+          () => {
+            this.carouselItemChanged(0);
+          },
+        );
+      } else {
+      // TODO: handle the case where libraryEntries is undefined
+      // Apparently we don't have any library entries.
+        this.setState({ library: [] });
+      }
     } catch (e) {
       console.log(e);
     }
