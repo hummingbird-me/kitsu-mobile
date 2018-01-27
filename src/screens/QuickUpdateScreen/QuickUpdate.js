@@ -14,6 +14,7 @@ import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
+import URL from 'url-parse';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
@@ -32,21 +33,21 @@ const LIBRARY_ENTRIES_FIELDS = [
   'unit',
   'nextUnit',
   'updatedAt',
-  'anime',
-  'manga',
 ];
 
-const ANIME_FIELDS = [
+const MEDIA_FIELDS = [
   'slug',
   'coverImage',
   'posterImage',
-  'episodeCount',
   'canonicalTitle',
   'titles',
   'synopsis',
   'status',
   'startDate',
 ];
+
+const ANIME_FIELDS = [...MEDIA_FIELDS, 'episodeCount'];
+const MANGA_FIELDS = [...MEDIA_FIELDS, 'chapterCount'];
 
 const CAROUSEL_HEIGHT = 310;
 
@@ -60,7 +61,8 @@ class QuickUpdate extends Component {
     library: null,
     currentIndex: null,
     discussions: null,
-    discussionLoadings: false,
+    discussionsLoading: false,
+    isLoadingNextPage: false,
     filterMode: 'all',
     backgroundImageUri: undefined,
     nextUpBackgroundImageUri: undefined,
@@ -80,14 +82,14 @@ class QuickUpdate extends Component {
     this.setState({ editorText });
   };
 
-  onRate = (ratingTwenty) => this.rate(ratingTwenty);
+  onRate = ratingTwenty => this.rate(ratingTwenty);
 
   getItemLayout = (data, index) => {
     const { width } = Dimensions.get('window');
 
     return {
       length: width / 5,
-      offset: width / 5 * index,
+      offset: (width / 5) * index,
       index,
     };
   };
@@ -95,61 +97,82 @@ class QuickUpdate extends Component {
   rate = async (ratingTwenty) => {
     const { currentIndex, library } = this.state;
     const entry = library[currentIndex];
+    const media = getMedia(entry);
+    const mediaType = entry.anime ? 'anime' : 'manga';
     try {
-      const response = await Kitsu.update('libraryEntries', {
+      await Kitsu.update('libraryEntries', {
         ratingTwenty,
         id: entry.id,
-        anime: {
-          id: entry.anime.id,
+        [mediaType]: {
+          id: media.id,
+          type: mediaType,
         },
         user: {
           id: this.props.currentUser.id,
         },
       });
-      console.log('updating', response);
       this.refetchLibraryEntry(entry);
     } catch (e) {
       console.log(e);
     }
   };
 
-  fetchDiscussions = async (episodeId) => {
+  cursor = undefined
+  resetFeed = () => {
+    this.cursor = undefined;
+    this.setState({ discussions: null });
+  };
+
+  fetchDiscussions = async (entry) => {
     this.setState({ discussionsLoading: true });
     try {
-      const posts = await Kitsu.find('episodeFeed', __DEV__ ? 66064 : episodeId, {
+      const [unit] = entry.unit;
+      const cursor = this.cursor || (this.state.discussions || []);
+      const posts = await Kitsu.find('episodeFeed', unit.id, {
         include:
           'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
         filter: { kind: 'posts' },
         page: {
           limit: 10,
+          cursor,
         },
       });
-      console.log('posts', posts);
+
+      // I need to read the cursor value out of the 'next' link in the result.
+      const url = new URL(posts.links.next, true);
+      this.cursor = url.query['page[cursor]'];
+
       const processed = preprocessFeed(posts);
-      this.setState({ discussions: processed, discussionsLoading: false });
+      const discussions = [...(this.state.discussions || []), ...processed];
+      this.setState({ discussions, discussionsLoading: false });
     } catch (e) {
       console.log(e);
     }
   };
 
+  fetchNextPage = async (entry) => {
+    if (this.state.isLoadingNextPage || !this.cursor) { return; }
+    this.setState({ isLoadingNextPage: true });
+    await this.fetchDiscussions(entry);
+    this.setState({ isLoadingNextPage: false });
+  };
+
   fetchLibrary = async () => {
     this.setState({ loading: true });
-
-    const { filterMode } = this.state;
+    let { filterMode } = this.state;
+    filterMode = filterMode === 'all' ? undefined : filterMode;
 
     try {
+      const fields = getRequestFields(filterMode);
+      const includes = filterMode || 'anime,manga';
       const library = await Kitsu.findAll('libraryEntries', {
-        fields: {
-          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
-          anime: ANIME_FIELDS.join(),
-          user: 'id',
-        },
+        fields,
         filter: {
           status: 'current,planned',
           user_id: this.props.currentUser.id,
-          kind: 'anime',
+          kind: filterMode,
         },
-        include: 'anime,manga,unit,nextUnit',
+        include: `${includes},unit,nextUnit`,
         page: { limit: 15 },
         sort: 'status,-progressed_at,-updated_at',
       });
@@ -184,25 +207,28 @@ class QuickUpdate extends Component {
     library[index].loading = true;
     this.setState({ library });
     try {
+      const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
+      const fields = getRequestFields(filterMode);
+      const includes = filterMode || 'anime,manga';
       const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
-        fields: {
-          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
-          anime: ANIME_FIELDS.join(),
-          user: 'id',
-        },
-        include: 'anime,manga,unit,nextUnit',
+        fields,
+        include: `${includes},unit,nextUnit`,
       });
 
       library = [...this.state.library];
       library[index] = entry;
 
       this.setState({ library });
+
+      this.resetFeed();
+      this.fetchDiscussions(entry);
     } catch (e) {
       console.log(e);
     }
   };
 
   filterModeChanged = (filterMode) => {
+    if (filterMode === 'nevermind') { return; }
     this.setState({ filterMode }, () => {
       this.fetchLibrary();
     });
@@ -222,8 +248,8 @@ class QuickUpdate extends Component {
 
     while (this.imageFadeOperations.length > 0) {
       const index = this.imageFadeOperations.pop();
-      const data = this.state.library[index].anime;
-      const newBackgroundImage = (data.coverImage && data.coverImage.original) || data.posterImage.original;
+      const media = getMedia(this.state.library[index]);
+      const newBackgroundImage = (media.coverImage && media.coverImage.original) || media.posterImage.original;
 
       // Clear any remaining ones, they're now irrelevant.
       this.imageFadeOperations.length = 0;
@@ -281,7 +307,11 @@ class QuickUpdate extends Component {
     console.log('Library item on swipe: ', library[index]);
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
-    this.fetchDiscussions(library[index].anime.id);
+    const entry = library[index];
+    if (entry.progress > 0) {
+      this.resetFeed();
+      this.fetchDiscussions(entry);
+    }
     this.setState({ currentIndex: index });
   };
 
@@ -375,6 +405,7 @@ class QuickUpdate extends Component {
       loading,
       discussions,
       discussionsLoading,
+      isLoadingNextPage,
       currentIndex,
       editorText,
       editing,
@@ -389,7 +420,9 @@ class QuickUpdate extends Component {
       );
     }
 
-    progress = (library[currentIndex] && library[currentIndex].progress) || 0;
+    const entry = library[currentIndex];
+    const progress = (entry && entry.progress) || 0;
+    const media = entry && (entry.anime || entry.manga);
 
     console.log('Library data before render: ', library, nextUpBackgroundImageUri);
     return (
@@ -426,34 +459,48 @@ class QuickUpdate extends Component {
             containerCustomStyle={styles.carousel}
             onSnapToItem={this.carouselItemChanged}
           />
-          <View style={styles.socialContent}>
-            <View style={styles.separator} />
-            <Text style={styles.discussionTitle}>
-              <Text style={styles.bold}>Episode {progress} </Text>
-              Discussion
-            </Text>
 
-            {!discussionsLoading ? (
-              <KeyboardAwareFlatList
-                data={discussions}
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderPostItem}
-                onEndReached={this.fetchFeed}
-                onEndReachedThreshold={0.6}
-                ListHeaderComponent={
-                  <CreatePostRow
-                    title={`What do you think of EP ${progress}?`}
-                    onPress={this.toggleEditor}
-                  />
-                }
-                refreshControl={
-                  <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
-                }
-              />
-            ) : (
+          {/* Feed */}
+          {progress > 0 && (
+            <View style={styles.socialContent}>
+              <View style={styles.separator} />
+              <Text style={styles.discussionTitle}>
+                <Text style={styles.bold}>
+                  {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
+                  {' '}
+                  {progress}
+                  {' '}
+                </Text>
+                Discussion
+              </Text>
+
+              {(!discussionsLoading || isLoadingNextPage) ? (
+                <KeyboardAwareFlatList
+                  data={discussions}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderPostItem}
+                  onEndReached={() => discussions.length && this.fetchNextPage(entry)}
+                  onEndReachedThreshold={0.6}
+                  ListHeaderComponent={
+                    <CreatePostRow
+                      title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
+                      onPress={this.toggleEditor}
+                    />
+                  }
+                  ListFooterComponent={() =>
+                    isLoadingNextPage && (
+                      <ActivityIndicator />
+                    )
+                  }
+                  refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
+                  }
+                />
+              ) : (
                 <ActivityIndicator />
               )}
-          </View>
+            </View>
+          )}
         </View>
 
         {/* Editor */}
@@ -480,21 +527,24 @@ const mapStateToProps = ({ user }) => {
 
 export default connect(mapStateToProps)(QuickUpdate);
 
-function getRatingTwentyForText(text, type) {
-  if (type !== 'simple') {
-    throw new Error('This function should only be used in simple ratings.');
-  }
+function getRequestFields(filterMode) {
+  const fields = {
+    libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
+    user: 'id',
+  };
 
-  switch (text) {
-    case 'awful':
-      return 2;
-    case 'meh':
-      return 8;
-    case 'good':
-      return 14;
-    case 'great':
-      return 20;
-    default:
-      throw new Error(`Unknown text while determining simple rating type: "${text}"`);
+  if (filterMode === undefined) {
+    fields.anime = ANIME_FIELDS.join();
+    fields.manga = MANGA_FIELDS.join();
+    fields.libraryEntries = [fields.libraryEntries, 'anime', 'manga'].join();
+  } else {
+    fields[filterMode] = filterMode === 'anime' ? ANIME_FIELDS.join() : MANGA_FIELDS.join();
+    fields.libraryEntries = [fields.libraryEntries, filterMode].join();
   }
+  return fields;
 }
+
+function getMedia(entry) {
+  return entry.anime || entry.manga;
+}
+

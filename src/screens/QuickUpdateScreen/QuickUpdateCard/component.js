@@ -3,8 +3,6 @@ import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-na
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
-import { SimpleRating } from 'kitsu/components/SimpleRating';
-import { StarRating } from 'kitsu/components/StarRating';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -21,7 +19,14 @@ export default class QuickUpdateCard extends PureComponent {
           posterImage: PropTypes.shape({
             large: PropTypes.string.isRequired,
           }),
-        }).isRequired,
+        }),
+        manga: PropTypes.shape({
+          canonicalTitle: PropTypes.string.isRequired,
+          id: PropTypes.string.isRequired,
+          posterImage: PropTypes.shape({
+            large: PropTypes.string.isRequired,
+          }),
+        }),
       }).isRequired,
     }).isRequired,
     onBeginEditing: PropTypes.func,
@@ -106,17 +111,26 @@ export default class QuickUpdateCard extends PureComponent {
 
   render() {
     const { data } = this.props;
-    console.log('Quick Update Card Data: ', data);
-    if (!data || !data.item || !data.item.anime) {
+    if (!data || !data.item || (!data.item.anime && !data.item.manga)) {
       console.warn('Missing Quick Update Card data!');
       return null;
     }
-    const { loading, anime, progress, unit, nextUnit } = data.item;
+
+    let { unit } = data.item;
+    const { loading, anime, manga, progress, nextUnit } = data.item;
     const { editing, editingUpdateText, updateText } = this.state;
 
-    const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) || anime.posterImage.large;
+    // Might be a new entry and referencing a non-existent unit for episode 0
+    if ((!unit || !unit.length) && nextUnit) {
+      unit = [nextUnit];
+    }
 
-    const squareImage = anime.posterImage.small;
+    const media = anime || manga;
+    const unitCount = media.episodeCount || media.chapterCount;
+
+    const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) || media.posterImage.large;
+
+    const squareImage = media.posterImage.small;
     return (
       <View key={data.item.id} style={styles.wrapper}>
         {/* Episode Landscape Image */}
@@ -130,23 +144,34 @@ export default class QuickUpdateCard extends PureComponent {
               <Image source={{ uri: squareImage }} style={styles.avatarImage} />
               <View style={styles.descriptionRow}>
                 <Text style={styles.seriesTitle} numberOfLines={1}>
-                  {anime.canonicalTitle}
+                  {media.canonicalTitle}
                 </Text>
                 {/* Progress Bar */}
                 <View style={styles.progressBarContainer}>
                   <ProgressBar
                     backgroundStyle={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
                     height={6}
-                    fillPercentage={progress / anime.episodeCount * 100}
+                    fillPercentage={(progress / unitCount) * 100}
                   />
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.currentEpisodeText}>EP {progress}</Text>
-                  <Text style={styles.totalEpisodesText}>
-                    {' '}
-                    of {anime.episodeCount} {(unit && unit.length && unit[0].canonicalTitle) || ''}
-                  </Text>
-                </View>
+                {/* Progress State */}
+                {progress > 0 ? (
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.currentEpisodeText}>
+                      {media.type === 'anime' ? 'EP' : 'CH'}
+                      {' '}
+                      {progress}
+                    </Text>
+                    <Text style={styles.totalEpisodesText}>
+                      {' '}
+                      of {unitCount} {unit[0].canonicalTitle}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.totalEpisodesText}>Not Started</Text>
+                  </View>
+                )}
               </View>
             </View>
           </Image>
@@ -162,12 +187,14 @@ export default class QuickUpdateCard extends PureComponent {
                   <Text style={styles.seriesExtraInfo} numberOfLines={1}>
                     UP NEXT{' '}
                     <Text style={styles.seriesNextEpisodeTitle}>
-                      EP {nextUnit.number} - {nextUnit.canonicalTitle}
+                      {media.type === 'anime' ? 'EP' : 'CH'}
+                      {' '}
+                      {nextUnit.number} - {nextUnit.canonicalTitle}
                     </Text>
                   </Text>
                 ) : (
-                    <Text style={styles.seriesFinishedTitle}>Finished!</Text>
-                  )}
+                  <Text style={styles.seriesFinishedTitle}>Finished!</Text>
+                )}
               </View>
             </View>
           </View>
@@ -182,42 +209,29 @@ export default class QuickUpdateCard extends PureComponent {
                 >
                   <Text style={styles.buttonText}>Mark </Text>
                   <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>
-                    Episode {data.item.progress + 1}
+                    {media.type === 'anime' ? 'Episode' : 'Chapter'}
+                    {' '}
+                    {data.item.progress + 1}
                   </Text>
                   <Text style={styles.buttonText}> Watched</Text>
                 </TouchableOpacity>
               </View>
             ) : (
-                <View
-                  style={{
-                    paddingHorizontal: 10,
-                    paddingVertical: 14,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
-                  {this.renderRatingComponent()}
-                </View>
-              ))}
+              <View
+                style={{
+                  paddingHorizontal: 10,
+                  paddingVertical: 14,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
+                {this.renderRatingComponent()}
+              </View>
+            ))}
         </View>
       </View>
     );
   }
-}
-
-function getSimpleTextForRatingTwenty(rating) {
-  if (!rating) {
-    return null;
-  } else if (rating <= 5) {
-    return 'awful';
-  } else if (rating <= 9) {
-    return 'meh';
-  } else if (rating <= 15) {
-    return 'good';
-  } else if (rating <= 20) {
-    return 'great';
-  }
-  return null;
 }
