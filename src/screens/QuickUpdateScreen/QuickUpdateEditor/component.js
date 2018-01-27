@@ -15,6 +15,7 @@ const HIT_SLOP = {
 
 export default class QuickUpdateEditor extends PureComponent {
   static propTypes = {
+    currentEpisode: PropTypes.object.isRequired,
     episode: PropTypes.number.isRequired,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
@@ -46,9 +47,8 @@ export default class QuickUpdateEditor extends PureComponent {
   };
 
   render() {
-    const { episode, value, onCancel, onDone, media } = this.props;
+    const { episode, value, onCancel, onDone, currentEpisode } = this.props;
     const { headerOpacity } = this.state;
-
     return (
       <View style={styles.wrapper}>
         {/* Header */}
@@ -69,15 +69,15 @@ export default class QuickUpdateEditor extends PureComponent {
             value={value}
             style={styles.editor}
             onChangeText={this.props.onChange}
-            placeholder={`(Optional) Share your thoughts on Episode ${episode}`}
+            placeholder={`Share your thoughts on Episode ${episode}`}
             placeholderTextColor={colors.lightGrey}
           />
+          <MediaTag
+            media={currentEpisode}
+            episode={currentEpisode}
+            navigation={navigation}
+          />
         </View>
-        {/*<MediaTag
-          media={media.taggedMedia}
-          episode={media.}
-          navigation={navigation}
-        />*/}
       </View>
     );
   }

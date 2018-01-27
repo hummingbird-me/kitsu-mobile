@@ -271,7 +271,6 @@ class QuickUpdate extends Component {
         // Otherwise we need to do a fade.
         // Load the new image.
         this.setState({ nextUpBackgroundImageUri: newBackgroundImage });
-        console.log('set new bg image', index, newBackgroundImage);
 
         // After a short delay fade out the old one.
         Animated.timing(faderOpacity, {
@@ -421,10 +420,11 @@ class QuickUpdate extends Component {
     }
 
     const entry = library[currentIndex];
+    console.log(entry);
     const progress = (entry && entry.progress) || 0;
     const media = entry && (entry.anime || entry.manga);
 
-    console.log('Library data before render: ', library, nextUpBackgroundImageUri);
+    console.log('Library&Discussions data before render: ', library, discussions);
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
@@ -481,6 +481,12 @@ class QuickUpdate extends Component {
                   renderItem={this.renderPostItem}
                   onEndReached={() => discussions.length && this.fetchNextPage(entry)}
                   onEndReachedThreshold={0.6}
+                  ListEmptyComponent={
+                    <CreatePostRow
+                      title={`Start a discussion. What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
+                      onPress={this.toggleEditor}
+                    />
+                  }
                   ListHeaderComponent={
                     <CreatePostRow
                       title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
@@ -506,7 +512,7 @@ class QuickUpdate extends Component {
         {/* Editor */}
         <Modal animationType="slide" transparent visible={editing}>
           <QuickUpdateEditor
-            currentEpisode={library[currentIndex]}
+            currentEpisode={entry && entry.unit && entry.unit.length && entry.unit[0]}
             episode={progress}
             onChange={this.onEditorChanged}
             onCancel={this.toggleEditor}
