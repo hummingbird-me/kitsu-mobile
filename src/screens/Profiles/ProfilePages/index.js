@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 
 import { Kitsu } from 'kitsu/config/api';
-import { defaultCover } from 'kitsu/constants/app';
+import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
@@ -16,6 +16,9 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import Summary from 'kitsu/screens/Profiles/ProfilePages/pages/Summary';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
+import { isX, paddingX } from 'kitsu/utils/isX';
+
+const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
 // There's no way to Report Profiles at the moment in the API.
 const MORE_BUTTON_OPTIONS = ['Block', /* 'Report Profile', */ 'Nevermind'];
@@ -193,7 +196,7 @@ class ProfilePage extends PureComponent {
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
           style={{ flex: 1 }}
-          headerHeight={60}
+          headerHeight={HEADER_HEIGHT}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
           renderParallaxBackground={() => (

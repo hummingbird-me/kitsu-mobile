@@ -8,7 +8,7 @@ import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import * as ProfileScreens from 'kitsu/screens/Profiles';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import homeIcon from 'kitsu/assets/img/tabbar_icons/home.png';
-import { statusBarHeight } from 'kitsu/constants/app';
+import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import navigationOptions from './navigationOptions';
 
 const PostStack = StackNavigator(
@@ -69,7 +69,7 @@ const FeedStack = StackNavigator(
         ...options.headerStyle,
         // This may look weird but it's the only way to make the modal status bars look normal
         // On ios it auto adds status bar height, where as on android it doesnt :/
-        height: Platform.select({ ios: 44, android: 44 + statusBarHeight }),
+        height: Platform.select({ ios: navigationBarHeight, android: navigationBarHeight + statusBarHeight }),
         paddingTop: Platform.select({ ios: 0, android: statusBarHeight }),
       },
       // eslint-disable-next-line react/prop-types
