@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: Platform.select({ ios: 0, android: 20 }),
-    paddingTop: isX ? 20 : 0,
+    paddingTop: Platform.select({ ios: 10, android: 0 }) + isX ? 20 : 0,
     height: 70,
     flexDirection: 'row',
     backgroundColor: 'transparent',
@@ -46,10 +46,11 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     fontWeight: '700',
     fontSize: 16,
+    marginTop: isX ? 4 : 0,
   },
   filterButton: {
     position: 'absolute',
-    top: '50%',
+    top: Platform.select({ ios: '50%', android: '30%' }),
     marginTop: isX ? 10 : 0,
     right: 10,
   },
