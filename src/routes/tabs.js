@@ -1,5 +1,4 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -35,17 +34,25 @@ const Tabs = TabNavigator(
   {
     lazy: true,
     tabBarPosition: 'bottom',
-    swipeEnabled: Platform.OS === 'ios',
+    swipeEnabled: false,
     tabBarOptions: {
       activeTintColor: tabRed,
       inactiveBackgroundColor: listBackPurple,
       activeBackgroundColor: listBackPurple,
       showLabel: false,
       showIcon: true,
+      iconStyle: {
+        width: 44,
+        height: 44,
+      },
       style: {
         height: 44.96,
         borderTopWidth: 0,
         backgroundColor: listBackPurple,
+      },
+      tabStyle: {
+        height: 44.96,
+        borderTopWidth: 0,
       },
       indicatorStyle: {
         backgroundColor: tabRed,

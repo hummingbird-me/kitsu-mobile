@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   posterImageCard: {
     backgroundColor: colors.lightPurple,
     marginBottom: 2,
+    borderRadius: 3,
   },
   progressBar: {
     marginTop: 2,

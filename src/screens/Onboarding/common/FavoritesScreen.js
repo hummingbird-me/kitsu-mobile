@@ -91,20 +91,25 @@ class FavoritesScreen extends React.Component {
 
   onFaveCategory = async (id, index) => {
     const { id: userId } = this.props.currentUser;
-    try {
-      const res = await Kitsu.create('categoryFavorites', {
-        category: {
-          id,
-        },
-        user: {
-          id: userId,
-        },
-      });
-      const categories = this.props.favoriteCategories.slice();
-      categories[index].favoritesId = res.id;
-      return categories;
-    } catch (e) {
-      console.log(e);
+    if (id) {
+      setToken(this.props.accessToken);
+      try {
+        const res = await Kitsu.create('categoryFavorites', {
+          category: {
+            id,
+          },
+          user: {
+            id: userId,
+          },
+        });
+        const categories = this.props.favoriteCategories.slice();
+        categories[index].favoritesId = res.id;
+        return categories;
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log('id doesnt exist', id, index);
     }
     return null;
   };

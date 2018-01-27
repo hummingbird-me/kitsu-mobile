@@ -1,8 +1,10 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 
-const TABBAR_HEIGHT = Platform.select({ ios: 62, android: 54 });
+// Don't need to check for iPhone X as the container is the one that will pad the content with it.
+const TABBAR_HEIGHT = (navigationBarHeight - 1) + statusBarHeight;
 
 export const styles = StyleSheet.create({
   container: {
@@ -23,6 +25,7 @@ export const styles = StyleSheet.create({
   searchBox: {
     marginHorizontal: 10,
     marginBottom: 10,
+    marginTop: 2,
     justifyContent: 'center',
   },
   tabBar: {
@@ -32,26 +35,20 @@ export const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderLeftWidth: 0,
     height: TABBAR_HEIGHT,
-    paddingRight: 5,
-    paddingLeft: 5,
-    paddingTop: 10,
-    paddingBottom: 10,
+    justifyContent: 'flex-end',
     shadowColor: 'black',
-    shadowOpacity: 0.1,
-    shadowRadius: StyleSheet.hairlineWidth,
-    marginTop: 0,
-    justifyContent: 'center',
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginVertical: 0,
   },
   tabBarItem: {
-    height: 27,
-    marginTop: Platform.select({ ios: 8, android: 6 }),
+    // Tab bar adds a padding of 8 around the item.
+    height: navigationBarHeight - 16,
+  },
+  textContainer: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    borderBottomWidth: 0,
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
+    alignItems: 'center',
   },
   tabBarTextActive: {
     color: colors.red,

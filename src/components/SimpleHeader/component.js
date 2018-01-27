@@ -12,6 +12,9 @@ export const SimpleHeader = (props) => {
   const titleAction = props.titleAction ? () => props.titleAction() : null;
   const rightAction = props.rightAction ? () => props.rightAction() : null;
 
+  // FIXME: This view isn't properly styled (content is not centered properley in the bar)
+  // Due to time constraints though it's being left as is since it looks very similar
+  // to the original navigation style.
   return (
     <View style={styles.headerContainer}>
       {props.titleContent &&

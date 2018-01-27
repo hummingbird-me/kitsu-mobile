@@ -1,6 +1,6 @@
 /* global __DEV__ */
 import React, { PureComponent } from 'react';
-import { View, StatusBar, Linking } from 'react-native';
+import { Platform, View, StatusBar, Linking } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import identity from 'lodash/identity';
@@ -150,6 +150,7 @@ const ConnectedRoot = connect(({ feed }) => ({
 }))(RootContainer);
 
 // Check for Codepush only in production mode (Saves compile time & network calls in development).
-const wrapper = __DEV__ ? identity : codePush;
+// FIXME: Codepush is making android crash
+const wrapper = __DEV__ || Platform.OS === 'android' ? identity : codePush;
 
 export default wrapper(App);
