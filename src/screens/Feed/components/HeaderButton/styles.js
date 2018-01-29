@@ -6,6 +6,6 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   headerButton_disabled: {
-    opacity: 0.5,
+    opacity: 0.7,
   },
 });

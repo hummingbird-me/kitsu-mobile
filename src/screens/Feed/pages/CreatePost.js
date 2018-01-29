@@ -157,7 +157,10 @@ class CreatePost extends React.PureComponent {
     if (navigation.state.params.busy) return;
 
     // Don't allow posting if content and gif is empty
-    if (isEmpty(content) && isNull(gif)) return;
+    if (isEmpty(content)) {
+      this.setState({ error: 'No content provided!' });
+      return;
+    };
 
     navigation.setParams({ busy: true });
     this.setState({ error: '' });
