@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, View, Text } from 'react-native';
+import { KeyboardAvoidingView, View, Text, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { indexOf, isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
@@ -135,19 +135,36 @@ class CreatePost extends React.PureComponent {
             feedTitle={this.state.currentFeed.title}
             onFeedPillPress={() => this.handleFeedPickerModal(true)}
           />
-          <PostTextInput
-            inputRef={(el) => { this.postTextInput = el; }}
-            multiline
-            numberOfLines={4}
-            onChangeText={content => this.setState({ content })}
-            value={this.state.content}
-            placeholder="Write something...."
-            placeholderTextColor={colors.grey}
-            autoCorrect={false}
-            autoFocus
-            returnKeyType="done"
-            underlineColorAndroid="transparent"
-          />
+          <ScrollView style={{ flex: 1 }} >
+            <PostTextInput
+              inputRef={(el) => { this.postTextInput = el; }}
+              multiline
+              numberOfLines={0}
+              onChangeText={content => this.setState({ content })}
+              onContentSizeChange={({ nativeEvent }) => {
+                // On android the text box doesn't auto grow, so we have to manually set the height
+                if (Platform.OS === 'android') {
+                  this.setState({ textInputHeight: nativeEvent.contentSize.height });
+                }
+              }}
+              onSubmitEditing={() => {
+                if (!this.state.content.endsWith('\n')) {
+                  const content = `${this.state.content}\n`;
+                  this.setState({ content });
+                }
+              }}
+              height={Platform.select({ ios: null, android: (this.state.textInputHeight || 0) })}
+              value={this.state.content}
+              placeholder="Write something...."
+              placeholderTextColor={colors.grey}
+              autoCorrect={false}
+              autoFocus
+              returnKeyType="done"
+              underlineColorAndroid="transparent"
+              blurOnSubmit={false}
+            />
+            <View style={{ backgroundColor: 'blue', height: 100, marginTop: 20 }} />
+          </ScrollView>
         </View>
         <PickerModal
           visible={this.state.feedPickerModalIsVisible}
