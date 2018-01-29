@@ -7,7 +7,7 @@ import { styles } from './styles';
 export const HeaderButton = ({ disabled, highlighted, title, onPress, loading }) => (
   <TouchableOpacity
     disabled={disabled}
-    style={styles.headerButton}
+    style={[styles.headerButton, disabled ? styles.headerButton_disabled : null]}
     onPress={onPress}
   >
     {loading ?

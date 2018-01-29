@@ -4,44 +4,9 @@ import { View, Modal, FlatList, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyledText } from 'kitsu/components/StyledText';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
+import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { styles } from './styles';
 
-const ModalHeader = ({
-  title,
-  leftButtonTitle,
-  leftButtonAction,
-  rightButtonTitle,
-  rightButtonAction,
-}) => (
-  <View style={styles.modalHeader}>
-    <View style={styles.modalButton}>
-      <HeaderButton onPress={leftButtonAction} title={leftButtonTitle} />
-    </View>
-    <View style={styles.modalTitle}>
-      <StyledText color="light" size="small" bold>{title}</StyledText>
-    </View>
-    <View style={[styles.modalButton, styles.modalRightButton]}>
-      <HeaderButton onPress={rightButtonAction} highlighted title={rightButtonTitle} />
-    </View>
-  </View>
-);
-
-ModalHeader.propTypes = {
-  title: PropTypes.string,
-  leftButtonTitle: PropTypes.string,
-  leftButtonAction: PropTypes.func,
-  rightButtonTitle: PropTypes.string,
-  rightButtonAction: PropTypes.func,
-};
-
-ModalHeader.defaultProps = {
-  title: '',
-  leftButtonTitle: 'Cancel',
-  leftButtonAction: null,
-  rightButtonTitle: 'Done',
-  rightButtonAction: null,
-};
 
 const ModalMain = props => <View style={styles.modalMain} {...props} />;
 

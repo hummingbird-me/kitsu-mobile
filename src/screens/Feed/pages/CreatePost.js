@@ -10,6 +10,7 @@ import { PostMeta } from 'kitsu/screens/Feed/components/PostMeta';
 import { PostTextInput } from 'kitsu/screens/Feed/components/PostTextInput';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PickerModal } from 'kitsu/screens/Feed/components/PickerModal';
+import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { feedStreams } from '../feedStreams';
 
 class CreatePost extends React.PureComponent {
@@ -166,10 +167,17 @@ class CreatePost extends React.PureComponent {
             <View style={{ backgroundColor: 'blue', height: 100, marginTop: 20 }} />
           </ScrollView>
         </View>
-        <PickerModal
+        {/* <PickerModal
           visible={this.state.feedPickerModalIsVisible}
           data={feedStreams}
           currentPick={this.state.currentFeed}
+          onCancelPress={() => this.handleFeedPickerModal(false)}
+          onDonePress={feed => this.handleFeedPicker(feed)}
+        /> */}
+        <GiphyModal
+          visible={this.state.feedPickerModalIsVisible}
+          // data={feedStreams}
+          // currentPick={this.state.currentFeed}
           onCancelPress={() => this.handleFeedPickerModal(false)}
           onDonePress={feed => this.handleFeedPicker(feed)}
         />
