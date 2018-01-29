@@ -162,9 +162,9 @@ export default class QuickUpdateCard extends PureComponent {
                       {' '}
                       {progress}
                     </Text>
-                    <Text style={styles.totalEpisodesText}>
+                    <Text numberOfLines={1} style={styles.totalEpisodesText}>
                       {' '}
-                      of {unitCount} {unit[0].canonicalTitle}
+                      of {unitCount} {unit[0] && unit[0].canonicalTitle}
                     </Text>
                   </View>
                 ) : (
