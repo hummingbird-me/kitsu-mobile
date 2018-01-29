@@ -207,17 +207,17 @@ export default class QuickUpdateCard extends PureComponent {
                   onPress={this.onMarkComplete}
                   style={[styles.button, styles.markWatchedButton]}
                 >
-                  {unitCount === progress ? (
+                  {unitCount === progress + 1 ? ( // is final episode?
+                    <Text style={styles.buttonText}>Mark as Complete</Text>
+                  ) : (
                     <Text style={styles.buttonText}>Mark
                       <Text style={{ fontWeight: 'bold' }}>
-                        {media.type === 'anime' ? 'Episode' : 'Chapter'}
+                        {' '}{media.type === 'anime' ? 'Episode' : 'Chapter'}
                         {' '}
-                        {data.item.progress + 1}
+                        {data.item.progress + 1}{' '}
                       </Text>
                     Watched
                     </Text>
-                  ) : (
-                    <Text style={styles.buttonText}>Mark as Complete</Text>
                   )}
                 </TouchableOpacity>
               </View>
