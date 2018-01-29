@@ -16,7 +16,7 @@ const HIT_SLOP = {
 export default class QuickUpdateEditor extends PureComponent {
   static propTypes = {
     currentEpisode: PropTypes.object.isRequired,
-    episode: PropTypes.number.isRequired,
+    progress: PropTypes.number.isRequired,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onDone: PropTypes.func,
@@ -47,7 +47,7 @@ export default class QuickUpdateEditor extends PureComponent {
   };
 
   render() {
-    const { episode, value, onCancel, onDone, currentEpisode } = this.props;
+    const { progress, value, onCancel, onDone, currentEpisode } = this.props;
     const { headerOpacity } = this.state;
     return (
       <View style={styles.wrapper}>
@@ -57,7 +57,7 @@ export default class QuickUpdateEditor extends PureComponent {
           <TouchableOpacity onPress={onCancel} hitSlop={HIT_SLOP} style={styles.headerButton}>
             <Text style={styles.headerButtonText}>Cancel</Text>
           </TouchableOpacity>
-          <Text style={styles.headerText}>Episode {episode}</Text>
+          <Text style={styles.headerText}>Episode {progress}</Text>
           <TouchableOpacity onPress={onDone} hitSlop={HIT_SLOP} style={styles.headerButton}>
             <Text style={styles.headerButtonText}>Done</Text>
           </TouchableOpacity>
@@ -69,7 +69,7 @@ export default class QuickUpdateEditor extends PureComponent {
             value={value}
             style={styles.editor}
             onChangeText={this.props.onChange}
-            placeholder={`(Optional) Share your thoughts on Episode ${episode}`}
+            placeholder={`(Optional) Share your thoughts on Episode ${progress}`}
             placeholderTextColor={colors.lightGrey}
           />
           <MediaTag

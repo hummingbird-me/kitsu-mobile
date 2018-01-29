@@ -520,17 +520,19 @@ class QuickUpdate extends Component {
           )}
         </View>
 
-        {/* Editor */}
-        <Modal animationType="slide" transparent visible={editing}>
-          <QuickUpdateEditor
-            currentEpisode={entry && entry.unit && entry.unit.length && entry.unit[0]}
-            episode={progress}
-            onChange={this.onEditorChanged}
-            onCancel={this.toggleEditor}
-            onDone={this.updateTextAndToggle}
-            value={editorText}
-          />
-        </Modal>
+        {/* Editor: Render if there is a unit. */}
+        {entry && entry.unit && entry.unit.length > 0 && (
+          <Modal animationType="slide" transparent visible={editing}>
+            <QuickUpdateEditor
+              currentEpisode={entry.unit[0]}
+              progress={progress}
+              onChange={this.onEditorChanged}
+              onCancel={this.toggleEditor}
+              onDone={this.updateTextAndToggle}
+              value={editorText}
+            />
+          </Modal>
+        )}
       </View>
     );
   }
