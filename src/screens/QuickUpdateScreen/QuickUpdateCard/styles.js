@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     color: '#999999',
     fontFamily: 'OpenSans',
     fontSize: 12,
+    flex: 1,
   },
   episodeName: {
     backgroundColor: 'transparent',
