@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   editor: {
-    flex: 1,
     ...text,
     color: 'black',
   },

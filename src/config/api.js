@@ -191,7 +191,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
     nextUnit: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'library-entries' },
@@ -804,6 +804,16 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'episodeFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/episode_aggr' },
+);
+
+Kitsu.define(
   'globalFeed',
   {
     activityGroups: {
@@ -868,6 +878,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     spoiledUnit: {
+      type: 'episodes',
       jsonApi: 'hasOne',
     },
     targetUser: {
@@ -877,6 +888,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     user: {
+      type: 'users',
       jsonApi: 'hasOne',
     },
   },
