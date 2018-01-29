@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, View, Text, ScrollView, Platform } from 'react-native';
+import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { indexOf, isEmpty } from 'lodash';
+import { indexOf, isEmpty, isNull } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -11,7 +11,73 @@ import { PostTextInput } from 'kitsu/screens/Feed/components/PostTextInput';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PickerModal } from 'kitsu/screens/Feed/components/PickerModal';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
+import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
+import { scene } from 'kitsu/screens/Feed/constants';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { feedStreams } from '../feedStreams';
+
+const GIFSelectText = ({ onPress, disabled }) => (
+  <TouchableOpacity
+    style={{
+      borderColor: colors.grey,
+      borderWidth: 1,
+      borderRadius: 4,
+      height: 100,
+      margin: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+    onPress={onPress}
+    disabled={disabled}
+  >
+    <View style={{ flexDirection: 'row' }} >
+      <Icon name="plus" style={{ color: colors.grey, fontSize: 18, marginRight: 6 }} />
+      <Text style={{ color: colors.grey }}>
+        Tap here to add a GIF
+      </Text>
+    </View>
+  </TouchableOpacity>
+);
+
+GIFSelectText.propTypes = {
+  onPress: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
+
+GIFSelectText.defaultProps = {
+  disabled: false,
+};
+
+const GIFImage = ({ uri, onClear, disabled }) => (
+  <View>
+    <PostImage uri={uri} width={scene.width} />
+    <TouchableOpacity
+      onPress={onClear}
+      style={{
+        position: 'absolute',
+        right: 5,
+        top: 5,
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+      }}
+      disabled={disabled}
+    >
+      <Icon name="close" style={{ color: colors.lightGrey, fontSize: 18 }} />
+    </TouchableOpacity>
+  </View>
+);
+
+GIFImage.propTypes = {
+  uri: PropTypes.string.isRequired,
+  onClear: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
+
+GIFImage.defaultProps = {
+  disabled: false,
+};
 
 class CreatePost extends React.PureComponent {
   static propTypes = {
@@ -49,9 +115,11 @@ class CreatePost extends React.PureComponent {
 
   state = {
     feedPickerModalIsVisible: false,
+    giphyPickerModalIsVisible: false,
     content: '',
     currentFeed: feedStreams[0],
     error: '',
+    gif: null,
   };
 
   componentDidMount() {
@@ -59,6 +127,15 @@ class CreatePost extends React.PureComponent {
       handlePressPost: this.handlePressPost,
       busy: false,
     });
+  }
+
+  handleGiphy = (gif) => {
+    this.setState({ gif });
+    this.handleGiphyPickerModal(false);
+  }
+
+  handleGiphyPickerModal = (giphyPickerModalIsVisible) => {
+    this.setState({ giphyPickerModalIsVisible });
   }
 
   handleFeedPicker = (currentFeed) => {
@@ -73,13 +150,23 @@ class CreatePost extends React.PureComponent {
 
   handlePressPost = async () => {
     const { navigation } = this.props;
+    const { gif } = this.state;
+    const currentUserId = this.props.currentUser.id;
+    const { content, currentFeed } = this.state;
+
     if (navigation.state.params.busy) return;
+
+    // Don't allow posting if content and gif is empty
+    if (isEmpty(content) && isNull(gif)) return;
 
     navigation.setParams({ busy: true });
     this.setState({ error: '' });
 
-    const currentUserId = this.props.currentUser.id;
-    const { content, currentFeed } = this.state;
+    // Add the gif to the content
+    let additionalContent = content;
+    if (gif && gif.url) {
+      additionalContent += `\n${gif.url}`;
+    }
 
     // Target interest is either 'anime', 'manga', or blank depending
     // on the feed we want to post to.
@@ -89,7 +176,7 @@ class CreatePost extends React.PureComponent {
 
     try {
       const post = await Kitsu.create('posts', {
-        content,
+        content: additionalContent,
         targetInterest,
         user: {
           type: 'users',
@@ -100,6 +187,8 @@ class CreatePost extends React.PureComponent {
       if (this.props.navigation.state.params.onNewPostCreated) {
         this.props.navigation.state.params.onNewPostCreated(post);
       }
+
+      this.props.navigation.goBack();
     } catch (err) {
       const string = (e && e[0].detail) || 'Failed to create post.';
       this.setState({ error: string });
@@ -107,14 +196,12 @@ class CreatePost extends React.PureComponent {
     }
 
     this.props.navigation.setParams({ busy: false });
-
-    // Take user back to the feeds
-    if (isEmpty(this.state.error)) this.props.navigation.goBack();
   }
 
   render() {
-    const { currentUser } = this.props;
-    const { error } = this.state;
+    const { currentUser, navigation } = this.props;
+    const { error, gif } = this.state;
+    const { busy } = navigation.state.params;
 
     return (
       <KeyboardAvoidingView
@@ -164,22 +251,30 @@ class CreatePost extends React.PureComponent {
               underlineColorAndroid="transparent"
               blurOnSubmit={false}
             />
-            <View style={{ backgroundColor: 'blue', height: 100, marginTop: 20 }} />
+            <View style={{ marginTop: 20 }}>
+              { gif ?
+                <GIFImage
+                  disabled={busy}
+                  uri={gif.url}
+                  onClear={() => this.setState({ gif: null })}
+                />
+                :
+                <GIFSelectText disabled={busy} onPress={() => this.handleGiphyPickerModal(true)} />
+              }
+            </View>
           </ScrollView>
         </View>
-        {/* <PickerModal
+        <PickerModal
           visible={this.state.feedPickerModalIsVisible}
           data={feedStreams}
           currentPick={this.state.currentFeed}
           onCancelPress={() => this.handleFeedPickerModal(false)}
           onDonePress={feed => this.handleFeedPicker(feed)}
-        /> */}
+        />
         <GiphyModal
-          visible={this.state.feedPickerModalIsVisible}
-          // data={feedStreams}
-          // currentPick={this.state.currentFeed}
-          onCancelPress={() => this.handleFeedPickerModal(false)}
-          onDonePress={feed => this.handleFeedPicker(feed)}
+          visible={this.state.giphyPickerModalIsVisible}
+          onCancelPress={() => this.handleGiphyPickerModal(false)}
+          onGifSelect={g => this.handleGiphy(g)}
         />
       </KeyboardAvoidingView>
     );

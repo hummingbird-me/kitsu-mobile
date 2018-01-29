@@ -1,39 +1,56 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, FlatList, TouchableHighlight, Text, Keyboard } from 'react-native';
+import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions } from 'react-native';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
-import { isEmpty, isNull } from 'lodash';
+import { isEmpty, range } from 'lodash';
+import { getBestGridItemSpacing } from 'kitsu/common/utils';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
 const apiKey = 'dc6zaTOxFJmzC';
 const endpoint = 'https://api.giphy.com/v1/gifs/search?';
 
+const IMAGE_SIZE = { width: 150, height: 100 };
+
+function getBestSpacing() {
+  const itemWidths = range(150, 300, 5);
+  const width = Dimensions.get('window').width;
+  const minMargin = 2;
+
+  const best = getBestGridItemSpacing(itemWidths, width, minMargin);
+
+  // The ratio of the poster/image
+  const imageRatio = IMAGE_SIZE.width / IMAGE_SIZE.height;
+
+  return {
+    columnCount: 3,
+    margin: minMargin,
+    ...best,
+    height: best.width * (1 / imageRatio),
+  };
+}
+
+// Just need to calculate this once since we don't have landscape.
+const bestSpacing = getBestSpacing();
+
 export class GiphyModal extends PureComponent {
   static propTypes = {
     visible: PropTypes.bool,
     onCancelPress: PropTypes.func,
-    onDonePress: PropTypes.func,
+    onGifSelect: PropTypes.func,
   }
 
   static defaultProps = {
     visible: false,
     onCancelPress: null,
-    onDonePress: null,
+    onGifSelect: null,
   }
 
   state = {
-    currentPick: null,
     gifs: [],
     query: '',
-  }
-
-  handlePicker = (currentPick) => {
-    this.setState({ currentPick });
-  }
-
-  handleOnDonePress = () => {
-    this.props.onDonePress(this.state.currentPick);
   }
 
   handleSearchStateChange = (query) => {
@@ -58,24 +75,34 @@ export class GiphyModal extends PureComponent {
       const giphy = await response.json();
       const gifs = giphy.data.map(e => e.images.original);
 
-      // User might have cleared keyboard but results come in after
-      if (!isEmpty(query)) this.setState({ gifs });
+      this.setState({ gifs });
     } catch (e) {
       console.log(e);
     }
   }
 
-  renderItem({ item }) {
+  renderItem(item, spacing) {
     return (
-      <Text>
-        {item.url}
-      </Text>
+      <View style={{ width: spacing.width, margin: spacing.margin, backgroundColor: colors.lightGrey }}>
+        <TouchableOpacity onPress={() => this.props.onGifSelect(item)}>
+          <ProgressiveImage
+            source={{ uri: item.url }}
+            style={{
+              height: spacing.height,
+              width: spacing.width,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
     );
   }
 
   render() {
     const { visible, onCancelPress } = this.props;
-    const { gifs, currentPick } = this.state;
+    const { gifs } = this.state;
+
+    // This will make it so the list will be centred should we have any extra space left over
+    const padding = { paddingLeft: bestSpacing.extra / 2, paddingTop: bestSpacing.margin / 2 };
 
     return (
       <Modal
@@ -85,14 +112,12 @@ export class GiphyModal extends PureComponent {
         onRequestClose={onCancelPress}
       >
         <ModalHeader
-          title="Giphy Search"
+          title="Select a GIF"
           leftButtonTitle="Cancel"
           leftButtonAction={onCancelPress}
-          rightButtonTitle="Done"
-          rightButtonAction={this.handleOnDonePress}
-          rightButtonDisabled={isNull(currentPick)}
+          rightButtonTitle=""
         />
-        <View>
+        <View style={{ flex: 1 }}>
           <View style={styles.searchBoxContainer}>
             <SearchBox
               placeholder={'Search for a GIF'}
@@ -103,11 +128,19 @@ export class GiphyModal extends PureComponent {
               onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
-
+          {/* TODO: Fetch more gifs on scroll */}
           <FlatList
+            style={padding}
             data={gifs}
+            getItemLayout={(data, index) => ({
+              length: bestSpacing.height,
+              offset: bestSpacing.height * index,
+              index,
+            })}
+            numColumns={bestSpacing.columnCount}
             ItemSeparatorComponent={() => <View />}
-            renderItem={this.renderItem}
+            keyExtractor={item => item.url}
+            renderItem={({ item }) => this.renderItem(item, bestSpacing)}
           />
         </View>
       </Modal>
