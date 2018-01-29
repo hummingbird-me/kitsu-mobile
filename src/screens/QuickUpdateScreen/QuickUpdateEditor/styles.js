@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-
+import { isX } from 'kitsu/utils/isX';
 import * as colors from 'kitsu/constants/colors';
 
 const text = {
@@ -21,11 +21,13 @@ const styles = StyleSheet.create({
   headerText: {
     flex: 1,
     ...text,
+    marginTop: isX ? 20 : 0,
     textAlign: 'center',
     alignSelf: 'center',
     fontWeight: '700',
   },
   headerButton: {
+    marginTop: isX ? 20 : 0,
     justifyContent: 'center',
   },
   headerButtonText: {
