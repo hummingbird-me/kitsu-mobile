@@ -304,7 +304,6 @@ class QuickUpdate extends Component {
 
   carouselItemChanged = (index) => {
     const { library } = this.state;
-    console.log('Library item on swipe: ', library[index]);
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
     const entry = library[index];
@@ -443,7 +442,6 @@ class QuickUpdate extends Component {
     const progress = (entry && entry.progress) || 0;
     const media = entry && (entry.anime || entry.manga);
 
-    console.log('Library&Discussions data before render: ', library, discussions);
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}

@@ -33,6 +33,7 @@ export default class QuickUpdateCard extends PureComponent {
     onEndEditing: PropTypes.func,
     onMarkComplete: PropTypes.func,
     onViewDiscussion: PropTypes.func,
+    onRate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -118,7 +119,6 @@ export default class QuickUpdateCard extends PureComponent {
 
     let { unit } = data.item;
     const { loading, anime, manga, progress, nextUnit } = data.item;
-    const { editing, editingUpdateText, updateText } = this.state;
 
     // Might be a new entry and referencing a non-existent unit for episode 0
     if ((!unit || !unit.length) && nextUnit) {
