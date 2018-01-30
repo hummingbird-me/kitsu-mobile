@@ -21,7 +21,7 @@ export class ProgressBar extends React.Component {
 
   state = {
     fillPercentage: new Animated.Value(this.props.fillPercentage),
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     this.update(nextProps.fillPercentage);
@@ -45,11 +45,12 @@ export class ProgressBar extends React.Component {
     };
 
     return (
-      <View style={[
-        styles.background,
-        this.props.backgroundStyle,
-        { height: this.props.height, borderRadius: this.props.height },
-      ]}
+      <View
+        style={[
+          styles.background,
+          this.props.backgroundStyle,
+          { height: this.props.height, borderRadius: this.props.height },
+        ]}
       >
         <Animated.View style={fillStyle} />
       </View>

@@ -17,10 +17,10 @@ import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
+import { SimpleRating } from 'kitsu/components/SimpleRating';
+import { StarRating } from 'kitsu/components/StarRating';
 import { styles as commonStyles } from '../styles';
 import { styles } from './styles';
-import { SimpleRating } from './SimpleRating';
-import { StarRating } from './StarRating';
 
 class RateScreen extends React.Component {
   static navigationOptions = {

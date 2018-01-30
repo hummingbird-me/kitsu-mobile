@@ -16,6 +16,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { PostImage, PostImageSeparator } from 'kitsu/screens/Feed/components/PostImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { scene } from 'kitsu/screens/Feed/constants';
 import { styles } from './styles';
@@ -335,43 +336,6 @@ PostHeader.defaultProps = {
   time: null,
   onBackButtonPress: null,
   onAvatarPress: null,
-};
-
-// Media Tag
-export const MediaTag = ({ media, episode, navigation }) => (
-  <View style={styles.mediaTagView}>
-    <TouchableOpacity
-      onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
-      style={styles.mediaTag}
-    >
-      <StyledText color="green" size="xxsmall">{media.canonicalTitle}</StyledText>
-    </TouchableOpacity>
-    {episode && (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
-        style={styles.episodeTagView}
-      >
-        <View style={styles.episodeTagLine} />
-        <View style={styles.mediaTag}>
-          <StyledText color="green" size="xxsmall">{`E ${episode.number}`}</StyledText>
-        </View>
-      </TouchableOpacity>
-    )}
-  </View>
-);
-
-MediaTag.propTypes = {
-  media: PropTypes.shape({
-    canonicalTitle: PropTypes.string.isRequired,
-  }).isRequired,
-  episode: PropTypes.shape({
-    number: PropTypes.number.isRequired,
-  }),
-  navigation: PropTypes.object.isRequired,
-};
-
-MediaTag.defaultProps = {
-  episode: null,
 };
 
 // PostMain

@@ -6,42 +6,50 @@ import {
   Dimensions,
   Image,
   Text,
-  TouchableOpacity,
+  RefreshControl,
   View,
+  Modal,
 } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
-import Icon from 'react-native-vector-icons/Ionicons';
-
+import URL from 'url-parse';
+import { Post } from 'kitsu/screens/Feed/components/Post';
+import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
+import QuickUpdateEditor from './QuickUpdateEditor';
 
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
-
 import styles from './styles';
 
 const LIBRARY_ENTRIES_FIELDS = [
   'progress',
   'status',
   'rating',
+  'ratingTwenty',
   'unit',
+  'nextUnit',
   'updatedAt',
-  'anime',
-  'manga',
 ];
 
-const ANIME_FIELDS = [
+const MEDIA_FIELDS = [
   'slug',
   'coverImage',
   'posterImage',
-  'episodeCount',
   'canonicalTitle',
   'titles',
   'synopsis',
   'status',
   'startDate',
 ];
+
+const ANIME_FIELDS = [...MEDIA_FIELDS, 'episodeCount'];
+const MANGA_FIELDS = [...MEDIA_FIELDS, 'chapterCount'];
+
+const CAROUSEL_HEIGHT = 310;
 
 class QuickUpdate extends Component {
   static propTypes = {
@@ -51,16 +59,30 @@ class QuickUpdate extends Component {
 
   state = {
     library: null,
+    currentIndex: null,
+    discussions: null,
+    discussionsLoading: false,
+    isLoadingNextPage: false,
     filterMode: 'all',
     backgroundImageUri: undefined,
     nextUpBackgroundImageUri: undefined,
     faderOpacity: new Animated.Value(1),
     headerOpacity: new Animated.Value(1),
-  }
+    editorText: '',
+    editing: false,
+    refreshing: false,
+    ratingSimpleSelected: 0,
+  };
 
   componentWillMount() {
     this.fetchLibrary();
   }
+
+  onEditorChanged = (editorText) => {
+    this.setState({ editorText });
+  };
+
+  onRate = ratingTwenty => this.rate(ratingTwenty);
 
   getItemLayout = (data, index) => {
     const { width } = Dimensions.get('window');
@@ -70,40 +92,113 @@ class QuickUpdate extends Component {
       offset: (width / 5) * index,
       index,
     };
-  }
+  };
 
-  fetchLibrary = async () => {
-    this.setState({ loading: true });
-
-    const { filterMode } = this.state;
-
+  rate = async (ratingTwenty) => {
+    const { currentIndex, library } = this.state;
+    const entry = library[currentIndex];
+    const media = getMedia(entry);
+    const mediaType = entry.anime ? 'anime' : 'manga';
     try {
-      const library = await Kitsu.findAll('libraryEntries', {
-        fields: {
-          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
-          anime: ANIME_FIELDS.join(),
-          user: 'id',
+      await Kitsu.update('libraryEntries', {
+        ratingTwenty,
+        id: entry.id,
+        [mediaType]: {
+          id: media.id,
+          type: mediaType,
         },
-        filter: {
-          status: 'current,planned',
-          user_id: this.props.currentUser.id,
-          kind: 'anime',
+        user: {
+          id: this.props.currentUser.id,
         },
-        include: 'anime,manga,unit',
-        page: { limit: 40 },
-        sort: 'status,-progressed_at,-updated_at',
       });
-
-      this.setState({
-        library,
-        loading: false,
-      }, () => {
-        this.carouselItemChanged(0);
-      });
+      this.refetchLibraryEntry(entry);
     } catch (e) {
       console.log(e);
     }
-  }
+  };
+
+  cursor = undefined
+  resetFeed = (cb) => {
+    this.cursor = undefined;
+    this.setState({ discussions: null }, cb);
+  };
+
+  fetchDiscussions = async (entry) => {
+    this.setState({ discussionsLoading: true });
+    try {
+      const [unit] = entry.unit;
+      const posts = await Kitsu.find('episodeFeed', unit.id, {
+        include:
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        filter: { kind: 'posts' },
+        page: {
+          limit: 10,
+          cursor: this.cursor,
+        },
+      });
+
+      // I need to read the cursor value out of the 'next' link in the result.
+      const url = new URL(posts.links.next, true);
+      this.cursor = url.query['page[cursor]'];
+
+      const processed = preprocessFeed(posts);
+      const discussions = [...(this.state.discussions || []), ...processed];
+      this.setState({ discussions, discussionsLoading: false });
+    } catch (e) {
+      console.log(e);
+      // Something went wrong, stop the spinner.
+      this.setState({ discussions: [], discussionsLoading: false });
+    }
+  };
+
+  fetchNextPage = async (entry) => {
+    if (this.state.isLoadingNextPage || !this.cursor) { return; }
+    this.setState({ isLoadingNextPage: true });
+    await this.fetchDiscussions(entry);
+    this.setState({ isLoadingNextPage: false });
+  };
+
+  fetchLibrary = async () => {
+    this.setState({ loading: true });
+    let { filterMode } = this.state;
+    filterMode = filterMode === 'all' ? undefined : filterMode;
+
+    try {
+      const fields = getRequestFields(filterMode);
+      const includes = filterMode || 'anime,manga';
+      const library = await Kitsu.findAll('libraryEntries', {
+        fields,
+        filter: {
+          status: 'current,planned',
+          user_id: this.props.currentUser.id,
+          kind: filterMode,
+        },
+        include: `${includes},unit,nextUnit`,
+        page: { limit: 15 },
+        sort: 'status,-progressed_at,-updated_at',
+      });
+
+      // See else statement, api may return
+      // library = [meta: Object, links: Object]
+      if (library.length !== 0) {
+        this.setState(
+          {
+            library,
+            loading: false,
+          },
+          () => {
+            this.carouselItemChanged(0);
+          },
+        );
+      } else {
+      // TODO: handle the case where libraryEntries is undefined
+      // Apparently we don't have any library entries.
+        this.setState({ library: [] });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   refetchLibraryEntry = async (libraryEntry) => {
     const index = this.state.library.indexOf(libraryEntry);
@@ -112,45 +207,50 @@ class QuickUpdate extends Component {
     // Tell the entry it's loading.
     library[index].loading = true;
     this.setState({ library });
-
     try {
+      const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
+      const fields = getRequestFields(filterMode);
+      const includes = filterMode || 'anime,manga';
       const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
-        fields: {
-          libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
-          anime: ANIME_FIELDS.join(),
-          user: 'id',
-        },
-        include: 'anime,manga,unit',
+        fields,
+        include: `${includes},unit,nextUnit`,
       });
 
       library = [...this.state.library];
       library[index] = entry;
 
       this.setState({ library });
+
+      this.resetFeed();
+      this.fetchDiscussions(entry);
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   filterModeChanged = (filterMode) => {
+    if (filterMode === 'nevermind') { return; }
     this.setState({ filterMode }, () => {
       this.fetchLibrary();
     });
-  }
+  };
 
   // These are requests to change the background image.
   // If they happen at all in parallel it looks awful.
-  imageFadeOperations = []
-  operationInProgress = false
+  imageFadeOperations = [];
+  operationInProgress = false;
 
   ensureAllImageFadeOperationsHandled = async () => {
-    if (this.operationInProgress) { return; }
+    if (this.operationInProgress) {
+      return;
+    }
 
     this.operationInProgress = true;
 
     while (this.imageFadeOperations.length > 0) {
       const index = this.imageFadeOperations.pop();
-      const newBackgroundImage = this.state.library[index].anime.coverImage.original;
+      const media = getMedia(this.state.library[index]);
+      const newBackgroundImage = (media.coverImage && media.coverImage.original) || media.posterImage.original;
 
       // Clear any remaining ones, they're now irrelevant.
       this.imageFadeOperations.length = 0;
@@ -200,20 +300,27 @@ class QuickUpdate extends Component {
     }
 
     this.operationInProgress = false;
-  }
+  };
 
   carouselItemChanged = (index) => {
+    const { library } = this.state;
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
-  }
+    const entry = library[index];
+    if (entry.progress > 0) {
+      this.resetFeed();
+      this.fetchDiscussions(entry);
+    }
+    this.setState({ currentIndex: index });
+  };
 
   hideHeader = () => {
     this.animateHeaderOpacityTo(0);
-  }
+  };
 
-  showHeader = () => {
-    this.animateHeaderOpacityTo(1, 500);
-  }
+  showHeader = (delay = 500) => {
+    this.animateHeaderOpacityTo(1, delay);
+  };
 
   animateHeaderOpacityTo = (toValue, delay = 0) => {
     const { headerOpacity } = this.state;
@@ -224,7 +331,7 @@ class QuickUpdate extends Component {
       duration: 300,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   markComplete = async (libraryEntry) => {
     const result = await Kitsu.update('libraryEntries', {
@@ -233,20 +340,70 @@ class QuickUpdate extends Component {
     });
 
     if (!result.progress) {
-      Alert.alert(
-        'Error',
-        'Error while updating progress, please try again.',
-        [
-          { text: 'OK', style: 'cancel' },
-        ],
-      );
+      Alert.alert('Error', 'Error while updating progress, please try again.', [
+        { text: 'OK', style: 'cancel' },
+      ]);
     } else {
       this.refetchLibraryEntry(libraryEntry);
     }
-  }
+  };
+
+  updateTextAndToggle = async () => {
+    // Restore any previous text, and then toggle the editor.
+    this.setState({ discussionsLoading: true }, this.toggleEditor);
+    const { library, currentIndex, editorText } = this.state;
+    const { currentUser } = this.props;
+    const current = library[currentIndex];
+    try {
+      await Kitsu.create('posts', {
+        content: editorText,
+        media: {
+          id: getMedia(current).id, type: current.anime ? 'anime' : 'manga',
+        },
+        spoiledUnit: { id: current.unit[0].id },
+        user: { id: currentUser.id },
+      });
+      this.resetFeed(() => {
+        this.fetchDiscussions(current);
+        this.setState({ updateText: editorText });
+      });
+    } catch (e) {
+      console.warn('Can not submit discussion post: ', e);
+    }
+  };
+
+  toggleEditor = () => {
+    const { editing, updateText } = this.state;
+
+    if (!editing) {
+      this.setState({
+        editing: true,
+        // Need to copy the current updateText over so the dialog shows with the correct text in it.
+        editorText: updateText,
+      });
+      this.hideHeader();
+      // this.props.onBeginEditing();
+    } else {
+      this.setState({ editing: false });
+      this.showHeader(100);
+      // this.props.onEndEditing();
+    }
+  };
+
+  renderPostItem = ({ item }) => (
+    <Post
+      post={item}
+      onPostPress={() => { }}
+      currentUser={this.props.currentUser}
+      navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
+      navigation={this.props.navigation}
+    />
+  );
 
   renderItem = data => (
     <QuickUpdateCard
+      ratingSystem={this.props.ratingSystem}
+      onRate={this.onRate}
       data={data}
       onBeginEditing={this.hideHeader}
       onEndEditing={this.showHeader}
@@ -264,6 +421,13 @@ class QuickUpdate extends Component {
       headerOpacity,
       library,
       loading,
+      discussions,
+      discussionsLoading,
+      isLoadingNextPage,
+      currentIndex,
+      editorText,
+      editing,
+      refreshing,
     } = this.state;
 
     if (loading || !library) {
@@ -274,13 +438,14 @@ class QuickUpdate extends Component {
       );
     }
 
+    const entry = library[currentIndex];
+    const progress = (entry && entry.progress) || 0;
+    const media = entry && (entry.anime || entry.manga);
+
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <Image
-          source={{ uri: nextUpBackgroundImageUri }}
-          style={styles.backgroundImage}
-        />
+        <Image source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
         <Animated.Image
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
@@ -300,20 +465,74 @@ class QuickUpdate extends Component {
         </Animated.View>
 
         {/* Carousel */}
-        <Carousel
-          data={library}
-          renderItem={this.renderItem}
-          sliderWidth={Dimensions.get('window').width}
-          itemWidth={Dimensions.get('window').width * 0.85}
-          itemHeight={900}
-          slideStyle={styles.carousel}
-          onSnapToItem={this.carouselItemChanged}
-        />
+        <View style={styles.contentWrapper}>
+          <Carousel
+            data={library}
+            renderItem={this.renderItem}
+            sliderWidth={Dimensions.get('window').width}
+            itemWidth={Dimensions.get('window').width * 0.85}
+            itemHeight={CAROUSEL_HEIGHT}
+            sliderHeight={CAROUSEL_HEIGHT}
+            containerCustomStyle={styles.carousel}
+            onSnapToItem={this.carouselItemChanged}
+          />
 
-        {/* Close Button */}
-        {/* <TouchableOpacity style={styles.closeButton} onPress={this.props.onClose}>
-          <Icon name="ios-close" size={70} color="white" />
-        </TouchableOpacity> */}
+          {/* Feed */}
+          {progress > 0 && (
+            <View style={styles.socialContent}>
+              <View style={styles.separator} />
+              <Text style={styles.discussionTitle}>
+                <Text style={styles.bold}>
+                  {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
+                  {' '}
+                  {progress}
+                  {' '}
+                </Text>
+                Discussion
+              </Text>
+
+              {(!discussionsLoading || isLoadingNextPage) ? (
+                <KeyboardAwareFlatList
+                  data={discussions}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderPostItem}
+                  onEndReached={() => discussions.length && this.fetchNextPage(entry)}
+                  onEndReachedThreshold={0.6}
+                  ListHeaderComponent={
+                    <CreatePostRow
+                      title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
+                      onPress={this.toggleEditor}
+                    />
+                  }
+                  ListFooterComponent={() =>
+                    isLoadingNextPage && (
+                      <ActivityIndicator />
+                    )
+                  }
+                  refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
+                  }
+                />
+              ) : (
+                <ActivityIndicator />
+              )}
+            </View>
+          )}
+        </View>
+
+        {/* Editor: Render if there is a unit. */}
+        {entry && entry.unit && entry.unit.length > 0 && (
+          <Modal animationType="slide" transparent visible={editing}>
+            <QuickUpdateEditor
+              currentEpisode={entry.unit[0]}
+              progress={progress}
+              onChange={this.onEditorChanged}
+              onCancel={this.toggleEditor}
+              onDone={this.updateTextAndToggle}
+              value={editorText}
+            />
+          </Modal>
+        )}
       </View>
     );
   }
@@ -321,9 +540,30 @@ class QuickUpdate extends Component {
 
 const mapStateToProps = ({ user }) => {
   const { currentUser } = user;
-  return { currentUser };
+  const { ratingSystem } = currentUser;
+  return { currentUser, ratingSystem };
 };
 
-
 export default connect(mapStateToProps)(QuickUpdate);
+
+function getRequestFields(filterMode) {
+  const fields = {
+    libraryEntries: LIBRARY_ENTRIES_FIELDS.join(),
+    user: 'id',
+  };
+
+  if (filterMode === undefined) {
+    fields.anime = ANIME_FIELDS.join();
+    fields.manga = MANGA_FIELDS.join();
+    fields.libraryEntries = [fields.libraryEntries, 'anime', 'manga'].join();
+  } else {
+    fields[filterMode] = filterMode === 'anime' ? ANIME_FIELDS.join() : MANGA_FIELDS.join();
+    fields.libraryEntries = [fields.libraryEntries, filterMode].join();
+  }
+  return fields;
+}
+
+function getMedia(entry) {
+  return entry.anime || entry.manga;
+}
 
