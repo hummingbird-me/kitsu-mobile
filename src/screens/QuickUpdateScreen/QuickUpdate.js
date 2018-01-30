@@ -105,12 +105,9 @@ class QuickUpdate extends Component {
         // capture tap events and detect double press to fetch notifications
         const now = new Date().getTime();
         const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
-        console.log('tapped');
         if (previousScene.key !== 'QuickUpdate' || doublePressed) {
           this.lastTap = null;
           jumpToIndex(scene.index);
-          // scroll to top.
-          console.log('scrolling top');
           this.scrollView.scrollTo({ x: 0, y: 0, animated: true });
         } else {
           this.lastTap = now;
