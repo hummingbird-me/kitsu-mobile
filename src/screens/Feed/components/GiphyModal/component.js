@@ -1,12 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator } from 'react-native';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { isEmpty, range } from 'lodash';
 import { getBestGridItemSpacing } from 'kitsu/common/utils';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
+import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
+import { scene } from 'kitsu/screens/Feed/constants';
 import { styles } from './styles';
 
 const apiKey = 'dc6zaTOxFJmzC';
@@ -52,10 +54,23 @@ export class GiphyModal extends PureComponent {
   state = {
     gifs: [],
     query: '',
+    selected: null,
   }
 
   componentDidMount() {
     this.searchGIF('');
+  }
+
+  handleGIFSelect = (gif) => {
+    const { onGifSelect } = this.props;
+    onGifSelect(gif);
+    this.setState({ selected: null });
+  }
+
+  handleCancelPress = () => {
+    const { onCancelPress } = this.props;
+    onCancelPress();
+    this.setState({ selected: null });
   }
 
   handleSearchStateChange = (query) => {
@@ -65,9 +80,7 @@ export class GiphyModal extends PureComponent {
   }
 
   searchGIF = async (query) => {
-    this.setState({ gifs: [] });
-
-    const empty = isEmpty(query);
+    const empty = isEmpty(query.trim());
     const api = empty ? trending : endpoint;
 
     // Build the params
@@ -81,7 +94,7 @@ export class GiphyModal extends PureComponent {
     try {
       const response = await fetch(url);
       const giphy = await response.json();
-      const gifs = giphy.data.map(e => e.images.original);
+      const gifs = giphy.data;
 
       this.setState({ gifs });
     } catch (e) {
@@ -90,6 +103,7 @@ export class GiphyModal extends PureComponent {
   }
 
   renderItem(item, spacing) {
+    const images = item.images;
     return (
       <View
         style={{
@@ -98,9 +112,9 @@ export class GiphyModal extends PureComponent {
           backgroundColor: colors.lightGrey,
         }}
       >
-        <TouchableOpacity onPress={() => this.props.onGifSelect(item)}>
+        <TouchableOpacity onPress={() => this.setState({ selected: item })}>
           <ProgressiveImage
-            source={{ uri: item.url }}
+            source={{ uri: images.downsized_small.url || item.images.fixed_width.url || '' }}
             style={{
               height: spacing.height,
               width: spacing.width,
@@ -111,9 +125,37 @@ export class GiphyModal extends PureComponent {
     );
   }
 
+  renderSelected(gif) {
+    const images = gif.images;
+    return (
+      <View style={styles.selectedContainer}>
+        <View style={styles.selectedButtonContainer}>
+          <TouchableOpacity
+            onPress={() => this.setState({ selected: null })}
+            style={[styles.button, styles.backButton]}
+          >
+            <Text style={[styles.text, styles.back]}>Back</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.handleGIFSelect(gif)}
+            style={[styles.button, styles.selectButton]}
+          >
+            <Text style={[styles.text, styles.select]}>Select</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ minHeight: 150 }}>
+          <View style={styles.loading}>
+            <ActivityIndicator color={colors.white} />
+          </View>
+          <PostImage uri={images.downsized.url || images.original.url || ''} width={scene.width} />
+        </View>
+      </View>
+    );
+  }
+
   render() {
-    const { visible, onCancelPress } = this.props;
-    const { gifs } = this.state;
+    const { visible } = this.props;
+    const { gifs, selected } = this.state;
 
     // This will make it so the list will be centred should we have any extra space left over
     const padding = { paddingLeft: bestSpacing.extra / 2, paddingTop: bestSpacing.margin / 2 };
@@ -123,12 +165,15 @@ export class GiphyModal extends PureComponent {
         animationType="slide"
         visible={visible}
         transparent={false}
-        onRequestClose={onCancelPress}
+        onRequestClose={this.handleCancelPress}
       >
+        {selected &&
+          this.renderSelected(selected)
+        }
         <ModalHeader
           title="Select a GIF"
           leftButtonTitle="Cancel"
-          leftButtonAction={onCancelPress}
+          leftButtonAction={this.handleCancelPress}
           rightButtonTitle=""
         />
         <View style={{ flex: 1 }}>
@@ -153,7 +198,7 @@ export class GiphyModal extends PureComponent {
             })}
             numColumns={bestSpacing.columnCount}
             ItemSeparatorComponent={() => <View />}
-            keyExtractor={item => item.url}
+            keyExtractor={item => item.id}
             renderItem={({ item }) => this.renderItem(item, bestSpacing)}
           />
         </View>

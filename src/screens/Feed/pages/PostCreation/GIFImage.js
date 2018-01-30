@@ -27,9 +27,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export const GIFImage = ({ uri, onClear, disabled }) => (
+export const GIFImage = ({ gif, onClear, disabled }) => (
   <View>
-    <PostImage uri={uri} width={scene.width} />
+    <PostImage
+      uri={gif.images.original.url || ''}
+      width={scene.width}
+    />
     <TouchableOpacity
       onPress={onClear}
       style={styles.iconContainer}
@@ -41,7 +44,9 @@ export const GIFImage = ({ uri, onClear, disabled }) => (
 );
 
 GIFImage.propTypes = {
-  uri: PropTypes.string.isRequired,
+  gif: PropTypes.shape({
+    images: PropTypes.object.isRequired,
+  }).isRequired,
   onClear: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };

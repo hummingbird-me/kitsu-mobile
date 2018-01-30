@@ -96,15 +96,15 @@ class CreatePost extends React.PureComponent {
     if (isEmpty(content)) {
       this.setState({ error: 'No content provided!' });
       return;
-    };
+    }
 
     navigation.setParams({ busy: true });
     this.setState({ error: '' });
 
     // Add the gif to the content
     let additionalContent = content;
-    if (gif && gif.url) {
-      additionalContent += `\n${gif.url}`;
+    if (gif && gif.images.original) {
+      additionalContent += `\n${gif.images.original.url}`;
     }
 
     // Target interest is either 'anime', 'manga', or blank depending
@@ -194,7 +194,7 @@ class CreatePost extends React.PureComponent {
               { gif ?
                 <GIFImage
                   disabled={busy}
-                  uri={gif.url}
+                  gif={gif}
                   onClear={() => this.setState({ gif: null })}
                 />
                 :
