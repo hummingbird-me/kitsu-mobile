@@ -469,24 +469,24 @@ class QuickUpdate extends Component {
         />
         <View style={styles.faderCover} />
 
-        {/* Header */}
-        <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          {/* Dummy View, helps with layout to center text */}
-          <View style={styles.spacer} />
-          <Text style={styles.headerText}>Quick Update</Text>
-          <HeaderFilterButton
-            mode={filterMode}
-            onModeChanged={this.filterModeChanged}
-            style={styles.filterButton}
-          />
-        </Animated.View>
-
         {/* Carousel */}
         <ScrollView
           style={styles.contentWrapper}
           contentContainerStyle={{ paddingTop: 12 }}
-          stickyHeaderIndices={[1]}
+          stickyHeaderIndices={[2]} // BULLSEYE
         >
+          {/* Header */}
+          <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
+            {/* Dummy View, helps with layout to center text */}
+            <View style={styles.spacer} />
+            <Text style={styles.headerText}>Quick Update</Text>
+            <HeaderFilterButton
+              mode={filterMode}
+              onModeChanged={this.filterModeChanged}
+              style={styles.filterButton}
+            />
+          </Animated.View>
+
           <Carousel
             data={library}
             renderItem={this.renderItem}
