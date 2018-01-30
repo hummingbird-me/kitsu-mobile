@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, View, Text, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { indexOf, isEmpty, isNull } from 'lodash';
+import { indexOf, isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -11,73 +11,9 @@ import { PostTextInput } from 'kitsu/screens/Feed/components/PostTextInput';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PickerModal } from 'kitsu/screens/Feed/components/PickerModal';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
-import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
-import { scene } from 'kitsu/screens/Feed/constants';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { feedStreams } from '../feedStreams';
-
-const GIFSelectText = ({ onPress, disabled }) => (
-  <TouchableOpacity
-    style={{
-      borderColor: colors.grey,
-      borderWidth: 1,
-      borderRadius: 4,
-      height: 100,
-      margin: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-    onPress={onPress}
-    disabled={disabled}
-  >
-    <View style={{ flexDirection: 'row' }} >
-      <Icon name="plus" style={{ color: colors.grey, fontSize: 18, marginRight: 6 }} />
-      <Text style={{ color: colors.grey }}>
-        Tap here to add a GIF
-      </Text>
-    </View>
-  </TouchableOpacity>
-);
-
-GIFSelectText.propTypes = {
-  onPress: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-};
-
-GIFSelectText.defaultProps = {
-  disabled: false,
-};
-
-const GIFImage = ({ uri, onClear, disabled }) => (
-  <View>
-    <PostImage uri={uri} width={scene.width} />
-    <TouchableOpacity
-      onPress={onClear}
-      style={{
-        position: 'absolute',
-        right: 5,
-        top: 5,
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'transparent',
-      }}
-      disabled={disabled}
-    >
-      <Icon name="close" style={{ color: colors.lightGrey, fontSize: 18 }} />
-    </TouchableOpacity>
-  </View>
-);
-
-GIFImage.propTypes = {
-  uri: PropTypes.string.isRequired,
-  onClear: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-};
-
-GIFImage.defaultProps = {
-  disabled: false,
-};
+import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
+import { GIFImage } from './GIFImage';
+import { GIFSelectText } from './GIFSelectText';
 
 class CreatePost extends React.PureComponent {
   static propTypes = {
