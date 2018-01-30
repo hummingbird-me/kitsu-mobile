@@ -482,7 +482,11 @@ class QuickUpdate extends Component {
         </Animated.View>
 
         {/* Carousel */}
-        <View style={styles.contentWrapper}>
+        <ScrollView
+          style={styles.contentWrapper}
+          contentContainerStyle={{ paddingTop: 12 }}
+          stickyHeaderIndices={[1]}
+        >
           <Carousel
             data={library}
             renderItem={this.renderItem}
@@ -494,20 +498,22 @@ class QuickUpdate extends Component {
             onSnapToItem={this.carouselItemChanged}
           />
 
+          {progress > 0 && <View style={styles.socialContent}>
+            <View style={styles.separator} />
+            <Text style={styles.discussionTitle}>
+              <Text style={styles.bold}>
+                {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
+                {' '}
+                {progress}
+                {' '}
+              </Text>
+              Discussion
+            </Text>
+          </View>}
+
           {/* Feed */}
           {progress > 0 ? (
             <View style={styles.socialContent}>
-              <View style={styles.separator} />
-              <Text style={styles.discussionTitle}>
-                <Text style={styles.bold}>
-                  {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
-                  {' '}
-                  {progress}
-                  {' '}
-                </Text>
-                Discussion
-              </Text>
-
               {(!discussionsLoading || isLoadingNextPage) ? (
                 <KeyboardAwareFlatList
                   data={discussions}
@@ -550,7 +556,7 @@ class QuickUpdate extends Component {
               />
             </ScrollView>
           )}
-        </View>
+        </ScrollView>
 
         {/* Editor: Render if there is a unit. */}
         {entry && entry.unit && entry.unit.length > 0 && (
