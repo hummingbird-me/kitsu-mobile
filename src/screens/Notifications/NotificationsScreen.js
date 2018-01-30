@@ -68,6 +68,7 @@ class NotificationsScreen extends PureComponent {
         // capture tap events and detect double press to fetch notifications
         const now = new Date().getTime();
         const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
+        console.log('pressed notf');
         if (previousScene.key !== 'Notifications' || doublePressed) {
           this.lastTap = null;
           jumpToIndex(scene.index);

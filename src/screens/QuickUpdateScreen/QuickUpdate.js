@@ -53,6 +53,7 @@ const ANIME_FIELDS = [...MEDIA_FIELDS, 'episodeCount'];
 const MANGA_FIELDS = [...MEDIA_FIELDS, 'chapterCount'];
 
 const CAROUSEL_HEIGHT = 310;
+const DOUBLE_PRESS_DELAY = 500;
 
 const StatusComponent = ({ title, text, image }) => (
   <View style={styles.statusWrapper}>
@@ -69,6 +70,9 @@ StatusComponent.propTypes = {
 };
 
 class QuickUpdate extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
+  });
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     // onClose: PropTypes.func.isRequired,
@@ -95,6 +99,26 @@ class QuickUpdate extends Component {
     this.fetchLibrary();
   }
 
+  componentDidMount() {
+    this.props.navigation.setParams({
+      tabListener: async ({ previousScene, scene, jumpToIndex }) => {
+        // capture tap events and detect double press to fetch notifications
+        const now = new Date().getTime();
+        const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
+        console.log('tapped');
+        if (previousScene.key !== 'QuickUpdate' || doublePressed) {
+          this.lastTap = null;
+          jumpToIndex(scene.index);
+          // scroll to top.
+          console.log('scrolling top');
+          this.scrollView.scrollTo({ x: 0, y: 0, animated: true });
+        } else {
+          this.lastTap = now;
+        }
+      },
+    });
+  }
+
   onEditorChanged = (editorText) => {
     this.setState({ editorText });
   };
@@ -110,6 +134,9 @@ class QuickUpdate extends Component {
       index,
     };
   };
+
+  // Timer for scrolling top back (double tap on tab)
+  lastTap = null;
 
   rate = async (ratingTwenty) => {
     const { currentIndex, library } = this.state;
@@ -471,8 +498,8 @@ class QuickUpdate extends Component {
 
         {/* Carousel */}
         <ScrollView
+          ref={(r) => { this.scrollView = r; }}
           style={styles.contentWrapper}
-          contentContainerStyle={{ paddingTop: 12 }}
           stickyHeaderIndices={[2]} // BULLSEYE
         >
           {/* Header */}
@@ -500,6 +527,8 @@ class QuickUpdate extends Component {
 
           {progress > 0 && <View style={styles.socialContent}>
             <View style={styles.separator} />
+            {/* Some padding for status bar when sticked */}
+            <View style={{ height: 20, backgroundColor: 'transparent' }} />
             <Text style={styles.discussionTitle}>
               <Text style={styles.bold}>
                 {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
