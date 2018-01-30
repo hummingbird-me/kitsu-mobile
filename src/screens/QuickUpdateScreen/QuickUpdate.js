@@ -458,7 +458,7 @@ class QuickUpdate extends Component {
     const entry = library[currentIndex];
     const progress = (entry && entry.progress) || 0;
     const media = entry && (entry.anime || entry.manga);
-    console.log(entry);
+
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
@@ -556,7 +556,7 @@ class QuickUpdate extends Component {
         {entry && entry.unit && entry.unit.length > 0 && (
           <Modal animationType="slide" transparent visible={editing}>
             <QuickUpdateEditor
-              // media={}
+              media={getMedia(entry)}
               currentEpisode={entry.unit[0]}
               progress={progress}
               onChange={this.onEditorChanged}

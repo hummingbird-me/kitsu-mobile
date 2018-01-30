@@ -4,9 +4,10 @@ import { StyledText } from 'kitsu/components/StyledText';
 import PropTypes from 'prop-types';
 import { styles } from './styles';
 
-export const MediaTag = ({ media, episode, navigation }) => (
+export const MediaTag = ({ disabled, media, episode, navigation }) => (
   <View style={styles.mediaTagView}>
     <TouchableOpacity
+      disabled={disabled}
       onPress={() =>
         navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
       style={styles.mediaTag}
@@ -17,6 +18,7 @@ export const MediaTag = ({ media, episode, navigation }) => (
     </TouchableOpacity>
     {episode && (
       <TouchableOpacity
+        disabled={disabled}
         onPress={() =>
           navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
         style={styles.episodeTagView}
@@ -38,8 +40,10 @@ MediaTag.propTypes = {
     number: PropTypes.number.isRequired,
   }),
   navigation: PropTypes.object.isRequired,
+  disabled: PropTypes.bool,
 };
 
 MediaTag.defaultProps = {
   episode: null,
+  disabled: false,
 };
