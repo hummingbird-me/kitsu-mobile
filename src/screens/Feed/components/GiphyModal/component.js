@@ -11,6 +11,7 @@ import { styles } from './styles';
 
 const apiKey = 'dc6zaTOxFJmzC';
 const endpoint = 'https://api.giphy.com/v1/gifs/search?';
+const trending = 'https://api.giphy.com/v1/gifs/trending?';
 
 const IMAGE_SIZE = { width: 150, height: 100 };
 
@@ -53,6 +54,10 @@ export class GiphyModal extends PureComponent {
     query: '',
   }
 
+  componentDidMount() {
+    this.searchGIF('');
+  }
+
   handleSearchStateChange = (query) => {
     this.setState({ query }, () => {
       this.searchGIF(query);
@@ -60,14 +65,17 @@ export class GiphyModal extends PureComponent {
   }
 
   searchGIF = async (query) => {
-    // Reset on empty query
-    if (isEmpty(query)) {
-      this.setState({ gifs: [] });
-      return;
-    }
+    this.setState({ gifs: [] });
 
-    const params = `api_key=${apiKey}&q=${query}`;
-    const url = `${endpoint}${params}`;
+    const empty = isEmpty(query);
+    const api = empty ? trending : endpoint;
+
+    // Build the params
+    let params = `api_key=${apiKey}`;
+    if (!empty) params += `&q=${query}`;
+
+    // Build the URL
+    const url = `${api}${params}`;
 
     // Fetch the GIFS!
     try {
@@ -83,7 +91,13 @@ export class GiphyModal extends PureComponent {
 
   renderItem(item, spacing) {
     return (
-      <View style={{ width: spacing.width, margin: spacing.margin, backgroundColor: colors.lightGrey }}>
+      <View
+        style={{
+          width: spacing.width,
+          margin: spacing.margin,
+          backgroundColor: colors.lightGrey,
+        }}
+      >
         <TouchableOpacity onPress={() => this.props.onGifSelect(item)}>
           <ProgressiveImage
             source={{ uri: item.url }}
