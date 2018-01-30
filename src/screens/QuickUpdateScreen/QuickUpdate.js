@@ -9,6 +9,7 @@ import {
   RefreshControl,
   View,
   Modal,
+  ScrollView,
 } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
@@ -19,8 +20,10 @@ import { Post } from 'kitsu/screens/Feed/components/Post';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
-import QuickUpdateEditor from './QuickUpdateEditor';
+import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
+import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 
+import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
 import styles from './styles';
@@ -50,6 +53,20 @@ const ANIME_FIELDS = [...MEDIA_FIELDS, 'episodeCount'];
 const MANGA_FIELDS = [...MEDIA_FIELDS, 'chapterCount'];
 
 const CAROUSEL_HEIGHT = 310;
+
+const StatusComponent = ({ title, text, image }) => (
+  <View style={styles.statusWrapper}>
+    <Text style={styles.statusTitle}>{title}</Text>
+    <Text style={styles.statusText}>{text}</Text>
+    <Image style={styles.statusImage} source={image} />
+  </View>
+);
+
+StatusComponent.propTypes = {
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  image: PropTypes.object.isRequired,
+};
 
 class QuickUpdate extends Component {
   static propTypes = {
@@ -441,7 +458,7 @@ class QuickUpdate extends Component {
     const entry = library[currentIndex];
     const progress = (entry && entry.progress) || 0;
     const media = entry && (entry.anime || entry.manga);
-
+    console.log(entry);
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
@@ -478,7 +495,7 @@ class QuickUpdate extends Component {
           />
 
           {/* Feed */}
-          {progress > 0 && (
+          {progress > 0 ? (
             <View style={styles.socialContent}>
               <View style={styles.separator} />
               <Text style={styles.discussionTitle}>
@@ -509,6 +526,13 @@ class QuickUpdate extends Component {
                       <ActivityIndicator />
                     )
                   }
+                  ListEmptyComponent={() => (
+                    <StatusComponent
+                      title="START THE DISCUSSION"
+                      text={`Be the first to share your thoughts about episode ${progress}`}
+                      image={emptyComment}
+                    />
+                  )}
                   refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
                   }
@@ -517,6 +541,14 @@ class QuickUpdate extends Component {
                 <ActivityIndicator />
               )}
             </View>
+          ) : (
+            <ScrollView style={styles.unstartedWrapper}>
+              <StatusComponent
+                title="START WATCHING TO JOIN IN"
+                text="As you update your progress, you'll see the thoughts from the community on the episodes you've watched!"
+                image={unstarted}
+              />
+            </ScrollView>
           )}
         </View>
 
@@ -524,6 +556,7 @@ class QuickUpdate extends Component {
         {entry && entry.unit && entry.unit.length > 0 && (
           <Modal animationType="slide" transparent visible={editing}>
             <QuickUpdateEditor
+              // media={}
               currentEpisode={entry.unit[0]}
               progress={progress}
               onChange={this.onEditorChanged}

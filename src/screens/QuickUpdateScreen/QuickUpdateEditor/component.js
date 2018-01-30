@@ -49,6 +49,7 @@ export default class QuickUpdateEditor extends PureComponent {
   render() {
     const { progress, value, onCancel, onDone, currentEpisode } = this.props;
     const { headerOpacity } = this.state;
+    console.log(currentEpisode);
     return (
       <View style={styles.wrapper}>
         {/* Header */}
