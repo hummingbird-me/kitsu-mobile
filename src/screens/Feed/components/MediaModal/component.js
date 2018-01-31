@@ -57,6 +57,7 @@ class MediaModal extends PureComponent {
         'subtype',
         'chapterCount',
         'episodeCount',
+        'synopsis',
       ],
     });
 

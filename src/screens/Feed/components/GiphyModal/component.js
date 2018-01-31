@@ -102,7 +102,7 @@ export class GiphyModal extends PureComponent {
     }
   }
 
-  renderItem(item, spacing) {
+  renderItem = (item, spacing) => {
     const images = item.images;
     return (
       <View

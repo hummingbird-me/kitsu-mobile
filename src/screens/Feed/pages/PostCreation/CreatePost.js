@@ -15,6 +15,7 @@ import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
 import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
 import { GIFImage } from './GIFImage';
 import { AdditionalButton } from './AdditionalButton';
+import { MediaItem } from './MediaItem';
 
 class CreatePost extends React.PureComponent {
   static propTypes = {
@@ -98,7 +99,7 @@ class CreatePost extends React.PureComponent {
 
   handlePressPost = async () => {
     const { navigation } = this.props;
-    const { gif } = this.state;
+    const { gif, media } = this.state;
     const currentUserId = this.props.currentUser.id;
     const { content, currentFeed } = this.state;
 
@@ -125,6 +126,11 @@ class CreatePost extends React.PureComponent {
     const currentFeedIndex = indexOf(ignoredTargetFeeds, currentFeed.key);
     const targetInterest = currentFeedIndex !== -1 ? currentFeed.key : undefined;
 
+    const mediaData = media ? {
+      id: media.id,
+      type: media.kind,
+    } : null;
+
     try {
       const post = await Kitsu.create('posts', {
         content: additionalContent,
@@ -133,6 +139,7 @@ class CreatePost extends React.PureComponent {
           type: 'users',
           id: currentUserId,
         },
+        media: mediaData,
       });
 
       if (this.props.navigation.state.params.onNewPostCreated) {
@@ -141,9 +148,8 @@ class CreatePost extends React.PureComponent {
 
       this.props.navigation.goBack();
     } catch (err) {
-      const string = (e && e[0].detail) || 'Failed to create post.';
+      const string = (err && err[0].detail) || 'Failed to create post.';
       this.setState({ error: string });
-      console.error(err);
     }
 
     this.props.navigation.setParams({ busy: false });
@@ -151,7 +157,7 @@ class CreatePost extends React.PureComponent {
 
   render() {
     const { currentUser, navigation } = this.props;
-    const { error, gif } = this.state;
+    const { error, gif, media } = this.state;
     const { busy } = navigation.state.params;
 
     return (
@@ -203,14 +209,22 @@ class CreatePost extends React.PureComponent {
               blurOnSubmit={false}
             />
             <View style={{ marginTop: 20 }}>
-              <AdditionalButton
-                text="Tag a Media"
-                icon="tag"
-                color={colors.blue}
-                disabled={busy}
-                onPress={() => this.handleMediaPickerModal(true)}
-                style={{ margin: 10, marginBottom: 5 }}
-              />
+              {media ?
+                <MediaItem
+                  disabled={busy}
+                  media={media}
+                  onClear={() => this.setState({ media: null })}
+                />
+                :
+                <AdditionalButton
+                  text="Tag a Media"
+                  icon="tag"
+                  color={colors.blue}
+                  disabled={busy}
+                  onPress={() => this.handleMediaPickerModal(true)}
+                  style={{ margin: 10, marginBottom: 5 }}
+                />
+              }
               { gif ?
                 <GIFImage
                   disabled={busy}
@@ -232,7 +246,7 @@ class CreatePost extends React.PureComponent {
         </View>
         <PickerModal
           visible={this.state.feedPickerModalIsVisible}
-          data={feedStreams}
+          data={feedStreams.filter(stream => stream.selectable)}
           currentPick={this.state.currentFeed}
           onCancelPress={() => this.handleFeedPickerModal(false)}
           onDonePress={this.handleFeedPicker}
