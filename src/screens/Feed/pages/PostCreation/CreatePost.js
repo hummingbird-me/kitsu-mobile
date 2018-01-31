@@ -11,6 +11,7 @@ import { PostTextInput } from 'kitsu/screens/Feed/components/PostTextInput';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PickerModal } from 'kitsu/screens/Feed/components/PickerModal';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
+import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
 import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
 import { GIFImage } from './GIFImage';
 import { GIFSelectText } from './GIFSelectText';
@@ -211,9 +212,15 @@ class CreatePost extends React.PureComponent {
           onDonePress={feed => this.handleFeedPicker(feed)}
         />
         <GiphyModal
-          visible={this.state.giphyPickerModalIsVisible}
+          // visible={this.state.giphyPickerModalIsVisible}
+          visible={false}
           onCancelPress={() => this.handleGiphyPickerModal(false)}
           onGifSelect={g => this.handleGiphy(g)}
+        />
+        <MediaModal
+          visible={this.state.giphyPickerModalIsVisible}
+          onCancelPress={() => this.handleGiphyPickerModal(false)}
+          onMediaSelect={g => console.log(g)}
         />
       </KeyboardAvoidingView>
     );

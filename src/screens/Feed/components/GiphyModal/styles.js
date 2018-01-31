@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   searchBoxContainer: {
-    backgroundColor: colors.listBackPurple,
+    backgroundColor: colors.darkPurple,
   },
   selectedContainer: {
     position: 'absolute',
