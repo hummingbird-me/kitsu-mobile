@@ -18,4 +18,9 @@ export const kitsuConfig = {
     featureRequest: 'fed94acf-1df6-dda7-fdd0-7c86cb41eb63',
     databaseRequest: '91febb25-fc04-e80a-c5c4-0dcd7028a4ac',
   },
+  giphy: {
+    apiKey: 'l2YStwkAmzBNWuFxe',
+    endpoint: 'https://api.giphy.com/v1/gifs/search?',
+    trending: 'https://api.giphy.com/v1/gifs/trending?',
+  },
 };

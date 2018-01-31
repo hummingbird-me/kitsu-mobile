@@ -25,4 +25,18 @@ export const styles = StyleSheet.create({
   submitButtonIcon: {
     fontSize: 24,
   },
+  gifButton: {
+    marginLeft: 6,
+    marginRight: 8,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+    borderWidth: 1,
+    borderColor: colors.grey,
+    borderRadius: 16,
+  },
+  gifText: {
+    color: colors.grey,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
 });

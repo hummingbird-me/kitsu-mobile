@@ -11,6 +11,7 @@ const defaults = {
   },
   topUpcoming: {
     filter: { status: 'upcoming' },
+    sort: '-userCount',
   },
   highest: {
     sort: '-averageRating',

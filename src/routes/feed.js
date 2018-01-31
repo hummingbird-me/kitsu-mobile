@@ -3,7 +3,7 @@ import { Image, Platform } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Feed from 'kitsu/screens/Feed';
 import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
-import CreatePost from 'kitsu/screens/Feed/pages/CreatePost';
+import CreatePost from 'kitsu/screens/Feed/pages/PostCreation/CreatePost';
 import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import * as ProfileScreens from 'kitsu/screens/Profiles';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';

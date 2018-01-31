@@ -12,5 +12,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'Open Sans',
     fontSize: 17,
     paddingHorizontal: scenePadding,
+    textAlignVertical: 'top',
   },
 });

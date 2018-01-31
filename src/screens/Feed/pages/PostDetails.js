@@ -4,8 +4,7 @@ import {
   FlatList,
   View,
   StatusBar,
-  ScrollView,
-  TouchableOpacity
+  ScrollView
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 
@@ -64,6 +63,12 @@ export default class PostDetails extends PureComponent {
   }
 
   onCommentChanged = comment => this.setState({ comment });
+
+  onGifSelected = (gif) => {
+    this.setState({ comment: gif.images.original.url }, () => {
+      this.onSubmitComment();
+    });
+  }
 
   onSubmitComment = async () => {
     try {
@@ -323,6 +328,7 @@ export default class PostDetails extends PureComponent {
               currentUser={currentUser}
               comment={comment}
               onCommentChanged={this.onCommentChanged}
+              onGifSelected={this.onGifSelected}
               onSubmit={this.onSubmitComment}
             />
           </PostSection>

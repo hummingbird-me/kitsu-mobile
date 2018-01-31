@@ -37,12 +37,14 @@ class SearchScreen extends Component {
         title: 'Anime',
         apiKey: this.props.algoliaKeys.media.key,
         indexName: this.props.algoliaKeys.media.index,
+        kind: 'anime',
       },
       {
         key: 'manga',
         title: 'Manga',
         apiKey: this.props.algoliaKeys.media.key,
         indexName: this.props.algoliaKeys.media.index,
+        kind: 'manga',
       },
       {
         key: 'users',
@@ -57,7 +59,9 @@ class SearchScreen extends Component {
     const algoliaClient = algolia(kitsuConfig.algoliaAppId, route.apiKey);
     const algoliaIndex = algoliaClient.initIndex(route.indexName);
 
-    algoliaIndex.search(query, (err, content) => {
+    const filters = route.kind ? `kind:${route.kind}` : '';
+
+    algoliaIndex.search({ query, filters }, (err, content) => {
       if (!err) {
         this.setState({ searchResults: { [route.key]: content.hits } });
       }

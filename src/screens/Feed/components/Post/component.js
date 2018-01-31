@@ -71,6 +71,12 @@ export class Post extends PureComponent {
 
   onCommentChanged = comment => this.setState({ comment })
 
+  onGifSelected = (gif) => {
+    this.setState({ comment: gif.images.original.url  }, () => {
+      this.onSubmitComment();
+    });
+  }
+
   onSubmitComment = async () => {
     const comment = await Kitsu.create('comments', {
       content: this.state.comment,
@@ -274,6 +280,7 @@ export class Post extends PureComponent {
               comment={comment}
               onCommentChanged={this.onCommentChanged}
               onSubmit={this.onSubmitComment}
+              onGifSelected={this.onGifSelected}
             />
           </PostSection>
         </PostFooter>
