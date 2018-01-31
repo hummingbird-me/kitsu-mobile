@@ -7,6 +7,10 @@ import { scene } from 'kitsu/screens/Feed/constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const styles = StyleSheet.create({
+  container: {
+    alignSelf: 'stretch',
+    minHeight: 100,
+  },
   iconContainer: {
     position: 'absolute',
     right: 8,
@@ -28,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 export const GIFImage = ({ gif, onClear, disabled }) => (
-  <View>
+  <View style={styles.container}>
     <PostImage
       uri={gif.images.original.url || ''}
       width={scene.width}
