@@ -64,12 +64,12 @@ class MediaModal extends PureComponent {
     this.setState({ loading: true });
 
     algoliaIndex.search({ query, page }, (err, content) => {
+      let results = {};
       if (!err) {
-        const media = page > 0 ? [...this.state.media, ...content.hits] : content.hits;
-        this.setState({ media });
+        media = page > 0 ? [...this.state.media, ...content.hits] : content.hits;
+        results = { media };
       }
-
-      this.setState({ loading: false });
+      this.setState({ ...results, loading: false });
     });
   };
 
@@ -127,7 +127,7 @@ class MediaModal extends PureComponent {
 
   render() {
     const { visible } = this.props;
-    const { media, selected } = this.state;
+    const { media, selected, query } = this.state;
     return (
       <Modal
         animationType="slide"
@@ -149,9 +149,9 @@ class MediaModal extends PureComponent {
               placeholder={'Search for Media'}
               searchIconOffset={130}
               style={styles.searchBox}
-              value={this.state.query}
-              onChangeText={text => this.handleSearchStateChange(text)}
-              onSubmitEditing={() => Keyboard.dismiss()}
+              value={query}
+              onChangeText={this.handleSearchStateChange}
+              onSubmitEditing={Keyboard.dismiss}
             />
           </View>
           <FlatList

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ViewPropTypes } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -50,7 +50,7 @@ AdditionalButton.propTypes = {
   text: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  style: PropTypes.style,
+  style: ViewPropTypes.style,
 };
 
 AdditionalButton.defaultProps = {

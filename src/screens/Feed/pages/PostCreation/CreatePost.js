@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, View, Text, ScrollView, Platform } from 'react-native';
+import { KeyboardAvoidingView, View, Text, ScrollView, Platform, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { indexOf, isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
@@ -17,15 +17,35 @@ import { GIFImage } from './GIFImage';
 import { AdditionalButton } from './AdditionalButton';
 import { MediaItem } from './MediaItem';
 
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  flex: {
+    flex: 1,
+  },
+  errorContainer: {
+    padding: 6,
+    backgroundColor: '#CC6549',
+  },
+  additionalContainer: {
+    marginTop: 20,
+  },
+  tagMedia: {
+    margin: 10,
+    marginBottom: 5,
+  },
+  addGIF: {
+    margin: 10,
+    marginTop: 5,
+  },
+});
+
 class CreatePost extends React.PureComponent {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
-    onNewPostCreated: PropTypes.func,
-  }
-
-  static defaultProps = {
-    onNewPostCreated: null,
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -99,9 +119,8 @@ class CreatePost extends React.PureComponent {
 
   handlePressPost = async () => {
     const { navigation } = this.props;
-    const { gif, media } = this.state;
     const currentUserId = this.props.currentUser.id;
-    const { content, currentFeed } = this.state;
+    const { content, currentFeed, gif, media } = this.state;
 
     if (navigation.state.params.busy) return;
 
@@ -142,33 +161,43 @@ class CreatePost extends React.PureComponent {
         media: mediaData,
       });
 
-      if (this.props.navigation.state.params.onNewPostCreated) {
-        this.props.navigation.state.params.onNewPostCreated(post);
+      if (navigation.state.params.onNewPostCreated) {
+        navigation.state.params.onNewPostCreated(post);
       }
 
-      this.props.navigation.goBack();
+      navigation.goBack();
     } catch (err) {
       const string = (err && err[0].detail) || 'Failed to create post.';
       this.setState({ error: string });
     }
 
-    this.props.navigation.setParams({ busy: false });
+    navigation.setParams({ busy: false });
   }
 
   render() {
     const { currentUser, navigation } = this.props;
-    const { error, gif, media } = this.state;
+    const {
+      error,
+      gif,
+      media,
+      currentFeed,
+      content,
+      textInputHeight,
+      feedPickerModalIsVisible,
+      giphyPickerModalIsVisible,
+      mediaPickerModalIsVisible,
+    } = this.state;
     const { busy } = navigation.state.params;
 
     return (
       <KeyboardAvoidingView
         behavior="padding"
-        style={{ flex: 1, backgroundColor: '#FFFFFF' }}
+        style={styles.main}
       >
-        <View style={{ flex: 1 }}>
+        <View style={styles.flex}>
           { /* Error */}
           {!isEmpty(error) &&
-            <View style={{ padding: 6, backgroundColor: '#CC6549' }}>
+            <View style={styles.errorContainer}>
               <Text style={{ color: 'white' }}>
                 An Error Occurred. {error}
               </Text>
@@ -177,15 +206,14 @@ class CreatePost extends React.PureComponent {
           <PostMeta
             avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar}
             author={currentUser.name}
-            feedTitle={this.state.currentFeed.title}
+            feedTitle={currentFeed.title}
             onFeedPillPress={() => this.handleFeedPickerModal(true)}
           />
-          <ScrollView style={{ flex: 1 }} >
+          <ScrollView style={styles.flex} >
             <PostTextInput
               inputRef={(el) => { this.postTextInput = el; }}
               multiline
-              numberOfLines={0}
-              onChangeText={content => this.setState({ content })}
+              onChangeText={c => this.setState({ content: c })}
               onContentSizeChange={({ nativeEvent }) => {
                 // On android the text box doesn't auto grow, so we have to manually set the height
                 if (Platform.OS === 'android') {
@@ -193,13 +221,13 @@ class CreatePost extends React.PureComponent {
                 }
               }}
               onSubmitEditing={() => {
-                if (!this.state.content.endsWith('\n')) {
-                  const content = `${this.state.content}\n`;
-                  this.setState({ content });
+                if (!content.endsWith('\n')) {
+                  const updatedContent = `${content}\n`;
+                  this.setState({ content: updatedContent });
                 }
               }}
-              height={Platform.select({ ios: null, android: (this.state.textInputHeight || 0) })}
-              value={this.state.content}
+              height={Platform.select({ ios: null, android: (textInputHeight || 0) })}
+              value={content}
               placeholder="Write something...."
               placeholderTextColor={colors.grey}
               autoCorrect={false}
@@ -208,7 +236,7 @@ class CreatePost extends React.PureComponent {
               underlineColorAndroid="transparent"
               blurOnSubmit={false}
             />
-            <View style={{ marginTop: 20 }}>
+            <View style={styles.additionalContainer}>
               {media ?
                 <MediaItem
                   disabled={busy}
@@ -222,7 +250,7 @@ class CreatePost extends React.PureComponent {
                   color={colors.blue}
                   disabled={busy}
                   onPress={() => this.handleMediaPickerModal(true)}
-                  style={{ margin: 10, marginBottom: 5 }}
+                  style={styles.tagMedia}
                 />
               }
               { gif ?
@@ -238,26 +266,26 @@ class CreatePost extends React.PureComponent {
                   color={colors.green}
                   disabled={busy}
                   onPress={() => this.handleGiphyPickerModal(true)}
-                  style={{ margin: 10, marginTop: 5 }}
+                  style={styles.addGIF}
                 />
               }
             </View>
           </ScrollView>
         </View>
         <PickerModal
-          visible={this.state.feedPickerModalIsVisible}
+          visible={feedPickerModalIsVisible}
           data={feedStreams.filter(stream => stream.selectable)}
-          currentPick={this.state.currentFeed}
+          currentPick={currentFeed}
           onCancelPress={() => this.handleFeedPickerModal(false)}
           onDonePress={this.handleFeedPicker}
         />
         <GiphyModal
-          visible={this.state.giphyPickerModalIsVisible}
+          visible={giphyPickerModalIsVisible}
           onCancelPress={() => this.handleGiphyPickerModal(false)}
           onGifSelect={this.handleGiphy}
         />
         <MediaModal
-          visible={this.state.mediaPickerModalIsVisible}
+          visible={mediaPickerModalIsVisible}
           onCancelPress={() => this.handleMediaPickerModal(false)}
           onMediaSelect={this.handleMedia}
         />

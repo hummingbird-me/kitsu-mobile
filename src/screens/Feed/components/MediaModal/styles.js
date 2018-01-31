@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   pickerIconCircle: {
     width: 30,
     height: 30,
-    borderRadius: 30,
+    borderRadius: 15,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.lightGrey,
     alignItems: 'center',

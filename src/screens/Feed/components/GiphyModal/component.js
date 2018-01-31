@@ -9,11 +9,8 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Feed/constants';
+import { kitsuConfig } from 'kitsu/config/env';
 import { styles } from './styles';
-
-const apiKey = 'l2YStwkAmzBNWuFxe';
-const endpoint = 'https://api.giphy.com/v1/gifs/search?';
-const trending = 'https://api.giphy.com/v1/gifs/trending?';
 
 const IMAGE_SIZE = { width: 150, height: 100 };
 
@@ -80,11 +77,12 @@ export class GiphyModal extends PureComponent {
   }
 
   searchGIF = async (query) => {
+    const config = kitsuConfig.giphy;
     const empty = isEmpty(query.trim());
-    const api = empty ? trending : endpoint;
+    const api = empty ? config.trending : config.endpoint;
 
     // Build the params
-    let params = `api_key=${apiKey}`;
+    let params = `api_key=${config.apiKey}`;
     if (!empty) params += `&q=${query}`;
 
     // Build the URL
@@ -125,7 +123,7 @@ export class GiphyModal extends PureComponent {
     );
   }
 
-  renderSelected = (gif) => {
+  renderSelected(gif) {
     const images = gif.images;
     return (
       <View style={styles.selectedContainer}>
@@ -143,7 +141,7 @@ export class GiphyModal extends PureComponent {
             <Text style={[styles.text, styles.select]}>Select</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ minHeight: 150 }}>
+        <View style={styles.imageContainer}>
           <View style={styles.loading}>
             <ActivityIndicator color={colors.white} />
           </View>
@@ -155,7 +153,7 @@ export class GiphyModal extends PureComponent {
 
   render() {
     const { visible } = this.props;
-    const { gifs, selected } = this.state;
+    const { gifs, selected, query } = this.state;
 
     // This will make it so the list will be centred should we have any extra space left over
     const padding = { paddingLeft: bestSpacing.extra / 2, paddingTop: bestSpacing.margin / 2 };
@@ -179,12 +177,12 @@ export class GiphyModal extends PureComponent {
         <View style={{ flex: 1 }}>
           <View style={styles.searchBoxContainer}>
             <SearchBox
-              placeholder={'Search for a GIF'}
+              placeholder="Search for a GIF"
               searchIconOffset={116}
               style={styles.searchBox}
-              value={this.state.query}
-              onChangeText={text => this.handleSearchStateChange(text)}
-              onSubmitEditing={() => Keyboard.dismiss()}
+              value={query}
+              onChangeText={this.handleSearchStateChange}
+              onSubmitEditing={Keyboard.dismiss}
             />
           </View>
           {/* TODO: Fetch more gifs on scroll */}

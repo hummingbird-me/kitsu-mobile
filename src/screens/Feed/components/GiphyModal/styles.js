@@ -19,7 +19,6 @@ export const styles = StyleSheet.create({
     right: 0,
     zIndex: 2,
     backgroundColor: 'rgba(0, 0, 0, 0.95)',
-    alignItems: 'center',
     justifyContent: 'center',
   },
   selectedButtonContainer: {
@@ -61,8 +60,11 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: -1,
+    zIndex: 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  imageContainer: {
+    minHeight: 150,
   },
 });
