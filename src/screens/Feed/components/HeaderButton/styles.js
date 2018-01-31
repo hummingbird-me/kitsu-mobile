@@ -5,7 +5,4 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 17,
     paddingVertical: 10,
   },
-  headerButton_disabled: {
-    opacity: 0.7,
-  },
 });

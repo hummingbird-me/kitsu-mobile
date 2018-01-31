@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     height: 40,
-    margin: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -30,26 +29,31 @@ const styles = StyleSheet.create({
   },
 });
 
-export const GIFSelectText = ({ onPress, disabled }) => (
+export const AdditionalButton = ({ onPress, disabled, text, icon, color, style }) => (
   <TouchableOpacity
-    style={styles.container}
+    style={[styles.container, { borderColor: color }, style]}
     onPress={onPress}
     disabled={disabled}
   >
     <View style={styles.innerContainer} >
-      <Icon name="plus" style={styles.icon} />
-      <Text style={styles.text}>
-        Add a GIF
+      <Icon name={icon} style={[styles.icon, { color }]} />
+      <Text style={[styles.text, { color }]}>
+        {text}
       </Text>
     </View>
   </TouchableOpacity>
 );
 
-GIFSelectText.propTypes = {
+AdditionalButton.propTypes = {
   onPress: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
+  text: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  style: PropTypes.style,
 };
 
-GIFSelectText.defaultProps = {
+AdditionalButton.defaultProps = {
   disabled: false,
+  style: null,
 };

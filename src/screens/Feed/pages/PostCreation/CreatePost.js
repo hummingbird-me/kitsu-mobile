@@ -14,7 +14,7 @@ import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
 import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
 import { GIFImage } from './GIFImage';
-import { GIFSelectText } from './GIFSelectText';
+import { AdditionalButton } from './AdditionalButton';
 
 class CreatePost extends React.PureComponent {
   static propTypes = {
@@ -53,10 +53,12 @@ class CreatePost extends React.PureComponent {
   state = {
     feedPickerModalIsVisible: false,
     giphyPickerModalIsVisible: false,
+    mediaPickerModalIsVisible: false,
     content: '',
     currentFeed: feedStreams[0],
     error: '',
     gif: null,
+    media: null,
   };
 
   componentDidMount() {
@@ -66,9 +68,18 @@ class CreatePost extends React.PureComponent {
     });
   }
 
+  handleMedia = (media) => {
+    this.setState({ media });
+    this.handleMediaPickerModal(false);
+  };
+
   handleGiphy = (gif) => {
     this.setState({ gif });
     this.handleGiphyPickerModal(false);
+  }
+
+  handleMediaPickerModal = (mediaPickerModalIsVisible) => {
+    this.setState({ mediaPickerModalIsVisible });
   }
 
   handleGiphyPickerModal = (giphyPickerModalIsVisible) => {
@@ -192,6 +203,14 @@ class CreatePost extends React.PureComponent {
               blurOnSubmit={false}
             />
             <View style={{ marginTop: 20 }}>
+              <AdditionalButton
+                text="Tag a Media"
+                icon="tag"
+                color={colors.blue}
+                disabled={busy}
+                onPress={() => this.handleMediaPickerModal(true)}
+                style={{ margin: 10, marginBottom: 5 }}
+              />
               { gif ?
                 <GIFImage
                   disabled={busy}
@@ -199,7 +218,14 @@ class CreatePost extends React.PureComponent {
                   onClear={() => this.setState({ gif: null })}
                 />
                 :
-                <GIFSelectText disabled={busy} onPress={() => this.handleGiphyPickerModal(true)} />
+                <AdditionalButton
+                  text="Add a GIF"
+                  icon="plus"
+                  color={colors.green}
+                  disabled={busy}
+                  onPress={() => this.handleGiphyPickerModal(true)}
+                  style={{ margin: 10, marginTop: 5 }}
+                />
               }
             </View>
           </ScrollView>
@@ -209,18 +235,17 @@ class CreatePost extends React.PureComponent {
           data={feedStreams}
           currentPick={this.state.currentFeed}
           onCancelPress={() => this.handleFeedPickerModal(false)}
-          onDonePress={feed => this.handleFeedPicker(feed)}
+          onDonePress={this.handleFeedPicker}
         />
         <GiphyModal
-          // visible={this.state.giphyPickerModalIsVisible}
-          visible={false}
-          onCancelPress={() => this.handleGiphyPickerModal(false)}
-          onGifSelect={g => this.handleGiphy(g)}
-        />
-        <MediaModal
           visible={this.state.giphyPickerModalIsVisible}
           onCancelPress={() => this.handleGiphyPickerModal(false)}
-          onMediaSelect={g => console.log(g)}
+          onGifSelect={this.handleGiphy}
+        />
+        <MediaModal
+          visible={this.state.mediaPickerModalIsVisible}
+          onCancelPress={() => this.handleMediaPickerModal(false)}
+          onMediaSelect={this.handleMedia}
         />
       </KeyboardAvoidingView>
     );

@@ -125,7 +125,7 @@ export class GiphyModal extends PureComponent {
     );
   }
 
-  renderSelected(gif) {
+  renderSelected = (gif) => {
     const images = gif.images;
     return (
       <View style={styles.selectedContainer}>

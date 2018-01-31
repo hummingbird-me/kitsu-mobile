@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   pickerIcon: {
     fontSize: 28,
     backgroundColor: 'transparent',
-    paddingTop: 4,
+    paddingTop: Platform.select({ ios: 4, android: 0 }),
   },
 
   rowPickerSeparator: {

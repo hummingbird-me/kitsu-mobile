@@ -1,16 +1,17 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Modal, FlatList, Keyboard, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import algolia from 'algoliasearch/reactnative';
+import { kitsuConfig } from 'kitsu/config/env';
+import { View, Modal, FlatList, Keyboard, TouchableHighlight } from 'react-native';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
-import { isNull } from 'lodash';
+import { isNull, upperFirst } from 'lodash';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import * as colors from 'kitsu/constants/colors';
+import { StyledText } from 'kitsu/components/StyledText';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
-import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
-
-const IMAGE_SIZE = { width: 150, height: 100 };
 
 class MediaModal extends PureComponent {
   static propTypes = {
@@ -27,38 +28,55 @@ class MediaModal extends PureComponent {
   }
 
   state = {
-    media: {
-      anime: [],
-      manga: [],
-    },
+    media: [],
     query: '',
+    page: 0,
+    loading: false,
     selected: null,
-    activeTab: 0,
-    index: 0,
-    routes: [
-      {
-        key: 'anime',
-        title: 'Anime',
-        apiKey: this.props.algoliaKeys.media.key,
-        indexName: this.props.algoliaKeys.media.index,
-      },
-      {
-        key: 'manga',
-        title: 'Manga',
-        apiKey: this.props.algoliaKeys.media.key,
-        indexName: this.props.algoliaKeys.media.index,
-      },
-    ],
+    apiKey: this.props.algoliaKeys.media.key,
+    indexName: this.props.algoliaKeys.media.index,
   }
 
-  handleTabChange = (i) => {
-    this.setState({ activeTab: i });
+  componentDidMount() {
+    this.doSearch(this.state.query, this.state.page);
   }
+
+  doSearch = (query, page) => {
+    const { apiKey, indexName } = this.state;
+    const algoliaClient = algolia(kitsuConfig.algoliaAppId, apiKey);
+    const algoliaIndex = algoliaClient.initIndex(indexName);
+
+    algoliaIndex.setSettings({
+      attributesToRetrieve: [
+        'id',
+        'slug',
+        'kind',
+        'canonicalTitle',
+        'titles',
+        'posterImage',
+        'subtype',
+        'chapterCount',
+        'episodeCount',
+      ],
+    });
+
+    this.setState({ loading: true });
+
+    algoliaIndex.search({ query, page }, (err, content) => {
+      if (!err) {
+        const media = page > 0 ? [...this.state.media, ...content.hits] : content.hits;
+        this.setState({ media });
+      }
+
+      this.setState({ loading: false });
+    });
+  };
 
   handleDonePress = () => {
     if (this.state.selected && this.props.onMediaSelect) {
       this.props.onMediaSelect(this.state.selected);
     }
+    this.setState({ selected: null });
   }
 
   handleCancelPress = () => {
@@ -68,22 +86,47 @@ class MediaModal extends PureComponent {
   }
 
   handleSearchStateChange = (query) => {
-    this.setState({ query }, () => {
-      console.log('Search');
+    this.setState({ query, page: 0 }, () => {
+      this.doSearch(query, this.state.page);
     });
   }
 
-  renderItem({ item }) {
+  loadMore = () => {
+    if (!this.state.loading) {
+      this.setState({ page: this.state.page + 1 }, () => {
+        this.doSearch(this.state.query, this.state.page);
+      });
+    }
+  }
+
+  renderItem = ({ item }) => {
+    const { selected } = this.state;
+    const isPicked = selected && item.id === selected.id;
+
     return (
-      <View />
+      <TouchableHighlight onPress={() => this.setState({ selected: item })}>
+        <View style={styles.pickerRow}>
+          <Layout.RowWrap alignItems="center">
+            <ProgressiveImage
+              source={{ uri: item.posterImage.tiny }}
+              style={{ width: 60, height: 90 }}
+            />
+            <Layout.RowMain>
+              <StyledText color="dark" size="small" bold>{item.canonicalTitle || 'Title'}</StyledText>
+              <StyledText color="dark" size="xsmall">{upperFirst(item.subtype) || 'Subtype'}</StyledText>
+            </Layout.RowMain>
+            <View style={[styles.pickerIconCircle, isPicked && styles.pickerIconCircle__isPicked]}>
+              <Icon name="ios-checkmark" color="#FFFFFF" style={styles.pickerIcon} />
+            </View>
+          </Layout.RowWrap>
+        </View>
+      </TouchableHighlight>
     );
   }
 
   render() {
     const { visible } = this.props;
-    const { media, selected, activeTab, routes } = this.state;
-
-    const activeRoute = routes[activeTab];
+    const { media, selected } = this.state;
     return (
       <Modal
         animationType="slide"
@@ -95,21 +138,14 @@ class MediaModal extends PureComponent {
           title="Select Media"
           leftButtonTitle="Cancel"
           leftButtonAction={this.handleCancelPress}
-          rightButtonTitle="Done"
+          rightButtonTitle={isNull(selected) ? '' : 'Done'}
           rightButtonAction={this.handleDonePress}
           rightButtonDisabled={isNull(selected)}
         />
         <View style={{ flex: 1 }}>
-          <View style={styles.tabBarContainer}>
-            <ScrollableTabBar
-              tabs={['Anime', 'Manga']}
-              activeTab={activeTab}
-              goToPage={this.handleTabChange}
-            />
-          </View>
           <View style={styles.searchBoxContainer}>
             <SearchBox
-              placeholder={`Search for ${activeRoute.title}`}
+              placeholder={'Search for Media'}
               searchIconOffset={130}
               style={styles.searchBox}
               value={this.state.query}
@@ -118,11 +154,12 @@ class MediaModal extends PureComponent {
             />
           </View>
           <FlatList
-            data={media[activeRoute.key]}
-            numColumns={bestSpacing.columnCount}
-            ItemSeparatorComponent={() => <View />}
+            data={media}
+            ItemSeparatorComponent={() => <View style={styles.rowPickerSeparator} />}
             keyExtractor={item => item.id}
             renderItem={this.renderItem}
+            onEndReached={this.loadMore}
+            onEndReachedThreshold={0.5}
           />
         </View>
       </Modal>
