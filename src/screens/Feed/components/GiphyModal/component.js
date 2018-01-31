@@ -11,7 +11,7 @@ import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Feed/constants';
 import { styles } from './styles';
 
-const apiKey = 'dc6zaTOxFJmzC';
+const apiKey = 'l2YStwkAmzBNWuFxe';
 const endpoint = 'https://api.giphy.com/v1/gifs/search?';
 const trending = 'https://api.giphy.com/v1/gifs/trending?';
 
