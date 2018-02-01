@@ -117,6 +117,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
         notifications: action.payload,
         loadingNotifications: false,
+        loadingMoreNotifications: action.loadingMoreNotifications,
         notificationsUnseen: action.meta.unseenCount,
         notificationsUnread: action.meta.unreadCount,
         error: '',
@@ -127,7 +128,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         notifications,
-        loadingNotifications: false,
+        loadingNotifications: true,
         notificationsUnseen: action.meta.unseenCount,
         notificationsUnread: action.meta.unreadCount,
         inAppNotification: {

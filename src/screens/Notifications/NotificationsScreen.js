@@ -264,16 +264,24 @@ class NotificationsScreen extends PureComponent {
         />
         <FlatList
           ListHeaderComponent={this.renderHeader}
-          removeClippedSubviews={false}
           data={notifications}
           renderItem={this.renderItem}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={this.renderItemSeperator}
           initialNumToRender={10}
           refreshing={loadingNotifications}
-          onRefresh={fetchNotifications}
-          onEndReached={this.fetchMoreNotifications}
-          onEndReachedThreshold={0.3}
+          onRefresh={this.fetchNotifications}
+          onMomentumScrollBegin={() => {
+            // Prevent iOS calling onendreached when list is loaded.
+            this.onEndReachedCalledDuringMomentum = false;
+          }}
+          onEndReached={() => {
+            if (!this.onEndReachedCalledDuringMomentum) {
+              this.fetchMoreNotifications();
+              this.onEndReachedCalledDuringMomentum = true;
+            }
+          }}
+          onEndReachedThreshold={0.5}
           style={styles.container}
         />
       </View>

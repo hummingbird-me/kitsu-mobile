@@ -153,6 +153,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       type: types.FETCH_NOTIFICATIONS_SUCCESS,
       payload: [...results],
       meta: results.meta,
+      loadingMoreNotifications: false,
     });
     const notificationsStream = getStream().feed(
       results.meta.feed.group,
@@ -160,6 +161,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       results.meta.feed.token,
     );
     notificationsStream.subscribe(async (data) => {
+      console.warn('Notifications stream callback triggered! Fetching more notifications.');
       const not = await Kitsu.one('activityGroups', id).get({
         page: { limit: 1 },
         include: 'target.user,target.post,actor',
