@@ -34,7 +34,6 @@ export const styles = StyleSheet.create({
   linkStyle: {
     color: colors.orange,
     fontStyle: 'italic',
-    // For some reason text isn't coloured on android
-    fontWeight: Platform.select({ ios: 'normal', android: 'bold' }),
+    fontWeight: 'bold',
   },
 });

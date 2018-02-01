@@ -46,6 +46,7 @@ export class Post extends PureComponent {
     isLiked: false,
     postLikesCount: this.props.post.postLikesCount,
     overlayRemoved: false,
+    isPostingComment: false,
   };
 
   componentDidMount() {
@@ -79,6 +80,10 @@ export class Post extends PureComponent {
   }
 
   onSubmitComment = async () => {
+    if (this.state.isPostingComment) return;
+
+    this.setState({ isPostingComment: true });
+
     const comment = await Kitsu.create('comments', {
       content: this.state.comment,
       post: {
@@ -95,7 +100,8 @@ export class Post extends PureComponent {
     this.setState({
       comment: '',
       comments: [...this.state.comments, comment],
-      latestComments: [...this.state.latestComments, comment]
+      latestComments: [...this.state.latestComments, comment],
+      isPostingComment: false,
     });
   }
 
@@ -208,7 +214,13 @@ export class Post extends PureComponent {
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComments, overlayRemoved, postLikesCount } = this.state;
+    const {
+      comment,
+      latestComments,
+      overlayRemoved,
+      postLikesCount,
+      isPostingComment,
+    } = this.state;
 
     let postBody = null;
 
@@ -282,6 +294,7 @@ export class Post extends PureComponent {
               onCommentChanged={this.onCommentChanged}
               onSubmit={this.onSubmitComment}
               onGifSelected={this.onGifSelected}
+              loading={isPostingComment}
             />
           </PostSection>
         </PostFooter>

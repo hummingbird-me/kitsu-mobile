@@ -53,6 +53,7 @@ export default class PostDetails extends PureComponent {
       },
       isLoadingNextPage: false,
       isReplying: false,
+      isPostingComment: false,
     };
   }
 
@@ -71,6 +72,10 @@ export default class PostDetails extends PureComponent {
   }
 
   onSubmitComment = async () => {
+    if (this.state.isPostingComment) return;
+
+    this.setState({ isPostingComment: true });
+
     try {
       const { currentUser, post } = this.props.navigation.state.params;
 
@@ -100,7 +105,7 @@ export default class PostDetails extends PureComponent {
       });
       comment.user = currentUser;
 
-      this.setState({ comment: '', isReplying: false });
+      this.setState({ comment: '', isReplying: false, isPostingComment: false });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
@@ -110,6 +115,7 @@ export default class PostDetails extends PureComponent {
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);
+      this.setState({ isPostingComment: false });
     }
   };
 
@@ -251,10 +257,10 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, isLiked, postLikesCount } = this.state;
+    const { comment, comments, isLiked, postLikesCount, isPostingComment } = this.state;
 
     const { content, images, commentsCount,
-            topLevelCommentsCount, media, spoiledUnit } = post;
+      topLevelCommentsCount, media, spoiledUnit } = post;
 
     return (
       <KeyboardAvoidingView
@@ -330,6 +336,7 @@ export default class PostDetails extends PureComponent {
               onCommentChanged={this.onCommentChanged}
               onGifSelected={this.onGifSelected}
               onSubmit={this.onSubmitComment}
+              loading={isPostingComment}
             />
           </PostSection>
         </PostFooter>
