@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
@@ -83,5 +83,9 @@ export const styles = StyleSheet.create({
   youTubeEmbed: {
     alignSelf: 'stretch',
     height: 300,
+  },
+  linkStyle: {
+    color: colors.orange,
+    fontStyle: 'italic',
   },
 });

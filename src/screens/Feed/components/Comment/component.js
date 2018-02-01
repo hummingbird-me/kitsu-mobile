@@ -7,6 +7,7 @@ import { defaultAvatar } from 'kitsu/constants/app';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
+import Hyperlink from 'react-native-hyperlink';
 import { StyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
@@ -170,9 +171,11 @@ export class Comment extends PureComponent {
         <Layout.RowMain>
           <View style={styles.bubble}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
-            <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
-              {content}
-            </StyledText>
+            <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+              <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
+                {content}
+              </StyledText>
+            </Hyperlink>
           </View>
 
           {!isTruncated && (

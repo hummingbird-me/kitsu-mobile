@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -29,6 +29,12 @@ export const styles = StyleSheet.create({
   },
   nestedComments: {
     marginTop: 14,
-    marginLeft: 14
+    marginLeft: 14,
+  },
+  linkStyle: {
+    color: colors.orange,
+    fontStyle: 'italic',
+    // For some reason text isn't coloured on android
+    fontWeight: Platform.select({ ios: 'normal', android: 'bold' }),
   },
 });

@@ -19,6 +19,7 @@ import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { scene } from 'kitsu/screens/Feed/constants';
+import Hyperlink from 'react-native-hyperlink';
 import { styles } from './styles';
 
 import { Spoiler } from './PostOverlays/Spoiler';
@@ -362,7 +363,9 @@ export const PostMain = ({
     <View style={styles.postMain}>
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.postContent}>
-          <StyledText color="dark" size="small">{content}</StyledText>
+          <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+            <StyledText color="dark" size="small">{content}</StyledText>
+          </Hyperlink>
         </View>
       </TouchableWithoutFeedback>
       {images && images.length > 0 && (
