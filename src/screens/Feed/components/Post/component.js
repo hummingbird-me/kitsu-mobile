@@ -16,6 +16,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { PostImage, PostImageSeparator } from 'kitsu/screens/Feed/components/PostImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { scene } from 'kitsu/screens/Feed/constants';
 import { styles } from './styles';
@@ -39,8 +40,10 @@ export class Post extends PureComponent {
   state = {
     comment: '',
     comments: [],
-    latestComment: null,
+    latestComments: [],
     like: null,
+    isLiked: false,
+    postLikesCount: this.props.post.postLikesCount,
     overlayRemoved: false,
   };
 
@@ -60,14 +63,22 @@ export class Post extends PureComponent {
       post: this.props.post,
       comments: this.state.comments,
       like: this.state.like,
+      isLiked: this.state.isLiked,
+      postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
     });
   }
 
   onCommentChanged = comment => this.setState({ comment })
 
+  onGifSelected = (gif) => {
+    this.setState({ comment: gif.images.original.url  }, () => {
+      this.onSubmitComment();
+    });
+  }
+
   onSubmitComment = async () => {
-    await Kitsu.create('comments', {
+    const comment = await Kitsu.create('comments', {
       content: this.state.comment,
       post: {
         id: this.props.post.id,
@@ -78,9 +89,13 @@ export class Post extends PureComponent {
         type: 'users',
       },
     });
+    comment.user = this.props.currentUser;
 
-    this.setState({ comment: '' });
-    this.fetchComments();
+    this.setState({
+      comment: '',
+      comments: [...this.state.comments, comment],
+      latestComments: [...this.state.latestComments, comment]
+    });
   }
 
   mounted = false
@@ -92,24 +107,21 @@ export class Post extends PureComponent {
       const comments = await Kitsu.findAll('comments', {
         filter: {
           postId: this.props.post.id,
+          parentId: '_none',
         },
         fields: {
           users: 'avatar,name',
         },
         include: 'user',
-        sort: 'createdAt',
+        sort: '-createdAt',
       });
 
-      // TODO: Comments come in without any structure.
-      // We need to hook them up with parent / child comments,
-      // but Devour doesn't seem to do this correctly:
-      // https://github.com/twg/devour/issues/90
-      // and there's no way for me to access the relationship
-      // data from the raw response from this context.
-
-      const latestComment = comments[comments.length - 1];
-
-      if (this.mounted) this.setState({ latestComment, comments });
+      if (this.mounted) {
+        this.setState({
+          latestComments: comments.slice(0, 2).reverse(),
+          comments: comments.reverse(),
+        });
+      }
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -123,41 +135,53 @@ export class Post extends PureComponent {
           userId: this.props.currentUser.id,
         },
         include: 'user',
-        page: {
-          limit: 4,
-        },
       });
 
       const like = likes.length && likes[0];
-
-      if (this.mounted) this.setState({ like });
+      if (this.mounted) {
+        this.setState({ like, isLiked: !!like });
+      }
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
   }
 
   toggleLike = async () => {
-    let { like } = this.state;
+    try {
+      const { currentUser, post } = this.props;
+      let { like, isLiked, postLikesCount } = this.state;
 
-    if (like) {
-      this.setState({ like: null });
-
-      await Kitsu.destroy('postLikes', like.id);
-    } else {
-      like = await Kitsu.create('postLikes', {
-        post: {
-          id: this.props.post.id,
-          type: 'posts',
-        },
-        user: {
-          id: this.props.currentUser.id,
-          type: 'users',
-        },
+      this.setState({
+        isLiked: !isLiked,
+        postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
       });
 
-      this.setState({ like });
+      if (like) {
+        await Kitsu.destroy('postLikes', like.id);
+        this.setState({ like: null });
+      } else {
+        like = await Kitsu.create('postLikes', {
+          post: {
+            id: post.id,
+            type: 'posts',
+          },
+          user: {
+            id: currentUser.id,
+            type: 'users',
+          },
+        });
+
+        this.setState({ like });
+      }
+    } catch (err) {
+      console.log('Error toggling like: ', err);
+      const { isLiked, postLikesCount } = this.state;
+      this.setState({
+        isLiked: !isLiked,
+        postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
+      });
     }
-  }
+  };
 
   focusOnCommentInput = () => {
     this.commentInput.focus();
@@ -180,11 +204,10 @@ export class Post extends PureComponent {
       nsfw,
       spoiler,
       spoiledUnit,
-      postLikesCount,
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComment, overlayRemoved } = this.state;
+    const { comment, latestComments, overlayRemoved, postLikesCount } = this.state;
 
     let postBody = null;
 
@@ -222,19 +245,31 @@ export class Post extends PureComponent {
         {postBody}
 
         <PostActions
-          isLiked={!!this.state.like}
+          isLiked={this.state.isLiked}
           onLikePress={this.toggleLike}
           onCommentPress={this.focusOnCommentInput}
           onSharePress={() => {}}
         />
 
         <PostFooter>
-          {commentsCount > 0 && !latestComment &&
+          {commentsCount > 0 && latestComments.length === 0 &&
             <SceneLoader />
           }
-          {latestComment && (
+          {latestComments.length > 0 && (
             <PostSection>
-              <Comment comment={latestComment} isTruncated />
+              <FlatList
+                data={latestComments}
+                keyExtractor={keyExtractor}
+                renderItem={({ item }) => {
+                  return <Comment
+                    post={this.props.post}
+                    comment={item}
+                    onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
+                    isTruncated
+                  />
+                }}
+                ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+              />
             </PostSection>
           )}
 
@@ -245,6 +280,7 @@ export class Post extends PureComponent {
               comment={comment}
               onCommentChanged={this.onCommentChanged}
               onSubmit={this.onSubmitComment}
+              onGifSelected={this.onGifSelected}
             />
           </PostSection>
         </PostFooter>
@@ -302,43 +338,6 @@ PostHeader.defaultProps = {
   onAvatarPress: null,
 };
 
-// Media Tag
-export const MediaTag = ({ media, episode, navigation }) => (
-  <View style={styles.mediaTagView}>
-    <TouchableOpacity
-      onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
-      style={styles.mediaTag}
-    >
-      <StyledText color="green" size="xxsmall">{media.canonicalTitle}</StyledText>
-    </TouchableOpacity>
-    {episode && (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
-        style={styles.episodeTagView}
-      >
-        <View style={styles.episodeTagLine} />
-        <View style={styles.mediaTag}>
-          <StyledText color="green" size="xxsmall">{`E ${episode.number}`}</StyledText>
-        </View>
-      </TouchableOpacity>
-    )}
-  </View>
-);
-
-MediaTag.propTypes = {
-  media: PropTypes.shape({
-    canonicalTitle: PropTypes.string.isRequired,
-  }).isRequired,
-  episode: PropTypes.shape({
-    number: PropTypes.number.isRequired,
-  }),
-  navigation: PropTypes.object.isRequired,
-};
-
-MediaTag.defaultProps = {
-  episode: null,
-};
-
 // PostMain
 const keyExtractor = (item, index) => index;
 
@@ -390,14 +389,16 @@ export const PostMain = ({
           navigation={navigation}
         />
       )}
-      <View style={styles.postStatusRow}>
-        <View style={styles.postStatus}>
-          <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={styles.postStatusRow}>
+          <View style={styles.postStatus}>
+            <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+          </View>
+          <View style={styles.postStatus}>
+            <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
+          </View>
         </View>
-        <View style={styles.postStatus}>
-          <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -489,6 +490,26 @@ PostActions.defaultProps = {
   onLikePress: null,
   onCommentPress: null,
   onSharePress: null,
+};
+
+export const PostReplyBanner = ({ name, onClose }) => (
+  <View style={styles.postReplyBanner}>
+    <StyledText size="xsmall" color="grey">
+      Replying to {name}
+    </StyledText>
+    <TouchableOpacity onPress={onClose}>
+      <StyledText size="large" color="grey">X</StyledText>
+    </TouchableOpacity>
+  </View>
+);
+
+PostReplyBanner.propTypes = {
+  name: PropTypes.string,
+  onClose: PropTypes.func,
+};
+PostReplyBanner.defaultProps = {
+  name: '',
+  onClose: null,
 };
 
 

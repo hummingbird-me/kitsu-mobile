@@ -191,7 +191,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
     nextUnit: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
   },
   { collectionPath: 'library-entries' },
@@ -750,6 +750,22 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'commentLikes',
+  {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+    comment: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'comment-likes' },
+);
+
+Kitsu.define(
   'userFeed',
   {
     createdAt: '',
@@ -785,6 +801,26 @@ Kitsu.define(
     },
   },
   { collectionPath: 'feeds/media_aggr' },
+);
+
+Kitsu.define(
+  'episodeFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/episode_aggr' },
+);
+
+Kitsu.define(
+  'globalFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/global' },
 );
 
 Kitsu.define(
@@ -842,6 +878,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     spoiledUnit: {
+      type: 'episodes',
       jsonApi: 'hasOne',
     },
     targetUser: {
@@ -851,6 +888,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     user: {
+      type: 'users',
       jsonApi: 'hasOne',
     },
   },

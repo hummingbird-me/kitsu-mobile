@@ -10,15 +10,23 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { upperFirst, isNull } from 'lodash';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
-    castings: PropTypes.array.isRequired,
+    castings: PropTypes.array,
     currentUser: PropTypes.object.isRequired,
     media: PropTypes.object.isRequired,
-    mediaReactions: PropTypes.array.isRequired,
+    mediaReactions: PropTypes.array,
     navigation: PropTypes.object.isRequired,
     setActiveTab: PropTypes.func.isRequired,
+    loadingAdditional: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    castings: null,
+    mediaReactions: null,
+    loadingAdditional: false,
   }
 
   state = {
@@ -75,23 +83,35 @@ class SummaryComponent extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   }
 
+  navigateToMedia = (type, id) => {
+    this.props.navigation.navigate('MediaPages', {
+      mediaId: id,
+      mediaType: type,
+    });
+  }
+
   render() {
-    const { media, castings, mediaReactions } = this.props;
+    const { media, castings, mediaReactions, loadingAdditional } = this.props;
     const { loading, feed } = this.state;
     const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
     const seriesCount = series.length;
+
+    // What is a common name between episode and chapter???
+    const episodePrefix = media.type === 'anime' ? 'Ep.' : 'Ch.';
+    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
 
     return (
       <SceneContainer>
         {/* Episodes */}
         <ScrollableSection
-          title={`Episodes・${seriesCount}`}
+          title={`${media.type === 'anime' ? 'Episodes' : 'Chapters'}・${seriesCount}`}
           onViewAllPress={() => this.navigateTo('Episodes')}
           data={this.formatData(series)}
+          loading={loadingAdditional}
           renderItem={({ item }) => (
             <ScrollItem>
               <ImageCard
-                subtitle={`Ep. ${item.number} of ${media.episodeCount}`}
+                subtitle={`${episodePrefix} ${item.number} ${episodeSuffix}`}
                 title={item.canonicalTitle}
                 variant="landscapeLarge"
                 source={{
@@ -109,17 +129,25 @@ class SummaryComponent extends PureComponent {
           contentDark
           title="More from this series"
           data={this.formatData(media.mediaRelationships)}
-          renderItem={({ item }) => (
-            <ScrollItem>
+          loading={loadingAdditional}
+          renderItem={({ item }) => {
+            const destination = item.destination;
+            const subheading = destination.type === 'anime' ? destination.showType : destination.mangaType;
+
+            return (<ScrollItem spacing={4}>
               <ImageCard
+                centerTitle
+                boldTitle={false}
                 variant="portraitLarge"
-                title={item.destination.canonicalTitle}
+                title={destination.canonicalTitle}
+                subheading={upperFirst(subheading)}
                 source={{
-                  uri: item.destination.posterImage && item.destination.posterImage.original,
+                  uri: destination.posterImage && destination.posterImage.original,
                 }}
+                onPress={() => this.navigateToMedia(destination.type, destination.id)}
               />
-            </ScrollItem>
-          )}
+            </ScrollItem>);
+          }}
         />
 
         {/* Reactions */}
@@ -127,6 +155,7 @@ class SummaryComponent extends PureComponent {
           title="Reactions"
           onViewAllPress={() => this.navigateTo('Reactions')}
           data={mediaReactions}
+          loading={isNull(mediaReactions)}
           renderItem={({ item }) => (
             <ScrollItem>
               <ReactionBox
@@ -144,9 +173,12 @@ class SummaryComponent extends PureComponent {
           title="Characters"
           onViewAllPress={() => this.navigateTo('Characters')}
           data={castings}
+          loading={isNull(castings)}
           renderItem={({ item }) => (
-            <ScrollItem>
+            <ScrollItem spacing={4}>
               <ImageCard
+                centerTitle
+                boldTitle={false}
                 variant="portrait"
                 title={item.character.name}
                 source={{
@@ -161,6 +193,7 @@ class SummaryComponent extends PureComponent {
         { !loading &&
           feed.map(item => (
             <Post
+              key={item.id}
               post={item}
               onPostPress={this.navigateToPost}
               currentUser={this.props.currentUser}

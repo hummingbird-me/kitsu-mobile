@@ -3,25 +3,6 @@ import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 export const styles = StyleSheet.create({
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 70,
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
-    backgroundColor: colors.listBackPurple,
-  },
-  modalButton: {
-    flex: 1,
-  },
-  modalRightButton: {
-    alignItems: 'flex-end',
-  },
-  modalTitle: {
-    flex: 2,
-    alignItems: 'center',
-  },
-
   pickerRow: {
     backgroundColor: '#FFFFFF',
     padding: scenePadding,
@@ -30,7 +11,7 @@ export const styles = StyleSheet.create({
   pickerIconCircle: {
     width: 30,
     height: 30,
-    borderRadius: 30,
+    borderRadius: 15,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.lightGrey,
     alignItems: 'center',
@@ -44,7 +25,7 @@ export const styles = StyleSheet.create({
   pickerIcon: {
     fontSize: 28,
     backgroundColor: 'transparent',
-    paddingTop: 4,
+    paddingTop: Platform.select({ ios: 4, android: 0 }),
   },
 
   rowPickerSeparator: {

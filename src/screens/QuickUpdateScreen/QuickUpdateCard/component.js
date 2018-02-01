@@ -1,16 +1,15 @@
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
+import { Rating } from 'kitsu/components/Rating';
 import PropTypes from 'prop-types';
-
-import QuickUpdateEditor from '../QuickUpdateEditor';
-
 import styles from './styles';
 
 export default class QuickUpdateCard extends PureComponent {
   static propTypes = {
     // TODO: Not yet a complete definition of the things we use in data.
+    ratingSystem: PropTypes.string.isRequired,
     data: PropTypes.shape({
       loading: PropTypes.bool,
       item: PropTypes.shape({
@@ -20,21 +19,29 @@ export default class QuickUpdateCard extends PureComponent {
           posterImage: PropTypes.shape({
             large: PropTypes.string.isRequired,
           }),
-        }).isRequired,
+        }),
+        manga: PropTypes.shape({
+          canonicalTitle: PropTypes.string.isRequired,
+          id: PropTypes.string.isRequired,
+          posterImage: PropTypes.shape({
+            large: PropTypes.string.isRequired,
+          }),
+        }),
       }).isRequired,
     }).isRequired,
     onBeginEditing: PropTypes.func,
     onEndEditing: PropTypes.func,
     onMarkComplete: PropTypes.func,
     onViewDiscussion: PropTypes.func,
-  }
+    onRate: PropTypes.func.isRequired,
+  };
 
   static defaultProps = {
-    onBeginEditing: () => {},
-    onEndEditing: () => {},
-    onMarkComplete: () => {},
-    onViewDiscussion: () => {},
-  }
+    onBeginEditing: () => { },
+    onEndEditing: () => { },
+    onMarkComplete: () => { },
+    onViewDiscussion: () => { },
+  };
 
   state = {
     editing: false,
@@ -43,7 +50,7 @@ export default class QuickUpdateCard extends PureComponent {
     // to locate a view with a tag.
     editingUpdateText: null,
     updateText: null,
-  }
+  };
 
   componentWillReceiveProps = (nextProps) => {
     // This means they've likely reloaded the data.
@@ -53,26 +60,26 @@ export default class QuickUpdateCard extends PureComponent {
         updateText: null,
       });
     }
-  }
+  };
 
   onEditorChanged = (editingUpdateText) => {
     this.setState({ editingUpdateText });
-  }
+  };
 
   onViewDiscussion = () => {
     this.props.onViewDiscussion(this.props.data.item);
-  }
+  };
 
   onMarkComplete = () => {
     this.props.onMarkComplete(this.props.data.item);
-  }
+  };
 
   updateTextAndToggle = () => {
     // Restore any previous text, and then toggle the editor.
     this.setState({ updateText: this.state.editingUpdateText }, () => {
       this.toggleEditor();
     });
-  }
+  };
 
   toggleEditor = () => {
     const { loading } = this.props.data;
@@ -89,114 +96,146 @@ export default class QuickUpdateCard extends PureComponent {
       this.setState({ editing: false });
       this.props.onEndEditing();
     }
-  }
+  };
+
+  renderRatingComponent = () => {
+    const { data, ratingSystem, onRate } = this.props;
+
+    return (
+      <Rating
+        ratingSystem={ratingSystem}
+        ratingTwenty={data.item.ratingTwenty}
+        onRatingChanged={onRate}
+      />
+    );
+  };
 
   render() {
     const { data } = this.props;
-    const { loading } = data.item;
-    const { editing, editingUpdateText, updateText } = this.state;
-
-    if (!data || !data.item || !data.item.anime || !data.item.unit || !data.item.unit.length) {
+    if (!data || !data.item || (!data.item.anime && !data.item.manga)) {
+      console.warn('Missing Quick Update Card data!');
       return null;
     }
 
-    const { anime, progress, unit } = data.item;
+    let { unit } = data.item;
+    const { loading, anime, manga, progress, nextUnit } = data.item;
 
-    let landscapeImage = unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original;
-    if (!landscapeImage) {
-      landscapeImage = anime.posterImage.large;
+    // Might be a new entry and referencing a non-existent unit for episode 0
+    if ((!unit || !unit.length) && nextUnit) {
+      unit = [nextUnit];
     }
 
-    const squareImage = anime.posterImage.small;
+    const media = anime || manga;
+    const unitCount = media.episodeCount || media.chapterCount;
 
+    const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) || media.posterImage.large;
+
+    const squareImage = media.posterImage.small;
     return (
       <View key={data.item.id} style={styles.wrapper}>
         {/* Episode Landscape Image */}
         <View style={[styles.posterImageWrapper, styles.shadow]}>
-          <Image
-            source={{ uri: landscapeImage }}
-            style={styles.posterImage}
-          >
-            <LinearGradient colors={['transparent', 'rgba(0, 0, 0, 0.8)']} style={styles.posterImageGradient} />
-            <View style={styles.episodeRow}>
-              <Text style={styles.currentEpisodeText}>Ep. {progress}</Text>
-              <Text style={styles.totalEpisodesText}> of {anime.episodeCount}</Text>
+          <Image source={{ uri: landscapeImage }} style={styles.posterImage}>
+            <LinearGradient
+              colors={['transparent', 'rgba(0, 0, 0, 1)']}
+              style={styles.posterImageGradient}
+            />
+            <View style={{ flexDirection: 'row' }}>
+              <Image source={{ uri: squareImage }} style={styles.avatarImage} />
+              <View style={styles.descriptionRow}>
+                <Text style={styles.seriesTitle} numberOfLines={1}>
+                  {media.canonicalTitle}
+                </Text>
+                {/* Progress Bar */}
+                <View style={styles.progressBarContainer}>
+                  <ProgressBar
+                    backgroundStyle={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+                    height={6}
+                    fillPercentage={(progress / unitCount) * 100}
+                  />
+                </View>
+                {/* Progress State */}
+                {progress > 0 ? (
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.currentEpisodeText}>
+                      {media.type === 'anime' ? 'EP' : 'CH'}
+                      {' '}
+                      {progress}
+                    </Text>
+                    <Text numberOfLines={1} style={styles.totalEpisodesText}>
+                      {' '}
+                      of {unitCount} {unit[0] && unit[0].canonicalTitle}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.totalEpisodesText}>Not Started</Text>
+                  </View>
+                )}
+              </View>
             </View>
-            <Text style={styles.episodeName} numberOfLines={1}>{unit[0].canonicalTitle}</Text>
           </Image>
         </View>
 
         {/* Card */}
         <View style={[styles.cardWrapper, styles.shadow]}>
-          <View style={styles.cardHeaderArea}>
-            <View style={styles.cardContent}>
-              {/* Progress Bar */}
-              <View style={styles.progressBarContainer}>
-                <ProgressBar
-                  height={6}
-                  fillPercentage={(progress / anime.episodeCount) * 100}
-                />
-              </View>
+          <View style={styles.cardHeaderWrapper}>
+            <View style={styles.cardHeaderArea}>
               {/* Series Description */}
-              <View style={styles.seriesDescriptionRow}>
-                <Image source={{ uri: squareImage }} style={styles.avatarImage} />
-                <View style={styles.descriptionRow}>
-                  <Text style={styles.seriesTitle} numberOfLines={1}>{anime.canonicalTitle}</Text>
-                  <Text style={styles.seriesExtraInfo}>Anime • {anime.startDate.split('-')[0]}</Text>
-                </View>
+              <View style={styles.episodeRow}>
+                {nextUnit ? ( // finished ?
+                  <Text style={styles.seriesExtraInfo} numberOfLines={1}>
+                    UP NEXT{' '}
+                    <Text style={styles.seriesNextEpisodeTitle}>
+                      {media.type === 'anime' ? 'EP' : 'CH'}
+                      {' '}
+                      {nextUnit.number} {nextUnit.canonicalTitle ? `- ${nextUnit.canonicalTitle}` : ''}
+                    </Text>
+                  </Text>
+                ) : (
+                  <Text style={styles.seriesFinishedTitle}>Finished!</Text>
+                )}
               </View>
             </View>
           </View>
-          {
-            loading &&
-            <ActivityIndicator size="large" style={styles.loadingSpinner} />
-          }
-          {
-            !loading &&
-            <TouchableOpacity onPress={this.toggleEditor} style={styles.placeholderWrapper}>
-              <Text
-                style={updateText ? styles.updateText : styles.placeholder}
-              >
-                {updateText || `(Optional) Share your thoughts on Episode ${data.item.progress}`}
-              </Text>
-            </TouchableOpacity>
-          }
+          {loading && <ActivityIndicator size="large" style={styles.loadingSpinner} />}
           {/* Action Row */}
-          {
-            !loading &&
-            <View style={styles.actionRow}>
-              <TouchableOpacity
-                onPress={this.onViewDiscussion}
-                style={[styles.button, styles.discussionButton]}
+          {!loading &&
+            (nextUnit ? ( // finished ?
+              <View style={styles.actionRow}>
+                <TouchableOpacity
+                  onPress={this.onMarkComplete}
+                  style={[styles.button, styles.markWatchedButton]}
+                >
+                  {unitCount === progress + 1 ? ( // is final episode?
+                    <Text style={styles.buttonText}>Mark as Complete</Text>
+                  ) : (
+                    <Text style={styles.buttonText}>Mark
+                      <Text style={{ fontWeight: 'bold' }}>
+                        {' '}{media.type === 'anime' ? 'Episode' : 'Chapter'}
+                        {' '}
+                        {data.item.progress + 1}{' '}
+                      </Text>
+                    Watched
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View
+                style={{
+                  paddingHorizontal: 10,
+                  paddingVertical: 14,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
               >
-                <Text style={styles.buttonText}>View Discussion</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={this.onMarkComplete}
-                style={[styles.button, styles.markWatchedButton]}
-              >
-                <Text style={styles.buttonText}>Mark </Text>
-                <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Episode {data.item.progress}</Text>
-                <Text style={styles.buttonText}> Watched</Text>
-              </TouchableOpacity>
-            </View>
-          }
+                <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
+                {this.renderRatingComponent()}
+              </View>
+            ))}
         </View>
-
-        {/* Editor */}
-        <Modal
-          animationType="slide"
-          transparent
-          visible={editing}
-        >
-          <QuickUpdateEditor
-            episode={data.item.progress}
-            onChange={this.onEditorChanged}
-            onCancel={this.toggleEditor}
-            onDone={this.updateTextAndToggle}
-            value={editingUpdateText}
-          />
-        </Modal>
       </View>
     );
   }

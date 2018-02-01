@@ -6,15 +6,11 @@ const styles = StyleSheet.create({
   wrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 12,
-    backgroundColor: 'rgba(200, 200, 200, 0.5)',
   },
-  text: {
-    marginHorizontal: 14,
+  icon: {
+    marginHorizontal: 8,
     marginVertical: 2,
-    fontFamily: 'OpenSans',
-    fontWeight: '700',
-    fontSize: 13,
+    fontSize: 24,
     color: colors.white,
   },
 });

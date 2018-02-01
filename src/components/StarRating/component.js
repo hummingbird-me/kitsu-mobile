@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Slider,
-  Text,
-} from 'react-native';
+import { View, Slider, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
@@ -12,36 +8,36 @@ export const StarRating = ({
   ratingTwenty,
   ratingSystem,
   sliderValueChanged,
-  onSlidingComplete
+  onSlidingComplete,
 }) => (
-    <View>
-      {/* Star, 4.5 */
-        ratingTwenty ? (
-          <View style={styles.modalStarRow}>
-            <Icon name="star" size={46} color={colors.yellow} />
-            <Text style={styles.modalRatingText}>
-              {getRatingTwentyProperties(ratingTwenty, ratingSystem).text}
-            </Text>
-          </View>
-        ) : (
-            <View style={styles.modalStarRow}>
-              <Text style={styles.modalNoRatingText}>Slide to rate</Text>
-            </View>
-          )}
-      {/* Slider */}
-      <Slider
-        minimumValue={ratingSystem === 'regular' ? 0 : 1}
-        maximumValue={20}
-        step={ratingSystem === 'regular' ? 2 : 1}
-        value={ratingTwenty || 0}
-        minimumTrackTintColor={colors.tabRed}
-        maximumTrackTintColor={'rgb(43, 33, 32)'}
-        onValueChange={sliderValueChanged}
-        onSlidingComplete={onSlidingComplete}
-        style={styles.modalSlider}
-      />
-    </View>
-  );
+  <View>
+    {/* Star, 4.5 */
+      ratingTwenty ? (
+        <View style={styles.modalStarRow}>
+          <Icon name="star" size={46} color={colors.yellow} />
+          <Text style={styles.modalRatingText}>
+            {getRatingTwentyProperties(ratingTwenty, ratingSystem).text}
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.modalStarRow}>
+          <Text style={styles.modalNoRatingText}>Slide to rate</Text>
+        </View>
+      )}
+    {/* Slider */}
+    <Slider
+      minimumValue={ratingSystem === 'regular' ? 0 : 1}
+      maximumValue={20}
+      step={ratingSystem === 'regular' ? 2 : 1}
+      value={ratingTwenty || 0}
+      minimumTrackTintColor={colors.tabRed}
+      maximumTrackTintColor={'rgb(43, 33, 32)'}
+      onValueChange={sliderValueChanged}
+      onSlidingComplete={onSlidingComplete}
+      style={styles.modalSlider}
+    />
+  </View>
+);
 
 function getRatingTwentyProperties(ratingTwenty, type) {
   const ratingProperties = {};
@@ -88,4 +84,3 @@ function displayRatingFromTwenty(ratingTwenty, type) {
 
   throw new Error(`Unknown rating type ${type}.`);
 }
-

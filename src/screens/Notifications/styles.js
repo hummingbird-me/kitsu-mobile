@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
+
 
 export const styles = StyleSheet.create({
   customHeaderWrapper: {
-    height: 64 + (isX ? paddingX : 0),
+    height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',

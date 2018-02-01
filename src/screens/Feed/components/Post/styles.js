@@ -64,6 +64,14 @@ export const styles = StyleSheet.create({
     borderTopColor: colors.lightGrey,
     backgroundColor: colors.offWhite,
   },
+  postReplyBanner: {
+    backgroundColor: colors.lightestGrey,
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   postSection: {
     padding: scenePadding,
   },
@@ -71,28 +79,6 @@ export const styles = StyleSheet.create({
     padding: scenePadding,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.lightGrey,
-  },
-
-  mediaTagView: {
-    marginTop: scenePadding * 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  mediaTag: {
-    paddingHorizontal: 5,
-    paddingVertical: 3,
-    borderRadius: 4,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.green,
-  },
-  episodeTagView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  episodeTagLine: {
-    height: StyleSheet.hairlineWidth,
-    width: 10,
-    backgroundColor: colors.green,
   },
   youTubeEmbed: {
     alignSelf: 'stretch',

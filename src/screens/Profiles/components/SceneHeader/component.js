@@ -13,6 +13,8 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
 import { styles } from './styles';
 
+const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
+
 export class SceneHeader extends PureComponent {
   state = {
     expanded: false,
@@ -56,9 +58,15 @@ export class SceneHeader extends PureComponent {
             contentContainerStyle={styles.categoriesInner}
             showsHorizontalScrollIndicator={false}
             data={categories}
-            renderItem={({ item }) => (
-              <View style={{ marginLeft: 5 }}><Pill label={item.title} /></View>
-            )}
+            renderItem={({ index, item }) => {
+              const colorIndex = index % PILL_COLORS.length;
+              const color = PILL_COLORS[colorIndex];
+              return (
+                <View style={{ marginLeft: 5 }}>
+                  <Pill color={color} label={item.title} />
+                </View>
+              );
+            }}
           />
         </View>
       );

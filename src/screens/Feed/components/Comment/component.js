@@ -1,40 +1,160 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { StyledText } from 'kitsu/components/StyledText';
+import { listBackPurple } from 'kitsu/constants/colors';
+import { Kitsu } from 'kitsu/config/api';
 import { styles } from './styles';
 
 export class Comment extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isLiked: false,
       likesCount: props.comment.likesCount,
+      isLiked: false,
+      like: null,
+      replies: [],
+      repliesCount: props.comment.repliesCount,
+      isLoadingNextPage: false,
     };
   }
 
-  toggleLike = () => {
-    this.setState({
-      isLiked: !this.state.isLiked,
-      likesCount: this.state.isLiked ? this.state.likesCount - 1 : this.state.likesCount + 1,
+  componentDidMount() {
+    this.mounted = true;
+    if (!this.props.isTruncated) {
+      this.fetchLikes();
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  fetchLikes = async () => {
+    const { currentUser, comment } = this.props;
+    try {
+      const likes = await Kitsu.findAll('commentLikes', {
+        filter: {
+          commentId: comment.id,
+          userId: currentUser.id,
+        }
+      });
+
+      const like = likes.length && likes[0];
+      if (this.mounted) {
+        this.setState({ like, isLiked: !!like });
+      }
+    } catch (err) {
+      console.log('Error fetching likes: ', err);
+    }
+  }
+
+  toggleLike = async () => {
+    try {
+      const { likesCount, isLiked, like } = this.state;
+      const { comment, currentUser } = this.props;
+
+      this.setState({
+        isLiked: !isLiked,
+        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
+      });
+
+      if (like) {
+        await Kitsu.destroy('commentLikes', like.id);
+        this.setState({ like: null });
+      } else {
+        const record = await Kitsu.create('commentLikes', {
+          comment: {
+            id: comment.id,
+            type: 'comments',
+          },
+          user: {
+            id: currentUser.id,
+            type: 'users',
+          },
+        });
+        this.setState({ like: record });
+      }
+    } catch (err) {
+      console.log('Error toggling like: ', err);
+
+      const { isLiked, likesCount } = this.state;
+      this.setState({
+        isLiked: !isLiked,
+        likesCount: isLiked ? likesCount - 1 : likesCount + 1,
+      });
+    }
+  }
+
+  onPagination = async () => {
+    this.setState({ isLoadingNextPage: true });
+    await this.fetchReplies({
+      page: {
+        offset: this.state.replies.length,
+        limit: 5,
+      },
+    });
+    this.setState({ isLoadingNextPage: false });
+  }
+
+  fetchReplies = async (requestOptions = {}) => {
+    try {
+      this.setState({ isLoadingNextPage: true });
+
+      const replies = await Kitsu.findAll('comments', {
+        filter: {
+          parentId: this.props.comment.id,
+        },
+        fields: {
+          users: 'avatar,name',
+        },
+        include: 'user',
+        sort: '-createdAt',
+        page: { limit: 5 },
+        ...requestOptions,
+      });
+
+      this.setState({ replies: [...replies.reverse(), ...this.state.replies] });
+    } catch (err) {
+      console.log('Error fetching replies: ', err);
+    } finally {
+      this.setState({ isLoadingNextPage: false });
+    }
+  }
+
+  onReplyPress = (item) => {
+    this.props.onReplyPress(item.user.name, (comment) => {
+      this.setState({
+        replies: [...this.state.replies, comment],
+        repliesCount: this.state.repliesCount + 1,
+      });
     });
   }
+
+  renderItem = ({ item }) => (
+    <Comment
+      post={this.props.post}
+      comment={item}
+      currentUser={this.props.currentUser}
+      onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
+      onReplyPress={() => this.onReplyPress(item)}
+    />
+  )
 
   render() {
     const {
       comment,
       isTruncated,
       onAvatarPress,
-      onReplyPress,
-      children,
     } = this.props;
 
-    const { isLiked, likesCount } = this.state;
+    const { isLiked, likesCount, replies, repliesCount } = this.state;
 
     const { content, createdAt, user } = comment;
     const { avatar, name } = user;
@@ -54,13 +174,14 @@ export class Comment extends PureComponent {
               {content}
             </StyledText>
           </View>
+
           {!isTruncated && (
             <View style={styles.commentActions}>
               <StyledText color="grey" size="xxsmall">{moment(createdAt).fromNow()}</StyledText>
               <TouchableOpacity onPress={this.toggleLike} style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">{`Like${isLiked ? 'd' : ''}`}</StyledText>
               </TouchableOpacity>
-              <TouchableOpacity onPress={onReplyPress} style={styles.commentActionItem}>
+              <TouchableOpacity onPress={() => this.onReplyPress(comment)} style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">Reply</StyledText>
               </TouchableOpacity>
               <View style={styles.commentActionItem}>
@@ -69,8 +190,33 @@ export class Comment extends PureComponent {
               </View>
             </View>
           )}
-          {children && (
-            <View style={styles.nestedCommentSection}>{children}</View>
+
+          {!isTruncated && repliesCount > 0 && (
+            <View style={styles.nestedComments}>
+              {replies.length == 0 && (
+                <ToggleReplies
+                  onPress={() => { this.fetchReplies(); }}
+                  isLoading={this.state.isLoadingNextPage}
+                  repliesCount={repliesCount}
+                />
+              )}
+              {replies.length > 0 && (
+                <View>
+                  {repliesCount > replies.length && (
+                    <CommentPagination
+                      onPress={this.onPagination}
+                      isLoading={this.state.isLoadingNextPage}
+                    />
+                  )}
+                  <FlatList
+                    data={replies}
+                    keyExtractor={(item, index) => index}
+                    renderItem={this.renderItem}
+                    ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+                  />
+                </View>
+              )}
+            </View>
           )}
         </Layout.RowMain>
       </Layout.RowWrap>
@@ -79,24 +225,74 @@ export class Comment extends PureComponent {
 }
 
 Comment.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.string,
+  }).isRequired,
   comment: PropTypes.shape({
     avatar: PropTypes.string,
     name: PropTypes.string,
     content: PropTypes.string,
     time: PropTypes.string,
     likesCount: PropTypes.number,
+    repliesCount: PropTypes.number,
     createdAt: PropTypes.string,
-    children: PropTypes.array,
   }).isRequired,
-  children: PropTypes.node,
+  navigation: PropTypes.object,
   isTruncated: PropTypes.bool,
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
 };
 
 Comment.defaultProps = {
-  children: [],
   isTruncated: false,
   onAvatarPress: null,
   onReplyPress: null,
+};
+
+export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (
+  <View>
+    {isLoading && (
+      <ActivityIndicator color={listBackPurple} />
+    )}
+    {!isLoading && (
+      <TouchableOpacity onPress={onPress}>
+        <StyledText color="dark" size="xxsmall" bold>View replies ({repliesCount})</StyledText>
+      </TouchableOpacity>
+    )}
+  </View>
+);
+
+ToggleReplies.propTypes = {
+  onPress: PropTypes.func,
+  isLoading: PropTypes.bool,
+  repliesCount: PropTypes.number,
+};
+
+ToggleReplies.defaultProps = {
+  onPress: null,
+  isLoading: false,
+  repliesCount: 0,
+};
+
+export const CommentPagination = ({ onPress, isLoading }) => (
+  <View style={{ marginBottom: 14 }}>
+    {isLoading && (
+      <ActivityIndicator color={listBackPurple} />
+    )}
+    {!isLoading && (
+      <TouchableOpacity onPress={onPress}>
+        <StyledText color="dark" size="xxsmall" bold>View previous comments</StyledText>
+      </TouchableOpacity>
+    )}
+  </View>
+);
+
+CommentPagination.propTypes = {
+  onPress: PropTypes.func,
+  isLoading: PropTypes.bool,
+};
+
+CommentPagination.defaultProps = {
+  onPress: null,
+  isLoading: false,
 };

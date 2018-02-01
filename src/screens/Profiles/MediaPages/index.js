@@ -4,7 +4,7 @@ import { StatusBar } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
-import { defaultCover } from 'kitsu/constants/app';
+import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
@@ -14,7 +14,9 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
+const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
 const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
 
@@ -30,6 +32,7 @@ const TAB_ITEMS = [
 
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
+  // TODO: Change label to Chapters for Manga.
   Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
   Characters: { getScreen: () => require('./pages/Characters').Characters },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
@@ -51,10 +54,11 @@ class MediaPages extends PureComponent {
 
   state = {
     active: 'Summary',
-    loading: false,
+    loading: false, // Check whether basic data is loading
     media: null,
     castings: null,
     mediaReactions: null,
+    loadingAdditional: false, // Check whether episodes & Related are loading
   }
 
   componentDidMount = () => {
@@ -71,14 +75,60 @@ class MediaPages extends PureComponent {
 
   goBack = () => this.props.navigation.goBack();
 
+  /**
+   * Fetch the media information
+   */
   fetchMedia = async (type, id) => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, loadingAdditional: true });
     try {
+      // Fetch the media with categories
       const media = await Kitsu.one(type, id).get({
-        include: `categories,mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
+        include: 'categories',
       });
 
-      // Now that we've got the media, everything else can go async together.
+      // Set the initial media info
+      this.setState({
+        loading: false,
+        media,
+      });
+
+      // Lazy load the rest
+      this.fetchEpisodesAndRelated(type, id);
+      this.fetchOther(type, id);
+    } catch (error) {
+      // OH NO!
+      this.setState({
+        loading: false,
+        error,
+      });
+    }
+  }
+
+  /**
+   * Fetch the episodes/chapter and related media types
+   */
+  fetchEpisodesAndRelated = async (type, id) => {
+    try {
+      // To make this simple, we'll just refetch the media object with these fields.
+      const media = await Kitsu.one(type, id).get({
+        include: `mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
+      });
+
+      // Combine the 2 object that we have
+      this.setState({
+        media: { ...media, categories: this.state.media.categories },
+        loadingAdditional: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /**
+   * Fetch the other media information
+   */
+  fetchOther = async (type, id) => {
+    try {
       const [
         castings,
         mediaReactions,
@@ -101,16 +151,11 @@ class MediaPages extends PureComponent {
       ]);
 
       this.setState({
-        loading: false,
         castings,
-        media,
         mediaReactions,
       });
     } catch (error) {
-      this.setState({
-        loading: false,
-        error,
-      });
+      console.log(error);
     }
   }
 
@@ -134,6 +179,7 @@ class MediaPages extends PureComponent {
       loading,
       media,
       mediaReactions,
+      loadingAdditional,
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
     if (loading) {
@@ -157,7 +203,7 @@ class MediaPages extends PureComponent {
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
           style={{ flex: 1 }}
-          headerHeight={60}
+          headerHeight={HEADER_HEIGHT}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
           renderParallaxBackground={() => (
@@ -199,7 +245,8 @@ class MediaPages extends PureComponent {
             mediaId={media.id}
             mediaReactions={mediaReactions}
             castings={castings}
-            navigation={navigation}
+            navigation={this.props.navigation}
+            loadingAdditional={loadingAdditional}
           />
         </ParallaxScroll>
       </SceneContainer>

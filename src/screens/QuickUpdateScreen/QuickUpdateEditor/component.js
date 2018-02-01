@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import PropTypes from 'prop-types';
+import * as colors from 'kitsu/constants/colors';
 
 import styles from './styles';
-import * as colors from 'kitsu/constants/colors';
 
 const HIT_SLOP = {
   top: 10,
@@ -14,7 +15,9 @@ const HIT_SLOP = {
 
 export default class QuickUpdateEditor extends PureComponent {
   static propTypes = {
-    episode: PropTypes.number.isRequired,
+    media: PropTypes.object.isRequired,
+    currentEpisode: PropTypes.object.isRequired,
+    progress: PropTypes.number.isRequired,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onDone: PropTypes.func,
@@ -30,7 +33,7 @@ export default class QuickUpdateEditor extends PureComponent {
 
   state = {
     headerOpacity: new Animated.Value(0),
-  }
+  };
 
   componentDidMount = () => {
     // Animate the header in after the slide.
@@ -39,13 +42,13 @@ export default class QuickUpdateEditor extends PureComponent {
     Animated.timing(headerOpacity, {
       toValue: 1,
       duration: 300,
-      delay: 500,
+      delay: 200,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   render() {
-    const { episode, value, onCancel, onDone } = this.props;
+    const { progress, value, onCancel, onDone, media, currentEpisode } = this.props;
     const { headerOpacity } = this.state;
 
     return (
@@ -56,7 +59,7 @@ export default class QuickUpdateEditor extends PureComponent {
           <TouchableOpacity onPress={onCancel} hitSlop={HIT_SLOP} style={styles.headerButton}>
             <Text style={styles.headerButtonText}>Cancel</Text>
           </TouchableOpacity>
-          <Text style={styles.headerText}>Episode {episode}</Text>
+          <Text style={styles.headerText}>Episode {progress}</Text>
           <TouchableOpacity onPress={onDone} hitSlop={HIT_SLOP} style={styles.headerButton}>
             <Text style={styles.headerButtonText}>Done</Text>
           </TouchableOpacity>
@@ -68,8 +71,14 @@ export default class QuickUpdateEditor extends PureComponent {
             value={value}
             style={styles.editor}
             onChangeText={this.props.onChange}
-            placeholder={`(Optional) Share your thoughts on Episode ${episode}`}
+            placeholder={`(Optional) Share your thoughts on Episode ${progress}`}
             placeholderTextColor={colors.lightGrey}
+          />
+          <MediaTag
+            disabled
+            media={media}
+            episode={currentEpisode}
+            navigation={navigation}
           />
         </View>
       </View>

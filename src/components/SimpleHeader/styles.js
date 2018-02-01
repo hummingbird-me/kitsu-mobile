@@ -1,13 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { flattenCommon } from 'kitsu/common/styles';
 import * as colors from 'kitsu/constants/colors';
+import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'flex-end',
     backgroundColor: colors.darkPurple,
     flexDirection: 'row',
-    height: 64,
+    height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
   },
   headerItemText: {
     ...flattenCommon('text'),
