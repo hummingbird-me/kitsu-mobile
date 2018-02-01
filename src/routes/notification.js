@@ -39,7 +39,9 @@ const NotifStack = StackNavigator(
           {screenProps &&
             screenProps.badge > 0 && (
               <View style={styles.textWrapper}>
-                <Text style={styles.text}>{screenProps.badge}</Text>
+                <Text style={styles.text}>
+                  {screenProps.badge > 99 ? '99+' : screenProps.badge}
+                </Text>
               </View>
             )}
           <Image source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
