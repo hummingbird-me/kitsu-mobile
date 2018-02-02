@@ -73,6 +73,7 @@ class NotificationsScreen extends PureComponent {
         if (previousScene.key !== 'Notifications' || doublePressed) {
           this.lastTap = null;
           jumpToIndex(scene.index);
+          this.resetScrollPosition();
           this.fetchNotifications();
         } else {
           this.lastTap = now;
@@ -214,6 +215,10 @@ class NotificationsScreen extends PureComponent {
     }
   };
 
+  resetScrollPosition = () => {
+    this.list.scrollToOffset({ x: 0, y: 0, animated: true });
+  }
+
   handleActionBtnPress = () => {
     if (Platform.OS === 'ios') {
       OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
@@ -302,6 +307,7 @@ class NotificationsScreen extends PureComponent {
           onMarkAll={this.onMarkAll}
         />
         <FlatList
+          ref={(r) => { this.list = r; }}
           ListHeaderComponent={this.renderHeader}
           data={notifications}
           renderItem={this.renderItem}
