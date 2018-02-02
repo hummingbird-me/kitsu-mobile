@@ -118,6 +118,25 @@ class NotificationsScreen extends PureComponent {
         }
         break;
       case 'post':
+        if (target.length !== 0) {
+          navigation.navigate('PostDetails', {
+            post: target[0],
+            comments: [],
+            like: null,
+            currentUser,
+          });
+        } else { // should be a "mention"
+          const post = await this.fetchPost(activity);
+          if (post) {
+            navigation.navigate('PostDetails', {
+              post,
+              comments: [],
+              like: null,
+              currentUser,
+            });
+          }
+        }
+        break;
       case 'post_like':
       case 'comment_like':
       case 'comment':
@@ -151,6 +170,26 @@ class NotificationsScreen extends PureComponent {
     Kitsu.find('mediaReactions', mediaId, {
       include: 'user,anime,manga',
     });
+
+  /**
+   * Fetches post by extracting postId from activity foreignId.
+   * Created for fetching mentions in a hacky way.
+   * @param {object} activity Activity object from notifications
+   * @returns {object} post
+   * @memberof NotificationsScreen
+   */
+  fetchPost = async (activity) => {
+    const postId = activity.foreignId.split(':')[1];
+    let post;
+    try {
+      post = await Kitsu.find('posts', postId, {
+        include: 'user,targetUser,targetGroup,media',
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    return post;
+  };
 
   /**
    * Fetches notifications and immediately marks them as read.
