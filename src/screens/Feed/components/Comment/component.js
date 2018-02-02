@@ -13,6 +13,7 @@ import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
 import { trim, isEmpty } from 'lodash';
 import { styles } from './styles';
+import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
 
 export class Comment extends PureComponent {
   constructor(props) {
@@ -131,7 +132,9 @@ export class Comment extends PureComponent {
         ...requestOptions,
       });
 
-      this.setState({ replies: [...replies.reverse(), ...this.state.replies] });
+      const processed = preprocessFeedPosts(replies);
+
+      this.setState({ replies: [...processed.reverse(), ...this.state.replies] });
     } catch (err) {
       console.log('Error fetching replies: ', err);
     } finally {
@@ -164,20 +167,18 @@ export class Comment extends PureComponent {
       onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
     );
 
-    const trimmedContent = trim(content);
-
     return (
       <Layout.RowWrap>
         <AvatarContainer>
           <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
         </AvatarContainer>
         <Layout.RowMain>
-          <View style={[styles.bubble, isEmpty(trimmedContent) && styles.emptyBubble]}>
+          <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
-            {!isEmpty(trimmedContent) &&
+            {!isEmpty(content) &&
               <Hyperlink linkStyle={styles.linkStyle} linkDefault>
                 <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
-                  {trimmedContent}
+                  {content}
                 </StyledText>
 
               </Hyperlink>

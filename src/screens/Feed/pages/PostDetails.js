@@ -24,6 +24,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
 import { StyledText } from 'kitsu/components/StyledText';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -105,13 +106,15 @@ export default class PostDetails extends PureComponent {
       });
       comment.user = currentUser;
 
+      const processed = preprocessFeedPost(comment);
+
       this.setState({ comment: '', isReplying: false, isPostingComment: false });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
-        this.setState({ comments: [...this.state.comments, comment] });
+        this.setState({ comments: [...this.state.comments, processed] });
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);
@@ -127,6 +130,19 @@ export default class PostDetails extends PureComponent {
       },
     });
     this.setState({ isLoadingNextPage: false });
+  };
+
+  onReplyPress = (comment, username, callback) => {
+    let name = username;
+    if (typeof username !== 'string') {
+      name = comment.user.name;
+    }
+    this.setState({
+      comment: `@${name} `,
+      isReplying: true,
+    });
+    this.replyRef = { comment, name, callback };
+    this.focusOnCommentInput();
   };
 
   toggleLike = async () => {
@@ -182,7 +198,9 @@ export default class PostDetails extends PureComponent {
         ...requestOptions,
       });
 
-      this.setState({ comments: [...comments.reverse(), ...this.state.comments] });
+      const processed = preprocessFeedPosts(comments);
+
+      this.setState({ comments: [...processed.reverse(), ...this.state.comments] });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -224,19 +242,6 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.navigate('ProfilePages', { userId });
   };
 
-  onReplyPress = (comment, username, callback) => {
-    let name = username;
-    if (typeof username !== 'string') {
-      name = comment.user.name;
-    }
-    this.setState({
-      comment: `@${name} `,
-      isReplying: true,
-    });
-    this.replyRef = { comment, name, callback };
-    this.focusOnCommentInput();
-  };
-
   renderItem = ({ item }) => {
     const { currentUser, post } = this.props.navigation.state.params;
     return (
@@ -259,7 +264,7 @@ export default class PostDetails extends PureComponent {
     const { currentUser, post } = this.props.navigation.state.params;
     const { comment, comments, isLiked, postLikesCount, isPostingComment } = this.state;
 
-    const { content, images, commentsCount,
+    const { content, embed, commentsCount,
       topLevelCommentsCount, media, spoiledUnit } = post;
 
     return (
@@ -281,7 +286,7 @@ export default class PostDetails extends PureComponent {
           <ScrollView>
             <PostMain
               content={content}
-              images={images}
+              embed={embed}
               likesCount={postLikesCount}
               commentsCount={commentsCount}
               taggedMedia={media}

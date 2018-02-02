@@ -21,9 +21,12 @@ import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput
 import { scene } from 'kitsu/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
 import { isEmpty, trim } from 'lodash';
+import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
+import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { styles } from './styles';
 import { Spoiler } from './PostOverlays/Spoiler';
 import { NotSafeForWork } from './PostOverlays/NotSafeForWork';
+
 
 
 // Post
@@ -98,10 +101,12 @@ export class Post extends PureComponent {
     });
     comment.user = this.props.currentUser;
 
+    const processed = preprocessFeedPost(comment);
+
     this.setState({
       comment: '',
-      comments: [...this.state.comments, comment],
-      latestComments: [...this.state.latestComments, comment],
+      comments: [...this.state.comments, processed],
+      latestComments: [...this.state.latestComments, processed],
       isPostingComment: false,
     });
   }
@@ -124,10 +129,12 @@ export class Post extends PureComponent {
         sort: '-createdAt',
       });
 
+      const processed = preprocessFeedPosts(comments);
+
       if (this.mounted) {
         this.setState({
-          latestComments: comments.slice(0, 2).reverse(),
-          comments: comments.reverse(),
+          latestComments: processed.slice(0, 2).reverse(),
+          comments: processed.reverse(),
         });
       }
     } catch (err) {
@@ -274,14 +281,14 @@ export class Post extends PureComponent {
               <FlatList
                 data={latestComments}
                 keyExtractor={keyExtractor}
-                renderItem={({ item }) => {
-                  return <Comment
+                renderItem={({ item }) => (
+                  <Comment
                     post={this.props.post}
                     comment={item}
                     onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
                     isTruncated
                   />
-                }}
+                )}
                 ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
               />
             </PostSection>
@@ -358,7 +365,6 @@ const keyExtractor = (item, index) => index;
 
 export const PostMain = ({
   content,
-  images,
   embed,
   likesCount,
   commentsCount,
@@ -367,42 +373,25 @@ export const PostMain = ({
   navigation,
   onPress,
 }) => {
-  let youTubeVideoId = null;
-  if (embed && embed.video && embed.site_name === 'YouTube') {
-    const chunks = embed.video.url.split('/');
-    youTubeVideoId = chunks[chunks.length - 1];
-  }
-
-  const trimmedContent = trim(content);
-
   return (
     <View style={styles.postMain}>
-      {!isEmpty(trimmedContent) &&
+      {!isEmpty(content) &&
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
             <Hyperlink linkStyle={styles.linkStyle} linkDefault>
-              <StyledText color="dark" size="small">{trimmedContent}</StyledText>
+              <StyledText color="dark" size="small">{content}</StyledText>
             </Hyperlink>
           </View>
         </TouchableWithoutFeedback>
       }
-      {images && images.length > 0 && (
-        <FlatList
-          keyExtractor={keyExtractor}
-          style={[styles.postImagesView, (isEmpty(trimmedContent) && styles.posImagesView__noText)]}
-          data={images}
-          renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
-          ItemSeparatorComponent={() => <PostImageSeparator />}
+      { embed &&
+        <EmbeddedContent
+          embed={embed}
+          maxWidth={scene.width}
+          minWidth={scene.width}
+          style={[styles.postImagesView, isEmpty(content) && styles.postImagesView_noText]}
         />
-      )}
-      {youTubeVideoId && (
-        <YouTube
-          videoId={youTubeVideoId}
-          modestBranding
-          rel={false}
-          style={styles.youTubeEmbed}
-        />
-      )}
+      }
       {taggedMedia && (
         <MediaTag
           media={taggedMedia}

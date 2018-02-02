@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     marginLeft: scenePadding * -1,
     marginRight: scenePadding * -1,
   },
-  posImagesView__noText: {
+  postImagesView_noText: {
     marginTop: 0,
   },
 
@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   postSection: {
     padding: scenePadding,
@@ -79,10 +79,6 @@ export const styles = StyleSheet.create({
     padding: scenePadding,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.lightGrey,
-  },
-  youTubeEmbed: {
-    alignSelf: 'stretch',
-    height: 300,
   },
   linkStyle: {
     color: colors.orange,
