@@ -30,14 +30,14 @@ const CreatePostRowComponent = ({ currentUser, targetUser, onPress, title }) => 
 
 CreatePostRowComponent.propTypes = {
   currentUser: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     avatar: PropTypes.shape({
       medium: PropTypes.string,
     }),
     name: PropTypes.string,
   }).isRequired,
   targetUser: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     name: PropTypes.string,
   }),
   onPress: PropTypes.func,

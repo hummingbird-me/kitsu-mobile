@@ -8,6 +8,7 @@ import SeasonScreen from 'kitsu/screens/Search/SeasonScreen';
 import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import search from 'kitsu/assets/img/tabbar_icons/search.png';
+import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
 import navigationOptions from './navigationOptions';
 
 const SearchStack = StackNavigator(
@@ -29,6 +30,9 @@ const SearchStack = StackNavigator(
     },
     ProfilePages: {
       screen: ProfilePages,
+    },
+    PostDetails: {
+      screen: PostDetails,
     },
   },
   {

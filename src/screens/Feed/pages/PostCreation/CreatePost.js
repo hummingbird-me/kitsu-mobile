@@ -147,25 +147,32 @@ class CreatePost extends React.PureComponent {
     const targetInterest = currentFeedIndex !== -1 ? currentFeed.key : undefined;
 
     const mediaData = media ? {
-      id: media.id,
-      type: media.kind,
-    } : null;
+      media: {
+        id: media.id,
+        type: media.kind,
+      },
+    } : {};
 
     const targetData = (targetUser && targetUser.id !== currentUserId) ? {
-      type: 'users',
-      id: targetUser.id,
-    } : null;
+      targetUser: {
+        type: 'users',
+        id: targetUser.id,
+      },
+    } : {};
+
+    // We can't set target_interest with targetUser
+    const targetInterestData = isEmpty(targetData) ? { targetInterest } : {};
 
     try {
       const post = await Kitsu.create('posts', {
         content: additionalContent,
-        targetInterest,
+        ...targetInterestData,
         user: {
           type: 'users',
           id: currentUserId,
         },
-        targetUser: targetData,
-        media: mediaData,
+        ...targetData,
+        ...mediaData,
       });
 
       if (navigation.state.params.onNewPostCreated) {
@@ -196,8 +203,8 @@ class CreatePost extends React.PureComponent {
     } = this.state;
     const { busy, targetUser } = navigation.state.params;
 
-    const placeholder = (targetUser && targetUser.id !== currentUser.id && targetUser.name) ?
-      `Write something to ${targetUser.name}` : 'Write something....';
+    const isValidTargetUser = (targetUser && targetUser.id !== currentUser.id && targetUser.name);
+    const placeholder = isValidTargetUser ? `Write something to ${targetUser.name}` : 'Write something....';
 
     return (
       <KeyboardAvoidingView
@@ -218,6 +225,7 @@ class CreatePost extends React.PureComponent {
             author={currentUser.name}
             feedTitle={currentFeed.title}
             onFeedPillPress={() => this.handleFeedPickerModal(true)}
+            targetName={(isValidTargetUser && targetUser.name) || ''}
           />
           <ScrollView style={styles.flex} >
             <PostTextInput

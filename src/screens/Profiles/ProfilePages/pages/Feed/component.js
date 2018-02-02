@@ -10,7 +10,7 @@ import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 
 class FeedComponent extends PureComponent {
   static propTypes = {
-    userId: PropTypes.string.isRequired,
+    userId: PropTypes.number.isRequired,
     navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object,
@@ -51,7 +51,8 @@ class FeedComponent extends PureComponent {
         },
       });
 
-      const feed = preprocessFeed(result);
+      // Need to change this here if we want to also display media updates, follows, etc
+      const feed = preprocessFeed(result).filter(i => i.type === 'posts');
 
       this.setState({
         feed,
