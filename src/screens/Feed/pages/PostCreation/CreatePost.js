@@ -119,6 +119,7 @@ class CreatePost extends React.PureComponent {
 
   handlePressPost = async () => {
     const { navigation } = this.props;
+    const { targetUser } = navigation.state.params;
     const currentUserId = this.props.currentUser.id;
     const { content, currentFeed, gif, media } = this.state;
 
@@ -150,6 +151,11 @@ class CreatePost extends React.PureComponent {
       type: media.kind,
     } : null;
 
+    const targetData = (targetUser && targetUser.id !== currentUserId) ? {
+      type: 'users',
+      id: targetUser.id,
+    } : null;
+
     try {
       const post = await Kitsu.create('posts', {
         content: additionalContent,
@@ -158,6 +164,7 @@ class CreatePost extends React.PureComponent {
           type: 'users',
           id: currentUserId,
         },
+        targetUser: targetData,
         media: mediaData,
       });
 
@@ -187,7 +194,10 @@ class CreatePost extends React.PureComponent {
       giphyPickerModalIsVisible,
       mediaPickerModalIsVisible,
     } = this.state;
-    const { busy } = navigation.state.params;
+    const { busy, targetUser } = navigation.state.params;
+
+    const placeholder = (targetUser && targetUser.id !== currentUser.id && targetUser.name) ?
+      `Write something to ${targetUser.name}` : 'Write something....';
 
     return (
       <KeyboardAvoidingView
@@ -228,7 +238,7 @@ class CreatePost extends React.PureComponent {
               }}
               height={Platform.select({ ios: null, android: (textInputHeight || 0) })}
               value={content}
-              placeholder="Write something...."
+              placeholder={placeholder}
               placeholderTextColor={colors.grey}
               autoCorrect={false}
               autoFocus

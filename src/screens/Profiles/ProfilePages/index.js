@@ -14,9 +14,10 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
-import Summary from 'kitsu/screens/Profiles/ProfilePages/pages/Summary';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import Summary from './pages/Summary';
+import { Feed } from './pages/Feed';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
@@ -27,6 +28,7 @@ const tabPage = name => ({ key: name.toLowerCase(), label: name, screen: name })
 
 const TAB_ITEMS = [
   tabPage('Summary'),
+  tabPage('Feed'),
   tabPage('About'),
   tabPage('Library'),
   tabPage('Groups'),
@@ -37,6 +39,7 @@ const TAB_ITEMS = [
 
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
+  Feed: { screen: Feed },
   About: { getScreen: () => require('./pages/About').About },
   Library: { getScreen: () => require('./pages/Library').Library },
   Groups: { getScreen: () => require('./pages/Groups').Groups },

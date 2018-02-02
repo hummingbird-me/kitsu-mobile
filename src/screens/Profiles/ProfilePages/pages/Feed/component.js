@@ -1,0 +1,105 @@
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Kitsu } from 'kitsu/config/api';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
+import { Post } from 'kitsu/screens/Feed/components/Post';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
+
+class FeedComponent extends PureComponent {
+  static propTypes = {
+    userId: PropTypes.string.isRequired,
+    navigation: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    profile: PropTypes.object,
+  }
+
+  static defaultProps = {
+    profile: null,
+  }
+
+  state = {
+    error: null,
+    loading: false,
+    feed: [],
+  }
+
+  componentDidMount() {
+    this.fetchFeed();
+  }
+
+  navigateToPost = (props) => {
+    this.props.navigation.navigate('PostDetails', props);
+  }
+
+  fetchFeed = async () => {
+    const { userId } = this.props;
+
+    this.setState({ loading: true });
+
+    try {
+      const result = await Kitsu.one('userFeed', userId).get({
+        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        filter: {
+          kind: 'posts',
+        },
+        // TODO: Maybe later find a way for infinite scrolling
+        page: {
+          limit: 40,
+        },
+      });
+
+      const feed = preprocessFeed(result);
+
+      this.setState({
+        feed,
+        loading: false,
+      });
+    } catch (error) {
+      console.log(error);
+      this.setState({ error, loading: false });
+    }
+  }
+
+  navigateToCreatePost = () => {
+    this.props.navigation.navigate('CreatePost', {
+      onNewPostCreated: this.fetchFeed,
+      targetUser: this.props.profile,
+    });
+  };
+
+  render() {
+    const { profile, currentUser, navigation } = this.props;
+    const { loading, feed } = this.state;
+
+    // TODO: Show error state here
+    return (
+      <SceneContainer>
+        <CreatePostRow onPress={this.navigateToCreatePost} targetUser={profile} />
+        {/* Feed */}
+        { loading ?
+          <SceneLoader />
+          :
+          feed.map(item => (
+            <Post
+              key={item.id}
+              post={item}
+              onPostPress={this.navigateToPost}
+              currentUser={currentUser}
+              navigation={navigation}
+            />
+          ))
+        }
+      </SceneContainer>
+    );
+  }
+}
+
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  return { currentUser };
+};
+
+export default connect(mapStateToProps)(FeedComponent);
