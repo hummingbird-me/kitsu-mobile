@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 4,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#16A085',
+    borderColor: colors.green,
   },
   episodeTagView: {
     flexDirection: 'row',
@@ -22,6 +22,6 @@ export const styles = StyleSheet.create({
   episodeTagLine: {
     height: StyleSheet.hairlineWidth,
     width: 10,
-    backgroundColor: '#16A085',
+    backgroundColor: colors.green,
   },
 });

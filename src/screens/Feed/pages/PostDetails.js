@@ -267,8 +267,6 @@ export default class PostDetails extends PureComponent {
     const { content, embed, commentsCount,
       topLevelCommentsCount, media, spoiledUnit } = post;
 
-    console.log(embed);
-
     return (
       <KeyboardAvoidingView
         behavior="padding"
