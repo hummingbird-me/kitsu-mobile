@@ -11,6 +11,7 @@ import Hyperlink from 'react-native-hyperlink';
 import { StyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
+import { trim, isEmpty } from 'lodash';
 import { styles } from './styles';
 
 export class Comment extends PureComponent {
@@ -37,6 +38,26 @@ export class Comment extends PureComponent {
     this.mounted = false;
   }
 
+  onPagination = async () => {
+    this.setState({ isLoadingNextPage: true });
+    await this.fetchReplies({
+      page: {
+        offset: this.state.replies.length,
+        limit: 5,
+      },
+    });
+    this.setState({ isLoadingNextPage: false });
+  }
+
+  onReplyPress = (item) => {
+    this.props.onReplyPress(item.user.name, (comment) => {
+      this.setState({
+        replies: [...this.state.replies, comment],
+        repliesCount: this.state.repliesCount + 1,
+      });
+    });
+  }
+
   fetchLikes = async () => {
     const { currentUser, comment } = this.props;
     try {
@@ -44,7 +65,7 @@ export class Comment extends PureComponent {
         filter: {
           commentId: comment.id,
           userId: currentUser.id,
-        }
+        },
       });
 
       const like = likes.length && likes[0];
@@ -93,17 +114,6 @@ export class Comment extends PureComponent {
     }
   }
 
-  onPagination = async () => {
-    this.setState({ isLoadingNextPage: true });
-    await this.fetchReplies({
-      page: {
-        offset: this.state.replies.length,
-        limit: 5,
-      },
-    });
-    this.setState({ isLoadingNextPage: false });
-  }
-
   fetchReplies = async (requestOptions = {}) => {
     try {
       this.setState({ isLoadingNextPage: true });
@@ -127,15 +137,6 @@ export class Comment extends PureComponent {
     } finally {
       this.setState({ isLoadingNextPage: false });
     }
-  }
-
-  onReplyPress = (item) => {
-    this.props.onReplyPress(item.user.name, (comment) => {
-      this.setState({
-        replies: [...this.state.replies, comment],
-        repliesCount: this.state.repliesCount + 1,
-      });
-    });
   }
 
   renderItem = ({ item }) => (
@@ -163,19 +164,24 @@ export class Comment extends PureComponent {
       onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
     );
 
+    const trimmedContent = trim(content);
+
     return (
       <Layout.RowWrap>
         <AvatarContainer>
           <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
         </AvatarContainer>
         <Layout.RowMain>
-          <View style={styles.bubble}>
+          <View style={[styles.bubble, isEmpty(trimmedContent) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
-            <Hyperlink linkStyle={styles.linkStyle} linkDefault>
-              <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
-                {content}
-              </StyledText>
-            </Hyperlink>
+            {!isEmpty(trimmedContent) &&
+              <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+                <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
+                  {trimmedContent}
+                </StyledText>
+
+              </Hyperlink>
+            }
           </View>
 
           {!isTruncated && (

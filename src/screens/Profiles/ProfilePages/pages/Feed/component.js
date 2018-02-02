@@ -7,6 +7,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
+import { View } from 'react-native';
 
 class FeedComponent extends PureComponent {
   static propTypes = {
@@ -78,7 +79,9 @@ class FeedComponent extends PureComponent {
     // TODO: Show error state here
     return (
       <SceneContainer>
-        <CreatePostRow onPress={this.navigateToCreatePost} targetUser={profile} />
+        <View style={{ paddingTop: 10 }}>
+          <CreatePostRow onPress={this.navigateToCreatePost} targetUser={profile} />
+        </View>
         {/* Feed */}
         { loading ?
           <SceneLoader />

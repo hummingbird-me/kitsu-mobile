@@ -9,6 +9,9 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: colors.lightestGrey,
   },
+  emptyBubble: {
+    backgroundColor: 'transparent',
+  },
   commentActions: {
     flexDirection: 'row',
     alignItems: 'center',

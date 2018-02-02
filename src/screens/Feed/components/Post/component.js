@@ -20,10 +20,11 @@ import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { scene } from 'kitsu/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
+import { isEmpty, trim } from 'lodash';
 import { styles } from './styles';
-
 import { Spoiler } from './PostOverlays/Spoiler';
 import { NotSafeForWork } from './PostOverlays/NotSafeForWork';
+
 
 // Post
 export class Post extends PureComponent {
@@ -372,19 +373,23 @@ export const PostMain = ({
     youTubeVideoId = chunks[chunks.length - 1];
   }
 
+  const trimmedContent = trim(content);
+
   return (
     <View style={styles.postMain}>
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View style={styles.postContent}>
-          <Hyperlink linkStyle={styles.linkStyle} linkDefault>
-            <StyledText color="dark" size="small">{content}</StyledText>
-          </Hyperlink>
-        </View>
-      </TouchableWithoutFeedback>
+      {!isEmpty(trimmedContent) &&
+        <TouchableWithoutFeedback onPress={onPress}>
+          <View style={styles.postContent}>
+            <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+              <StyledText color="dark" size="small">{trimmedContent}</StyledText>
+            </Hyperlink>
+          </View>
+        </TouchableWithoutFeedback>
+      }
       {images && images.length > 0 && (
         <FlatList
           keyExtractor={keyExtractor}
-          style={[styles.postImagesView, !content && styles.posImagesView__noText]}
+          style={[styles.postImagesView, (isEmpty(trimmedContent) && styles.posImagesView__noText)]}
           data={images}
           renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
           ItemSeparatorComponent={() => <PostImageSeparator />}
