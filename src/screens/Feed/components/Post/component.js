@@ -384,6 +384,13 @@ export const PostMain = ({
           </View>
         </TouchableWithoutFeedback>
       }
+      {taggedMedia && (
+        <MediaTag
+          media={taggedMedia}
+          episode={taggedEpisode}
+          navigation={navigation}
+        />
+      )}
       { embed &&
         <EmbeddedContent
           embed={embed}
@@ -392,13 +399,6 @@ export const PostMain = ({
           style={[styles.postImagesView, isEmpty(content) && styles.postImagesView_noText]}
         />
       }
-      {taggedMedia && (
-        <MediaTag
-          media={taggedMedia}
-          episode={taggedEpisode}
-          navigation={navigation}
-        />
-      )}
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.postStatusRow}>
           <View style={styles.postStatus}>

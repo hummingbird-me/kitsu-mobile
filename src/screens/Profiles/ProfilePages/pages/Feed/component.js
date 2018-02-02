@@ -11,7 +11,7 @@ import { View } from 'react-native';
 
 class FeedComponent extends PureComponent {
   static propTypes = {
-    userId: PropTypes.number.isRequired,
+    userId: PropTypes.string.isRequired,
     navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object,

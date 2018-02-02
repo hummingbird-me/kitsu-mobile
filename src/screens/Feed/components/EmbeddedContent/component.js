@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes } from 'react-native';
+import { View, ViewPropTypes, WebView, Platform } from 'react-native';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
-import { YouTube } from 'react-native-youtube';
+import YouTube from 'react-native-youtube';
 
 export class EmbeddedContent extends PureComponent {
   static propTypes = {
@@ -55,25 +55,36 @@ export class EmbeddedContent extends PureComponent {
 
   renderYoutube(embed) {
     if (!embed.video) return null;
+    const { maxWidth } = this.props;
     const video = embed.video;
+
     const chunks = video.url.split('/');
     const youTubeVideoId = chunks[chunks.length - 1];
 
     // Get the scaled height
     const height = (video.height && video.width) ? (video.height / video.width) * maxWidth : 300;
+    const style = { width: maxWidth, height: Math.max(200, height) };
 
     return (
-      <YouTube
-        videoId={youTubeVideoId}
-        modestBranding
-        rel={false}
-        style={{ width: maxWidth, height }}
-      />
+      Platform.OS === 'ios' ?
+        <YouTube
+          videoId={youTubeVideoId}
+          modestBranding
+          rel={false}
+          style={style}
+        />
+        :
+        <WebView
+          style={style}
+          source={{ uri: `${video.url}?rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1` }}
+        />
     );
   }
 
   renderItem(embed) {
-    if (embed.video && embed.site && embed.site.name === 'YouTube') return this.renderYoutube(embed);
+    if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
+      return this.renderYoutube(embed);
+    }
     if (embed.kind.includes('image') || embed.kind.includes('gif')) return this.renderImage(embed);
 
     return null;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text } from 'react-native';
+import { Text, ViewPropTypes } from 'react-native';
 import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red, green, black } from 'kitsu/constants/colors';
 import { styles } from './styles';
 
@@ -52,12 +52,12 @@ StyledText.propTypes = {
   bold: PropTypes.bool,
   color: PropTypes.oneOf(['light', 'dark', 'grey', 'darkGrey', 'lightGrey', 'yellow', 'orange', 'red', 'green', 'black']),
   size: PropTypes.oneOf(['default', 'xxsmall', 'xsmall', 'small', 'large', 'xlarge']),
-  textStyle: PropTypes.object,
+  textStyle: ViewPropTypes.style,
 };
 
 StyledText.defaultProps = {
   bold: false,
   color: 'light',
   size: 'default',
-  textStyle: {},
+  textStyle: null,
 };

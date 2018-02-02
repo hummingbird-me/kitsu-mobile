@@ -4,7 +4,7 @@ import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 export const styles = StyleSheet.create({
   mediaTagView: {
-    marginTop: scenePadding * 2,
+    marginTop: scenePadding,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 4,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.green,
+    borderColor: '#16A085',
   },
   episodeTagView: {
     flexDirection: 'row',
@@ -22,6 +22,6 @@ export const styles = StyleSheet.create({
   episodeTagLine: {
     height: StyleSheet.hairlineWidth,
     width: 10,
-    backgroundColor: colors.green,
+    backgroundColor: '#16A085',
   },
 });

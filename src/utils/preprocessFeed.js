@@ -1,6 +1,13 @@
 
 import { trimStart, trimEnd } from 'lodash';
 
+const getHttpUrls = (url) => {
+  // A quick hack to return both the http and https url
+  if (url.indexOf('http:') === -1 && url.indexOf('https:') === -1) return [url];
+  const cleanedUrl = url.replace('https:', '').replace('http:', '');
+  return [`http${cleanedUrl}`, `https:${cleanedUrl}`];
+};
+
 /**
  * Remove any embed image/video links from content in the given post.
  * This will also work with comments.
@@ -14,11 +21,19 @@ export const preprocessFeedPost = (post) => {
     const image = post.embed.image;
     const video = post.embed.video;
 
-    // eslint-disable-next-line no-param-reassign
-    if (image) post.content = post.content.replace(image.url || '', '');
+    if (image) {
+      getHttpUrls(image.url || '').forEach((url) => {
+        // eslint-disable-next-line no-param-reassign
+        post.content = post.content.replace(url, '');
+      });
+    }
 
-    // eslint-disable-next-line no-param-reassign
-    if (video) post.content = post.content.replace(video.url || '', '');
+    if (video) {
+      getHttpUrls(video.url || '').forEach((url) => {
+        // eslint-disable-next-line no-param-reassign
+        post.content = post.content.replace(url, '');
+      });
+    }
   }
 
   // finally trim the content

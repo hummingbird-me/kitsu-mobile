@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator, FlatList, Text } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { defaultAvatar } from 'kitsu/constants/app';
@@ -12,8 +12,8 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
 import { trim, isEmpty } from 'lodash';
-import { styles } from './styles';
 import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
+import { styles } from './styles';
 
 export class Comment extends PureComponent {
   constructor(props) {
