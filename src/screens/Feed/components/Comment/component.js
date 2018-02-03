@@ -41,12 +41,16 @@ export class Comment extends PureComponent {
 
   onPagination = async () => {
     this.setState({ isLoadingNextPage: true });
-    await this.fetchReplies({
-      page: {
-        offset: this.state.replies.length,
-        limit: 5,
-      },
-    });
+    try {
+      await this.fetchReplies({
+        page: {
+          offset: this.state.replies.length,
+          limit: 5,
+        },
+      });
+    } catch (err) {
+      console.log('Error fetching replies: ', err);
+    }
     this.setState({ isLoadingNextPage: false });
   }
 
