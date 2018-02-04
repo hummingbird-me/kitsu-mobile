@@ -15,6 +15,7 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import capitalize from 'lodash/capitalize';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
@@ -22,7 +23,8 @@ const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'N
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
-  { key: 'episodes', label: 'Episodes', screen: 'Episodes' },
+  { key: 'episodes', label: 'Episodes', screen: 'Episodes', if: (state) => state.media.type === 'anime'},
+  { key: 'chapters', label: 'Chapters', screen: 'Episodes', if: (state) => state.media.type === 'manga'},
   { key: 'characters', label: 'Characters', screen: 'Characters' },
   { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
   { key: 'franchise', label: 'Franchise', screen: 'Franchise' },
@@ -32,8 +34,8 @@ const TAB_ITEMS = [
 
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
-  // TODO: Change label to Chapters for Manga.
   Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
+  Chapters: { getScreen: () => require('./pages/Episodes').Episodes },
   Characters: { getScreen: () => require('./pages/Characters').Characters },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
   Franchise: { getScreen: () => require('./pages/Franchise').Franchise },
@@ -161,14 +163,20 @@ class MediaPages extends PureComponent {
 
   renderTabNav = () => (
     <TabBar>
-      {TAB_ITEMS.map(tabItem => (
-        <TabBarLink
-          key={tabItem.key}
-          label={tabItem.label}
-          isActive={this.state.active === tabItem.screen}
-          onPress={() => this.setActiveTab(tabItem.screen)}
-        />
-      ))}
+      {TAB_ITEMS.map(tabItem => {
+        // If this tab item is conditional, run the check
+        if (tabItem.if && !tabItem.if(this.state)) {
+          return;
+        }
+        return (
+          <TabBarLink
+            key={tabItem.key}
+            label={tabItem.label}
+            isActive={this.state.active === tabItem.screen}
+            onPress={() => this.setActiveTab(tabItem.screen)}
+          />
+        );
+      })}
     </TabBar>
   );
 
@@ -224,7 +232,7 @@ class MediaPages extends PureComponent {
           <SceneHeader
             variant="media"
             media={media}
-            type={media.type}
+            type={capitalize(media.type)}
             title={media.canonicalTitle}
             description={media.synopsis}
             coverImage={media.coverImage && media.coverImage.original}
