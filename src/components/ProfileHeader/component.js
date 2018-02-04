@@ -12,7 +12,6 @@ export const ProfileHeader = (
   const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
   const goBack = () => onClickBack();
-  const onFollow = () => onClickFollow();
 
   return (
     <View style={styles.headerContainer}>
@@ -80,7 +79,7 @@ ProfileHeader.defaultProps = {
   onClickFollow: () => {},
   onClickBack: () => {},
   showCoverImage: true,
-  showFollowButton: true,
+  showFollowButton: false,
   showProfileImage: true,
   title: '',
 };

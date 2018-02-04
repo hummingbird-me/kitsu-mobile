@@ -70,6 +70,8 @@ class ProfilePage extends PureComponent {
     error: null,
     profile: null,
     feed: null,
+    follow: null,
+    isLoadingFollow: false
   }
 
   componentWillMount() {
@@ -85,6 +87,7 @@ class ProfilePage extends PureComponent {
     }
 
     this.loadUserData(userId);
+    this.fetchFollow(userId);
   }
 
   onMoreButtonOptionsSelected = async (button) => {
@@ -144,7 +147,54 @@ class ProfilePage extends PureComponent {
     }
   }
 
-  handleFollowing = () => {}
+  fetchFollow = async (userId) => {
+    try {
+      this.setState({ isLoadingFollow: true });
+      const response = await Kitsu.findAll('follows', {
+        filter :{
+          follower: this.props.currentUser.id,
+          followed: userId
+        }
+      });
+      const record = response && response[0];
+      this.setState({ follow: record, isLoadingFollow: false });
+    } catch (err) {
+      console.log('Error fetching follow:', err);
+    }
+  }
+
+  createFollow = async (userId) => {
+    try {
+      this.setState({ isLoadingFollow: true });
+      const record = await Kitsu.create('follows', {
+        follower: {
+          id: this.props.currentUser.id,
+          type: 'users'
+        },
+        followed: {
+          id: userId,
+          type: 'users'
+        }
+      });
+      this.setState({ follow: record, isLoadingFollow: false });
+    } catch (err) {
+      console.log('Error creating follow:', err);
+    }
+  }
+
+  handleFollowing = async () => {
+    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+    const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
+    if (isCurrentUser) {
+      // Edit Profile
+    } else if (this.state.follow) { // Destroy
+      this.setState({ isLoadingFollow: true });
+      await Kitsu.destroy('follows', this.state.follow.id);
+      this.setState({ follow: null, isLoadingFollow: false });
+    } else { // Create
+      await this.createFollow(userId);
+    }
+  }
 
   renderTabNav = () => (
     <TabBar>
@@ -176,7 +226,7 @@ class ProfilePage extends PureComponent {
   }
 
   render() {
-    const { error, loading, profile } = this.state;
+    const { error, loading, profile, follow, isLoadingFollow } = this.state;
 
     if (loading) {
       return (
@@ -197,7 +247,7 @@ class ProfilePage extends PureComponent {
 
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
     const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
-    const mainButtonTitle = isCurrentUser ? 'Edit' : 'Follow';
+    const mainButtonTitle = isCurrentUser ? 'Edit' : follow ? 'Unfollow' : 'Follow';
     return (
       <SceneContainer>
         <StatusBar barStyle="light-content" />
@@ -231,6 +281,7 @@ class ProfilePage extends PureComponent {
             showMoreButton={!isCurrentUser}
             moreButtonOptions={MORE_BUTTON_OPTIONS}
             mainButtonTitle={mainButtonTitle}
+            mainButtonLoading={isLoadingFollow}
             onFollowButtonPress={this.handleFollowing}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />

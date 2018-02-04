@@ -27,8 +27,7 @@ export class UserLibraryListScreenComponent extends React.Component {
   };
 
   static navigationOptions = (props) => {
-    const { libraryStatus, libraryType, profile, currentUser } = props.navigation.state.params;
-    const showFollowButton = currentUser ? !isIdForCurrentUser(profile.id, currentUser) : false;
+    const { libraryStatus, libraryType, profile } = props.navigation.state.params;
     return {
       headerStyle: {
         shadowColor: 'transparent',
@@ -38,8 +37,6 @@ export class UserLibraryListScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
-          showFollowButton={showFollowButton}
-          onClickFollow={() => {}} // @Thomas - TODO
           onClickBack={props.navigation.goBack}
         />
       ),
@@ -49,10 +46,6 @@ export class UserLibraryListScreenComponent extends React.Component {
   state = {
     movedEntries: [],
     isSwiping: false,
-  }
-
-  componentWillMount() {
-    this.props.navigation.setParams({ currentUser: this.props.currentUser });
   }
 
   onSwipingItem = (isSwiping) => {

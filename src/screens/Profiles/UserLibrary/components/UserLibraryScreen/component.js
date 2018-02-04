@@ -54,8 +54,7 @@ export class UserLibraryScreenComponent extends React.Component {
   };
 
   static navigationOptions = ({ navigation }) => {
-    const { profile, currentUser} = navigation.state.params;
-    const showFollowButton = currentUser ? !isIdForCurrentUser(profile.id, currentUser) : false;
+    const { profile } = navigation.state.params;
     return {
       headerStyle: {
         shadowColor: 'transparent',
@@ -65,17 +64,11 @@ export class UserLibraryScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title={profile.name}
-          showFollowButton={showFollowButton}
-          onClickFollow={() => {}} // @Thomas - TODO
           onClickBack={navigation.goBack}
         />
       ),
     };
   };
-
-  componentWillMount() {
-    this.props.navigation.setParams({ currentUser: this.props.currentUser });
-  }
 
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
