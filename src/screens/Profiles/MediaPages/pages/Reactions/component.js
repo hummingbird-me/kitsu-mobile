@@ -33,8 +33,8 @@ class Reactions extends PureComponent {
             padded
             contentDark
             title="Reactions"
-            actionOnPress={this.handleWriteReaction}
-            actionTitle="Write reaction"
+            actionOnPress={() => {}}
+            actionTitle=""
           />
         )}
       />
