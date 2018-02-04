@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { UserLibraryListCard, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
-import { idExtractor } from 'kitsu/common/utils';
+import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
 import { styles } from './styles';
 
 const HEADER_TEXT_MAPPING = {
@@ -27,8 +27,8 @@ export class UserLibraryListScreenComponent extends React.Component {
   };
 
   static navigationOptions = (props) => {
-    const { libraryStatus, libraryType, profile } = props.navigation.state.params;
-
+    const { libraryStatus, libraryType, profile, currentUser } = props.navigation.state.params;
+    const showFollowButton = currentUser ? !isIdForCurrentUser(profile.id, currentUser) : false;
     return {
       headerStyle: {
         shadowColor: 'transparent',
@@ -38,6 +38,8 @@ export class UserLibraryListScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
+          showFollowButton={showFollowButton}
+          onClickFollow={() => {}} // @Thomas - TODO
           onClickBack={props.navigation.goBack}
         />
       ),
@@ -47,6 +49,10 @@ export class UserLibraryListScreenComponent extends React.Component {
   state = {
     movedEntries: [],
     isSwiping: false,
+  }
+
+  componentWillMount() {
+    this.props.navigation.setParams({ currentUser: this.props.currentUser });
   }
 
   onSwipingItem = (isSwiping) => {

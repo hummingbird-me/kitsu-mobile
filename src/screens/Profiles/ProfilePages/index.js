@@ -18,6 +18,7 @@ import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
+import { isIdForCurrentUser } from 'kitsu/common/utils';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
@@ -194,6 +195,8 @@ class ProfilePage extends PureComponent {
       return null;
     }
 
+    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+    const mainButtonTitle = isIdForCurrentUser(userId, this.props.currentUser) ? 'Edit' : 'Follow';
     return (
       <SceneContainer>
         <StatusBar barStyle="light-content" />
@@ -225,6 +228,7 @@ class ProfilePage extends PureComponent {
             followersCount={profile.followersCount}
             followingCount={profile.followingCount}
             moreButtonOptions={MORE_BUTTON_OPTIONS}
+            mainButtonTitle={mainButtonTitle}
             onFollowButtonPress={this.handleFollowing}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
