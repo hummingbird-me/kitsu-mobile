@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { StatusBar } from 'react-native';
 import { TabRouter } from 'react-navigation';
+import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
@@ -19,7 +20,6 @@ import capitalize from 'lodash/capitalize';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
-const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
@@ -60,16 +60,44 @@ class MediaPages extends PureComponent {
     media: null,
     castings: null,
     mediaReactions: null,
+    favorite: null,
+    isFavorited: false,
     loadingAdditional: false, // Check whether episodes & Related are loading
   }
 
   componentDidMount = () => {
     const { mediaId, mediaType } = this.props.navigation.state.params;
     this.fetchMedia(mediaType, mediaId);
+    this.fetchFavorite(mediaType, mediaId);
   }
 
   onMainButtonOptionsSelected = () => {}
-  onMoreButtonOptionsSelected = () => {}
+
+  onMoreButtonOptionsSelected = async (option) => {
+    const { mediaId, mediaType } = this.props.navigation.state.params;
+    switch (option) {
+      case 'add':
+        const record = await Kitsu.create('favorites', {
+          item: {
+            id: mediaId,
+            type: mediaType
+          },
+          user: {
+            id: this.props.currentUser.id,
+            type: 'users'
+          }
+        });
+        this.setState({ favorite: record, isFavorited: !!record });
+        break;
+      case 'remove':
+        await Kitsu.destroy('favorites', this.state.favorite.id);
+        this.setState({ favorite: null, isFavorited: false });
+        break;
+      default:
+        console.log('unhandled option selected:', option);
+        break;
+    }
+  }
 
   setActiveTab = (tab) => {
     this.setState({ active: tab });
@@ -161,6 +189,22 @@ class MediaPages extends PureComponent {
     }
   }
 
+  fetchFavorite = async (type, id) => {
+    try {
+      const response = await Kitsu.findAll('favorites', {
+        filter: {
+          item_type: capitalize(type),
+          item_id: id,
+          user_id: this.props.currentUser.id
+        }
+      });
+      const record = response && response[0];
+      this.setState({ favorite: record, isFavorited: !!record });
+    } catch (err) {
+      console.log('Error fetching favorite state:', err);
+    }
+  }
+
   renderTabNav = () => (
     <TabBar>
       {TAB_ITEMS.map(tabItem => {
@@ -187,6 +231,7 @@ class MediaPages extends PureComponent {
       loading,
       media,
       mediaReactions,
+      isFavorited,
       loadingAdditional,
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
@@ -204,6 +249,14 @@ class MediaPages extends PureComponent {
 
     if (error || !media) {
       return null;
+    }
+
+    // Handle dynamic button options
+    const MORE_BUTTON_OPTIONS = ['Nevermind'];
+    if (isFavorited) {
+      MORE_BUTTON_OPTIONS.unshift({ text: 'Remove from Favorites', value: 'remove' });
+    } else {
+      MORE_BUTTON_OPTIONS.unshift({ text: 'Add to Favorites', value: 'add' });
     }
 
     return (
@@ -262,4 +315,9 @@ class MediaPages extends PureComponent {
   }
 }
 
-export default MediaPages;
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  return { currentUser };
+};
+
+export default connect(mapStateToProps)(MediaPages);

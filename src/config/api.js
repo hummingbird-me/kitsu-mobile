@@ -618,11 +618,11 @@ Kitsu.define(
     id: '',
     favRank: '',
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
+      type: 'users',
     },
     item: {
       jsonApi: 'hasOne',
-      type: ['anime', 'manga', 'characters'],
     },
   },
   { collectionPath: 'favorites' },
