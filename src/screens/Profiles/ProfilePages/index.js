@@ -196,7 +196,8 @@ class ProfilePage extends PureComponent {
     }
 
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
-    const mainButtonTitle = isIdForCurrentUser(userId, this.props.currentUser) ? 'Edit' : 'Follow';
+    const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
+    const mainButtonTitle = isCurrentUser ? 'Edit' : 'Follow';
     return (
       <SceneContainer>
         <StatusBar barStyle="light-content" />
@@ -227,6 +228,7 @@ class ProfilePage extends PureComponent {
             posterImage={profile.avatar && profile.avatar.large}
             followersCount={profile.followersCount}
             followingCount={profile.followingCount}
+            showMoreButton={!isCurrentUser}
             moreButtonOptions={MORE_BUTTON_OPTIONS}
             mainButtonTitle={mainButtonTitle}
             onFollowButtonPress={this.handleFollowing}
