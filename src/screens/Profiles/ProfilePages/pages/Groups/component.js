@@ -22,7 +22,7 @@ class Groups extends PureComponent {
     try {
       const data = await Kitsu.findAll('group-members', {
         fields: {
-          group: 'slug,name,avatar,tagline,membersCount,category',
+          group: 'slug,name,avatar,tagline',
         },
         filter: {
           query_user: this.props.userId,
