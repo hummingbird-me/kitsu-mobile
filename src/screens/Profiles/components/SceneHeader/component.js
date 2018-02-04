@@ -92,11 +92,13 @@ export class SceneHeader extends PureComponent {
           options={this.props.mainButtonOptions}
           onOptionSelected={this.props.onMainButtonOptionsSelected}
           activeOpacity={0.8}
+          disabled={this.props.mainButtonLoading}
           style={styles.mainButtonView}
         >
           <Button
             block
             title={this.props.mainButtonTitle}
+            loading={this.props.mainButtonLoading}
             style={styles.mainButton}
           />
         </SelectMenu>
@@ -108,6 +110,7 @@ export class SceneHeader extends PureComponent {
         <Button
           block
           title={this.props.mainButtonTitle}
+          loading={this.props.mainButtonLoading}
           style={styles.mainButton}
           onPress={this.props.onFollowButtonPress}
         />

@@ -19,7 +19,9 @@ class Episodes extends PureComponent {
 
   render() {
     const { media } = this.props;
-    const data = this.formatData(media.episodes);
+    const isAnime = media.type === 'anime';
+    const data = this.formatData(isAnime ? media.episodes : media.chapters);
+    const prefix = isAnime ? "Episode" : "Chapter";
 
     return (
       <TabContainer light padded>
@@ -28,7 +30,7 @@ class Episodes extends PureComponent {
           renderItem={({ item }) => (
             <MediaRow
               imageVariant="landscapeSmall"
-              title={item.canonicalTitle || `Episode ${item.number}`}
+              title={item.canonicalTitle || `${prefix} ${item.number}`}
               summary={media.synopsis}
               thumbnail={{
                 uri: item.thumbnail ? item.thumbnail.original : media.posterImage.large,
@@ -37,7 +39,7 @@ class Episodes extends PureComponent {
             />
           )}
           ItemSeparatorComponent={() => <RowSeparator />}
-          ListHeaderComponent={() => <TabHeader title="Episodes" contentDark />}
+          ListHeaderComponent={() => <TabHeader title={`${prefix}s`} contentDark />}
         />
       </TabContainer>
     );
