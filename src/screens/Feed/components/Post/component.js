@@ -19,10 +19,15 @@ import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { scene } from 'kitsu/screens/Feed/constants';
+import Hyperlink from 'react-native-hyperlink';
+import { isEmpty, trim } from 'lodash';
+import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
+import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { styles } from './styles';
-
 import { Spoiler } from './PostOverlays/Spoiler';
 import { NotSafeForWork } from './PostOverlays/NotSafeForWork';
+
+
 
 // Post
 export class Post extends PureComponent {
@@ -45,6 +50,7 @@ export class Post extends PureComponent {
     isLiked: false,
     postLikesCount: this.props.post.postLikesCount,
     overlayRemoved: false,
+    isPostingComment: false,
   };
 
   componentDidMount() {
@@ -78,6 +84,10 @@ export class Post extends PureComponent {
   }
 
   onSubmitComment = async () => {
+    if (this.state.isPostingComment) return;
+
+    this.setState({ isPostingComment: true });
+
     const comment = await Kitsu.create('comments', {
       content: this.state.comment,
       post: {
@@ -91,10 +101,13 @@ export class Post extends PureComponent {
     });
     comment.user = this.props.currentUser;
 
+    const processed = preprocessFeedPost(comment);
+
     this.setState({
       comment: '',
-      comments: [...this.state.comments, comment],
-      latestComments: [...this.state.latestComments, comment]
+      comments: [...this.state.comments, processed],
+      latestComments: [...this.state.latestComments, processed],
+      isPostingComment: false,
     });
   }
 
@@ -116,10 +129,12 @@ export class Post extends PureComponent {
         sort: '-createdAt',
       });
 
+      const processed = preprocessFeedPosts(comments);
+
       if (this.mounted) {
         this.setState({
-          latestComments: comments.slice(0, 2).reverse(),
-          comments: comments.reverse(),
+          latestComments: processed.slice(0, 2).reverse(),
+          comments: processed.reverse(),
         });
       }
     } catch (err) {
@@ -207,7 +222,13 @@ export class Post extends PureComponent {
       commentsCount,
       user,
     } = this.props.post;
-    const { comment, latestComments, overlayRemoved, postLikesCount } = this.state;
+    const {
+      comment,
+      latestComments,
+      overlayRemoved,
+      postLikesCount,
+      isPostingComment,
+    } = this.state;
 
     let postBody = null;
 
@@ -260,14 +281,14 @@ export class Post extends PureComponent {
               <FlatList
                 data={latestComments}
                 keyExtractor={keyExtractor}
-                renderItem={({ item }) => {
-                  return <Comment
+                renderItem={({ item }) => (
+                  <Comment
                     post={this.props.post}
                     comment={item}
                     onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
                     isTruncated
                   />
-                }}
+                )}
                 ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
               />
             </PostSection>
@@ -281,6 +302,7 @@ export class Post extends PureComponent {
               onCommentChanged={this.onCommentChanged}
               onSubmit={this.onSubmitComment}
               onGifSelected={this.onGifSelected}
+              loading={isPostingComment}
             />
           </PostSection>
         </PostFooter>
@@ -343,7 +365,6 @@ const keyExtractor = (item, index) => index;
 
 export const PostMain = ({
   content,
-  images,
   embed,
   likesCount,
   commentsCount,
@@ -352,36 +373,17 @@ export const PostMain = ({
   navigation,
   onPress,
 }) => {
-  let youTubeVideoId = null;
-  if (embed && embed.video && embed.site_name === 'YouTube') {
-    const chunks = embed.video.url.split('/');
-    youTubeVideoId = chunks[chunks.length - 1];
-  }
-
   return (
     <View style={styles.postMain}>
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View style={styles.postContent}>
-          <StyledText color="dark" size="small">{content}</StyledText>
-        </View>
-      </TouchableWithoutFeedback>
-      {images && images.length > 0 && (
-        <FlatList
-          keyExtractor={keyExtractor}
-          style={[styles.postImagesView, !content && styles.posImagesView__noText]}
-          data={images}
-          renderItem={({ item }) => <PostImage uri={item} width={scene.width} />}
-          ItemSeparatorComponent={() => <PostImageSeparator />}
-        />
-      )}
-      {youTubeVideoId && (
-        <YouTube
-          videoId={youTubeVideoId}
-          modestBranding
-          rel={false}
-          style={styles.youTubeEmbed}
-        />
-      )}
+      {!isEmpty(content) &&
+        <TouchableWithoutFeedback onPress={onPress}>
+          <View style={styles.postContent}>
+            <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+              <StyledText color="dark" size="small">{content}</StyledText>
+            </Hyperlink>
+          </View>
+        </TouchableWithoutFeedback>
+      }
       {taggedMedia && (
         <MediaTag
           media={taggedMedia}
@@ -389,6 +391,14 @@ export const PostMain = ({
           navigation={navigation}
         />
       )}
+      { embed &&
+        <EmbeddedContent
+          embed={embed}
+          maxWidth={scene.width}
+          minWidth={scene.width}
+          style={[styles.postImagesView, isEmpty(content) && styles.postImagesView_noText]}
+        />
+      }
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.postStatusRow}>
           <View style={styles.postStatus}>

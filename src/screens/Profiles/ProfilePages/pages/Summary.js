@@ -14,7 +14,7 @@ import { StyledText } from 'kitsu/components/StyledText';
 export default class Summary extends PureComponent {
   static propTypes = {
     setActiveTab: PropTypes.func,
-    userId: PropTypes.string.isRequired,
+    userId: PropTypes.number.isRequired,
     navigation: PropTypes.object.isRequired,
   }
 

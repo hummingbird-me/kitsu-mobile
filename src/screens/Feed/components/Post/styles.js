@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
@@ -28,11 +28,11 @@ export const styles = StyleSheet.create({
   },
 
   postImagesView: {
-    marginTop: scenePadding * 2,
+    marginTop: 12,
     marginLeft: scenePadding * -1,
     marginRight: scenePadding * -1,
   },
-  posImagesView__noText: {
+  postImagesView_noText: {
     marginTop: 0,
   },
 
@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   postSection: {
     padding: scenePadding,
@@ -80,8 +80,8 @@ export const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.lightGrey,
   },
-  youTubeEmbed: {
-    alignSelf: 'stretch',
-    height: 300,
+  linkStyle: {
+    color: colors.orange,
+    fontStyle: 'italic',
   },
 });

@@ -36,6 +36,7 @@
     "react-native-fading-slides": "^0.1.4",
     "react-native-fbsdk": "0.6.0",
     "react-native-htmlview": "^0.10.0",
+    "react-native-hyperlink": "^0.0.12",
     "react-native-keyboard-aware-scroll-view": "^0.4.1",
     "react-native-linear-gradient": "^2.3.0",
     "react-native-modal-picker": "^0.0.16",
