@@ -183,10 +183,7 @@ export class Comment extends PureComponent {
       onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
     );
 
-    // The width of the image will be:
-    // Window width - (post padding + avatar width + bubble padding left)
-    // This would have to change if styling changes :/
-    // const maxEmbedWidth = Dimensions.get('window').width - ((scenePadding * 3) + 36);
+    // The width of the embeds
     const maxEmbedWidth = commentWidth || 200;
     const minEmbedWidth = Math.max(100, maxEmbedWidth / 2);
 
