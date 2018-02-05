@@ -40,7 +40,8 @@ export const StyledText = ({
         fontSize: textSizes[size],
         color: textColors[color],
         fontWeight: bold ? '700' : 'normal',
-        lineHeight: textSizes[size] * 1.25,
+        // Messes up color highlighting of links on Android
+        // lineHeight: textSizes[size] * 1.25,
       },
       textStyle,
     ]}

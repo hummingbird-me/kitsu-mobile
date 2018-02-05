@@ -187,8 +187,8 @@ export class Comment extends PureComponent {
     // Window width - (post padding + avatar width + bubble padding left)
     // This would have to change if styling changes :/
     // const maxEmbedWidth = Dimensions.get('window').width - ((scenePadding * 3) + 36);
-    const maxEmbedWidth = commentWidth || 300;
-    const minEmbedWidth = Math.max(300, maxEmbedWidth / 2);
+    const maxEmbedWidth = commentWidth || 200;
+    const minEmbedWidth = Math.max(100, maxEmbedWidth / 2);
 
     return (
       <Layout.RowWrap>
@@ -237,7 +237,7 @@ export class Comment extends PureComponent {
 
           {!isTruncated && repliesCount > 0 && (
             <View style={styles.nestedComments}>
-              {replies.length == 0 && (
+              {replies.length === 0 && (
                 <ToggleReplies
                   onPress={() => { this.fetchReplies(); }}
                   isLoading={this.state.isLoadingNextPage}

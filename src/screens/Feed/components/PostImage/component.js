@@ -16,18 +16,31 @@ export class PostImage extends PureComponent {
     size: 'default',
     width: null,
     height: null,
+    borderRadius: 0,
+    overlayColor: null,
   };
 
   state = {
     width: 0,
     height: 0,
-    borderRadius: 0,
-    overlayColor: null,
   }
 
   componentWillMount() {
     this.mounted = true;
+    this.updateImageSize();
+  }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.width !== nextProps.width || this.props.height !== nextProps.height) {
+      this.updateImageSize();
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  updateImageSize() {
     Image.getSize(this.props.uri, (width, height) => {
       if (!this.mounted) return;
 
@@ -48,10 +61,6 @@ export class PostImage extends PureComponent {
         });
       }
     });
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
   }
 
   mounted = false
