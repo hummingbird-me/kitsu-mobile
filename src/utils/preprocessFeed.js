@@ -5,7 +5,7 @@ const getHttpUrls = (url) => {
   // A quick hack to return both the http and https url
   if (url.indexOf('http:') === -1 && url.indexOf('https:') === -1) return [url];
   const cleanedUrl = url.replace('https:', '').replace('http:', '');
-  return [`http${cleanedUrl}`, `https:${cleanedUrl}`];
+  return [`http:${cleanedUrl}`, `https:${cleanedUrl}`];
 };
 
 /**

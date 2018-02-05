@@ -215,7 +215,7 @@ export class Comment extends PureComponent {
               minWidth={minEmbedWidth}
               borderRadius={20}
               overlayColor={overlayColor}
-              style={styles.embed}
+              style={isEmpty(content) ? null : styles.embed}
             />
           }
 
