@@ -200,7 +200,12 @@ export class Comment extends PureComponent {
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
             {!isEmpty(content) &&
               <Hyperlink linkStyle={styles.linkStyle} linkDefault>
-                <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
+                <StyledText
+                  size="xsmall"
+                  color="dark"
+                  textStyle={{ lineHeight: null }}
+                  numberOfLines={(isTruncated && 2) || undefined}
+                >
                   {content}
                 </StyledText>
 
