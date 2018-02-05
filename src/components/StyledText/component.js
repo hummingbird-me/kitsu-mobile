@@ -40,6 +40,7 @@ export const StyledText = ({
         fontSize: textSizes[size],
         color: textColors[color],
         fontWeight: bold ? '700' : 'normal',
+        // Messes up color highlighting of links on Android
         lineHeight: textSizes[size] * 1.25,
       },
       textStyle,
@@ -52,7 +53,7 @@ StyledText.propTypes = {
   bold: PropTypes.bool,
   color: PropTypes.oneOf(['light', 'dark', 'grey', 'darkGrey', 'lightGrey', 'yellow', 'orange', 'red', 'green', 'black']),
   size: PropTypes.oneOf(['default', 'xxsmall', 'xsmall', 'small', 'large', 'xlarge']),
-  textStyle: ViewPropTypes.style,
+  textStyle: ViewPropTypes.textStyle,
 };
 
 StyledText.defaultProps = {

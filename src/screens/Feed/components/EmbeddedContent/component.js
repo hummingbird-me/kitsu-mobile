@@ -13,23 +13,27 @@ export class EmbeddedContent extends PureComponent {
       }),
       image: PropTypes.shape({
         url: PropTypes.string.isRequired,
-        width: PropTypes.number,
-        height: PropTypes.number,
+        width: PropTypes.string,
+        height: PropTypes.string,
       }),
       video: PropTypes.shape({
         url: PropTypes.string.isRequired,
-        width: PropTypes.number,
-        height: PropTypes.number,
+        width: PropTypes.string,
+        height: PropTypes.string,
       }),
     }).isRequired,
     style: ViewPropTypes.style,
     maxWidth: PropTypes.number.isRequired,
     minWidth: PropTypes.number,
+    borderRadius: PropTypes.number,
+    overlayColor: PropTypes.string,
   }
 
   static defaultProps = {
     style: null,
     minWidth: null,
+    borderRadius: 0,
+    overlayColor: null,
   }
 
   /**
@@ -42,7 +46,7 @@ export class EmbeddedContent extends PureComponent {
   renderImage(embed) {
     if (!embed.image) return null;
 
-    const { maxWidth, minWidth } = this.props;
+    const { maxWidth, minWidth, borderRadius, overlayColor } = this.props;
     const imageWidth = embed.image.width || maxWidth;
 
     let width = imageWidth;
@@ -50,7 +54,14 @@ export class EmbeddedContent extends PureComponent {
     if (width > maxWidth) width = maxWidth;
 
     // PostImage will auto scale the image
-    return <PostImage uri={embed.image.url} width={width} />;
+    return (
+      <PostImage
+        uri={embed.image.url}
+        width={width}
+        borderRadius={borderRadius}
+        overlayColor={overlayColor}
+      />
+    );
   }
 
   renderYoutube(embed) {

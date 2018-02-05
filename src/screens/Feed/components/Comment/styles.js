@@ -12,6 +12,9 @@ export const styles = StyleSheet.create({
   emptyBubble: {
     backgroundColor: 'transparent',
   },
+  embed: {
+    marginTop: 6,
+  },
   commentActions: {
     flexDirection: 'row',
     alignItems: 'center',

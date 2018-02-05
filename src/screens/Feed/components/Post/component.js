@@ -2,10 +2,7 @@ import React, { PureComponent } from 'react';
 import { FlatList, Image, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
-import YouTube from 'react-native-youtube';
-
 import moment from 'moment';
-
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -13,14 +10,13 @@ import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { PostImage, PostImageSeparator } from 'kitsu/screens/Feed/components/PostImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { scene } from 'kitsu/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
-import { isEmpty, trim } from 'lodash';
+import { isEmpty } from 'lodash';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { styles } from './styles';
@@ -287,6 +283,7 @@ export class Post extends PureComponent {
                     comment={item}
                     onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
                     isTruncated
+                    overlayColor={colors.offWhite}
                   />
                 )}
                 ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
@@ -379,7 +376,7 @@ export const PostMain = ({
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
             <Hyperlink linkStyle={styles.linkStyle} linkDefault>
-              <StyledText color="dark" size="small">{content}</StyledText>
+              <StyledText color="dark" textStyle={{ lineHeight: null }} size="small">{content}</StyledText>
             </Hyperlink>
           </View>
         </TouchableWithoutFeedback>
@@ -415,7 +412,6 @@ export const PostMain = ({
 
 PostMain.propTypes = {
   content: PropTypes.string,
-  images: PropTypes.array,
   embed: PropTypes.object,
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
@@ -426,7 +422,6 @@ PostMain.propTypes = {
 };
 PostMain.defaultProps = {
   content: null,
-  images: [],
   embed: null,
   likesCount: 0,
   commentsCount: 0,
