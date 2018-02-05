@@ -82,7 +82,6 @@ class ProfilePage extends PureComponent {
         loading: false,
         error: 'Missing userId in component.',
       });
-
       return;
     }
 
@@ -118,6 +117,7 @@ class ProfilePage extends PureComponent {
         },
         fields: {
           users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
+          characters: 'name,image,description'
         },
         include: 'waifu',
       });
