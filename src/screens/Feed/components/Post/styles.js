@@ -79,6 +79,7 @@ export const styles = StyleSheet.create({
     padding: scenePadding,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.lightGrey,
+    backgroundColor: colors.offWhite,
   },
   linkStyle: {
     color: colors.orange,

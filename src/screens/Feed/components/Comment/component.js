@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity, ActivityIndicator, FlatList, Text } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator, FlatList, Text, Dimensions } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { defaultAvatar } from 'kitsu/constants/app';
@@ -11,8 +11,10 @@ import Hyperlink from 'react-native-hyperlink';
 import { StyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
-import { trim, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
+import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
+import { scenePadding } from 'kitsu/screens/Feed/constants';
 import { styles } from './styles';
 
 export class Comment extends PureComponent {
@@ -25,6 +27,7 @@ export class Comment extends PureComponent {
       replies: [],
       repliesCount: props.comment.repliesCount,
       isLoadingNextPage: false,
+      commentWidth: null,
     };
   }
 
@@ -61,6 +64,14 @@ export class Comment extends PureComponent {
         repliesCount: this.state.repliesCount + 1,
       });
     });
+  }
+
+  onCommentLayout = (event) => {
+    // Only calculate this once, else we'll have lots of updates
+    if (this.state.commentWidth) return;
+    const { width } = event.nativeEvent.layout;
+    // The width - left padding
+    this.setState({ commentWidth: width - scenePadding });
   }
 
   fetchLikes = async () => {
@@ -161,22 +172,30 @@ export class Comment extends PureComponent {
       comment,
       isTruncated,
       onAvatarPress,
+      overlayColor,
     } = this.props;
 
-    const { isLiked, likesCount, replies, repliesCount } = this.state;
+    const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
 
-    const { content, createdAt, user } = comment;
+    const { content, createdAt, user, embed } = comment;
     const { avatar, name } = user;
     const AvatarContainer = props => (
       onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
     );
+
+    // The width of the image will be:
+    // Window width - (post padding + avatar width + bubble padding left)
+    // This would have to change if styling changes :/
+    // const maxEmbedWidth = Dimensions.get('window').width - ((scenePadding * 3) + 36);
+    const maxEmbedWidth = commentWidth || 300;
+    const minEmbedWidth = Math.max(300, maxEmbedWidth / 2);
 
     return (
       <Layout.RowWrap>
         <AvatarContainer>
           <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
         </AvatarContainer>
-        <Layout.RowMain>
+        <Layout.RowMain onLayout={this.onCommentLayout}>
           <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
             {!isEmpty(content) &&
@@ -188,6 +207,17 @@ export class Comment extends PureComponent {
               </Hyperlink>
             }
           </View>
+
+          { embed &&
+            <EmbeddedContent
+              embed={embed}
+              maxWidth={maxEmbedWidth}
+              minWidth={minEmbedWidth}
+              borderRadius={20}
+              overlayColor={overlayColor}
+              style={styles.embed}
+            />
+          }
 
           {!isTruncated && (
             <View style={styles.commentActions}>
@@ -255,12 +285,14 @@ Comment.propTypes = {
   isTruncated: PropTypes.bool,
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
+  overlayColor: PropTypes.string,
 };
 
 Comment.defaultProps = {
   isTruncated: false,
   onAvatarPress: null,
   onReplyPress: null,
+  overlayColor: null,
 };
 
 export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (

@@ -25,6 +25,7 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { StyledText } from 'kitsu/components/StyledText';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
+import * as colors from 'kitsu/constants/colors';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -252,6 +253,7 @@ export default class PostDetails extends PureComponent {
         navigation={this.props.navigation}
         onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
         onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
+        overlayColor={colors.offWhite}
       />
     );
   };
