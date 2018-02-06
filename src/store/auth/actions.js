@@ -21,8 +21,8 @@ export const refreshTokens = (forceRefresh = false) => async (dispatch, getState
 
     // Check if we have a connection to the net
     // If not then we just return old tokens
-    const isConnected = await NetInfo.fetch();
-    if (isConnected === 'none') return tokens;
+    const isConnected = await NetInfo.isConnected.fetch();
+    if (!isConnected) return tokens;
   }
 
   dispatch({ type: types.TOKEN_REFRESH });
