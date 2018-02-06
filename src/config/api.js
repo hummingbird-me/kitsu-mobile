@@ -20,7 +20,7 @@ const errorMiddleware = {
   name: 'error-middleware',
   error: (payload) => {
     console.log('failed payload', payload);
-    if (payload.status === 401) {
+    if (payload.status === 401 || payload.status === 403) {
       return {
         request: {
           authorized: false,

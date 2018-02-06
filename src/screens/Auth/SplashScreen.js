@@ -34,10 +34,10 @@ class SplashScreen extends Component {
 
     try {
       const tokens = await refresh();
-      console.log(tokens);
+      console.log('tokens: ', tokens);
       this.navigate(authorized, completed);
     } catch (e) {
-      console.log(e);
+      console.log('token refresh error: ', e);
       logout(this.props.navigation);
     }
   }

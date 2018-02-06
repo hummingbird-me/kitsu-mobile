@@ -1,5 +1,6 @@
 import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import { NavigationActions } from 'react-navigation';
+import { NetInfo } from 'react-native';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
@@ -11,15 +12,23 @@ export const refreshTokens = () => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
   if (isEmpty(tokens)) return null;
 
-  const oAuth = auth.createToken(tokens);
-  if (!oAuth.expired) return tokens;
+  // Make sure old token is expired before we refresh
+  const milliseconds = (tokens.created_at + tokens.expires_in) * 1000;
+  const expiredAt = new Date(milliseconds);
+  const current = new Date();
+  if (current < expiredAt) return tokens;
+
+  // Check if we have a connection to the net
+  // If not then we just return old tokens
+  const isConnected = await NetInfo.fetch();
+  if (isConnected === 'none') return tokens;
 
   dispatch({ type: types.TOKEN_REFRESH });
 
   try {
-    const newTokens = await oAuth.refresh();
+    const newTokens = await auth.createToken(tokens).refresh();
     dispatch({ type: types.TOKEN_REFRESH_SUCCESS, payload: newTokens.data });
-    return newTokens;
+    return newTokens.data;
   } catch (e) {
     dispatch({ type: types.TOKEN_REFRESH_FAIL });
     throw e;
