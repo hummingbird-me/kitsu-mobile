@@ -7,26 +7,42 @@ import Animation from 'lottie-react-native';
 
 import anim from 'kitsu/assets/animation/kitsu.json';
 import * as colors from 'kitsu/constants/colors';
+import { auth } from 'kitsu/config/api';
+import { refreshTokens, logoutUser } from 'kitsu/store/auth/actions';
 
 class SplashScreen extends Component {
   static navigationOptions = {
     header: null,
   };
 
+  state = {
+    refreshingToken: false,
+  }
+
   componentDidMount() {
     this.animation.play();
-    const { isAuthenticated, completed } = this.props;
-    if (this.props.rehydratedAt) {
-      this.init(isAuthenticated, completed);
-    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, completed } = nextProps;
-    this.init(isAuthenticated, completed);
+    const { isAuthenticated, completed, refreshTokens, logoutUser } = nextProps;
+    this.init(refreshTokens, logoutUser, isAuthenticated, completed);
   }
 
-  init(authorized, completed) {
+  async init(refresh, logout, authorized, completed) {
+    if (this.state.refreshingToken) return;
+    this.setState({ refreshingToken: true });
+
+    try {
+      const tokens = await refresh();
+      console.log(tokens);
+      this.navigate(authorized, completed);
+    } catch (e) {
+      console.log(e);
+      logout(this.props.navigation);
+    }
+  }
+
+  navigate(authorized, completed) {
     const { dispatch } = this.props.navigation;
     let resetAction = null;
     if (authorized && completed) {
@@ -50,6 +66,7 @@ class SplashScreen extends Component {
     }
     dispatch(resetAction);
   }
+
   render() {
     return (
       <View
@@ -89,4 +106,4 @@ SplashScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(SplashScreen);
+export default connect(mapStateToProps, { refreshTokens, logoutUser })(SplashScreen);

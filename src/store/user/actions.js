@@ -16,9 +16,14 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
       },
       filter: { self: true },
     });
-    dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
-    createOneSignalPlayer(dispatch, getState);
-    return user[0];
+
+    if (user.length > 0) {
+      dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
+      createOneSignalPlayer(dispatch, getState);
+      return user[0];
+    }
+    dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'No user found in request' });
+    return null;
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
     return null;

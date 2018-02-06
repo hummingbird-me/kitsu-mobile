@@ -5,6 +5,26 @@ import { kitsuConfig } from 'kitsu/config/env';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboarding/actions';
 import * as types from 'kitsu/store/types';
+import { isEmpty } from 'lodash';
+
+export const refreshTokens = () => async (dispatch, getState) => {
+  const tokens = getState().auth.tokens;
+  if (isEmpty(tokens)) return null;
+
+  const oAuth = auth.createToken(tokens);
+  if (!oAuth.expired) return tokens;
+
+  dispatch({ type: types.TOKEN_REFRESH });
+
+  try {
+    const newTokens = await oAuth.refresh();
+    dispatch({ type: types.TOKEN_REFRESH_SUCCESS, payload: newTokens.data });
+    return newTokens;
+  } catch (e) {
+    dispatch({ type: types.TOKEN_REFRESH_FAIL });
+    throw e;
+  }
+};
 
 export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   dispatch({ type: types.LOGIN_USER });

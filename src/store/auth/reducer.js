@@ -11,10 +11,29 @@ const INITIAL_STATE = {
   fbError: '',
   isAuthenticated: false,
   rehydratedAt: null,
+  isRefreshingTokens: false,
 };
 
 export const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case types.TOKEN_REFRESH:
+      return {
+        ...state,
+        isRefreshingTokens: true,
+      };
+    case types.TOKEN_REFRESH_SUCCESS:
+      return {
+        ...state,
+        isRefreshingTokens: false,
+        tokens: action.payload,
+      };
+    case types.TOKEN_REFRESH_FAIL:
+      return {
+        ...state,
+        isRefreshingTokens: false,
+        isAuthenticated: false,
+        tokens: null,
+      };
     case types.LOGIN_USER:
       return {
         ...state,
