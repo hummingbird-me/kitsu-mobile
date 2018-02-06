@@ -8,20 +8,22 @@ import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboardi
 import * as types from 'kitsu/store/types';
 import { isEmpty } from 'lodash';
 
-export const refreshTokens = () => async (dispatch, getState) => {
+export const refreshTokens = (forceRefresh = false) => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
   if (isEmpty(tokens)) return null;
 
-  // Make sure old token is expired before we refresh
-  const milliseconds = (tokens.created_at + tokens.expires_in) * 1000;
-  const expiredAt = new Date(milliseconds);
-  const current = new Date();
-  if (current < expiredAt) return tokens;
+  if (!forceRefresh) {
+    // Make sure old token is expired before we refresh
+    const milliseconds = (tokens.created_at + tokens.expires_in) * 1000;
+    const expiredAt = new Date(milliseconds);
+    const current = new Date();
+    if (current < expiredAt) return tokens;
 
-  // Check if we have a connection to the net
-  // If not then we just return old tokens
-  const isConnected = await NetInfo.fetch();
-  if (isConnected === 'none') return tokens;
+    // Check if we have a connection to the net
+    // If not then we just return old tokens
+    const isConnected = await NetInfo.fetch();
+    if (isConnected === 'none') return tokens;
+  }
 
   dispatch({ type: types.TOKEN_REFRESH });
 
