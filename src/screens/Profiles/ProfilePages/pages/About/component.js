@@ -19,8 +19,8 @@ class About extends Component {
   render() {
     const { profile } = this.props;
     const aboutRows = [
-      { key: 'gender', label: 'Gender', content: capitalize(profile.gender) },
-      { key: 'location', label: 'Location', content: profile.location },
+      { key: 'gender', label: 'Gender', content: profile.gender ? capitalize(profile.gender) : 'It\'s a secret' },
+      { key: 'location', label: 'Location', content: profile.location || 'It\'s a secret' },
       { key: 'birthday', label: 'Birthday', content: moment(profile.birthday).format('MMMM Do') },
       { key: 'joinDate', label: 'Joined', content: moment(profile.createdAt).format('MMMM Do, YYYY') },
     ];
