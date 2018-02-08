@@ -1890,6 +1890,7 @@
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 98KG27K553;
@@ -1925,7 +1926,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.EverFox.AnimeTrakr;
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development kitsu-san";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.EverFox.AnimeTrakr";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1937,6 +1938,7 @@
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 98KG27K553;
 				ENABLE_BITCODE = YES;
@@ -1971,7 +1973,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.EverFox.AnimeTrakr;
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "6fc85f52-7b65-4f2c-a5da-9348bd87906b";
-				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc kitsu-san";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.EverFox.AnimeTrakr";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
