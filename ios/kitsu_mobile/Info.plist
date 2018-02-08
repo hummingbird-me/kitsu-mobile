@@ -66,7 +66,7 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Kitsu needs to access your photo library to let you upload photos.</string>
 	<key>UIAppFonts</key>
