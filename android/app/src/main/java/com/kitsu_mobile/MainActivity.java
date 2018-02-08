@@ -1,4 +1,4 @@
-package com.kitsu_mobile;
+package com.everfox.animetrackerandroid;
 import com.facebook.react.ReactActivity;
 import android.content.Intent;
 import android.os.Bundle;
