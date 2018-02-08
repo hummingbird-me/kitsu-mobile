@@ -79,10 +79,10 @@ platform :android do
     build_beta()
 
     supply(
-      track: 'beta'
-      skip_upload_metadata
-      skip_upload_images
-      skip_upload_screenshots
+      track: 'beta',
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
     )
   end
 
