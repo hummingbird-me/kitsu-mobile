@@ -1,4 +1,4 @@
-app_identifier "kitsu-san" # The bundle identifier of your app
+app_identifier "com.EverFox.AnimeTrakr" # The bundle identifier of your app
 apple_id "josh@kitsu.io" # Your Apple email address
 
 team_id "98KG27K553" # Developer Portal Team ID
