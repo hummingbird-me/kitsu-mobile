@@ -37,13 +37,14 @@ platform :android do
     f.close
   end
 
-  desc "Generate a new Beta Build"
-  lane :build_beta do
+  desc "Generate a new Build"
+  lane :build do
     # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
 
     bump_version_code
     gradle(
-      task: "assembleRelease",
+      task: "assemble",
+      build_type: "Release",
       # project_dir: "platforms/android/",
       properties: {
         'android.useDeprecatedNdk' => true,
@@ -57,7 +58,7 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics"
   lane :beta_crashlytics do |values|
-    build_beta()
+    build()
 
     emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com', 'josh.madewell@gmail.com', 'is@urihere.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
@@ -76,7 +77,7 @@ platform :android do
 
   desc "Submit a new Beta Build to Google Play"
   lane :beta_googleplay do
-    build_beta()
+    build()
 
     supply(
       track: 'beta',

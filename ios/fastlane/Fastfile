@@ -53,9 +53,8 @@ platform :ios do
 
   end
 
-  desc "Generate a new Beta Build"
-  desc "This will also make sure the profile is up to date"
-  lane :build_beta do
+  desc "Generate a new Build"
+  lane :build do
     # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
     create_keychain(
       name: ENV["MATCH_KEYCHAIN_NAME"],
@@ -120,7 +119,7 @@ platform :ios do
 
   desc "Submit a new Beta Build to crashlytics"
   lane :beta_crashlytics do |values|
-    build_beta()
+    build()
 
     emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io', 'edencakir@gmail.com', 'pjchavarria@gmail.com', 'bilal@codeinfuse.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
@@ -139,8 +138,7 @@ platform :ios do
 
   desc "Submit a new Beta Build to Testflight"
   lane :beta_testflight do
-    build_beta()
-    
+    build()
     pilot(skip_submission: true) # Upload the app to TestFlight
   end
 

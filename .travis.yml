@@ -56,6 +56,7 @@ matrix:
         - yarn install
       script:
         - cd android && ./gradlew clean
+        # Change this to beta_googleplay once we have the json file and Aozora keystore
         - fastlane beta_crashlytics
 
     - language: objective-c
@@ -76,4 +77,4 @@ matrix:
         - travis_retry yarn
       script:
         - cd ios
-        - fastlane beta_crashlytics
+        - fastlane beta_testflight
