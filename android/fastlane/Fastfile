@@ -37,16 +37,14 @@ platform :android do
     f.close
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do |values|
+  desc "Generate a new Build"
+  lane :build do
     # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
-
-    emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com', 'josh.madewell@gmail.com', 'is@urihere.com'] # You can list more emails here
-    groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     bump_version_code
     gradle(
-      task: "assembleRelease",
+      task: "assemble",
+      build_type: "Release",
       # project_dir: "platforms/android/",
       properties: {
         'android.useDeprecatedNdk' => true,
@@ -56,8 +54,14 @@ platform :android do
         'android.injected.signing.key.password' => ENV["KITSU_RELEASE_KEY_PASSWORD"]
       }
     )
+  end
 
-    # supply(track: 'beta')
+  desc "Submit a new Beta Build to Crashlytics"
+  lane :beta_crashlytics do |values|
+    build()
+
+    emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com', 'josh.madewell@gmail.com', 'is@urihere.com'] # You can list more emails here
+    groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     crashlytics(
       api_token: 'b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00',
@@ -69,9 +73,18 @@ platform :android do
       # notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
       notifications: true  # Should this distribution notify your testers via email?
     )
+  end
 
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+  desc "Submit a new Beta Build to Google Play"
+  lane :beta_googleplay do
+    build()
+
+    supply(
+      track: 'beta',
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
   end
 
   desc "Deploy a new version to the Google Play"

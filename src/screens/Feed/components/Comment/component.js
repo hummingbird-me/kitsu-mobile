@@ -164,6 +164,7 @@ export class Comment extends PureComponent {
       currentUser={this.props.currentUser}
       onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
       onReplyPress={() => this.onReplyPress(item)}
+      hideEmbeds={this.props.hideEmbeds}
     />
   )
 
@@ -173,6 +174,7 @@ export class Comment extends PureComponent {
       isTruncated,
       onAvatarPress,
       overlayColor,
+      hideEmbeds,
     } = this.props;
 
     const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
@@ -210,7 +212,7 @@ export class Comment extends PureComponent {
             }
           </View>
 
-          { embed &&
+          { embed && !hideEmbeds &&
             <EmbeddedContent
               embed={embed}
               maxWidth={maxEmbedWidth}
@@ -288,6 +290,7 @@ Comment.propTypes = {
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
   overlayColor: PropTypes.string,
+  hideEmbeds: PropTypes.bool,
 };
 
 Comment.defaultProps = {
@@ -295,6 +298,7 @@ Comment.defaultProps = {
   onAvatarPress: null,
   onReplyPress: null,
   overlayColor: null,
+  hideEmbeds: false,
 };
 
 export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (

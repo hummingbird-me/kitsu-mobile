@@ -109,7 +109,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.kitsu_mobile"
+        applicationId "com.everfox.animetrackerandroid"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1

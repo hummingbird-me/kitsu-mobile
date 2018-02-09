@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -1921,10 +1922,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
+				PRODUCT_BUNDLE_IDENTIFIER = com.EverFox.AnimeTrakr;
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development kitsu-san";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.EverFox.AnimeTrakr";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1967,10 +1969,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "kitsu-san";
+				PRODUCT_BUNDLE_IDENTIFIER = com.EverFox.AnimeTrakr;
 				PRODUCT_NAME = kitsu_mobile;
-				PROVISIONING_PROFILE = "6fc85f52-7b65-4f2c-a5da-9348bd87906b";
-				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc kitsu-san";
+				PROVISIONING_PROFILE = "f06f0454-9e3e-401a-a018-a7c5efa62809";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.EverFox.AnimeTrakr";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
