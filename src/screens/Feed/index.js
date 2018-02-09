@@ -188,14 +188,21 @@ class Feed extends React.PureComponent {
             data={this.state.data}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
-            onEndReached={this.fetchNextPage}
+            onMomentumScrollBegin={() => {
+              // Prevent iOS calling onendreached when list is loaded.
+              this.onEndReachedCalledDuringMomentum = false;
+            }}
+            onEndReached={() => {
+              if (!this.onEndReachedCalledDuringMomentum) {
+                this.fetchNextPage();
+                this.onEndReachedCalledDuringMomentum = true;
+              }
+            }}
             onEndReachedThreshold={0.6}
             ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
-            ListFooterComponent={() => {
-              return this.state.isLoadingNextPage && (
-                <SceneLoader color={offWhite} />
-              )
-            }}
+            ListFooterComponent={() => this.state.isLoadingNextPage && (
+              <SceneLoader color={offWhite} />
+            )}
             refreshControl={
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
             }
