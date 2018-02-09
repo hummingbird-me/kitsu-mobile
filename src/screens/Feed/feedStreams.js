@@ -5,6 +5,7 @@ export const feedStreams = [
     title: 'Follower Feed',
     description: 'Shared with all of your followers',
     selectable: true,
+    targetInterest: null,
   },
   {
     key: 'globalFeed',
@@ -12,6 +13,7 @@ export const feedStreams = [
     title: 'Global Feed',
     description: 'Shared with everyone',
     selectable: false,
+    targetInterest: null,
   },
   {
     key: 'animeFeed',
@@ -19,6 +21,7 @@ export const feedStreams = [
     title: 'Anime Feed',
     description: 'Shared with your followers and all anime fans',
     selectable: true,
+    targetInterest: 'Anime',
   },
   {
     key: 'mangaFeed',
@@ -26,5 +29,6 @@ export const feedStreams = [
     title: 'Manga Feed',
     description: 'Shared with your followers and all manga fans',
     selectable: true,
+    targetInterest: 'Manga',
   },
 ];
