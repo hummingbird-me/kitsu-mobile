@@ -284,6 +284,7 @@ export class Post extends PureComponent {
                     onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
                     isTruncated
                     overlayColor={colors.offWhite}
+                    hideEmbeds={nsfw && !overlayRemoved}
                   />
                 )}
                 ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
