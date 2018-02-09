@@ -1970,8 +1970,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.EverFox.AnimeTrakr;
 				PRODUCT_NAME = kitsu_mobile;
+				PROVISIONING_PROFILE = "f06f0454-9e3e-401a-a018-a7c5efa62809";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.EverFox.AnimeTrakr";
-				PROVISIONING_PROFILE = "6fc85f52-7b65-4f2c-a5da-9348bd87906b";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
