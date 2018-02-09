@@ -78,4 +78,3 @@ matrix:
       script:
         - cd ios
         - fastlane beta_testflight
-        - echo /Users/travis/Library/Logs/gym/kitsu_mobile-kitsu_mobile.log

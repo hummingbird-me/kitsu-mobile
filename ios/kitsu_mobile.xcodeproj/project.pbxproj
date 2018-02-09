@@ -1926,6 +1926,7 @@
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.EverFox.AnimeTrakr";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1972,6 +1973,7 @@
 				PRODUCT_NAME = kitsu_mobile;
 				PROVISIONING_PROFILE = "f06f0454-9e3e-401a-a018-a7c5efa62809";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.EverFox.AnimeTrakr";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
