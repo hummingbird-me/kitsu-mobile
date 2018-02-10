@@ -14,6 +14,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
+import { EditModal } from 'kitsu/screens/Profiles/components/EditModal';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import Summary from './pages/Summary';
@@ -71,7 +72,8 @@ class ProfilePage extends PureComponent {
     profile: null,
     feed: null,
     follow: null,
-    isLoadingFollow: false
+    isLoadingFollow: false,
+    editModalVisible: false
   }
 
   componentWillMount() {
@@ -149,6 +151,8 @@ class ProfilePage extends PureComponent {
 
   fetchFollow = async (userId) => {
     try {
+      const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
+      if (isCurrentUser) { return; }
       this.setState({ isLoadingFollow: true });
       const response = await Kitsu.findAll('follows', {
         filter :{
@@ -185,14 +189,30 @@ class ProfilePage extends PureComponent {
   handleFollowing = async () => {
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
     const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
-    if (isCurrentUser) {
-      // Edit Profile
+    if (isCurrentUser) { // Edit
+      this.setState({ editModalVisible: true });
     } else if (this.state.follow) { // Destroy
       this.setState({ isLoadingFollow: true });
       await Kitsu.destroy('follows', this.state.follow.id);
       this.setState({ follow: null, isLoadingFollow: false });
     } else { // Create
       await this.createFollow(userId);
+    }
+  }
+
+  onEditProfile = async (changes) => {
+    try {
+      this.setState({ editModalVisible: false, loading: true });
+      const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+      const data = await Kitsu.update('users', {
+        id: userId,
+        ...changes
+      }, { include: 'waifu' });
+      this.setState({ profile: data });
+    } catch (err) {
+      console.log('Error updating user:', err);
+    } finally {
+      this.setState({ loading: false });
     }
   }
 
@@ -226,7 +246,7 @@ class ProfilePage extends PureComponent {
   }
 
   render() {
-    const { error, loading, profile, follow, isLoadingFollow } = this.state;
+    const { error, loading, profile, follow, isLoadingFollow, editModalVisible } = this.state;
 
     if (loading) {
       return (
@@ -295,6 +315,13 @@ class ProfilePage extends PureComponent {
             ]}
           />
         </ParallaxScroll>
+
+        <EditModal
+          user={profile}
+          visible={editModalVisible}
+          onConfirm={(changes) => this.onEditProfile(changes)}
+          onCancel={() => this.setState({ editModalVisible: false })}
+        />
       </SceneContainer>
     );
   }
