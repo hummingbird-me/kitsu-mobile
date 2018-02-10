@@ -21,13 +21,13 @@
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		17B1C288A2D54CB79E53BF44 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40C1013E41074CFBA8034B60 /* libCodePush.a */; };
 		19D1AA009FED4A8A99A2963C /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13EA31936B534A038F25C38F /* Zocial.ttf */; };
 		1E6B3818FE594CE5BFCD8724 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 31FC4458B30648D49B57D619 /* OFL.txt */; };
+		2418BFC1202E73360015D195 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		288C7B16940D4F52A8F13835 /* Asap-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = FD61A198D0A948A68EDEFB8F /* Asap-Medium.otf */; };
 		2923FACE130440C38EEA44BE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B8CC94332114017AA1BD9BC /* EvilIcons.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -1619,7 +1619,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7BE3B0DF1ECFF1DE0012FD5C /* fontello.woff in Resources */,
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				6A7C2EB1DA0A4BB18D13C2CF /* Entypo.ttf in Resources */,
 				609C40E8BBE646D28429CA1C /* EvilIcons.ttf in Resources */,
@@ -1628,6 +1627,7 @@
 				BBB5BC05D8B64ACFB7C4210F /* Ionicons.ttf in Resources */,
 				6F495AA596A54B8F854436AB /* MaterialIcons.ttf in Resources */,
 				8E348D7BD45D4DD0AC21E616 /* Octicons.ttf in Resources */,
+				2418BFC1202E73360015D195 /* Images.xcassets in Resources */,
 				9EBBE89CE0C24651AF983187 /* Roboto_medium.ttf in Resources */,
 				850F5E73CB14449E8114D769 /* Roboto.ttf in Resources */,
 				C03F4620F2A64FA2B5DDAE9D /* rubicon-icon-font.ttf in Resources */,
