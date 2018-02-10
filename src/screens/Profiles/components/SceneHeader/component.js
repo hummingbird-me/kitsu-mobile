@@ -126,6 +126,7 @@ export class SceneHeader extends PureComponent {
       posterImage,
       moreButtonOptions,
       onMoreButtonOptionsSelected,
+      showMoreButton
     } = this.props;
 
     return (
@@ -154,13 +155,15 @@ export class SceneHeader extends PureComponent {
             {/* Add to library button & more button */}
             <View style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}>
               {this.renderMainButton()}
-              <SelectMenu
-                options={moreButtonOptions}
-                onOptionSelected={onMoreButtonOptionsSelected}
-                style={styles.moreButton}
-              >
-                <Icon name="md-more" style={styles.moreIcon} />
-              </SelectMenu>
+              {showMoreButton &&
+                <SelectMenu
+                  options={moreButtonOptions}
+                  onOptionSelected={onMoreButtonOptionsSelected}
+                  style={styles.moreButton}
+                >
+                  <Icon name="md-more" style={styles.moreIcon} />
+                </SelectMenu>
+              }
             </View>
           </View>
         </View>
@@ -221,6 +224,7 @@ SceneHeader.propTypes = {
   mainButtonOptions: PropTypes.array,
   mainButtonTitle: PropTypes.string,
   moreButtonOptions: PropTypes.array,
+  showMoreButton: PropTypes.bool,
   onFollowButtonPress: PropTypes.func,
   onMainButtonOptionsSelected: PropTypes.func,
   onMoreButtonOptionsSelected: PropTypes.func,
@@ -242,6 +246,7 @@ SceneHeader.defaultProps = {
   mainButtonOptions: [],
   mainButtonTitle: 'Follow',
   moreButtonOptions: [],
+  showMoreButton: true,
   onFollowButtonPress: null,
   onHeaderLeftButtonPress: null,
   onMainButtonOptionsSelected: null,

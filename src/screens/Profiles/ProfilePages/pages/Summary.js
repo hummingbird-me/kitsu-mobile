@@ -115,7 +115,7 @@ export default class Summary extends PureComponent {
                     }}
                   />
                   <View style={{ alignItems: 'center', marginTop: 3 }}>
-                    <StyledText size="xxsmall">{caption}</StyledText>
+                    <StyledText size="xxsmall" color="dark">{caption}</StyledText>
                   </View>
                 </TouchableOpacity>
               </ScrollItem>

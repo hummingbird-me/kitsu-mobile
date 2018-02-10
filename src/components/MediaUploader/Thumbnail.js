@@ -8,7 +8,7 @@ import * as colors from 'kitsu/constants/colors';
 export default class Thumbnail extends PureComponent {
   static propTypes = {
     size: PropTypes.number,
-    image: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    image: PropTypes.object.isRequired,
     type: PropTypes.string,
     placeholder: PropTypes.bool,
     playableDuration: PropTypes.string,
@@ -42,10 +42,10 @@ export default class Thumbnail extends PureComponent {
 
   render() {
     const { placeholder, image, selectedIndex, size, type } = this.props;
-    let source = { uri: image };
+    let source = { uri: image.uri };
 
     // Our placeholders sometimes come through with numbers as sources.
-    if (typeof image !== 'string') {
+    if (typeof image.uri !== 'string') {
       source = null;
     }
 
