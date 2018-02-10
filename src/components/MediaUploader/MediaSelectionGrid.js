@@ -41,11 +41,13 @@ export default class MediaSelectionGrid extends Component {
     filterContext: PropTypes.string.isRequired,
     minimumTileWidth: PropTypes.number,
     onSelectedImagesChanged: PropTypes.func,
+    multiple: PropTypes.bool,
   }
 
   static defaultProps = {
     minimumTileWidth: 100,
     onSelectedImagesChanged: () => {},
+    multiple: true,
   }
 
   state = {
@@ -79,15 +81,20 @@ export default class MediaSelectionGrid extends Component {
     this.setState({ dimensions: Dimensions.get('window') });
   }
 
-  onToggleTile = (uri) => {
-    // Make a copy so we don't mutate state directly.
-    const newSelected = this.state.selectedMedia.slice();
-    const selectedIndex = this.state.selectedMedia.indexOf(uri);
+  onToggleTile = (image) => {
+    let newSelected;
+    if (this.props.multiple) {
+      // Make a copy so we don't mutate state directly.
+      newSelected = this.state.selectedMedia.slice();
+      const selectedIndex = this.state.selectedMedia.map(image => image.uri).indexOf(image.uri);
 
-    if (selectedIndex < 0) {
-      newSelected.push(uri);
+      if (selectedIndex < 0) {
+        newSelected.push(image);
+      } else {
+        newSelected.splice(selectedIndex, 1);
+      }
     } else {
-      newSelected.splice(selectedIndex, 1);
+      newSelected = [image];
     }
 
     this.setState({ selectedMedia: newSelected });
@@ -106,12 +113,15 @@ export default class MediaSelectionGrid extends Component {
         return 'PhotoStream';
       case 'Camera Roll':
         return 'SavedPhotos';
+      case 'All':
+        return 'All';
       default:
         throw new Error(`Unknown filter context: ${this.props.filterContext}`);
     }
   }
 
   ensureSufficientPermissions = async () => {
+    if (Platform.OS !== 'android') { return true; }
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -180,12 +190,11 @@ export default class MediaSelectionGrid extends Component {
     const { placeholder, image, playableDuration, type } = item.node;
     const { selectedMedia } = this.state;
 
-    const selectedIndex = selectedMedia.indexOf(image.uri);
-
+    const selectedIndex = selectedMedia.map(image => image.uri).indexOf(image.uri);
     return (
       <Thumbnail
         size={tileSize}
-        image={image.uri}
+        image={image}
         type={type}
         placeholder={placeholder}
         playableDuration={playableDuration}
