@@ -140,12 +140,6 @@ class CreatePost extends React.PureComponent {
       additionalContent += `\n${gif.images.original.url}`;
     }
 
-    // Target interest is either 'anime', 'manga', or blank depending
-    // on the feed we want to post to.
-    const ignoredTargetFeeds = ['followingFeed', 'globalFeed'];
-    const currentFeedIndex = indexOf(ignoredTargetFeeds, currentFeed.key);
-    const targetInterest = currentFeedIndex !== -1 ? currentFeed.key : undefined;
-
     const mediaData = media ? {
       media: {
         id: media.id,
@@ -159,6 +153,10 @@ class CreatePost extends React.PureComponent {
         id: targetUser.id,
       },
     } : {};
+
+    // Target interest is either 'anime', 'manga', or blank depending
+    // on the feed we want to post to.
+    const targetInterest = currentFeed.targetInterest || undefined;
 
     // We can't set target_interest with targetUser
     const targetInterestData = isEmpty(targetData) ? { targetInterest } : {};
