@@ -156,7 +156,7 @@ class CreatePost extends React.PureComponent {
 
     // Target interest is either 'anime', 'manga', or blank depending
     // on the feed we want to post to.
-    const targetInterest = currentFeed.targetInterest;
+    const targetInterest = currentFeed.targetInterest || undefined;
 
     // We can't set target_interest with targetUser
     const targetInterestData = isEmpty(targetData) ? { targetInterest } : {};
