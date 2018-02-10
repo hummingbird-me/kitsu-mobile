@@ -152,7 +152,7 @@ export default class Summary extends PureComponent {
           renderItem={({ item }) => (
             <ScrollItem>
               <ReactionBox
-                boxed
+                boxed={true}
                 reactedMedia={item.anime ? item.anime.canonicalTitle : item.manga.canonicalTitle}
                 reaction={item}
               />

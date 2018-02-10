@@ -611,6 +611,21 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'mediaReactionVotes',
+  {
+    mediaReaction: {
+      jsonApi: 'hasOne',
+      type: 'mediaReactions'
+    },
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users'
+    }
+  },
+  { collectionPath: 'media-reaction-votes' }
+);
+
+Kitsu.define(
   'favorites',
   {
     createdAt: '',
