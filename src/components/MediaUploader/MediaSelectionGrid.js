@@ -62,6 +62,10 @@ export default class MediaSelectionGrid extends Component {
     tileWidth: null,
   }
 
+  componentDidMount() {
+    this.loadMore();
+  }
+
   componentWillReceiveProps = (newProps) => {
     if (!this.props || this.props.filterContext !== newProps.filterContext) {
       this.setState({
@@ -129,7 +133,6 @@ export default class MediaSelectionGrid extends Component {
           title: 'Kitsu Photos Permission',
           message: 'Kitsu needs access to your photos to allow you to choose and upload one.',
         });
-
       // If they didn't give us the permission, go ahead and show them
       // the nothing here message.
       if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
@@ -150,10 +153,12 @@ export default class MediaSelectionGrid extends Component {
     return true;
   }
 
+  isLoadingMore = false;
   loadMore = async () => {
     const permissions = await this.ensureSufficientPermissions();
     if (!permissions) return;
-
+    if (this.isLoadingMore) { return; }
+    this.isLoadingMore = true;
     if (!this.state.initialLoad && !this.state.hasNextPage) return;
 
     const groupTypes = this.groupTypeForFilterContext();
@@ -183,6 +188,8 @@ export default class MediaSelectionGrid extends Component {
       });
     } catch (e) {
       console.log(e);
+    } finally {
+      this.isLoadingMore = false;
     }
   }
 

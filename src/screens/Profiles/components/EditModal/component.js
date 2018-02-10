@@ -33,8 +33,6 @@ export class EditModal extends Component {
   onCancel() {
     this.setState({
       changes: {},
-      selectedImage: [],
-      mediaContext: null,
       hasMadeChanges: false,
       isEditingGender: false
     });
@@ -43,8 +41,6 @@ export class EditModal extends Component {
 
   onConfirm() {
     this.setState({
-      selectedImage: [],
-      mediaContext: null,
       isEditingGender: false,
       hasMadeChanges: false
     });
@@ -100,7 +96,7 @@ export class EditModal extends Component {
 
   renderCoverComponent = () => {
     const { changeset, changes } = this.state;
-    let cover = { uri: (changeset.coverImage && changeset.coverImage.medium) || defaultCover };
+    let cover = { uri: (changeset.coverImage && changeset.coverImage.large) || defaultCover };
     if ('coverImage' in changes) {
       cover = { uri: changes.coverImage };
     }
