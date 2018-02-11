@@ -41,7 +41,7 @@ export class SceneHeader extends PureComponent {
         <View>
           {/* Rankings */}
           <View style={styles.descriptionView}>
-            <StyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={!this.state.expanded && 4}>{description}</StyledText>
+            <StyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={(!this.state.expanded && 4) || undefined}>{description}</StyledText>
             <TouchableOpacity onPress={this.toggleExpanded}>
               <StyledText size="small" color="grey">{expandedText}</StyledText>
             </TouchableOpacity>
