@@ -9,6 +9,7 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { MediaSelectionGrid } from 'kitsu/components/MediaUploader';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
+import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
 import { styles } from './styles';
 
@@ -21,7 +22,7 @@ export class EditModal extends Component {
   }
 
   state = {
-    changeset: this.props.user,
+    changeset: {},
     changes: {},
     selectedImage: [],
     mediaContext: null,
@@ -30,20 +31,21 @@ export class EditModal extends Component {
     isMediaSelectionShown: false
   }
 
-  onCancel() {
+  // This should fire each time the Modal is opened & closed.
+  componentWillReceiveProps() {
     this.setState({
+      changeset: cloneDeep(this.props.user),
       changes: {},
       hasMadeChanges: false,
       isEditingGender: false
     });
+  }
+
+  onCancel() {
     this.props.onCancel();
   }
 
   onConfirm() {
-    this.setState({
-      isEditingGender: false,
-      hasMadeChanges: false
-    });
     this.props.onConfirm(this.state.changes);
   }
 
@@ -140,7 +142,8 @@ export class EditModal extends Component {
 
   renderGenderComponent = () => {
     const options = ['It\'s a secret', 'Male', 'Female', 'Custom', 'Nevermind'];
-    const gender = this.state.changeset.gender && capitalize(this.state.changeset.gender) || 'It\'s a secret';
+    const gender = this.state.isEditingGender ? this.state.gender :
+      (this.state.changeset.gender && capitalize(this.state.changeset.gender) || 'It\'s a secret');
     return (
       <SelectMenu
         options={options}
