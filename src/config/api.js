@@ -564,7 +564,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
     media: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
     user: {
       jsonApi: 'hasOne',
