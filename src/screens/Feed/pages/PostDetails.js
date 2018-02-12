@@ -4,25 +4,21 @@ import {
   FlatList,
   View,
   StatusBar,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
-
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import {
-  PostHeader,
-  PostMain,
-  PostActions,
   PostFooter,
   PostSection,
   PostCommentsSection,
   PostReplyBanner,
 } from 'kitsu/screens/Feed/components/Post';
+import { PostHeader, PostMain, PostActions } from 'kitsu/screens/Feed/components/Post/components';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
-import { StyledText } from 'kitsu/components/StyledText';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
