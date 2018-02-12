@@ -195,7 +195,7 @@ export class Post extends PureComponent {
   };
 
   focusOnCommentInput = () => {
-    this.commentInput.focus();
+    if (this.commentInput) this.commentInput.focus();
   }
 
   toggleOverlay = () => {
@@ -268,42 +268,46 @@ export class Post extends PureComponent {
           onSharePress={() => {}}
         />
 
-        <PostFooter>
-          {commentsCount > 0 && latestComments.length === 0 &&
-            <SceneLoader />
-          }
-          {latestComments.length > 0 && (
+        {((!nsfw && !spoiler) || overlayRemoved) &&
+          // Only show comments if the post is not nsfw or spoiler
+          // or if the overlay has been removed.
+          <PostFooter>
+            {commentsCount > 0 && latestComments.length === 0 &&
+              <SceneLoader />
+            }
+            {latestComments.length > 0 && (
+              <PostSection>
+                <FlatList
+                  data={latestComments}
+                  keyExtractor={keyExtractor}
+                  renderItem={({ item }) => (
+                    <Comment
+                      post={this.props.post}
+                      comment={item}
+                      onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
+                      isTruncated
+                      overlayColor={colors.offWhite}
+                      hideEmbeds={nsfw && !overlayRemoved}
+                    />
+                  )}
+                  ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+                />
+              </PostSection>
+            )}
+
             <PostSection>
-              <FlatList
-                data={latestComments}
-                keyExtractor={keyExtractor}
-                renderItem={({ item }) => (
-                  <Comment
-                    post={this.props.post}
-                    comment={item}
-                    onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
-                    isTruncated
-                    overlayColor={colors.offWhite}
-                    hideEmbeds={nsfw && !overlayRemoved}
-                  />
-                )}
-                ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+              <CommentTextInput
+                currentUser={this.props.currentUser}
+                inputRef={(el) => { this.commentInput = el; }}
+                comment={comment}
+                onCommentChanged={this.onCommentChanged}
+                onSubmit={this.onSubmitComment}
+                onGifSelected={this.onGifSelected}
+                loading={isPostingComment}
               />
             </PostSection>
-          )}
-
-          <PostSection>
-            <CommentTextInput
-              currentUser={this.props.currentUser}
-              inputRef={(el) => { this.commentInput = el; }}
-              comment={comment}
-              onCommentChanged={this.onCommentChanged}
-              onSubmit={this.onSubmitComment}
-              onGifSelected={this.onGifSelected}
-              loading={isPostingComment}
-            />
-          </PostSection>
-        </PostFooter>
+          </PostFooter>
+        }
       </View>
     );
   }
