@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
 import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
@@ -49,7 +50,9 @@ class SidebarScreen extends React.Component {
   };
 
   navigateUserProfile = () => {
-    this.props.navigation.navigate('ProfilePages', { userId: this.props.userId });
+    if (this.props.userId) {
+      this.props.navigation.navigate('ProfilePages', { userId: this.props.userId });
+    }
   };
 
   renderSectionHeader = ({ section }) => (
@@ -186,7 +189,7 @@ class SidebarScreen extends React.Component {
       });
     }
     return (
-      <View style={{ backgroundColor: colors.listBackPurple }}>
+      <View style={{ backgroundColor: colors.listBackPurple, flex: 1 }}>
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
@@ -204,13 +207,14 @@ class SidebarScreen extends React.Component {
               activeOpacity={0.6}
               style={styles.userProfileButton}
               onPress={this.navigateUserProfile}
+              disabled={isEmpty(currentUser)}
             >
               <Image
                 style={styles.userProfileImage}
                 source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
               />
               <View style={styles.userProfileTextWrapper}>
-                <Text style={styles.userProfileName}>{name}</Text>
+                <Text style={styles.userProfileName}>{name || '-'}</Text>
                 <Text style={styles.userProfileDetailsText}>view profile</Text>
               </View>
             </TouchableOpacity>
@@ -218,7 +222,7 @@ class SidebarScreen extends React.Component {
         </ProgressiveImage>
         <SectionList
           contentContainerStyle={{ paddingBottom: 100 }}
-          sections={sectionListData}
+          sections={isEmpty(currentUser) ? [] : sectionListData}
           keyExtractor={keyExtractor}
           renderSectionHeader={this.renderSectionHeader}
           renderSectionFooter={this.renderSectionFooter}
@@ -234,8 +238,8 @@ class SidebarScreen extends React.Component {
 
 const mapStateToProps = ({ auth, user, groups }) => ({
   accessToken: auth.tokens.access_token,
-  currentUser: user.currentUser,
-  userId: user.currentUser.id,
+  currentUser: user.currentUser || {},
+  userId: (user.currentUser && user.currentUser.id) || null,
   groupMemberships: groups.groupMemberships,
 });
 

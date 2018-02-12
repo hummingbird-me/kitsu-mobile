@@ -19,7 +19,6 @@ export const styles = StyleSheet.create({
     borderColor: colors.lightGrey,
     borderWidth: 1,
     borderRadius: 5,
-    margin: scenePadding,
     padding: scenePadding * 1.5,
   },
   backgroundText: {

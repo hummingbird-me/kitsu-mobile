@@ -130,9 +130,11 @@ class Feed extends React.PureComponent {
   };
 
   navigateToCreatePost = () => {
-    this.props.navigation.navigate('CreatePost', {
-      onNewPostCreated: () => this.fetchFeed({ reset: true }),
-    });
+    if (this.props.currentUser) {
+      this.props.navigation.navigate('CreatePost', {
+        onNewPostCreated: () => this.fetchFeed({ reset: true }),
+      });
+    }
   };
 
   navigateToUserProfile = (userId) => {
