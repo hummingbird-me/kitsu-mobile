@@ -26,7 +26,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: scenePadding,
     paddingVertical: scenePadding / 2,
   },
-
   postImagesView: {
     marginTop: 12,
     marginLeft: scenePadding * -1,

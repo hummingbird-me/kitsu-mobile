@@ -225,15 +225,24 @@ export class Post extends PureComponent {
       isPostingComment,
     } = this.state;
 
-    let postBody = null;
-    if (spoiler && nsfw && !overlayRemoved) {
-      postBody = <NSFWandSpoiler onPress={this.toggleOverlay} />;
-    } else if (spoiler && !overlayRemoved) {
-      postBody = <Spoiler onPress={this.toggleOverlay} />;
-    } else if (nsfw && !overlayRemoved) {
-      postBody = <NotSafeForWork onPress={this.toggleOverlay} />;
-    } else {
-      postBody = (
+    const isSpoilerOrNSFW = (spoiler || nsfw);
+
+    // Build the post body based on if we have nsfw/spoiler content
+    const postBody = (isSpoilerOrNSFW && !overlayRemoved) ?
+      (
+        <PostOverlay
+          nsfw={nsfw}
+          spoiler={spoiler}
+          likesCount={postLikesCount}
+          commentsCount={commentsCount}
+          taggedMedia={media}
+          taggedEpisode={spoiledUnit}
+          navigation={navigation}
+          onPress={this.toggleOverlay}
+        />
+      )
+      :
+      (
         <PostMain
           content={content}
           images={images}
@@ -246,7 +255,6 @@ export class Post extends PureComponent {
           onPress={this.onPostPress}
         />
       );
-    }
 
     return (
       <View style={styles.wrap}>
@@ -261,52 +269,54 @@ export class Post extends PureComponent {
 
         {postBody}
 
-        <PostActions
-          isLiked={this.state.isLiked}
-          onLikePress={this.toggleLike}
-          onCommentPress={this.focusOnCommentInput}
-          onSharePress={() => {}}
-        />
-
-        {((!nsfw && !spoiler) || overlayRemoved) &&
+        {(!isSpoilerOrNSFW || overlayRemoved) &&
           // Only show comments if the post is not nsfw or spoiler
           // or if the overlay has been removed.
-          <PostFooter>
-            {commentsCount > 0 && latestComments.length === 0 &&
-              <SceneLoader />
-            }
-            {latestComments.length > 0 && (
+          <View>
+            <PostActions
+              isLiked={this.state.isLiked}
+              onLikePress={this.toggleLike}
+              onCommentPress={this.focusOnCommentInput}
+              onSharePress={() => {}}
+            />
+
+            <PostFooter>
+              {commentsCount > 0 && latestComments.length === 0 &&
+                <SceneLoader />
+              }
+              {latestComments.length > 0 && (
+                <PostSection>
+                  <FlatList
+                    data={latestComments}
+                    keyExtractor={keyExtractor}
+                    renderItem={({ item }) => (
+                      <Comment
+                        post={this.props.post}
+                        comment={item}
+                        onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
+                        isTruncated
+                        overlayColor={colors.offWhite}
+                        hideEmbeds={nsfw && !overlayRemoved}
+                      />
+                    )}
+                    ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+                  />
+                </PostSection>
+              )}
+
               <PostSection>
-                <FlatList
-                  data={latestComments}
-                  keyExtractor={keyExtractor}
-                  renderItem={({ item }) => (
-                    <Comment
-                      post={this.props.post}
-                      comment={item}
-                      onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
-                      isTruncated
-                      overlayColor={colors.offWhite}
-                      hideEmbeds={nsfw && !overlayRemoved}
-                    />
-                  )}
-                  ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+                <CommentTextInput
+                  currentUser={this.props.currentUser}
+                  inputRef={(el) => { this.commentInput = el; }}
+                  comment={comment}
+                  onCommentChanged={this.onCommentChanged}
+                  onSubmit={this.onSubmitComment}
+                  onGifSelected={this.onGifSelected}
+                  loading={isPostingComment}
                 />
               </PostSection>
-            )}
-
-            <PostSection>
-              <CommentTextInput
-                currentUser={this.props.currentUser}
-                inputRef={(el) => { this.commentInput = el; }}
-                comment={comment}
-                onCommentChanged={this.onCommentChanged}
-                onSubmit={this.onSubmitComment}
-                onGifSelected={this.onGifSelected}
-                loading={isPostingComment}
-              />
-            </PostSection>
-          </PostFooter>
+            </PostFooter>
+          </View>
         }
       </View>
     );
@@ -374,46 +384,35 @@ export const PostMain = ({
   taggedEpisode,
   navigation,
   onPress,
-}) => {
-  return (
-    <View style={styles.postMain}>
-      {!isEmpty(content) &&
-        <TouchableWithoutFeedback onPress={onPress}>
-          <View style={styles.postContent}>
-            <Hyperlink linkStyle={styles.linkStyle} linkDefault>
-              <StyledText color="dark" textStyle={{ lineHeight: null }} size="small">{content}</StyledText>
-            </Hyperlink>
-          </View>
-        </TouchableWithoutFeedback>
-      }
-      {taggedMedia && (
-        <MediaTag
-          media={taggedMedia}
-          episode={taggedEpisode}
-          navigation={navigation}
-        />
-      )}
-      { embed &&
-        <EmbeddedContent
-          embed={embed}
-          maxWidth={scene.width}
-          minWidth={scene.width}
-          style={[styles.postImagesView, isEmpty(content) && styles.postImagesView_noText]}
-        />
-      }
+}) => (
+  <View style={styles.postMain}>
+    {!isEmpty(content) &&
       <TouchableWithoutFeedback onPress={onPress}>
-        <View style={styles.postStatusRow}>
-          <View style={styles.postStatus}>
-            <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
-          </View>
-          <View style={styles.postStatus}>
-            <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
-          </View>
+        <View style={styles.postContent}>
+          <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+            <StyledText color="dark" textStyle={{ lineHeight: null }} size="small">{content}</StyledText>
+          </Hyperlink>
         </View>
       </TouchableWithoutFeedback>
-    </View>
-  );
-};
+    }
+    {taggedMedia && (
+      <MediaTag
+        media={taggedMedia}
+        episode={taggedEpisode}
+        navigation={navigation}
+      />
+    )}
+    { embed &&
+      <EmbeddedContent
+        embed={embed}
+        maxWidth={scene.width}
+        minWidth={scene.width}
+        style={[styles.postImagesView, isEmpty(content) && styles.postImagesView_noText]}
+      />
+    }
+    <PostStatus onPress={onPress} likesCount={likesCount} commentsCount={commentsCount} />
+  </View>
+);
 
 PostMain.propTypes = {
   content: PropTypes.string,
@@ -428,6 +427,60 @@ PostMain.propTypes = {
 PostMain.defaultProps = {
   content: null,
   embed: null,
+  likesCount: 0,
+  commentsCount: 0,
+  taggedMedia: null,
+  taggedEpisode: null,
+  onPress: null,
+};
+
+export const PostOverlay = ({
+  nsfw,
+  spoiler,
+  onPress,
+  taggedMedia,
+  taggedEpisode,
+  likesCount,
+  commentsCount,
+  navigation,
+}) => {
+  let postOverlay = <View />;
+
+  if (spoiler && nsfw) {
+    postOverlay = <NSFWandSpoiler onPress={onPress} />;
+  } else if (spoiler) {
+    postOverlay = <Spoiler onPress={onPress} />;
+  } else if (nsfw) {
+    postOverlay = <NotSafeForWork onPress={onPress} />;
+  }
+
+  return (
+    <View style={styles.postMain}>
+      {postOverlay}
+      {taggedMedia && (
+        <MediaTag
+          media={taggedMedia}
+          episode={taggedEpisode}
+          navigation={navigation}
+        />
+      )}
+      <PostStatus likesCount={likesCount} commentsCount={commentsCount} />
+    </View>
+  );
+};
+
+PostOverlay.propTypes = {
+  nsfw: PropTypes.bool.isRequired,
+  spoiler: PropTypes.bool.isRequired,
+  navigation: PropTypes.object.isRequired,
+  likesCount: PropTypes.number,
+  commentsCount: PropTypes.number,
+  taggedMedia: PropTypes.object,
+  taggedEpisode: PropTypes.object,
+  onPress: PropTypes.func,
+};
+
+PostOverlay.defaultProps = {
   likesCount: 0,
   commentsCount: 0,
   taggedMedia: null,
@@ -520,6 +573,31 @@ PostReplyBanner.propTypes = {
 PostReplyBanner.defaultProps = {
   name: '',
   onClose: null,
+};
+
+export const PostStatus = ({ likesCount, commentsCount, onPress }) => (
+  <TouchableWithoutFeedback onPress={onPress}>
+    <View style={styles.postStatusRow}>
+      <View style={styles.postStatus}>
+        <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+      </View>
+      <View style={styles.postStatus}>
+        <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
+      </View>
+    </View>
+  </TouchableWithoutFeedback>
+);
+
+PostStatus.propTypes = {
+  likesCount: PropTypes.number,
+  commentsCount: PropTypes.number,
+  onPress: PropTypes.func,
+};
+
+PostStatus.defaultProps = {
+  likesCount: 0,
+  commentsCount: 0,
+  onPress: null,
 };
 
 
