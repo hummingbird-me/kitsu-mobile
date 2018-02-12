@@ -22,8 +22,7 @@ import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessF
 import { styles } from './styles';
 import { Spoiler } from './PostOverlays/Spoiler';
 import { NotSafeForWork } from './PostOverlays/NotSafeForWork';
-
-
+import { NSFWandSpoiler } from './PostOverlays/NSFWandSpoiler';
 
 // Post
 export class Post extends PureComponent {
@@ -74,7 +73,7 @@ export class Post extends PureComponent {
   onCommentChanged = comment => this.setState({ comment })
 
   onGifSelected = (gif) => {
-    this.setState({ comment: gif.images.original.url  }, () => {
+    this.setState({ comment: gif.images.original.url }, () => {
       this.onSubmitComment();
     });
   }
@@ -227,8 +226,9 @@ export class Post extends PureComponent {
     } = this.state;
 
     let postBody = null;
-
-    if (spoiler && !overlayRemoved) {
+    if (spoiler && nsfw && !overlayRemoved) {
+      postBody = <NSFWandSpoiler onPress={this.toggleOverlay} />;
+    } else if (spoiler && !overlayRemoved) {
       postBody = <Spoiler onPress={this.toggleOverlay} />;
     } else if (nsfw && !overlayRemoved) {
       postBody = <NotSafeForWork onPress={this.toggleOverlay} />;
