@@ -44,8 +44,8 @@ export const PostOverlay = ({
 };
 
 PostOverlay.propTypes = {
-  nsfw: PropTypes.bool.isRequired,
-  spoiler: PropTypes.bool.isRequired,
+  nsfw: PropTypes.bool,
+  spoiler: PropTypes.bool,
   navigation: PropTypes.object.isRequired,
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
@@ -60,4 +60,6 @@ PostOverlay.defaultProps = {
   taggedMedia: null,
   taggedEpisode: null,
   onPress: null,
+  nsfw: false,
+  spoiler: false,
 };
