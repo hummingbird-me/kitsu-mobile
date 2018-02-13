@@ -1,6 +1,22 @@
 import { includes } from 'lodash';
 import { Linking } from 'react-native';
-import { Kitsu } from 'kitsu/config/api';
+
+/**
+ * Open the given url in `Linking`.
+ * Checks to see if the url is supported by an app before opening it.
+ *
+ * @param {any} url The url to open
+ */
+async function openUrl(url) {
+  try {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      Linking.openURL(url);
+    }
+  } catch (e) {
+    console.log(`Error handling ${url}: ${e}`);
+  }
+}
 
 /**
  * Checks to see if `url` belongs to Kitsu.
@@ -14,64 +30,35 @@ export async function handleURL(url, navigation) {
   const { hostname, pathname } = new URL(url);
   const paths = pathname.split('/').slice(1);
 
-  // If it's not a kitsu url then pass it onto `Linking`
+  // If it's not a kitsu url then we open it
   if (!includes(hostname.toLowerCase(), 'kitsu') || paths.length < 2) {
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        Linking.openURL(url);
-      }
-    } catch (e) {
-      console.log(`Error handling ${url}: ${e}`);
-    }
+    openUrl(url);
+    return;
   }
-
-  let params = null;
 
   switch (paths[0]) {
     case 'users':
+      // For this we just pray that they use the kitsu link properly
       params = ['UserProfile', { userName: paths[1] }];
       break;
     case 'anime': {
-      let id = null;
       // If we have an id (i.e a number)
       if (/^\d+$/.test(paths[1])) {
-        id = paths[1];
-      } else {
-        try {
-          const anime = await Kitsu.findAll('anime', {
-            filter: { slug: paths[1] },
-          });
-          id = (anime.length > 0 && anime[0].id) || null;
-        } catch (e) {
-          console.log(`Failed to fetch anime ${paths[1]}: ${e}`);
-        }
+        params = ['MediaPages', { mediaId: paths[1], mediaType: 'anime' }];
       }
-
-      if (id) params = ['MediaPages', { mediaId: id, mediaType: 'anime' }];
       break;
     }
     case 'manga': {
-      let id = null;
       // If we have an id (i.e a number)
       if (/^\d+$/.test(paths[1])) {
-        id = paths[1];
-      } else {
-        try {
-          const manga = await Kitsu.findAll('anime', {
-            filter: { slug: paths[1] },
-          });
-          id = (manga.length > 0 && manga[0].id) || null;
-        } catch (e) {
-          console.log(`Failed to fetch manga ${paths[1]}: ${e}`);
-        }
+        params = ['MediaPages', { mediaId: paths[1], mediaType: 'manga' }];
       }
-
-      if (id) params = ['MediaPages', { mediaId: id, mediaType: 'manga' }];
       break;
     }
     // TODO: Handle posts and comments
     default:
+      openUrl(url);
+      break;
   }
 
   if (params) {
