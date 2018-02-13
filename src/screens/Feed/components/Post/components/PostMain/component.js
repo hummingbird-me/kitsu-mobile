@@ -7,6 +7,7 @@ import { scene } from 'kitsu/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
 import { isEmpty } from 'lodash';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
+import { handleURL } from 'kitsu/common/utils/url';
 import { styles } from './styles';
 import { PostStatus } from '../PostStatus';
 
@@ -24,7 +25,7 @@ export const PostMain = ({
     {!isEmpty(content) &&
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.postContent}>
-          <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+          <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
             <StyledText color="dark" textStyle={{ lineHeight: null }} size="small">{content}</StyledText>
           </Hyperlink>
         </View>

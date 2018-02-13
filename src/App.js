@@ -30,7 +30,6 @@ class App extends PureComponent {
     OneSignal.addEventListener('registered', this.onPNRegistered);
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
-    Linking.addEventListener('url', this.onUrl);
   }
 
   componentDidMount() {
@@ -42,7 +41,6 @@ class App extends PureComponent {
     OneSignal.removeEventListener('registered', this.onPNRegistered);
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
-    Linking.removeEventListener('url', this.onUrl);
   }
 
   onIds(device) {
@@ -82,38 +80,6 @@ class App extends PureComponent {
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
     this.navigation.dispatch(resetAction);
-  }
-
-  onUrl(data) {
-    console.log(data);
-    const { url } = data;
-    const { pathname, searchParams } = new URL(url);
-    const paths = pathname.split('/').slice(1);
-
-    const notification = searchParams.get('notification');
-    if (notification) {
-      const { id } = store.getState().user.currentUser;
-      const token = store.getState().auth.tokens.access_token;
-      if (id) {
-        markNotifications(id, token, [notification]);
-      }
-    }
-
-    switch (paths[0]) {
-      // TODO: Add more handlers here as we get more pages implemented
-      case 'users':
-        if (paths[1]) {
-          this.navigation.dispatch({
-            type: 'Navigate',
-            routeName: 'UserProfile',
-            params: { userName: paths[1] },
-          });
-        }
-        break;
-      default:
-    }
-
-    Linking.openURL(url);
   }
 
   render() {
