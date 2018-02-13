@@ -5,6 +5,14 @@ import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
 
 export class EmbeddedContent extends PureComponent {
+  // The reason for the combination of string or number is that
+  // sometimes the embeds return width/height as strings
+  // othertimes as numbers ...
+  static typeStringNumber = PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]);
+
   static propTypes = {
     embed: PropTypes.shape({
       kind: PropTypes.string.isRequired,
@@ -13,13 +21,13 @@ export class EmbeddedContent extends PureComponent {
       }),
       image: PropTypes.shape({
         url: PropTypes.string.isRequired,
-        width: PropTypes.string,
-        height: PropTypes.string,
+        width: this.typeStringNumber,
+        height: this.typeStringNumber,
       }),
       video: PropTypes.shape({
         url: PropTypes.string.isRequired,
-        width: PropTypes.string,
-        height: PropTypes.string,
+        width: this.typeStringNumber,
+        height: this.typeStringNumber,
       }),
     }).isRequired,
     style: ViewPropTypes.style,
@@ -49,7 +57,7 @@ export class EmbeddedContent extends PureComponent {
     const { maxWidth, minWidth, borderRadius, overlayColor } = this.props;
     const imageWidth = embed.image.width || maxWidth;
 
-    let width = imageWidth;
+    let width = parseInt(imageWidth, 10);
     if (minWidth && width < minWidth) width = minWidth;
     if (width > maxWidth) width = maxWidth;
 
@@ -72,8 +80,11 @@ export class EmbeddedContent extends PureComponent {
     const chunks = video.url.split('/');
     const youTubeVideoId = chunks[chunks.length - 1];
 
+    const videoWidth = video.width && parseInt(video.width, 10);
+    const videoHeight = video.height && parseInt(video.height, 10);
+
     // Get the scaled height
-    const height = (video.height && video.width) ? (video.height / video.width) * maxWidth : 300;
+    const height = (videoHeight && videoWidth) ? (videoHeight / videoWidth) * maxWidth : 300;
     const style = { width: maxWidth, height: Math.max(200, height) };
 
     return (
@@ -96,7 +107,10 @@ export class EmbeddedContent extends PureComponent {
     if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
       return this.renderYoutube(embed);
     }
-    if (embed.kind.includes('image') || embed.kind.includes('gif')) return this.renderImage(embed);
+
+    if (embed.kind && (embed.kind.includes('image') || embed.kind.includes('gif'))) {
+      return this.renderImage(embed);
+    }
 
     return null;
   }
