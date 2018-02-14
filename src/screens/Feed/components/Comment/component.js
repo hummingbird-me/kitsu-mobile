@@ -15,6 +15,7 @@ import { isEmpty } from 'lodash';
 import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { handleURL } from 'kitsu/common/utils/url';
 import { styles } from './styles';
 
 export class Comment extends PureComponent {
@@ -165,11 +166,13 @@ export class Comment extends PureComponent {
       onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
+      navigation={this.props.navigation}
     />
   )
 
   render() {
     const {
+      navigation,
       comment,
       isTruncated,
       onAvatarPress,
@@ -198,7 +201,7 @@ export class Comment extends PureComponent {
           <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
             {!isEmpty(content) &&
-              <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
                 <StyledText
                   size="xsmall"
                   color="dark"
