@@ -6,11 +6,10 @@ import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { StyledText } from 'kitsu/components/StyledText';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { styles } from './styles';
-import { PostHeader, PostMain, PostOverlay, PostActions } from './components';
+import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
 
 // Post
 export class Post extends PureComponent {
@@ -194,7 +193,7 @@ export class Post extends PureComponent {
   }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, post } = this.props;
     const {
       createdAt,
       content,
@@ -206,7 +205,7 @@ export class Post extends PureComponent {
       spoiledUnit,
       commentsCount,
       user,
-    } = this.props.post;
+    } = post;
     const {
       comment,
       latestComments,
@@ -278,21 +277,13 @@ export class Post extends PureComponent {
               }
               {latestComments.length > 0 && (
                 <PostSection>
-                  <FlatList
-                    data={latestComments}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={({ item }) => (
-                      <Comment
-                        post={this.props.post}
-                        comment={item}
-                        onAvatarPress={id => navigation.navigate('ProfilePages', { userId: id })}
-                        isTruncated
-                        overlayColor={colors.offWhite}
-                        hideEmbeds={nsfw && !overlayRemoved}
-                        navigation={navigation}
-                      />
-                    )}
-                    ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+                  <CommentFlatList
+                    post={post}
+                    latestComments={latestComments}
+                    hideEmbeds={nsfw && !overlayRemoved}
+                    overlayColor={colors.offWhite}
+                    isTruncated
+                    navigation={navigation}
                   />
                 </PostSection>
               )}
