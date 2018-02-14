@@ -48,7 +48,7 @@ platform :android do
       # project_dir: "platforms/android/",
       properties: {
         'android.useDeprecatedNdk' => true,
-        'android.injected.signing.store.file' => 'app/kitsu-android-key.keystore',
+        'android.injected.signing.store.file' => 'app/animetrackkey.jks',
         'android.injected.signing.store.password' => ENV["KITSU_RELEASE_STORE_PASSWORD"],
         'android.injected.signing.key.alias'=> ENV["KITSU_RELEASE_KEY_ALIAS"],
         'android.injected.signing.key.password' => ENV["KITSU_RELEASE_KEY_PASSWORD"]
