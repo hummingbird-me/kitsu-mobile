@@ -166,6 +166,7 @@ export class Comment extends PureComponent {
       onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
+      navigation={this.props.navigation}
     />
   )
 
