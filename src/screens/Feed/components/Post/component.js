@@ -285,7 +285,7 @@ export class Post extends PureComponent {
                       <Comment
                         post={this.props.post}
                         comment={item}
-                        onAvatarPress={() => navigation.navigate('ProfilePages', { userId: item.user.id })}
+                        onAvatarPress={id => navigation.navigate('ProfilePages', { userId: id })}
                         isTruncated
                         overlayColor={colors.offWhite}
                         hideEmbeds={nsfw && !overlayRemoved}

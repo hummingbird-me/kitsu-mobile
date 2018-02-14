@@ -163,7 +163,7 @@ export class Comment extends PureComponent {
       post={this.props.post}
       comment={item}
       currentUser={this.props.currentUser}
-      onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
+      onAvatarPress={this.props.onAvatarPress}
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
       navigation={this.props.navigation}
@@ -190,7 +190,7 @@ export class Comment extends PureComponent {
 
     const AvatarContainer = props => (
       user && onAvatarPress ?
-        <TouchableOpacity onPress={onAvatarPress} {...props} />
+        <TouchableOpacity onPress={() => onAvatarPress(user.id)} {...props} />
         :
         <View {...props} />
     );

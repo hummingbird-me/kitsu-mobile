@@ -247,7 +247,7 @@ export default class PostDetails extends PureComponent {
         comment={item}
         currentUser={currentUser}
         navigation={this.props.navigation}
-        onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+        onAvatarPress={id => this.navigateToUserProfile(id)}
         onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
         overlayColor={colors.offWhite}
       />
