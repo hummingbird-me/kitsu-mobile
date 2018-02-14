@@ -31,7 +31,7 @@ class Episodes extends PureComponent {
             <MediaRow
               imageVariant="landscapeSmall"
               title={item.canonicalTitle || `${prefix} ${item.number}`}
-              summary={media.synopsis}
+              summary={item.synopsis || media.synopsis}
               thumbnail={{
                 uri: item.thumbnail ? item.thumbnail.original : media.posterImage.large,
               }}
