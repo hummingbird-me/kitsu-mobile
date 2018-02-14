@@ -183,9 +183,16 @@ export class Comment extends PureComponent {
     const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
 
     const { content, createdAt, user, embed } = comment;
-    const { avatar, name } = user;
+
+    // Get the user avatar and name
+    const avatar = (user && user.avatar);
+    const name = (user && user.name) || '-';
+
     const AvatarContainer = props => (
-      onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
+      user && onAvatarPress ?
+        <TouchableOpacity onPress={onAvatarPress} {...props} />
+        :
+        <View {...props} />
     );
 
     // The width of the embeds

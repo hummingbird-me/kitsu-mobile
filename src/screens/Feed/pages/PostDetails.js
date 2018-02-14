@@ -236,7 +236,7 @@ export default class PostDetails extends PureComponent {
   keyExtractor = (item, index) => index;
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
+    if (userId) this.props.navigation.navigate('ProfilePages', { userId });
   };
 
   renderItem = ({ item }) => {
@@ -273,9 +273,11 @@ export default class PostDetails extends PureComponent {
         <StatusBar barStyle="dark-content" />
 
         <PostHeader
-          avatar={(post.user.avatar && post.user.avatar.medium) || defaultAvatar}
-          onAvatarPress={() => this.navigateToUserProfile(post.user.id)}
-          name={post.user.name}
+          avatar={(post.user && post.user.avatar && post.user.avatar.medium) || defaultAvatar}
+          onAvatarPress={() => {
+            if (post.user) this.navigateToUserProfile(post.user.id);
+          }}
+          name={(post.user && post.user.name) || '-'}
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />

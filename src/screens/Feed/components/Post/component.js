@@ -251,7 +251,9 @@ export class Post extends PureComponent {
         <TouchableWithoutFeedback onPress={this.onPostPress}>
           <PostHeader
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
-            onAvatarPress={() => navigation.navigate('ProfilePages', { userId: user.id })}
+            onAvatarPress={() => {
+              if (user) navigation.navigate('ProfilePages', { userId: user.id });
+            }}
             name={user.name}
             time={createdAt}
           />
