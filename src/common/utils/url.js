@@ -24,7 +24,7 @@ async function openUrl(url) {
  * @param {string} url the url.
  * @returns a Dictionary or null if not a valid url.
  */
-function extractURLInfo(url) {
+function parseURL(url) {
   /**
    * The Regex below is as follows:
     '^(https?:)//', protocol
@@ -58,7 +58,7 @@ function extractURLInfo(url) {
 export async function handleURL(url, navigation) {
 
   // Get url information
-  const info = extractURLInfo(url);
+  const info = parseURL(url);
   if (!info) {
     openUrl(url);
     return;
