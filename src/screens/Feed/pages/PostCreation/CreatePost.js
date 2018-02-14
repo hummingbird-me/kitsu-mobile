@@ -261,7 +261,6 @@ class CreatePost extends React.PureComponent {
               placeholderTextColor={colors.grey}
               autoCorrect={false}
               autoFocus
-              returnKeyType="done"
               underlineColorAndroid="transparent"
               blurOnSubmit={false}
             />

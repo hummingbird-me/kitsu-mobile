@@ -163,7 +163,7 @@ export class Comment extends PureComponent {
       post={this.props.post}
       comment={item}
       currentUser={this.props.currentUser}
-      onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
+      onAvatarPress={this.props.onAvatarPress}
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
       navigation={this.props.navigation}
@@ -183,9 +183,16 @@ export class Comment extends PureComponent {
     const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
 
     const { content, createdAt, user, embed } = comment;
-    const { avatar, name } = user;
+
+    // Get the user avatar and name
+    const avatar = (user && user.avatar);
+    const name = (user && user.name) || '-';
+
     const AvatarContainer = props => (
-      onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
+      user && onAvatarPress ?
+        <TouchableOpacity onPress={() => onAvatarPress(user.id)} {...props} />
+        :
+        <View {...props} />
     );
 
     // The width of the embeds
