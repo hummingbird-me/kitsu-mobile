@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform, TouchableHighlight, Image, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, WebView, Platform, Image, TouchableOpacity } from 'react-native';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { styles } from './styles';
 import { startCase } from 'lodash';
+import { styles } from './styles';
 
 export class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -192,7 +192,7 @@ export class EmbeddedContent extends PureComponent {
     }
 
     if (embed.kind) {
-      if ((embed.kind.includes('image') || embed.kind.includes('gif'))) {
+      if (embed.kind.includes('image') || embed.kind.includes('gif')) {
         return this.renderImage(embed);
       }
 
