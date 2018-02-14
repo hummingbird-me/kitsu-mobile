@@ -47,14 +47,14 @@ export async function handleURL(url, navigation) {
     case 'anime': {
       // If we have an id (i.e a number)
       if (/^\d+$/.test(paths[1])) {
-        params = ['MediaPages', { mediaId: paths[1], mediaType: 'anime' }];
+        params = ['MediaPages', { mediaId: parseInt(paths[1], 10), mediaType: 'anime' }];
       }
       break;
     }
     case 'manga': {
       // If we have an id (i.e a number)
       if (/^\d+$/.test(paths[1])) {
-        params = ['MediaPages', { mediaId: paths[1], mediaType: 'manga' }];
+        params = ['MediaPages', { mediaId: parseInt(paths[1], 10), mediaType: 'manga' }];
       }
       break;
     }

@@ -287,6 +287,7 @@ export class Post extends PureComponent {
                         isTruncated
                         overlayColor={colors.offWhite}
                         hideEmbeds={nsfw && !overlayRemoved}
+                        navigation={navigation}
                       />
                     )}
                     ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
