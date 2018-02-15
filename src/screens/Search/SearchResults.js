@@ -81,8 +81,9 @@ class SearchResults extends Component {
 
   render() {
     // const { params } = this.props.navigation.state;
+    const { results, loading } = this.props;
     const data =
-      this.props.results.length > 0
+      !loading || results.length > 0
         ? this.props.results
         : Array(20)
           .fill(1)
