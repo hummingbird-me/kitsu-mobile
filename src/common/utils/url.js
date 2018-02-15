@@ -73,10 +73,13 @@ export async function handleURL(url, navigation) {
     return;
   }
 
+  let params = null;
+
   switch (paths[0]) {
     case 'users':
-      // For this we just pray that they use the kitsu link properly
-      params = ['UserProfile', { userName: paths[1] }];
+      if (/^\d+$/.test(paths[1])) {
+        params = ['ProfilePages', { userId: parseInt(paths[1], 10) }];
+      }
       break;
     case 'anime': {
       // If we have an id (i.e a number)

@@ -230,6 +230,7 @@ export class Comment extends PureComponent {
               borderRadius={20}
               overlayColor={overlayColor}
               style={isEmpty(content) ? null : styles.embed}
+              navigation={navigation}
             />
           }
 
