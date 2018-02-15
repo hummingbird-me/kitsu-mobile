@@ -18,22 +18,31 @@ class CreateAccountScreen extends React.Component {
   };
 
   onChangeText = (text, type) => {
-    this.setState({ [type]: text });
+    this.setState({ [type]: text.trim() });
   };
 
-  onConfirm = () => {
+  onConfirm = async () => {
     const { usernameConfirmed } = this.state;
     if (usernameConfirmed) {
       const { username, email, password, confirmPassword } = this.state;
       const { currentUser, navigation } = this.props;
+      const isValidPass = !isEmpty(password) && password === confirmPassword;
+
       const valuesToUpdate = {
-        ...((username !== currentUser.name && { name: username }) || {}),
-        ...((email !== currentUser.email && { email }) || {}),
-        ...((password === confirmPassword && { password }) || {}),
+        ...((username !== currentUser.name && { name: username.trim() }) || {}),
+        ...((email !== currentUser.email && { email: email.trim() }) || {}),
+        ...((!currentUser.hasPassword && isValidPass && { password }) || {}),
       };
       console.log('values to update', valuesToUpdate);
-      if (!isEmpty(valuesToUpdate)) {
-        this.props.updateGeneralSettings(valuesToUpdate);
+
+      // Only continue if user has set the name and email
+      if (!isEmpty(username) && !isEmpty(email)) {
+
+        // Update the values if we need
+        if (!isEmpty(valuesToUpdate)) {
+          await this.props.updateGeneralSettings(valuesToUpdate);
+        }
+
         this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
         this.props.setScreenName('FavoritesScreen');
         navigation.navigate('FavoritesScreen');
@@ -49,9 +58,13 @@ class CreateAccountScreen extends React.Component {
 
   render() {
     const { email, username, password, confirmPassword, usernameConfirmed } = this.state;
-    const passwordSet = password.length >= 8 && password === confirmPassword;
-    const buttonText =
-      !usernameConfirmed || passwordSet ? 'Looks good!' : 'You need to set a password!';
+    const { currentUser } = this.props;
+    const isValidPass = password.length >= 8 && password === confirmPassword;
+    const passwordSet = currentUser.hasPassword || isValidPass;
+
+    const passwordText = passwordSet ? 'Looks good!' : 'You need to set a password!';
+    const buttonText = !usernameConfirmed ? 'Confirm Username' : passwordText;
+
     return (
       <View style={commonStyles.container}>
         <Text style={commonStyles.tutorialText}>
@@ -74,7 +87,7 @@ class CreateAccountScreen extends React.Component {
           value={username}
           onChangeText={text => this.onChangeText(text, 'username')}
         />
-        {usernameConfirmed ? (
+        {usernameConfirmed && !currentUser.hasPassword ? (
           <View>
             <Input
               placeholder="Password"
