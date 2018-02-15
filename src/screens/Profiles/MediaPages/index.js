@@ -326,8 +326,8 @@ class MediaPages extends PureComponent {
 
     // Handle dynamic button options (TODO: Cleanup)
     let MAIN_BUTTON_OPTIONS = [
-      { text: 'Watch', value: 'current', if: (type) => type === 'anime' },
-      { text: 'Read', value: 'current', if: (type) => type === 'manga' },
+      { text: 'Watching', value: 'current', if: (type) => type === 'anime' },
+      { text: 'Reading', value: 'current', if: (type) => type === 'manga' },
       { text: 'Want to Watch', value: 'planned', if: (type) => type === 'anime' },
       { text: 'Want to Read', value: 'planned', if: (type) => type === 'manga' },
       { text: 'Completed', value: 'completed' },
