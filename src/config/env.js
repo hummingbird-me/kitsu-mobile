@@ -1,3 +1,5 @@
+const kitsuUrl = 'https://staging.kitsu.io';
+
 export const kitsuConfig = {
   authConfig: {
     CLIENT_ID: 'dd031b32d2f56c990b1425efe6c42ad847e7fe3ab46bf1299f05ecd856bdb7dd',
@@ -5,8 +7,9 @@ export const kitsuConfig = {
   },
   // assetsUrl: __DEV__ && false ? 'https://staging.kitsu.io/images' : 'https://kitsu.io/images',
   // baseUrl: __DEV__ && false ? 'https://staging.kitsu.io/api' : 'https://kitsu.io/api',
-  assetsUrl: 'https://staging.kitsu.io/images',
-  baseUrl: 'https://staging.kitsu.io/api',
+  kitsuUrl,
+  assetsUrl: `${kitsuUrl}/images`,
+  baseUrl: `${kitsuUrl}/api`,
   version: '0.0.0',
   stream: {
     API_KEY: 'eb6dvmba4ct3',

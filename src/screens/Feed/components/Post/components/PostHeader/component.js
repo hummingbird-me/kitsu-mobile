@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Clipboard } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -8,11 +8,42 @@ import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { isEmpty } from 'lodash';
+import { kitsuConfig } from 'kitsu/config/env';
 import { styles } from './styles';
 
-export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPress }) => {
+export const PostHeader = ({
+  post,
+  avatar,
+  onAvatarPress,
+  name,
+  time,
+  onBackButtonPress,
+  currentUser,
+}) => {
+  const user = (post && post.user);
+  const isCurrentUser = (user && currentUser && user.id === currentUser.id);
+
   const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
-  const ACTION_OPTIONS = ['Copy link to post', 'Follow post', `Hide post from ${name}`, 'Report Post', `Block ${name}`, 'Never mind'];
+  const ACTION_OPTIONS = [
+    {
+      onSelected: async () => {
+        if (!post) return;
+        await Clipboard.setString(`${kitsuConfig.kitsuUrl}/posts/${post.id}`);
+      },
+      text: 'Copy link to post',
+    },
+    isCurrentUser ?
+      {
+        onSelected: null,
+        text: 'Delete post',
+      } : {},
+    {
+      onSelected: null,
+      text: 'Never mind',
+    },
+  ];
+
   return (
     <View style={styles.postHeader}>
       <Layout.RowWrap alignItems="center">
@@ -32,8 +63,10 @@ export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPres
 
         {/* Todo KB: hook up with real action for each options */}
         <SelectMenu
-          options={ACTION_OPTIONS}
-          onOptionSelected={() => { }}
+          options={ACTION_OPTIONS.filter(s => !isEmpty(s))}
+          onOptionSelected={(value, option) => {
+            if (option.onSelected) option.onSelected();
+          }}
           activeOpacity={0.8}
         >
           <Icon name="ios-more" color={colors.lightGrey} style={{ fontSize: 32, paddingVertical: 10 }} />
@@ -44,11 +77,13 @@ export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPres
 };
 
 PostHeader.propTypes = {
+  post: PropTypes.object.isRequired,
   avatar: PropTypes.string,
   name: PropTypes.string,
   time: PropTypes.string,
   onBackButtonPress: PropTypes.func,
   onAvatarPress: PropTypes.func,
+  currentUser: PropTypes.object,
 };
 
 PostHeader.defaultProps = {
@@ -57,4 +92,5 @@ PostHeader.defaultProps = {
   time: null,
   onBackButtonPress: null,
   onAvatarPress: null,
+  currentUser: null,
 };

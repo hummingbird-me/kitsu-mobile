@@ -273,6 +273,8 @@ export default class PostDetails extends PureComponent {
         <StatusBar barStyle="dark-content" />
 
         <PostHeader
+          post={post}
+          currentUser={currentUser}
           avatar={(post.user && post.user.avatar && post.user.avatar.medium) || defaultAvatar}
           onAvatarPress={() => {
             if (post.user) this.navigateToUserProfile(post.user.id);

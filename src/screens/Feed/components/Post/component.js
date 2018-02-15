@@ -193,7 +193,7 @@ export class Post extends PureComponent {
   }
 
   render() {
-    const { navigation, post } = this.props;
+    const { navigation, post, currentUser } = this.props;
     const {
       createdAt,
       content,
@@ -249,6 +249,8 @@ export class Post extends PureComponent {
       <View style={styles.wrap}>
         <TouchableWithoutFeedback onPress={this.onPostPress}>
           <PostHeader
+            post={post}
+            currentUser={currentUser}
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
             onAvatarPress={() => {
               if (user) navigation.navigate('ProfilePages', { userId: user.id });
@@ -290,7 +292,7 @@ export class Post extends PureComponent {
 
               <PostSection>
                 <CommentTextInput
-                  currentUser={this.props.currentUser}
+                  currentUser={currentUser}
                   inputRef={(el) => { this.commentInput = el; }}
                   comment={comment}
                   onCommentChanged={this.onCommentChanged}

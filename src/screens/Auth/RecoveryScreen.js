@@ -20,7 +20,7 @@ class RecoveryScreen extends Component {
     email: '',
     loading: false,
     toastVisible: false,
-    toastTitle: ''
+    toastTitle: '',
   };
 
   onDismiss = () => {
