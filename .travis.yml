@@ -58,6 +58,7 @@ matrix:
       script:
         - cd android && ./gradlew clean
         - fastlane beta_googleplay
+        - fastlane beta_crashlytics
 
     - language: objective-c
       os: osx
