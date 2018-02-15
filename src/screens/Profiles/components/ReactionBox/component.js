@@ -84,6 +84,7 @@ export class ReactionBoxComponent extends PureComponent {
         <AvatarHeader
           avatar={user.avatar && user.avatar.original}
           title={reactedMedia}
+          numberOfLinesTitle={(boxed && 2) || undefined}
           subtitle={`by ${user.name} ・ ${timeStamp}`}
           sideElement={
             <UpVoteCountBox

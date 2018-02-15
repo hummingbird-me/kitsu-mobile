@@ -381,6 +381,7 @@ class MediaPages extends PureComponent {
             variant="media"
             media={media}
             type={capitalize(media.type)}
+            subType={media.showType || capitalize(media.mangaType || '')}
             title={media.canonicalTitle}
             description={media.synopsis}
             coverImage={media.coverImage && media.coverImage.original}
