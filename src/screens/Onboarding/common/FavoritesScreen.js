@@ -1,28 +1,22 @@
 import React from 'react';
-import { View, ScrollView, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
+import { View, ScrollView, Text, Platform, UIManager, LayoutAnimation, ActivityIndicator } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { Pill } from 'kitsu/components/Pill';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { setScreenName, updateFavorites } from 'kitsu/store/onboarding/actions';
+import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
 class FavoritesScreen extends React.Component {
   state = {
     loading: false,
+    loadingFromKitsu: false,
   };
 
   componentDidMount() {
-    const categories = this.props.favoriteCategories.slice();
-    for (let i = 0; i < categories.length; i += 1) {
-      const index = i % 5;
-      // set colors if pills are not colored yet.
-      if (!categories[i].color) {
-        categories[i].color = COLOR_LIST[index];
-      }
-    }
-    this.props.updateFavorites(categories);
+    this.updateCategoryColors().then(() => this.fetchFavoritesFromKitsu(this.props.currentUser.id));
   }
 
   onConfirm = () => {
@@ -150,6 +144,73 @@ class FavoritesScreen extends React.Component {
     }
   };
 
+  loadFavourites = async (id) => {
+    if (id) {
+      setToken(this.props.accessToken);
+      try {
+        const res = await Kitsu.findAll('categoryFavorites', {
+          filter: { userId: id },
+          include: 'category',
+        });
+        return res;
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log('id doesnt exist', id);
+    }
+    return [];
+  }
+
+  /**
+   * Fetch favorites from kitsu and update the categories accordingly.
+   *
+   * @param {number} id The current user id
+   */
+  async fetchFavoritesFromKitsu(id) {
+    if (!id) return;
+    this.setState({ loadingFromKitsu: true });
+
+    const favorites = await this.loadFavourites(id);
+    if (!favorites) {
+      this.setState({ loadingFromKitsu: false });
+      return;
+    }
+
+    const categories = this.props.favoriteCategories.slice();
+
+    // Go through each favourite
+    // and check if there is a category that matches the category in the favourite
+    // If so then we update the values
+    favorites.forEach((favorite) => {
+      if (favorite.category) {
+        categories.forEach((category, index, array) => {
+          if (parseInt(favorite.category.id, 10) === category.id) {
+            array[index].favoritesId = favorite.id; // eslint-disable-line no-param-reassign
+            array[index].selected = true; // eslint-disable-line no-param-reassign
+          }
+        });
+      }
+    });
+
+    await this.props.updateFavorites(categories);
+    this.setState({ loadingFromKitsu: false });
+  }
+
+  async updateCategoryColors() {
+    // set colors if pills are not colored yet.
+    const categories = this.props.favoriteCategories.slice();
+    for (let i = 0; i < categories.length; i += 1) {
+      const index = i % 5;
+
+      if (!categories[i].color) {
+        categories[i].color = COLOR_LIST[index];
+      }
+    }
+    await this.props.updateFavorites(categories);
+  }
+
+
   prepareAnimation = () => {
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -159,6 +220,7 @@ class FavoritesScreen extends React.Component {
 
   render() {
     const { favoriteCategories: categories } = this.props;
+    const { loadingFromKitsu } = this.state;
     const buttonDisabled = categories.filter(v => v.selected).length < 5;
     const buttonTitle = buttonDisabled ? 'Pick at least 5' : 'Looks good!';
     return (
@@ -167,30 +229,35 @@ class FavoritesScreen extends React.Component {
           <Text style={styles.tutorialText}>
             Tap categories you like, we’ll use these to help you find new anime and manga.
           </Text>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
-          >
-            <View style={styles.pillsWrapper}>
-              {categories.map((v, i) => (
-                <Pill
-                  key={v.id}
-                  selected={v.selected}
-                  onPress={() => this.onPressPill(v, i, v.isSubCategory)}
-                  loading={v.loading}
-                  color={v.color}
-                  title={v.title}
-                />
-              ))}
-            </View>
-            <Button
-              disabled={buttonDisabled}
-              style={{ marginHorizontal: 0, marginTop: 36 }}
-              onPress={this.onConfirm}
-              title={buttonTitle}
-              titleStyle={styles.buttonTitleStyle}
-            />
-          </ScrollView>
+          {loadingFromKitsu ?
+            <ActivityIndicator color={colors.white} />
+            :
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 20 }}
+            >
+              <View style={styles.pillsWrapper}>
+                {categories.map((v, i) => (
+                  <Pill
+                    key={v.id}
+                    selected={v.selected}
+                    onPress={() => this.onPressPill(v, i, v.isSubCategory)}
+                    loading={v.loading}
+                    color={v.color}
+                    title={v.title}
+                  />
+                ))}
+              </View>
+
+              <Button
+                disabled={buttonDisabled}
+                style={{ marginHorizontal: 0, marginTop: 36 }}
+                onPress={this.onConfirm}
+                title={buttonTitle}
+                titleStyle={styles.buttonTitleStyle}
+              />
+            </ScrollView>
+          }
         </View>
       </View>
     );
