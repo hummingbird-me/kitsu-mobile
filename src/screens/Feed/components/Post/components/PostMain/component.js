@@ -47,6 +47,7 @@ export const PostMain = ({
           maxWidth={scene.width}
           minWidth={scene.width}
           style={[styles.postImagesView, !hasContentAbove && styles.postImagesView_noText]}
+          navigation={navigation}
         />
       }
       <PostStatus onPress={onPress} likesCount={likesCount} commentsCount={commentsCount} />

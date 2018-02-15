@@ -64,7 +64,7 @@ class SummaryComponent extends PureComponent {
         },
       });
 
-      const feed = preprocessFeed(result);
+      const feed = preprocessFeed(result).filter(i => i.type === 'posts');
 
       this.setState({
         feed,

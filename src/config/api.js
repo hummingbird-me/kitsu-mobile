@@ -84,6 +84,7 @@ Kitsu.define(
     password: '',
     slug: '',
     status: '',
+    hasPassword: '',
     waifu: {
       jsonApi: 'hasOne',
       type: 'characters',

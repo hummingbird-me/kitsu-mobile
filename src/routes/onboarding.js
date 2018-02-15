@@ -12,6 +12,7 @@ import {
   ImportLibrary,
   ImportDetail,
 } from 'kitsu/screens/Onboarding/';
+import { IntroScreen } from 'kitsu/screens/Intro';
 import navigationOptions from './navigationOptions';
 import Tabs from './tabs';
 
@@ -49,6 +50,9 @@ const OnboardingStack = StackNavigator(
     },
     Tabs: {
       screen: Tabs,
+    },
+    Intro: {
+      screen: IntroScreen,
     },
   },
   {
