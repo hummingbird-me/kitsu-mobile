@@ -11,6 +11,7 @@ import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
@@ -126,7 +127,8 @@ export class SceneHeader extends PureComponent {
       posterImage,
       moreButtonOptions,
       onMoreButtonOptionsSelected,
-      showMoreButton
+      showMoreButton,
+      subType,
     } = this.props;
 
     return (
@@ -148,7 +150,9 @@ export class SceneHeader extends PureComponent {
           <View style={[styles.titleView, styles[`titleView__${variant}`]]}>
             {/* Title */}
             <View style={[styles.titleTop, styles[`titleTop__${variant}`]]}>
-              <StyledText size="xsmall" color="light">{type}</StyledText>
+              <StyledText size="xsmall" color="light">
+                {type}{!isEmpty(subType) && subType !== type && ` · ${subType}`}
+              </StyledText>
               <StyledText size="large" color="light" bold>{title}</StyledText>
             </View>
 
@@ -233,6 +237,7 @@ SceneHeader.propTypes = {
   ratingRank: PropTypes.string,
   title: PropTypes.string,
   type: PropTypes.string,
+  subType: PropTypes.string,
   variant: PropTypes.oneOf(['profile', 'media', 'group']),
 };
 
@@ -256,5 +261,6 @@ SceneHeader.defaultProps = {
   ratingRank: '',
   title: '',
   type: '',
+  subType: '',
   variant: 'profile',
 };
