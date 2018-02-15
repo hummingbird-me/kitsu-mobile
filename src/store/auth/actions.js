@@ -37,6 +37,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       const onboardingAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+        key: null,
       });
       nav.dispatch(onboardingAction);
     } else if (user.status === 'aozora') {
@@ -44,6 +45,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       const onboardingAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+        key: null,
       });
       nav.dispatch(onboardingAction);
     } else {
@@ -51,6 +53,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       const loginAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+        key: null,
       });
       nav.dispatch(loginAction);
     }
@@ -100,10 +103,10 @@ const loginUserFb = async (dispatch) => {
 
 export const logoutUser = nav => (dispatch) => {
   dispatch({ type: types.LOGOUT_USER });
-  const loginAction = NavigationActions.reset({
+  const resetAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Intro' })],
     key: null,
   });
-  nav.dispatch(loginAction);
+  nav.dispatch(resetAction);
 };

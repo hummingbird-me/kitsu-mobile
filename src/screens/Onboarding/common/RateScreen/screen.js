@@ -97,6 +97,7 @@ class RateScreen extends React.Component {
       const navigateTabs = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+        key: null,
       });
       this.props.navigation.dispatch(navigateTabs);
     } else {
