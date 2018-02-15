@@ -60,7 +60,7 @@ platform :android do
   lane :beta_crashlytics do |values|
     build()
 
-    emails = values[:test_email] ? values[:test_email] : ['thomas@kitsu.io','mikunj@live.com.au','nuck@kitsu.io', 'daniel@rassiner.com', 'josh.madewell@gmail.com', 'is@urihere.com'] # You can list more emails here
+    emails = values[:test_email] ? values[:test_email] : ['is@urihere.com'] # You can list more emails here
     groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
 
     crashlytics(
