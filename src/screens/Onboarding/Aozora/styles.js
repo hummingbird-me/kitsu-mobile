@@ -49,4 +49,13 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain',
     bottom: -32,
   },
+  errorContainer: {
+    flex: 1,
+    padding: 8,
+  },
+  errorText: {
+    color: colors.white,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
 });

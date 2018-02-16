@@ -25,10 +25,23 @@ const MediaItem = ({ onPress, title, details, image }) => (
   </TouchableOpacity>
 );
 
+const getTitleFromKind = (kind) => {
+  switch (kind.toLowerCase()) {
+    case 'my-anime-list':
+      return 'MyAnimeList';
+    case 'anilist':
+      return 'AniList';
+    case 'aozora':
+      return 'Aozora';
+    default:
+      return 'Unknown';
+  }
+};
+
 const ImportItem = ({ kind, status, date, total }) => {
   let icon = null;
   let details = '';
-  const title = kind === 'my-anime-list' ? 'MyAnimeList' : 'AniList';
+  const title = getTitleFromKind(kind);
   switch (status) {
     case 'running':
       icon = pending;

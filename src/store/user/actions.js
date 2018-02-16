@@ -152,8 +152,10 @@ export const updateGeneralSettings = data => async (dispatch, getState) => {
     await Kitsu.update('users', { id, ...payload });
     delete payload.password; // Don't keep password.
     dispatch({ type: types.UPDATE_GENERAL_SETTINGS_SUCCESS, payload });
+    return null;
   } catch (e) {
-    dispatch({ type: types.UPDATE_GENERAL_SETTINGS_FAIL });
+    dispatch({ type: types.UPDATE_GENERAL_SETTINGS_FAIL, payload: e && e[0] });
+    return (e && e[0]) || 'Something went wrong';
   }
 };
 

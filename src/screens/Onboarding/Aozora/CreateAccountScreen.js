@@ -5,12 +5,13 @@ import { Input } from 'kitsu/components/Input';
 import { connect } from 'react-redux';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import { setScreenName } from 'kitsu/store/onboarding/actions';
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty, isNull } from 'lodash';
 import { styles as commonStyles } from '../common/styles';
+import { styles } from './styles';
 
 class CreateAccountScreen extends React.Component {
   state = {
-    email: this.props.currentUser.email,
+    email: this.props.currentUser.email || this.props.fbuser.email || '',
     username: this.props.currentUser.name,
     password: '',
     confirmPassword: '',
@@ -37,15 +38,19 @@ class CreateAccountScreen extends React.Component {
 
       // Only continue if user has set the name and email
       if (!isEmpty(username) && !isEmpty(email)) {
+        let error = null;
 
         // Update the values if we need
         if (!isEmpty(valuesToUpdate)) {
-          await this.props.updateGeneralSettings(valuesToUpdate);
+          error = await this.props.updateGeneralSettings(valuesToUpdate);
         }
 
-        this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
-        this.props.setScreenName('FavoritesScreen');
-        navigation.navigate('FavoritesScreen');
+        // Only continue if we don't have an error
+        if (isNull(error)) {
+          this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
+          this.props.setScreenName('FavoritesScreen');
+          navigation.navigate('FavoritesScreen');
+        }
       }
     } else {
       if (Platform.OS === 'android') {
@@ -58,12 +63,16 @@ class CreateAccountScreen extends React.Component {
 
   render() {
     const { email, username, password, confirmPassword, usernameConfirmed } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, error, loading } = this.props;
     const isValidPass = password.length >= 8 && password === confirmPassword;
     const passwordSet = currentUser.hasPassword || isValidPass;
 
+    const isEmailValid = !isEmpty(email) && email.includes('@');
+    const fieldsValid = isEmailValid && !isEmpty(username);
+
     const passwordText = passwordSet ? 'Looks good!' : 'You need to set a password!';
-    const buttonText = !usernameConfirmed ? 'Confirm Username' : passwordText;
+    const usernameText = !usernameConfirmed ? 'Confirm Username' : passwordText;
+    const buttonText = !fieldsValid ? 'Please fill out the fields above' : usernameText;
 
     return (
       <View style={commonStyles.container}>
@@ -107,21 +116,30 @@ class CreateAccountScreen extends React.Component {
           <View />
         )}
         <Button
-          disabled={!passwordSet && usernameConfirmed}
+          disabled={!fieldsValid || (!passwordSet && usernameConfirmed)}
           style={{ marginTop: 36 }}
           onPress={this.onConfirm}
           title={buttonText}
           titleStyle={commonStyles.buttonTitleStyle}
+          loading={loading}
         />
+        { !isEmpty(error) &&
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>
+              An Error Occurred: {error.detail || 'Something went wrong!'}
+            </Text>
+          </View>
+        }
       </View>
     );
   }
 }
 
-const mapStateToProps = ({ onboarding, user }) => {
+const mapStateToProps = ({ onboarding, user, auth }) => {
   const { conflicts: accounts } = onboarding;
-  const { loading, error, currentUser } = user;
-  return { loading, error, currentUser, accounts };
+  const { loading, generalSettingError: error, currentUser } = user;
+  const { fbuser } = auth;
+  return { loading, error, currentUser, accounts, fbuser };
 };
 export default connect(mapStateToProps, { updateGeneralSettings, setScreenName })(
   CreateAccountScreen,

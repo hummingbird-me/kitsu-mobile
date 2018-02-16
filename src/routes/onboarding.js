@@ -51,6 +51,8 @@ const OnboardingStack = StackNavigator(
     Tabs: {
       screen: Tabs,
     },
+    // BUG HERE: After onboarding, if user logs out then they get taken to intro screen
+    // but they can't go to the auth screen unless they restart the app
     Intro: {
       screen: IntroScreen,
     },
