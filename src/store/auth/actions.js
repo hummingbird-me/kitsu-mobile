@@ -19,11 +19,11 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
     }
   } else {
     try {
-      // The flow here is:
-      // If we get a 401 or 403 from the Kitsu server
-      // Send the user to the signup page
-      // Otherwise set the tokens
-      // which means a user account is already associated with the fb account
+      /**
+       * The flow here is:
+       * If we get a 401 or 403 from the Kitsu server, Send the user to the signup page.
+       * Otherwise set the tokens which means a user account is already associated with the fb account.
+      */
       const userFb = await loginUserFb(dispatch);
       if (![401, 403].includes(userFb.status)) {
         tokens = await userFb.json();
@@ -48,13 +48,13 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     const user = await fetchCurrentUser()(dispatch, getState);
 
-    // Now over here, aozora users will always have their status set to aozora
-    // However for regular users we can't differentiate if they just signed up or not
-    // Thus we check the screen name to see if it's sign up
-    // If it is then we know they just signed up
-    // Note: signup is passed in `createUser`
-    // it shouldn't be passed in from anywhere else
-    // otherwise users might always be stuck in onboarding
+    /**
+     * Now over here, aozora users will always have their status set to `aozora`, until they complete onboarding which will set their status to `registered`.
+     * However for regular users we can't differentiate if they just signed up or not,since their status is always `registered` from the start.
+     * Thus we check the screen name to see if it's a `signup`.
+     * Note: `signup` is passed in from `createUser` function. It shouldn't be passed in from anywhere else
+       otherwise users might always be sent to onboarding when logging in with fb.
+    */
     if (user.status === 'aozora') {
       await getAccountConflicts()(dispatch, getState);
       const onboardingAction = NavigationActions.reset({
