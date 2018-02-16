@@ -67,12 +67,12 @@ class CreateAccountScreen extends React.Component {
     const isValidPass = password.length >= 8 && password === confirmPassword;
     const passwordSet = currentUser.hasPassword || isValidPass;
 
+    const isEmailValid = !isEmpty(email) && email.includes('@');
+    const fieldsValid = isEmailValid && !isEmpty(username);
+
     const passwordText = passwordSet ? 'Looks good!' : 'You need to set a password!';
     const usernameText = !usernameConfirmed ? 'Confirm Username' : passwordText;
-
-    const isEmailValid = !isEmpty(email) && email.includes('@');
-    const fieldsEmpty = !isEmailValid || isEmpty(username);
-    const buttonText = fieldsEmpty ? 'Please fill out the fields above' : usernameText;
+    const buttonText = !fieldsValid ? 'Please fill out the fields above' : usernameText;
 
     return (
       <View style={commonStyles.container}>
@@ -116,7 +116,7 @@ class CreateAccountScreen extends React.Component {
           <View />
         )}
         <Button
-          disabled={fieldsEmpty || (!passwordSet && usernameConfirmed)}
+          disabled={!fieldsValid || (!passwordSet && usernameConfirmed)}
           style={{ marginTop: 36 }}
           onPress={this.onConfirm}
           title={buttonText}
