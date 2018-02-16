@@ -293,7 +293,7 @@ class CreatePost extends React.PureComponent {
                 />
                 :
                 <AdditionalButton
-                  text="Tag a Media"
+                  text="Tag Anime or Manga"
                   icon="tag"
                   color={colors.blue}
                   disabled={busy}
@@ -309,7 +309,7 @@ class CreatePost extends React.PureComponent {
                 />
                 :
                 <AdditionalButton
-                  text="Add a GIF"
+                  text="Search & Share Gif"
                   icon="plus"
                   color={colors.green}
                   disabled={busy}
