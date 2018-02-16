@@ -15,6 +15,7 @@ export class ProgressiveImage extends PureComponent {
     resizeMode: PropTypes.string,
     source: PropTypes.object.isRequired,
     defaultSource: PropTypes.number,
+    hasOverlay: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -24,6 +25,7 @@ export class ProgressiveImage extends PureComponent {
     style: undefined,
     resizeMode: 'cover',
     defaultSource: undefined,
+    hasOverlay: false,
   };
 
   state = {
@@ -56,7 +58,15 @@ export class ProgressiveImage extends PureComponent {
 
   render() {
     const { thumbnailOpacity } = this.state;
-    const { backgroundStyle, children, style, resizeMode, source, defaultSource } = this.props;
+    const {
+      backgroundStyle,
+      children,
+      style,
+      resizeMode,
+      source,
+      defaultSource,
+      hasOverlay,
+    } = this.props;
 
     return (
       <View style={[styles.imageBackground, backgroundStyle, style]}>
@@ -71,7 +81,7 @@ export class ProgressiveImage extends PureComponent {
           />
         )}
 
-        {children && source.uri &&
+        {(children || hasOverlay) && source.uri &&
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.6)']}
             style={[commonStyles.absoluteFill, style]}
