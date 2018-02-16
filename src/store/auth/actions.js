@@ -20,7 +20,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   } else {
     try {
       const userFb = await loginUserFb(dispatch);
-      if (userFb.status !== 401) {
+      if (![401, 403].includes(userFb.status)) {
         tokens = await userFb.json();
       } else if (screen !== 'signup') {
         nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
@@ -33,7 +33,8 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     const user = await fetchCurrentUser()(dispatch, getState);
-    if (screen === 'signup') {
+    if (screen === 'signup' && user.status !== 'registered') {
+      await getAccountConflicts()(dispatch, getState);
       const onboardingAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
