@@ -69,10 +69,10 @@ class FilterSub extends Component {
     return (
       <View style={{ padding: 20, paddingTop: 40, flexDirection: 'column' }}>
         <View style={{ flexDirection: 'row' }}>
-          <Left><Text style={styles.outerText}>Start: {startV}</Text></Left>
+          <Left><Text style={styles.outerText}>{startV}</Text></Left>
           <Right>
             <Text style={{ ...styles.outerText, paddingRight: 20 }}>
-              End: {endV === 100 ? '∞' : endV}
+              {endV === 100 ? '∞' : endV}
             </Text>
           </Right>
         </View>
