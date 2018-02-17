@@ -180,6 +180,7 @@ class NotificationsScreen extends PureComponent {
    * @memberof NotificationsScreen
    */
   fetchPost = async (activity) => {
+    if (!activity.foreignId) return null;
     const postId = activity.foreignId.split(':')[1];
     let post;
     try {
