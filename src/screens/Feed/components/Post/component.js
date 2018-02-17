@@ -89,7 +89,6 @@ export class Post extends PureComponent {
     comment.user = this.props.currentUser;
 
     const processed = preprocessFeedPost(comment);
-
     this.setState({
       comment: '',
       comments: [...this.state.comments, processed],
@@ -110,7 +109,7 @@ export class Post extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'avatar,name',
+          users: 'slug,avatar,name',
         },
         include: 'user',
         sort: '-createdAt',

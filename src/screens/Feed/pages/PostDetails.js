@@ -110,7 +110,6 @@ export default class PostDetails extends PureComponent {
       comment.user = currentUser;
 
       const processed = preprocessFeedPost(comment);
-
       this.setState({ comment: '', isReplying: false, isPostingComment: false });
 
       if (this.replyRef) {
@@ -135,16 +134,14 @@ export default class PostDetails extends PureComponent {
     this.setState({ isLoadingNextPage: false });
   };
 
-  onReplyPress = (comment, username, callback) => {
-    let name = username;
-    if (typeof username !== 'string') {
-      name = comment.user.name;
-    }
+  onReplyPress = (comment, user, callback) => {
+    const mention = user.slug || user.id;
+    const name = user.name;
     this.setState({
-      comment: `@${name} `,
+      comment: `@${mention} `,
       isReplying: true,
     });
-    this.replyRef = { comment, name, callback };
+    this.replyRef = { comment, mention, name, callback };
     this.focusOnCommentInput();
   };
 
@@ -194,7 +191,7 @@ export default class PostDetails extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'avatar,name',
+          users: 'slug,avatar,name',
         },
         include: 'user',
         sort: '-createdAt',
@@ -254,7 +251,7 @@ export default class PostDetails extends PureComponent {
         currentUser={currentUser}
         navigation={this.props.navigation}
         onAvatarPress={id => this.navigateToUserProfile(id)}
-        onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
+        onReplyPress={(user, callback) => this.onReplyPress(item, user, callback)}
         overlayColor={colors.offWhite}
       />
     );
