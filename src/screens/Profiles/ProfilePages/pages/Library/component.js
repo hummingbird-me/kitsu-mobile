@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { Kitsu } from 'kitsu/config/api';
+import { fetchUserLibrary } from 'kitsu/store/profile/actions';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { LibraryHeader, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
@@ -48,40 +50,10 @@ class Library extends PureComponent {
     navigation: PropTypes.object.isRequired,
   }
 
-  state = {
-    loading: false,
-    data: null,
-  }
-
-  componentDidMount = async () => {
+  componentDidMount() {
     const { userId } = this.props;
-    this.setState({ loading: true });
-    try {
-      const data = await Kitsu.findAll('libraryEntries', {
-        fields: {
-          anime: 'slug,posterImage,canonicalTitle,titles,synopsis,subtype,startDate,status,averageRating,popularityRank,ratingRank,episodeCount',
-          users: 'id',
-        },
-        filter: {
-          userId,
-          kind: 'anime',
-        },
-        include: 'anime,user,mediaReaction',
-        page: {
-          // TODO: Connect pagination with flat list
-          offset: 0,
-          limit: 40,
-        },
-        sort: 'status,-progressed_at',
-      });
-
-      this.setState({
-        data,
-        loading: false,
-      });
-    } catch (err) {
-      console.log('Unhandled error while retrieving library entries: ', err);
-    }
+    const { countForMaxWidth } = getCardVisibilityCounts();
+    this.props.fetchUserLibrary({ userId, limit: countForMaxWidth });
   }
 
   renderEmptyItem() {
@@ -157,20 +129,15 @@ class Library extends PureComponent {
         >
           {`${messagePrefix} marked any ${type} as ${messageMapping[status][type]} yet!`}
         </Text>
-        <TouchableOpacity style={styles.browseButton}>
-          <Text style={[commonStyles.text, commonStyles.colorWhite]}>
-            Browse {type === 'anime' ? 'Anime' : 'Manga'}
-          </Text>
-        </TouchableOpacity>
       </View>
     );
   };
 
   renderFetchingMoreSpinner = (type, status) => {
-    const { data } = this.state;
-    const { newData, loading } = data[type][status];
+    const { userLibrary } = this.props;
+    const { data, loading } = userLibrary[type][status];
 
-    if (loading && newData.length) {
+    if (loading && data.length) {
       return (
         <View style={styles.listLoadingSpinnerContainer}>
           <Spinner color="white" />
@@ -182,8 +149,7 @@ class Library extends PureComponent {
   }
 
   renderLists = (type) => {
-    const { navigation, profile } = this.props;
-    const { data } = this.state;
+    const { navigation, userLibrary, profile } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
@@ -194,19 +160,19 @@ class Library extends PureComponent {
 
     return listOrder.map((currentList, index) => {
       const { status } = currentList;
-      const filteredData = data.filter(item => item.status === status);
+      const { data, fetchMore, loading } = userLibrary[type][status];
 
       const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
-      const emptyItemsToAdd = countForMaxWidth - filteredData.length;
-      const dataFilled = filteredData.slice();
+      const emptyItemsToAdd = countForMaxWidth - data.length;
+      const dataFilled = data.slice();
 
-      if (emptyItemsToAdd > 0) {
+      if (!loading && emptyItemsToAdd > 0) {
         for (let x = 0; x < emptyItemsToAdd; x += 1) {
           dataFilled.push({ id: x, type: 'empty-item' });
         }
       }
 
-      const renderData = emptyItemsToAdd > 0 ? dataFilled : filteredData;
+      const renderData = emptyItemsToAdd > 0 ? dataFilled : data;
       const listStyle = index === listOrder.length - 1 ? styles.listLastChild : null;
       return (
         <View key={`${status}-${type}`} style={listStyle}>
@@ -218,28 +184,36 @@ class Library extends PureComponent {
             profile={profile}
           />
 
-          <FlatList
-            horizontal
-            data={renderData}
-            initialNumToRender={countForMaxWidth}
-            initialScrollIndex={0}
-            getItemLayout={getItemLayout}
-            keyExtractor={idExtractor}
-            removeClippedSubviews={false}
-            renderItem={this.renderItem}
-            scrollEnabled={filteredData.length >= countForCurrentWidth}
-            showsHorizontalScrollIndicator={false}
-          />
+          {loading && !data.length &&
+            this.renderLoadingList()
+          }
+
+          {!loading && !data.length ?
+            this.renderEmptyList(type, status)
+            :
+            <FlatList
+              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
+              horizontal
+              data={renderData}
+              initialNumToRender={countForMaxWidth}
+              initialScrollIndex={0}
+              getItemLayout={getItemLayout}
+              keyExtractor={idExtractor}
+              onEndReached={fetchMore}
+              onEndReachedThreshold={0.5}
+              removeClippedSubviews={false}
+              renderItem={this.renderItem}
+              scrollEnabled={data.length >= countForCurrentWidth}
+              showsHorizontalScrollIndicator={false}
+            />
+          }
         </View>
       );
     });
   }
 
   render() {
-    const { loading, data } = this.state;
     const { profile, navigation } = this.props;
-
-    if (loading || !data) return <SceneLoader />;
 
     return (
       <View style={styles.container}>
@@ -258,4 +232,9 @@ class Library extends PureComponent {
   }
 }
 
-export const component = Library;
+const mapStateToProps = ({ profile }) => {
+  const { userLibrary } = profile;
+  return { userLibrary };
+};
+
+export const component = connect(mapStateToProps, { fetchUserLibrary })(Library);

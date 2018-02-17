@@ -8,8 +8,10 @@ import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { styles } from './styles';
 
-const CreatePostRowComponent = ({ currentUser, onPress, title }) => {
+const CreatePostRowComponent = ({ currentUser, targetUser, onPress, title }) => {
   const defaultTitle = `Want to share an update, ${currentUser.name}?`;
+  const shareTitle = `Share an update with ${targetUser ? targetUser.name : 'Someone'}`;
+  const isTargetCurrentUser = targetUser ? targetUser.id === currentUser.id : true;
   return (
     <View style={styles.wrap}>
       <TouchableOpacity onPress={onPress}>
@@ -17,7 +19,7 @@ const CreatePostRowComponent = ({ currentUser, onPress, title }) => {
           <Avatar avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar} />
           <Layout.RowMain>
             <StyledText color="grey" size="xsmall">
-              {title || defaultTitle}
+              {title || (isTargetCurrentUser ? defaultTitle : shareTitle)}
             </StyledText>
           </Layout.RowMain>
         </Layout.RowWrap>
@@ -28,17 +30,23 @@ const CreatePostRowComponent = ({ currentUser, onPress, title }) => {
 
 CreatePostRowComponent.propTypes = {
   currentUser: PropTypes.shape({
+    id: PropTypes.string,
     avatar: PropTypes.shape({
       medium: PropTypes.string,
     }),
     name: PropTypes.string,
   }).isRequired,
+  targetUser: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+  }),
   onPress: PropTypes.func,
   title: PropTypes.string,
 };
 
 CreatePostRowComponent.defaultProps = {
   currentUser: null,
+  targetUser: null,
   onPress: null,
   title: null,
 };

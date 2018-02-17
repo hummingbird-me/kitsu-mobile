@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   currentUser: {},
   loading: false,
   error: '',
+  generalSettingError: '',
   signingUp: false,
   signupError: {},
   ifollow: {},
@@ -106,6 +107,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
+        generalSettingError: '',
         currentUser: {
           ...state.currentUser,
           ...action.payload,
@@ -115,7 +117,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: '', // TODO: handle the error ~ Toast?
+        generalSettingError: action.payload, // TODO: handle the error ~ Toast?
       };
     case types.UPDATE_LIBRARY_SETTINGS:
       return {
@@ -158,6 +160,8 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         signingIn: false,
         signingUp: false,
         signupError: {},
+        error: '',
+        generalSettingError: '',
         rehydratedAt: new Date(),
       };
     default:

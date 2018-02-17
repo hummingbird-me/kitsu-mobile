@@ -8,12 +8,16 @@ export class PostImage extends PureComponent {
     uri: PropTypes.string.isRequired,
     width: PropTypes.number,
     height: PropTypes.number,
+    borderRadius: PropTypes.number,
+    overlayColor: PropTypes.string,
   };
 
   static defaultProps = {
     size: 'default',
     width: null,
     height: null,
+    borderRadius: 0,
+    overlayColor: null,
   };
 
   state = {
@@ -23,7 +27,20 @@ export class PostImage extends PureComponent {
 
   componentWillMount() {
     this.mounted = true;
+    this.updateImageSize();
+  }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.width !== nextProps.width || this.props.height !== nextProps.height) {
+      this.updateImageSize();
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  updateImageSize() {
     Image.getSize(this.props.uri, (width, height) => {
       if (!this.mounted) return;
 
@@ -46,21 +63,17 @@ export class PostImage extends PureComponent {
     });
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
   mounted = false
 
   render() {
-    const { uri } = this.props;
+    const { uri, borderRadius, overlayColor } = this.props;
     const { width, height } = this.state;
 
     return (
       <Image
         resizeMode="cover"
         source={{ uri }}
-        style={{ width, height }}
+        style={{ width, height, borderRadius, overlayColor }}
       />
     );
   }

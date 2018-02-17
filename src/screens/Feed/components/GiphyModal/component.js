@@ -48,6 +48,11 @@ export class GiphyModal extends PureComponent {
     onGifSelect: null,
   }
 
+  constructor(props) {
+    super(props);
+    this.mounted = false;
+  }
+
   state = {
     gifs: [],
     query: '',
@@ -55,7 +60,12 @@ export class GiphyModal extends PureComponent {
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.searchGIF('');
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   handleGIFSelect = (gif) => {
@@ -94,7 +104,7 @@ export class GiphyModal extends PureComponent {
       const giphy = await response.json();
       const gifs = giphy.data;
 
-      this.setState({ gifs });
+      if (this.mounted) this.setState({ gifs });
     } catch (e) {
       console.log(e);
     }

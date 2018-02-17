@@ -5,17 +5,22 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import { DropdownPill } from 'kitsu/screens/Feed/components/DropdownPill';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
-export const PostMeta = ({ avatar, author, feedTitle, onFeedPillPress }) => (
+export const PostMeta = ({ avatar, author, targetName, feedTitle, onFeedPillPress }) => (
   <View style={styles.postMeta}>
     <Layout.RowWrap alignItems="center">
       <Avatar avatar={avatar} />
       <Layout.RowMain>
         <StyledText color="dark" size="xsmall" bold>{author}</StyledText>
-        <View style={styles.feedPill}>
-          <DropdownPill title={feedTitle} onPress={onFeedPillPress} />
-        </View>
+        { isEmpty(targetName) ?
+          <View style={styles.feedPill}>
+            <DropdownPill title={feedTitle} onPress={onFeedPillPress} />
+          </View>
+          :
+          <StyledText color="dark" size="xxsmall">To {targetName}</StyledText>
+        }
       </Layout.RowMain>
     </Layout.RowWrap>
   </View>
@@ -24,6 +29,7 @@ export const PostMeta = ({ avatar, author, feedTitle, onFeedPillPress }) => (
 PostMeta.propTypes = {
   avatar: PropTypes.string,
   author: PropTypes.string,
+  targetName: PropTypes.string,
   feedTitle: PropTypes.string,
   onFeedPillPress: PropTypes.func,
 };
@@ -31,5 +37,6 @@ PostMeta.defaultProps = {
   avatar: null,
   author: '',
   feedTitle: '',
+  targetName: '',
   onFeedPillPress: null,
 };

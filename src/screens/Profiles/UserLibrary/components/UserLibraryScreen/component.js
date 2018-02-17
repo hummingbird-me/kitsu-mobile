@@ -55,7 +55,6 @@ export class UserLibraryScreenComponent extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     const { profile } = navigation.state.params;
-
     return {
       headerStyle: {
         shadowColor: 'transparent',
@@ -154,11 +153,6 @@ export class UserLibraryScreenComponent extends React.Component {
         >
           {`${messagePrefix} marked any ${type} as ${messageMapping[status][type]} yet!`}
         </Text>
-        <TouchableOpacity style={styles.browseButton}>
-          <Text style={[commonStyles.text, commonStyles.colorWhite]}>
-            Browse {type === 'anime' ? 'Anime' : 'Manga'}
-          </Text>
-        </TouchableOpacity>
       </View>
     );
   };

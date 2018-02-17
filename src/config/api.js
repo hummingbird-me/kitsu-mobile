@@ -84,6 +84,7 @@ Kitsu.define(
     password: '',
     slug: '',
     status: '',
+    hasPassword: '',
     waifu: {
       jsonApi: 'hasOne',
       type: 'characters',
@@ -564,7 +565,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
     media: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
     },
     user: {
       jsonApi: 'hasOne',
@@ -611,6 +612,21 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'mediaReactionVotes',
+  {
+    mediaReaction: {
+      jsonApi: 'hasOne',
+      type: 'mediaReactions'
+    },
+    user: {
+      jsonApi: 'hasOne',
+      type: 'users'
+    }
+  },
+  { collectionPath: 'media-reaction-votes' }
+);
+
+Kitsu.define(
   'favorites',
   {
     createdAt: '',
@@ -618,11 +634,11 @@ Kitsu.define(
     id: '',
     favRank: '',
     user: {
-      jsonApi: 'hasMany',
+      jsonApi: 'hasOne',
+      type: 'users',
     },
     item: {
       jsonApi: 'hasOne',
-      type: ['anime', 'manga', 'characters'],
     },
   },
   { collectionPath: 'favorites' },

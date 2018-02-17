@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { UserLibraryListCard, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
-import { idExtractor } from 'kitsu/common/utils';
+import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
 import { styles } from './styles';
 
 const HEADER_TEXT_MAPPING = {
@@ -28,7 +28,6 @@ export class UserLibraryListScreenComponent extends React.Component {
 
   static navigationOptions = (props) => {
     const { libraryStatus, libraryType, profile } = props.navigation.state.params;
-
     return {
       headerStyle: {
         shadowColor: 'transparent',

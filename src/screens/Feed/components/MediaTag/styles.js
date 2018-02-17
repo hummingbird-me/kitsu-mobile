@@ -4,7 +4,7 @@ import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 export const styles = StyleSheet.create({
   mediaTagView: {
-    marginTop: scenePadding * 2,
+    marginTop: scenePadding,
     flexDirection: 'row',
     alignItems: 'center',
   },

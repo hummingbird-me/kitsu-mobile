@@ -7,6 +7,7 @@ import { Counter } from 'kitsu/components/Counter';
 import { Rating } from 'kitsu/components/Rating';
 import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { isNull } from 'lodash';
 import { styles } from './styles';
 
 const visibilityOptions = [
@@ -252,9 +253,10 @@ export class UserLibraryEditScreenComponent extends React.Component {
             >
               Personal Notes
             </Text>
-            {this.state.notes &&
+            {!isNull(this.state.notes) &&
               <TextInput
                 value={this.state.notes}
+                placeholder="Type some notes..."
                 onChangeText={this.onNotesChanged}
                 multiline
               />

@@ -127,6 +127,8 @@ export default class QuickUpdateCard extends PureComponent {
 
     const media = anime || manga;
     const unitCount = media.episodeCount || media.chapterCount;
+    const isCompleted = data.item.status === 'completed';
+    const nextProgress = progress + 1;
 
     const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) || media.posterImage.large;
 
@@ -163,8 +165,11 @@ export default class QuickUpdateCard extends PureComponent {
                       {progress}
                     </Text>
                     <Text numberOfLines={1} style={styles.totalEpisodesText}>
+                      {unitCount > 0 && (
+                        ` of ${unitCount}`
+                      )}
                       {' '}
-                      of {unitCount} {unit[0] && unit[0].canonicalTitle}
+                      {unit[0] && unit[0].canonicalTitle}
                     </Text>
                   </View>
                 ) : (
@@ -183,14 +188,22 @@ export default class QuickUpdateCard extends PureComponent {
             <View style={styles.cardHeaderArea}>
               {/* Series Description */}
               <View style={styles.episodeRow}>
-                {nextUnit ? ( // finished ?
+                {!isCompleted ? ( // finished ?
                   <Text style={styles.seriesExtraInfo} numberOfLines={1}>
                     UP NEXT{' '}
-                    <Text style={styles.seriesNextEpisodeTitle}>
-                      {media.type === 'anime' ? 'EP' : 'CH'}
-                      {' '}
-                      {nextUnit.number} {nextUnit.canonicalTitle ? `- ${nextUnit.canonicalTitle}` : ''}
-                    </Text>
+                    {nextUnit ? ( // Might not exist
+                      <Text style={styles.seriesNextEpisodeTitle}>
+                        {media.type === 'anime' ? 'EP' : 'CH'}
+                        {' '}
+                        {nextUnit.number} {nextUnit.canonicalTitle ? `- ${nextUnit.canonicalTitle}` : ''}
+                      </Text>
+                    ) : (
+                      <Text style={styles.seriesNextEpisodeTitle}>
+                        {media.type === 'anime' ? 'EP' : 'CH'}
+                        {' '}
+                        {nextProgress}
+                      </Text>
+                    )}
                   </Text>
                 ) : (
                   <Text style={styles.seriesFinishedTitle}>Finished!</Text>
@@ -201,7 +214,7 @@ export default class QuickUpdateCard extends PureComponent {
           {loading && <ActivityIndicator size="large" style={styles.loadingSpinner} />}
           {/* Action Row */}
           {!loading &&
-            (nextUnit ? ( // finished ?
+            (!isCompleted ? ( // finished ?
               <View style={styles.actionRow}>
                 <TouchableOpacity
                   onPress={this.onMarkComplete}

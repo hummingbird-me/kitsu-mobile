@@ -12,6 +12,7 @@ import {
   ImportLibrary,
   ImportDetail,
 } from 'kitsu/screens/Onboarding/';
+import { IntroScreen } from 'kitsu/screens/Intro';
 import navigationOptions from './navigationOptions';
 import Tabs from './tabs';
 
@@ -49,6 +50,11 @@ const OnboardingStack = StackNavigator(
     },
     Tabs: {
       screen: Tabs,
+    },
+    // BUG HERE: After onboarding, if user logs out then they get taken to intro screen
+    // but they can't go to the auth screen unless they restart the app
+    Intro: {
+      screen: IntroScreen,
     },
   },
   {

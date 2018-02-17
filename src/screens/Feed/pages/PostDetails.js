@@ -4,26 +4,24 @@ import {
   FlatList,
   View,
   StatusBar,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
-
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import {
-  PostHeader,
-  PostMain,
-  PostActions,
   PostFooter,
   PostSection,
   PostCommentsSection,
   PostReplyBanner,
 } from 'kitsu/screens/Feed/components/Post';
+import { PostHeader, PostMain, PostActions } from 'kitsu/screens/Feed/components/Post/components';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
-import { StyledText } from 'kitsu/components/StyledText';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
+import * as colors from 'kitsu/constants/colors';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -53,6 +51,7 @@ export default class PostDetails extends PureComponent {
       },
       isLoadingNextPage: false,
       isReplying: false,
+      isPostingComment: false,
     };
   }
 
@@ -71,6 +70,10 @@ export default class PostDetails extends PureComponent {
   }
 
   onSubmitComment = async () => {
+    if (this.state.isPostingComment) return;
+
+    this.setState({ isPostingComment: true });
+
     try {
       const { currentUser, post } = this.props.navigation.state.params;
 
@@ -100,16 +103,19 @@ export default class PostDetails extends PureComponent {
       });
       comment.user = currentUser;
 
-      this.setState({ comment: '', isReplying: false });
+      const processed = preprocessFeedPost(comment);
+
+      this.setState({ comment: '', isReplying: false, isPostingComment: false });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
-        this.setState({ comments: [...this.state.comments, comment] });
+        this.setState({ comments: [...this.state.comments, processed] });
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);
+      this.setState({ isPostingComment: false });
     }
   };
 
@@ -121,6 +127,19 @@ export default class PostDetails extends PureComponent {
       },
     });
     this.setState({ isLoadingNextPage: false });
+  };
+
+  onReplyPress = (comment, username, callback) => {
+    let name = username;
+    if (typeof username !== 'string') {
+      name = comment.user.name;
+    }
+    this.setState({
+      comment: `@${name} `,
+      isReplying: true,
+    });
+    this.replyRef = { comment, name, callback };
+    this.focusOnCommentInput();
   };
 
   toggleLike = async () => {
@@ -176,7 +195,9 @@ export default class PostDetails extends PureComponent {
         ...requestOptions,
       });
 
-      this.setState({ comments: [...comments.reverse(), ...this.state.comments] });
+      const processed = preprocessFeedPosts(comments);
+
+      this.setState({ comments: [...processed.reverse(), ...this.state.comments] });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -215,20 +236,7 @@ export default class PostDetails extends PureComponent {
   keyExtractor = (item, index) => index;
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
-  };
-
-  onReplyPress = (comment, username, callback) => {
-    let name = username;
-    if (typeof username !== 'string') {
-      name = comment.user.name;
-    }
-    this.setState({
-      comment: `@${name} `,
-      isReplying: true,
-    });
-    this.replyRef = { comment, name, callback };
-    this.focusOnCommentInput();
+    if (userId) this.props.navigation.navigate('ProfilePages', { userId });
   };
 
   renderItem = ({ item }) => {
@@ -239,8 +247,9 @@ export default class PostDetails extends PureComponent {
         comment={item}
         currentUser={currentUser}
         navigation={this.props.navigation}
-        onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+        onAvatarPress={id => this.navigateToUserProfile(id)}
         onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
+        overlayColor={colors.offWhite}
       />
     );
   };
@@ -251,10 +260,10 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, isLiked, postLikesCount } = this.state;
+    const { comment, comments, isLiked, postLikesCount, isPostingComment } = this.state;
 
-    const { content, images, commentsCount,
-            topLevelCommentsCount, media, spoiledUnit } = post;
+    const { content, embed, commentsCount,
+      topLevelCommentsCount, media, spoiledUnit } = post;
 
     return (
       <KeyboardAvoidingView
@@ -264,9 +273,11 @@ export default class PostDetails extends PureComponent {
         <StatusBar barStyle="dark-content" />
 
         <PostHeader
-          avatar={(post.user.avatar && post.user.avatar.medium) || defaultAvatar}
-          onAvatarPress={() => this.navigateToUserProfile(post.user.id)}
-          name={post.user.name}
+          avatar={(post.user && post.user.avatar && post.user.avatar.medium) || defaultAvatar}
+          onAvatarPress={() => {
+            if (post.user) this.navigateToUserProfile(post.user.id);
+          }}
+          name={(post.user && post.user.name) || '-'}
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />
@@ -275,7 +286,7 @@ export default class PostDetails extends PureComponent {
           <ScrollView>
             <PostMain
               content={content}
-              images={images}
+              embed={embed}
               likesCount={postLikesCount}
               commentsCount={commentsCount}
               taggedMedia={media}
@@ -330,6 +341,7 @@ export default class PostDetails extends PureComponent {
               onCommentChanged={this.onCommentChanged}
               onGifSelected={this.onGifSelected}
               onSubmit={this.onSubmitComment}
+              loading={isPostingComment}
             />
           </PostSection>
         </PostFooter>

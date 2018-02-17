@@ -9,6 +9,7 @@ import {
   resolveAccountConflicts,
   setSelectedAccount,
   setScreenName,
+  completeOnboarding,
 } from 'kitsu/store/onboarding/actions';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
@@ -48,9 +49,18 @@ class SelectAccountScreen extends React.Component {
     const success = this.props.resolveAccountConflicts(selectedAccount);
     if (success) {
       this.props.setSelectedAccount(selectedAccount);
-      this.props.setScreenName('CreateAccountScreen');
-      this.props.navigation.navigate('CreateAccountScreen');
+      // If user selected kitsu account then send them right into the app!
+      if (selectedAccount === 'kitsu') {
+        this.completeOnboarding();
+      } else {
+        this.props.setScreenName('CreateAccountScreen');
+        this.props.navigation.navigate('CreateAccountScreen');
+      }
     }
+  };
+
+  completeOnboarding = () => {
+    this.props.completeOnboarding(this.props.navigation);
   };
 
   render() {
@@ -119,4 +129,5 @@ export default connect(mapStateToProps, {
   resolveAccountConflicts,
   setSelectedAccount,
   setScreenName,
+  completeOnboarding,
 })(SelectAccountScreen);

@@ -1,15 +1,21 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator, FlatList, Text, Dimensions } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
+import Hyperlink from 'react-native-hyperlink';
 import { StyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
+import { isEmpty } from 'lodash';
+import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
+import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
+import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { handleURL } from 'kitsu/common/utils/url';
 import { styles } from './styles';
 
 export class Comment extends PureComponent {
@@ -22,6 +28,7 @@ export class Comment extends PureComponent {
       replies: [],
       repliesCount: props.comment.repliesCount,
       isLoadingNextPage: false,
+      commentWidth: null,
     };
   }
 
@@ -36,6 +43,38 @@ export class Comment extends PureComponent {
     this.mounted = false;
   }
 
+  onPagination = async () => {
+    this.setState({ isLoadingNextPage: true });
+    try {
+      await this.fetchReplies({
+        page: {
+          offset: this.state.replies.length,
+          limit: 5,
+        },
+      });
+    } catch (err) {
+      console.log('Error fetching replies: ', err);
+    }
+    this.setState({ isLoadingNextPage: false });
+  }
+
+  onReplyPress = (item) => {
+    this.props.onReplyPress(item.user.name, (comment) => {
+      this.setState({
+        replies: [...this.state.replies, comment],
+        repliesCount: this.state.repliesCount + 1,
+      });
+    });
+  }
+
+  onCommentLayout = (event) => {
+    // Only calculate this once, else we'll have lots of updates
+    if (this.state.commentWidth) return;
+    const { width } = event.nativeEvent.layout;
+    // The width - left padding
+    this.setState({ commentWidth: width - scenePadding });
+  }
+
   fetchLikes = async () => {
     const { currentUser, comment } = this.props;
     try {
@@ -43,7 +82,7 @@ export class Comment extends PureComponent {
         filter: {
           commentId: comment.id,
           userId: currentUser.id,
-        }
+        },
       });
 
       const like = likes.length && likes[0];
@@ -92,17 +131,6 @@ export class Comment extends PureComponent {
     }
   }
 
-  onPagination = async () => {
-    this.setState({ isLoadingNextPage: true });
-    await this.fetchReplies({
-      page: {
-        offset: this.state.replies.length,
-        limit: 5,
-      },
-    });
-    this.setState({ isLoadingNextPage: false });
-  }
-
   fetchReplies = async (requestOptions = {}) => {
     try {
       this.setState({ isLoadingNextPage: true });
@@ -120,7 +148,9 @@ export class Comment extends PureComponent {
         ...requestOptions,
       });
 
-      this.setState({ replies: [...replies.reverse(), ...this.state.replies] });
+      const processed = preprocessFeedPosts(replies);
+
+      this.setState({ replies: [...processed.reverse(), ...this.state.replies] });
     } catch (err) {
       console.log('Error fetching replies: ', err);
     } finally {
@@ -128,52 +158,81 @@ export class Comment extends PureComponent {
     }
   }
 
-  onReplyPress = (item) => {
-    this.props.onReplyPress(item.user.name, (comment) => {
-      this.setState({
-        replies: [...this.state.replies, comment],
-        repliesCount: this.state.repliesCount + 1,
-      });
-    });
-  }
-
   renderItem = ({ item }) => (
     <Comment
       post={this.props.post}
       comment={item}
       currentUser={this.props.currentUser}
-      onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
+      onAvatarPress={this.props.onAvatarPress}
       onReplyPress={() => this.onReplyPress(item)}
+      hideEmbeds={this.props.hideEmbeds}
+      navigation={this.props.navigation}
     />
   )
 
   render() {
     const {
+      navigation,
       comment,
       isTruncated,
       onAvatarPress,
+      overlayColor,
+      hideEmbeds,
     } = this.props;
 
-    const { isLiked, likesCount, replies, repliesCount } = this.state;
+    const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
 
-    const { content, createdAt, user } = comment;
-    const { avatar, name } = user;
+    const { content, createdAt, user, embed } = comment;
+
+    // Get the user avatar and name
+    const avatar = (user && user.avatar);
+    const name = (user && user.name) || '-';
+
     const AvatarContainer = props => (
-      onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
+      user && onAvatarPress ?
+        <TouchableOpacity onPress={() => onAvatarPress(user.id)} {...props} />
+        :
+        <View {...props} />
     );
+
+    // The width of the embeds
+    const maxEmbedWidth = commentWidth || 200;
+    const minEmbedWidth = Math.max(100, maxEmbedWidth / 2);
 
     return (
       <Layout.RowWrap>
         <AvatarContainer>
           <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
         </AvatarContainer>
-        <Layout.RowMain>
-          <View style={styles.bubble}>
+        <Layout.RowMain onLayout={this.onCommentLayout}>
+          <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
-            <StyledText size="xsmall" color="dark" numberOfLines={(isTruncated && 2) || undefined}>
-              {content}
-            </StyledText>
+            {!isEmpty(content) &&
+              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
+                <StyledText
+                  size="xsmall"
+                  color="dark"
+                  textStyle={{ lineHeight: null }}
+                  numberOfLines={(isTruncated && 2) || undefined}
+                >
+                  {content}
+                </StyledText>
+
+              </Hyperlink>
+            }
           </View>
+
+          { embed && !hideEmbeds &&
+            <EmbeddedContent
+              embed={embed}
+              maxWidth={maxEmbedWidth}
+              minWidth={minEmbedWidth}
+              borderRadius={20}
+              overlayColor={overlayColor}
+              style={isEmpty(content) ? null : styles.embed}
+              navigation={navigation}
+            />
+          }
 
           {!isTruncated && (
             <View style={styles.commentActions}>
@@ -193,7 +252,7 @@ export class Comment extends PureComponent {
 
           {!isTruncated && repliesCount > 0 && (
             <View style={styles.nestedComments}>
-              {replies.length == 0 && (
+              {replies.length === 0 && (
                 <ToggleReplies
                   onPress={() => { this.fetchReplies(); }}
                   isLoading={this.state.isLoadingNextPage}
@@ -241,12 +300,16 @@ Comment.propTypes = {
   isTruncated: PropTypes.bool,
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
+  overlayColor: PropTypes.string,
+  hideEmbeds: PropTypes.bool,
 };
 
 Comment.defaultProps = {
   isTruncated: false,
   onAvatarPress: null,
   onReplyPress: null,
+  overlayColor: null,
+  hideEmbeds: false,
 };
 
 export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (

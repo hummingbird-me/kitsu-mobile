@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -8,6 +8,12 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 20,
     backgroundColor: colors.lightestGrey,
+  },
+  emptyBubble: {
+    backgroundColor: 'transparent',
+  },
+  embed: {
+    marginTop: 6,
   },
   commentActions: {
     flexDirection: 'row',
@@ -29,6 +35,11 @@ export const styles = StyleSheet.create({
   },
   nestedComments: {
     marginTop: 14,
-    marginLeft: 14
+    marginLeft: 14,
+  },
+  linkStyle: {
+    color: colors.orange,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
   },
 });

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
@@ -20,6 +20,7 @@ export class CommentTextInput extends PureComponent {
     comment: PropTypes.string,
     onCommentChanged: PropTypes.func,
     onGifSelected: PropTypes.func,
+    loading: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -31,6 +32,7 @@ export class CommentTextInput extends PureComponent {
     comment: '',
     onCommentChanged: null,
     onGifSelected: null,
+    loading: false,
   }
 
   state = {
@@ -52,6 +54,7 @@ export class CommentTextInput extends PureComponent {
       comment,
       onCommentChanged,
       onSubmit,
+      loading,
     } = this.props;
 
     const { gifModalVisible } = this.state;
@@ -61,6 +64,7 @@ export class CommentTextInput extends PureComponent {
         {showAvatar && <Avatar avatar={currentUser.avatar && currentUser.avatar.medium} size="small" />}
         <Layout.RowMain>
           <View style={styles.textInputBox}>
+            {/* TODO: Maybe a good idea to not make it editable when loading? */}
             <TextInput
               ref={inputRef}
               style={styles.textInputField}
@@ -80,8 +84,12 @@ export class CommentTextInput extends PureComponent {
           </View>
         </Layout.RowMain>
         {!!comment && (
-          <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
-            <Icon name="md-send" color={colors.blue} style={styles.submitButtonIcon} />
+          <TouchableOpacity onPress={onSubmit} style={styles.submitButton} disabled={loading}>
+            { loading ?
+              <ActivityIndicator color={colors.blue} />
+              :
+              <Icon name="md-send" color={colors.blue} style={styles.submitButtonIcon} />
+            }
           </TouchableOpacity>
         )}
         <GiphyModal

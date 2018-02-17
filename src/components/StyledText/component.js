@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text } from 'react-native';
+import { Text, ViewPropTypes } from 'react-native';
 import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red, green, black } from 'kitsu/constants/colors';
 import { styles } from './styles';
 
@@ -40,6 +40,7 @@ export const StyledText = ({
         fontSize: textSizes[size],
         color: textColors[color],
         fontWeight: bold ? '700' : 'normal',
+        // Messes up color highlighting of links on Android
         lineHeight: textSizes[size] * 1.25,
       },
       textStyle,
@@ -59,5 +60,5 @@ StyledText.defaultProps = {
   bold: false,
   color: 'light',
   size: 'default',
-  textStyle: {},
+  textStyle: null,
 };

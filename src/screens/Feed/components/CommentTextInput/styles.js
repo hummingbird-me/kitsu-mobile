@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Open Sans',
     fontSize: 13,
     paddingHorizontal: scenePadding,
+    paddingVertical: 0,
   },
   submitButton: {
     height: 36,

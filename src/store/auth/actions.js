@@ -19,11 +19,25 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
     }
   } else {
     try {
+      /**
+       * The flow here is:
+       * If we get a 401 or 403 from the Kitsu server, Send the user to the signup page.
+       * Otherwise set the tokens which means a user account is already associated with the fb account.
+      */
       const userFb = await loginUserFb(dispatch);
-      if (userFb.status !== 401) {
+      if (![401, 403].includes(userFb.status)) {
         tokens = await userFb.json();
+      // We only navigate to the signup screen
+      // IF `createAccount` wasn't the one that called this function
       } else if (screen !== 'signup') {
-        nav.dispatch(NavigationActions.navigate({ routeName: 'Signup' }));
+        nav.dispatch(NavigationActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({
+            routeName: 'AuthScreen',
+            params: { authType: 'signup' },
+          })],
+          key: null,
+        }));
       }
     } catch (e) {
       console.log(e);
@@ -33,17 +47,28 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     const user = await fetchCurrentUser()(dispatch, getState);
-    if (screen === 'signup') {
-      const onboardingAction = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
-      });
-      nav.dispatch(onboardingAction);
-    } else if (user.status === 'aozora') {
+
+    /**
+     * Now over here, aozora users will always have their status set to `aozora`, until they complete onboarding which will set their status to `registered`.
+     * However for regular users we can't differentiate if they just signed up or not,since their status is always `registered` from the start.
+     * Thus we check the screen name to see if it's a `signup`.
+     * Note: `signup` is passed in from `createUser` function. It shouldn't be passed in from anywhere else
+       otherwise users might always be sent to onboarding when logging in with fb.
+    */
+    if (user.status === 'aozora') {
       await getAccountConflicts()(dispatch, getState);
       const onboardingAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+        key: null,
+      });
+      nav.dispatch(onboardingAction);
+    } else if (user.status !== 'registered' || screen === 'signup') {
+      await getAccountConflicts()(dispatch, getState);
+      const onboardingAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+        key: null,
       });
       nav.dispatch(onboardingAction);
     } else {
@@ -51,6 +76,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       const loginAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+        key: null,
       });
       nav.dispatch(loginAction);
     }
@@ -100,10 +126,10 @@ const loginUserFb = async (dispatch) => {
 
 export const logoutUser = nav => (dispatch) => {
   dispatch({ type: types.LOGOUT_USER });
-  const loginAction = NavigationActions.reset({
+  const resetAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Intro' })],
     key: null,
   });
-  nav.dispatch(loginAction);
+  nav.dispatch(resetAction);
 };

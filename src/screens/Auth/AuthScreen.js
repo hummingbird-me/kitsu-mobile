@@ -73,7 +73,7 @@ class AuthScreen extends React.Component {
     const { navigation } = this.props;
     const { email, username, password, confirmPassword, birthday, isBirthdaySet } = this.state;
     if (isFb) {
-      this.props.loginUser(null, navigation, 'signup');
+      this.props.loginUser(null, navigation, 'login');
     } else if (
       isEmpty(email) ||
       isEmpty(username) ||

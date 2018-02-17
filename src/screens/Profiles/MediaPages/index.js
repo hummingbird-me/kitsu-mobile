@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { StatusBar } from 'react-native';
 import { TabRouter } from 'react-navigation';
+import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
@@ -15,14 +16,13 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import capitalize from 'lodash/capitalize';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
-const MAIN_BUTTON_OPTIONS = ['Watch', 'Want to Watch', 'Completed', 'On Hold', 'Dropped', 'Cancel', 'Nevermind'];
-const MORE_BUTTON_OPTIONS = ['Add to Favorites', 'Follow this Anime\'s Feed', 'Nevermind'];
-
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
-  { key: 'episodes', label: 'Episodes', screen: 'Episodes' },
+  { key: 'episodes', label: 'Episodes', screen: 'Episodes', if: (state) => state.media.type === 'anime'},
+  { key: 'chapters', label: 'Chapters', screen: 'Episodes', if: (state) => state.media.type === 'manga'},
   { key: 'characters', label: 'Characters', screen: 'Characters' },
   { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
   { key: 'franchise', label: 'Franchise', screen: 'Franchise' },
@@ -32,8 +32,8 @@ const TAB_ITEMS = [
 
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
-  // TODO: Change label to Chapters for Manga.
   Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
+  Chapters: { getScreen: () => require('./pages/Episodes').Episodes },
   Characters: { getScreen: () => require('./pages/Characters').Characters },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
   Franchise: { getScreen: () => require('./pages/Franchise').Franchise },
@@ -58,16 +58,101 @@ class MediaPages extends PureComponent {
     media: null,
     castings: null,
     mediaReactions: null,
+    favorite: null,
+    libraryEntry: null,
+    loadingLibrary: false,
     loadingAdditional: false, // Check whether episodes & Related are loading
   }
 
   componentDidMount = () => {
     const { mediaId, mediaType } = this.props.navigation.state.params;
     this.fetchMedia(mediaType, mediaId);
+    this.fetchFavorite(mediaType, mediaId);
+    this.fetchLibraryEntry(mediaType, mediaId);
   }
 
-  onMainButtonOptionsSelected = () => {}
-  onMoreButtonOptionsSelected = () => {}
+  createLibraryEntry = async (status) => {
+    const { mediaId, mediaType } = this.props.navigation.state.params;
+    try {
+      this.setState({ loadingLibrary: true });
+      const record = await Kitsu.create('libraryEntries', {
+        status,
+        [mediaType]: {
+          id: mediaId,
+          type: mediaType
+        },
+        user: {
+          id: this.props.currentUser.id,
+          type: 'users'
+        }
+      });
+      this.setState({ libraryEntry: record, loadingLibrary: false });
+    } catch (err) {
+      console.log('Error creating library entry:', err);
+    }
+  }
+
+  updateLibraryEntry = async (status) => {
+    const { libraryEntry } = this.state;
+    const { mediaId, mediaType } = this.props.navigation.state.params;
+    try {
+      this.setState({ loadingLibrary: true });
+      const record = await Kitsu.update('libraryEntries', {
+        id: libraryEntry.id,
+        status
+      });
+      this.setState({ libraryEntry: record, loadingLibrary: false });
+    } catch (err) {
+      console.log('Error updating library entry:', err);
+    }
+  }
+
+  onMainButtonOptionsSelected = async (option) => {
+    const { libraryEntry } = this.state;
+    switch (option) {
+      case 'current':
+      case 'planned':
+      case 'completed':
+      case 'on_hold':
+      case 'dropped':
+        libraryEntry ? await this.updateLibraryEntry(option) : await this.createLibraryEntry(option);
+        break;
+      case 'remove':
+        this.setState({ loadingLibrary: true });
+        await Kitsu.destroy('libraryEntries', libraryEntry.id);
+        this.setState({ libraryEntry: null, loadingLibrary: false });
+        break;
+      default:
+        console.log('unhandled option selected:', option);
+        break;
+    }
+  }
+
+  onMoreButtonOptionsSelected = async (option) => {
+    const { mediaId, mediaType } = this.props.navigation.state.params;
+    switch (option) {
+      case 'add':
+        const record = await Kitsu.create('favorites', {
+          item: {
+            id: mediaId,
+            type: mediaType
+          },
+          user: {
+            id: this.props.currentUser.id,
+            type: 'users'
+          }
+        });
+        this.setState({ favorite: record });
+        break;
+      case 'remove':
+        await Kitsu.destroy('favorites', this.state.favorite.id);
+        this.setState({ favorite: null });
+        break;
+      default:
+        console.log('unhandled option selected:', option);
+        break;
+    }
+  }
 
   setActiveTab = (tab) => {
     this.setState({ active: tab });
@@ -159,16 +244,54 @@ class MediaPages extends PureComponent {
     }
   }
 
+  fetchFavorite = async (type, id) => {
+    try {
+      const response = await Kitsu.findAll('favorites', {
+        filter: {
+          item_type: capitalize(type),
+          item_id: id,
+          user_id: this.props.currentUser.id
+        }
+      });
+      const record = response && response[0];
+      this.setState({ favorite: record });
+    } catch (err) {
+      console.log('Error fetching favorite state:', err);
+    }
+  }
+
+  fetchLibraryEntry = async (type, id) => {
+    try {
+      this.setState({ loadingLibrary: true });
+      const response = await Kitsu.findAll('libraryEntries', {
+        filter: {
+          user_id: this.props.currentUser.id,
+          [`${type}_id`]: id
+        }
+      });
+      const record = response && response[0];
+      this.setState({ libraryEntry: record, loadingLibrary: false });
+    } catch (err) {
+      console.log('Error fetching library entry:', err);
+    }
+  }
+
   renderTabNav = () => (
     <TabBar>
-      {TAB_ITEMS.map(tabItem => (
-        <TabBarLink
-          key={tabItem.key}
-          label={tabItem.label}
-          isActive={this.state.active === tabItem.screen}
-          onPress={() => this.setActiveTab(tabItem.screen)}
-        />
-      ))}
+      {TAB_ITEMS.map(tabItem => {
+        // If this tab item is conditional, run the check
+        if (tabItem.if && !tabItem.if(this.state)) {
+          return;
+        }
+        return (
+          <TabBarLink
+            key={tabItem.key}
+            label={tabItem.label}
+            isActive={this.state.active === tabItem.screen}
+            onPress={() => this.setActiveTab(tabItem.screen)}
+          />
+        );
+      })}
     </TabBar>
   );
 
@@ -179,6 +302,9 @@ class MediaPages extends PureComponent {
       loading,
       media,
       mediaReactions,
+      favorite,
+      libraryEntry,
+      loadingLibrary,
       loadingAdditional,
     } = this.state;
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
@@ -196,6 +322,36 @@ class MediaPages extends PureComponent {
 
     if (error || !media) {
       return null;
+    }
+
+    // Handle dynamic button options (TODO: Cleanup)
+    let MAIN_BUTTON_OPTIONS = [
+      { text: 'Watching', value: 'current', if: (type) => type === 'anime' },
+      { text: 'Reading', value: 'current', if: (type) => type === 'manga' },
+      { text: 'Want to Watch', value: 'planned', if: (type) => type === 'anime' },
+      { text: 'Want to Read', value: 'planned', if: (type) => type === 'manga' },
+      { text: 'Completed', value: 'completed' },
+      { text: 'On Hold', value: 'on_hold' },
+      { text: 'Dropped', value: 'dropped' }
+    ];
+    MAIN_BUTTON_OPTIONS = MAIN_BUTTON_OPTIONS.filter((item) => {
+      return item.if ? item.if(media.type) : true;
+    });
+
+    let mainButtonTitle = 'Add to library';
+    if (libraryEntry) {
+      MAIN_BUTTON_OPTIONS.push({ text: 'Remove', value: 'remove' });
+
+      const entry = MAIN_BUTTON_OPTIONS.find(item => item.value === libraryEntry.status);
+      mainButtonTitle = (entry && entry.text) || mainButtonTitle;
+    }
+    MAIN_BUTTON_OPTIONS.push('Nevermind');
+
+    const MORE_BUTTON_OPTIONS = ['Nevermind'];
+    if (favorite) {
+      MORE_BUTTON_OPTIONS.unshift({ text: 'Remove from Favorites', value: 'remove' });
+    } else {
+      MORE_BUTTON_OPTIONS.unshift({ text: 'Add to Favorites', value: 'add' });
     }
 
     return (
@@ -224,7 +380,8 @@ class MediaPages extends PureComponent {
           <SceneHeader
             variant="media"
             media={media}
-            type={media.type}
+            type={capitalize(media.type)}
+            subType={media.showType || capitalize(media.mangaType || '')}
             title={media.canonicalTitle}
             description={media.synopsis}
             coverImage={media.coverImage && media.coverImage.original}
@@ -232,8 +389,9 @@ class MediaPages extends PureComponent {
             popularityRank={media.popularityRank}
             ratingRank={media.ratingRank}
             categories={media.categories}
-            mainButtonTitle="Add to library"
+            mainButtonTitle={mainButtonTitle}
             mainButtonOptions={MAIN_BUTTON_OPTIONS}
+            mainButtonLoading={loadingLibrary}
             moreButtonOptions={MORE_BUTTON_OPTIONS}
             onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
@@ -254,4 +412,9 @@ class MediaPages extends PureComponent {
   }
 }
 
-export default MediaPages;
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  return { currentUser };
+};
+
+export default connect(mapStateToProps)(MediaPages);
