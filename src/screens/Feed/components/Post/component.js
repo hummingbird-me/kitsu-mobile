@@ -100,8 +100,6 @@ export class Post extends PureComponent {
 
   mounted = false
 
-  keyExtractor = (item, index) => index;
-
   fetchComments = async () => {
     try {
       // We go ahead and fetch the comments so if the user wants to view detail
