@@ -1,8 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform } from 'react-native';
+import { View, ViewPropTypes, WebView, Platform, Image, TouchableOpacity } from 'react-native';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
+import { StyledText } from 'kitsu/components/StyledText';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
+import { startCase } from 'lodash';
+import { styles } from './styles';
 
 export class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -13,17 +19,23 @@ export class EmbeddedContent extends PureComponent {
     PropTypes.number,
   ]);
 
+  // Same case here
+  static typeStringImage = PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      url: PropTypes.string.isRequired,
+      width: this.typeStringNumber,
+      height: this.typeStringNumber,
+    }),
+  ]);
+
   static propTypes = {
     embed: PropTypes.shape({
       kind: PropTypes.string.isRequired,
       site: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
-      image: PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        width: this.typeStringNumber,
-        height: this.typeStringNumber,
-      }),
+      image: this.typeStringImage,
       video: PropTypes.shape({
         url: PropTypes.string.isRequired,
         width: this.typeStringNumber,
@@ -35,6 +47,7 @@ export class EmbeddedContent extends PureComponent {
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
     overlayColor: PropTypes.string,
+    navigation: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -103,13 +116,89 @@ export class EmbeddedContent extends PureComponent {
     );
   }
 
+  renderKitsu(embed) {
+    if (embed.url) {
+      if (embed.url.includes('anime') || embed.url.includes('manga')) return this.renderMedia(embed);
+      if (embed.url.includes('users')) return this.renderUser(embed);
+    }
+
+    return null;
+  }
+
+  renderMedia(embed) {
+    const id = embed.kitsu && embed.kitsu.id;
+    if (!id) return null;
+
+    const { navigation, maxWidth } = this.props;
+    const type = embed.url && embed.url.includes('anime') ? 'anime' : 'manga';
+
+    return (
+      <TouchableOpacity
+        style={{ width: maxWidth }}
+        onPress={() => navigation.navigate('MediaPages', { mediaId: id, mediaType: type })}
+      >
+        <Layout.RowWrap style={styles.kitsuContent}>
+          {/* Make sure embed image doesn't break if they change it */}
+          {typeof embed.image === 'string' &&
+            <ProgressiveImage
+              source={{ uri: embed.image || '' }}
+              style={styles.mediaPoster}
+            />
+          }
+          <Layout.RowMain>
+            <StyledText color="dark" size="small" numberOfLines={1} bold>{embed.title || '-'}</StyledText>
+            <StyledText color="dark" size="xxsmall" numberOfLines={1} bold textStyle={{ paddingVertical: 4 }}>
+              {startCase(type)}
+            </StyledText>
+            <StyledText color="dark" size="xsmall" numberOfLines={5}>{embed.description || '-'}</StyledText>
+          </Layout.RowMain>
+        </Layout.RowWrap>
+      </TouchableOpacity>
+    );
+  }
+
+  renderUser(embed) {
+    const id = embed.kitsu && embed.kitsu.id;
+    if (!id) return null;
+
+    const { navigation, maxWidth } = this.props;
+
+    const image = (embed.image.includes('http') && { uri: embed.image }) || defaultAvatar;
+
+    return (
+      <TouchableOpacity
+        style={{ width: maxWidth }}
+        onPress={() => navigation.navigate('ProfilePages', { userId: id })}
+      >
+        <Layout.RowWrap style={styles.kitsuContent} alignItems="center">
+          {/* Make sure embed image doesn't break if they change it */}
+          {typeof embed.image === 'string' &&
+            <Image
+              source={image}
+              style={styles.userPoster}
+            />
+          }
+          <Layout.RowMain>
+            <StyledText color="dark" size="small" numberOfLines={2} bold>{embed.title || '-'}</StyledText>
+          </Layout.RowMain>
+        </Layout.RowWrap>
+      </TouchableOpacity>
+    );
+  }
+
   renderItem(embed) {
     if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
       return this.renderYoutube(embed);
     }
 
-    if (embed.kind && (embed.kind.includes('image') || embed.kind.includes('gif'))) {
-      return this.renderImage(embed);
+    if (embed.kind) {
+      if (embed.kind.includes('image') || embed.kind.includes('gif')) {
+        return this.renderImage(embed);
+      }
+
+      if (embed.kind.includes('kitsu')) {
+        return this.renderKitsu(embed);
+      }
     }
 
     return null;

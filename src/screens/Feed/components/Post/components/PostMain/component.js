@@ -20,35 +20,40 @@ export const PostMain = ({
   taggedEpisode,
   navigation,
   onPress,
-}) => (
-  <View style={styles.postMain}>
-    {!isEmpty(content) &&
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View style={styles.postContent}>
-          <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
-            <StyledText color="dark" textStyle={{ lineHeight: null }} size="small">{content}</StyledText>
-          </Hyperlink>
-        </View>
-      </TouchableWithoutFeedback>
-    }
-    {taggedMedia && (
-      <MediaTag
-        media={taggedMedia}
-        episode={taggedEpisode}
-        navigation={navigation}
-      />
-    )}
-    {embed &&
-      <EmbeddedContent
-        embed={embed}
-        maxWidth={scene.width}
-        minWidth={scene.width}
-        style={[styles.postImagesView, isEmpty(content) && styles.postImagesView_noText]}
-      />
-    }
-    <PostStatus onPress={onPress} likesCount={likesCount} commentsCount={commentsCount} />
-  </View>
-);
+}) => {
+  const hasContentAbove = !isEmpty(content) || taggedMedia;
+  return (
+    <View style={styles.postMain}>
+      {!isEmpty(content) &&
+        <TouchableWithoutFeedback onPress={onPress}>
+          <View style={styles.postContent}>
+            <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
+              <StyledText color="dark" textStyle={{ lineHeight: null }} size="small">{content}</StyledText>
+            </Hyperlink>
+          </View>
+        </TouchableWithoutFeedback>
+      }
+      {taggedMedia && (
+        <MediaTag
+          media={taggedMedia}
+          episode={taggedEpisode}
+          navigation={navigation}
+          style={isEmpty(content) ? { marginTop: 0 } : null}
+        />
+      )}
+      {embed &&
+        <EmbeddedContent
+          embed={embed}
+          maxWidth={scene.width}
+          minWidth={scene.width}
+          style={[styles.postImagesView, !hasContentAbove && styles.postImagesView_noText]}
+          navigation={navigation}
+        />
+      }
+      <PostStatus onPress={onPress} likesCount={likesCount} commentsCount={commentsCount} />
+    </View>
+  );
+};
 
 PostMain.propTypes = {
   content: PropTypes.string,
