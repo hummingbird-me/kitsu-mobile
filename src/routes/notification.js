@@ -35,10 +35,13 @@ const NotifStack = StackNavigator(
       ),
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <View style={styles.tabBarIcon}>
+        <View style={styles.tabBarIconWrapper}>
           {screenProps &&
             screenProps.badge > 0 && (
-              <View style={styles.textWrapper}>
+              <View style={[
+                styles.textWrapper,
+                screenProps.badge > 99 && styles.textWrapperExpanded]}
+              >
                 <Text style={styles.text}>
                   {screenProps.badge > 99 ? '99+' : screenProps.badge}
                 </Text>
@@ -64,13 +67,20 @@ const styles = StyleSheet.create({
     zIndex: 2,
     minWidth: 16,
   },
+  textWrapperExpanded: {
+    minWidth: 22,
+  },
   text: {
     color: colors.white,
-    fontSize: 10,
     minWidth: 14,
+    fontSize: 10,
     fontWeight: '700',
     textAlign: 'center',
     fontFamily: 'OpenSans',
+  },
+  tabBarIconWrapper: {
+    width: 25,
+    height: 21,
   },
   tabBarIcon: {
     width: 21,
