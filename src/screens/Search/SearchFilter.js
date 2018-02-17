@@ -17,7 +17,7 @@ class SearchFilter extends Component {
     header: (
       <NavigationHeader
         navigation={navigation}
-        title="Filter"
+        title="Filters"
         leftIcon={null}
         leftAction={null}
       />
@@ -154,7 +154,7 @@ class SearchFilter extends Component {
     const { key } = item;
 
     if (key === 'length') {
-      return this.renderCustomItem('Length', 'length');
+      return this.renderCustomItem('Epsiodes', 'length');
     }
 
     if (key === 'fade') {
@@ -292,7 +292,7 @@ class SearchFilter extends Component {
                     { key: 'release', title: 'Year' },
                     { key: 'categories', title: 'Category' },
                     { key: 'released', title: 'Released' },
-                    { key: 'length', title: 'Length' },
+                    { key: 'length', title: 'Episodes' },
                     { key: 'avail', title: 'Availabitily' },
                   ],
                   title: 'Browse by',
