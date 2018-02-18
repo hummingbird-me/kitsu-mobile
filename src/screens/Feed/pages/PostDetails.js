@@ -42,6 +42,8 @@ export default class PostDetails extends PureComponent {
       comments: props.navigation.state.params.comments && [
         ...props.navigation.state.params.comments,
       ],
+      topLevelCommentsCount: props.navigation.state.params.topLevelCommentsCount,
+      commentsCount: props.navigation.state.params.commentsCount,
       like: props.navigation.state.params.like,
       isLiked: props.navigation.state.params.isLiked,
       postLikesCount: props.navigation.state.params.postLikesCount,
@@ -110,13 +112,21 @@ export default class PostDetails extends PureComponent {
       comment.user = currentUser;
 
       const processed = preprocessFeedPost(comment);
-      this.setState({ comment: '', isReplying: false, isPostingComment: false });
+      this.setState({
+        comment: '',
+        isReplying: false,
+        isPostingComment: false,
+        commentsCount: this.state.commentsCount + 1
+      });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
-        this.setState({ comments: [...this.state.comments, processed] });
+        this.setState({
+          comments: [...this.state.comments, processed],
+          topLevelCommentsCount: this.state.topLevelCommentsCount + 1
+        });
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);
@@ -263,10 +273,10 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, isLiked, postLikesCount, isPostingComment } = this.state;
+    const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
+        isPostingComment } = this.state;
 
-    const { content, embed, commentsCount,
-      topLevelCommentsCount, media, spoiledUnit } = post;
+    const { content, embed, media, spoiledUnit } = post;
 
     return (
       <KeyboardAvoidingView

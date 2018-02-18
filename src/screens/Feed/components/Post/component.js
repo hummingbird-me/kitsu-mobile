@@ -29,12 +29,16 @@ export class Post extends PureComponent {
     comment: '',
     comments: [],
     latestComments: [],
+    commentsCount: this.props.post.commentsCount,
+    topLevelCommentsCount: this.props.post.topLevelCommentsCount,
     like: null,
     isLiked: false,
     postLikesCount: this.props.post.postLikesCount,
     overlayRemoved: false,
     isPostingComment: false,
   };
+
+  mounted = false
 
   componentDidMount() {
     this.mounted = true;
@@ -51,6 +55,7 @@ export class Post extends PureComponent {
     this.props.onPostPress({
       post: this.props.post,
       comments: this.state.comments,
+      commentsCount: this.state.commentsCount,
       like: this.state.like,
       isLiked: this.state.isLiked,
       postLikesCount: this.state.postLikesCount,
@@ -88,16 +93,19 @@ export class Post extends PureComponent {
     });
     comment.user = this.props.currentUser;
 
-    const processed = preprocessFeedPost(comment);
-    this.setState({
-      comment: '',
-      comments: [...this.state.comments, processed],
-      latestComments: [...this.state.latestComments, processed],
-      isPostingComment: false,
-    });
+      const processed = preprocessFeedPost(comment);
+      this.setState({
+        comment: '',
+        comments: [...this.state.comments, processed],
+        latestComments: [...this.state.latestComments, processed],
+        topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
+        commentsCount: this.state.commentsCount + 1,
+        isPostingComment: false,
+      });
+    } catch (error) {
+      console.log('Error submitting comment:', error);
+    }
   }
-
-  mounted = false
 
   fetchComments = async () => {
     try {
@@ -205,7 +213,6 @@ export class Post extends PureComponent {
       nsfw,
       spoiler,
       spoiledUnit,
-      commentsCount,
       user,
     } = post;
     const {
@@ -213,6 +220,7 @@ export class Post extends PureComponent {
       latestComments,
       overlayRemoved,
       postLikesCount,
+      commentsCount,
       isPostingComment,
     } = this.state;
 
