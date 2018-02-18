@@ -83,7 +83,7 @@ export default class PostDetails extends PureComponent {
     this.setState({ isPostingComment: true });
 
     try {
-      const { currentUser, post } = this.props.navigation.state.params;
+      const { currentUser, post, syncComments } = this.props.navigation.state.params;
 
       // Check if this is a reply rather than a top-level comment
       let replyOptions = {};
@@ -127,6 +127,13 @@ export default class PostDetails extends PureComponent {
           comments: [...this.state.comments, processed],
           topLevelCommentsCount: this.state.topLevelCommentsCount + 1
         });
+
+        // This is a top-level comment, we want to let the upstream
+        // component know that this exists without a re-fetch.
+        // @Hack
+        if (syncComments) {
+          syncComments([processed]);
+        }
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);

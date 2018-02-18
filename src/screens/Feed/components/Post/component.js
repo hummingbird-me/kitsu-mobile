@@ -56,10 +56,19 @@ export class Post extends PureComponent {
       post: this.props.post,
       comments: this.state.comments,
       commentsCount: this.state.commentsCount,
+      topLevelCommentsCount: this.state.topLevelCommentsCount,
       like: this.state.like,
       isLiked: this.state.isLiked,
       postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
+      syncComments: (comments) => {
+        this.setState({
+          comments: [...this.state.comments, ...comments],
+          latestComments: [...this.state.latestComments, ...comments],
+          commentsCount: this.state.commentsCount + comments.length,
+          topLevelCommentsCount: this.state.commentsCount + comments.length
+        })
+      }
     });
   }
 
