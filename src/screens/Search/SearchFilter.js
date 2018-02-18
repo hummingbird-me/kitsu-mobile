@@ -154,7 +154,7 @@ class SearchFilter extends Component {
     const { key } = item;
 
     if (key === 'length') {
-      return this.renderCustomItem('Epsiodes', 'length');
+      return this.renderCustomItem('Length', 'length');
     }
 
     if (key === 'fade') {
@@ -292,7 +292,7 @@ class SearchFilter extends Component {
                     { key: 'release', title: 'Year' },
                     { key: 'categories', title: 'Category' },
                     { key: 'released', title: 'Released' },
-                    { key: 'length', title: 'Episodes' },
+                    { key: 'length', title: 'Length' },
                     { key: 'avail', title: 'Availabitily' },
                   ],
                   title: 'Browse by',
