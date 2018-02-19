@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { FlatList, View } from 'react-native';
@@ -11,9 +11,9 @@ import capitalize from 'lodash/capitalize';
 
 const ItemSeparator = () => <View style={{ height: 10 }} />;
 
-class About extends Component {
+class About extends PureComponent {
   static propTypes = {
-    profile: PropTypes.object.isRequired
+    profile: PropTypes.object.isRequired,
   };
 
   render() {
@@ -21,7 +21,11 @@ class About extends Component {
     const aboutRows = [
       { key: 'gender', label: 'Gender', content: profile.gender ? capitalize(profile.gender) : 'It\'s a secret' },
       { key: 'location', label: 'Location', content: profile.location || 'It\'s a secret' },
-      { key: 'birthday', label: 'Birthday', content: moment(profile.birthday).format('MMMM Do') },
+      {
+        key: 'birthday',
+        label: 'Birthday',
+        content: profile.birthday ? moment(profile.birthday).format('MMMM Do') : 'It\'s a secret',
+      },
       { key: 'joinDate', label: 'Joined', content: moment(profile.createdAt).format('MMMM Do, YYYY') },
     ];
 
