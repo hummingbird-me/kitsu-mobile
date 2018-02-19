@@ -7,7 +7,6 @@ import Animation from 'lottie-react-native';
 
 import anim from 'kitsu/assets/animation/kitsu.json';
 import * as colors from 'kitsu/constants/colors';
-import { auth } from 'kitsu/config/api';
 import { refreshTokens, logoutUser } from 'kitsu/store/auth/actions';
 
 class SplashScreen extends Component {
@@ -35,8 +34,10 @@ class SplashScreen extends Component {
     try {
       const tokens = await refresh();
       console.log('tokens: ', tokens);
+      this.setState({ refreshingToken: false });
       this.navigate(authorized, completed);
     } catch (e) {
+      this.setState({ refreshingToken: false });
       console.log('token refresh error: ', e);
       logout(this.props.navigation);
     }

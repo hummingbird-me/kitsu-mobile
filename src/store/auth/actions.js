@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash';
 export const refreshTokens = (forceRefresh = false) => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
   if (isEmpty(tokens)) return null;
-  if (getState().isRefreshingTokens) return tokens;
+  if (getState().auth.isRefreshingTokens) return tokens;
 
   if (!forceRefresh) {
     // Make sure old token is expired before we refresh
