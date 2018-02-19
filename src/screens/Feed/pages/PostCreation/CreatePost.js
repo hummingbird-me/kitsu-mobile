@@ -259,8 +259,9 @@ class CreatePost extends React.PureComponent {
               value={content}
               placeholder={placeholder}
               placeholderTextColor={colors.grey}
-              autoCorrect={false}
+              autoCorrect
               autoFocus
+              autoCapitalize="sentences"
               underlineColorAndroid="transparent"
               blurOnSubmit={false}
             />
