@@ -29,12 +29,16 @@ export class Post extends PureComponent {
     comment: '',
     comments: [],
     latestComments: [],
+    commentsCount: this.props.post.commentsCount,
+    topLevelCommentsCount: this.props.post.topLevelCommentsCount,
     like: null,
     isLiked: false,
     postLikesCount: this.props.post.postLikesCount,
     overlayRemoved: false,
     isPostingComment: false,
   };
+
+  mounted = false
 
   componentDidMount() {
     this.mounted = true;
@@ -51,10 +55,20 @@ export class Post extends PureComponent {
     this.props.onPostPress({
       post: this.props.post,
       comments: this.state.comments,
+      commentsCount: this.state.commentsCount,
+      topLevelCommentsCount: this.state.topLevelCommentsCount,
       like: this.state.like,
       isLiked: this.state.isLiked,
       postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
+      syncComments: (comments) => {
+        this.setState({
+          comments: [...this.state.comments, ...comments],
+          latestComments: [...this.state.latestComments, ...comments],
+          commentsCount: this.state.commentsCount + comments.length,
+          topLevelCommentsCount: this.state.commentsCount + comments.length
+        })
+      }
     });
   }
 
@@ -72,35 +86,36 @@ export class Post extends PureComponent {
 
   onSubmitComment = async () => {
     if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
-
     this.setState({ isPostingComment: true });
 
-    const comment = await Kitsu.create('comments', {
-      content: this.state.comment.trim(),
-      post: {
-        id: this.props.post.id,
-        type: 'posts',
-      },
-      user: {
-        id: this.props.currentUser.id,
-        type: 'users',
-      },
-    });
-    comment.user = this.props.currentUser;
+    try {
+      const comment = await Kitsu.create('comments', {
+        content: this.state.comment.trim(),
+        post: {
+          id: this.props.post.id,
+          type: 'posts',
+        },
+        user: {
+          id: this.props.currentUser.id,
+          type: 'users',
+        },
+      });
+      comment.user = this.props.currentUser;
 
-    const processed = preprocessFeedPost(comment);
-
-    this.setState({
-      comment: '',
-      comments: [...this.state.comments, processed],
-      latestComments: [...this.state.latestComments, processed],
-      isPostingComment: false,
-    });
+      const processed = preprocessFeedPost(comment);
+      this.setState({
+        comment: '',
+        comments: [...this.state.comments, processed],
+        latestComments: [...this.state.latestComments, processed],
+        topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
+        commentsCount: this.state.commentsCount + 1
+      });
+    } catch (error) {
+      console.log('Error submitting comment:', error);
+    } finally {
+      this.setState({ isPostingComment: false });
+    }
   }
-
-  mounted = false
-
-  keyExtractor = (item, index) => index;
 
   fetchComments = async () => {
     try {
@@ -112,7 +127,7 @@ export class Post extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'avatar,name',
+          users: 'slug,avatar,name',
         },
         include: 'user',
         sort: '-createdAt',
@@ -208,7 +223,6 @@ export class Post extends PureComponent {
       nsfw,
       spoiler,
       spoiledUnit,
-      commentsCount,
       user,
     } = post;
     const {
@@ -216,6 +230,7 @@ export class Post extends PureComponent {
       latestComments,
       overlayRemoved,
       postLikesCount,
+      commentsCount,
       isPostingComment,
     } = this.state;
 
