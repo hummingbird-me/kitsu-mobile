@@ -273,8 +273,7 @@ export default class PostDetails extends PureComponent {
 
     return (
       <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={Platform.select({ ios: 0, android: -190 })}
+        behavior={Platform.select({ ios: 'padding', android: null })}
         style={{ flex: 1, paddingTop: isX ? paddingX + 20 : 20, backgroundColor: '#FFFFFF' }}
       >
         <StatusBar barStyle="dark-content" />
