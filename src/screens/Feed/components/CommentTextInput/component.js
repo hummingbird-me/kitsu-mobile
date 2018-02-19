@@ -72,6 +72,8 @@ export class CommentTextInput extends PureComponent {
               ref={inputRef}
               style={styles.textInputField}
               autoFocus={autoFocus}
+              autoCapitalize="sentences"
+              autoCorrect
               editable={!loading}
               placeholder={placeholderText}
               placeholderTextColor={colors.grey}
