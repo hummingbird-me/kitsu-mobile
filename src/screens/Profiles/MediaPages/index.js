@@ -200,9 +200,12 @@ class MediaPages extends PureComponent {
         include: `mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
       });
 
+      const previousCategories = (this.state.media && this.state.media.categories) || null;
+      const categories = (previousCategories && { categories: previousCategories }) || {};
+
       // Combine the 2 object that we have
       this.setState({
-        media: { ...media, categories: this.state.media.categories },
+        media: { ...media, ...categories },
         loadingAdditional: false,
       });
     } catch (error) {

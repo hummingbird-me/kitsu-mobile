@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, ScrollView, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
@@ -38,6 +38,7 @@ const progressFromLibraryEntry = (libraryEntry) => {
   return Math.floor((libraryEntry.progress / mediaData.chapterCount) * 100);
 };
 
+// FIXME: Is this a duplicate class of ProfilePages/pages/Library??
 export class UserLibraryScreenComponent extends React.Component {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
@@ -72,10 +73,9 @@ export class UserLibraryScreenComponent extends React.Component {
 
   componentDidMount() {
     const { profile } = this.props.navigation.state.params;
-    const { countForMaxWidth } = getCardVisibilityCounts();
 
     if (this.props.userLibrary.userId !== profile.id) {
-      this.props.fetchUserLibrary({ userId: profile.id, limit: countForMaxWidth });
+      this.props.fetchUserLibrary({ userId: profile.id });
     }
   }
 
@@ -108,25 +108,11 @@ export class UserLibraryScreenComponent extends React.Component {
     );
   }
 
-  renderLoadingList = () => {
-    const { countForMaxWidth } = getCardVisibilityCounts();
-    const data = Array(countForMaxWidth).fill(1).map((_, index) => ({ id: index, anime: {} }));
-
-    return (
-      <FlatList
-        horizontal
-        data={data}
-        initialNumToRender={countForMaxWidth}
-        initialScrollIndex={0}
-        keyExtractor={idExtractor}
-        getItemLayout={getItemLayout}
-        removeClippedSubviews={false}
-        renderItem={this.renderItem}
-        scrollEnabled={false}
-        showsHorizontalScrollIndicator={false}
-      />
-    );
-  }
+  renderLoadingList = () => (
+    <View style={styles.loadingList}>
+      <ActivityIndicator color="white" />
+    </View>
+  )
 
   renderEmptyList = (type, status) => {
     const { currentUser, navigation } = this.props;
@@ -223,7 +209,9 @@ export class UserLibraryScreenComponent extends React.Component {
               initialScrollIndex={0}
               getItemLayout={getItemLayout}
               keyExtractor={idExtractor}
-              onEndReached={fetchMore}
+              onEndReached={() => {
+                if (!loading) fetchMore();
+              }}
               onEndReachedThreshold={0.5}
               removeClippedSubviews={false}
               renderItem={this.renderItem}

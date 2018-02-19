@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { Kitsu } from 'kitsu/config/api';
@@ -52,8 +52,7 @@ class Library extends PureComponent {
 
   componentDidMount() {
     const { userId } = this.props;
-    const { countForMaxWidth } = getCardVisibilityCounts();
-    this.props.fetchUserLibrary({ userId, limit: countForMaxWidth });
+    this.props.fetchUserLibrary({ userId });
   }
 
   renderEmptyItem() {
@@ -85,25 +84,11 @@ class Library extends PureComponent {
     );
   }
 
-  renderLoadingList = () => {
-    const { countForMaxWidth } = getCardVisibilityCounts();
-    const data = Array(countForMaxWidth).fill(1).map((_, index) => ({ id: index, anime: {} }));
-
-    return (
-      <FlatList
-        horizontal
-        data={data}
-        initialNumToRender={countForMaxWidth}
-        initialScrollIndex={0}
-        keyExtractor={idExtractor}
-        getItemLayout={getItemLayout}
-        removeClippedSubviews={false}
-        renderItem={this.renderItem}
-        scrollEnabled={false}
-        showsHorizontalScrollIndicator={false}
-      />
-    );
-  }
+  renderLoadingList = () => (
+    <View style={styles.loadingList}>
+      <ActivityIndicator color="white" />
+    </View>
+  )
 
   renderEmptyList = (type, status) => {
     const { currentUser, profile } = this.props;

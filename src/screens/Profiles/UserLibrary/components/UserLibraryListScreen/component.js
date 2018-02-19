@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, View, ActivityIndicator } from 'react-native';
 import { PropTypes } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
@@ -24,6 +24,11 @@ export class UserLibraryListScreenComponent extends React.Component {
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
+    loading: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    loading: false,
   };
 
   static navigationOptions = (props) => {
@@ -121,6 +126,15 @@ export class UserLibraryListScreenComponent extends React.Component {
     );
   }
 
+  renderFooter = () => {
+    const { loading } = this.props;
+    if (!loading) return (<View />);
+
+    return (
+      <ActivityIndicator color="white" style={{ paddingVertical: 16 }} />
+    );
+  }
+
   renderItem = ({ item }) => (
     <UserLibraryListCard
       currentUser={this.props.currentUser}
@@ -135,7 +149,7 @@ export class UserLibraryListScreenComponent extends React.Component {
   );
 
   render() {
-    const { libraryEntries } = this.props;
+    const { libraryEntries, loading } = this.props;
     const renderData = libraryEntries.data.slice();
     this.state.movedEntries.forEach(({ entry, index }) => {
       renderData.splice(index, 0, entry);
@@ -146,11 +160,14 @@ export class UserLibraryListScreenComponent extends React.Component {
         <View>
           <FlatList
             ListHeaderComponent={this.renderSearchBar}
+            ListFooterComponent={this.renderFooter}
             data={renderData}
             initialNumToRender={10}
             initialScrollIndex={0}
             keyExtractor={idExtractor}
-            onEndReached={libraryEntries.fetchMore}
+            onEndReached={() => {
+              if (!loading) libraryEntries.fetchMore();
+            }}
             onEndReachedThreshold={0.75}
             removeClippedSubviews={false}
             renderItem={this.renderItem}
