@@ -156,12 +156,6 @@ const loginUserFb = async (dispatch) => {
   return result;
 };
 
-export const logoutUser = nav => (dispatch) => {
+export const logoutUser = () => (dispatch) => {
   dispatch({ type: types.LOGOUT_USER });
-  const resetAction = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'Intro' })],
-    key: null,
-  });
-  nav.dispatch(resetAction);
 };

@@ -26,14 +26,14 @@ export const kitsuRequestMiddleware = {
   name: 'kitsu-request-middleware',
   req: (payload) => {
     const jsonApi = payload.jsonApi;
-    // return jsonApi.axios(payload.req);
+
     // Send the request
     return jsonApi.axios(payload.req).catch((error) => {
       // Check if we got an 401 or 403 error
       // If so then refresh our tokens
       if ([401, 403].includes(error.status)) {
-        console.log(`Recieved a ${error.status}`);
-        console.log('Refreshing tokens');
+        console.log(`Recieved a ${error.status}.`);
+        console.log('Refreshing tokens.');
         // If we successfully refreshed the tokens then re-send the request, Otherwise logout
         return store.dispatch(refreshTokens(true)).then((tokens) => {
           console.log('Refreshed tokens: ', tokens);
