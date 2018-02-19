@@ -117,6 +117,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
         notifications: action.payload,
         loadingNotifications: false,
+        loadingMoreNotifications: action.loadingMoreNotifications,
         notificationsUnseen: action.meta.unseenCount,
         notificationsUnread: action.meta.unreadCount,
         error: '',
@@ -127,7 +128,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         notifications,
-        loadingNotifications: false,
+        loadingNotifications: true,
         notificationsUnseen: action.meta.unseenCount,
         notificationsUnread: action.meta.unreadCount,
         inAppNotification: {
@@ -159,19 +160,59 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
       };
     case types.MARK_AS_SEEN_SUCCESS:
-      // Setting notifications unseen to 0
+      // Setting notificationsUnseen to meta - seen
       // since response of the `mark seen` is
-      // not immediately changed and therefore
-      // metadata is invalid.
+      // not immediately changed because of using 3rd party
+      // notification service at backend.
+      currentNotifications = state.notifications.slice();
+      seen = 0;
+      // eslint-disable-next-line no-restricted-syntax
+      for (current of currentNotifications) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (target of action.notifications) {
+          if (current.id === target.id) {
+            current.isSeen = true;
+            seen += 1;
+          }
+        }
+      }
       return {
         ...state,
-        notificationsUnseen: 0,
-        notifications: state.notifications.map(v => ({
-          ...v,
-          isSeen: true,
-        })),
+        notificationsUnseen: action.meta.unseenCount - seen,
+        notifications: currentNotifications,
       };
     case types.MARK_AS_SEEN_FAIL:
+      return {
+        ...state,
+        // error: action.payload,
+      };
+    case types.MARK_AS_READ:
+      return {
+        ...state,
+      };
+    case types.MARK_AS_READ_SUCCESS:
+      // Setting notificationsUnread to meta - read
+      // since response of the `mark read` is
+      // not immediately changed because of using 3rd party
+      // notification service at backend.
+      currentNotifications = state.notifications.slice();
+      read = 0;
+      // eslint-disable-next-line no-restricted-syntax
+      for (current of currentNotifications) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (target of action.notifications) {
+          if (current.id === target.id) {
+            current.isRead = true;
+            read += 1;
+          }
+        }
+      }
+      return {
+        ...state,
+        notificationsUnread: action.meta.unreadCount - read,
+        notifications: currentNotifications,
+      };
+    case types.MARK_AS_READ_FAIL:
       return {
         ...state,
         // error: action.payload,

@@ -135,7 +135,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },
-      include: 'target.user,target.post,actor',
+      include: 'target.user,target.post,actor,target.manga,target.anime',
       fields: {
         activities: 'time,verb,id',
       },
@@ -153,6 +153,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       type: types.FETCH_NOTIFICATIONS_SUCCESS,
       payload: [...results],
       meta: results.meta,
+      loadingMoreNotifications: false,
     });
     const notificationsStream = getStream().feed(
       results.meta.feed.group,
@@ -160,9 +161,10 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       results.meta.feed.token,
     );
     notificationsStream.subscribe(async (data) => {
+      console.warn('Notifications stream callback triggered! Fetching more notifications.');
       const not = await Kitsu.one('activityGroups', id).get({
         page: { limit: 1 },
-        include: 'target.user,target.post,actor',
+        include: 'target.user,target.post,actor,target.manga,target.anime',
       });
       if (data.new.length > 0) {
         dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
@@ -187,41 +189,43 @@ export const dismissInAppNotification = (dispatch) => {
   dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION });
 };
 
-export const markNotifications = notifs => async (dispatch, getState) => {
-  const { id } = getState().user.currentUser;
-  const token = getState().auth.tokens.access_token;
-
-  // TODO: this can be rewritten with Devour.
-  fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_read`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify(notifs),
-  });
-};
-
-export const markNotificationsAsSeen = () => async (dispatch, getState) => {
+/**
+ * Marks notifications as read or seen and updates redux state.
+ * @param {object[]} notifications array to be updated
+ * @param {string} type seen or read
+ */
+export const markNotifications = (notifications, type = 'seen') => async (dispatch, getState) => {
+  if (type !== 'seen' && type !== 'read') {
+    throw Error('Notification Type must be "seen" or "read"');
+  }
   const token = getState().auth.tokens.access_token;
   const { id } = getState().user.currentUser;
-  const { notifications } = getState().feed;
-  const notificationsUnseen = notifications.filter(v => !v.isSeen).map(v => v.id);
+  const notificationsFiltered = notifications
+    .filter(v => !v[type === 'seen' ? 'isSeen' : 'isRead'])
+    .map(v => v.id);
 
-  dispatch({ type: types.MARK_AS_SEEN });
+  dispatch({ type: types[`MARK_AS_${type.toUpperCase()}`] });
   try {
     // TODO: Use Devour: Manually fetching results in ugly response,
     // which also makes reducer more complicated than it should be.
-    const results = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_seen`, {
+    const results = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_${type}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/vnd.api+json',
         'content-type': 'application/json',
       },
-      body: JSON.stringify(notificationsUnseen),
+      body: JSON.stringify(notificationsFiltered),
     }).then(response => response.json());
-    dispatch({ type: types.MARK_AS_SEEN_SUCCESS, payload: results.data });
+    dispatch({
+      type: types[`MARK_AS_${type.toUpperCase()}_SUCCESS`],
+      payload: results.data,
+      meta: results.meta,
+      notifications,
+    });
   } catch (e) {
     console.log(e);
-    dispatch({ type: types.MARK_AS_SEEN_FAIL });
+    dispatch({ type: types[`MARK_AS_${type.toUpperCase()}_FAIL`] });
   }
 };
 
