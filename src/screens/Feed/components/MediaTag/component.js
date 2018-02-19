@@ -4,14 +4,17 @@ import { StyledText } from 'kitsu/components/StyledText';
 import PropTypes from 'prop-types';
 import { styles } from './styles';
 
+const navigateToMedia = (media, navigation) => {
+  if (media) navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type });
+}
+
 export const MediaTag = ({ disabled, media, episode, navigation, style }) => {
   const episodePrefix = media.type === 'anime' ? 'E' : 'CH';
   return (
     <View style={[styles.mediaTagView, style]}>
       <TouchableOpacity
         disabled={disabled}
-        onPress={() =>
-          navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
+        onPress={() => navigateToMedia(media, navigation)}
         style={styles.mediaTag}
       >
         <StyledText color="green" size="xxsmall">
@@ -21,8 +24,7 @@ export const MediaTag = ({ disabled, media, episode, navigation, style }) => {
       {episode && (
         <TouchableOpacity
           disabled={disabled}
-          onPress={() =>
-            navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type })}
+          onPress={() => navigateToMedia(media, navigation)}
           style={styles.episodeTagView}
         >
           <View style={styles.episodeTagLine} />

@@ -99,6 +99,7 @@ class SearchScreen extends Component {
           value={currentValue}
           onChangeText={t => this.handleSearchStateChange(route, t)}
           onSubmitEditing={() => Keyboard.dismiss()}
+          returnKeyType="search"
         />
         <ScrollView
           contentContainerStyle={styles.scrollViewContentContainer}

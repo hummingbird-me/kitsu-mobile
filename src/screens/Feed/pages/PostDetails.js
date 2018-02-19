@@ -5,6 +5,7 @@ import {
   View,
   StatusBar,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
@@ -22,6 +23,7 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
+import { isEmpty } from 'lodash';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -64,13 +66,17 @@ export default class PostDetails extends PureComponent {
   onCommentChanged = comment => this.setState({ comment });
 
   onGifSelected = (gif) => {
-    this.setState({ comment: gif.images.original.url }, () => {
-      this.onSubmitComment();
+    const gifUrl = gif.images.original.url;
+    const comment = this.state.comment.trim();
+    const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
+    this.setState({ comment: newComment }, () => {
+      // Submit gif if comment was empty
+      if (isEmpty(comment)) this.onSubmitComment();
     });
   }
 
   onSubmitComment = async () => {
-    if (this.state.isPostingComment) return;
+    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
 
     this.setState({ isPostingComment: true });
 
@@ -90,7 +96,7 @@ export default class PostDetails extends PureComponent {
       }
 
       const comment = await Kitsu.create('comments', {
-        content: this.state.comment,
+        content: this.state.comment.trim(),
         post: {
           id: post.id,
           type: 'posts',
@@ -267,7 +273,7 @@ export default class PostDetails extends PureComponent {
 
     return (
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.select({ ios: 'padding', android: null })}
         style={{ flex: 1, paddingTop: isX ? paddingX + 20 : 20, backgroundColor: '#FFFFFF' }}
       >
         <StatusBar barStyle="dark-content" />
@@ -291,7 +297,7 @@ export default class PostDetails extends PureComponent {
               commentsCount={commentsCount}
               taggedMedia={media}
               taggedEpisode={spoiledUnit}
-              navigation={navigation}
+              navigation={this.props.navigation}
             />
 
             <PostActions
@@ -342,6 +348,7 @@ export default class PostDetails extends PureComponent {
               onGifSelected={this.onGifSelected}
               onSubmit={this.onSubmitComment}
               loading={isPostingComment}
+              multiline
             />
           </PostSection>
         </PostFooter>

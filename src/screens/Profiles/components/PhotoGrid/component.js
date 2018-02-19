@@ -40,21 +40,25 @@ export class PhotoGrid extends React.Component {
     );
   }
 
-  renderItem = (item, itemWidth, adjustedMargin) => (
-    <View style={{
-      width: itemWidth,
-      height: itemWidth,
-      marginRight: adjustedMargin,
-    }}
-    >
-      <ImageCard
-        variant="filled"
-        borderRadius={0}
-        title={item.character.name}
-        source={{ uri: item.character.image.original }}
-      />
-    </View>
-  );
+  renderItem = (item, itemWidth, adjustedMargin) => {
+    const character = item && item.character;
+    const image = character && character.image && character.image.original;
+    return (
+      <View style={{
+        width: itemWidth,
+        height: itemWidth,
+        marginRight: adjustedMargin,
+      }}
+      >
+        <ImageCard
+          variant="filled"
+          borderRadius={0}
+          title={(character && character.name) || '-'}
+          source={{ uri: image || null }}
+        />
+      </View>
+    );
+  }
 
   render() {
     if (!this.props.photos) return null;

@@ -167,6 +167,7 @@ export class Comment extends PureComponent {
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
       navigation={this.props.navigation}
+      overlayColor={this.props.overlayColor}
     />
   )
 

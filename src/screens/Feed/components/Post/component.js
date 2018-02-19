@@ -10,6 +10,7 @@ import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
+import { isEmpty } from 'lodash';
 
 // Post
 export class Post extends PureComponent {
@@ -60,18 +61,22 @@ export class Post extends PureComponent {
   onCommentChanged = comment => this.setState({ comment })
 
   onGifSelected = (gif) => {
-    this.setState({ comment: gif.images.original.url }, () => {
-      this.onSubmitComment();
+    const gifUrl = gif.images.original.url;
+    const comment = this.state.comment.trim();
+    const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
+    this.setState({ comment: newComment }, () => {
+      // Submit gif if comment was empty
+      if (isEmpty(comment)) this.onSubmitComment();
     });
   }
 
   onSubmitComment = async () => {
-    if (this.state.isPostingComment) return;
+    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
 
     this.setState({ isPostingComment: true });
 
     const comment = await Kitsu.create('comments', {
-      content: this.state.comment,
+      content: this.state.comment.trim(),
       post: {
         id: this.props.post.id,
         type: 'posts',

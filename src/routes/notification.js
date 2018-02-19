@@ -34,17 +34,27 @@ const NotifStack = StackNavigator(
         },
       ),
       // eslint-disable-next-line react/prop-types
-      tabBarIcon: ({ tintColor }) => (
-        <View style={styles.tabBarIcon}>
-          {screenProps &&
-            screenProps.badge > 0 && (
-              <View style={styles.textWrapper}>
-                <Text style={styles.text}>{screenProps.badge}</Text>
-              </View>
-            )}
-          <Image source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
-        </View>
-      ),
+      tabBarIcon: ({ tintColor }) => {
+        const shouldExpand = screenProps.badge > 99;
+        return (
+          <View style={[
+            styles.tabBarIconWrapper, shouldExpand && styles.tabBarIconWrapperExpanded]}
+          >
+            {screenProps &&
+              screenProps.badge > 0 && (
+                <View style={[
+                  styles.textWrapper,
+                  shouldExpand && styles.textWrapperExpanded]}
+                >
+                  <Text style={styles.text}>
+                    {shouldExpand ? '99+' : screenProps.badge}
+                  </Text>
+                </View>
+              )}
+            <Image source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
+          </View>
+        );
+      },
     }),
   },
 );
@@ -62,13 +72,25 @@ const styles = StyleSheet.create({
     zIndex: 2,
     minWidth: 16,
   },
+  textWrapperExpanded: {
+    minWidth: 22,
+  },
   text: {
     color: colors.white,
-    fontSize: 10,
     minWidth: 14,
+    fontSize: 10,
     fontWeight: '700',
     textAlign: 'center',
     fontFamily: 'OpenSans',
+  },
+  tabBarIconWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 21,
+    height: 21,
+  },
+  tabBarIconWrapperExpanded: {
+    width: 25,
   },
   tabBarIcon: {
     width: 21,

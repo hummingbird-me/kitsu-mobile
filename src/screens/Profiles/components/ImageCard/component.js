@@ -29,7 +29,7 @@ const TextView = ({ variant, title, subtitle, boldTitle, centerTitle, noMask }) 
       <View style={[styles.anchorBottom, { padding: paddingOptions[variant] }]}>
         {!isEmpty(subtitle) && <StyledText color="lightGrey" size={subtitleSize} numberOfLines={1}>{subtitle}</StyledText>}
         {!isEmpty(title) &&
-          (<StyledText
+          <StyledText
             color="light"
             size={titleSize}
             bold={boldTitle}
@@ -39,7 +39,7 @@ const TextView = ({ variant, title, subtitle, boldTitle, centerTitle, noMask }) 
             ellipsizeMode="tail"
           >
             {title}
-          </StyledText>)
+          </StyledText>
         }
       </View>
     </View>
@@ -103,7 +103,7 @@ export const ImageCard = ({
           noMask={noMask}
         />
       </View>
-      {subheading && (
+      {!isEmpty(subheading) && (
         <View style={{ width: cardDimensions.width, paddingTop: 4 }}>
           <Text numberOfLines={1} style={styles.subheading}>
             {subheading}

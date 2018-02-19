@@ -16,7 +16,7 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import capitalize from 'lodash/capitalize';
+import { capitalize, upperFirst } from 'lodash';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
@@ -71,6 +71,58 @@ class MediaPages extends PureComponent {
     this.fetchLibraryEntry(mediaType, mediaId);
   }
 
+  onMainButtonOptionsSelected = async (option) => {
+    const { libraryEntry } = this.state;
+    switch (option) {
+      case 'current':
+      case 'planned':
+      case 'completed':
+      case 'on_hold':
+      case 'dropped':
+        libraryEntry ? await this.updateLibraryEntry(option) : await this.createLibraryEntry(option);
+        break;
+      case 'remove':
+        this.setState({ loadingLibrary: true });
+        await Kitsu.destroy('libraryEntries', libraryEntry.id);
+        this.setState({ libraryEntry: null, loadingLibrary: false });
+        break;
+      default:
+        console.log('unhandled option selected:', option);
+        break;
+    }
+  }
+
+  onMoreButtonOptionsSelected = async (option) => {
+    const { mediaId, mediaType } = this.props.navigation.state.params;
+    switch (option) {
+      case 'add': {
+        const record = await Kitsu.create('favorites', {
+          item: {
+            id: mediaId,
+            type: mediaType,
+          },
+          user: {
+            id: this.props.currentUser.id,
+            type: 'users',
+          },
+        });
+        this.setState({ favorite: record });
+        break;
+      }
+      case 'remove':
+        await Kitsu.destroy('favorites', this.state.favorite.id);
+        this.setState({ favorite: null });
+        break;
+      default:
+        console.log('unhandled option selected:', option);
+        break;
+    }
+  }
+
+  setActiveTab = (tab) => {
+    this.setState({ active: tab });
+  }
+
   createLibraryEntry = async (status) => {
     const { mediaId, mediaType } = this.props.navigation.state.params;
     try {
@@ -105,57 +157,6 @@ class MediaPages extends PureComponent {
     } catch (err) {
       console.log('Error updating library entry:', err);
     }
-  }
-
-  onMainButtonOptionsSelected = async (option) => {
-    const { libraryEntry } = this.state;
-    switch (option) {
-      case 'current':
-      case 'planned':
-      case 'completed':
-      case 'on_hold':
-      case 'dropped':
-        libraryEntry ? await this.updateLibraryEntry(option) : await this.createLibraryEntry(option);
-        break;
-      case 'remove':
-        this.setState({ loadingLibrary: true });
-        await Kitsu.destroy('libraryEntries', libraryEntry.id);
-        this.setState({ libraryEntry: null, loadingLibrary: false });
-        break;
-      default:
-        console.log('unhandled option selected:', option);
-        break;
-    }
-  }
-
-  onMoreButtonOptionsSelected = async (option) => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
-    switch (option) {
-      case 'add':
-        const record = await Kitsu.create('favorites', {
-          item: {
-            id: mediaId,
-            type: mediaType
-          },
-          user: {
-            id: this.props.currentUser.id,
-            type: 'users'
-          }
-        });
-        this.setState({ favorite: record });
-        break;
-      case 'remove':
-        await Kitsu.destroy('favorites', this.state.favorite.id);
-        this.setState({ favorite: null });
-        break;
-      default:
-        console.log('unhandled option selected:', option);
-        break;
-    }
-  }
-
-  setActiveTab = (tab) => {
-    this.setState({ active: tab });
   }
 
   goBack = () => this.props.navigation.goBack();
@@ -381,7 +382,11 @@ class MediaPages extends PureComponent {
             variant="media"
             media={media}
             type={capitalize(media.type)}
-            subType={media.showType || capitalize(media.mangaType || '')}
+            subType={
+              (media.showType && upperFirst(media.showType)) ||
+              (media.mangaType && capitalize(media.mangaType)) ||
+              ''
+            }
             title={media.canonicalTitle}
             description={media.synopsis}
             coverImage={media.coverImage && media.coverImage.original}

@@ -47,12 +47,17 @@ class Reactions extends PureComponent {
       <TabContainer>
         <FlatList
           data={data}
-          renderItem={({ item }) => (
-            <ReactionBox
-              reactedMedia={item.anime ? item.anime.canonicalTitle : item.manga.canonicalTitle}
-              reaction={item}
-            />
-          )}
+          renderItem={({ item }) => {
+            const title =
+              (item.anime && item.anime.canonicalTitle) ||
+              (item.manga && item.manga.canonicalTitle) || '-';
+            return (
+              <ReactionBox
+                reactedMedia={title}
+                reaction={item}
+              />
+            );
+          }}
           ItemSeparatorComponent={() => <RowSeparator size="large" transparent />}
         />
       </TabContainer>
