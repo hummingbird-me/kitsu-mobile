@@ -91,7 +91,7 @@ class HomeScreen extends Component {
               Nuck Library
             </Text>
           </Button>
-          <Button onPress={() => this.props.logoutUser(navigation)}>
+          <Button onPress={this.props.logoutUser}>
             <Text>
               Logout
             </Text>

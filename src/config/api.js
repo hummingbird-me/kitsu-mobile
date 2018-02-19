@@ -1,6 +1,7 @@
 import OAuth2 from 'client-oauth2';
 import JsonApi from 'devour-client';
 import { kitsuConfig } from './env';
+import { errorMiddleware, kitsuRequestMiddleware } from './middlewares';
 
 export const auth = new OAuth2({
   clientId: kitsuConfig.authConfig.CLIENT_ID,
@@ -15,28 +16,8 @@ export const Kitsu = new JsonApi({
 });
 
 Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
-
-const errorMiddleware = {
-  name: 'error-middleware',
-  error: (payload) => {
-    console.log('failed payload', payload);
-    if (payload.status === 401) {
-      return {
-        request: {
-          authorized: false,
-        },
-      };
-    }
-    const data = payload.data;
-    if (!(data && data.errors)) {
-      console.log('Unidentified error');
-      console.log(payload);
-      return null;
-    }
-    return payload.data.errors;
-  },
-};
 Kitsu.replaceMiddleware('errors', errorMiddleware);
+Kitsu.replaceMiddleware('axios-request', kitsuRequestMiddleware);
 
 Kitsu.define(
   'users',

@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { Platform, View, StatusBar, Linking } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
-import identity from 'lodash/identity';
+import { identity, isNull } from 'lodash';
 
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
@@ -30,6 +30,7 @@ class App extends PureComponent {
     OneSignal.addEventListener('registered', this.onPNRegistered);
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
+    this.unsubscribe = store.subscribe(this.onStoreUpdate);
   }
 
   componentDidMount() {
@@ -41,6 +42,25 @@ class App extends PureComponent {
     OneSignal.removeEventListener('registered', this.onPNRegistered);
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
+    this.unsubscribe();
+  }
+
+  onStoreUpdate() {
+    // Check if authentication state changed
+    const authenticated = store.getState().auth.isAuthenticated;
+
+    // If the authentication state changed from true to false then take user to intro screen
+    if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Intro' })],
+        key: null,
+      });
+      this.navigation.dispatch(resetAction);
+    }
+
+    // Set the new authentication value
+    this.authenticated = authenticated;
   }
 
   onIds(device) {
