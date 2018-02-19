@@ -23,6 +23,7 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
+import { isEmpty } from 'lodash';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
