@@ -37,6 +37,9 @@ export default class PostDetails extends PureComponent {
   constructor(props) {
     super(props);
 
+    const { post, postLikesCount } = props.navigation.state.params;
+    const postLikes = parseInt(postLikesCount, 10) || parseInt(post.postLikesCount, 10) || 0;
+
     this.state = {
       comment: '',
       comments: props.navigation.state.params.comments && [
@@ -44,7 +47,7 @@ export default class PostDetails extends PureComponent {
       ],
       like: props.navigation.state.params.like,
       isLiked: props.navigation.state.params.isLiked,
-      postLikesCount: props.navigation.state.params.postLikesCount,
+      postLikesCount: postLikes,
       taggedMedia: {
         media: {
           canonicalTitle: 'Made in Abyss',

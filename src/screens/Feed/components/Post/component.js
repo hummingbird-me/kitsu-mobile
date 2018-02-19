@@ -31,7 +31,7 @@ export class Post extends PureComponent {
     latestComments: [],
     like: null,
     isLiked: false,
-    postLikesCount: this.props.post.postLikesCount,
+    postLikesCount: parseInt(this.props.post.postLikesCount, 10) || 0,
     overlayRemoved: false,
     isPostingComment: false,
   };
