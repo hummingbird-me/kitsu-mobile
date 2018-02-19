@@ -34,7 +34,7 @@ export const refreshTokens = (forceRefresh = false) => async (dispatch, getState
     return newTokens.data;
   } catch (e) {
     dispatch({ type: types.TOKEN_REFRESH_FAIL });
-    throw e;
+    return Promise.reject(e);
   }
 };
 
