@@ -86,21 +86,21 @@ export class Post extends PureComponent {
 
   onSubmitComment = async () => {
     if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
-
     this.setState({ isPostingComment: true });
 
-    const comment = await Kitsu.create('comments', {
-      content: this.state.comment.trim(),
-      post: {
-        id: this.props.post.id,
-        type: 'posts',
-      },
-      user: {
-        id: this.props.currentUser.id,
-        type: 'users',
-      },
-    });
-    comment.user = this.props.currentUser;
+    try {
+      const comment = await Kitsu.create('comments', {
+        content: this.state.comment.trim(),
+        post: {
+          id: this.props.post.id,
+          type: 'posts',
+        },
+        user: {
+          id: this.props.currentUser.id,
+          type: 'users',
+        },
+      });
+      comment.user = this.props.currentUser;
 
       const processed = preprocessFeedPost(comment);
       this.setState({
@@ -108,11 +108,12 @@ export class Post extends PureComponent {
         comments: [...this.state.comments, processed],
         latestComments: [...this.state.latestComments, processed],
         topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
-        commentsCount: this.state.commentsCount + 1,
-        isPostingComment: false,
+        commentsCount: this.state.commentsCount + 1
       });
     } catch (error) {
       console.log('Error submitting comment:', error);
+    } finally {
+      this.setState({ isPostingComment: false });
     }
   }
 

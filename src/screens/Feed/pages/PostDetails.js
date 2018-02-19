@@ -115,7 +115,6 @@ export default class PostDetails extends PureComponent {
       this.setState({
         comment: '',
         isReplying: false,
-        isPostingComment: false,
         commentsCount: this.state.commentsCount + 1
       });
 
@@ -137,6 +136,7 @@ export default class PostDetails extends PureComponent {
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);
+    } finally {
       this.setState({ isPostingComment: false });
     }
   };
