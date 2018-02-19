@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   editorWrapper: {
     flex: 1,
