@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, TextInput, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, ActivityIndicator, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
-
 
 export class CommentTextInput extends PureComponent {
   static propTypes = {
@@ -21,6 +21,7 @@ export class CommentTextInput extends PureComponent {
     onCommentChanged: PropTypes.func,
     onGifSelected: PropTypes.func,
     loading: PropTypes.bool,
+    multiline: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -33,10 +34,12 @@ export class CommentTextInput extends PureComponent {
     onCommentChanged: null,
     onGifSelected: null,
     loading: false,
+    multiline: false,
   }
 
   state = {
     gifModalVisible: false,
+    textInputHeight: null,
   }
 
   onGifSelect = (gif) => {
@@ -55,25 +58,42 @@ export class CommentTextInput extends PureComponent {
       onCommentChanged,
       onSubmit,
       loading,
+      multiline,
     } = this.props;
 
-    const { gifModalVisible } = this.state;
+    const { gifModalVisible, textInputHeight } = this.state;
 
     return (
       <Layout.RowWrap alignItems="center">
         {showAvatar && <Avatar avatar={currentUser.avatar && currentUser.avatar.medium} size="small" />}
         <Layout.RowMain>
           <View style={styles.textInputBox}>
-            {/* TODO: Maybe a good idea to not make it editable when loading? */}
             <TextInput
               ref={inputRef}
               style={styles.textInputField}
               autoFocus={autoFocus}
+              editable={!loading}
               placeholder={placeholderText}
               placeholderTextColor={colors.grey}
               onChangeText={onCommentChanged}
               value={comment}
               underlineColorAndroid="transparent"
+              multiline={multiline}
+              height={Platform.select({ ios: null, android: (textInputHeight || 0) })}
+              onContentSizeChange={({ nativeEvent }) => {
+                // On android the text box doesn't auto grow, so we have to manually set the height
+                // BUG: Once Max height has been reached, this will not allow scroll on android
+                if (multiline && Platform.OS === 'android') {
+                  this.setState({ textInputHeight: nativeEvent.contentSize.height });
+                }
+              }}
+              onSubmitEditing={() => {
+                if (multiline && !comment.endsWith('\n')) {
+                  const updatedContent = `${comment}\n`;
+                  onCommentChanged(updatedContent);
+                }
+              }}
+              blurOnSubmit={!multiline}
             />
             <TouchableOpacity
               style={styles.gifButton}
@@ -83,7 +103,7 @@ export class CommentTextInput extends PureComponent {
             </TouchableOpacity>
           </View>
         </Layout.RowMain>
-        {!!comment && (
+        {!isEmpty(comment.trim()) && (
           <TouchableOpacity onPress={onSubmit} style={styles.submitButton} disabled={loading}>
             { loading ?
               <ActivityIndicator color={colors.blue} />
