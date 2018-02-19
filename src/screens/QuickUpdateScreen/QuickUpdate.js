@@ -22,6 +22,7 @@ import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
+import { isEmpty } from 'lodash';
 
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
@@ -391,8 +392,12 @@ class QuickUpdate extends Component {
 
   updateTextAndToggle = async () => {
     // Restore any previous text, and then toggle the editor.
-    this.setState({ discussionsLoading: true }, this.toggleEditor);
     const { library, currentIndex, editorText } = this.state;
+    this.setState({ discussionsLoading: !isEmpty(editorText.trim()) }, this.toggleEditor);
+
+    // Make sure we have something written in the text
+    if (isEmpty(editorText.trim())) return;
+
     const { currentUser } = this.props;
     const current = library[currentIndex];
     try {

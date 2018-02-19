@@ -149,15 +149,20 @@ export default class Summary extends PureComponent {
           onViewAllPress={() => this.navigateTo('Reactions')}
           data={userReactions}
           loading={isNull(userReactions)}
-          renderItem={({ item }) => (
-            <ScrollItem>
-              <ReactionBox
-                boxed={true}
-                reactedMedia={item.anime ? item.anime.canonicalTitle : item.manga.canonicalTitle}
-                reaction={item}
-              />
-            </ScrollItem>
-          )}
+          renderItem={({ item }) => {
+            const title =
+              (item.anime && item.anime.canonicalTitle) ||
+              (item.manga && item.manga.canonicalTitle) || '-';
+            return (
+              <ScrollItem>
+                <ReactionBox
+                  boxed
+                  reactedMedia={title}
+                  reaction={item}
+                />
+              </ScrollItem>
+            );
+          }}
         />
       </SceneContainer>
     );
