@@ -17,7 +17,7 @@ class SearchFilter extends Component {
     header: (
       <NavigationHeader
         navigation={navigation}
-        title="Filter"
+        title="Filters"
         leftIcon={null}
         leftAction={null}
       />
