@@ -12,7 +12,7 @@ import { styles } from './styles';
 
 export const PostHeader = ({ avatar, onAvatarPress, name, time, onBackButtonPress }) => {
   const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
-  const ACTION_OPTIONS = ['Copy link to post', 'Follow post', `Hide post from ${name}`, 'Report Post', `Block ${name}`, 'Never mind'];
+  const ACTION_OPTIONS = ['Copy Link to Post', 'Follow Post', `Hide Posts from ${name}`, 'Report Post', `Block ${name}`, 'Nevermind'];
   return (
     <View style={styles.postHeader}>
       <Layout.RowWrap alignItems="center">
