@@ -297,7 +297,7 @@ export default class PostDetails extends PureComponent {
               commentsCount={commentsCount}
               taggedMedia={media}
               taggedEpisode={spoiledUnit}
-              navigation={navigation}
+              navigation={this.props.navigation}
             />
 
             <PostActions
