@@ -23,6 +23,7 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
+import { isEmpty } from 'lodash';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -65,8 +66,12 @@ export default class PostDetails extends PureComponent {
   onCommentChanged = comment => this.setState({ comment });
 
   onGifSelected = (gif) => {
-    this.setState({ comment: gif.images.original.url }, () => {
-      this.onSubmitComment();
+    const gifUrl = gif.images.original.url;
+    const comment = this.state.comment.trim();
+    const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
+    this.setState({ comment: newComment }, () => {
+      // Submit gif if comment was empty
+      if (isEmpty(comment)) this.onSubmitComment();
     });
   }
 
