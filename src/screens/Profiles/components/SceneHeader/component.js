@@ -11,6 +11,7 @@ import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
@@ -41,7 +42,7 @@ export class SceneHeader extends PureComponent {
         <View>
           {/* Rankings */}
           <View style={styles.descriptionView}>
-            <StyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={!this.state.expanded && 4}>{description}</StyledText>
+            <StyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={(!this.state.expanded && 4) || undefined}>{description}</StyledText>
             <TouchableOpacity onPress={this.toggleExpanded}>
               <StyledText size="small" color="grey">{expandedText}</StyledText>
             </TouchableOpacity>
@@ -126,6 +127,8 @@ export class SceneHeader extends PureComponent {
       posterImage,
       moreButtonOptions,
       onMoreButtonOptionsSelected,
+      showMoreButton,
+      subType,
     } = this.props;
 
     return (
@@ -147,20 +150,24 @@ export class SceneHeader extends PureComponent {
           <View style={[styles.titleView, styles[`titleView__${variant}`]]}>
             {/* Title */}
             <View style={[styles.titleTop, styles[`titleTop__${variant}`]]}>
-              <StyledText size="xsmall" color="light">{type}</StyledText>
+              <StyledText size="xsmall" color="light">
+                {type}{!isEmpty(subType) && subType !== type && ` · ${subType}`}
+              </StyledText>
               <StyledText size="large" color="light" bold>{title}</StyledText>
             </View>
 
             {/* Add to library button & more button */}
             <View style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}>
               {this.renderMainButton()}
-              <SelectMenu
-                options={moreButtonOptions}
-                onOptionSelected={onMoreButtonOptionsSelected}
-                style={styles.moreButton}
-              >
-                <Icon name="md-more" style={styles.moreIcon} />
-              </SelectMenu>
+              {showMoreButton &&
+                <SelectMenu
+                  options={moreButtonOptions}
+                  onOptionSelected={onMoreButtonOptionsSelected}
+                  style={styles.moreButton}
+                >
+                  <Icon name="md-more" style={styles.moreIcon} />
+                </SelectMenu>
+              }
             </View>
           </View>
         </View>
@@ -221,6 +228,7 @@ SceneHeader.propTypes = {
   mainButtonOptions: PropTypes.array,
   mainButtonTitle: PropTypes.string,
   moreButtonOptions: PropTypes.array,
+  showMoreButton: PropTypes.bool,
   onFollowButtonPress: PropTypes.func,
   onMainButtonOptionsSelected: PropTypes.func,
   onMoreButtonOptionsSelected: PropTypes.func,
@@ -229,6 +237,7 @@ SceneHeader.propTypes = {
   ratingRank: PropTypes.string,
   title: PropTypes.string,
   type: PropTypes.string,
+  subType: PropTypes.string,
   variant: PropTypes.oneOf(['profile', 'media', 'group']),
 };
 
@@ -242,6 +251,7 @@ SceneHeader.defaultProps = {
   mainButtonOptions: [],
   mainButtonTitle: 'Follow',
   moreButtonOptions: [],
+  showMoreButton: true,
   onFollowButtonPress: null,
   onHeaderLeftButtonPress: null,
   onMainButtonOptionsSelected: null,
@@ -251,5 +261,6 @@ SceneHeader.defaultProps = {
   ratingRank: '',
   title: '',
   type: '',
+  subType: '',
   variant: 'profile',
 };

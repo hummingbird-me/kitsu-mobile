@@ -4,25 +4,21 @@ import {
   FlatList,
   View,
   StatusBar,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
-
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import {
-  PostHeader,
-  PostMain,
-  PostActions,
   PostFooter,
   PostSection,
   PostCommentsSection,
   PostReplyBanner,
 } from 'kitsu/screens/Feed/components/Post';
+import { PostHeader, PostMain, PostActions } from 'kitsu/screens/Feed/components/Post/components';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
-import { StyledText } from 'kitsu/components/StyledText';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
@@ -240,7 +236,7 @@ export default class PostDetails extends PureComponent {
   keyExtractor = (item, index) => index;
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
+    if (userId) this.props.navigation.navigate('ProfilePages', { userId });
   };
 
   renderItem = ({ item }) => {
@@ -251,7 +247,7 @@ export default class PostDetails extends PureComponent {
         comment={item}
         currentUser={currentUser}
         navigation={this.props.navigation}
-        onAvatarPress={() => this.navigateToUserProfile(item.user.id)}
+        onAvatarPress={id => this.navigateToUserProfile(id)}
         onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
         overlayColor={colors.offWhite}
       />
@@ -277,9 +273,11 @@ export default class PostDetails extends PureComponent {
         <StatusBar barStyle="dark-content" />
 
         <PostHeader
-          avatar={(post.user.avatar && post.user.avatar.medium) || defaultAvatar}
-          onAvatarPress={() => this.navigateToUserProfile(post.user.id)}
-          name={post.user.name}
+          avatar={(post.user && post.user.avatar && post.user.avatar.medium) || defaultAvatar}
+          onAvatarPress={() => {
+            if (post.user) this.navigateToUserProfile(post.user.id);
+          }}
+          name={(post.user && post.user.name) || '-'}
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />

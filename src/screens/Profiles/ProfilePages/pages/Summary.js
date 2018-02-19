@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
+import { isNull } from 'lodash';
 import capitalize from 'lodash/capitalize';
 
 import { Kitsu } from 'kitsu/config/api';
@@ -9,6 +10,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
 import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
+import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { StyledText } from 'kitsu/components/StyledText';
 
 export default class Summary extends PureComponent {
@@ -26,13 +28,15 @@ export default class Summary extends PureComponent {
     loading: true,
     libraryActivity: null,
     error: null,
+    userReactions: null,
   }
 
   componentDidMount() {
-    this.loadData();
+    this.loadLibraryActivity();
+    this.loadReactions();
   }
 
-  loadData = async () => {
+  loadLibraryActivity = async () => {
     const { userId } = this.props;
 
     try {
@@ -58,6 +62,21 @@ export default class Summary extends PureComponent {
     }
   }
 
+  loadReactions = async () => {
+    const { userId } = this.props;
+    try {
+      const reactions = await Kitsu.findAll('mediaReactions', {
+        filter: { userId },
+        include: 'anime,user,manga',
+        sort: 'upVotesCount',
+        page: { limit: 5 }
+      });
+      this.setState({ userReactions: reactions });
+    } catch (error) {
+      console.log('Error fetching reactions for user:', error);
+    }
+  }
+
   navigateTo = (scene) => {
     this.props.setActiveTab(scene);
   }
@@ -74,7 +93,7 @@ export default class Summary extends PureComponent {
   }
 
   render() {
-    const { loading, error, libraryActivity } = this.state;
+    const { loading, error, libraryActivity, userReactions } = this.state;
 
     if (loading) return <SceneLoader />;
 
@@ -115,7 +134,7 @@ export default class Summary extends PureComponent {
                     }}
                   />
                   <View style={{ alignItems: 'center', marginTop: 3 }}>
-                    <StyledText size="xxsmall">{caption}</StyledText>
+                    <StyledText size="xxsmall" color="dark">{caption}</StyledText>
                   </View>
                 </TouchableOpacity>
               </ScrollItem>
@@ -124,21 +143,18 @@ export default class Summary extends PureComponent {
         />
 
         {/* Reactions */}
-        {/* Todo KB: get real data */}
+        {/* @TODO: Empty state when userReactions != null && empty */}
         <ScrollableSection
           title="Reactions"
           onViewAllPress={() => this.navigateTo('Reactions')}
+          data={userReactions}
+          loading={isNull(userReactions)}
           renderItem={({ item }) => (
             <ScrollItem>
-              <ImageCard
-                subtitle="Ep. 1 of 12"
-                title={item.canonicalTitle}
-                variant="landscapeLarge"
-                source={{
-                  uri:
-                    (item.thumbnail && item.thumbnail.original) ||
-                    (media.posterImage && media.posterImage.large),
-                }}
+              <ReactionBox
+                boxed={true}
+                reactedMedia={item.anime ? item.anime.canonicalTitle : item.manga.canonicalTitle}
+                reaction={item}
               />
             </ScrollItem>
           )}

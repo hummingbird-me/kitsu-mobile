@@ -15,6 +15,7 @@ import { isEmpty } from 'lodash';
 import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { handleURL } from 'kitsu/common/utils/url';
 import { styles } from './styles';
 
 export class Comment extends PureComponent {
@@ -162,25 +163,36 @@ export class Comment extends PureComponent {
       post={this.props.post}
       comment={item}
       currentUser={this.props.currentUser}
-      onAvatarPress={() => this.props.navigation.navigate('ProfilePages', { userId: item.user.id })}
+      onAvatarPress={this.props.onAvatarPress}
       onReplyPress={() => this.onReplyPress(item)}
+      hideEmbeds={this.props.hideEmbeds}
+      navigation={this.props.navigation}
     />
   )
 
   render() {
     const {
+      navigation,
       comment,
       isTruncated,
       onAvatarPress,
       overlayColor,
+      hideEmbeds,
     } = this.props;
 
     const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
 
     const { content, createdAt, user, embed } = comment;
-    const { avatar, name } = user;
+
+    // Get the user avatar and name
+    const avatar = (user && user.avatar);
+    const name = (user && user.name) || '-';
+
     const AvatarContainer = props => (
-      onAvatarPress ? <TouchableOpacity onPress={onAvatarPress} {...props} /> : <View {...props} />
+      user && onAvatarPress ?
+        <TouchableOpacity onPress={() => onAvatarPress(user.id)} {...props} />
+        :
+        <View {...props} />
     );
 
     // The width of the embeds
@@ -196,7 +208,7 @@ export class Comment extends PureComponent {
           <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
             {!isEmpty(content) &&
-              <Hyperlink linkStyle={styles.linkStyle} linkDefault>
+              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
                 <StyledText
                   size="xsmall"
                   color="dark"
@@ -210,7 +222,7 @@ export class Comment extends PureComponent {
             }
           </View>
 
-          { embed &&
+          { embed && !hideEmbeds &&
             <EmbeddedContent
               embed={embed}
               maxWidth={maxEmbedWidth}
@@ -218,6 +230,7 @@ export class Comment extends PureComponent {
               borderRadius={20}
               overlayColor={overlayColor}
               style={isEmpty(content) ? null : styles.embed}
+              navigation={navigation}
             />
           }
 
@@ -288,6 +301,7 @@ Comment.propTypes = {
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
   overlayColor: PropTypes.string,
+  hideEmbeds: PropTypes.bool,
 };
 
 Comment.defaultProps = {
@@ -295,6 +309,7 @@ Comment.defaultProps = {
   onAvatarPress: null,
   onReplyPress: null,
   overlayColor: null,
+  hideEmbeds: false,
 };
 
 export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (

@@ -375,7 +375,7 @@ export const parseNotificationData = (activities, currentUserId) => {
       notificationData.text = 'liked your reaction.';
       break;
     case 'comment':
-      if (currentUserId === replyToUser.split(':')[1]) {
+      if (replyToUser && currentUserId === replyToUser.split(':')[1]) {
         notificationData.text = `replied to your ${replyToType}.`;
       } else if (isMentioned(mentionedUsers || [], currentUserId)) {
         notificationData.text = 'mentioned you in a comment.';

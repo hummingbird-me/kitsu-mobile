@@ -89,7 +89,7 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         ...action.payload.auth,
         loginError: null,
         signingIn: false,
-        fbuser: {},
+        fbError: '',
         rehydratedAt: new Date(),
       };
     default:

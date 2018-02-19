@@ -50,13 +50,15 @@ matrix:
         - travis_retry sudo apt-get install -y -qq yarn
         - gem install fastlane --no-rdoc --no-ri --no-document --quiet
         - chmod +x ./android/gradlew
-        - openssl aes-256-cbc -K $encrypted_68a856edd0d9_key -iv $encrypted_68a856edd0d9_iv -in ./android/app/kitsu-android-key.keystore.enc -out ./android/app/kitsu-android-key.keystore -d
+        - openssl aes-256-cbc -K $encrypted_70d456c9569f_key -iv $encrypted_70d456c9569f_iv -in ./android/app/releaseFiles.tar.enc -out ./android/app/releaseFiles.tar -d
+        - tar xvf ./android/app/releaseFiles.tar -C ./android/app
         # - security delete-certificate -c "Apple Worldwide Developer Relations Certification Authority" # add this to resolve 'Could not install WWDR certificate'
       install:
         - yarn install
       script:
         - cd android && ./gradlew clean
-        - fastlane beta
+        - fastlane beta_googleplay
+        - fastlane beta_crashlytics
 
     - language: objective-c
       os: osx
@@ -76,4 +78,4 @@ matrix:
         - travis_retry yarn
       script:
         - cd ios
-        - fastlane beta
+        - fastlane beta_testflight

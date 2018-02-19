@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { KeyboardAvoidingView, View, Text, ScrollView, Platform, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { indexOf, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -13,6 +13,7 @@ import { PickerModal } from 'kitsu/screens/Feed/components/PickerModal';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
 import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
+import { CheckBox } from 'react-native-elements';
 import { GIFImage } from './GIFImage';
 import { AdditionalButton } from './AdditionalButton';
 import { MediaItem } from './MediaItem';
@@ -29,9 +30,6 @@ const styles = StyleSheet.create({
     padding: 6,
     backgroundColor: '#CC6549',
   },
-  additionalContainer: {
-    marginTop: 20,
-  },
   tagMedia: {
     margin: 10,
     marginBottom: 5,
@@ -39,6 +37,15 @@ const styles = StyleSheet.create({
   addGIF: {
     margin: 10,
     marginTop: 5,
+  },
+  checkboxContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    flex: 1,
+  },
+  checkbox: {
+    marginRight: 0,
+    padding: 8,
   },
 });
 
@@ -80,6 +87,8 @@ class CreatePost extends React.PureComponent {
     error: '',
     gif: null,
     media: null,
+    nsfw: false,
+    spoiler: false,
   };
 
   componentDidMount() {
@@ -121,7 +130,7 @@ class CreatePost extends React.PureComponent {
     const { navigation } = this.props;
     const { targetUser } = navigation.state.params;
     const currentUserId = this.props.currentUser.id;
-    const { content, currentFeed, gif, media } = this.state;
+    const { content, currentFeed, gif, media, nsfw, spoiler } = this.state;
 
     if (navigation.state.params.busy) return;
 
@@ -140,12 +149,6 @@ class CreatePost extends React.PureComponent {
       additionalContent += `\n${gif.images.original.url}`;
     }
 
-    // Target interest is either 'anime', 'manga', or blank depending
-    // on the feed we want to post to.
-    const ignoredTargetFeeds = ['followingFeed', 'globalFeed'];
-    const currentFeedIndex = indexOf(ignoredTargetFeeds, currentFeed.key);
-    const targetInterest = currentFeedIndex !== -1 ? currentFeed.key : undefined;
-
     const mediaData = media ? {
       media: {
         id: media.id,
@@ -160,6 +163,10 @@ class CreatePost extends React.PureComponent {
       },
     } : {};
 
+    // Target interest is either 'anime', 'manga', or blank depending
+    // on the feed we want to post to.
+    const targetInterest = currentFeed.targetInterest || undefined;
+
     // We can't set target_interest with targetUser
     const targetInterestData = isEmpty(targetData) ? { targetInterest } : {};
 
@@ -173,6 +180,8 @@ class CreatePost extends React.PureComponent {
         },
         ...targetData,
         ...mediaData,
+        nsfw,
+        spoiler,
       });
 
       if (navigation.state.params.onNewPostCreated) {
@@ -200,6 +209,8 @@ class CreatePost extends React.PureComponent {
       feedPickerModalIsVisible,
       giphyPickerModalIsVisible,
       mediaPickerModalIsVisible,
+      nsfw,
+      spoiler,
     } = this.state;
     const { busy, targetUser } = navigation.state.params;
 
@@ -250,11 +261,30 @@ class CreatePost extends React.PureComponent {
               placeholderTextColor={colors.grey}
               autoCorrect={false}
               autoFocus
-              returnKeyType="done"
               underlineColorAndroid="transparent"
               blurOnSubmit={false}
             />
-            <View style={styles.additionalContainer}>
+            <View style={styles.checkboxContainer}>
+              <CheckBox
+                title="NSFW"
+                containerStyle={styles.checkbox}
+                checkedColor={colors.green}
+                checked={nsfw}
+                checkedIcon="check-circle"
+                uncheckedIcon="circle-thin"
+                onPress={() => this.setState({ nsfw: !nsfw })}
+              />
+              <CheckBox
+                title="Spoiler"
+                containerStyle={styles.checkbox}
+                checkedColor={colors.green}
+                checked={spoiler}
+                checkedIcon="check-circle"
+                uncheckedIcon="circle-thin"
+                onPress={() => this.setState({ spoiler: !spoiler })}
+              />
+            </View>
+            <View>
               {media ?
                 <MediaItem
                   disabled={busy}
@@ -263,7 +293,7 @@ class CreatePost extends React.PureComponent {
                 />
                 :
                 <AdditionalButton
-                  text="Tag a Media"
+                  text="Tag Anime or Manga"
                   icon="tag"
                   color={colors.blue}
                   disabled={busy}
@@ -279,7 +309,7 @@ class CreatePost extends React.PureComponent {
                 />
                 :
                 <AdditionalButton
-                  text="Add a GIF"
+                  text="Search & Share Gif"
                   icon="plus"
                   color={colors.green}
                   disabled={busy}

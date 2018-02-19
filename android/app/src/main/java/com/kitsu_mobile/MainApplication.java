@@ -1,4 +1,4 @@
-package com.kitsu_mobile;
+package com.everfox.animetrackerandroid;
 
 import android.app.Application;
 

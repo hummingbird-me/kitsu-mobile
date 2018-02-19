@@ -11,6 +11,7 @@ export const Modal = ({
   onConfirm,
   onCancel,
   children,
+  contentStyle,
   headerStyle,
   bodyStyle,
   ...otherProps
@@ -22,7 +23,7 @@ export const Modal = ({
     onRequestClose={onRequestClose}
     {...otherProps}
   >
-    <View style={styles.modalContent}>
+    <View style={[styles.modalContent, contentStyle]}>
       <View style={[styles.modalHeader, headerStyle]}>
         <TouchableOpacity onPress={onCancel}>
           <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>Cancel</Text>
@@ -45,11 +46,13 @@ Modal.propTypes = {
   title: PropTypes.string.isRequired,
   visible: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired,
+  contentStyle: ViewPropTypes.style,
   headerStyle: ViewPropTypes.style,
   bodyStyle: ViewPropTypes.style,
 };
 Modal.defaultProps = {
   style: null,
+  contentStyle: null,
   headerStyle: null,
   bodyStyle: null,
 };

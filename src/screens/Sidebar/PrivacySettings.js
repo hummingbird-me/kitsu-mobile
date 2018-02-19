@@ -65,7 +65,7 @@ class PrivacySettings extends React.Component {
     const { shareToGlobal, modified } = this.state;
     return (
       <View style={styles.containerStyle}>
-        <SidebarTitle title={'Personal Settings'} />
+        <SidebarTitle title={'Discoverability'} />
         <View
           style={styles.privacySettingsWrapper}
         >

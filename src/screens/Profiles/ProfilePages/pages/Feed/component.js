@@ -66,10 +66,12 @@ class FeedComponent extends PureComponent {
   }
 
   navigateToCreatePost = () => {
-    this.props.navigation.navigate('CreatePost', {
-      onNewPostCreated: this.fetchFeed,
-      targetUser: this.props.profile,
-    });
+    if (this.props.currentUser) {
+      this.props.navigation.navigate('CreatePost', {
+        onNewPostCreated: this.fetchFeed,
+        targetUser: this.props.profile,
+      });
+    }
   };
 
   render() {
