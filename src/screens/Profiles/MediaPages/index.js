@@ -339,7 +339,7 @@ class MediaPages extends PureComponent {
       return item.if ? item.if(media.type) : true;
     });
 
-    let mainButtonTitle = 'Add to library';
+    let mainButtonTitle = 'Add to Library';
     if (libraryEntry) {
       MAIN_BUTTON_OPTIONS.push({ text: 'Remove', value: 'remove' });
 
