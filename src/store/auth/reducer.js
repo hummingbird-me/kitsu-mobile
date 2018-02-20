@@ -12,7 +12,6 @@ const INITIAL_STATE = {
   isAuthenticated: false,
   rehydratedAt: null,
   isRefreshingTokens: false,
-  tokenPromise: null,
 };
 
 export const authReducer = (state = INITIAL_STATE, action) => {
@@ -34,11 +33,6 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         isRefreshingTokens: false,
         isAuthenticated: false,
         tokens: null,
-      };
-    case types.TOKEN_PROMISE_SET:
-      return {
-        ...state,
-        tokenPromise: action.payload,
       };
     case types.LOGIN_USER:
       return {
@@ -96,7 +90,6 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         loginError: null,
         signingIn: false,
         fbError: '',
-        tokenPromise: null,
         isRefreshingTokens: false,
         rehydratedAt: new Date(),
       };

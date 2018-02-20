@@ -1,6 +1,10 @@
-import { logoutUser, refreshTokens, setTokenPromise } from 'kitsu/store/auth/actions';
+import { logoutUser, refreshTokens } from 'kitsu/store/auth/actions';
 import store from 'kitsu/store/config';
 import { isNull } from 'lodash';
+
+const helper = {
+  tokenPromise: null,
+};
 
 export const errorMiddleware = {
   name: 'error-middleware',
@@ -37,23 +41,22 @@ export const kitsuRequestMiddleware = {
         console.log('Refreshing tokens.');
 
         // Check if there's already a promise for refreshing tokens
-        let promise = store.getState().auth.tokenPromise;
+        let promise = helper.tokenPromise;
 
         // If we don't then create the refresh token and set the token
         if (isNull(promise)) {
-          const refresh = store.dispatch(refreshTokens(true));
-          store.dispatch(setTokenPromise(refresh));
-          promise = refresh;
+          promise = store.dispatch(refreshTokens(true));
+          helper.tokenPromise = promise;
         }
 
         // If we successfully refreshed the tokens then re-send the request, Otherwise logout
         return promise.then((tokens) => {
           console.log('Refreshed tokens: ', tokens);
-          store.dispatch(setTokenPromise(null));
+          helper.tokenPromise = null;
           return jsonApi.axios(payload.req);
         }).catch((e) => {
           console.log('Failed to refresh tokens: ', e);
-          store.dispatch(setTokenPromise(null));
+          helper.tokenPromise = null;
           if (store) store.dispatch(logoutUser());
           return Promise.reject(e);
         });
