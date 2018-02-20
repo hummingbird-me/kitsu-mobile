@@ -9,8 +9,6 @@ import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import capitalize from 'lodash/capitalize';
 
-const ItemSeparator = () => <View style={{ height: 10 }} />;
-
 class About extends PureComponent {
   static propTypes = {
     profile: PropTypes.object.isRequired,
@@ -45,7 +43,6 @@ class About extends PureComponent {
     return (
       <TabContainer>
         <FlatList
-          style={{ marginTop: 10 }}
           data={aboutRows}
           renderItem={({ item }) => (
             <InfoRow
@@ -54,7 +51,6 @@ class About extends PureComponent {
               contentComponent={(item.key === 'waifuOrHusbando' && item.contentComponent) && item.contentComponent}
             />
           )}
-          ItemSeparatorComponent={() => <ItemSeparator />}
         />
       </TabContainer>
     );
