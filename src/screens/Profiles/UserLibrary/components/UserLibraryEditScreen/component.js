@@ -183,7 +183,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
             viewType="single"
             onRatingChanged={this.onRatingChanged}
             style={styles.ratingStyle}
-            ratingTwenty={libraryEntry.ratingTwenty}
+            ratingTwenty={this.state.ratingTwenty}
             ratingSystem={ratingSystem}
           />
         </View>

@@ -120,6 +120,12 @@ export class Rating extends PureComponent {
     ratingTwenty: this.props.ratingTwenty,
   }
 
+  componentWillReceiveProps({ ratingTwenty }) {
+    if (ratingTwenty !== this.state.ratingTwenty) {
+      this.setState({ ratingTwenty });
+    }
+  }
+
   onModalClosed = () => {
     this.cancel();
   }

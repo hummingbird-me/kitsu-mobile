@@ -102,7 +102,6 @@ export class UserLibraryListCard extends React.Component {
         libraryEntry,
         libraryStatus,
         libraryType,
-        updateUserLibraryEntry,
       } = this.props;
 
       this.props.navigate(USER_LIBRARY_EDIT_SCREEN, {
@@ -112,7 +111,7 @@ export class UserLibraryListCard extends React.Component {
         profile,
         canEdit: profile.id === currentUser.id,
         ratingSystem: currentUser.ratingSystem,
-        updateUserLibraryEntry,
+        updateUserLibraryEntry: this.updateUserLibraryEntry,
       });
     }
   }
@@ -139,9 +138,22 @@ export class UserLibraryListCard extends React.Component {
     text: option[this.props.libraryType],
   })).filter(option => option.value !== this.props.libraryEntry.status);
 
+  // We maintain our own state of progress and rating on this component,
+  // so update them here and then proxy pass to the update function.
+  updateUserLibraryEntry = async (type, status, updates) => {
+    const { progress, ratingTwenty } = updates;
+    const progressPercentage = Math.floor((progress / this.getMaxProgress()) * 100);
+    this.setState({
+      progress,
+      progressPercentage,
+      ratingTwenty
+    });
+    await this.props.updateUserLibraryEntry(type, status, updates);
+  }
+
   render() {
     const { libraryEntry, libraryType, currentUser } = this.props;
-    const { progressPercentage, isSliderActive } = this.state;
+    const { progressPercentage, isSliderActive, ratingTwenty, progress } = this.state;
     const mediaData = libraryEntry[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
@@ -221,6 +233,7 @@ export class UserLibraryListCard extends React.Component {
                 <Counter
                   disabled={!canEdit}
                   initialValue={libraryEntry.progress}
+                  value={progress}
                   maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
                   progressCounter={typeof maxProgress === 'number'}
                   onValueChanged={this.onProgressValueChanged}
@@ -231,7 +244,7 @@ export class UserLibraryListCard extends React.Component {
                   viewType="single"
                   onRatingChanged={this.onRatingChanged}
                   style={styles.ratingStyle}
-                  ratingTwenty={libraryEntry.ratingTwenty}
+                  ratingTwenty={ratingTwenty}
                   ratingSystem={currentUser.ratingSystem}
                 />
               </View>
