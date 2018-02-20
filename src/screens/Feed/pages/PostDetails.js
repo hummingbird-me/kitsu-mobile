@@ -38,7 +38,10 @@ export default class PostDetails extends PureComponent {
     super(props);
 
     const { post, postLikesCount } = props.navigation.state.params;
-    const postLikes = parseInt(postLikesCount, 10) || parseInt(post.postLikesCount, 10) || 0;
+    const postLikes =
+      parseInt(postLikesCount, 10) ||
+      parseInt(post.postLikesCount, 10) ||
+      parseInt(post.likesCount, 10) || 0;
 
     this.state = {
       comment: '',
