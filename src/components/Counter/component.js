@@ -7,6 +7,7 @@ export class Counter extends React.PureComponent {
   static propTypes = {
     disabled: PropTypes.bool,
     initialValue: PropTypes.number.isRequired,
+    value: PropTypes.number,
     maxValue: PropTypes.number,
     minValue: PropTypes.number,
     onValueChanged: PropTypes.func,
@@ -25,6 +26,12 @@ export class Counter extends React.PureComponent {
     manualEditMode: false,
     value: this.props.initialValue,
   };
+
+  componentWillReceiveProps({ value }) {
+    if (value && value !== this.state.value) {
+      this.setState({ value });
+    }
+  }
 
   onManualValueChanged = (value) => {
     this.setState({

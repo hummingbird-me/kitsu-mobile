@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FlatList } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
 
 import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
@@ -26,28 +26,39 @@ const ROLE_LOOKUP_TABLE = {
   other: 'Other'
 };
 
-export const component = ({ media: { mediaRelationships } }) => (
+const renderItem = (item, navigation) => {
+  const type = upperFirst(item.destination.subtype);
+  const started = item.destination.startDate;
+  const year = started ? moment(started).year() : '';
+
+  let subtitle = `${type} · ${ROLE_LOOKUP_TABLE[item.role]}`;
+  subtitle = !!year ? `${subtitle} · ${year}` : subtitle;
+
+  const onPress = () => (
+    navigation.navigate('MediaPages', {
+      mediaId: item.destination.id,
+      mediaType: item.destination.type,
+    })
+  );
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <MediaRow
+        title={item.destination.canonicalTitle}
+        summary={item.destination.synopsis}
+        subtitle={subtitle}
+        summaryLines={4}
+        thumbnail={{ uri: item.destination.posterImage.large }}
+      />
+    </TouchableOpacity>
+  );
+}
+
+export const component = ({ media: { mediaRelationships }, navigation }) => (
   <TabContainer light padded>
     <FlatList
       data={mediaRelationships}
-      ItemSeparatorComponent={() => <RowSeparator />}
       ListHeaderComponent={() => <TabHeader title="Franchise" contentDark />}
-      renderItem={({ item }) => {
-        const type = upperFirst(item.destination.subtype);
-        const started = item.destination.startDate;
-        const year = started ? moment(started).year() : '';
-
-        let subtitle = `${type} · ${ROLE_LOOKUP_TABLE[item.role]}`;
-        subtitle = !!year ? `${subtitle} · ${year}` : subtitle;
-
-        return (<MediaRow
-          title={item.destination.canonicalTitle}
-          summary={item.destination.synopsis}
-          subtitle={subtitle}
-          summaryLines={4}
-          thumbnail={{ uri: item.destination.posterImage.large }}
-        />);
-      }}
+      renderItem={({ item }) => renderItem(item, navigation)}
     />
   </TabContainer>
 );

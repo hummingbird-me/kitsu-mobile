@@ -128,6 +128,7 @@ class SummaryComponent extends PureComponent {
         <ScrollableSection
           contentDark
           title="More from this series"
+          onViewAllPress={() => this.navigateTo('Franchise')}
           data={this.formatData(media.mediaRelationships)}
           loading={loadingAdditional}
           renderItem={({ item }) => {
