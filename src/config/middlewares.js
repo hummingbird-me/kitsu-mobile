@@ -3,9 +3,7 @@ import store from 'kitsu/store/config';
 import { isNull } from 'lodash';
 import { setToken } from 'kitsu/config/api';
 
-const helper = {
-  tokenPromise: null,
-};
+let tokenPromise = null;
 
 export const errorMiddleware = {
   name: 'error-middleware',
@@ -36,13 +34,13 @@ export const kitsuRequestMiddleware = {
 
         // Check if there's already a promise for refreshing tokens
         // If we don't then create the refresh token and set the promise
-        if (isNull(helper.tokenPromise)) {
-          helper.tokenPromise = store.dispatch(refreshTokens(true));
+        if (isNull(tokenPromise)) {
+          tokenPromise = store.dispatch(refreshTokens(true));
         }
 
         try {
           // wait for the token to refresh
-          const tokens = await helper.tokenPromise;
+          const tokens = await tokenPromise;
           console.log('Refreshed tokens: ', tokens);
 
           const request = payload.req;
@@ -63,7 +61,7 @@ export const kitsuRequestMiddleware = {
           store.dispatch(logoutUser());
           throw e;
         } finally {
-          helper.tokenPromise = null;
+          tokenPromise = null;
         }
       }
       // Throw the error back
