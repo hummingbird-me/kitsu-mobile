@@ -37,6 +37,9 @@ export default class PostDetails extends PureComponent {
   constructor(props) {
     super(props);
 
+    const { post, postLikesCount } = props.navigation.state.params;
+    const postLikes = parseInt(postLikesCount, 10) || parseInt(post.postLikesCount, 10) || 0;
+
     this.state = {
       comment: '',
       comments: props.navigation.state.params.comments && [
@@ -46,7 +49,7 @@ export default class PostDetails extends PureComponent {
       commentsCount: props.navigation.state.params.commentsCount,
       like: props.navigation.state.params.like,
       isLiked: props.navigation.state.params.isLiked,
-      postLikesCount: props.navigation.state.params.postLikesCount,
+      postLikesCount: postLikes,
       taggedMedia: {
         media: {
           canonicalTitle: 'Made in Abyss',
@@ -68,7 +71,8 @@ export default class PostDetails extends PureComponent {
   onCommentChanged = comment => this.setState({ comment });
 
   onGifSelected = (gif) => {
-    const gifUrl = gif.images.original.url;
+    if (!(gif && gif.id)) return;
+    const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
     const comment = this.state.comment.trim();
     const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
     this.setState({ comment: newComment }, () => {

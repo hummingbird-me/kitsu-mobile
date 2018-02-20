@@ -198,9 +198,13 @@ class NotificationsScreen extends PureComponent {
    * @memberof NotificationsScreen
    */
   fetchNotifications = async () => {
-    await this.props.fetchNotifications();
-    await this.props.markNotifications(this.props.notifications, 'seen');
-    PushNotificationIOS.setApplicationIconBadgeNumber(0);
+    const { loadingNotifications } = this.props;
+
+    if (!loadingNotifications) {
+      await this.props.fetchNotifications();
+      await this.props.markNotifications(this.props.notifications, 'seen');
+      PushNotificationIOS.setApplicationIconBadgeNumber(0);
+    }
   };
 
   /**

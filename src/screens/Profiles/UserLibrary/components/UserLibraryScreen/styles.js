@@ -54,4 +54,10 @@ export const styles = StyleSheet.create({
   posterImageLoading: {
     backgroundColor: colors.lightPurple,
   },
+  loadingList: {
+    width: '100%',
+    height: constants.POSTER_CARD_HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

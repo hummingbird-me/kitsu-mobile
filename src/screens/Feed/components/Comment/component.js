@@ -215,6 +215,7 @@ export class Comment extends PureComponent {
                   color="dark"
                   textStyle={{ lineHeight: null }}
                   numberOfLines={(isTruncated && 2) || undefined}
+                  selectable
                 >
                   {content}
                 </StyledText>

@@ -135,6 +135,10 @@ class Blocking extends React.Component {
   onBlockUser = async (user) => {
     const { currentUser, accessToken } = this.props;
     const { id } = user;
+
+    // Don't allow us to block ourselves!
+    if (currentUser.id == user.id) return;
+
     setToken(accessToken);
     Keyboard.dismiss();
     this.setState({ loading: true, searchState: {} });

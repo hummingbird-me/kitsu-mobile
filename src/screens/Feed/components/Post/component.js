@@ -33,7 +33,7 @@ export class Post extends PureComponent {
     topLevelCommentsCount: this.props.post.topLevelCommentsCount,
     like: null,
     isLiked: false,
-    postLikesCount: this.props.post.postLikesCount,
+    postLikesCount: parseInt(this.props.post.postLikesCount, 10) || 0,
     overlayRemoved: false,
     isPostingComment: false,
   };
@@ -75,7 +75,8 @@ export class Post extends PureComponent {
   onCommentChanged = comment => this.setState({ comment })
 
   onGifSelected = (gif) => {
-    const gifUrl = gif.images.original.url;
+    if (!(gif && gif.id)) return;
+    const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
     const comment = this.state.comment.trim();
     const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
     this.setState({ comment: newComment }, () => {
@@ -317,6 +318,7 @@ export class Post extends PureComponent {
                   onSubmit={this.onSubmitComment}
                   onGifSelected={this.onGifSelected}
                   loading={isPostingComment}
+                  multiline
                 />
               </PostSection>
             </PostFooter>
