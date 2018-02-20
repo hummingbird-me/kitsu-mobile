@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Clipboard } from 'react-native';
+import { View, TouchableOpacity, Clipboard, ToastAndroid, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -30,7 +30,16 @@ export const PostHeader = ({
       onSelected: async () => {
         if (!post) return;
         await Clipboard.setString(`${kitsuConfig.kitsuUrl}/posts/${post.id}`);
-        alert('Copied post link!');
+        if (Platform.OS === 'android') {
+          ToastAndroid.showWithGravity(
+            'Copied post link!',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM,
+          );
+        } else {
+          alert('Copied post link!');
+        }
+
       },
       text: 'Copy Link to Post',
     },
