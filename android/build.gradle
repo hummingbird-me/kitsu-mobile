@@ -21,6 +21,9 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
 
+        // jitpack repo is necessary to fetch ucrop dependency
+        maven { url "https://jitpack.io" }
+
         configurations.all {
             resolutionStrategy {
                 force 'com.facebook.android:facebook-android-sdk:4.26.0' // Temp fix for broken run-android (see goo.gl/v8u59r)

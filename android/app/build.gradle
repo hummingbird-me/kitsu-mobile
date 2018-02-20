@@ -122,6 +122,7 @@ android {
             onesignal_app_id: "01f6e47a-6809-4118-a796-949952e9c209",
             onesignal_google_project_number: "427013649345"
         ]
+        vectorDrawables.useSupportLibrary = true
     }
     dexOptions {
         jumboMode = true
