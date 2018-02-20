@@ -11,6 +11,7 @@
       android:minSdkVersion="16"
       android:targetSdkVersion="22" />
 
+  <activity android:name="android.support.multidex.MultiDexApplication" />
   <application
       android:name=".MainApplication"
       android:allowBackup="true"
