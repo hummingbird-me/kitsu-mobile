@@ -106,13 +106,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 25 //updated for airbnb lottie
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27 //updated for airbnb lottie
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.everfox.animetrackerandroid"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
