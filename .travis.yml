@@ -40,7 +40,11 @@ matrix:
         - android-sdk-license-.+
         - google-gdk-license-.+
       before_install:
-        # - echo yes | android update sdk -u -a -t "platforms;android-27"
+        - ls ./
+        - ls $ANDROID_HOME
+        - ls $ANDROID_HOME/tools
+        - ls $ANDROID_HOME/tools/bin
+        - echo yes | sdkmanager "platforms;android-27"
         - nvm install 7
         - node --version
         - travis_retry curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
