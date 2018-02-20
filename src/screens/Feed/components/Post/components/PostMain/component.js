@@ -28,7 +28,7 @@ export const PostMain = ({
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
             <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
-              <StyledText color="dark" textStyle={{ lineHeight: null }} size="small">{content}</StyledText>
+              <StyledText color="dark" textStyle={{ lineHeight: null }} size="small" selectable>{content}</StyledText>
             </Hyperlink>
           </View>
         </TouchableWithoutFeedback>
