@@ -8,6 +8,13 @@ import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboardi
 import * as types from 'kitsu/store/types';
 import { isEmpty } from 'lodash';
 
+export const setTokenPromise = promise => async (dispatch, getState) => {
+  const previous = getState().auth.tokenPromise;
+  if (!isEmpty(previous)) return;
+
+  dispatch({ type: types.TOKEN_PROMISE_SET, payload: promise });
+};
+
 export const refreshTokens = (forceRefresh = false) => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
   if (isEmpty(tokens)) return null;
