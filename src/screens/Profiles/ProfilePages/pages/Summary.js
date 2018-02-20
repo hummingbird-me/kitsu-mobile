@@ -12,12 +12,14 @@ import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { StyledText } from 'kitsu/components/StyledText';
+import { Rating } from 'kitsu/components/Rating';
 
 export default class Summary extends PureComponent {
   static propTypes = {
     setActiveTab: PropTypes.func,
     userId: PropTypes.number.isRequired,
     navigation: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -117,8 +119,6 @@ export default class Summary extends PureComponent {
               caption = `${activity.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${activity.progress}`;
             } else if (activity.verb === 'updated') {
               caption = `${capitalize(activity.status.replace('_', ' '))}`;
-            } else if (activity.verb === 'rated') {
-              caption = `Rated: ${activity.rating}`;
             }
 
             return (
@@ -134,7 +134,19 @@ export default class Summary extends PureComponent {
                     }}
                   />
                   <View style={{ alignItems: 'center', marginTop: 3 }}>
-                    <StyledText size="xxsmall" color="dark">{caption}</StyledText>
+                    {activity.verb === 'rated' ? (
+                      <Rating
+                        disabled
+                        ratingTwenty={activity.rating}
+                        ratingSystem={this.props.currentUser.ratingSystem}
+                        size="tiny"
+                        viewType="single"
+                        showNotRated={false}
+                      />
+                    )
+                    : (
+                      <StyledText size="xxsmall" color="dark">{caption}</StyledText>
+                    )}
                   </View>
                 </TouchableOpacity>
               </ScrollItem>
