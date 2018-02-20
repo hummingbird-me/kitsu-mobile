@@ -3,6 +3,7 @@ package com.everfox.animetrackerandroid;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -44,6 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerPackage(),
             new ReactNativeOneSignalPackage(),
             new ReactNativeYouTube(),
             new LinearGradientPackage(),

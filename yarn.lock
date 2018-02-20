@@ -6919,6 +6919,10 @@ react-native-hyperlink@^0.0.12:
   dependencies:
     linkify-it "^1.2.0"
 
+react-native-image-crop-picker@^0.19.3:
+  version "0.19.3"
+  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.19.3.tgz#ef4f10875fd9b6eff10df2b55e3cdb966b875d70"
+
 react-native-iphone-x-helper@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.0.1.tgz#950dbdaca66f458689a7e9697c5beb9bd53f98f2"

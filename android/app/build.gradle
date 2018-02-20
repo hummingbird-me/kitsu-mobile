@@ -167,6 +167,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-crop-picker')
     compile project(':react-native-sentry')
     compile project(':react-native-onesignal')
     compile project(':react-native-youtube')
