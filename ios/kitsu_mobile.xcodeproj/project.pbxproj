@@ -94,6 +94,7 @@
 		C03F4620F2A64FA2B5DDAE9D /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62E2EDC082F94A53B17E4A03 /* rubicon-icon-font.ttf */; };
 		C097D63E6F7E491085912176 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 80BDB36AC10F4D1799DC4612 /* libz.tbd */; };
 		C161099CF8704538BD4B7890 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 15E8EFC0652B40E28898F62C /* MaterialIcons.ttf */; };
+		C66A922D67A7B3674D162721 /* libPods-kitsu_mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7705A49D109D6DDA5C7E6B1 /* libPods-kitsu_mobile.a */; };
 		C6A9134E1F3DE0F400722EA9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A9134C1F3DE0F400722EA9 /* Fabric.framework */; };
 		C6A9134F1F3DE0F400722EA9 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A9134D1F3DE0F400722EA9 /* Crashlytics.framework */; };
 		C6A917621F45972700722EA9 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A917611F45972700722EA9 /* Bolts.framework */; };
@@ -531,6 +532,7 @@
 		13EA31936B534A038F25C38F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		15E8EFC0652B40E28898F62C /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		1C7979762FDBB54E8A743029 /* Pods-kitsu_mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kitsu_mobile.release.xcconfig"; path = "Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile.release.xcconfig"; sourceTree = "<group>"; };
 		22D26144262F4F7690ABB7B3 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		24EE088E743447C4A67C2CB7 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* kitsu_mobile-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "kitsu_mobile-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -540,6 +542,7 @@
 		32B99BDC2D7D4547AD86C3AF /* libRCTActionSheet.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTActionSheet.a; sourceTree = "<group>"; };
 		3563704EB3A74655B9BB1587 /* fontello.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = fontello.ttf; path = ../src/assets/fonts/icons/font/fontello.ttf; sourceTree = "<group>"; };
 		3641E116F118450885AE5103 /* Slider.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = Slider.xcodeproj; path = "../node_modules/react-native-multi-slider/iOS/Slider.xcodeproj"; sourceTree = "<group>"; };
+		3673A87E0860B73BC7C5F353 /* Pods-kitsu_mobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kitsu_mobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile.debug.xcconfig"; sourceTree = "<group>"; };
 		3F5C99850F22455FAE4EDCEE /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBold.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		40C1013E41074CFBA8034B60 /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
 		4138ED52D35F41FA8AB2D1DF /* Asap-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Asap-Bold.otf"; path = "../src/assets/fonts/open-sans/Asap-Bold.otf"; sourceTree = "<group>"; };
@@ -602,6 +605,7 @@
 		CEBFB53677FA4F4699F1F3FB /* RNShimmer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShimmer.xcodeproj; path = "../node_modules/react-native-shimmer/ios/RNShimmer.xcodeproj"; sourceTree = "<group>"; };
 		D09185B7DA82492DB020FF6E /* Asap-MediumItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Asap-MediumItalic.otf"; path = "../src/assets/fonts/open-sans/Asap-MediumItalic.otf"; sourceTree = "<group>"; };
 		D623A1ED603D4D93A018DD32 /* RCTYouTube.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTYouTube.xcodeproj; path = "../node_modules/react-native-youtube/RCTYouTube.xcodeproj"; sourceTree = "<group>"; };
+		D7705A49D109D6DDA5C7E6B1 /* libPods-kitsu_mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kitsu_mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81B2118496E498F84C1FFBD /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTYouTube.a; sourceTree = "<group>"; };
 		E2221571BBEC4788A0E756DA /* libRCTOneSignal.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTOneSignal.a; sourceTree = "<group>"; };
@@ -663,6 +667,7 @@
 				771B7507592545E092384234 /* libRCTOneSignal.a in Frameworks */,
 				31F93FD4710E49FDA70574E3 /* libRNSentry.a in Frameworks */,
 				5B8F3A180D4E492986BEDC27 /* libimageCropPicker.a in Frameworks */,
+				C66A922D67A7B3674D162721 /* libPods-kitsu_mobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -852,6 +857,7 @@
 				C6A917651F45973800722EA9 /* FBSDKShareKit.framework */,
 				C6A917611F45972700722EA9 /* Bolts.framework */,
 				80BDB36AC10F4D1799DC4612 /* libz.tbd */,
+				D7705A49D109D6DDA5C7E6B1 /* libPods-kitsu_mobile.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1017,6 +1023,7 @@
 				6D33A6C67DF148E09CE537CB /* Frameworks */,
 				D7757FB0234F48C3A09F0799 /* Resources */,
 				B472871B1F77C47E00F0528A /* Recovered References */,
+				D1EAAB0A56BD442A1C8364A9 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1059,6 +1066,15 @@
 				BC5EE0411FEE84310004423C /* libRCTPushNotification-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D1EAAB0A56BD442A1C8364A9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3673A87E0860B73BC7C5F353 /* Pods-kitsu_mobile.debug.xcconfig */,
+				1C7979762FDBB54E8A743029 /* Pods-kitsu_mobile.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		D7757FB0234F48C3A09F0799 /* Resources */ = {
@@ -1140,6 +1156,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "kitsu_mobile" */;
 			buildPhases = (
+				446EAB4C23F4B34DB9D1597B /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1147,6 +1164,8 @@
 				7B1311CF1ED52FF400875F67 /* Embed Frameworks */,
 				C6A9134B1F3DE0A800722EA9 /* ShellScript */,
 				F7BFDCB4BEEC4AE69BA6DD6E /* Upload Debug Symbols to Sentry */,
+				6F81E16EA5F9BAD09BE6B193 /* [CP] Embed Pods Frameworks */,
+				667C8D105DBEAA6284C4AA54 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1831,6 +1850,59 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/packager/react-native-xcode.sh";
 		};
+		446EAB4C23F4B34DB9D1597B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-kitsu_mobile-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		667C8D105DBEAA6284C4AA54 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/QBImagePickerController/QBImagePicker.bundle",
+				"${PODS_ROOT}/RSKImageCropper/RSKImageCropper/RSKImageCropperStrings.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RSKImageCropperStrings.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6F81E16EA5F9BAD09BE6B193 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C6A9134B1F3DE0A800722EA9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2017,6 +2089,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3673A87E0860B73BC7C5F353 /* Pods-kitsu_mobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
@@ -2067,6 +2140,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C7979762FDBB54E8A743029 /* Pods-kitsu_mobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = kitsu_mobile/kitsu_mobile.entitlements;
