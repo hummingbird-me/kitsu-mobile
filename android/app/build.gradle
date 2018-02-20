@@ -123,6 +123,9 @@ android {
             onesignal_google_project_number: "427013649345"
         ]
     }
+    dexOptions {
+        jumboMode = true
+    }
     splits {
         abi {
             reset()
