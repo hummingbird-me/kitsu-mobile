@@ -1,6 +1,7 @@
 import { logoutUser, refreshTokens } from 'kitsu/store/auth/actions';
 import store from 'kitsu/store/config';
 import { isNull } from 'lodash';
+import { setToken } from 'kitsu/config/api';
 
 const helper = {
   tokenPromise: null,
@@ -9,19 +10,11 @@ const helper = {
 export const errorMiddleware = {
   name: 'error-middleware',
   error: (payload) => {
-    console.log('failed payload', payload);
-    if (payload.status === 401 || payload.status === 403) {
-      return {
-        request: {
-          authorized: false,
-        },
-      };
-    }
     const data = payload.data;
     if (!(data && data.errors)) {
       console.log('Unidentified error');
       console.log(payload);
-      return null;
+      return payload;
     }
     return payload.data.errors;
   },
@@ -29,40 +22,52 @@ export const errorMiddleware = {
 
 export const kitsuRequestMiddleware = {
   name: 'kitsu-request-middleware',
-  req: (payload) => {
+  req: async (payload) => {
     const jsonApi = payload.jsonApi;
 
     // Send the request
-    return jsonApi.axios(payload.req).catch((error) => {
+    try {
+      return await jsonApi.axios(payload.req);
+    } catch (error) {
       // Check if we got an 401 or 403 error
       // If so then refresh our tokens
       if ([401, 403].includes(error.status)) {
-        console.log(`Recieved a ${error.status}.`);
-        console.log('Refreshing tokens.');
+        console.log(`Recieved a ${error.status}`);
 
         // Check if there's already a promise for refreshing tokens
-        let promise = helper.tokenPromise;
-
-        // If we don't then create the refresh token and set the token
-        if (isNull(promise)) {
-          promise = store.dispatch(refreshTokens(true));
-          helper.tokenPromise = promise;
+        // If we don't then create the refresh token and set the promise
+        if (isNull(helper.tokenPromise)) {
+          helper.tokenPromise = store.dispatch(refreshTokens(true));
         }
 
-        // If we successfully refreshed the tokens then re-send the request, Otherwise logout
-        return promise.then((tokens) => {
+        try {
+          // wait for the token to refresh
+          const tokens = await helper.tokenPromise;
           console.log('Refreshed tokens: ', tokens);
-          helper.tokenPromise = null;
-          return jsonApi.axios(payload.req);
-        }).catch((e) => {
+
+          const request = payload.req;
+
+          // Re-set the token
+          if (tokens && tokens.access_token) {
+            console.log('Old headers: ', request.headers);
+            setToken(tokens.access_token);
+            request.headers.Authorization = `Bearer ${tokens.access_token}`;
+            console.log('New headers: ', request.headers);
+          }
+
+          // And then resend the thing
+          return await jsonApi.axios(request);
+        } catch (e) {
+          // Token refreshing failed! Abort!
           console.log('Failed to refresh tokens: ', e);
+          store.dispatch(logoutUser());
+          throw e;
+        } finally {
           helper.tokenPromise = null;
-          if (store) store.dispatch(logoutUser());
-          return Promise.reject(e);
-        });
+        }
       }
       // Throw the error back
-      return Promise.reject(error);
-    });
+      throw error;
+    }
   },
 };
