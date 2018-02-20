@@ -231,7 +231,7 @@ export default class QuickUpdateCard extends PureComponent {
                         {' '}
                         {data.item.progress + 1}{' '}
                       </Text>
-                    Watched
+                      {media.type === 'anime' ? 'Watched' : 'Read'}
                     </Text>
                   )}
                 </TouchableOpacity>

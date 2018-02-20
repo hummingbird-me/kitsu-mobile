@@ -22,7 +22,7 @@ import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
-import { isEmpty } from 'lodash';
+import { isEmpty, capitalize } from 'lodash';
 
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
@@ -488,6 +488,9 @@ class QuickUpdate extends Component {
     const progress = (entry && entry.progress) || 0;
     const media = entry && (entry.anime || entry.manga);
 
+    const episodeOrChapter = media && media.type === 'manga' ? 'chapter' : 'episode';
+    const watchedOrRead = media && media.type === 'manga' ? 'read' : 'watched';
+
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
@@ -533,7 +536,7 @@ class QuickUpdate extends Component {
             <View style={{ height: 20, backgroundColor: 'transparent' }} />
             <Text style={styles.discussionTitle}>
               <Text style={styles.bold}>
-                {media && media.type === 'anime' ? 'Episode' : 'Chapter'}
+                {capitalize(episodeOrChapter)}
                 {' '}
                 {progress}
                 {' '}
@@ -566,7 +569,7 @@ class QuickUpdate extends Component {
                   ListEmptyComponent={() => (
                     <StatusComponent
                       title="START THE DISCUSSION"
-                      text={`Be the first to share your thoughts about episode ${progress}`}
+                      text={`Be the first to share your thoughts about ${episodeOrChapter} ${progress}`}
                       image={emptyComment}
                     />
                   )}
@@ -581,8 +584,8 @@ class QuickUpdate extends Component {
           ) : (
             <ScrollView style={styles.unstartedWrapper}>
               <StatusComponent
-                title="START WATCHING TO JOIN IN"
-                text="As you update your progress, you'll see the thoughts from the community on the episodes you've watched!"
+                title={`START ${media && media.type === 'manga' ? 'READING' : 'WATCHING'} TO JOIN IN`}
+                text={`As you update your progress, you'll see the thoughts from the community on the ${episodeOrChapter}s you've ${watchedOrRead}!`}
                 image={unstarted}
               />
             </ScrollView>
