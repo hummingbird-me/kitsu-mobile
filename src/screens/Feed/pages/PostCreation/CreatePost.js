@@ -9,7 +9,6 @@ import * as colors from 'kitsu/constants/colors';
 import { PostMeta } from 'kitsu/screens/Feed/components/PostMeta';
 import { PostTextInput } from 'kitsu/screens/Feed/components/PostTextInput';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
-import { PickerModal } from 'kitsu/screens/Feed/components/PickerModal';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
 import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
@@ -79,7 +78,6 @@ class CreatePost extends React.PureComponent {
   };
 
   state = {
-    feedPickerModalIsVisible: false,
     giphyPickerModalIsVisible: false,
     mediaPickerModalIsVisible: false,
     content: '',
@@ -114,16 +112,6 @@ class CreatePost extends React.PureComponent {
 
   handleGiphyPickerModal = (giphyPickerModalIsVisible) => {
     this.setState({ giphyPickerModalIsVisible });
-  }
-
-  handleFeedPicker = (currentFeed) => {
-    this.setState({ currentFeed });
-    this.postTextInput.focus();
-    this.handleFeedPickerModal(false);
-  }
-
-  handleFeedPickerModal = (feedPickerModalIsVisible) => {
-    this.setState({ feedPickerModalIsVisible });
   }
 
   handlePressPost = async () => {
@@ -207,7 +195,6 @@ class CreatePost extends React.PureComponent {
       currentFeed,
       content,
       textInputHeight,
-      feedPickerModalIsVisible,
       giphyPickerModalIsVisible,
       mediaPickerModalIsVisible,
       nsfw,
@@ -236,7 +223,6 @@ class CreatePost extends React.PureComponent {
             avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar}
             author={currentUser.name}
             feedTitle={currentFeed.title}
-            onFeedPillPress={() => this.handleFeedPickerModal(true)}
             targetName={(isValidTargetUser && targetUser.name) || ''}
           />
           <ScrollView style={styles.flex} >
@@ -322,13 +308,6 @@ class CreatePost extends React.PureComponent {
             </View>
           </ScrollView>
         </View>
-        <PickerModal
-          visible={feedPickerModalIsVisible}
-          data={feedStreams.filter(stream => stream.selectable)}
-          currentPick={currentFeed}
-          onCancelPress={() => this.handleFeedPickerModal(false)}
-          onDonePress={this.handleFeedPicker}
-        />
         <GiphyModal
           visible={giphyPickerModalIsVisible}
           onCancelPress={() => this.handleGiphyPickerModal(false)}

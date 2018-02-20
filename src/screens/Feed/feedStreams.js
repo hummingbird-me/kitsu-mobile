@@ -15,20 +15,21 @@ export const feedStreams = [
     selectable: false,
     targetInterest: null,
   },
-  {
-    key: 'animeFeed',
-    label: 'Anime',
-    title: 'Anime Feed',
-    description: 'Shared with your followers and all anime fans',
-    selectable: true,
-    targetInterest: 'Anime',
-  },
-  {
-    key: 'mangaFeed',
-    label: 'Manga',
-    title: 'Manga Feed',
-    description: 'Shared with your followers and all manga fans',
-    selectable: true,
-    targetInterest: 'Manga',
-  },
+  // Disabled anime and manga feeds
+  // {
+  //   key: 'animeFeed',
+  //   label: 'Anime',
+  //   title: 'Anime Feed',
+  //   description: 'Shared with your followers and all anime fans',
+  //   selectable: true,
+  //   targetInterest: 'Anime',
+  // },
+  // {
+  //   key: 'mangaFeed',
+  //   label: 'Manga',
+  //   title: 'Manga Feed',
+  //   description: 'Shared with your followers and all manga fans',
+  //   selectable: true,
+  //   targetInterest: 'Manga',
+  // },
 ];

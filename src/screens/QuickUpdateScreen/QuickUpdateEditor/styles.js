@@ -51,6 +51,14 @@ const styles = StyleSheet.create({
     ...text,
     color: 'black',
   },
+  addGIF: {
+    margin: 10,
+    marginTop: 5,
+  },
+  gifWrapper: {
+    marginTop: 5,
+    marginHorizontal: -10,
+  },
 });
 
 export default styles;

@@ -3,7 +3,9 @@ import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-
+import { GIFImage } from 'kitsu/screens/Feed/pages/PostCreation/GIFImage';
+import { AdditionalButton } from 'kitsu/screens/Feed/pages/PostCreation/AdditionalButton';
+import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import styles from './styles';
 
 const HIT_SLOP = {
@@ -33,6 +35,8 @@ export default class QuickUpdateEditor extends PureComponent {
 
   state = {
     headerOpacity: new Animated.Value(0),
+    giphyPickerModalIsVisible: false,
+    gif: null,
   };
 
   componentDidMount = () => {
@@ -47,9 +51,18 @@ export default class QuickUpdateEditor extends PureComponent {
     }).start();
   };
 
+  handleGiphy = (gif) => {
+    this.setState({ gif });
+    this.handleGiphyPickerModal(false);
+  }
+
+  handleGiphyPickerModal = (giphyPickerModalIsVisible) => {
+    this.setState({ giphyPickerModalIsVisible });
+  }
+
   render() {
     const { progress, value, onCancel, onDone, media, currentEpisode } = this.props;
-    const { headerOpacity } = this.state;
+    const { headerOpacity, giphyPickerModalIsVisible, gif } = this.state;
 
     return (
       <View style={styles.wrapper}>
@@ -60,7 +73,7 @@ export default class QuickUpdateEditor extends PureComponent {
             <Text style={styles.headerButtonText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.headerText}>Episode {progress}</Text>
-          <TouchableOpacity onPress={onDone} hitSlop={HIT_SLOP} style={styles.headerButton}>
+          <TouchableOpacity onPress={() => onDone(gif)} hitSlop={HIT_SLOP} style={styles.headerButton}>
             <Text style={styles.headerButtonText}>Done</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -80,7 +93,28 @@ export default class QuickUpdateEditor extends PureComponent {
             episode={currentEpisode}
             navigation={navigation}
           />
+          <View style={styles.gifWrapper}>
+            {gif ?
+              <GIFImage
+                gif={gif}
+                onClear={() => this.setState({ gif: null })}
+              />
+              :
+              <AdditionalButton
+                text="Search & Share Gif"
+                icon="plus"
+                color={colors.green}
+                onPress={() => this.handleGiphyPickerModal(true)}
+                style={styles.addGIF}
+              />
+            }
+          </View>
         </View>
+        <GiphyModal
+          visible={giphyPickerModalIsVisible}
+          onCancelPress={() => this.handleGiphyPickerModal(false)}
+          onGifSelect={this.handleGiphy}
+        />
       </View>
     );
   }

@@ -20,6 +20,10 @@ class SplashScreen extends Component {
 
   componentDidMount() {
     this.animation.play();
+    const { isAuthenticated, completed, refreshTokens, logoutUser, rehydratedAt } = this.props;
+    if (rehydratedAt) {
+      this.init(refreshTokens, logoutUser, isAuthenticated, completed);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
