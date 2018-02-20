@@ -5,7 +5,4 @@ export const styles = StyleSheet.create({
   postMeta: {
     padding: scenePadding,
   },
-  feedPill: {
-    marginTop: 4,
-  },
 });

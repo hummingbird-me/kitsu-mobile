@@ -8,17 +8,13 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
-export const PostMeta = ({ avatar, author, targetName, feedTitle, onFeedPillPress }) => (
+export const PostMeta = ({ avatar, author, targetName, feedTitle }) => (
   <View style={styles.postMeta}>
     <Layout.RowWrap alignItems="center">
       <Avatar avatar={avatar} />
       <Layout.RowMain>
         <StyledText color="dark" size="xsmall" bold>{author}</StyledText>
-        { isEmpty(targetName) ?
-          <View style={styles.feedPill}>
-            <DropdownPill title={feedTitle} onPress={onFeedPillPress} />
-          </View>
-          :
+        { !isEmpty(targetName) &&
           <StyledText color="dark" size="xxsmall">To {targetName}</StyledText>
         }
       </Layout.RowMain>
@@ -31,12 +27,10 @@ PostMeta.propTypes = {
   author: PropTypes.string,
   targetName: PropTypes.string,
   feedTitle: PropTypes.string,
-  onFeedPillPress: PropTypes.func,
 };
 PostMeta.defaultProps = {
   avatar: null,
   author: '',
   feedTitle: '',
   targetName: '',
-  onFeedPillPress: null,
 };
