@@ -87,6 +87,7 @@ import com.android.build.OutputFile
  */
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-sentry/sentry.gradle"
 apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
@@ -121,6 +122,9 @@ android {
             onesignal_app_id: "01f6e47a-6809-4118-a796-949952e9c209",
             onesignal_google_project_number: "427013649345"
         ]
+    }
+    dexOptions {
+        jumboMode = true
     }
     splits {
         abi {
@@ -163,6 +167,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sentry')
     compile project(':react-native-onesignal')
     compile project(':react-native-youtube')
     compile project(':react-native-linear-gradient')
