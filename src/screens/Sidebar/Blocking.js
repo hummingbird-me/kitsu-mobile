@@ -136,7 +136,7 @@ class Blocking extends React.Component {
     const { id } = user;
 
     // Don't allow us to block ourselves!
-    if (currentUser.id === user.id) return;
+    if (currentUser.id == user.id) return;
 
     setToken(accessToken);
     Keyboard.dismiss();
