@@ -41,7 +41,6 @@ matrix:
         - android-sdk-license-.+
         - google-gdk-license-.+
       before_install:
-        - find $ANDROID_HOME -name sdktools
         - yes | sdkmanager "platforms;android-27"
         - nvm install 7
         - node --version
