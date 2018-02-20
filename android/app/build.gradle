@@ -115,6 +115,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -122,6 +123,7 @@ android {
             onesignal_app_id: "01f6e47a-6809-4118-a796-949952e9c209",
             onesignal_google_project_number: "427013649345"
         ]
+        vectorDrawables.useSupportLibrary = true
     }
     dexOptions {
         jumboMode = true
@@ -167,6 +169,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-crop-picker')
     compile project(':react-native-sentry')
     compile project(':react-native-onesignal')
     compile project(':react-native-youtube')
@@ -177,6 +180,7 @@ dependencies {
     compile project(':react-native-code-push')
     compile fileTree(dir: "libs", include: ["*.jar"])
     
+    compile 'com.android.support:multidex:1.0.1'
     compile "com.android.support:appcompat-v7:25.1.1"
     compile "com.airbnb.android:lottie:1.5.3"
     compile "com.facebook.react:react-native:+"  // From node_modules

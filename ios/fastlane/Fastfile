@@ -93,13 +93,16 @@ platform :ios do
       build_number: ENV["TRAVIS_BUILD_NUMBER"]
     )
 
+    # Get pods
+    cocoapods
+
     # Build a release
     gym(
       scheme: "kitsu_mobile",
       clean: true,
       configuration: "Release",
-      project: "./kitsu_mobile.xcodeproj",
-      # workspace: "./kitsu_mobile.xcworkspace" # if using pods
+      # project: "./kitsu_mobile.xcodeproj", # if not using pods
+      workspace: "./kitsu_mobile.xcworkspace",
       export_method: "ad-hoc",
       xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AdHoc com.EverFox.AnimeTrakr'"
     )
@@ -153,13 +156,16 @@ platform :ios do
       build_number: ENV["TRAVIS_BUILD_NUMBER"]
     )
 
+    # Get pods
+    cocoapods
+
     # Build a release
     gym(
       scheme: "kitsu_mobile",
       clean: true,
       configuration: "Release",
-      project: "./kitsu_mobile.xcodeproj",
-      # workspace: "./kitsu_mobile.xcworkspace" # if using pods
+      # project: "./kitsu_mobile.xcodeproj", # if not using pods
+      workspace: "./kitsu_mobile.xcworkspace", 
       xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.EverFox.AnimeTrakr'"
     )
   end
@@ -216,15 +222,16 @@ platform :ios do
       keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
     )
 
-    # snapshot
+    # Get pods
+    cocoapods
 
     # Build a release
     gym(
       scheme: "kitsu_mobile",
       clean: true,
       configuration: "Release",
-      project: "./kitsu_mobile.xcodeproj",
-      # workspace: "./kitsu_mobile.xcworkspace" # if using pods
+      # project: "./kitsu_mobile.xcodeproj", # if not using pods
+      workspace: "./kitsu_mobile.xcworkspace",
       export_method: "app-store",
       xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.EverFox.AnimeTrakr'"
     )

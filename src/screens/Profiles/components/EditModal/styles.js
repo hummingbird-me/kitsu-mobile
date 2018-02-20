@@ -4,12 +4,12 @@ import * as colors from 'kitsu/constants/colors';
 export const styles = StyleSheet.create({
   profileCoverWrapper: {
     flex: 1,
-    marginTop: 10
+    marginTop: 10,
   },
 
   profileCover: {
     width: Dimensions.get('window').width,
-    height: 100
+    height: Dimensions.get('window').width * (500 / 1200),
   },
 
   profileImageWrapper: {
@@ -20,6 +20,6 @@ export const styles = StyleSheet.create({
   profileImage: {
     width: 80,
     height: 80,
-    borderRadius: 40
-  }
+    borderRadius: 40,
+  },
 });

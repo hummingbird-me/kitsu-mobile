@@ -4,6 +4,7 @@
 
 # Xcode
 #
+Pods/
 build/
 *.pbxuser
 !default.pbxuser
@@ -29,6 +30,7 @@ build/
 .gradle
 local.properties
 *.iml
+android/app/bin/
 
 # node.js
 #
