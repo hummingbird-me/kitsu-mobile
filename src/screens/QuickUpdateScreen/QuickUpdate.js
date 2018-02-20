@@ -390,19 +390,27 @@ class QuickUpdate extends Component {
     }
   };
 
-  updateTextAndToggle = async () => {
+  updateTextAndToggle = async (gif) => {
     // Restore any previous text, and then toggle the editor.
     const { library, currentIndex, editorText } = this.state;
-    this.setState({ discussionsLoading: !isEmpty(editorText.trim()) }, this.toggleEditor);
+
+    // Add gifs
+    let updatedText = (editorText && editorText.trim()) || '';
+    if (gif && gif.id) {
+      const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+      updatedText += `\n${gifURL}`;
+    }
+
+    this.setState({ discussionsLoading: !isEmpty(updatedText.trim()) }, this.toggleEditor);
 
     // Make sure we have something written in the text
-    if (isEmpty(editorText.trim())) return;
+    if (isEmpty(updatedText.trim())) return;
 
     const { currentUser } = this.props;
     const current = library[currentIndex];
     try {
       await Kitsu.create('posts', {
-        content: editorText,
+        content: updatedText.trim(),
         media: {
           id: getMedia(current).id, type: current.anime ? 'anime' : 'manga',
         },
@@ -411,7 +419,7 @@ class QuickUpdate extends Component {
       });
       this.resetFeed(() => {
         this.fetchDiscussions(current);
-        this.setState({ updateText: editorText });
+        this.setState({ editorText: '' });
       });
     } catch (e) {
       console.warn('Can not submit discussion post: ', e);
