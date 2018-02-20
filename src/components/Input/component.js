@@ -19,7 +19,7 @@ export const Input = ({ style, containerStyle, ...otherProps }) => (
 
 Input.propTypes = {
   ...TextInput.propTypes,
-  style: ViewPropTypes.style,
+  style: PropTypes.object,
   containerStyle: ViewPropTypes.style,
 };
 Input.defaultProps = {

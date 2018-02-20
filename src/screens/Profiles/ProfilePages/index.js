@@ -17,9 +17,10 @@ import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { EditModal } from 'kitsu/screens/Profiles/components/EditModal';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { isIdForCurrentUser } from 'kitsu/common/utils';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
-import { isIdForCurrentUser } from 'kitsu/common/utils';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
@@ -91,6 +92,10 @@ class ProfilePage extends PureComponent {
     this.fetchFollow(userId);
   }
 
+  componentWillUnmount() {
+    this.setState({ editModalVisible: false });
+  }
+
   onMoreButtonOptionsSelected = async (button) => {
     if (button === 'Block') {
       await Kitsu.create('blocks', {
@@ -100,6 +105,23 @@ class ProfilePage extends PureComponent {
     } else if (button === 'Report Profile') {
       // There's no current way to report users from the site.
       // Once there is, the API call goes here.
+    }
+  }
+
+  onEditProfile = async (changes) => {
+    try {
+      this.setState({ editModalVisible: false, loading: true });
+      const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+      const data = await Kitsu.update('users', {
+        id: userId,
+        ...changes,
+      }, { include: 'waifu' });
+      this.setState({ profile: data });
+      await fetchCurrentUser();
+    } catch (err) {
+      console.log('Error updating user:', err);
+    } finally {
+      this.setState({ loading: false });
     }
   }
 
@@ -119,7 +141,7 @@ class ProfilePage extends PureComponent {
         },
         fields: {
           users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
-          characters: 'name,image,description'
+          characters: 'name,image,description',
         },
         include: 'waifu',
       });
@@ -197,22 +219,6 @@ class ProfilePage extends PureComponent {
       this.setState({ follow: null, isLoadingFollow: false });
     } else { // Create
       await this.createFollow(userId);
-    }
-  }
-
-  onEditProfile = async (changes) => {
-    try {
-      this.setState({ editModalVisible: false, loading: true });
-      const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
-      const data = await Kitsu.update('users', {
-        id: userId,
-        ...changes
-      }, { include: 'waifu' });
-      this.setState({ profile: data });
-    } catch (err) {
-      console.log('Error updating user:', err);
-    } finally {
-      this.setState({ loading: false });
     }
   }
 
@@ -332,4 +338,4 @@ const mapStateToProps = ({ user }) => {
   return { currentUser };
 };
 
-export default connect(mapStateToProps)(ProfilePage);
+export default connect(mapStateToProps, { fetchCurrentUser })(ProfilePage);

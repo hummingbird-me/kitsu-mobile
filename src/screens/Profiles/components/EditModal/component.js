@@ -6,12 +6,11 @@ import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
 import { Input } from 'kitsu/components/Input';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { StyledText } from 'kitsu/components/StyledText';
-import { MediaSelectionGrid } from 'kitsu/components/MediaUploader';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
+import ImagePicker from 'react-native-image-crop-picker';
 import { styles } from './styles';
 
 export class EditModal extends Component {
@@ -25,11 +24,8 @@ export class EditModal extends Component {
   state = {
     changeset: {},
     changes: {},
-    selectedImage: [],
-    mediaContext: null,
     hasMadeChanges: false,
     isEditingGender: false,
-    isMediaSelectionShown: false
   }
 
   // This should fire each time the Modal is opened & closed.
@@ -38,7 +34,7 @@ export class EditModal extends Component {
       changeset: cloneDeep(this.props.user),
       changes: {},
       hasMadeChanges: false,
-      isEditingGender: false
+      isEditingGender: false,
     });
   }
 
@@ -48,6 +44,23 @@ export class EditModal extends Component {
 
   onConfirm() {
     this.props.onConfirm(this.state.changes);
+  }
+
+  onMediaSelect = async (mediaContext, width, height) => {
+    try {
+      const image = await ImagePicker.openPicker({
+        width,
+        height,
+        cropping: true,
+        mediaType: 'photo',
+        includeBase64: true,
+        cropperCircleOverlay: mediaContext === 'avatar',
+      });
+      console.log(image);
+      this.updateChanges(mediaContext, `data:${image.mime};base64,${image.data}`);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   updateChanges(property, value) {
@@ -73,30 +86,6 @@ export class EditModal extends Component {
     }
   }
 
-  handleMediaSelect() {
-    const { selectedImage, mediaContext } = this.state;
-
-    // Convert the selected image to a dataURI
-    const [image] = selectedImage;
-    const cropObj = {
-      offset: { x: 0, y: 0 },
-      size: { width: image.width, height: image.height }
-    };
-    // @Perf: This might be slow? Should benchmark this against a native library.
-    ImageEditor.cropImage(image.uri, cropObj, (uri) => {
-      ImageStore.getBase64ForTag(uri, (data) => {
-        this.updateChanges(mediaContext, `data:image/png;base64,${data}`);
-      }, (err) => console.log('error converting image to base64:', err));
-    }, (err) => console.log('error cropping media:', err));
-
-    // Cleanup
-    this.setState({ mediaContext: null, selectedImage: [], isMediaSelectionShown: false });
-  }
-
-  handleMediaClose = () => (
-    this.setState({ isMediaSelectionShown: false, selectedImage: [], mediaContext: null })
-  )
-
   renderCoverComponent = () => {
     const { changeset, changes } = this.state;
     let cover = { uri: (changeset.coverImage && changeset.coverImage.large) || defaultCover };
@@ -105,7 +94,7 @@ export class EditModal extends Component {
     }
     return (
       <View style={styles.profileCoverWrapper}>
-        <TouchableOpacity activeOpacity={0.6} onPress={() => this.setState({ isMediaSelectionShown: true, mediaContext: 'coverImage' })}>
+        <TouchableOpacity activeOpacity={0.6} onPress={() => this.onMediaSelect('coverImage', 1200, 500)}>
           <Image
             style={styles.profileCover}
             source={cover}
@@ -123,7 +112,7 @@ export class EditModal extends Component {
     }
     return (
       <View style={styles.profileImageWrapper}>
-        <TouchableOpacity activeOpacity={0.6} onPress={() => this.setState({ isMediaSelectionShown: true, mediaContext: 'avatar' })}>
+        <TouchableOpacity activeOpacity={0.6} onPress={() => this.onMediaSelect('avatar', 300, 300)}>
           <Image
             style={styles.profileImage}
             source={avatar}
@@ -151,7 +140,7 @@ export class EditModal extends Component {
         onOptionSelected={(option) => this.handleGenderChange(option)}>
         <View pointerEvents={this.state.isEditingGender ? 'auto' : 'none'}>
           <Input
-            selectTextOnFocus={true}
+            selectTextOnFocus
             value={gender}
             editable={this.state.isEditingGender}
             onChangeText={text => this.updateChanges('gender', text)}
@@ -173,7 +162,7 @@ export class EditModal extends Component {
   )
 
   render() {
-    const { hasMadeChanges, isMediaSelectionShown } = this.state;
+    const { hasMadeChanges } = this.state;
     const { visible, onCancel, onConfirm } = this.props;
     const rows = [
       {
@@ -229,29 +218,6 @@ export class EditModal extends Component {
                 />
               )}
             />
-
-            {/* Media Modal */}
-            <Modal
-              animationType="slide"
-              visible={isMediaSelectionShown}
-              transparent={false}
-              onRequestClose={() => this.handleMediaClose()}
-            >
-              <ModalHeader
-                title="Select Media"
-                leftButtonTitle="Cancel"
-                leftButtonAction={() => this.handleMediaClose()}
-                rightButtonTitle="Done"
-                rightButtonAction={() => this.handleMediaSelect()}
-              />
-              <View style={{ flex: 1 }}>
-                <MediaSelectionGrid
-                  filterContext="All"
-                  onSelectedImagesChanged={selectedImage => this.setState({ selectedImage })}
-                  multiple={false}
-                />
-              </View>
-            </Modal>
           </View>
         </Modal>
       </View>
