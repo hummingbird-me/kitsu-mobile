@@ -6,7 +6,7 @@ import { styles } from './styles';
 
 const navigateToMedia = (media, navigation) => {
   if (media) navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type });
-}
+};
 
 export const MediaTag = ({ disabled, media, episode, navigation, style }) => {
   const episodePrefix = media.type === 'anime' ? 'E' : 'CH';

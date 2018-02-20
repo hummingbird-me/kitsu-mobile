@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FlatList } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 
 import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
@@ -26,7 +26,11 @@ const ROLE_LOOKUP_TABLE = {
   other: 'Other'
 };
 
-export const component = ({ media: { mediaRelationships } }) => (
+const navigateToMedia = (media, navigation) => {
+  if (media) navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type });
+};
+
+export const component = ({ media: { mediaRelationships }, navigation }) => (
   <TabContainer light padded>
     <FlatList
       data={mediaRelationships}
@@ -40,13 +44,17 @@ export const component = ({ media: { mediaRelationships } }) => (
         let subtitle = `${type} · ${ROLE_LOOKUP_TABLE[item.role]}`;
         subtitle = !!year ? `${subtitle} · ${year}` : subtitle;
 
-        return (<MediaRow
-          title={item.destination.canonicalTitle}
-          summary={item.destination.synopsis}
-          subtitle={subtitle}
-          summaryLines={4}
-          thumbnail={{ uri: item.destination.posterImage.large }}
-        />);
+        return (
+          <TouchableOpacity onPress={() => navigateToMedia(item.destination, navigation)}>
+            <MediaRow
+              title={item.destination.canonicalTitle}
+              summary={item.destination.synopsis}
+              subtitle={subtitle}
+              summaryLines={4}
+              thumbnail={{ uri: item.destination.posterImage.large }}
+            />
+          </TouchableOpacity>
+        );
       }}
     />
   </TabContainer>
@@ -54,17 +62,26 @@ export const component = ({ media: { mediaRelationships } }) => (
 
 component.propTypes = {
   media: PropTypes.shape({
-    mediaRelationships: PropTypes.shape({
-      role: PropTypes.string.isRequired,
-      destination: PropTypes.shape({
-        canonicalTitle: PropTypes.string.isRequired,
-        synopsis: PropTypes.string.isRequired,
-        posterImage: PropTypes.shape({
-          large: PropTypes.string.isRequired
+    mediaRelationships: PropTypes.arrayOf(
+      PropTypes.shape({
+        role: PropTypes.string.isRequired,
+        destination: PropTypes.shape({
+          id: PropTypes.oneOf(PropTypes.string, PropTypes.number).isRequired,
+          type: PropTypes.string.isRequired,
+          canonicalTitle: PropTypes.string.isRequired,
+          synopsis: PropTypes.string.isRequired,
+          posterImage: PropTypes.shape({
+            large: PropTypes.string.isRequired,
+          }).isRequired,
+          subtype: PropTypes.string.isRequired,
+          startDate: PropTypes.string,
         }).isRequired,
-        subtype: PropTypes.string.isRequired,
-        startDate: PropTypes.string
-      }).isRequired
-    }).isRequired
-  })
+      }),
+    ).isRequired,
+  }),
+  navigation: PropTypes.object.isRequired,
+};
+
+component.defaultProps = {
+  media: {},
 };
