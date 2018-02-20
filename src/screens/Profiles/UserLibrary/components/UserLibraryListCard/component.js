@@ -209,11 +209,13 @@ export class UserLibraryListCard extends React.Component {
                 )}
               </View>
               <View style={styles.progressContainer}>
-                <ProgressBar
-                  height={6}
-                  fillPercentage={progressPercentage}
-                  backgroundStyle={styles.progressBarBackground}
-                />
+                {typeof maxProgress === 'number' && (
+                  <ProgressBar
+                    height={6}
+                    fillPercentage={progressPercentage}
+                    backgroundStyle={styles.progressBarBackground}
+                  />
+                )}
               </View>
               <View style={styles.statusSection}>
                 <Counter
