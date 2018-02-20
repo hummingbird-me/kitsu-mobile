@@ -47,6 +47,7 @@
     "react-native-progress": "^3.2.1",
     "react-native-progress-bar": "^0.1.2",
     "react-native-scrollable-tab-view": "0.7.4",
+    "react-native-sentry": "^0.34.0",
     "react-native-shimmer": "^0.2.1",
     "react-native-snap-carousel": "^3.3.4",
     "react-native-swipeable": "^0.4.0",
