@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Modal, FlatList, Image, TouchableOpacity, ImageEditor, ImageStore } from 'react-native';
+import { View, Modal, Image, TouchableOpacity, ImageEditor, ImageStore } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
@@ -227,9 +227,6 @@ export class EditModal extends Component {
                   label={item.label}
                   contentComponent={item.component}
                 />
-              )}
-              ItemSeparatorComponent={() => (
-                <View style={{ height: 10, backgroundColor: colors.darkPurple }} />
               )}
             />
 

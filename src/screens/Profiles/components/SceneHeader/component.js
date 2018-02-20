@@ -11,7 +11,7 @@ import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
-import { isEmpty } from 'lodash';
+import { isEmpty, capitalize } from 'lodash';
 import { styles } from './styles';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
@@ -186,7 +186,7 @@ const Status = ({ statusType, ranking }) => (
     />
     <StyledText size="xsmall" color="dark">
       Rank #{ranking}
-      <StyledText size="xsmall" color="grey">&nbsp;({statusType})</StyledText>
+      <StyledText size="xsmall" color="grey">&nbsp;({capitalize(statusType)})</StyledText>
     </StyledText>
   </View>
 );
