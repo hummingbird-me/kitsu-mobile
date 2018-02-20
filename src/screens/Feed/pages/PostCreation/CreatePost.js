@@ -145,8 +145,9 @@ class CreatePost extends React.PureComponent {
 
     // Add the gif to the content
     let additionalContent = content;
-    if (gif && gif.images.original) {
-      additionalContent += `\n${gif.images.original.url}`;
+    if (gif && gif.id) {
+      const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+      additionalContent += `\n${gifURL}`;
     }
 
     const mediaData = media ? {
