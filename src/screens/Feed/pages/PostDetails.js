@@ -45,6 +45,8 @@ export default class PostDetails extends PureComponent {
       comments: props.navigation.state.params.comments && [
         ...props.navigation.state.params.comments,
       ],
+      topLevelCommentsCount: props.navigation.state.params.topLevelCommentsCount,
+      commentsCount: props.navigation.state.params.commentsCount,
       like: props.navigation.state.params.like,
       isLiked: props.navigation.state.params.isLiked,
       postLikesCount: postLikes,
@@ -84,7 +86,7 @@ export default class PostDetails extends PureComponent {
     this.setState({ isPostingComment: true });
 
     try {
-      const { currentUser, post } = this.props.navigation.state.params;
+      const { currentUser, post, syncComments } = this.props.navigation.state.params;
 
       // Check if this is a reply rather than a top-level comment
       let replyOptions = {};
@@ -113,17 +115,31 @@ export default class PostDetails extends PureComponent {
       comment.user = currentUser;
 
       const processed = preprocessFeedPost(comment);
-
-      this.setState({ comment: '', isReplying: false, isPostingComment: false });
+      this.setState({
+        comment: '',
+        isReplying: false,
+        commentsCount: this.state.commentsCount + 1
+      });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
-        this.setState({ comments: [...this.state.comments, processed] });
+        this.setState({
+          comments: [...this.state.comments, processed],
+          topLevelCommentsCount: this.state.topLevelCommentsCount + 1
+        });
+
+        // This is a top-level comment, we want to let the upstream
+        // component know that this exists without a re-fetch.
+        // @Hack
+        if (syncComments) {
+          syncComments([processed]);
+        }
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);
+    } finally {
       this.setState({ isPostingComment: false });
     }
   };
@@ -138,16 +154,14 @@ export default class PostDetails extends PureComponent {
     this.setState({ isLoadingNextPage: false });
   };
 
-  onReplyPress = (comment, username, callback) => {
-    let name = username;
-    if (typeof username !== 'string') {
-      name = comment.user.name;
-    }
+  onReplyPress = (comment, user, callback) => {
+    const mention = user.slug || user.id;
+    const name = user.name;
     this.setState({
-      comment: `@${name} `,
+      comment: `@${mention} `,
       isReplying: true,
     });
-    this.replyRef = { comment, name, callback };
+    this.replyRef = { comment, mention, name, callback };
     this.focusOnCommentInput();
   };
 
@@ -197,7 +211,7 @@ export default class PostDetails extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'avatar,name',
+          users: 'slug,avatar,name',
         },
         include: 'user',
         sort: '-createdAt',
@@ -257,7 +271,7 @@ export default class PostDetails extends PureComponent {
         currentUser={currentUser}
         navigation={this.props.navigation}
         onAvatarPress={id => this.navigateToUserProfile(id)}
-        onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
+        onReplyPress={(user, callback) => this.onReplyPress(item, user, callback)}
         overlayColor={colors.offWhite}
       />
     );
@@ -269,10 +283,10 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, isLiked, postLikesCount, isPostingComment } = this.state;
+    const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
+        isPostingComment } = this.state;
 
-    const { content, embed, commentsCount,
-      topLevelCommentsCount, media, spoiledUnit } = post;
+    const { content, embed, media, spoiledUnit } = post;
 
     return (
       <KeyboardAvoidingView

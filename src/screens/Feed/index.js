@@ -156,7 +156,9 @@ class Feed extends React.PureComponent {
     this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
   };
 
-  keyExtractor = (item, index) => index;
+  keyExtractor = (item, index) => {
+    return `${item.id}-${item.updatedAt}`;
+  }
 
   renderPost = ({ item }) => {
     // This dispatches based on the type of an entity to the correct
