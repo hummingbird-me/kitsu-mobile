@@ -302,6 +302,7 @@ export class Post extends PureComponent {
                   onSubmit={this.onSubmitComment}
                   onGifSelected={this.onGifSelected}
                   loading={isPostingComment}
+                  multiline
                 />
               </PostSection>
             </PostFooter>
