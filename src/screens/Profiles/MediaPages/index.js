@@ -222,6 +222,7 @@ class MediaPages extends PureComponent {
         Kitsu.findAll('castings', {
           filter: {
             mediaId: id,
+            mediaType: capitalize(type),
             isCharacter: true,
           },
           sort: '-featured',
