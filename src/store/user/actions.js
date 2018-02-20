@@ -12,13 +12,18 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
     const user = await Kitsu.findAll('users', {
       fields: {
         users:
-          'id,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,titleLanguagePreference,status',
+          'id,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,titleLanguagePreference,status,hasPassword',
       },
       filter: { self: true },
     });
-    dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
-    createOneSignalPlayer(dispatch, getState);
-    return user[0];
+
+    if (user.length > 0) {
+      dispatch({ type: types.FETCH_CURRENT_USER_SUCCESS, payload: user[0] });
+      createOneSignalPlayer(dispatch, getState);
+      return user[0];
+    }
+    dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'No user found in request' });
+    return null;
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
     return null;
@@ -152,8 +157,10 @@ export const updateGeneralSettings = data => async (dispatch, getState) => {
     await Kitsu.update('users', { id, ...payload });
     delete payload.password; // Don't keep password.
     dispatch({ type: types.UPDATE_GENERAL_SETTINGS_SUCCESS, payload });
+    return null;
   } catch (e) {
-    dispatch({ type: types.UPDATE_GENERAL_SETTINGS_FAIL });
+    dispatch({ type: types.UPDATE_GENERAL_SETTINGS_FAIL, payload: e && e[0] });
+    return (e && e[0]) || 'Something went wrong';
   }
 };
 

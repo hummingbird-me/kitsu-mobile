@@ -88,9 +88,10 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
   );
 };
 
-const Hits = connectInfiniteHits(({ hits, hasMore, refine, onPress }) => (
-  <BlockingResultList hits={hits} hasMore={hasMore} refine={refine} onPress={onPress} />
-));
+const Hits = connectInfiniteHits(({ hits, hasMore, refine, onPress, currentUser }) => {
+  const data = hits.filter(item => item.id != currentUser.id);
+  return <BlockingResultList hits={data} hasMore={hasMore} refine={refine} onPress={onPress} />
+});
 
 const InstantSearchBox = connectSearchBox(
   ({ refine, currentRefinement, placeholder, searchIconOffset, style }) => (
@@ -134,6 +135,10 @@ class Blocking extends React.Component {
   onBlockUser = async (user) => {
     const { currentUser, accessToken } = this.props;
     const { id } = user;
+
+    // Don't allow us to block ourselves!
+    if (currentUser.id == user.id) return;
+
     setToken(accessToken);
     Keyboard.dismiss();
     this.setState({ loading: true, searchState: {} });
@@ -222,7 +227,7 @@ class Blocking extends React.Component {
     const { query } = this.state.searchState;
     return (
       <View>
-        {query && <Hits onPress={this.onBlockUser} />}
+        {query && <Hits onPress={this.onBlockUser} currentUser={this.props.currentUser} />}
       </View>
     );
   };

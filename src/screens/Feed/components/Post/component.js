@@ -10,6 +10,7 @@ import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
+import { isEmpty } from 'lodash';
 
 // Post
 export class Post extends PureComponent {
@@ -28,12 +29,16 @@ export class Post extends PureComponent {
     comment: '',
     comments: [],
     latestComments: [],
+    commentsCount: this.props.post.commentsCount,
+    topLevelCommentsCount: this.props.post.topLevelCommentsCount,
     like: null,
     isLiked: false,
-    postLikesCount: this.props.post.postLikesCount,
+    postLikesCount: parseInt(this.props.post.postLikesCount, 10) || 0,
     overlayRemoved: false,
     isPostingComment: false,
   };
+
+  mounted = false
 
   componentDidMount() {
     this.mounted = true;
@@ -50,52 +55,68 @@ export class Post extends PureComponent {
     this.props.onPostPress({
       post: this.props.post,
       comments: this.state.comments,
+      commentsCount: this.state.commentsCount,
+      topLevelCommentsCount: this.state.topLevelCommentsCount,
       like: this.state.like,
       isLiked: this.state.isLiked,
       postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
+      syncComments: (comments) => {
+        this.setState({
+          comments: [...this.state.comments, ...comments],
+          latestComments: [...this.state.latestComments, ...comments],
+          commentsCount: this.state.commentsCount + comments.length,
+          topLevelCommentsCount: this.state.commentsCount + comments.length
+        })
+      }
     });
   }
 
   onCommentChanged = comment => this.setState({ comment })
 
   onGifSelected = (gif) => {
-    this.setState({ comment: gif.images.original.url }, () => {
-      this.onSubmitComment();
+    if (!(gif && gif.id)) return;
+    const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+    const comment = this.state.comment.trim();
+    const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
+    this.setState({ comment: newComment }, () => {
+      // Submit gif if comment was empty
+      if (isEmpty(comment)) this.onSubmitComment();
     });
   }
 
   onSubmitComment = async () => {
-    if (this.state.isPostingComment) return;
-
+    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
     this.setState({ isPostingComment: true });
 
-    const comment = await Kitsu.create('comments', {
-      content: this.state.comment,
-      post: {
-        id: this.props.post.id,
-        type: 'posts',
-      },
-      user: {
-        id: this.props.currentUser.id,
-        type: 'users',
-      },
-    });
-    comment.user = this.props.currentUser;
+    try {
+      const comment = await Kitsu.create('comments', {
+        content: this.state.comment.trim(),
+        post: {
+          id: this.props.post.id,
+          type: 'posts',
+        },
+        user: {
+          id: this.props.currentUser.id,
+          type: 'users',
+        },
+      });
+      comment.user = this.props.currentUser;
 
-    const processed = preprocessFeedPost(comment);
-
-    this.setState({
-      comment: '',
-      comments: [...this.state.comments, processed],
-      latestComments: [...this.state.latestComments, processed],
-      isPostingComment: false,
-    });
+      const processed = preprocessFeedPost(comment);
+      this.setState({
+        comment: '',
+        comments: [...this.state.comments, processed],
+        latestComments: [...this.state.latestComments, processed],
+        topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
+        commentsCount: this.state.commentsCount + 1
+      });
+    } catch (error) {
+      console.log('Error submitting comment:', error);
+    } finally {
+      this.setState({ isPostingComment: false });
+    }
   }
-
-  mounted = false
-
-  keyExtractor = (item, index) => index;
 
   fetchComments = async () => {
     try {
@@ -107,7 +128,7 @@ export class Post extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'avatar,name',
+          users: 'slug,avatar,name',
         },
         include: 'user',
         sort: '-createdAt',
@@ -203,7 +224,6 @@ export class Post extends PureComponent {
       nsfw,
       spoiler,
       spoiledUnit,
-      commentsCount,
       user,
     } = post;
     const {
@@ -211,6 +231,7 @@ export class Post extends PureComponent {
       latestComments,
       overlayRemoved,
       postLikesCount,
+      commentsCount,
       isPostingComment,
     } = this.state;
 
@@ -299,6 +320,7 @@ export class Post extends PureComponent {
                   onSubmit={this.onSubmitComment}
                   onGifSelected={this.onGifSelected}
                   loading={isPostingComment}
+                  multiline
                 />
               </PostSection>
             </PostFooter>

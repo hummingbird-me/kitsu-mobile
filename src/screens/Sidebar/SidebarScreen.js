@@ -42,7 +42,7 @@ class SidebarScreen extends React.Component {
   }
 
   onLogoutButtonPressed = () => {
-    this.props.logoutUser(this.props.screenProps.rootNavigation);
+    this.props.logoutUser();
   };
 
   onSeeMoreButtonPressed = () => {
@@ -163,6 +163,8 @@ class SidebarScreen extends React.Component {
         ItemSeparatorComponent: this.renderItemSeparatorComponent,
       },
     ];
+    // Temporily disabled group display
+    /**
     if (groupsData.length > 0) {
       sectionListData.splice(1, 0, {
         key: 'groups',
@@ -188,6 +190,7 @@ class SidebarScreen extends React.Component {
         ItemSeparatorComponent: () => <ItemSeparator underlineImage={false} />,
       });
     }
+    */
     return (
       <View style={{ backgroundColor: colors.listBackPurple, flex: 1 }}>
         <ProgressiveImage

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
@@ -6,17 +6,26 @@ export const styles = StyleSheet.create({
   textInputBox: {
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.lightGrey,
-    borderRadius: 100,
-    height: 36,
+    borderRadius: 20,
+    minHeight: 36,
+    // We have a bigger height for android
+    // Because there is a bug with the textfield where it won't allow
+    // users to scroll if max height has been reached :/
+    // Might be fixable by upgrading RN
+    // see: https://github.com/facebook/react-native/issues/12799#issuecomment-317864934
+    maxHeight: Platform.select({ ios: 100, android: 180 }),
     flexDirection: 'row',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   textInputField: {
     flex: 1,
     fontFamily: 'Open Sans',
     fontSize: 13,
     paddingHorizontal: scenePadding,
-    paddingVertical: 0,
+    paddingVertical: 6,
+    minHeight: 30,
+    textAlignVertical: 'top',
   },
   submitButton: {
     height: 36,

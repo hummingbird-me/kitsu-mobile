@@ -4,11 +4,18 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { styles } from './styles';
 
-export const ProfileHeader = (
-  { profile, showCoverImage, showFollowButton, showProfileImage, title, onClickBack, onClickFollow },
-) => {
+export const ProfileHeader = ({
+  profile,
+  showCoverImage,
+  showFollowButton,
+  showProfileImage,
+  title,
+  onClickBack,
+  onClickFollow,
+}) => {
   const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
   const goBack = () => onClickBack();
@@ -16,7 +23,8 @@ export const ProfileHeader = (
   return (
     <View style={styles.headerContainer}>
       {showCoverImage &&
-        <Image
+        <ProgressiveImage
+          hasOverlay
           style={commonStyles.absoluteFill}
           source={{ uri: coverImageUri }}
         />

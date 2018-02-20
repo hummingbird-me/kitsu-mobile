@@ -18,6 +18,7 @@ export const completeOnboarding = navigation => async (dispatch, getState) => {
     const navigateTabs = NavigationActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+      key: null,
     });
     navigation.dispatch(navigateTabs);
     dispatch({ type: types.COMPLETE_ONBOARDING_SUCCESS });

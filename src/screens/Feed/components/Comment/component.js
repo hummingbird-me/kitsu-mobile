@@ -59,7 +59,7 @@ export class Comment extends PureComponent {
   }
 
   onReplyPress = (item) => {
-    this.props.onReplyPress(item.user.name, (comment) => {
+    this.props.onReplyPress(item.user, (comment) => {
       this.setState({
         replies: [...this.state.replies, comment],
         repliesCount: this.state.repliesCount + 1,
@@ -140,7 +140,7 @@ export class Comment extends PureComponent {
           parentId: this.props.comment.id,
         },
         fields: {
-          users: 'avatar,name',
+          users: 'slug,avatar,name',
         },
         include: 'user',
         sort: '-createdAt',
@@ -167,6 +167,7 @@ export class Comment extends PureComponent {
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
       navigation={this.props.navigation}
+      overlayColor={this.props.overlayColor}
     />
   )
 
@@ -214,6 +215,7 @@ export class Comment extends PureComponent {
                   color="dark"
                   textStyle={{ lineHeight: null }}
                   numberOfLines={(isTruncated && 2) || undefined}
+                  selectable
                 >
                   {content}
                 </StyledText>
@@ -230,6 +232,7 @@ export class Comment extends PureComponent {
               borderRadius={20}
               overlayColor={overlayColor}
               style={isEmpty(content) ? null : styles.embed}
+              navigation={navigation}
             />
           }
 

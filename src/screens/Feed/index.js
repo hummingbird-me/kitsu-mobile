@@ -13,6 +13,7 @@ import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { isEmpty } from 'lodash';
 import { feedStreams } from './feedStreams';
 
 class Feed extends React.PureComponent {
@@ -62,14 +63,23 @@ class Feed extends React.PureComponent {
   };
 
   cursor = undefined;
+  canFetchNext = true;
 
   fetchFeed = async ({ reset = false } = {}) => {
     const PAGE_SIZE = 10;
 
-    if (this.isFetchingFeed) { return; }
+    if (this.isFetchingFeed) return;
     this.isFetchingFeed = true;
 
-    if (reset) this.cursor = undefined;
+    if (reset) {
+      this.cursor = undefined;
+      this.canFetchNext = true;
+    }
+
+    if (!this.canFetchNext) {
+      this.isFetchingFeed = false;
+      return;
+    }
 
     try {
       // Following Feed example URL:
@@ -101,6 +111,7 @@ class Feed extends React.PureComponent {
       });
 
       // I need to read the cursor value out of the 'next' link in the result.
+      this.canFetchNext = !isEmpty(result && result.links && result.links.next);
       const url = new URL(result.links.next, true);
       this.cursor = url.query['page[cursor]'];
 
@@ -145,7 +156,9 @@ class Feed extends React.PureComponent {
     this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
   };
 
-  keyExtractor = (item, index) => index;
+  keyExtractor = (item, index) => {
+    return `${item.id}-${item.updatedAt}`;
+  }
 
   renderPost = ({ item }) => {
     // This dispatches based on the type of an entity to the correct

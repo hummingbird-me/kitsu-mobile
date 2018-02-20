@@ -5,6 +5,7 @@ import {
   View,
   StatusBar,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
@@ -22,6 +23,7 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
+import { isEmpty } from 'lodash';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -35,14 +37,19 @@ export default class PostDetails extends PureComponent {
   constructor(props) {
     super(props);
 
+    const { post, postLikesCount } = props.navigation.state.params;
+    const postLikes = parseInt(postLikesCount, 10) || parseInt(post.postLikesCount, 10) || 0;
+
     this.state = {
       comment: '',
       comments: props.navigation.state.params.comments && [
         ...props.navigation.state.params.comments,
       ],
+      topLevelCommentsCount: props.navigation.state.params.topLevelCommentsCount,
+      commentsCount: props.navigation.state.params.commentsCount,
       like: props.navigation.state.params.like,
       isLiked: props.navigation.state.params.isLiked,
-      postLikesCount: props.navigation.state.params.postLikesCount,
+      postLikesCount: postLikes,
       taggedMedia: {
         media: {
           canonicalTitle: 'Made in Abyss',
@@ -64,18 +71,23 @@ export default class PostDetails extends PureComponent {
   onCommentChanged = comment => this.setState({ comment });
 
   onGifSelected = (gif) => {
-    this.setState({ comment: gif.images.original.url }, () => {
-      this.onSubmitComment();
+    if (!(gif && gif.id)) return;
+    const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+    const comment = this.state.comment.trim();
+    const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
+    this.setState({ comment: newComment }, () => {
+      // Submit gif if comment was empty
+      if (isEmpty(comment)) this.onSubmitComment();
     });
   }
 
   onSubmitComment = async () => {
-    if (this.state.isPostingComment) return;
+    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
 
     this.setState({ isPostingComment: true });
 
     try {
-      const { currentUser, post } = this.props.navigation.state.params;
+      const { currentUser, post, syncComments } = this.props.navigation.state.params;
 
       // Check if this is a reply rather than a top-level comment
       let replyOptions = {};
@@ -90,7 +102,7 @@ export default class PostDetails extends PureComponent {
       }
 
       const comment = await Kitsu.create('comments', {
-        content: this.state.comment,
+        content: this.state.comment.trim(),
         post: {
           id: post.id,
           type: 'posts',
@@ -104,17 +116,31 @@ export default class PostDetails extends PureComponent {
       comment.user = currentUser;
 
       const processed = preprocessFeedPost(comment);
-
-      this.setState({ comment: '', isReplying: false, isPostingComment: false });
+      this.setState({
+        comment: '',
+        isReplying: false,
+        commentsCount: this.state.commentsCount + 1
+      });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
-        this.setState({ comments: [...this.state.comments, processed] });
+        this.setState({
+          comments: [...this.state.comments, processed],
+          topLevelCommentsCount: this.state.topLevelCommentsCount + 1
+        });
+
+        // This is a top-level comment, we want to let the upstream
+        // component know that this exists without a re-fetch.
+        // @Hack
+        if (syncComments) {
+          syncComments([processed]);
+        }
       }
     } catch (err) {
       console.log('Error submitting comment: ', err);
+    } finally {
       this.setState({ isPostingComment: false });
     }
   };
@@ -129,16 +155,14 @@ export default class PostDetails extends PureComponent {
     this.setState({ isLoadingNextPage: false });
   };
 
-  onReplyPress = (comment, username, callback) => {
-    let name = username;
-    if (typeof username !== 'string') {
-      name = comment.user.name;
-    }
+  onReplyPress = (comment, user, callback) => {
+    const mention = user.slug || user.id;
+    const name = user.name;
     this.setState({
-      comment: `@${name} `,
+      comment: `@${mention} `,
       isReplying: true,
     });
-    this.replyRef = { comment, name, callback };
+    this.replyRef = { comment, mention, name, callback };
     this.focusOnCommentInput();
   };
 
@@ -188,7 +212,7 @@ export default class PostDetails extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'avatar,name',
+          users: 'slug,avatar,name',
         },
         include: 'user',
         sort: '-createdAt',
@@ -248,7 +272,7 @@ export default class PostDetails extends PureComponent {
         currentUser={currentUser}
         navigation={this.props.navigation}
         onAvatarPress={id => this.navigateToUserProfile(id)}
-        onReplyPress={(name, callback) => this.onReplyPress(item, name, callback)}
+        onReplyPress={(user, callback) => this.onReplyPress(item, user, callback)}
         overlayColor={colors.offWhite}
       />
     );
@@ -260,14 +284,14 @@ export default class PostDetails extends PureComponent {
     // We expect to have navigated here using react-navigation, and it takes all our props
     // and jams them over into this crazy thing.
     const { currentUser, post } = this.props.navigation.state.params;
-    const { comment, comments, isLiked, postLikesCount, isPostingComment } = this.state;
+    const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
+        isPostingComment } = this.state;
 
-    const { content, embed, commentsCount,
-      topLevelCommentsCount, media, spoiledUnit } = post;
+    const { content, embed, media, spoiledUnit } = post;
 
     return (
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.select({ ios: 'padding', android: null })}
         style={{ flex: 1, paddingTop: isX ? paddingX + 20 : 20, backgroundColor: '#FFFFFF' }}
       >
         <StatusBar barStyle="dark-content" />
@@ -293,7 +317,7 @@ export default class PostDetails extends PureComponent {
               commentsCount={commentsCount}
               taggedMedia={media}
               taggedEpisode={spoiledUnit}
-              navigation={navigation}
+              navigation={this.props.navigation}
             />
 
             <PostActions
@@ -344,6 +368,7 @@ export default class PostDetails extends PureComponent {
               onGifSelected={this.onGifSelected}
               onSubmit={this.onSubmitComment}
               loading={isPostingComment}
+              multiline
             />
           </PostSection>
         </PostFooter>

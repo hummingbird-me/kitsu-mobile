@@ -16,7 +16,7 @@ const getTitle = (selectedAccount, hasRatedAnimes) => {
 
 const getButtonTitle = (selectedAccount, hasRatedAnimes, buttonIndex) => {
   if (buttonIndex === 0) {
-    if (selectedAccount === 'aozora') {
+    if (selectedAccount === 'aozora' || hasRatedAnimes) {
       return 'Start building manga library';
     }
     return 'Start building your library';
@@ -55,24 +55,31 @@ class ManageLibrary extends React.Component {
   render() {
     const { navigation, selectedAccount, accounts } = this.props;
     const { hasRatedAnimes } = navigation.state.params;
+
+    const kitsuAccountHasEntries = (
+      accounts && accounts.kitsu && accounts.kitsu.library_entries >= 5
+    );
+
+    const ratedAnime = hasRatedAnimes || kitsuAccountHasEntries;
+
     return (
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
           <Text style={[styles.tutorialText, styles.tutorialText]}>
-            {getTitle(selectedAccount, hasRatedAnimes)}
+            {getTitle(selectedAccount, ratedAnime)}
           </Text>
           <Button
             style={[styles.button, { marginTop: 24 }]}
             onPress={() =>
-              onPress(navigation, selectedAccount, hasRatedAnimes, 0, this.completeOnboarding)}
-            title={getButtonTitle(selectedAccount, hasRatedAnimes, 0)}
+              onPress(navigation, selectedAccount, ratedAnime, 0, this.completeOnboarding)}
+            title={getButtonTitle(selectedAccount, ratedAnime, 0)}
             titleStyle={styles.buttonTitleStyle}
           />
           <Button
             style={[styles.button, styles.buttonSecondary]}
             onPress={() =>
-              onPress(navigation, selectedAccount, hasRatedAnimes, 1, this.completeOnboarding)}
-            title={getButtonTitle(selectedAccount, hasRatedAnimes, 1)}
+              onPress(navigation, selectedAccount, ratedAnime, 1, this.completeOnboarding)}
+            title={getButtonTitle(selectedAccount, ratedAnime, 1)}
             titleStyle={styles.buttonSecondaryTitle}
           />
         </View>

@@ -7,6 +7,7 @@ import {
   Image,
   Platform,
   ActivityIndicator,
+  PushNotificationIOS,
 } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,7 +17,7 @@ import moment from 'moment';
 import { Kitsu } from 'kitsu/config/api';
 import {
   fetchNotifications,
-  markNotificationsAsSeen,
+  markNotifications,
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
@@ -72,6 +73,7 @@ class NotificationsScreen extends PureComponent {
         if (previousScene.key !== 'Notifications' || doublePressed) {
           this.lastTap = null;
           jumpToIndex(scene.index);
+          this.resetScrollPosition();
           this.fetchNotifications();
         } else {
           this.lastTap = now;
@@ -95,9 +97,10 @@ class NotificationsScreen extends PureComponent {
    * @param {Object} activity Activity of notification row data
    * @memberof NotificationsScreen
    */
-  onNotificationPressed = async (activity) => {
+  onNotificationPressed = async ({ activity, notification }) => {
     const { target, verb, actor } = activity;
     const { currentUser, navigation } = this.props;
+    this.props.markNotifications([notification], 'read');
     switch (verb) {
       case 'follow':
         navigation.navigate('ProfilePages', { userId: actor.id || currentUser.id });
@@ -116,6 +119,25 @@ class NotificationsScreen extends PureComponent {
         }
         break;
       case 'post':
+        if (target.length !== 0) {
+          navigation.navigate('PostDetails', {
+            post: target[0],
+            comments: [],
+            like: null,
+            currentUser,
+          });
+        } else { // should be a "mention"
+          const post = await this.fetchPost(activity);
+          if (post) {
+            navigation.navigate('PostDetails', {
+              post,
+              comments: [],
+              like: null,
+              currentUser,
+            });
+          }
+        }
+        break;
       case 'post_like':
       case 'comment_like':
       case 'comment':
@@ -140,24 +162,49 @@ class NotificationsScreen extends PureComponent {
 
   /**
    * Fetches media reaction.
-   * TODO: temporary request to fetch mediareactions & to navigate corresponding
-   * media screen. (since we don't have mediareactions screen right now)
-   *
    * @param {number} mediaId Media ID of notification target ID.
    * @memberof NotificationsScreen
    */
+  // TODO: temporary request to fetch mediareactions & to navigate corresponding
+  // media screen. (since we don't have mediareactions screen right now)
   fetchMediaReactions = async mediaId =>
     Kitsu.find('mediaReactions', mediaId, {
       include: 'user,anime,manga',
     });
 
   /**
+   * Fetches post by extracting postId from activity foreignId.
+   * Created for fetching mentions in a hacky way.
+   * @param {object} activity Activity object from notifications
+   * @returns {object} post
+   * @memberof NotificationsScreen
+   */
+  fetchPost = async (activity) => {
+    if (!activity.foreignId) return null;
+    const postId = activity.foreignId.split(':')[1];
+    let post;
+    try {
+      post = await Kitsu.find('posts', postId, {
+        include: 'user,targetUser,targetGroup,media',
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    return post;
+  };
+
+  /**
    * Fetches notifications and immediately marks them as read.
    * @memberof NotificationsScreen
    */
   fetchNotifications = async () => {
-    await this.props.fetchNotifications();
-    this.props.markNotificationsAsSeen();
+    const { loadingNotifications } = this.props;
+
+    if (!loadingNotifications) {
+      await this.props.fetchNotifications();
+      await this.props.markNotifications(this.props.notifications, 'seen');
+      PushNotificationIOS.setApplicationIconBadgeNumber(0);
+    }
   };
 
   /**
@@ -169,9 +216,13 @@ class NotificationsScreen extends PureComponent {
     const { loadingMoreNotifications, notifications } = this.props;
     if (!loadingMoreNotifications) {
       await this.props.fetchNotifications(notifications.slice(-1)[0].id);
-      this.props.markNotificationsAsSeen();
+      this.props.markNotifications(this.props.notifications, 'seen');
     }
   };
+
+  resetScrollPosition = () => {
+    this.list.scrollToOffset({ x: 0, y: 0, animated: true });
+  }
 
   handleActionBtnPress = () => {
     if (Platform.OS === 'ios') {
@@ -203,7 +254,9 @@ class NotificationsScreen extends PureComponent {
         : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
     return (
-      <TouchableOpacity onPress={() => this.onNotificationPressed(activity)}>
+      <TouchableOpacity
+        onPress={() => this.onNotificationPressed({ notification: item, activity })}
+      >
         <View style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
           <View style={styles.iconContainer}>
             <Icon name="circle" style={[styles.icon, !item.isRead && styles.iconUnread]} />
@@ -250,13 +303,7 @@ class NotificationsScreen extends PureComponent {
   };
 
   render() {
-    const {
-      notifications,
-      notificationsUnread,
-      loadingNotifications,
-      fetchNotifications,
-      markingRead,
-    } = this.props;
+    const { notifications, notificationsUnread, loadingNotifications, markingRead } = this.props;
     return (
       <View style={styles.container}>
         <CustomHeader
@@ -265,17 +312,26 @@ class NotificationsScreen extends PureComponent {
           onMarkAll={this.onMarkAll}
         />
         <FlatList
+          ref={(r) => { this.list = r; }}
           ListHeaderComponent={this.renderHeader}
-          removeClippedSubviews={false}
           data={notifications}
           renderItem={this.renderItem}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={this.renderItemSeperator}
           initialNumToRender={10}
           refreshing={loadingNotifications}
-          onRefresh={fetchNotifications}
-          onEndReached={this.fetchMoreNotifications}
-          onEndReachedThreshold={0.3}
+          onRefresh={this.fetchNotifications}
+          onMomentumScrollBegin={() => {
+            // Prevent iOS calling onendreached when list is loaded.
+            this.onEndReachedCalledDuringMomentum = false;
+          }}
+          onEndReached={() => {
+            if (!this.onEndReachedCalledDuringMomentum) {
+              this.fetchMoreNotifications();
+              this.onEndReachedCalledDuringMomentum = true;
+            }
+          }}
+          onEndReachedThreshold={0.5}
           style={styles.container}
         />
       </View>
@@ -288,7 +344,7 @@ NotificationsScreen.propTypes = {
   currentUser: PropTypes.object.isRequired,
   notifications: PropTypes.array.isRequired,
   loadingNotifications: PropTypes.bool.isRequired,
-  markNotificationsAsSeen: PropTypes.func.isRequired,
+  markNotifications: PropTypes.func.isRequired,
   markAllNotificationsAsRead: PropTypes.func.isRequired,
   notificationsUnread: PropTypes.number.isRequired,
   markingRead: PropTypes.bool.isRequired,
@@ -311,9 +367,8 @@ const mapStateToProps = ({ feed, user, app }) => {
 export default connect(mapStateToProps, {
   fetchNotifications,
   markAllNotificationsAsRead,
-  markNotificationsAsSeen,
+  markNotifications,
 })(NotificationsScreen);
-
 
 /**
  * Parses notification data into usable objects.
@@ -322,10 +377,10 @@ export default connect(mapStateToProps, {
  * @param {object} activities notification data received from API
  * @param {number} currentUserId logged in user ID
  * @returns {object} notificationData
- *  - @returns {string} actorName notification actor name
- *  - @returns {string} actorAvatar notification actor avatar URL
- *  - @returns {string} text notification text (ex: mentioned you.)
- *  - @returns {string} others other users involved in notification
+ *  - {string} notificationData.actorName notification actor name
+ *  - {string} notificationData.actorAvatar notification actor avatar URL
+ *  - {string} notificationData.text notification text (ex: mentioned you.)
+ *  - {string} notificationData.others other users involved in notification
  */
 export const parseNotificationData = (activities, currentUserId) => {
   const notificationData = {
@@ -375,7 +430,7 @@ export const parseNotificationData = (activities, currentUserId) => {
       notificationData.text = 'liked your reaction.';
       break;
     case 'comment':
-      if (currentUserId === replyToUser.split(':')[1]) {
+      if (replyToUser && currentUserId === replyToUser.split(':')[1]) {
         notificationData.text = `replied to your ${replyToType}.`;
       } else if (isMentioned(mentionedUsers || [], currentUserId)) {
         notificationData.text = 'mentioned you in a comment.';

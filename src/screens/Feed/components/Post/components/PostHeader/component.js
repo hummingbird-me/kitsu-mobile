@@ -30,17 +30,19 @@ export const PostHeader = ({
       onSelected: async () => {
         if (!post) return;
         await Clipboard.setString(`${kitsuConfig.kitsuUrl}/posts/${post.id}`);
+        alert('Copied post link!');
       },
-      text: 'Copy link to post',
+      text: 'Copy Link to Post',
     },
-    isCurrentUser ?
-      {
-        onSelected: null,
-        text: 'Delete post',
-      } : {},
+    // TODO: Implement post deletion
+    // isCurrentUser ?
+    //   {
+    //     onSelected: null,
+    //     text: 'Delete Post',
+    //   } : {},
     {
       onSelected: null,
-      text: 'Never mind',
+      text: 'Nevermind',
     },
   ];
 

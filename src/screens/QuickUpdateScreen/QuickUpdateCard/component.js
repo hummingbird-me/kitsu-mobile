@@ -149,13 +149,15 @@ export default class QuickUpdateCard extends PureComponent {
                   {media.canonicalTitle}
                 </Text>
                 {/* Progress Bar */}
-                <View style={styles.progressBarContainer}>
-                  <ProgressBar
-                    backgroundStyle={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
-                    height={6}
-                    fillPercentage={(progress / unitCount) * 100}
-                  />
-                </View>
+                {unitCount > 0 && (
+                  <View style={styles.progressBarContainer}>
+                    <ProgressBar
+                      backgroundStyle={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+                      height={6}
+                      fillPercentage={(progress / unitCount) * 100}
+                    />
+                  </View>
+                )}
                 {/* Progress State */}
                 {progress > 0 ? (
                   <View style={{ flexDirection: 'row' }}>

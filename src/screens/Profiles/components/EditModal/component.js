@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Modal, FlatList, Image, TouchableOpacity, ImageEditor, ImageStore } from 'react-native';
+import { View, Modal, Image, TouchableOpacity, ImageEditor, ImageStore } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
 import { Input } from 'kitsu/components/Input';
@@ -162,11 +163,12 @@ export class EditModal extends Component {
 
   renderBioComponent = () => (
     <Input
-      multiline={true}
+      multiline
       containerStyle={{ height: 140 }}
       placeholder="Tell the world your story."
       value={this.state.changeset.about}
       onChangeText={text => this.updateChanges('about', text)}
+      style={{ textAlignVertical: 'top' }}
     />
   )
 
@@ -176,24 +178,24 @@ export class EditModal extends Component {
     const rows = [
       {
         label: 'Cover',
-        component: this.renderCoverComponent()
+        component: this.renderCoverComponent(),
       },
       {
         label: 'Avatar',
-        component: this.renderAvatarComponent()
+        component: this.renderAvatarComponent(),
       },
       {
         label: 'Location',
-        component: this.renderLocationComponent()
+        component: this.renderLocationComponent(),
       },
       {
         label: 'Gender',
-        component: this.renderGenderComponent()
+        component: this.renderGenderComponent(),
       },
       {
         label: 'Bio',
-        component: this.renderBioComponent()
-      }
+        component: this.renderBioComponent(),
+      },
       // @Todo Needs datepicker code and character search implemented. - vevix
       //{ label: 'Birthday', },
       //{ label: 'Waifu', },
@@ -218,15 +220,14 @@ export class EditModal extends Component {
           />
           <View style={{ flex: 1 }}>
             {/* Profile Components */}
-            <FlatList
+            <KeyboardAwareFlatList
               data={rows}
-              renderItem={({ item }) =>
+              renderItem={({ item }) => (
                 <InfoRow
                   label={item.label}
                   contentComponent={item.component}
                 />
-              }
-              ItemSeparatorComponent={() => <View style={{ height: 10, backgroundColor: colors.darkPurple }}/>}
+              )}
             />
 
             {/* Media Modal */}

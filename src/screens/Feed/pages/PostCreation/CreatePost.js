@@ -145,8 +145,9 @@ class CreatePost extends React.PureComponent {
 
     // Add the gif to the content
     let additionalContent = content;
-    if (gif && gif.images.original) {
-      additionalContent += `\n${gif.images.original.url}`;
+    if (gif && gif.id) {
+      const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+      additionalContent += `\n${gifURL}`;
     }
 
     const mediaData = media ? {
@@ -259,8 +260,9 @@ class CreatePost extends React.PureComponent {
               value={content}
               placeholder={placeholder}
               placeholderTextColor={colors.grey}
-              autoCorrect={false}
+              autoCorrect
               autoFocus
+              autoCapitalize="sentences"
               underlineColorAndroid="transparent"
               blurOnSubmit={false}
             />
@@ -293,7 +295,7 @@ class CreatePost extends React.PureComponent {
                 />
                 :
                 <AdditionalButton
-                  text="Tag a Media"
+                  text="Tag Anime or Manga"
                   icon="tag"
                   color={colors.blue}
                   disabled={busy}
@@ -309,7 +311,7 @@ class CreatePost extends React.PureComponent {
                 />
                 :
                 <AdditionalButton
-                  text="Add a GIF"
+                  text="Search & Share Gif"
                   icon="plus"
                   color={colors.green}
                   disabled={busy}
