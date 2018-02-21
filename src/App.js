@@ -3,16 +3,19 @@ import React, { PureComponent } from 'react';
 import { Platform, View, StatusBar, Linking } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
-import { identity, isNull } from 'lodash';
-
+import { identity, isNull, isEmpty } from 'lodash';
+import Sentry from 'react-native-sentry';
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import store from './store/config';
 import Root from './Router';
 import { NotificationModal } from './components/NotificationModal';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
+import { kitsuConfig } from 'kitsu/config/env';
+
 
 // eslint-disable-next-line
 console.disableYellowBox = true;
@@ -45,7 +48,7 @@ class App extends PureComponent {
     this.unsubscribe();
   }
 
-  onStoreUpdate() {
+  async onStoreUpdate() {
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
 
@@ -58,6 +61,16 @@ class App extends PureComponent {
       });
       this.navigation.dispatch(resetAction);
     }
+
+    // If we're authenticated then update sentry
+    // But we first need to make sure current user is set
+    if (authenticated) {
+      if (isEmpty(store.getState().user.currentUser)) {
+        await store.dispatch(fetchCurrentUser());
+      }
+    }
+
+    this.updateSentryContext(authenticated);
 
     // Set the new authentication value
     this.authenticated = authenticated;
@@ -100,6 +113,26 @@ class App extends PureComponent {
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
     this.navigation.dispatch(resetAction);
+  }
+
+  updateSentryContext(authenticated) {
+    const user = store.getState().user.currentUser;
+    if (!isEmpty(user)) return;
+
+    if (authenticated) {
+      Sentry.setUserContext({
+        id: user.id,
+        email: user.email,
+        username: user.name,
+      });
+      // set the tag context
+      Sentry.setTagsContext({
+        environment: kitsuConfig.isProduction ? 'production' : 'staging',
+        react: true,
+      });
+    } else {
+      Sentry.clearContext();
+    }
   }
 
   render() {
