@@ -276,6 +276,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].status = 'planned';
       const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
+      this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
         mediaTotalDuration,
@@ -285,6 +286,10 @@ class RateScreen extends React.Component {
         ratingTwenty: null,
         selected: null,
       });
+      if (currentIndex + 1 >= updatedTopMedia.length - 4) {
+        this.loadMoreMedia();
+      }
+      this.carousel.snapToNext();
     } catch (e) {
       this.setState({ loadingWtW: false });
       console.log(e, 'error adding to watchlist');
@@ -305,6 +310,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
+      this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
         mediaTotalDuration,
@@ -314,6 +320,9 @@ class RateScreen extends React.Component {
         ratingTwenty: null,
         selected: null,
       });
+      if (currentIndex + 1 >= updatedTopMedia.length - 4) {
+        this.loadMoreMedia();
+      }
     } catch (e) {
       this.setState({ loadingWtW: false });
       console.log(e, 'error removing from watchlist');
@@ -337,6 +346,7 @@ class RateScreen extends React.Component {
         topMedia,
         selected: ratingTwenty && getSimpleTextForRatingTwenty(ratingTwenty),
         ratingTwenty,
+        wantToWatch: topMedia[0].status === 'planned',
         pageIndex: 1,
         fetching: false,
       });
@@ -400,9 +410,9 @@ class RateScreen extends React.Component {
             limit: 1,
           },
         });
-        if (response[0] && response[0].ratingTwenty) {
+        if (response[0] && (response[0].ratingTwenty || response[0].status === 'planned')) {
           ratedCount += 1;
-          if (media.episodeLength && media.episodeCount) {
+          if (media.episodeLength && media.episodeCount && response[0].status !== 'planned') {
             mediaTotalDuration += media.episodeLength * media.episodeCount;
           }
         }
@@ -428,9 +438,9 @@ class RateScreen extends React.Component {
     let mediaTotalDuration = 0;
     // eslint-disable-next-line
     for (const media of updatedTopMedia) {
-      if (media.ratingTwenty) {
+      if (media.ratingTwenty || media.status === 'planned') {
         ratedCount += 1;
-        if (media.episodeLength && media.episodeCount) {
+        if (media.episodeLength && media.episodeCount && media.status !== 'planned') {
           mediaTotalDuration += media.episodeLength * media.episodeCount;
         }
       }
