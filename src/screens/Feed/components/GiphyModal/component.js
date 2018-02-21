@@ -122,7 +122,7 @@ export class GiphyModal extends PureComponent {
       >
         <TouchableOpacity onPress={() => this.setState({ selected: item })}>
           <ProgressiveImage
-            source={{ uri: images.downsized_small.url || item.images.fixed_width.url || '' }}
+            source={{ uri: (images && (images.downsized_small.url || item.images.fixed_width.url)) || '' }}
             style={{
               height: spacing.height,
               width: spacing.width,
