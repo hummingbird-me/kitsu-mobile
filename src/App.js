@@ -48,11 +48,9 @@ class App extends PureComponent {
     this.unsubscribe();
   }
 
-  onStoreUpdate = () => {
+  onStoreUpdate() {
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
-
-    this.updateSentryContext(authenticated);
 
     // If the authentication state changed from true to false then take user to intro screen
     if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
@@ -62,6 +60,25 @@ class App extends PureComponent {
         key: null,
       });
       this.navigation.dispatch(resetAction);
+    }
+
+    // Update sentry
+    const user = store.getState().user.currentUser;
+    if (authenticated) {
+      if (!isEmpty(user)) {
+        console.log('Sentry!');
+        Sentry.setUserContext({
+          id: user.id,
+          email: user.email,
+          username: user.name,
+        });
+        Sentry.setTagsContext({
+          environment: kitsuConfig.isProduction ? 'production' : 'staging',
+          react: true,
+        });
+      }
+    } else {
+      Sentry.clearContext();
     }
 
     // Set the new authentication value
@@ -105,25 +122,6 @@ class App extends PureComponent {
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
     this.navigation.dispatch(resetAction);
-  }
-
-  updateSentryContext = (authenticated) => {
-    const user = store.getState().user.currentUser;
-    if (isEmpty(user)) return;
-
-    if (authenticated) {
-      Sentry.setUserContext({
-        id: user.id,
-        email: user.email,
-        username: user.name,
-      });
-      Sentry.setTagsContext({
-        environment: kitsuConfig.isProduction ? 'production' : 'staging',
-        react: true,
-      });
-    } else {
-      Sentry.clearContext();
-    }
   }
 
   render() {
