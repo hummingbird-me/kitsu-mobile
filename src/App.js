@@ -48,9 +48,11 @@ class App extends PureComponent {
     this.unsubscribe();
   }
 
-  async onStoreUpdate() {
+  onStoreUpdate = () => {
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
+
+    this.updateSentryContext(authenticated);
 
     // If the authentication state changed from true to false then take user to intro screen
     if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
@@ -61,16 +63,6 @@ class App extends PureComponent {
       });
       this.navigation.dispatch(resetAction);
     }
-
-    // If we're authenticated then update sentry
-    // But we first need to make sure current user is set
-    if (authenticated) {
-      if (isEmpty(store.getState().user.currentUser)) {
-        await store.dispatch(fetchCurrentUser());
-      }
-    }
-
-    this.updateSentryContext(authenticated);
 
     // Set the new authentication value
     this.authenticated = authenticated;
@@ -115,9 +107,9 @@ class App extends PureComponent {
     this.navigation.dispatch(resetAction);
   }
 
-  updateSentryContext(authenticated) {
+  updateSentryContext = (authenticated) => {
     const user = store.getState().user.currentUser;
-    if (!isEmpty(user)) return;
+    if (isEmpty(user)) return;
 
     if (authenticated) {
       Sentry.setUserContext({
