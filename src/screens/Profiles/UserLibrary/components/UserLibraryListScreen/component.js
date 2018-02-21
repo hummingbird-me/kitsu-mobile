@@ -166,7 +166,7 @@ export class UserLibraryListScreenComponent extends React.Component {
             initialScrollIndex={0}
             keyExtractor={idExtractor}
             onEndReached={() => {
-              if (!loading) libraryEntries.fetchMore();
+              if (!loading && libraryEntries.fetchMore) libraryEntries.fetchMore();
             }}
             onEndReachedThreshold={0.75}
             removeClippedSubviews={false}

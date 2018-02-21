@@ -210,7 +210,7 @@ export class UserLibraryScreenComponent extends React.Component {
               getItemLayout={getItemLayout}
               keyExtractor={idExtractor}
               onEndReached={() => {
-                if (!loading) fetchMore();
+                if (!loading && fetchMore) fetchMore();
               }}
               onEndReachedThreshold={0.5}
               removeClippedSubviews={false}
