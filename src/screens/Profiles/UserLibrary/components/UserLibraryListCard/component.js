@@ -158,6 +158,9 @@ export class UserLibraryListCard extends React.Component {
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
 
+    const textMapping = HEADER_TEXT_MAPPING.includes(libraryEntry.status) ?
+      HEADER_TEXT_MAPPING[libraryEntry.status][libraryType] : '-';
+
     return (
       <Swipeable
         onRightActionActivate={this.onRightActionActivate}
@@ -184,7 +187,7 @@ export class UserLibraryListCard extends React.Component {
               <View style={styles.horizontalRule} />
               <Text style={styles.movedText}>
                 Moved to <Text style={styles.movedToText}>
-                  {HEADER_TEXT_MAPPING[libraryEntry.status][libraryType]}
+                  {textMapping}
                 </Text>
               </Text>
               <View style={styles.horizontalRule} />
