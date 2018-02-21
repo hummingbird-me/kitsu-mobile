@@ -1,6 +1,5 @@
 import { parseURL } from 'kitsu/common/utils/url';
-
-const imgixBaseURL = 'kitsu.imgix.net';
+import { kitsuConfig } from 'kitsu/config/env';
 
 export const defaultImgixOptions = {
   w: 1200,
@@ -44,7 +43,7 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
   const mappings = Object.keys(options).map(key => `${key}=${options[key]}`);
   const searchParams = mappings.join('&');
 
-  const imgixURL = `https://${imgixBaseURL}${pathname}?${searchParams}`;
+  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}?${searchParams}`;
   console.log(imgixURL);
 
   return imgixURL;

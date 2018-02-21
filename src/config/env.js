@@ -28,4 +28,5 @@ export const kitsuConfig = {
     endpoint: 'https://api.giphy.com/v1/gifs/search?',
     trending: 'https://api.giphy.com/v1/gifs/trending?',
   },
+  imgixBaseUrl: 'kitsu.imgix.net',
 };
