@@ -117,6 +117,7 @@ class RateScreen extends React.Component {
   rate = async (ratingTwenty) => {
     const { currentIndex, topMedia } = this.state;
     const { accessToken, userId } = this.props;
+    const { type } = this.props.navigation.state.params;
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     setToken(accessToken);
@@ -134,8 +135,9 @@ class RateScreen extends React.Component {
         response = await Kitsu.update('libraryEntries', {
           ratingTwenty,
           id: libraryEntryId,
-          anime: {
+          [type]: {
             id,
+            type,
           },
           user: {
             id: userId,
@@ -145,8 +147,9 @@ class RateScreen extends React.Component {
         response = await Kitsu.create('libraryEntries', {
           status: 'completed',
           ratingTwenty,
-          anime: {
+          [type]: {
             id,
+            type,
           },
           user: {
             id: userId,
@@ -184,6 +187,7 @@ class RateScreen extends React.Component {
   removeRating = async () => {
     const { currentIndex, topMedia } = this.state;
     const { accessToken, userId } = this.props;
+    const { type } = this.props.navigation.state.params;
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     setToken(accessToken);
@@ -200,8 +204,9 @@ class RateScreen extends React.Component {
       response = await Kitsu.update('libraryEntries', {
         ratingTwenty: null,
         id: libraryEntryId,
-        anime: {
+        [type]: {
           id,
+          type,
         },
         user: {
           id: userId,
@@ -232,6 +237,7 @@ class RateScreen extends React.Component {
   addToWatchlist = async () => {
     const { currentIndex, topMedia } = this.state;
     const { accessToken, userId } = this.props;
+    const { type } = this.props.navigation.state.params;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     const id = topMedia[currentIndex].id;
     setToken(accessToken);
@@ -243,8 +249,9 @@ class RateScreen extends React.Component {
         response = await Kitsu.update('libraryEntries', {
           status: 'planned',
           id: libraryEntryId,
-          anime: {
+          [type]: {
             id,
+            type,
           },
           user: {
             id: userId,
@@ -253,8 +260,9 @@ class RateScreen extends React.Component {
       } else {
         response = await Kitsu.create('libraryEntries', {
           status: 'planned',
-          anime: {
+          [type]: {
             id,
+            type,
           },
           user: {
             id: userId,
@@ -268,6 +276,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].status = 'planned';
       const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
+      this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
         mediaTotalDuration,
@@ -277,6 +286,10 @@ class RateScreen extends React.Component {
         ratingTwenty: null,
         selected: null,
       });
+      if (currentIndex + 1 >= updatedTopMedia.length - 4) {
+        this.loadMoreMedia();
+      }
+      this.carousel.snapToNext();
     } catch (e) {
       this.setState({ loadingWtW: false });
       console.log(e, 'error adding to watchlist');
@@ -297,6 +310,7 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
+      this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
         mediaTotalDuration,
@@ -306,6 +320,9 @@ class RateScreen extends React.Component {
         ratingTwenty: null,
         selected: null,
       });
+      if (currentIndex + 1 >= updatedTopMedia.length - 4) {
+        this.loadMoreMedia();
+      }
     } catch (e) {
       this.setState({ loadingWtW: false });
       console.log(e, 'error removing from watchlist');
@@ -329,6 +346,7 @@ class RateScreen extends React.Component {
         topMedia,
         selected: ratingTwenty && getSimpleTextForRatingTwenty(ratingTwenty),
         ratingTwenty,
+        wantToWatch: topMedia[0].status === 'planned',
         pageIndex: 1,
         fetching: false,
       });
@@ -361,9 +379,14 @@ class RateScreen extends React.Component {
     let ratedCount = this.state.ratedCount;
     let mediaTotalDuration = this.state.mediaTotalDuration;
 
+    const mediaFields = type === 'anime' ?
+      'posterImage,titles,episodeCount,episodeLength' : 'posterImage,titles,chapterCount';
+
+    const mediaIdField = type === 'anime' ? 'anime_id' : 'manga_id';
+
     let topMedia = await Kitsu.findAll(type, {
       fields: {
-        [type]: 'posterImage,titles,episodeCount,episodeLength',
+        [type]: mediaFields,
       },
       page: {
         limit: pageLimit,
@@ -371,6 +394,7 @@ class RateScreen extends React.Component {
       },
       sort: '-averageRating',
     });
+
 
     topMedia = await Promise.all(
       topMedia.map(async (media) => {
@@ -380,15 +404,15 @@ class RateScreen extends React.Component {
           },
           filter: {
             user_id: userId,
-            anime_id: media.id,
+            [mediaIdField]: media.id,
           },
           page: {
             limit: 1,
           },
         });
-        if (response[0] && response[0].ratingTwenty) {
+        if (response[0] && (response[0].ratingTwenty || response[0].status === 'planned')) {
           ratedCount += 1;
-          if (media.episodeLength && media.episodeCount) {
+          if (media.episodeLength && media.episodeCount && response[0].status !== 'planned') {
             mediaTotalDuration += media.episodeLength * media.episodeCount;
           }
         }
@@ -414,9 +438,9 @@ class RateScreen extends React.Component {
     let mediaTotalDuration = 0;
     // eslint-disable-next-line
     for (const media of updatedTopMedia) {
-      if (media.ratingTwenty) {
+      if (media.ratingTwenty || media.status === 'planned') {
         ratedCount += 1;
-        if (media.episodeLength && media.episodeCount) {
+        if (media.episodeLength && media.episodeCount && media.status !== 'planned') {
           mediaTotalDuration += media.episodeLength * media.episodeCount;
         }
       }
@@ -487,6 +511,7 @@ class RateScreen extends React.Component {
 
   render() {
     const { ratingSystem } = this.props;
+    const { type } = this.props.navigation.state.params;
     const {
       wantToWatch,
       topMedia,
@@ -495,6 +520,9 @@ class RateScreen extends React.Component {
       ratedCount,
       mediaTotalDuration,
     } = this.state;
+
+    const watchOrRead = type === 'manga' ? 'read' : 'watch';
+
     if (fetching) {
       return (
         <View style={[commonStyles.container, { alignItems: 'center' }]}>
@@ -505,10 +533,10 @@ class RateScreen extends React.Component {
     return (
       <View style={commonStyles.container}>
         <Text style={styles.title}>
-          {ratedCount > 0 ? (
+          {ratedCount > 0 && type === 'anime' ? (
             `${formatTime(mediaTotalDuration)} spent watching anime`
           ) : (
-            "Rate the anime you've seen"
+            `Rate the ${type} you've ${type === 'anime' ? 'seen' : 'read'}`
           )}
         </Text>
         <View style={styles.line} />
@@ -534,7 +562,7 @@ class RateScreen extends React.Component {
                 <ActivityIndicator />
               ) : (
                 <Text style={styles.buttonWatchlistTitle}>
-                  {wantToWatch ? 'Saved in Want to Watch' : 'Want to watch'}
+                  {wantToWatch ? `Saved in Want to ${watchOrRead}` : `Want to ${watchOrRead}`}
                 </Text>
               )}
             </TouchableOpacity>

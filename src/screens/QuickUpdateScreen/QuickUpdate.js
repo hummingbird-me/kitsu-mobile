@@ -10,6 +10,7 @@ import {
   View,
   Modal,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
@@ -23,6 +24,7 @@ import { Kitsu } from 'kitsu/config/api';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { isEmpty, capitalize } from 'lodash';
+import { StyledText } from 'kitsu/components/StyledText';
 
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
@@ -116,6 +118,10 @@ class QuickUpdate extends Component {
       },
     });
   }
+
+  onNavigateToSearch = (navigation) => {
+    navigation.navigate('Search');
+  };
 
   onEditorChanged = (editorText) => {
     this.setState({ editorText });
@@ -235,7 +241,7 @@ class QuickUpdate extends Component {
       } else {
       // TODO: handle the case where libraryEntries is undefined
       // Apparently we don't have any library entries.
-        this.setState({ library: [] });
+        this.setState({ library: [], loading: false });
       }
     } catch (e) {
       console.log(e);
@@ -466,6 +472,80 @@ class QuickUpdate extends Component {
     />
   );
 
+  renderLoading = () => {
+    const { headerOpacity } = this.state;
+    return (
+      <View style={styles.wrapper}>
+        {/* Header */}
+        <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
+          {/* Dummy View, helps with layout to center text */}
+          <View style={styles.spacer} />
+          <Text style={styles.headerText}>Quick Update</Text>
+        </Animated.View>
+        <View style={styles.loadingWrapper}>
+          <ActivityIndicator size="large" />
+        </View>
+      </View>
+    )
+  };
+
+  renderEmptyState = () => {
+    const { loading, headerOpacity, filterMode } = this.state;
+    const { navigation } = this.props;
+
+    const emptyTitle =
+      (filterMode === 'anime' && 'START WATCHING ANIME') ||
+      (filterMode === 'manga' && 'START READING MANGA') ||
+      'START TRACKING MEDIA';
+
+    const buttonTitle =
+      (filterMode === 'anime' && 'Find Anime to Watch') ||
+      (filterMode === 'manga' && 'Find Manga to Read') ||
+      'Find Media to Add';
+
+    const descriptionType = filterMode === 'all' ? 'anime or manga' : filterMode;
+
+    return (
+      <View style={styles.wrapper}>
+        {/* Header */}
+        <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
+          {/* Dummy View, helps with layout to center text */}
+          <View style={styles.spacer} />
+          <Text style={styles.headerText}>Quick Update</Text>
+          <HeaderFilterButton
+            mode={filterMode}
+            onModeChanged={this.filterModeChanged}
+            style={styles.filterButton}
+          />
+        </Animated.View>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={this.fetchLibrary}
+            />
+          }
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          <View style={styles.emptyStateContainer}>
+            <StatusComponent
+              title={emptyTitle}
+              text={`As you add ${descriptionType} to your library, they'll start to displaying here and you'll be able to update them and join community discussions.`}
+              image={unstarted}
+            />
+            <TouchableOpacity
+              style={styles.emptyStateButton}
+              onPress={() => this.onNavigateToSearch(navigation)}
+            >
+              <Text style={styles.emptyStateButtonText}>{buttonTitle}</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+    )
+  }
+
   render() {
     const {
       nextUpBackgroundImageUri,
@@ -484,12 +564,12 @@ class QuickUpdate extends Component {
       refreshing,
     } = this.state;
 
-    if (loading || !library) {
-      return (
-        <View style={styles.loadingWrapper}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
+    if (loading) {
+      return this.renderLoading();
+    }
+
+    if (isEmpty(library)) {
+      return this.renderEmptyState();
     }
 
     const entry = library[currentIndex];
@@ -602,7 +682,7 @@ class QuickUpdate extends Component {
 
         {/* Editor: Render if there is a unit. */}
         {entry && entry.unit && entry.unit.length > 0 && (
-          <Modal animationType="slide" transparent visible={editing}>
+          <Modal animationType="slide" transparent visible={editing} onRequestClose={this.toggleEditor}>
             <QuickUpdateEditor
               media={getMedia(entry)}
               currentEpisode={entry.unit[0]}
@@ -647,4 +727,3 @@ function getRequestFields(filterMode) {
 function getMedia(entry) {
   return entry.anime || entry.manga;
 }
-
