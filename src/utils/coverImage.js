@@ -6,7 +6,7 @@ export const defaultImgixOptions = {
   w: 1200,
   'max-h': 500,
   fit: 'crop',
-  crop: 'edges',
+  crop: 'faces,edges',
   auto: 'format',
 };
 
