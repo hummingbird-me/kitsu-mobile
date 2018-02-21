@@ -11,6 +11,7 @@ import {
   Modal,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
@@ -298,7 +299,11 @@ class QuickUpdate extends Component {
     while (this.imageFadeOperations.length > 0) {
       const index = this.imageFadeOperations.pop();
       const media = getMedia(this.state.library[index]);
-      const newBackgroundImage = (media.coverImage && media.coverImage.original) || media.posterImage.original;
+
+      // We only need small on mobile devices
+      const size = Platform.isPad ? 'large' : 'small';
+      const newBackgroundImage =
+        (media.coverImage && media.coverImage[size]) || media.posterImage.original;
 
       // Clear any remaining ones, they're now irrelevant.
       this.imageFadeOperations.length = 0;
@@ -682,7 +687,7 @@ class QuickUpdate extends Component {
 
         {/* Editor: Render if there is a unit. */}
         {entry && entry.unit && entry.unit.length > 0 && (
-          <Modal animationType="slide" transparent visible={editing}>
+          <Modal animationType="slide" transparent visible={editing} onRequestClose={this.toggleEditor}>
             <QuickUpdateEditor
               media={getMedia(entry)}
               currentEpisode={entry.unit[0]}
