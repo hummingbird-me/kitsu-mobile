@@ -66,7 +66,6 @@ class App extends PureComponent {
     const user = store.getState().user.currentUser;
     if (authenticated) {
       if (!isEmpty(user)) {
-        console.log('Sentry!');
         Sentry.setUserContext({
           id: user.id,
           email: user.email,
