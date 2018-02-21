@@ -1,6 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
 import { isX } from 'kitsu/utils/isX';
-
 import * as colors from 'kitsu/constants/colors';
 
 const styles = StyleSheet.create({
@@ -13,6 +12,25 @@ const styles = StyleSheet.create({
   wrapper: {
     flexGrow: 1,
     backgroundColor: colors.listBackPurple,
+  },
+  emptyStateContainer: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyStateButton: {
+    marginVertical: 14,
+    backgroundColor: colors.green,
+    padding: 14,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyStateButtonText: {
+    color: colors.white,
   },
   backgroundImage: {
     position: 'absolute',
@@ -50,7 +68,7 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     position: 'absolute',
-    top: Platform.select({ ios: '50%', android: '30%' }),
+    top: Platform.select({ ios: '60%', android: '30%' }),
     marginTop: isX ? 10 : 0,
     right: 10,
   },
