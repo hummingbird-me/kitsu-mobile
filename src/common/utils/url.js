@@ -24,7 +24,7 @@ async function openUrl(url) {
  * @param {string} url the url.
  * @returns a Dictionary or null if not a valid url.
  */
-function parseURL(url) {
+export function parseURL(url) {
   /**
    * The Regex below is as follows:
     '^(https?:)//', protocol

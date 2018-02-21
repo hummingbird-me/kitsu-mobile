@@ -15,6 +15,7 @@ import { commonStyles } from 'kitsu/common/styles';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
 
@@ -196,7 +197,7 @@ class SidebarScreen extends React.Component {
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
-          source={{ uri: (coverImage && coverImage.large) || defaultCoverUri }}
+          source={{ uri: getImgixCoverImage(coverImage) || defaultCoverUri }}
           defaultSource={defaultCover}
         >
           <View

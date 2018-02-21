@@ -32,6 +32,7 @@ import {
   fetchUserFeed,
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
 const Loader = <ActivityIndicator size="small" color="grey" />;
 
@@ -501,7 +502,7 @@ class ProfileScreen extends Component {
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri: (profile.coverImage && profile.coverImage.original) || defaultCover }}
+              source={{ uri: getImgixCoverImage(profile.coverImage) || defaultCover }}
             />
           )}
           renderForeground={() => (
@@ -534,7 +535,7 @@ class ProfileScreen extends Component {
         <CustomHeader
           style={styles.customHeader}
           navigation={navigation}
-          headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
+          headerImage={{ uri: getImgixCoverImage(profile.coverImage) }}
           leftText={profile.name}
         />
       </View>
