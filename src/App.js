@@ -4,7 +4,7 @@ import { Platform, View, StatusBar, Linking } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import { identity, isNull, isEmpty } from 'lodash';
-import Sentry from 'react-native-sentry';
+import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
@@ -125,7 +125,6 @@ class App extends PureComponent {
         email: user.email,
         username: user.name,
       });
-      // set the tag context
       Sentry.setTagsContext({
         environment: kitsuConfig.isProduction ? 'production' : 'staging',
         react: true,
