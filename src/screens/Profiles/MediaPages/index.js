@@ -371,7 +371,7 @@ class MediaPages extends PureComponent {
             <MaskedImage
               maskedTop
               maskedBottom
-              source={{ uri: (media.coverImage && media.coverImage.original) || defaultCover }}
+              source={{ uri: (media.coverImage && media.coverImage.large) || defaultCover }}
             />
           )}
           renderHeader={() => (
@@ -393,7 +393,7 @@ class MediaPages extends PureComponent {
             }
             title={media.canonicalTitle}
             description={media.synopsis}
-            coverImage={media.coverImage && media.coverImage.original}
+            coverImage={media.coverImage && media.coverImage.large}
             posterImage={media.posterImage && media.posterImage.large}
             popularityRank={media.popularityRank}
             ratingRank={media.ratingRank}

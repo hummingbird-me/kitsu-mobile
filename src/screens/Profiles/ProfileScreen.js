@@ -501,7 +501,7 @@ class ProfileScreen extends Component {
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri: (profile.coverImage && profile.coverImage.original) || defaultCover }}
+              source={{ uri: (profile.coverImage && profile.coverImage.large) || defaultCover }}
             />
           )}
           renderForeground={() => (
@@ -534,7 +534,7 @@ class ProfileScreen extends Component {
         <CustomHeader
           style={styles.customHeader}
           navigation={navigation}
-          headerImage={{ uri: profile.coverImage && profile.coverImage.original }}
+          headerImage={{ uri: profile.coverImage && profile.coverImage.large }}
           leftText={profile.name}
         />
       </View>

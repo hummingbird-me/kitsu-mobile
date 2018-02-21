@@ -16,7 +16,7 @@ export const ProfileHeader = ({
   onClickBack,
   onClickFollow,
 }) => {
-  const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
+  const coverImageUri = (profile.coverImage && profile.coverImage.large) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
   const goBack = () => onClickBack();
 
