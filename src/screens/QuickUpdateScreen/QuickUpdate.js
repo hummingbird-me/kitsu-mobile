@@ -292,7 +292,7 @@ class QuickUpdate extends Component {
     while (this.imageFadeOperations.length > 0) {
       const index = this.imageFadeOperations.pop();
       const media = getMedia(this.state.library[index]);
-      const newBackgroundImage = (media.coverImage && media.coverImage.large) || media.posterImage.original;
+      const newBackgroundImage = (media.coverImage && media.coverImage.original) || media.posterImage.original;
 
       // Clear any remaining ones, they're now irrelevant.
       this.imageFadeOperations.length = 0;

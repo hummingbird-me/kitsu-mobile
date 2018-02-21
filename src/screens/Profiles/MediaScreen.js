@@ -615,7 +615,7 @@ class MediaScreen extends Component {
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri: (media.coverImage && media.coverImage.large) || defaultCover }}
+              source={{ uri: (media.coverImage && media.coverImage.original) || defaultCover }}
             />
           )}
         >
@@ -634,7 +634,7 @@ class MediaScreen extends Component {
         <CustomHeader
           navigation={navigation}
           headerImage={{
-            uri: media.coverImage && media.coverImage.large,
+            uri: media.coverImage && media.coverImage.original,
           }}
           right={
             <Button
