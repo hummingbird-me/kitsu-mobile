@@ -1,12 +1,12 @@
-const kitsuUrl = 'https://staging.kitsu.io';
+const isProduction = true;
+const kitsuUrl = isProduction ? 'https://kitsu.io' : 'https://staging.kitsu.io';
 
 export const kitsuConfig = {
+  isProduction,
   authConfig: {
     CLIENT_ID: 'dd031b32d2f56c990b1425efe6c42ad847e7fe3ab46bf1299f05ecd856bdb7dd',
     CLIENT_SECRET: '54d7307928f63414defd96399fc31ba847961ceaecef3a5fd93144e960c0e151',
   },
-  // assetsUrl: __DEV__ && false ? 'https://staging.kitsu.io/images' : 'https://kitsu.io/images',
-  // baseUrl: __DEV__ && false ? 'https://staging.kitsu.io/api' : 'https://kitsu.io/api',
   kitsuUrl,
   assetsUrl: `${kitsuUrl}/images`,
   baseUrl: `${kitsuUrl}/api`,
@@ -28,5 +28,5 @@ export const kitsuConfig = {
     endpoint: 'https://api.giphy.com/v1/gifs/search?',
     trending: 'https://api.giphy.com/v1/gifs/trending?',
   },
-  imgixBaseUrl: 'kitsu.imgix.net',
+  imgixBaseUrl: isProduction ? 'kitsu.imgix.net' : 'kitsu-staging.imgix.net',
 };
