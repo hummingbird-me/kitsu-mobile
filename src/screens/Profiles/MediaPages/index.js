@@ -17,6 +17,7 @@ import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { capitalize, upperFirst } from 'lodash';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
@@ -371,7 +372,7 @@ class MediaPages extends PureComponent {
             <MaskedImage
               maskedTop
               maskedBottom
-              source={{ uri: (media.coverImage && media.coverImage.original) || defaultCover }}
+              source={{ uri: getImgixCoverImage(media.coverImage) || defaultCover }}
             />
           )}
           renderHeader={() => (
@@ -393,7 +394,7 @@ class MediaPages extends PureComponent {
             }
             title={media.canonicalTitle}
             description={media.synopsis}
-            coverImage={media.coverImage && media.coverImage.original}
+            coverImage={getImgixCoverImage(media.coverImage)}
             posterImage={media.posterImage && media.posterImage.large}
             popularityRank={media.popularityRank}
             ratingRank={media.ratingRank}

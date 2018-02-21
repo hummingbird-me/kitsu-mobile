@@ -7,13 +7,14 @@ import { defaultCover as defaultCoverUri } from 'kitsu/constants/app/';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import PropTypes from 'prop-types';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
 const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
   <View style={styles.absolute}>
     <ProgressiveImage
       hasOverlay
       style={styles.header}
-      source={{ uri: (coverImage && coverImage.large) || defaultCoverUri }}
+      source={{ uri: getImgixCoverImage(coverImage) || defaultCoverUri }}
     >
       <View style={styles.headerContainer}>
         <View style={{ width: 30 }}>

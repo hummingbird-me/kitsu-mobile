@@ -28,6 +28,7 @@ import { getMediaFeed } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
 const { width } = Dimensions.get('window');
 
@@ -615,7 +616,7 @@ class MediaScreen extends Component {
                 backgroundColor: '#fff0',
               }}
               resizeMode="cover"
-              source={{ uri: (media.coverImage && media.coverImage.original) || defaultCover }}
+              source={{ uri: getImgixCoverImage(media.coverImage) || defaultCover }}
             />
           )}
         >
@@ -634,7 +635,7 @@ class MediaScreen extends Component {
         <CustomHeader
           navigation={navigation}
           headerImage={{
-            uri: media.coverImage && media.coverImage.original,
+            uri: getImgixCoverImage(media.coverImage) || '',
           }}
           right={
             <Button

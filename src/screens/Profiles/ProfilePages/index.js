@@ -19,6 +19,7 @@ import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { isIdForCurrentUser } from 'kitsu/common/utils';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
 
@@ -286,7 +287,7 @@ class ProfilePage extends PureComponent {
             <MaskedImage
               maskedTop
               maskedBottom
-              source={{ uri: (profile.coverImage && profile.coverImage.large) || defaultCover }}
+              source={{ uri: getImgixCoverImage(profile.coverImage) || defaultCover }}
             />
           )}
           renderHeader={() => (

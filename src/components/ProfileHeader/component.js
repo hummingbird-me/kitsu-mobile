@@ -5,6 +5,7 @@ import * as PropTypes from 'prop-types';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { styles } from './styles';
 
 export const ProfileHeader = ({
@@ -16,7 +17,7 @@ export const ProfileHeader = ({
   onClickBack,
   onClickFollow,
 }) => {
-  const coverImageUri = (profile.coverImage && profile.coverImage.original) || defaultCover;
+  const coverImageUri = getImgixCoverImage(profile.coverImage) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
   const goBack = () => onClickBack();
 
