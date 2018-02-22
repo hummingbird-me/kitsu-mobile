@@ -34,7 +34,7 @@ const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
 SidebarHeader.propTypes = {
   headerTitle: PropTypes.string.isRequired,
   navigation: PropTypes.object.isRequired,
-  coverImage: PropTypes.string,
+  coverImage: PropTypes.object,
 };
 
 SidebarHeader.defaultProps = {
