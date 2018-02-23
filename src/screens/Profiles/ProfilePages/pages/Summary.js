@@ -83,10 +83,12 @@ export default class Summary extends PureComponent {
   }
 
   navigateToMedia = (media) => {
-    this.props.navigation.navigate('MediaPages', {
-      mediaId: media.id,
-      mediaType: media.type,
-    });
+    if (media) {
+      this.props.navigation.navigate('MediaPages', {
+        mediaId: media.id,
+        mediaType: media.type,
+      });
+    }
   }
 
   formatData(data, numberOfItems = 12) {
