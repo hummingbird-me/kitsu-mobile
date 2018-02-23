@@ -8,6 +8,7 @@ import { styles } from './styles';
 class Board extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.title,
+    tabBarVisible: false,
   });
 
   state = {
@@ -19,24 +20,26 @@ class Board extends React.Component {
     this.getCannySsoToken();
   }
 
-  getCannySsoToken = () => {
+  getCannySsoToken = async () => {
     const accessToken = this.props.navigation.state.params.token;
-    fetch('https://kitsu.io/api/edge/sso/canny', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/vnd.api+json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    .then(response => response.json())
-    .then((responseJson) => {
-      if (responseJson && responseJson.token) {
+    try {
+      const response = await fetch('https://kitsu.io/api/edge/sso/canny', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/vnd.api+json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const json = await response.json();
+      if (json && json.token) {
         this.setState({
-          ssoToken: responseJson.token,
+          ssoToken: json.token,
           loading: false,
         });
       }
-    });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   renderErrorComponent = () => (
@@ -50,9 +53,10 @@ class Board extends React.Component {
   )
 
   render() {
-    const { token, loading } = this.state;
+    const { ssoToken, loading } = this.state;
     const { navigation } = this.props;
     const boardToken = kitsuConfig.cannyBoardTokens[navigation.state.params.type];
+    const uri = `https://webview.canny.io?boardToken=${boardToken}&ssoToken=${ssoToken}`;
 
     return (
       <View style={styles.wrapper}>
@@ -63,7 +67,7 @@ class Board extends React.Component {
           : <WebView
             style={styles.webView}
             source={{
-              uri: `https://webview.canny.io?boardToken=${boardToken}&ssoToken=${token}`,
+              uri,
             }}
             renderLoading={this.renderLoadingComponent}
             renderError={this.renderErrorComponent}
