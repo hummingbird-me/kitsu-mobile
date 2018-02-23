@@ -608,6 +608,7 @@ class QuickUpdate extends Component {
           </Animated.View>
 
           <Carousel
+            removeClippedSubviews
             data={library}
             renderItem={this.renderItem}
             sliderWidth={Dimensions.get('window').width}
