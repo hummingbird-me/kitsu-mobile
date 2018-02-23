@@ -20,17 +20,12 @@ platform :android do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
   end
 
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
-  end
-
-  lane :bump_version_code do
+  lane :bump_version_code do | options|
     path = '../app/build.gradle'
     re = /versionCode\s+(\d+)/
 
     s = File.read(path)
-    s[re, 1] = (ENV["TRAVIS_BUILD_NUMBER"]).to_s
+    s[re, 1] = (options[:code]).to_s
 
     f = File.new(path, 'w')
     f.write(s)
@@ -39,9 +34,13 @@ platform :android do
 
   desc "Generate a new Build"
   lane :build do
-    # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
-
-    bump_version_code
+    
+    # Update the version code
+    # TODO: Later for F-Droid support, we'll need to sync this with AndroidManifest.xml
+    # and then commit it back in the repo.
+    # The commit should only happen on the develop branch however, so we don't get out of sync branches.
+    bump_version_code(code: ENV["TRAVIS_BUILD_NUMBER"])
+    
     gradle(
       task: "assemble",
       build_type: "Release",
@@ -75,10 +74,20 @@ platform :android do
     )
   end
 
+  desc "Submit a new Alpha Build to Google Play"
+  lane :alpha_googleplay do
+    build()
+    supply(
+      track: 'alpha',
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
   desc "Submit a new Beta Build to Google Play"
   lane :beta_googleplay do
     build()
-
     supply(
       track: 'beta',
       skip_upload_metadata: true,
@@ -87,13 +96,16 @@ platform :android do
     )
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "assembleRelease")
-    supply
+  desc "Release a new version to the Google Play"
+  lane :release do
+    build()
+    supply(
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
   end
 
-  # You can define as many lanes as you want
 
   after_all do |lane|
     # This block is called, only if the executed lane was successful

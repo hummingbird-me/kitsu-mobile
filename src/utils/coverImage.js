@@ -40,7 +40,8 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
   if (!hostname.toLowerCase().includes('kitsu')) return coverURL;
 
   // Build the search params
-  const mappings = Object.keys(options).map(key => `${key}=${options[key]}`);
+  const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
+
   const searchParams = mappings.join('&');
 
   const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}?${searchParams}`;

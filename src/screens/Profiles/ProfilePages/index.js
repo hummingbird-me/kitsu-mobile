@@ -15,7 +15,7 @@ import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { EditModal } from 'kitsu/screens/Profiles/components/EditModal';
-import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
+import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { isIdForCurrentUser } from 'kitsu/common/utils';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
@@ -287,7 +287,13 @@ class ProfilePage extends PureComponent {
             <MaskedImage
               maskedTop
               maskedBottom
-              source={{ uri: getImgixCoverImage(profile.coverImage) || defaultCover }}
+              source={{
+                uri: getImgixCoverImage(profile.coverImage, {
+                  h: coverImageHeight * 2,
+                  w: scene.width * 2,
+                  'max-h': null,
+                }) || defaultCover,
+              }}
             />
           )}
           renderHeader={() => (
