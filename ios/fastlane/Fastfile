@@ -118,11 +118,7 @@ platform :ios do
   end
 
   desc "Submit a new Alpha/Beta Build to Testflight"
-  lane :alpha_beta_testflight do
-    # Since TestFlight doesn't have alpha/beta tracks
-    # We just use this single lane.
-    # The only down side is that we don't get auto-submitting beta builds for external users
-    # We can fix that in the future
+  lane :alpha_testflight do
     build()
 
     # Auto submit for alpha testers

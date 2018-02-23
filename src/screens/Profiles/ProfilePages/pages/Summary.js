@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
-import { isNull } from 'lodash';
+import { isNull, isEmpty } from 'lodash';
 import capitalize from 'lodash/capitalize';
 
 import { Kitsu } from 'kitsu/config/api';
@@ -42,12 +42,11 @@ export default class Summary extends PureComponent {
     const { userId } = this.props;
 
     try {
-      const libraryActivity = await Kitsu.one('userFeed', userId).get({
-        page: { limit: 40 },
-        filter: {
-          kind: 'media',
-        },
-        include: 'media',
+      const libraryActivity = await Kitsu.findAll('libraryEvents', {
+        page: { limit: 20 },
+        filter: { userId },
+        sort: '-createdAt',
+        include: 'libraryEntry.media',
       });
 
       this.setState({
@@ -71,7 +70,7 @@ export default class Summary extends PureComponent {
         filter: { userId },
         include: 'anime,user,manga',
         sort: 'upVotesCount',
-        page: { limit: 5 }
+        page: { limit: 5 },
       });
       this.setState({ userReactions: reactions });
     } catch (error) {
@@ -84,14 +83,63 @@ export default class Summary extends PureComponent {
   }
 
   navigateToMedia = (media) => {
-    this.props.navigation.navigate('MediaPages', {
-      mediaId: media.id,
-      mediaType: media.type,
-    });
+    if (media) {
+      this.props.navigation.navigate('MediaPages', {
+        mediaId: media.id,
+        mediaType: media.type,
+      });
+    }
   }
 
   formatData(data, numberOfItems = 12) {
     return data.sort((a, b) => a - b).slice(0, numberOfItems);
+  }
+
+  renderLibraryActivity = (item) => {
+    const entry = item.libraryEntry;
+    if (isEmpty(entry)) return <View />;
+
+    let caption = '';
+    const data = item.changedData;
+    const rating = (data && data.rating && data.rating[1]) || entry.rating;
+
+    if (data) {
+      if (data.status && data.status.length > 1) {
+        caption = `${capitalize(data.status[1].replace('_', ' '))}`;
+      } else if (data.progress && data.progress.length > 1) {
+        caption = `${entry.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${data.progress[1]}`;
+      }
+    }
+
+    return (
+      <ScrollItem>
+        <TouchableOpacity
+          onPress={() => this.navigateToMedia(entry.media)}
+        >
+          <ImageCard
+            noMask
+            variant="portraitLarge"
+            source={{
+              uri: entry.media.posterImage && entry.media.posterImage.original,
+            }}
+          />
+          <View style={{ alignItems: 'center', marginTop: 3 }}>
+            {item.kind === 'rated' ?
+              <Rating
+                disabled
+                ratingTwenty={rating}
+                ratingSystem={this.props.currentUser.ratingSystem}
+                size="tiny"
+                viewType="single"
+                showNotRated={false}
+              />
+              :
+              <StyledText size="xxsmall" color="dark">{caption}</StyledText>
+            }
+          </View>
+        </TouchableOpacity>
+      </ScrollItem>
+    );
   }
 
   render() {
@@ -112,46 +160,7 @@ export default class Summary extends PureComponent {
           title="Library activity"
           onViewAllPress={() => this.navigateTo('Library')}
           data={libraryActivity}
-          renderItem={({ item }) => {
-            const activity = item.activities[0];
-            let caption = '';
-            if (activity.verb === 'progressed') {
-              caption = `${activity.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${activity.progress}`;
-            } else if (activity.verb === 'updated') {
-              caption = `${capitalize(activity.status.replace('_', ' '))}`;
-            }
-
-            return (
-              <ScrollItem>
-                <TouchableOpacity
-                  onPress={() => this.navigateToMedia(item.activities[0].media)}
-                >
-                  <ImageCard
-                    noMask
-                    variant="portraitLarge"
-                    source={{
-                      uri: activity.media.posterImage && activity.media.posterImage.original,
-                    }}
-                  />
-                  <View style={{ alignItems: 'center', marginTop: 3 }}>
-                    {activity.verb === 'rated' ? (
-                      <Rating
-                        disabled
-                        ratingTwenty={activity.rating}
-                        ratingSystem={this.props.currentUser.ratingSystem}
-                        size="tiny"
-                        viewType="single"
-                        showNotRated={false}
-                      />
-                    )
-                    : (
-                      <StyledText size="xxsmall" color="dark">{caption}</StyledText>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              </ScrollItem>
-            );
-          }}
+          renderItem={({ item }) => this.renderLibraryActivity(item)}
         />
 
         {/* Reactions */}

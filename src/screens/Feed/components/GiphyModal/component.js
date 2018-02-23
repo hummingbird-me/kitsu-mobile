@@ -113,8 +113,8 @@ export class GiphyModal extends PureComponent {
   renderItem = (item, spacing) => {
     const images = item.images;
 
-    const downsized = image.downsized_small && image.downsized_small.url;
-    const fixedWidth = image.fixed_width && image.fixed_width.url;
+    const downsized = images.downsized_small && images.downsized_small.url;
+    const fixedWidth = images.fixed_width && images.fixed_width.url;
 
     return (
       <View
