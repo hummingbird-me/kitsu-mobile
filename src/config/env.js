@@ -1,4 +1,4 @@
-const isProduction = false;
+const isProduction = true;
 const kitsuUrl = isProduction ? 'https://kitsu.io' : 'https://staging.kitsu.io';
 
 export const kitsuConfig = {
