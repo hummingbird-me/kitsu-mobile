@@ -182,7 +182,7 @@ export class UserLibraryListCard extends React.Component {
           { libraryEntry.status !== this.props.libraryStatus &&
             <View style={styles.moved}>
               <View style={styles.horizontalRule} />
-              { HEADER_TEXT_MAPPING.includes(libraryEntry.status) ?
+              { (libraryEntry.status in HEADER_TEXT_MAPPING) ?
                 <Text style={styles.movedText}>
                   Moved to <Text style={styles.movedToText}>
                     {HEADER_TEXT_MAPPING[libraryEntry.status][libraryType]}
