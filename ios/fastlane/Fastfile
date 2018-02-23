@@ -53,61 +53,6 @@ platform :ios do
 
   end
 
-  desc "Generate a new Adhoc Build"
-  lane :build_adhoc do
-    # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
-    create_keychain(
-      name: ENV["MATCH_KEYCHAIN_NAME"],
-      password: ENV["MATCH_KEYCHAIN_PASSWORD"],
-      default_keychain: true,
-      unlock: true,
-      timeout: 3600,
-      add_to_search_list: true
-    )
-
-    unlock_keychain(
-			path: ENV["MATCH_KEYCHAIN_NAME"],
-			add_to_search_list: :replace,
-      password: ENV['MATCH_KEYCHAIN_PASSWORD']
-		)
-
-    register_devices(
-      devices_file: "./fastlane/devices.txt"
-    )
-
-    # After registering the new devices, we'll make sure to update the provisioning profile if necessary
-    # options for type are "adhoc", "development", "appstore"
-    match(
-      app_identifier: "com.EverFox.AnimeTrakr",
-      type: "adhoc",
-      force_for_new_devices: !is_ci, # update only forced on non-CI systems, and only if there is a new device
-      # clone_branch_directly: true,
-      readonly: true,  #readonly mode to be sure it won't create any new certificates or profiles.
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"],
-      verbose: true
-    )
-
-    # Change build number (requirement of Testflight).
-    increment_build_number(
-      build_number: ENV["TRAVIS_BUILD_NUMBER"]
-    )
-
-    # Get pods
-    cocoapods
-
-    # Build a release
-    gym(
-      scheme: "kitsu_mobile",
-      clean: true,
-      configuration: "Release",
-      # project: "./kitsu_mobile.xcodeproj", # if not using pods
-      workspace: "./kitsu_mobile.xcworkspace",
-      export_method: "ad-hoc",
-      xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AdHoc com.EverFox.AnimeTrakr'"
-    )
-  end
-
   desc "Generate a new Build"
   lane :build do
     # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
@@ -141,7 +86,7 @@ platform :ios do
       keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
     )
 
-     match(
+    match(
       app_identifier: "com.EverFox.AnimeTrakr",
       type: "appstore",
       # clone_branch_directly: true,
@@ -152,6 +97,8 @@ platform :ios do
     )
 
     # Change build number (requirement of Testflight).
+    # We don't need to push this to github because iOS versions are not dependant on the build number
+    # Unlike android which has its versioning system dependant on it
     increment_build_number(
       build_number: ENV["TRAVIS_BUILD_NUMBER"]
     )
@@ -170,73 +117,27 @@ platform :ios do
     )
   end
 
-  desc "Submit a new Beta Build to crashlytics"
-  lane :beta_crashlytics do |values|
-    build_adhoc()
-
-    emails = values[:test_email] ? values[:test_email] : ['josh@kitsu.io','mikunj@live.com.au','daniel@rassiner.com','nuck@kitsu.io', 'edencakir@gmail.com', 'pjchavarria@gmail.com', 'bilal@codeinfuse.com'] # You can list more emails here
-    groups = values[:test_email] ? nil : nil # You can define groups on the web and reference them here
-
-    crashlytics(
-      api_token: 'b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00',
-      build_secret: '010015018557534a1a97465380fd280881f586eec24f45bcc511520a031d50d4',
-      emails: emails,
-      groups: groups,
-      debug: true,
-      # there is a bug of crashlytics for notes (https://github.com/fastlane/fastlane/issues/6325)
-      # notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
-      notifications: true  # Should this distribution notify your testers via email?
-    )
-  end
-
-  desc "Submit a new Beta Build to Testflight"
-  lane :beta_testflight do
+  desc "Submit a new Alpha/Beta Build to Testflight"
+  lane :alpha_beta_testflight do
+    # Since TestFlight doesn't have alpha/beta tracks
+    # We just use this single lane.
+    # The only down side is that we don't get auto-submitting beta builds for external users
+    # We can fix that in the future
     build()
-    pilot(skip_submission: true) # Upload the app to TestFlight
+
+    # Auto submit for alpha testers
+    pilot()
   end
 
   desc "Deploy a new version to the App Store"
   lane :release do
-    # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
-    create_keychain(
-      name: ENV["MATCH_KEYCHAIN_NAME"],
-      password: ENV["MATCH_KEYCHAIN_PASSWORD"],
-      default_keychain: true,
-      unlock: true,
-      timeout: 3600,
-      add_to_search_list: true
+    build()
+    deliver(
+      force: true,
+      skip_metadata: true,
+      skip_app_version_update: true,
+      skip_screenshots: true,
     )
-
-    unlock_keychain(
-			path: ENV["MATCH_KEYCHAIN_NAME"],
-			add_to_search_list: :replace,
-      password: ENV['MATCH_KEYCHAIN_PASSWORD']
-		)
-
-    match(
-      app_identifier: "com.EverFox.AnimeTrakr",
-      type: "appstore",
-      # clone_branch_directly: true,
-      readonly: true,  #readonly mode to be sure it won't create any new certificates or profiles.
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
-    )
-
-    # Get pods
-    cocoapods
-
-    # Build a release
-    gym(
-      scheme: "kitsu_mobile",
-      clean: true,
-      configuration: "Release",
-      # project: "./kitsu_mobile.xcodeproj", # if not using pods
-      workspace: "./kitsu_mobile.xcworkspace",
-      export_method: "app-store",
-      xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.EverFox.AnimeTrakr'"
-    )
-    deliver(force: true)
-    # frameit
   end
 
   after_all do |lane|
