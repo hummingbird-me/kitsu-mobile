@@ -54,7 +54,7 @@ platform :ios do
   end
 
   desc "Generate a new Build"
-  lane :build do |options|
+  lane :build do
     # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
     create_keychain(
       name: ENV["MATCH_KEYCHAIN_NAME"],
@@ -96,19 +96,12 @@ platform :ios do
       verbose: true
     )
 
-    if options[:update_build_number]
-      # Change build number (requirement of Testflight).
-      increment_build_number(
-        build_number: ENV["TRAVIS_BUILD_NUMBER"]
-      )
-      commit_version_bump(
-        message: "[ci skip] iOS Build Version Bump"
-      )
-      push_to_git_remote(
-        remote_branch: "develop",
-        tags: false     # optional, default: true
-      )
-    end
+    # Change build number (requirement of Testflight).
+    # We don't need to push this to github because iOS versions are not dependant on the build number
+    # Unlike android which has its versioning system dependant on it
+    increment_build_number(
+      build_number: ENV["TRAVIS_BUILD_NUMBER"]
+    )
 
     # Get pods
     cocoapods
@@ -130,7 +123,7 @@ platform :ios do
     # We just use this single lane.
     # The only down side is that we don't get auto-submitting beta builds for external users
     # We can fix that in the future
-    build(update_build_number: true)
+    build()
 
     # Auto submit for alpha testers
     pilot()
