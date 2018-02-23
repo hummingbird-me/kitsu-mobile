@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, WebView, ActivityIndicator } from 'react-native';
+import { View, Text, WebView, ActivityIndicator, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import { kitsuConfig } from 'kitsu/config/env/';
 import { commonStyles } from 'kitsu/common/styles';
@@ -14,10 +14,18 @@ class Board extends React.Component {
   state = {
     token: null,
     loading: true,
+    keyboardHeight: 0,
   }
 
   componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
     this.getCannySsoToken();
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidHideListener.remove();
+    this.keyboardDidShowListener.remove();
   }
 
   getCannySsoToken = async () => {
@@ -42,6 +50,15 @@ class Board extends React.Component {
     }
   };
 
+  keyboardDidShow = ({ endCoordinates: { height } }) => {
+    this.setState({ keyboardHeight: height });
+  }
+
+  keyboardDidHide = () => {
+    this.setState({ keyboardHeight: 0 });
+  }
+
+
   renderErrorComponent = () => (
     <View style={[commonStyles.centerCenter, { flex: 1 }]}>
       <Text style={styles.errorText}>Error loading the board.</Text>
@@ -53,7 +70,7 @@ class Board extends React.Component {
   )
 
   render() {
-    const { ssoToken, loading } = this.state;
+    const { ssoToken, loading, keyboardHeight } = this.state;
     const { navigation } = this.props;
     const boardToken = kitsuConfig.cannyBoardTokens[navigation.state.params.type];
     const uri = `https://webview.canny.io?boardToken=${boardToken}&ssoToken=${ssoToken}`;
@@ -65,7 +82,7 @@ class Board extends React.Component {
             <ActivityIndicator />
           </View>
           : <WebView
-            style={styles.webView}
+            style={[styles.webView, { paddingBottom: keyboardHeight }]}
             source={{
               uri,
             }}
