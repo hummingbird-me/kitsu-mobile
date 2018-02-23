@@ -70,7 +70,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onStatusChanged = (libraryStatus) => {
-    this.setState({ libraryStatus });
+    this.setState({ status: libraryStatus });
   }
 
   onDeleteEntry = async () => {
@@ -139,7 +139,8 @@ export class UserLibraryEditScreenComponent extends React.Component {
   render() {
     const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props.navigation.state.params;
     const maxProgress = this.getMaxProgress();
-
+    // { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
+    const status = STATUS_SELECT_OPTIONS.filter(item => item.value === this.state.status)[0][libraryType]
     return (
       <View style={styles.container}>
         <SimpleHeader
@@ -155,7 +156,9 @@ export class UserLibraryEditScreenComponent extends React.Component {
             <Text style={[styles.editRowLabel, styles.withValueLabel]}>
               Library Status
             </Text>
-            <Text style={styles.editRowValue}>Currently Watching</Text>
+            <Text style={styles.editRowValue}>
+              {status}
+            </Text>
           </View>
           {canEdit &&
             <SelectMenu options={this.selectOptions} onOptionSelected={this.onStatusChanged}>
