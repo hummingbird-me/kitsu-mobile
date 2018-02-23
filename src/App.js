@@ -3,16 +3,19 @@ import React, { PureComponent } from 'react';
 import { Platform, View, StatusBar, Linking } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
-import { identity, isNull } from 'lodash';
-
+import { identity, isNull, isEmpty } from 'lodash';
+import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import store from './store/config';
 import Root from './Router';
 import { NotificationModal } from './components/NotificationModal';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
+import { kitsuConfig } from 'kitsu/config/env';
+
 
 // eslint-disable-next-line
 console.disableYellowBox = true;
@@ -57,6 +60,24 @@ class App extends PureComponent {
         key: null,
       });
       this.navigation.dispatch(resetAction);
+    }
+
+    // Update sentry
+    const user = store.getState().user.currentUser;
+    if (authenticated) {
+      if (!isEmpty(user)) {
+        Sentry.setUserContext({
+          id: user.id,
+          email: user.email,
+          username: user.name,
+        });
+        Sentry.setTagsContext({
+          environment: kitsuConfig.isProduction ? 'production' : 'staging',
+          react: true,
+        });
+      }
+    } else {
+      Sentry.clearContext();
     }
 
     // Set the new authentication value
