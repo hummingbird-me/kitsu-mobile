@@ -101,6 +101,13 @@ platform :ios do
       increment_build_number(
         build_number: ENV["TRAVIS_BUILD_NUMBER"]
       )
+      commit_version_bump(
+        message: "[ci skip] iOS Build Version Bump"
+      )
+      push_to_git_remote(
+        remote_branch: "develop",
+        tags: false     # optional, default: true
+      )
     end
 
     # Get pods

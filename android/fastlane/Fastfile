@@ -21,7 +21,7 @@ platform :android do
   end
 
   lane :bump_version_code do
-    path = '../app/build.gradle'
+    path = './app/build.gradle'
     re = /versionCode\s+(\d+)/
 
     s = File.read(path)
@@ -38,7 +38,13 @@ platform :android do
 
     if options[:update_build_number]
       bump_version_code
+      git_commit(path: "./app/build.gradle", message: "[ci skip] Android Build Version Bump")
+      push_to_git_remote(
+        remote_branch: "develop",
+        tags: false     # optional, default: true
+      )
     end
+    
     gradle(
       task: "assemble",
       build_type: "Release",
