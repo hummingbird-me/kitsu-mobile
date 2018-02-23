@@ -20,11 +20,6 @@ platform :android do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
   end
 
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
-  end
-
   lane :bump_version_code do
     path = '../app/build.gradle'
     re = /versionCode\s+(\d+)/
@@ -38,10 +33,12 @@ platform :android do
   end
 
   desc "Generate a new Build"
-  lane :build do
+  lane :build do |options|
     # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
 
-    bump_version_code
+    if options[:update_build_number]
+      bump_version_code
+    end
     gradle(
       task: "assemble",
       build_type: "Release",
@@ -75,6 +72,18 @@ platform :android do
     )
   end
 
+  desc "Submit a new Alpha Build to Google Play"
+  lane :alpha_googleplay do
+    build(update_build_number: true)
+
+    supply(
+      track: 'alpha',
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
   desc "Submit a new Beta Build to Google Play"
   lane :beta_googleplay do
     build()
@@ -87,13 +96,16 @@ platform :android do
     )
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "assembleRelease")
-    supply
+  desc "Release a new version to the Google Play"
+  lane :release do
+    build()
+    supply(
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
   end
 
-  # You can define as many lanes as you want
 
   after_all do |lane|
     # This block is called, only if the executed lane was successful
