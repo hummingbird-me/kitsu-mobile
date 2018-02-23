@@ -97,7 +97,7 @@ export default class Summary extends PureComponent {
 
   renderLibraryActivity = (item) => {
     const entry = item.libraryEntry;
-    if (isEmpty(entry)) return (<View />);
+    if (isEmpty(entry)) return <View />;
 
     let caption = '';
     const data = item.changedData;
