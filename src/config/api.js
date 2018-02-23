@@ -791,6 +791,7 @@ Kitsu.define(
   },
   { collectionPath: 'feeds/user_aggr' },
 );
+
 Kitsu.define(
   'mediaFeed',
   {
@@ -849,6 +850,32 @@ Kitsu.define(
     },
   },
   { collectionPath: 'feeds/interest_timeline' },
+);
+
+Kitsu.define(
+  'libraryEvents',
+  {
+    createdAt: '',
+    updatedAt: '',
+    kind: '',
+    changedData: '',
+    libraryEntry: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      jsonApi: 'hasOne',
+    },
+    anime: {
+      jsonApi: 'hasOne',
+    },
+    manga: {
+      jsonApi: 'hasOne',
+    },
+    drama: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'library-events' },
 );
 
 Kitsu.define(
