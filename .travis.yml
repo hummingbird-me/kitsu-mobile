@@ -8,7 +8,6 @@ cache:
 branches:
   only:
   - master
-  - release
   - develop
 notifications:
   email:
@@ -59,10 +58,9 @@ matrix:
         - yarn install
       script:
         - cd android && ./gradlew clean
-        - if [ "$TRAVIS_BRANCH" = "develop" ]; then fastlane alpha_googleplay; fi
-        - if [ "$TRAVIS_BRANCH" == "release" ]; then
-            fastlane beta_googleplay;
-            fastlane beta_crashlytics;
+        - if [ "$TRAVIS_BRANCH" = "develop" ]; then
+            fastlane alpha_googleplay;
+            fastlane alpha_crashlytics;
           fi
         - if [ "$TRAVIS_BRANCH" = "master" ]; then fastlane release; fi
 
@@ -85,5 +83,5 @@ matrix:
       script:
         - cd ios
         # We don't need to check for release branch here because alpha/beta are all handled in TestFlight
-        - if [ "$TRAVIS_BRANCH" = "develop" ]; then fastlane alpha_beta_testflight; fi
+        - if [ "$TRAVIS_BRANCH" = "develop" ]; then fastlane alpha_testflight; fi
         - if [ "$TRAVIS_BRANCH" = "master" ]; then fastlane release; fi
