@@ -14,7 +14,7 @@ import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
-import { coverImageHeight } from 'kitsu/screens/Profiles/constants';
+import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { capitalize, upperFirst } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
@@ -372,7 +372,13 @@ class MediaPages extends PureComponent {
             <MaskedImage
               maskedTop
               maskedBottom
-              source={{ uri: getImgixCoverImage(media.coverImage) || defaultCover }}
+              source={{
+                uri: getImgixCoverImage(media.coverImage, {
+                  h: coverImageHeight * 2,
+                  w: scene.width * 2,
+                  'max-h': null,
+                }) || defaultCover,
+              }}
             />
           )}
           renderHeader={() => (
