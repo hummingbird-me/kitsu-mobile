@@ -170,7 +170,6 @@ class Feed extends React.PureComponent {
             post={item}
             onPostPress={this.navigateToPost}
             currentUser={this.props.currentUser}
-            navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
             navigation={this.props.navigation}
           />
         );

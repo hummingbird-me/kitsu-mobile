@@ -32,7 +32,6 @@ export default class QuickUpdateCard extends PureComponent {
     onBeginEditing: PropTypes.func,
     onEndEditing: PropTypes.func,
     onMarkComplete: PropTypes.func,
-    onViewDiscussion: PropTypes.func,
     onRate: PropTypes.func.isRequired,
   };
 
@@ -40,7 +39,6 @@ export default class QuickUpdateCard extends PureComponent {
     onBeginEditing: () => { },
     onEndEditing: () => { },
     onMarkComplete: () => { },
-    onViewDiscussion: () => { },
   };
 
   state = {

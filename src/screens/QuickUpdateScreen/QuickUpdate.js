@@ -19,7 +19,7 @@ import Carousel from 'react-native-snap-carousel';
 import URL from 'url-parse';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { preprocessFeed, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
@@ -31,6 +31,7 @@ import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
 import styles from './styles';
 
+// API request fields
 const LIBRARY_ENTRIES_FIELDS = [
   'progress',
   'status',
@@ -41,6 +42,7 @@ const LIBRARY_ENTRIES_FIELDS = [
   'updatedAt',
 ];
 
+// API request fields
 const MEDIA_FIELDS = [
   'slug',
   'coverImage',
@@ -51,42 +53,28 @@ const MEDIA_FIELDS = [
   'status',
   'startDate',
 ];
-
 const ANIME_FIELDS = [...MEDIA_FIELDS, 'episodeCount'];
 const MANGA_FIELDS = [...MEDIA_FIELDS, 'chapterCount'];
 
 const CAROUSEL_HEIGHT = 310;
+const CAROUSEL_WIDTH = Dimensions.get('window').width;
+const CAROUSEL_ITEM_WIDTH = Dimensions.get('window').width * 0.85;
 const DOUBLE_PRESS_DELAY = 500;
-
-const StatusComponent = ({ title, text, image }) => (
-  <View style={styles.statusWrapper}>
-    <Text style={styles.statusTitle}>{title}</Text>
-    <Text style={styles.statusText}>{text}</Text>
-    <Image style={styles.statusImage} source={image} />
-  </View>
-);
-
-StatusComponent.propTypes = {
-  title: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  image: PropTypes.object.isRequired,
-};
 
 class QuickUpdate extends Component {
   static navigationOptions = ({ navigation }) => ({
     tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
   });
+
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
-    // onClose: PropTypes.func.isRequired,
   };
 
   state = {
     library: null,
-    currentIndex: null,
     discussions: null,
-    discussionsLoading: false,
-    isLoadingNextPage: false,
+    isLoadingFeed: false,
+    isLoadingNextFeedPage: false,
     filterMode: 'all',
     backgroundImageUri: undefined,
     nextUpBackgroundImageUri: undefined,
@@ -97,6 +85,19 @@ class QuickUpdate extends Component {
     refreshing: false,
     ratingSimpleSelected: 0,
   };
+
+  // These are requests to change the background image.
+  // If they happen at all in parallel it looks awful.
+  imageFadeOperations = [];
+  imageOperationInProgress = false;
+  lastTap = null; // Timer for scrolling top back (double tap on tab)
+  cursor = undefined; // Pagination for feeds
+
+  get _requestIncludeFields() {
+    const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
+    const includes = filterMode || 'anime,manga';
+    return `${includes},unit,nextUnit`;
+  }
 
   componentWillMount() {
     this.fetchLibrary();
@@ -127,52 +128,32 @@ class QuickUpdate extends Component {
     this.setState({ editorText });
   };
 
-  onRate = ratingTwenty => this.rate(ratingTwenty);
-
-  getItemLayout = (data, index) => {
-    const { width } = Dimensions.get('window');
-
-    return {
-      length: width / 5,
-      offset: (width / 5) * index,
-      index,
-    };
-  };
-
-  // Timer for scrolling top back (double tap on tab)
-  lastTap = null;
-
-  rate = async (ratingTwenty) => {
-    const { currentIndex, library } = this.state;
-    const entry = library[currentIndex];
+  rateEntry = async (ratingTwenty) => {
+    const { library } = this.state;
+    const entry = library[this.carousel.currentIndex];
     const media = getMedia(entry);
-    const mediaType = entry.anime ? 'anime' : 'manga';
     try {
-      await Kitsu.update('libraryEntries', {
-        ratingTwenty,
+      this.setLibraryEntryLoading();
+      const record = await Kitsu.update('libraryEntries', {
         id: entry.id,
-        [mediaType]: {
+        ratingTwenty,
+        [media.type]: {
           id: media.id,
-          type: mediaType,
         },
         user: {
           id: this.props.currentUser.id,
         },
+      }, {
+        include: this._requestIncludeFields
       });
-      this.refetchLibraryEntry(entry);
-    } catch (e) {
-      console.log(e);
+      this.updateLibraryEntry(record);
+    } catch (error) {
+      console.log('Error rating library entry:', error);
     }
   };
 
-  cursor = undefined
-  resetFeed = (cb) => {
-    this.cursor = undefined;
-    this.setState({ discussions: null }, cb);
-  };
-
-  fetchDiscussions = async (entry) => {
-    this.setState({ discussionsLoading: true });
+  fetchEpisodeFeed = async (entry) => {
+    this.setState({ isLoadingFeed: true });
     try {
       const [unit] = entry.unit;
       const posts = await Kitsu.find('episodeFeed', unit.id, {
@@ -191,19 +172,24 @@ class QuickUpdate extends Component {
 
       const processed = preprocessFeed(posts);
       const discussions = [...(this.state.discussions || []), ...processed];
-      this.setState({ discussions, discussionsLoading: false });
-    } catch (e) {
-      console.log(e);
+      this.setState({ discussions, isLoadingFeed: false });
+    } catch (error) {
+      console.log('Error loading episode feed:', error);
       // Something went wrong, stop the spinner.
-      this.setState({ discussions: [], discussionsLoading: false });
+      this.setState({ discussions: [], isLoadingFeed: false });
     }
   };
 
-  fetchNextPage = async (entry) => {
-    if (this.state.isLoadingNextPage || !this.cursor) { return; }
-    this.setState({ isLoadingNextPage: true });
-    await this.fetchDiscussions(entry);
-    this.setState({ isLoadingNextPage: false });
+  fetchNextFeedPage = async (entry) => {
+    if (this.state.isLoadingNextFeedPage || !this.cursor) { return; }
+    this.setState({ isLoadingNextFeedPage: true });
+    await this.fetchEpisodeFeed(entry);
+    this.setState({ isLoadingNextFeedPage: false });
+  };
+
+  resetFeed = (callback) => {
+    this.cursor = undefined;
+    this.setState({ discussions: null }, callback);
   };
 
   fetchLibrary = async () => {
@@ -213,7 +199,6 @@ class QuickUpdate extends Component {
 
     try {
       const fields = getRequestFields(filterMode);
-      const includes = filterMode || 'anime,manga';
       const library = await Kitsu.findAll('libraryEntries', {
         fields,
         filter: {
@@ -221,7 +206,7 @@ class QuickUpdate extends Component {
           user_id: this.props.currentUser.id,
           kind: filterMode,
         },
-        include: `${includes},unit,nextUnit`,
+        include: this._requestIncludeFields,
         page: { limit: 15 },
         sort: 'status,-progressed_at,-updated_at',
       });
@@ -239,8 +224,8 @@ class QuickUpdate extends Component {
           },
         );
       } else {
-      // TODO: handle the case where libraryEntries is undefined
-      // Apparently we don't have any library entries.
+        // TODO: handle the case where libraryEntries is undefined
+        // Apparently we don't have any library entries.
         this.setState({ library: [], loading: false });
       }
     } catch (e) {
@@ -248,53 +233,29 @@ class QuickUpdate extends Component {
     }
   };
 
-  refetchLibraryEntry = async (libraryEntry) => {
-    const index = this.state.library.indexOf(libraryEntry);
-    let library = [...this.state.library];
-
-    // Tell the entry it's loading.
-    library[index].loading = true;
+  updateLibraryEntry = (record) => {
+    const library = [...this.state.library];
+    library[this.carousel.currentIndex] = record;
     this.setState({ library });
-    try {
-      const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
-      const fields = getRequestFields(filterMode);
-      const includes = filterMode || 'anime,manga';
-      const entry = await Kitsu.find('libraryEntries', libraryEntry.id, {
-        fields,
-        include: `${includes},unit,nextUnit`,
-      });
+  };
 
-      library = [...this.state.library];
-      library[index] = entry;
-
-      this.setState({ library });
-
-      this.resetFeed();
-      this.fetchDiscussions(entry);
-    } catch (e) {
-      console.log(e);
-    }
+  setLibraryEntryLoading = () => {
+    const library = [...this.state.library];
+    library[this.carousel.currentIndex].loading = true;
+    this.setState({ library });
   };
 
   filterModeChanged = (filterMode) => {
     if (filterMode === 'nevermind') { return; }
-    this.setState({ filterMode }, () => {
-      this.fetchLibrary();
-    });
+    this.setState({ filterMode }, this.fetchLibrary);
   };
 
-  // These are requests to change the background image.
-  // If they happen at all in parallel it looks awful.
-  imageFadeOperations = [];
-  operationInProgress = false;
-
   ensureAllImageFadeOperationsHandled = async () => {
-    if (this.operationInProgress) {
+    if (this.imageOperationInProgress) {
       return;
     }
 
-    this.operationInProgress = true;
-
+    this.imageOperationInProgress = true;
     while (this.imageFadeOperations.length > 0) {
       const index = this.imageFadeOperations.pop();
       const media = getMedia(this.state.library[index]);
@@ -347,7 +308,7 @@ class QuickUpdate extends Component {
       });
     }
 
-    this.operationInProgress = false;
+    this.imageOperationInProgress = false;
   };
 
   carouselItemChanged = (index) => {
@@ -356,10 +317,8 @@ class QuickUpdate extends Component {
     this.ensureAllImageFadeOperationsHandled();
     const entry = library[index];
     if (entry.progress > 0) {
-      this.resetFeed();
-      this.fetchDiscussions(entry);
+      this.resetFeed(() => this.fetchEpisodeFeed(entry));
     }
-    this.setState({ currentIndex: index });
   };
 
   hideHeader = () => {
@@ -382,23 +341,26 @@ class QuickUpdate extends Component {
   };
 
   markComplete = async (libraryEntry) => {
-    const result = await Kitsu.update('libraryEntries', {
+    this.setLibraryEntryLoading();
+
+    const record = await Kitsu.update('libraryEntries', {
       id: libraryEntry.id,
       progress: libraryEntry.progress + 1,
-    });
+    }, { include: this._requestIncludeFields });
 
-    if (!result.progress) {
+    if (!record.progress) {
       Alert.alert('Error', 'Error while updating progress, please try again.', [
         { text: 'OK', style: 'cancel' },
       ]);
     } else {
-      this.refetchLibraryEntry(libraryEntry);
+      this.updateLibraryEntry(record);
+      this.resetFeed(() => this.fetchEpisodeFeed(record));
     }
   };
 
   updateTextAndToggle = async (gif) => {
     // Restore any previous text, and then toggle the editor.
-    const { library, currentIndex, editorText } = this.state;
+    const { library, editorText } = this.state;
 
     // Add gifs
     let updatedText = (editorText && editorText.trim()) || '';
@@ -407,28 +369,30 @@ class QuickUpdate extends Component {
       updatedText += `\n${gifURL}`;
     }
 
-    this.setState({ discussionsLoading: !isEmpty(updatedText.trim()) }, this.toggleEditor);
+    this.setState({ isLoadingFeed: !isEmpty(updatedText.trim()) }, this.toggleEditor);
 
     // Make sure we have something written in the text
     if (isEmpty(updatedText.trim())) return;
 
     const { currentUser } = this.props;
-    const current = library[currentIndex];
+    const current = library[this.carousel.currentIndex];
     try {
-      await Kitsu.create('posts', {
+      const post = await Kitsu.create('posts', {
         content: updatedText.trim(),
         media: {
           id: getMedia(current).id, type: current.anime ? 'anime' : 'manga',
         },
         spoiledUnit: { id: current.unit[0].id },
         user: { id: currentUser.id },
-      });
-      this.resetFeed(() => {
-        this.fetchDiscussions(current);
-        this.setState({ editorText: '' });
-      });
+      }, { include: 'media,spoiledUnit,user' }); // @TODO: Just assign these locally to reduce payload?
+
+      // Unshift new post into discussions list
+      const processed = preprocessFeedPost(post);
+      const discussions = [processed, ...this.state.discussions];
+      this.setState({ editorText: '', isLoadingFeed: false, discussions });
     } catch (e) {
-      console.warn('Can not submit discussion post: ', e);
+      console.error('Can not submit discussion post: ', e);
+      this.setState({ isLoadingFeed: false });
     }
   };
 
@@ -450,25 +414,26 @@ class QuickUpdate extends Component {
     }
   };
 
-  renderPostItem = ({ item }) => (
-    <Post
-      post={item}
-      onPostPress={() => { }}
-      currentUser={this.props.currentUser}
-      navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
-      navigation={this.props.navigation}
-    />
-  );
+  renderPostItem = ({ item }) => {
+    if (item.type !== 'posts') { return; }
+    return (
+      <Post
+        post={item}
+        onPostPress={(props) => this.props.navigation.navigate('PostDetails', props)}
+        currentUser={this.props.currentUser}
+        navigation={this.props.navigation}
+      />
+    );
+  };
 
-  renderItem = data => (
+  renderItem = (data) => (
     <QuickUpdateCard
       ratingSystem={this.props.ratingSystem}
-      onRate={this.onRate}
       data={data}
       onBeginEditing={this.hideHeader}
       onEndEditing={this.showHeader}
-      onViewDiscussion={this.viewDiscussion}
       onMarkComplete={this.markComplete}
+      onRate={this.rateEntry}
     />
   );
 
@@ -556,9 +521,8 @@ class QuickUpdate extends Component {
       library,
       loading,
       discussions,
-      discussionsLoading,
-      isLoadingNextPage,
-      currentIndex,
+      isLoadingFeed,
+      isLoadingNextFeedPage,
       editorText,
       editing,
       refreshing,
@@ -572,10 +536,9 @@ class QuickUpdate extends Component {
       return this.renderEmptyState();
     }
 
-    const entry = library[currentIndex];
+    const entry = library[(this.carousel && this.carousel.currentIndex) || 0];
     const progress = (entry && entry.progress) || 0;
-    const media = entry && (entry.anime || entry.manga);
-
+    const media = entry && getMedia(entry);
     const episodeOrChapter = media && media.type === 'manga' ? 'chapter' : 'episode';
     const watchedOrRead = media && media.type === 'manga' ? 'read' : 'watched';
 
@@ -608,40 +571,43 @@ class QuickUpdate extends Component {
           </Animated.View>
 
           <Carousel
+            ref={(c) => { this.carousel = c; }}
             data={library}
             renderItem={this.renderItem}
-            sliderWidth={Dimensions.get('window').width}
-            itemWidth={Dimensions.get('window').width * 0.85}
-            itemHeight={CAROUSEL_HEIGHT}
-            sliderHeight={CAROUSEL_HEIGHT}
-            containerCustomStyle={styles.carousel}
             onSnapToItem={this.carouselItemChanged}
+            sliderWidth={CAROUSEL_WIDTH}
+            sliderHeight={CAROUSEL_HEIGHT}
+            itemWidth={CAROUSEL_ITEM_WIDTH}
+            itemHeight={CAROUSEL_HEIGHT}
+            containerCustomStyle={styles.carousel}
           />
 
-          {progress > 0 && <View style={styles.socialContent}>
-            <View style={styles.separator} />
-            {/* Some padding for status bar when sticked */}
-            <View style={{ height: 20, backgroundColor: 'transparent' }} />
-            <Text style={styles.discussionTitle}>
-              <Text style={styles.bold}>
-                {capitalize(episodeOrChapter)}
-                {' '}
-                {progress}
-                {' '}
+          {progress > 0 && (
+            <View style={styles.socialContent}>
+              <View style={styles.separator} />
+              {/* Some padding for status bar when sticked */}
+              <View style={{ height: 20, backgroundColor: 'transparent' }} />
+              <Text style={styles.discussionTitle}>
+                <Text style={styles.bold}>
+                  {capitalize(episodeOrChapter)}
+                  {' '}
+                  {progress}
+                  {' '}
+                </Text>
+                Discussion
               </Text>
-              Discussion
-            </Text>
-          </View>}
+            </View>
+          )}
 
           {/* Feed */}
           {progress > 0 ? (
             <View style={styles.socialContent}>
-              {(!discussionsLoading || isLoadingNextPage) ? (
+              {(!isLoadingFeed || isLoadingNextFeedPage) ? (
                 <KeyboardAwareFlatList
                   data={discussions}
-                  keyExtractor={this.keyExtractor}
+                  keyExtractor={item => item.id}
                   renderItem={this.renderPostItem}
-                  onEndReached={() => discussions.length && this.fetchNextPage(entry)}
+                  onEndReached={() => discussions.length && this.fetchNextFeedPage(entry)}
                   onEndReachedThreshold={0.6}
                   ListHeaderComponent={
                     <CreatePostRow
@@ -650,7 +616,7 @@ class QuickUpdate extends Component {
                     />
                   }
                   ListFooterComponent={() =>
-                    isLoadingNextPage && (
+                    isLoadingNextFeedPage && (
                       <ActivityIndicator />
                     )
                   }
@@ -699,13 +665,19 @@ class QuickUpdate extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { currentUser } = user;
-  const { ratingSystem } = currentUser;
-  return { currentUser, ratingSystem };
-};
+const StatusComponent = ({ title, text, image }) => (
+  <View style={styles.statusWrapper}>
+    <Text style={styles.statusTitle}>{title}</Text>
+    <Text style={styles.statusText}>{text}</Text>
+    <Image style={styles.statusImage} source={image} />
+  </View>
+);
 
-export default connect(mapStateToProps)(QuickUpdate);
+StatusComponent.propTypes = {
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  image: PropTypes.object.isRequired,
+};
 
 function getRequestFields(filterMode) {
   const fields = {
@@ -727,3 +699,11 @@ function getRequestFields(filterMode) {
 function getMedia(entry) {
   return entry.anime || entry.manga;
 }
+
+const mapStateToProps = ({ user }) => {
+  const { currentUser } = user;
+  const { ratingSystem } = currentUser;
+  return { currentUser, ratingSystem };
+};
+
+export default connect(mapStateToProps)(QuickUpdate);
