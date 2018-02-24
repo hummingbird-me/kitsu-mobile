@@ -12,6 +12,7 @@ export class Counter extends React.PureComponent {
     minValue: PropTypes.number,
     onValueChanged: PropTypes.func,
     progressCounter: PropTypes.bool,
+    inputRef: PropTypes.func,
   }
 
   static defaultProps = {
@@ -20,6 +21,7 @@ export class Counter extends React.PureComponent {
     minValue: 0,
     onValueChanged: () => {},
     progressCounter: false,
+    inputRef: () => {},
   }
 
   state = {
@@ -98,6 +100,7 @@ export class Counter extends React.PureComponent {
           {this.state.manualEditMode
             ? (
               <TextInput
+                ref={this.props.inputRef}
                 autoFocus
                 style={styles.manualEditTextInput}
                 defaultValue={this.state.value.toString()}
