@@ -2,12 +2,12 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import moment from 'moment';
 import { Text, TextInput, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { STATUS_SELECT_OPTIONS } from 'kitsu/screens/Profiles/UserLibrary';
 import { Counter } from 'kitsu/components/Counter';
 import { Rating } from 'kitsu/components/Rating';
 import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { isNull } from 'lodash';
 import { styles } from './styles';
 
 const visibilityOptions = [
@@ -39,6 +39,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
     reconsumeCount: this.getLibraryEntry().reconsumeCount,
     startedAt: this.getLibraryEntry().startedAt,
     status: this.getLibraryEntry().status,
+    notesHeight: 150,
   }
 
   onFinishedAtChanged = (finishedAt) => {
@@ -47,6 +48,11 @@ export class UserLibraryEditScreenComponent extends React.Component {
 
   onNotesChanged = (notes) => {
     this.setState({ notes });
+  }
+
+  onNotesContentSizeChanged = (event) => {
+    const { contentSize } = event.nativeEvent;
+    this.setState({ notesHeight: contentSize.height + 5 });
   }
 
   onVisibilityChanged = (isPrivate) => {
@@ -114,17 +120,35 @@ export class UserLibraryEditScreenComponent extends React.Component {
       finishedAt,
       notes,
       private: isPrivate,
-      progress,
       ratingTwenty,
-      reconsumeCount,
       startedAt,
       status,
     } = this.state;
 
+    let { progress, reconsumeCount } = this.state;
+    // @Hack: Unblur the inputs and update the value locally here
+    // as the call to `onProgressValueChanged` will not apply before the upstream changes
+    // This is a QoL hack so that users can have their changes to inputs applied
+    // without the direct need to tap somewhere to unblur first.
+    // @Note: This is marked as a hack due to usage of `_lastNativeText`.
+    if (this.progressInput && this.progressInput.isFocused()) {
+      this.progressInput.blur();
+      const value = parseInt(this.progressInput._lastNativeText, 10);
+      if (progress !== value) {
+        progress = value;
+      }
+    } else if (this.rewatchInput && this.rewatchInput.isFocused()) {
+      this.rewatchInput.blur();
+      const value = parseInt(this.rewatchInput._lastNativeText, 10);
+      if (reconsumeCount !== value) {
+        reconsumeCount = value;
+      }
+    }
+
     await updateUserLibraryEntry(libraryType, libraryStatus, {
       id: libraryEntry.id,
       finishedAt,
-      notes,
+      notes: notes.trim(),
       progress,
       ratingTwenty,
       reconsumeCount,
@@ -151,128 +175,139 @@ export class UserLibraryEditScreenComponent extends React.Component {
           rightAction={this.saveEntry}
         />
 
-        <View style={styles.editRow}>
-          <View>
-            <Text style={[styles.editRowLabel, styles.withValueLabel]}>
-              Library Status
+        <KeyboardAwareScrollView>
+          {/* Status */}
+          <View style={styles.editRow}>
+            <Text style={styles.editRowLabel}>
+              Library Status:
             </Text>
-            <Text style={styles.editRowValue}>
-              {status}
-            </Text>
-          </View>
-          {canEdit &&
-            <SelectMenu options={this.selectOptions} onOptionSelected={this.onStatusChanged}>
-              <Text>X</Text>
-            </SelectMenu>
-          }
-        </View>
-        <View style={styles.editRow}>
-          <Text style={styles.editRowLabel}>
-            {libraryType === 'anime' ? 'Episode' : 'Chapter'} Progress:
-          </Text>
-          <Counter
-            disabled={!canEdit}
-            initialValue={libraryEntry.progress}
-            maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
-            progressCounter={typeof maxProgress === 'number'}
-            onValueChanged={this.onProgressValueChanged}
-          />
-        </View>
-        <View style={styles.editRow}>
-          <Text style={styles.editRowLabel}>Rating:</Text>
-          <Rating
-            disabled={!canEdit}
-            size="large"
-            viewType="single"
-            onRatingChanged={this.onRatingChanged}
-            style={styles.ratingStyle}
-            ratingTwenty={this.state.ratingTwenty}
-            ratingSystem={ratingSystem}
-          />
-        </View>
-        <View style={styles.editRow}>
-          <Text style={styles.editRowLabel}>Times {libraryType === 'anime' ? 'Rewatched' : 'Read'}:</Text>
-          <Counter
-            disabled={!canEdit}
-            initialValue={libraryEntry.reconsumeCount}
-            onValueChanged={this.onTimesRewatchedChanged}
-          />
-        </View>
-        <View style={styles.editRow}>
-          <View>
-            <Text style={[styles.editRowLabel, styles.withValueLabel, { paddingBottom: 4 }]}>
-              Library Entry Visibility
-            </Text>
-            <Text style={styles.editRowValue}>
-              {this.state.private ? 'Private' : 'Public'}
-            </Text>
-          </View>
-          {canEdit &&
-            <SelectMenu options={visibilityOptions} onOptionSelected={this.onVisibilityChanged}>
-              <Text>X</Text>
-            </SelectMenu>
-          }
-        </View>
-        <View style={styles.splitRow}>
-          <View style={[styles.editRow, styles.dateStarted]}>
-            <View>
-              <Text style={[
-                styles.editRowLabel,
-                this.state.startedAt && styles.withValueLabel,
-              ]}
-              >
-                Date Started
-              </Text>
-              {this.state.startedAt &&
-                <Text style={styles.editRowValue}>
-                  {moment(this.state.startedAt).format('MMM. DD, YYYY')}
-                </Text>
-              }
-            </View>
-          </View>
-          <View style={[styles.editRow, styles.dateFinished]}>
-            <View>
-              <Text style={[
-                styles.editRowLabel,
-                this.state.finishedAt && styles.withValueLabel,
-              ]}
-              >
-                Date Finished
-              </Text>
-              {this.state.finishedAt &&
-                <Text style={styles.editRowValue}>
-                  {moment(this.state.finishedAt).format('MMM. DD, YYYY')}
-                </Text>
-              }
-            </View>
-          </View>
-        </View>
-        <View style={styles.editRow}>
-          <View style={styles.notesSection}>
-            <Text style={[
-              styles.editRowLabel,
-              this.state.notes && styles.withValueLabel,
-            ]}
+            <SelectMenu
+              disabled={!canEdit}
+              options={this.selectOptions}
+              onOptionSelected={this.onStatusChanged}
             >
-              Personal Notes
+              <Text style={styles.editRowValue}>
+                {status}
+              </Text>
+            </SelectMenu>
+          </View>
+          {/* Progress */}
+          <View style={styles.editRow}>
+            <Text style={styles.editRowLabel}>
+              {libraryType === 'anime' ? 'Episode' : 'Chapter'} Progress:
             </Text>
-            {!isNull(this.state.notes) &&
+            <Counter
+              inputRef={(r) => { this.progressInput = r; }}
+              disabled={!canEdit}
+              initialValue={libraryEntry.progress}
+              maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
+              progressCounter={typeof maxProgress === 'number'}
+              onValueChanged={this.onProgressValueChanged}
+            />
+          </View>
+          {/* Rating */}
+          <View style={styles.editRow}>
+            <Text style={styles.editRowLabel}>Rating:</Text>
+            <Rating
+              disabled={!canEdit}
+              size="large"
+              viewType="single"
+              onRatingChanged={this.onRatingChanged}
+              style={styles.ratingStyle}
+              ratingTwenty={this.state.ratingTwenty}
+              ratingSystem={ratingSystem}
+            />
+          </View>
+          {/* Rewatched */}
+          <View style={styles.editRow}>
+            <Text style={styles.editRowLabel}>
+              Times {libraryType === 'anime' ? 'Rewatched' : 'Read'}:
+            </Text>
+            <Counter
+              inputRef={(r) => { this.rewatchInput = r; }}
+              disabled={!canEdit}
+              initialValue={libraryEntry.reconsumeCount}
+              onValueChanged={this.onTimesRewatchedChanged}
+            />
+          </View>
+          {/* Visibility */}
+          <View style={styles.editRow}>
+            <Text style={styles.editRowLabel}>
+              Library Entry Visibility:
+            </Text>
+            <SelectMenu
+              disabled={!canEdit}
+              options={visibilityOptions}
+              onOptionSelected={this.onVisibilityChanged}
+            >
+              <Text style={styles.editRowValue}>
+                {this.state.private ? 'Private' : 'Public'}
+              </Text>
+            </SelectMenu>
+          </View>
+          {/* Dates */}
+          {/* @TODO: Needs to be editable */}
+          <View style={styles.splitRow}>
+            <View style={[styles.editRow, styles.dateStarted]}>
+              <View>
+                <Text style={[
+                  styles.editRowLabel,
+                  this.state.startedAt && styles.withValueLabel,
+                ]}
+                >
+                  Date Started
+                </Text>
+                {this.state.startedAt &&
+                  <Text style={styles.editRowValue}>
+                    {moment(this.state.startedAt).format('MMM. DD, YYYY')}
+                  </Text>
+                }
+              </View>
+            </View>
+            <View style={[styles.editRow, styles.dateFinished]}>
+              <View>
+                <Text style={[
+                  styles.editRowLabel,
+                  this.state.finishedAt && styles.withValueLabel,
+                ]}
+                >
+                  Date Finished
+                </Text>
+                {this.state.finishedAt &&
+                  <Text style={styles.editRowValue}>
+                    {moment(this.state.finishedAt).format('MMM. DD, YYYY')}
+                  </Text>
+                }
+              </View>
+            </View>
+          </View>
+          {/* Notes */}
+          <View style={[styles.editRow, { maxHeight: 'auto' }]}>
+            <View style={styles.notesSection}>
+              <Text style={[styles.editRowLabel, styles.withValueLabel]}
+              >
+                Personal Notes
+              </Text>
               <TextInput
+                style={[styles.editRowValue, { height: this.state.notesHeight }]}
                 value={this.state.notes}
-                placeholder="Type some notes..."
+                placeholder={canEdit ? "Type some notes..." : "User has no notes"}
                 onChangeText={this.onNotesChanged}
+                onContentSizeChange={this.onNotesContentSizeChanged}
+                editable={canEdit}
                 multiline
               />
-            }
+            </View>
           </View>
-        </View>
-        {canEdit &&
-          <View style={[styles.deleteEntryRow]}>
-            <SelectMenu options={['Yes, Delete.', 'Nevermind']} onOptionSelected={this.onDeleteEntry}>
-              <Text style={styles.deleteEntryText}>Delete Library Entry</Text>
-            </SelectMenu>
-          </View>
-        }
+          {/* Delete */}
+          {canEdit &&
+            <View style={[styles.deleteEntryRow]}>
+              <SelectMenu options={['Yes, Delete.', 'Nevermind']} onOptionSelected={this.onDeleteEntry}>
+                <Text style={styles.deleteEntryText}>Delete Library Entry</Text>
+              </SelectMenu>
+            </View>
+          }
+        </KeyboardAwareScrollView>
       </View>
     );
   }
