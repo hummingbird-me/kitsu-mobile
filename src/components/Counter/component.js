@@ -96,7 +96,11 @@ export class Counter extends React.PureComponent {
           <Text>-</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.counterStatusContainer} onPress={this.activateManualEdit}>
+        <TouchableOpacity
+          disabled={this.props.disabled}
+          style={styles.counterStatusContainer}
+          onPress={this.activateManualEdit}
+        >
           {this.state.manualEditMode
             ? (
               <TextInput
