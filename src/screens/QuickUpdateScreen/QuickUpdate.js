@@ -92,6 +92,9 @@ class QuickUpdate extends Component {
   imageOperationInProgress = false;
   lastTap = null; // Timer for scrolling top back (double tap on tab)
   cursor = undefined; // Pagination for feeds
+  // Pagination for entries
+  isLoadingNextPage = false;
+  hasNextPage = true;
 
   get _requestIncludeFields() {
     const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
@@ -204,8 +207,10 @@ class QuickUpdate extends Component {
     this.setState({ discussions: null }, callback);
   };
 
-  fetchLibrary = async () => {
-    this.setState({ loading: true });
+  fetchLibrary = async (loading = true, offset, callback) => {
+    if (!this.hasNextPage) { return; }
+
+    this.setState({ loading });
     let { filterMode } = this.state;
     filterMode = filterMode === 'all' ? undefined : filterMode;
 
@@ -219,29 +224,33 @@ class QuickUpdate extends Component {
           kind: filterMode,
         },
         include: this._requestIncludeFields,
-        page: { limit: 15 },
+        page: { limit: 4, offset },
         sort: 'status,-progressed_at,-updated_at',
       });
 
       // See else statement, api may return
       // library = [meta: Object, links: Object]
       if (library.length !== 0) {
-        this.setState(
-          {
-            library,
-            loading: false,
-          },
-          () => {
+        this.hasNextPage = !!library.links.next;
+        if (offset) { // This was a pagination request
+          const data = [...this.state.library, ...library];
+          this.setState({ library: data, loading: false });
+        } else {
+          this.setState({ library, loading: false }, () => {
             this.carouselItemChanged(0);
-          },
-        );
+          });
+        }
       } else {
         // TODO: handle the case where libraryEntries is undefined
         // Apparently we don't have any library entries.
-        this.setState({ library: [], loading: false });
+        if (!offset) {
+          this.setState({ library: [], loading: false });
+        }
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      if (callback) { callback(); }
     }
   };
 
@@ -337,6 +346,13 @@ class QuickUpdate extends Component {
       } else {
         this.resetFeed(() => this.fetchEpisodeFeed());
       }
+    }
+    // Determine if we need to load the next page
+    const numItems = library.length;
+    const shouldFetch = (index + 1) >= (numItems / 2);
+    if (shouldFetch && !this.isLoadingNextPage) {
+      this.isLoadingNextPage = true;
+      this.fetchLibrary(false, numItems, () => { this.isLoadingNextPage = false; });
     }
   };
 
@@ -593,6 +609,7 @@ class QuickUpdate extends Component {
             ref={(c) => { this.carousel = c; }}
             data={library}
             renderItem={this.renderItem}
+            maxToRenderPerBatch={4}
             onSnapToItem={this.carouselItemChanged}
             sliderWidth={CAROUSEL_WIDTH}
             sliderHeight={CAROUSEL_HEIGHT}
