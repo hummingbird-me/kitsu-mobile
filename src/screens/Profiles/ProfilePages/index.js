@@ -127,6 +127,7 @@ class ProfilePage extends PureComponent {
       }
 
       this.setState({ profile: data });
+      await fetchCurrentUser();
     } catch (err) {
       console.log('Error updating user:', err);
     } finally {
