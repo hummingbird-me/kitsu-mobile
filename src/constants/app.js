@@ -9,4 +9,7 @@ export const defaultAvatar = `${kitsuConfig.assetsUrl}/default_avatar-ff0fd0e960
 
 export const defaultCover = `${kitsuConfig.assetsUrl}/default_cover-7bda2081d0823731a96bbb20b70f4fcf.png`;
 
+// The dimensions of the kitsu cover image
+export const coverImageDimensions = { width: 2400, height: 1000 };
+
 export const TERMS_URL = 'https://kitsu.io/terms';

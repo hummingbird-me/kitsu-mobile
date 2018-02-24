@@ -1,9 +1,11 @@
 import { parseURL } from 'kitsu/common/utils/url';
 import { kitsuConfig } from 'kitsu/config/env';
+import { coverImageDimensions } from 'kitsu/constants/app';
+import { isEmpty } from 'lodash';
 
 export const defaultImgixOptions = {
-  w: 1200,
-  'max-h': 500,
+  w: coverImageDimensions.width,
+  'max-h': coverImageDimensions.height,
   fit: 'crop',
   crop: 'faces,edges',
   auto: 'format',
@@ -36,16 +38,17 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
   if (!coverURL) return null;
 
   // Parse it
-  const { hostname, pathname } = parseURL(coverURL);
+  const { hostname, pathname, search } = parseURL(coverURL);
   if (!hostname.toLowerCase().includes('kitsu')) return coverURL;
 
   // Build the search params
   const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
-
   const searchParams = mappings.join('&');
 
-  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}?${searchParams}`;
-  console.log(imgixURL);
+  // Replace host with imgix
+  // This also ensures we keep the cache buster number at the end of the url
+  const coverSearchParam = isEmpty(search) ? '?' : `${search}&`;
+  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}${coverSearchParam}${searchParams}`;
 
   return imgixURL;
 }
