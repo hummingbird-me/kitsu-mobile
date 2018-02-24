@@ -82,7 +82,7 @@ class Board extends React.Component {
             <ActivityIndicator />
           </View>
           : <WebView
-            style={[styles.webView, { paddingBottom: keyboardHeight }]}
+            style={[styles.webView, { marginBottom: keyboardHeight }]}
             source={{
               uri,
             }}
