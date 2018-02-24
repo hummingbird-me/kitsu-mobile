@@ -26,7 +26,7 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
     ...imageOptions,
   };
 
-  if (!coverImage) return null;
+  if (isEmpty(coverImage) || typeof coverImage !== 'object') return null;
 
   // Get the cover url
   const coverURL = coverImage.original ||
@@ -35,20 +35,25 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
   coverImage.small ||
   null;
 
-  if (!coverURL) return null;
+  if (isEmpty(coverURL)) return null;
 
   // Parse it
-  const { hostname, pathname, search } = parseURL(coverURL);
+  const parsed = parseURL(coverURL);
+  if (!parsed) return null;
+
+  // Check if we have a kitsu cover
+  const { hostname, pathname, search } = parsed;
   if (!hostname.toLowerCase().includes('kitsu')) return coverURL;
 
   // Build the search params
   const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
   const searchParams = mappings.join('&');
 
-  // Replace host with imgix
-  // This also ensures we keep the cache buster number at the end of the url
-  const coverSearchParam = isEmpty(search) ? '?' : `${search}&`;
-  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}${coverSearchParam}${searchParams}`;
+  // Check if we have a cache buster applied, if not then we apply one ourselves
+  const cacheBust = isEmpty(search) ? `?${Date.now()}` : search;
+
+  // Make the new url
+  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}${cacheBust}&${searchParams}`;
 
   return imgixURL;
 }

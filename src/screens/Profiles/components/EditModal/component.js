@@ -12,13 +12,14 @@ import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
 import ImagePicker from 'react-native-image-crop-picker';
 import { styles } from './styles';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
 export class EditModal extends Component {
   static defaultProps = {
     user: null,
     visible: false,
     onCancel: null,
-    onConfirm: null
+    onConfirm: null,
   }
 
   state = {
@@ -88,10 +89,15 @@ export class EditModal extends Component {
 
   renderCoverComponent = () => {
     const { changeset, changes } = this.state;
-    let cover = { uri: (changeset.coverImage && changeset.coverImage.large) || defaultCover };
+
+    // Use the imgix cover here otherwise if we use original
+    // we may run into the problem where a users original cover is too large
+    // and it causes a crash on android :(
+    let cover = { uri: getImgixCoverImage(changeset.coverImage) || defaultCover };
     if ('coverImage' in changes) {
       cover = { uri: changes.coverImage };
     }
+
     return (
       <View style={styles.profileCoverWrapper}>
         <TouchableOpacity
