@@ -120,6 +120,17 @@ class QuickUpdate extends Component {
     });
   }
 
+  shouldComponentUpdate(_nextProps, nextState) {
+    // Feed has finished loading
+    if (this.state.isLoadingFeed && !nextState.isLoadingFeed) {
+      if (this._nextFeedOperation) {
+        this._nextFeedOperation();
+        this._nextFeedOperation = undefined;
+      }
+    }
+    return true;
+  }
+
   onNavigateToSearch = (navigation) => {
     navigation.navigate('Search');
   };
@@ -152,9 +163,10 @@ class QuickUpdate extends Component {
     }
   };
 
-  fetchEpisodeFeed = async (entry) => {
+  fetchEpisodeFeed = async () => {
     this.setState({ isLoadingFeed: true });
     try {
+      const entry = this.state.library[this.carousel.currentIndex];
       const [unit] = entry.unit;
       const posts = await Kitsu.find('episodeFeed', unit.id, {
         include:
@@ -180,10 +192,10 @@ class QuickUpdate extends Component {
     }
   };
 
-  fetchNextFeedPage = async (entry) => {
+  fetchNextFeedPage = async () => {
     if (this.state.isLoadingNextFeedPage || !this.cursor) { return; }
     this.setState({ isLoadingNextFeedPage: true });
-    await this.fetchEpisodeFeed(entry);
+    await this.fetchEpisodeFeed();
     this.setState({ isLoadingNextFeedPage: false });
   };
 
@@ -312,12 +324,19 @@ class QuickUpdate extends Component {
   };
 
   carouselItemChanged = (index) => {
-    const { library } = this.state;
+    const { library, isLoadingFeed } = this.state;
     this.imageFadeOperations.push(index);
     this.ensureAllImageFadeOperationsHandled();
     const entry = library[index];
     if (entry.progress > 0) {
-      this.resetFeed(() => this.fetchEpisodeFeed(entry));
+      // It's possible that we are still loading the feed from the previous
+      // carousel item. If that's the case then wait for it to finish and then load ours
+      // instead of entering a race condition.
+      if (isLoadingFeed) {
+        this._nextFeedOperation = () => this.resetFeed(() => this.fetchEpisodeFeed());
+      } else {
+        this.resetFeed(() => this.fetchEpisodeFeed());
+      }
     }
   };
 
@@ -354,7 +373,7 @@ class QuickUpdate extends Component {
       ]);
     } else {
       this.updateLibraryEntry(record);
-      this.resetFeed(() => this.fetchEpisodeFeed(record));
+      this.resetFeed(() => this.fetchEpisodeFeed());
     }
   };
 
@@ -415,7 +434,7 @@ class QuickUpdate extends Component {
   };
 
   renderPostItem = ({ item }) => {
-    if (item.type !== 'posts') { return; }
+    if (item.type !== 'posts') { return null; }
     return (
       <Post
         post={item}
@@ -607,7 +626,7 @@ class QuickUpdate extends Component {
                   data={discussions}
                   keyExtractor={item => item.id}
                   renderItem={this.renderPostItem}
-                  onEndReached={() => discussions.length && this.fetchNextFeedPage(entry)}
+                  onEndReached={() => discussions.length && this.fetchNextFeedPage()}
                   onEndReachedThreshold={0.6}
                   ListHeaderComponent={
                     <CreatePostRow
@@ -615,11 +634,7 @@ class QuickUpdate extends Component {
                       onPress={this.toggleEditor}
                     />
                   }
-                  ListFooterComponent={() =>
-                    isLoadingNextFeedPage && (
-                      <ActivityIndicator />
-                    )
-                  }
+                  ListFooterComponent={() => isLoadingNextFeedPage && <ActivityIndicator />}
                   ListEmptyComponent={() => (
                     <StatusComponent
                       title="START THE DISCUSSION"
