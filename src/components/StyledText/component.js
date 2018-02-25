@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
 import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red, green, black } from 'kitsu/constants/colors';
+import { ViewMoreText } from 'kitsu/components/ViewMoreText';
 import { styles } from './styles';
 
 const textSizes = {
@@ -61,4 +62,44 @@ StyledText.defaultProps = {
   color: 'light',
   size: 'default',
   textStyle: null,
+};
+
+export const ViewMoreStyledText = ({
+  size,
+  color,
+  bold,
+  textStyle,
+  disabled,
+  ...props
+}) => (
+  <ViewMoreText
+    textStyle={[
+      styles.formattedText,
+      {
+        fontSize: textSizes[size],
+        color: textColors[color],
+        fontWeight: bold ? '700' : 'normal',
+        // Messes up color highlighting of links on Android
+        lineHeight: textSizes[size] * 1.25,
+      },
+      textStyle,
+    ]}
+    {...props}
+  />
+);
+
+ViewMoreStyledText.propTypes = {
+  bold: PropTypes.bool,
+  color: PropTypes.oneOf(['light', 'dark', 'grey', 'darkGrey', 'lightGrey', 'yellow', 'orange', 'red', 'green', 'black']),
+  size: PropTypes.oneOf(['default', 'xxsmall', 'xsmall', 'small', 'large', 'xlarge']),
+  textStyle: PropTypes.object,
+  disabled: PropTypes.bool,
+};
+
+ViewMoreStyledText.defaultProps = {
+  bold: false,
+  color: 'light',
+  size: 'default',
+  textStyle: null,
+  disabled: false,
 };
