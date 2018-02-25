@@ -80,7 +80,7 @@ export class ViewMoreText extends PureComponent {
 }
 
 ViewMoreText.propTypes = {
-  textStyle: PropTypes.object,
+  textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   numberOfLines: PropTypes.number,
   renderViewMore: PropTypes.func,
   renderViewLess: PropTypes.func,
