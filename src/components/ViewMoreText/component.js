@@ -1,33 +1,27 @@
 import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
 import { PropTypes } from 'prop-types';
+import { isNull } from 'lodash';
 import { styles } from './styles';
 
 export class ViewMoreText extends PureComponent {
   state = {
     showAllText: false,
+    measured: false,
+    fullHeight: null,
+    shouldShowMore: false,
   }
 
-  async componentDidMount() {
-    await nextFrameAsync();
+  onLayout = (event) => {
+    const { fullHeight } = this.state;
+    const height = event.nativeEvent.layout.height;
+    if (isNull(fullHeight)) {
+      this.setState({ fullHeight: height, measured: true });
+      return;
+    }
 
-    // Get the height of the text with no restriction on number of lines
-    const fullHeight = await measureHeightAsync(this.text);
-
-    // We need to set the state here so we force re-render
-    this.measured = true;
-    this.fullHeight = fullHeight;
-    this.forceUpdate();
-
-    await nextFrameAsync();
-
-    // Get the height of the text now that number of lines has been set
-    const limitedHeight = await measureHeightAsync(this.text);
-    this.limitedHeight = limitedHeight;
-
-    if (fullHeight > limitedHeight) {
-      this.shouldShowMore = true;
-      this.forceUpdate();
+    if (fullHeight > height) {
+      this.setState({ shouldShowMore: true });
     }
   }
 
@@ -52,12 +46,12 @@ export class ViewMoreText extends PureComponent {
   )
 
   renderFooter() {
-    const { showAllText } = this.state;
+    const { showAllText, shouldShowMore } = this.state;
 
-    if (this.shouldShowMore && !showAllText) {
+    if (shouldShowMore && !showAllText) {
       const viewMore = (this.props.renderViewMore || this.renderViewMore);
       return viewMore(this.handlePressViewMore);
-    } else if (this.shouldShowMore && showAllText) {
+    } else if (shouldShowMore && showAllText) {
       const viewLess = (this.props.renderViewLess || this.renderViewLess);
       return viewLess(this.handlePressViewLess);
     }
@@ -65,16 +59,17 @@ export class ViewMoreText extends PureComponent {
   }
 
   render() {
-    const { showAllText } = this.state;
+    const { showAllText, measured } = this.state;
     const { textStyle, numberOfLines, children, ...props } = this.props;
 
     return (
       <View>
         <Text
-          numberOfLines={this.measured && !showAllText ? numberOfLines : 0}
+          numberOfLines={measured && !showAllText ? numberOfLines : 0}
           ref={(text) => { this.text = text; }}
           style={textStyle}
           {...props}
+          onLayout={this.onLayout}
         >
           {children}
         </Text>
@@ -97,12 +92,3 @@ ViewMoreText.defaultProps = {
   renderViewMore: null,
   renderViewLess: null,
 };
-
-
-function measureHeightAsync(component) {
-  return new Promise(resolve => component.measure((x, y, w, h) => resolve(h)));
-}
-
-function nextFrameAsync() {
-  return new Promise(resolve => requestAnimationFrame(() => resolve()));
-}
