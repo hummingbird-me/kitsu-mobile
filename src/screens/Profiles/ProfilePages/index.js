@@ -20,6 +20,8 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import { isIdForCurrentUser } from 'kitsu/common/utils';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { parseURL } from 'kitsu/common/utils/url';
+import { isEmpty } from 'lodash';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
 
@@ -117,6 +119,13 @@ class ProfilePage extends PureComponent {
         id: userId,
         ...changes,
       }, { include: 'waifu' });
+
+      // Bust the cover cache
+      if (data && data.coverImage) {
+        const bustedCovers = this.applyCacheBust(data.coverImage);
+        data.coverImage = bustedCovers;
+      }
+
       this.setState({ profile: data });
       await fetchCurrentUser();
     } catch (err) {
@@ -129,6 +138,34 @@ class ProfilePage extends PureComponent {
   setActiveTab = (tab) => {
     this.setState({ active: tab });
   }
+
+  /**
+   * Apply image cache bust to the given object.
+   * This will loop through each object property and check if the value is a url
+   * If it is then it will try apply a cache bust if it's not present.
+   *
+   * @param {any} object An object to apply cache bust to
+   * @returns The cache busted object
+   */
+  applyCacheBust(object) {
+    if (typeof object !== 'object') return object;
+
+    const updated = object;
+    Object.keys(object).forEach((key) => {
+      const url = object[key];
+      const parsed = parseURL(url);
+      if (parsed) {
+        // If we have the url but don't have any search params in it
+        // Then we know we have to apply a cache buster
+        if (isEmpty(parsed.search) && !isEmpty(url)) {
+          updated[key] = `${url}?${Date.now()}`;
+        }
+      }
+    });
+
+    return updated;
+  }
+
 
   goBack = () => {
     this.props.navigation.goBack();
@@ -196,12 +233,12 @@ class ProfilePage extends PureComponent {
       const record = await Kitsu.create('follows', {
         follower: {
           id: this.props.currentUser.id,
-          type: 'users'
+          type: 'users',
         },
         followed: {
           id: userId,
-          type: 'users'
-        }
+          type: 'users',
+        },
       });
       this.setState({ follow: record, isLoadingFollow: false });
     } catch (err) {

@@ -1,9 +1,11 @@
 import { parseURL } from 'kitsu/common/utils/url';
 import { kitsuConfig } from 'kitsu/config/env';
+import { coverImageDimensions } from 'kitsu/constants/app';
+import { isEmpty } from 'lodash';
 
 export const defaultImgixOptions = {
-  w: 1200,
-  'max-h': 500,
+  w: coverImageDimensions.width,
+  'max-h': coverImageDimensions.height,
   fit: 'crop',
   crop: 'faces,edges',
   auto: 'format',
@@ -24,7 +26,7 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
     ...imageOptions,
   };
 
-  if (!coverImage) return null;
+  if (isEmpty(coverImage) || typeof coverImage !== 'object') return null;
 
   // Get the cover url
   const coverURL = coverImage.original ||
@@ -33,19 +35,25 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
   coverImage.small ||
   null;
 
-  if (!coverURL) return null;
+  if (isEmpty(coverURL)) return null;
 
   // Parse it
-  const { hostname, pathname } = parseURL(coverURL);
+  const parsed = parseURL(coverURL);
+  if (!parsed) return null;
+
+  // Check if we have a kitsu cover
+  const { hostname, pathname, search } = parsed;
   if (!hostname.toLowerCase().includes('kitsu')) return coverURL;
 
   // Build the search params
   const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
-
   const searchParams = mappings.join('&');
 
-  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}?${searchParams}`;
-  console.log(imgixURL);
+  // Check if we have a cache buster applied, if not then we apply one ourselves
+  const cacheBust = isEmpty(search) ? `?${Date.now()}` : search;
+
+  // Make the new url
+  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}${cacheBust}&${searchParams}`;
 
   return imgixURL;
 }

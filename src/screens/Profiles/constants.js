@@ -7,6 +7,7 @@ export const scene = {
 
 export const scenePadding = scene.width * 0.03;
 
+// The height of the cover image in relation to the scene
 export const coverImageHeight = scene.height * 0.35;
 
 export const spacing = {
