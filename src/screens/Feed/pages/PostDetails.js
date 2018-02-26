@@ -260,7 +260,7 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.goBack();
   };
 
-  keyExtractor = (item, index) => index;
+  keyExtractor = item => item.id;
 
   navigateToUserProfile = (userId) => {
     if (userId) this.props.navigation.navigate('ProfilePages', { userId });

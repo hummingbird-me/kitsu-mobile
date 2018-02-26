@@ -8,7 +8,7 @@ import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import Hyperlink from 'react-native-hyperlink';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
 import { isEmpty } from 'lodash';
@@ -210,15 +210,15 @@ export class Comment extends PureComponent {
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
             {!isEmpty(content) &&
               <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
-                <StyledText
+                <ViewMoreStyledText
                   size="xsmall"
                   color="dark"
                   textStyle={{ lineHeight: null }}
-                  numberOfLines={(isTruncated && 2) || undefined}
+                  numberOfLines={(isTruncated && 3) || 8}
                   selectable
                 >
                   {content}
-                </StyledText>
+                </ViewMoreStyledText>
 
               </Hyperlink>
             }
@@ -271,7 +271,7 @@ export class Comment extends PureComponent {
                   )}
                   <FlatList
                     data={replies}
-                    keyExtractor={(item, index) => index}
+                    keyExtractor={item => item.id}
                     renderItem={this.renderItem}
                     ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
                   />
