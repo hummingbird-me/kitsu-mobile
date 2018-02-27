@@ -117,7 +117,7 @@ class SummaryComponent extends PureComponent {
                 source={{
                   uri:
                     (item.thumbnail && item.thumbnail.original) ||
-                    (media.posterImage && media.posterImage.large),
+                    (media && media.posterImage && media.posterImage.large),
                 }}
               />
             </ScrollItem>

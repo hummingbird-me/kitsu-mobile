@@ -37,7 +37,7 @@ class CardActivity extends PureComponent {
           <View key={item.id} style={{ padding: 0, flexDirection: 'row' }}>
             {index === 0 &&
               <ProgressiveImage
-                source={{ uri: subject.media ? subject.media.posterImage.small : '' }}
+                source={{ uri: subject.media && subject.media.posterImage && subject.media.posterImage.small }}
                 style={{ height: 120, width: 80, position: 'absolute' }}
               />}
             <Text style={styles.activityText}>
@@ -56,7 +56,7 @@ class CardActivity extends PureComponent {
           <View key={item.id} style={{ padding: 0, flexDirection: 'row' }}>
             {index === 0 &&
               <ProgressiveImage
-                source={{ uri: subject.media ? subject.media.posterImage.small : '' }}
+                source={{ uri: subject.media && subject.media.posterImage && subject.media.posterImage.small }}
                 style={{ height: 120, width: 80, position: 'absolute' }}
               />}
             <Text style={{ marginLeft: 90 }}>
@@ -73,7 +73,7 @@ class CardActivity extends PureComponent {
           <View key={item.id} style={{ padding: 0, flexDirection: 'row' }}>
             {index === 0 &&
               <ProgressiveImage
-                source={{ uri: subject.media ? subject.media.posterImage.small : '' }}
+                source={{ uri: subject.media && subject.media.posterImage && subject.media.posterImage.small }}
                 style={{ height: 120, width: 80, position: 'absolute' }}
               />}
             <Text style={{ marginLeft: 90 }}>
@@ -86,7 +86,7 @@ class CardActivity extends PureComponent {
         return (
           <View key={item.id} style={{ padding: 10, flexDirection: 'row' }}>
             <ProgressiveImage
-              source={{ uri: media ? media.posterImage.small : '' }}
+              source={{ uri: media && media.posterImage && media.posterImage.small }}
               style={{ height: 120, width: 80 }}
             />
             <View style={{ flex: 1, alignSelf: 'center' }}>

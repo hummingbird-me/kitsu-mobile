@@ -43,7 +43,7 @@ export const MediaItem = ({ media, onClear, disabled }) => (
   <View style={styles.container}>
     <Layout.RowWrap alignItems="center">
       <ProgressiveImage
-        source={{ uri: media.posterImage.tiny }}
+        source={{ uri: media && media.posterImage && media.posterImage.tiny }}
         style={styles.image}
       />
       <Layout.RowMain>
