@@ -10,14 +10,15 @@ export default StyleSheet.create({
     flex: 1,
   },
   header: {
-    flex: 2,
+    padding: 4,
   },
   bodyWrapper: {
-    flex: 8,
+    flex: 1,
+    justifyContent: 'center',
   },
   page: {
     justifyContent: 'center',
-    height: 320,
+    flex: 1,
   },
   slide: {
     alignItems: 'center',
@@ -51,7 +52,7 @@ export default StyleSheet.create({
     resizeMode: 'contain',
   },
   getStartedButton: {
-    marginBottom: 16,
+    marginBottom: 12,
     backgroundColor: colors.white,
   },
   getStartedText: {
@@ -60,11 +61,10 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   dotContainer: {
-    top: -10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 25,
+    padding: 10,
   },
   stepDot: {
     width: 8,
@@ -89,12 +89,11 @@ export default StyleSheet.create({
   },
   squareImage: {
     marginHorizontal: 8,
-    width: 130,
-    height: 130,
+    width: 115,
+    height: 115,
     borderRadius: 8,
   },
   buttonsWrapper: {
-    flex: 1,
     justifyContent: 'center',
   },
   fbIcon: {
