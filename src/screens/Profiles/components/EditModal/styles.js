@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
-import { coverImageDimensions } from 'kitsu/constants/app';
+import { originalCoverImageDimensions } from 'kitsu/constants/app';
 
 export const styles = StyleSheet.create({
   profileCoverWrapper: {
@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
 
   profileCover: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').width * (coverImageDimensions.height / coverImageDimensions.width),
+    height: Dimensions.get('window').width * (originalCoverImageDimensions.height / originalCoverImageDimensions.width),
   },
 
   profileImageWrapper: {
