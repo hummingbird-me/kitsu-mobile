@@ -4,6 +4,9 @@ import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/screens/Notifications/NotificationsScreen';
 import { styles } from './styles';
 
+/**
+ * @deprecated Use `NotificationPopover` instead. Will be removed in a future version.
+*/
 export const NotificationModal = ({ style, visible, onRequestClose, data, ...otherProps }) => {
   if (!data) return null;
   const { actorName, actorAvatar, others, text } = parseNotificationData(data.activities);
