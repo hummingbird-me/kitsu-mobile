@@ -42,11 +42,11 @@ const Tabs = TabNavigator(
         const { routes } = previousScene;
 
         // Check if we have pushed any other routes
-        if (routes.length > 1) {
+        if (!scene.focused && routes.length > 1) {
           const { routeName } = routes[0];
 
           // Check if the route is the one we have to reset
-          if (routeName in resetRoutes) {
+          if (resetRoutes.includes(routeName)) {
             navigation.dispatch(NavigationActions.reset({
               index: 0,
               actions: [NavigationActions.navigate({ routeName })],
