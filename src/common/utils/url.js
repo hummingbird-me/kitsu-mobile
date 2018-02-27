@@ -33,6 +33,8 @@ export function parseURL(url) {
     '(\\?[^#]*|)', search params
     '(#.*|)$' hash
   */
+  if (typeof url !== 'string') return null;
+
   const regex = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/;
   const match = url.match(regex);
   return match && {

@@ -194,7 +194,10 @@ class MediaScreen extends Component {
           {series.map((item, index) => (
             <View style={{ margin: 5 }} key={item.id}>
               <ProgressiveImage
-                source={{ uri: item.thumbnail ? item.thumbnail.original : media.posterImage.large }}
+                source={{
+                  uri: (item.thumbnail && item.thumbnail.original) ||
+                      (media && media.posterImage && media.posterImage.large),
+                }}
                 style={imageStyle}
                 resizeMode="cover"
               />
@@ -237,10 +240,10 @@ class MediaScreen extends Component {
               </View>
             </View>
           ))}
-          {media.episodeCount > 12 &&
+          {media && media.episodeCount > 12 &&
             <View style={{ margin: 5 }}>
               <ProgressiveImage
-                source={{ uri: media.posterImage.large }}
+                source={{ uri: media.posterImage && media.posterImage.large }}
                 style={imageStyle}
                 resizeMode="cover"
               />
@@ -282,15 +285,17 @@ class MediaScreen extends Component {
     if (mediaRelationships && mediaRelationships.length === 0) return;
     if (mediaRelationships) {
       more = mediaRelationships.map((item) => {
-        const title = item.destination.titles.en || item.destination.titles.en_jp;
+        if (!item || !item.destination) return null;
+        const { destination } = item;
+        const title = (destination.titles && (destination.titles.en || destination.titles.en_jp)) || '-';
         return {
-          image: item.destination.posterImage.original,
+          image: destination.posterImage && destination.posterImage.original,
           title,
-          id: item.destination.id,
-          type: item.destination.type,
-          key: item.destination.id,
+          id: destination.id,
+          type: destination.type,
+          key: destination.id,
         };
-      });
+      }).filter(i => !isNull(i));
     }
     return (
       <CardFull single singleText="View All" heading="More from this series">
@@ -376,19 +381,20 @@ class MediaScreen extends Component {
   }
 
   setTextHeightStyle = () => {
-    if(this.state.expanded){
+    if (this.state.expanded) {
       return { paddingLeft: 14, paddingRight: 14, paddingTop: 0, flex: 1, paddingBottom: 14, overflow: 'hidden', zIndex: 2 };
-    }
-    else {
+    } else {
       return { paddingLeft: 14, paddingRight: 14, paddingTop: 0, height: 70.67, overflow: 'hidden', zIndex: 2 };
     }
   }
   renderHeader = () => {
     const { media, reactions, navigation, currentUser, mediaFeed } = this.props;
-    console.log(reactions);
+
+    if (!media) return <View />;
+
     var items = new Array();
-    if(media.categories) {
-      for (var i=0; i < Math.min(media.categories.length, 4); i++) {
+    if (media.categories) {
+      for (let i = 0; i < Math.min(media.categories.length, 4); i += 1) {
         items.push(media.categories[i]);
       }
     }

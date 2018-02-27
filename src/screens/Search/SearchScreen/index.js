@@ -35,22 +35,22 @@ class SearchScreen extends Component {
       {
         key: 'anime',
         title: 'Anime',
-        apiKey: this.props.algoliaKeys.media.key,
-        indexName: this.props.algoliaKeys.media.index,
+        apiKey: this.props.algoliaKeys.media && this.props.algoliaKeys.media.key,
+        indexName: this.props.algoliaKeys.media && this.props.algoliaKeys.media.index,
         kind: 'anime',
       },
       {
         key: 'manga',
         title: 'Manga',
-        apiKey: this.props.algoliaKeys.media.key,
-        indexName: this.props.algoliaKeys.media.index,
+        apiKey: this.props.algoliaKeys.media && this.props.algoliaKeys.media.key,
+        indexName: this.props.algoliaKeys.media && this.props.algoliaKeys.media.index,
         kind: 'manga',
       },
       {
         key: 'users',
         title: 'Users',
-        apiKey: this.props.algoliaKeys.users.key,
-        indexName: this.props.algoliaKeys.users.index,
+        apiKey: this.props.algoliaKeys.users && this.props.algoliaKeys.users.key,
+        indexName: this.props.algoliaKeys.users && this.props.algoliaKeys.users.index,
       },
     ],
   };

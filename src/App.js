@@ -1,6 +1,6 @@
 /* global __DEV__ */
 import React, { PureComponent } from 'react';
-import { Platform, View, StatusBar, Linking } from 'react-native';
+import { Platform, View, StatusBar, Linking, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import { identity, isNull, isEmpty } from 'lodash';
@@ -9,13 +9,12 @@ import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { kitsuConfig } from 'kitsu/config/env';
+import { NotificationPopover } from 'kitsu/components/NotificationPopover';
 import store from './store/config';
 import Root from './Router';
-import { NotificationModal } from './components/NotificationModal';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
-import { kitsuConfig } from 'kitsu/config/env';
-
 
 // eslint-disable-next-line
 console.disableYellowBox = true;
@@ -140,17 +139,29 @@ const RootContainer = ({ inAppNotification }) => (
         this.navigation = nav;
       }}
     />
-    <NotificationModal
-      visible={inAppNotification.visible}
-      data={inAppNotification.data}
-      onRequestClose={() => store.dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION })}
-    />
+    {inAppNotification && inAppNotification.visible &&
+      <NotificationPopover
+        style={styles.notification}
+        data={inAppNotification.data}
+        onRequestClose={() => store.dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION })}
+      />
+    }
   </View>
 );
 
 RootContainer.propTypes = {
   inAppNotification: PropTypes.object.isRequired,
 };
+
+const styles = StyleSheet.create({
+  notification: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    zIndex: 666,
+  },
+});
 
 const ConnectedRoot = connect(({ feed }) => ({
   inAppNotification: feed.inAppNotification,

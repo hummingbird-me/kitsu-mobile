@@ -4,7 +4,7 @@ import { FlatList, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Pill } from 'kitsu/screens/Profiles/components/Pill';
@@ -17,14 +17,6 @@ import { styles } from './styles';
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
 export class SceneHeader extends PureComponent {
-  state = {
-    expanded: false,
-  }
-
-  toggleExpanded = () => {
-    this.setState({ expanded: !this.state.expanded });
-  }
-
   renderDescription = () => {
     const {
       variant,
@@ -37,15 +29,11 @@ export class SceneHeader extends PureComponent {
     } = this.props;
 
     if (variant === 'media') {
-      const expandedText = this.state.expanded ? 'less' : 'more';
       return (
         <View>
           {/* Rankings */}
           <View style={styles.descriptionView}>
-            <StyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={(!this.state.expanded && 4) || undefined}>{description}</StyledText>
-            <TouchableOpacity onPress={this.toggleExpanded}>
-              <StyledText size="small" color="grey">{expandedText}</StyledText>
-            </TouchableOpacity>
+            <ViewMoreStyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={4}>{description}</ViewMoreStyledText>
           </View>
           <View style={styles.statusView}>
             <Status statusType="popularity" ranking={popularityRank} />

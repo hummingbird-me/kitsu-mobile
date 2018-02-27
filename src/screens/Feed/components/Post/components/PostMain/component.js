@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { scene } from 'kitsu/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
@@ -28,7 +28,7 @@ export const PostMain = ({
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
             <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
-              <StyledText color="dark" textStyle={{ lineHeight: null }} size="small" selectable>{content}</StyledText>
+              <ViewMoreStyledText color="dark" textStyle={{ lineHeight: null }} size="small" selectable numberOfLines={8}>{content}</ViewMoreStyledText>
             </Hyperlink>
           </View>
         </TouchableWithoutFeedback>

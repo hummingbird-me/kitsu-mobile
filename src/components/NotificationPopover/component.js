@@ -1,28 +1,18 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, StatusBar, Image, Modal, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, Text, StatusBar, Image, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/screens/Notifications/NotificationsScreen';
 import { styles } from './styles';
 
-/**
- * @deprecated Use `NotificationPopover` instead. Will be removed in a future version.
-*/
-export const NotificationModal = ({ style, visible, onRequestClose, data, ...otherProps }) => {
+export const NotificationPopover = ({ style, onRequestClose, data }) => {
   if (!data) return null;
   const { actorName, actorAvatar, others, text } = parseNotificationData(data.activities);
-  console.log(actorName, others, text);
 
   return (
-    <Modal
-      transparent
-      animationType="fade"
-      visible={visible}
-      onRequestClose={onRequestClose}
-      {...otherProps}
-    >
-      <TouchableOpacity activeOpacity={1} onPress={onRequestClose} style={styles.modalWrapper}>
+    <View style={style}>
+      <TouchableOpacity activeOpacity={1} onPress={onRequestClose} style={styles.wrapper}>
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-        <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.modalContent}>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.content}>
           <View style={{ paddingRight: 10 }}>
             <Image style={styles.userAvatar} source={{ uri: actorAvatar }} />
           </View>
@@ -31,22 +21,20 @@ export const NotificationModal = ({ style, visible, onRequestClose, data, ...oth
           </Text>
           <Text style={styles.activityText}>
             {others && <Text>and {others}</Text>}
-            <Text style={styles.modalText}>{text}</Text>
+            <Text style={styles.text}>{text}</Text>
           </Text>
         </TouchableOpacity>
       </TouchableOpacity>
-    </Modal>
+    </View>
   );
 };
 
-NotificationModal.propTypes = {
-  ...Modal.propTypes,
+NotificationPopover.propTypes = {
   style: ViewPropTypes.style,
   data: PropTypes.object,
-  visible: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired,
 };
-NotificationModal.defaultProps = {
+NotificationPopover.defaultProps = {
   style: null,
   data: null,
 };

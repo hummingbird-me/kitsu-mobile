@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { FlatList, View, ActivityIndicator } from 'react-native';
+import React, { Component } from 'react';
+import { View, ActivityIndicator, Dimensions } from 'react-native';
+import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 import { PropTypes } from 'prop-types';
-import debounce from 'lodash/debounce';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { UserLibraryListCard, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
-import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
 import { styles } from './styles';
 
 const HEADER_TEXT_MAPPING = {
@@ -14,23 +13,11 @@ const HEADER_TEXT_MAPPING = {
   on_hold: { anime: 'On Hold', manga: 'On Hold' },
   dropped: { anime: 'Dropped', manga: 'Dropped' },
 };
+const LAYOUT_PROVIDER_TYPE = 'UserLibraryListCard';
+const LAYOUT_WIDTH = Dimensions.get('window').width;
+const LAYOUT_HEIGHT = 98;
 
-export class UserLibraryListScreenComponent extends React.Component {
-  static propTypes = {
-    currentUser: PropTypes.object.isRequired,
-    fetchUserLibraryByType: PropTypes.func.isRequired,
-    navigation: PropTypes.object.isRequired,
-    libraryEntries: PropTypes.object.isRequired,
-    libraryStatus: PropTypes.string.isRequired,
-    libraryType: PropTypes.string.isRequired,
-    updateUserLibraryEntry: PropTypes.func.isRequired,
-    loading: PropTypes.bool,
-  };
-
-  static defaultProps = {
-    loading: false,
-  };
-
+export class UserLibraryListScreenComponent extends Component {
   static navigationOptions = (props) => {
     const { libraryStatus, libraryType, profile } = props.navigation.state.params;
     return {
@@ -48,23 +35,67 @@ export class UserLibraryListScreenComponent extends React.Component {
     };
   };
 
+  static propTypes = {
+    currentUser: PropTypes.object.isRequired,
+    fetchUserLibraryByType: PropTypes.func.isRequired,
+    navigation: PropTypes.object.isRequired,
+    libraryEntries: PropTypes.object.isRequired,
+    libraryStatus: PropTypes.string.isRequired,
+    libraryType: PropTypes.string.isRequired,
+    updateUserLibraryEntry: PropTypes.func.isRequired,
+    loading: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    loading: false,
+  };
+
   state = {
-    movedEntries: [],
+    dataProvider: null,
     isSwiping: false,
-  }
+  };
 
-  onSwipingItem = (isSwiping) => {
-    this.setState({ isSwiping });
-  }
+  movedEntries = [];
 
-  debouncedFetch = debounce(() => {
-    const { profile } = this.props.navigation.state.params;
-    this.props.fetchUserLibraryByType({
-      userId: profile.id,
-      library: this.props.libraryType,
-      status: this.props.libraryStatus,
+  componentWillMount() {
+    const dataProvider = new DataProvider((rowA, rowB) => {
+      return rowA.id !== rowB.id
+    }).cloneWithRows(this.props.libraryEntries.data.slice());
+    this.setState({ dataProvider });
+
+    // Only one type of row item
+    this.layoutProvider = new LayoutProvider(() => LAYOUT_PROVIDER_TYPE, (type, dim, index) => {
+      switch (type) {
+        case LAYOUT_PROVIDER_TYPE:
+          dim.width = LAYOUT_WIDTH;
+          dim.height = LAYOUT_HEIGHT;
+          // We need to increase the height if the card is showing the `Moved` text.
+          const data = this.state.dataProvider.getDataForIndex(index);
+          if (data.status !== this.props.libraryStatus) {
+            dim.height = LAYOUT_HEIGHT + 27;
+          }
+          break;
+        default:
+          dim.width = 0;
+          dim.height = 0;
+          break;
+      }
     });
-  }, 100);
+  }
+
+  componentWillReceiveProps(newProps) {
+    // Length is different, this will happen from a pagination event,
+    // a removal of an entry, or a status update.
+    const lengthA = this.props.libraryEntries.data.length;
+    const lengthB = newProps.libraryEntries.data.length;
+    if (lengthA !== lengthB) {
+      const data = newProps.libraryEntries.data.slice();
+      this.movedEntries.forEach(({ entry, index }) => {
+        data.splice(index, 0, entry);
+      });
+      this.setState({ dataProvider: this.state.dataProvider.cloneWithRows(data) });
+    }
+  }
 
   // wrap the dispatch with a function that checks for "moved" entries (ie: current -> completed)
   // when a library entry is moved, add it the the moved entries array in state. once we
@@ -73,16 +104,16 @@ export class UserLibraryListScreenComponent extends React.Component {
   // they've been completely removed from their respective arrays in redux and we only want to show
   // that something has been moved until the user navigates away
   updateUserLibraryEntry = async (type, status, updates) => {
-    const { libraryEntries, libraryStatus } = this.props;
-    const { movedEntries } = this.state;
-
+    const { libraryStatus } = this.props;
+    const { dataProvider } = this.state;
     let movedEntry;
     let movedFromIndex;
-    const movedEntryIndex = movedEntries.findIndex(m => m.entry.id === updates.id);
+    const movedEntryIndex = this.movedEntries.findIndex(m => m.entry.id === updates.id);
+
     // the first thing we want to check for is if the entry has already been moved. if it has,
     // we want to remove it from the movedEntries array since properties are changing on it
     if (movedEntryIndex > -1) {
-      movedEntry = movedEntries.splice(movedEntryIndex, 1)[0].entry;
+      movedEntry = this.movedEntries.splice(movedEntryIndex, 1)[0].entry;
       movedFromIndex = movedEntry.index;
     }
 
@@ -92,15 +123,15 @@ export class UserLibraryListScreenComponent extends React.Component {
       // if we're not dealing with an entry that's already moved once, go find the entry in
       // the current library entry list
       if (!movedEntry) {
-        movedFromIndex = libraryEntries.data.findIndex(
+        movedFromIndex = dataProvider.getAllData().findIndex(
           libraryEntry => libraryEntry.id === updates.id,
         );
-        movedEntry = libraryEntries.data[movedFromIndex];
+        movedEntry = dataProvider.getDataForIndex(movedFromIndex);
       }
 
       // finally push the moved entry onto the movedEntries array in state and override it with
       // the updates
-      movedEntries.push({
+      this.movedEntries.push({
         entry: {
           ...movedEntry,
           ...updates,
@@ -110,13 +141,21 @@ export class UserLibraryListScreenComponent extends React.Component {
     }
 
     await this.props.updateUserLibraryEntry(type, status, updates);
+  }
 
-    this.setState({ movedEntries });
+  onSwipingItem = (isSwiping) => {
+    this.setState({ isSwiping });
+  }
+
+  onEndReached = () => {
+    const { loading, libraryEntries } = this.props;
+    if (!loading && libraryEntries.fetchMore) {
+      libraryEntries.fetchMore();
+    }
   }
 
   renderSearchBar = () => {
     const { profile } = this.props.navigation.state.params;
-
     return (
       <UserLibrarySearchBox
         navigation={this.props.navigation}
@@ -128,17 +167,16 @@ export class UserLibraryListScreenComponent extends React.Component {
 
   renderFooter = () => {
     const { loading } = this.props;
-    if (!loading) return (<View />);
-
+    if (!loading) return <View />;
     return (
       <ActivityIndicator color="white" style={{ paddingVertical: 16 }} />
     );
   }
 
-  renderItem = ({ item }) => (
+  renderRow = (_type, data) => (
     <UserLibraryListCard
       currentUser={this.props.currentUser}
-      libraryEntry={item}
+      libraryEntry={data}
       libraryStatus={this.props.libraryStatus}
       libraryType={this.props.libraryType}
       navigate={this.props.navigation.navigate}
@@ -146,34 +184,23 @@ export class UserLibraryListScreenComponent extends React.Component {
       updateUserLibraryEntry={this.updateUserLibraryEntry}
       onSwipingItem={this.onSwipingItem}
     />
-  );
+  )
 
   render() {
-    const { libraryEntries, loading } = this.props;
-    const renderData = libraryEntries.data.slice();
-    this.state.movedEntries.forEach(({ entry, index }) => {
-      renderData.splice(index, 0, entry);
-    });
-
+    const { dataProvider, isSwiping } = this.state;
     return (
       <View style={styles.container}>
-        <View>
-          <FlatList
-            ListHeaderComponent={this.renderSearchBar}
-            ListFooterComponent={this.renderFooter}
-            data={renderData}
-            initialNumToRender={10}
-            initialScrollIndex={0}
-            keyExtractor={idExtractor}
-            onEndReached={() => {
-              if (!loading && libraryEntries.fetchMore) libraryEntries.fetchMore();
-            }}
-            onEndReachedThreshold={0.75}
-            removeClippedSubviews={false}
-            renderItem={this.renderItem}
-            scrollEnabled={!this.state.isSwiping}
-          />
-        </View>
+        {this.renderSearchBar()}
+        <RecyclerListView
+          renderAheadOffset={LAYOUT_HEIGHT * 4}
+          layoutProvider={this.layoutProvider}
+          dataProvider={dataProvider}
+          rowRenderer={this.renderRow}
+          onEndReached={this.onEndReached}
+          onEndReachedThreshold={LAYOUT_HEIGHT * 2}
+          renderFooter={this.renderFooter}
+          scrollEnabled={!isSwiping}
+        />
       </View>
     );
   }

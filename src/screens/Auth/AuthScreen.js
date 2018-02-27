@@ -44,14 +44,14 @@ class AuthScreen extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.fbuser.name) {
+    if (this.props.fbuser && this.props.fbuser.name) {
       this.populateFB(this.props.fbuser);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { signingIn, signingUp, loginError, signupError, fbuser } = nextProps;
-    if (fbuser.name && fbuser.name !== this.props.fbuser.name) {
+    if (fbuser && fbuser.name && fbuser.name !== (this.props.fbuser && this.props.fbuser.name)) {
       this.populateFB(fbuser);
     }
     // current login/signup process triggers falsy toast

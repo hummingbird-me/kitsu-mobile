@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, Image, FlatList, Platform } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
@@ -53,12 +53,14 @@ class RegistrationScreen extends React.Component {
   };
 
   animateLists = () => {
+    const time = Platform.select({ ios: 120, android: 40 });
+    const offsetBy = Platform.select({ ios: 4, android: 1 });
     let offset = 4;
     this.animation = setInterval(() => {
       this.animeList.scrollToOffset({ offset, animated: true });
       this.mangaList.scrollToOffset({ offset, animated: true });
-      offset += 4;
-    }, 120);
+      offset += offsetBy;
+    }, time);
   };
 
   loginFacebook = () => {

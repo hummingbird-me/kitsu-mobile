@@ -142,6 +142,13 @@ class QuickUpdate extends Component {
     this.setState({ editorText });
   };
 
+  onMediaTapped = (media) => {
+    const { navigation } = this.props;
+    if (media && navigation) {
+      navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type });
+    }
+  }
+
   rateEntry = async (ratingTwenty) => {
     const { library } = this.state;
     const entry = library[this.carousel.currentIndex];
@@ -461,7 +468,7 @@ class QuickUpdate extends Component {
     );
   };
 
-  renderItem = (data) => (
+  renderItem = data => (
     <QuickUpdateCard
       ratingSystem={this.props.ratingSystem}
       data={data}
@@ -469,6 +476,7 @@ class QuickUpdate extends Component {
       onEndEditing={this.showHeader}
       onMarkComplete={this.markComplete}
       onRate={this.rateEntry}
+      onMediaTapped={this.onMediaTapped}
     />
   );
 
@@ -640,10 +648,10 @@ class QuickUpdate extends Component {
             <View style={styles.socialContent}>
               {(!isLoadingFeed || isLoadingNextFeedPage) ? (
                 <KeyboardAwareFlatList
-                  data={discussions}
+                  data={discussions || []}
                   keyExtractor={item => item.id}
                   renderItem={this.renderPostItem}
-                  onEndReached={() => discussions.length && this.fetchNextFeedPage()}
+                  onEndReached={() => discussions && discussions.length && this.fetchNextFeedPage()}
                   onEndReachedThreshold={0.6}
                   ListHeaderComponent={
                     <CreatePostRow

@@ -40,6 +40,21 @@ class Groups extends PureComponent {
     }
   }
 
+  renderGroupItem = ({ item }) => {
+    if (!item || !item.group) return null;
+    return (
+      <MediaRow
+        imageVariant="thumbnail"
+        title={item.group.name}
+        summary={item.group.about}
+        thumbnail={{
+          uri: (item.group.avatar && item.group.avatar.large) || defaultAvatar,
+        }}
+        summaryLines={2}
+      />
+    );
+  }
+
   render() {
     const { loading, data } = this.state;
 
@@ -51,17 +66,7 @@ class Groups extends PureComponent {
       <TabContainer>
         <FlatList
           data={data}
-          renderItem={({ item }) => (
-            <MediaRow
-              imageVariant="thumbnail"
-              title={item.group.name}
-              summary={item.group.about}
-              thumbnail={{
-                uri: item.group.avatar.large ? item.group.avatar.large : defaultAvatar,
-              }}
-              summaryLines={2}
-            />
-          )}
+          renderItem={this.renderGroupItem}
           ItemSeparatorComponent={() => <RowSeparator />}
         />
       </TabContainer>
