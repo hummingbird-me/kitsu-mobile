@@ -42,11 +42,12 @@ class MediaModal extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { algoliaKeys } = nextProps;
     // Check if we get new algolia keys
-    if (this.props.algoliaKeys !== nextProps.algoliaKeys) {
+    if (this.props.algoliaKeys !== algoliaKeys) {
       this.setState({
-        apiKey: nextProps.algoliaKeys.media.key,
-        indexName: nextProps.algoliaKeys.media.index,
+        apiKey: algoliaKeys.media && algoliaKeys.media.key,
+        indexName: algoliaKeys.media && algoliaKeys.media.index,
       });
     }
   }
