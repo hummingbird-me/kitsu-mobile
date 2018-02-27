@@ -4,6 +4,7 @@ import { Image, Platform } from 'react-native';
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
+import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
 import quickUpdateTabBarImage from 'kitsu/assets/img/tabbar_icons/update.png';
 import navigationOptions from './navigationOptions';
@@ -15,6 +16,9 @@ const QuickUpdateStack = DismissableStackNavigator(
     },
     ProfilePages: {
       screen: ProfilePages,
+    },
+    MediaPages: {
+      screen: MediaPages,
     },
     // @TODO: Handle all the sub-profile pages, should work on an easier way than c/p.
     PostDetails: {

@@ -33,12 +33,14 @@ export default class QuickUpdateCard extends PureComponent {
     onEndEditing: PropTypes.func,
     onMarkComplete: PropTypes.func,
     onRate: PropTypes.func.isRequired,
+    onMediaTapped: PropTypes.func,
   };
 
   static defaultProps = {
     onBeginEditing: () => { },
     onEndEditing: () => { },
     onMarkComplete: () => { },
+    onMediaTapped: () => { },
   };
 
   state = {
@@ -71,6 +73,12 @@ export default class QuickUpdateCard extends PureComponent {
   onMarkComplete = () => {
     this.props.onMarkComplete(this.props.data.item);
   };
+
+  onMediaTapped = (media) => {
+    if (media) {
+      this.props.onMediaTapped(media);
+    }
+  }
 
   updateTextAndToggle = () => {
     // Restore any previous text, and then toggle the editor.
@@ -141,11 +149,15 @@ export default class QuickUpdateCard extends PureComponent {
               style={styles.posterImageGradient}
             />
             <View style={{ flexDirection: 'row' }}>
-              <Image source={{ uri: squareImage }} style={styles.avatarImage} />
+              <TouchableOpacity onPress={() => this.onMediaTapped(media)}>
+                <Image source={{ uri: squareImage }} style={styles.avatarImage} />
+              </TouchableOpacity>
               <View style={styles.descriptionRow}>
-                <Text style={styles.seriesTitle} numberOfLines={1}>
-                  {media.canonicalTitle}
-                </Text>
+                <TouchableOpacity onPress={() => this.onMediaTapped(media)}>
+                  <Text style={styles.seriesTitle} numberOfLines={1}>
+                    {media.canonicalTitle}
+                  </Text>
+                </TouchableOpacity>
                 {/* Progress Bar */}
                 {unitCount > 0 && (
                   <View style={styles.progressBarContainer}>
