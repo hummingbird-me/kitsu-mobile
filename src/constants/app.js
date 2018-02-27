@@ -19,9 +19,11 @@ let coverHeight = originalCoverHeight;
 // This might be due to the size of the image loaded in.
 // Thus we decrease the dimesions based on the OS version.
 if (Platform.OS === 'android') {
+  // Android 4.4 and lower
   if (Platform.Version <= 19) {
     coverWidth /= 4;
     coverHeight /= 4;
+  // Android 6.0 and lower
   } else if (Platform.Version <= 23) {
     coverWidth /= 2;
     coverHeight /= 2;
