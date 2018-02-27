@@ -148,7 +148,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
     await updateUserLibraryEntry(libraryType, libraryStatus, {
       id: libraryEntry.id,
       finishedAt,
-      notes: notes.trim(),
+      notes: (notes && notes.trim()),
       progress,
       ratingTwenty,
       reconsumeCount,
