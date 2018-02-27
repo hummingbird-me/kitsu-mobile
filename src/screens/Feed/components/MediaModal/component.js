@@ -41,6 +41,16 @@ class MediaModal extends PureComponent {
     this.doSearch(this.state.query, this.state.page);
   }
 
+  componentWillReceiveProps(nextProps) {
+    // Check if we get new algolia keys
+    if (this.props.algoliaKeys !== nextProps.algoliaKeys) {
+      this.setState({
+        apiKey: nextProps.algoliaKeys.media.key,
+        indexName: nextProps.algoliaKeys.media.index,
+      });
+    }
+  }
+
   doSearch = (query, page) => {
     const { apiKey, indexName } = this.state;
     const algoliaClient = algolia(kitsuConfig.algoliaAppId, apiKey);

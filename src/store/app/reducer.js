@@ -1,7 +1,10 @@
 import * as types from 'kitsu/store/types';
 
 const initialState = {
-  algoliaKeys: {},
+  algoliaKeys: {
+    media: {},
+    users: {},
+  },
   pushNotificationEnabled: false,
 };
 
