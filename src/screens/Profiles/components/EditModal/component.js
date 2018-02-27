@@ -6,7 +6,7 @@ import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
 import { Input } from 'kitsu/components/Input';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { defaultAvatar, defaultCover, coverImageDimensions } from 'kitsu/constants/app';
+import { defaultAvatar, defaultCover, originalCoverImageDimensions } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
@@ -102,7 +102,9 @@ export class EditModal extends Component {
       <View style={styles.profileCoverWrapper}>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => this.onMediaSelect('coverImage', coverImageDimensions.width, coverImageDimensions.height)}
+          onPress={() =>
+            this.onMediaSelect('coverImage', originalCoverImageDimensions.width, originalCoverImageDimensions.height)
+          }
         >
           <Image
             style={styles.profileCover}
