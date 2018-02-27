@@ -4,11 +4,11 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import { statusBarHeight } from 'kitsu/constants/app';
 
 export const styles = StyleSheet.create({
-  modalWrapper: {
+  wrapper: {
     flex: 1,
     backgroundColor: colors.transparent,
   },
-  modalContent: {
+  content: {
     paddingTop: statusBarHeight + (isX ? paddingX : 0),
     paddingHorizontal: 12,
     height: 80 + (isX ? paddingX : 0),
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'rgb(46, 34, 45)',
   },
-  modalText: {
+  text: {
     color: colors.offWhite,
     fontWeight: '700',
     fontFamily: 'OpenSans',

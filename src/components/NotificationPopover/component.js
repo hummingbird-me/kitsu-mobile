@@ -10,9 +10,9 @@ export const NotificationPopover = ({ style, onRequestClose, data }) => {
 
   return (
     <View style={style}>
-      <TouchableOpacity activeOpacity={1} onPress={onRequestClose} style={styles.modalWrapper}>
+      <TouchableOpacity activeOpacity={1} onPress={onRequestClose} style={styles.wrapper}>
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-        <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.modalContent}>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.content}>
           <View style={{ paddingRight: 10 }}>
             <Image style={styles.userAvatar} source={{ uri: actorAvatar }} />
           </View>
@@ -21,7 +21,7 @@ export const NotificationPopover = ({ style, onRequestClose, data }) => {
           </Text>
           <Text style={styles.activityText}>
             {others && <Text>and {others}</Text>}
-            <Text style={styles.modalText}>{text}</Text>
+            <Text style={styles.text}>{text}</Text>
           </Text>
         </TouchableOpacity>
       </TouchableOpacity>
