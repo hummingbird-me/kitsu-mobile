@@ -54,6 +54,23 @@ export class UserLibraryListCard extends React.Component {
     isSliderActive: false,
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { libraryEntry, libraryType } = nextProps;
+    if (this.props.libraryEntry.id !== libraryEntry.id) {
+      const mediaData = libraryEntry[libraryType];
+      const maxProgress = mediaData.episodeCount || mediaData.chapterCount;
+
+      this.setState({
+        libraryStatus: libraryEntry.status,
+        progress: libraryEntry.progress,
+        progressPercentage: Math.floor(
+          (libraryEntry.progress / maxProgress) * 100,
+        ),
+        ratingTwenty: libraryEntry.ratingTwenty
+      });
+    }
+  }
+
   onProgressValueChanged = (newProgress) => {
     const maxProgress = this.getMaxProgress();
     const progressPercentage = Math.floor((newProgress / maxProgress) * 100);
