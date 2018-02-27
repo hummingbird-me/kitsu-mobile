@@ -282,15 +282,17 @@ class MediaScreen extends Component {
     if (mediaRelationships && mediaRelationships.length === 0) return;
     if (mediaRelationships) {
       more = mediaRelationships.map((item) => {
-        const title = item.destination.titles.en || item.destination.titles.en_jp;
+        if (!item || !item.destination) return null;
+        const { destination } = item;
+        const title = (destination.titles && (destination.titles.en || destination.titles.en_jp)) || '-';
         return {
-          image: item.destination.posterImage.original,
+          image: destination.posterImage && destination.posterImage.original,
           title,
-          id: item.destination.id,
-          type: item.destination.type,
-          key: item.destination.id,
+          id: destination.id,
+          type: destination.type,
+          key: destination.id,
         };
-      });
+      }).filter(i => !isNull(i));
     }
     return (
       <CardFull single singleText="View All" heading="More from this series">

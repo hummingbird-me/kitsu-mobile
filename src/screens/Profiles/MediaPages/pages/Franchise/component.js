@@ -23,10 +23,12 @@ const ROLE_LOOKUP_TABLE = {
   anime_adaptation: 'Anime',
   manga_adaptation: 'Manga',
   character: 'Character',
-  other: 'Other'
+  other: 'Other',
 };
 
 const renderItem = (item, navigation) => {
+  if (!item || !item.destination) return null;
+
   const type = upperFirst(item.destination.subtype);
   const started = item.destination.startDate;
   const year = started ? moment(started).year() : '';
@@ -47,11 +49,11 @@ const renderItem = (item, navigation) => {
         summary={item.destination.synopsis}
         subtitle={subtitle}
         summaryLines={4}
-        thumbnail={{ uri: item.destination.posterImage.large }}
+        thumbnail={{ uri: item.destination.posterImage && item.destination.posterImage.large }}
       />
     </TouchableOpacity>
   );
-}
+};
 
 export const component = ({ media: { mediaRelationships }, navigation }) => (
   <TabContainer light padded>

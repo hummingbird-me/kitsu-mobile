@@ -41,7 +41,7 @@ class Groups extends PureComponent {
   }
 
   renderGroupItem = ({ item }) => {
-    if (!(item && item.group)) return null;
+    if (!item || !item.group) return null;
     return (
       <MediaRow
         imageVariant="thumbnail"
