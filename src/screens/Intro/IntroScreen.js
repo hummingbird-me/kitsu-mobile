@@ -82,8 +82,8 @@ export default class OnboardingScreen extends React.Component {
               {this.renderStep()}
             </ScrollView>
           </View>
+          <View style={styles.dotContainer}>{this.renderDots()}</View>
           <View style={styles.buttonsWrapper}>
-            <View style={styles.dotContainer}>{this.renderDots()}</View>
             <Button
               style={styles.getStartedButton}
               title={'Get Started'}
