@@ -33,7 +33,8 @@ class Episodes extends PureComponent {
               title={item.canonicalTitle || `${prefix} ${item.number}`}
               summary={item.synopsis || media.synopsis}
               thumbnail={{
-                uri: item.thumbnail ? item.thumbnail.original : media.posterImage.large,
+                uri: (item.thumbnail && item.thumbnail.original) ||
+                    (media && media.posterImage && media.posterImage.large),
               }}
               summaryLines={2}
             />

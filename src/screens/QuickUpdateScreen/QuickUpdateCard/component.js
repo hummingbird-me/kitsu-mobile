@@ -136,9 +136,10 @@ export default class QuickUpdateCard extends PureComponent {
     const isCompleted = data.item.status === 'completed';
     const nextProgress = progress + 1;
 
-    const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) || media.posterImage.large;
+    const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) ||
+                          (media && media.posterImage && media.posterImage.large);
 
-    const squareImage = media.posterImage.small;
+    const squareImage = media && media.posterImage && media.posterImage.small;
     return (
       <View key={data.item.id} style={styles.wrapper}>
         {/* Episode Landscape Image */}
