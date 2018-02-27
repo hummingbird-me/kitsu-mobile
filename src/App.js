@@ -9,14 +9,12 @@ import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
-import store from './store/config';
-import Root from './Router';
-import { NotificationModal } from './components/NotificationModal';
-import * as types from './store/types';
-import { markNotifications } from './store/feed/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
-
+import store from './store/config';
+import Root from './Router';
+import * as types from './store/types';
+import { markNotifications } from './store/feed/actions';
 
 // eslint-disable-next-line
 console.disableYellowBox = true;
