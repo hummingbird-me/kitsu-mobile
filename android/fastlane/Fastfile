@@ -88,12 +88,23 @@ platform :android do
   desc "Release a new version to the Google Play"
   lane :release do
     build()
+
+    # For now this flow uses alpha since we can directly promote the app to publish from alpha
+    # However in the future this probably needs a revisit so the rollout process is easier
+    # TODO: Fix this flow up
     supply(
+      track: 'alpha',
       skip_upload_metadata: true,
       skip_upload_images: true,
-      skip_upload_screenshots: true,
-      check_superseded_tracks: true
+      skip_upload_screenshots: true
     )
+    
+    # Disabled this because it didn't seem to work :(
+    # supply(
+    #   skip_upload_metadata: true,
+    #   skip_upload_images: true,
+    #   skip_upload_screenshots: true
+    # )
   end
 
 
