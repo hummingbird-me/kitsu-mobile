@@ -1,8 +1,11 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX, safeAreaInsetX } from 'kitsu/utils/isX';
 
 export default StyleSheet.create({
   container: {
+    paddingTop: isX ? safeAreaInsetX.top : 0,
+    paddingBottom: isX ? safeAreaInsetX.bottom : 0,
     flex: 1,
     backgroundColor: colors.darkPurple,
   },

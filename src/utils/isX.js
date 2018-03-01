@@ -9,6 +9,7 @@ const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
 const { PlatformConstants = {} } = NativeModules;
 const { minor = 0 } = PlatformConstants.reactNativeVersion || {};
 
+export const safeAreaInsetX = { top: 24, bottom: 34 };
 export const paddingX = 20;
 export const isX = (() => {
   if (Platform.OS === 'web') return false;
