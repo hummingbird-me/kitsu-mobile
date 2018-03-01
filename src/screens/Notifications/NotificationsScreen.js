@@ -437,10 +437,12 @@ export const parseNotificationData = (activities, currentUserId) => {
       } else {
         notificationData.text = 'replied to';
         if (target && target[0] && target[0].user) {
-          if (target[0].user.id === actor.id) {
+          if (actor && target[0].user.id === actor.id) {
             notificationData.text = `${notificationData.text} their`;
           } else if (target[0].user.id === currentUserId) {
             notificationData.text = `${notificationData.text} your`;
+          } else {
+            notificationData.text = `${notificationData.text} a`;
           }
         } else {
           notificationData.text = `${notificationData.text} a`;
