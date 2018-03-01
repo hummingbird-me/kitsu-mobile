@@ -12,9 +12,6 @@ const SignupForm = ({
   loading,
   onSignInFacebook,
   signingInFacebook,
-  onBirthdayButtonPressed,
-  birthday,
-  isBirthdaySet,
   onPressTerms,
 }) => (
   <View>
@@ -45,12 +42,6 @@ const SignupForm = ({
       value={data.confirmPassword}
       onChangeText={text => handleChange(text, 'confirmPassword')}
       autoCapitalize="none"
-    />
-    <Button
-      title={birthday}
-      onPress={onBirthdayButtonPressed}
-      style={styles.pickerButton}
-      titleStyle={[styles.pickerButtonTitle, { color: isBirthdaySet ? '#333' : 'grey' }]}
     />
     <Button
       loading={loading}
