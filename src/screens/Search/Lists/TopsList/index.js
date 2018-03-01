@@ -191,8 +191,8 @@ class TopsList extends PureComponent {
         image: require('kitsu/assets/img/streaming-services/funimation.png'),
       },
       {
-        name: 'viewster',
-        image: require('kitsu/assets/img/streaming-services/viewster.png'),
+        name: 'hidive',
+        image: require('kitsu/assets/img/streaming-services/hidive.png'),
       },
     ].map(streamer => ({
       ...streamer,
