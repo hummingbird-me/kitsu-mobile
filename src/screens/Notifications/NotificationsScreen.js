@@ -394,7 +394,7 @@ export const parseNotificationData = (activities, currentUserId) => {
   const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
 
   // actor
-  notificationData.actorName = actor && `${actor.name} `;
+  notificationData.actorName = (actor && `${actor.name} `) || '-';
 
   notificationData.actorAvatar =
     actor && actor.avatar
