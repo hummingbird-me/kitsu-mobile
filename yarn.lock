@@ -3525,7 +3525,7 @@ fbjs@0.8.12:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
-fbjs@^0.8.12, fbjs@^0.8.16, fbjs@^0.8.4:
+fbjs@^0.8.12, fbjs@^0.8.16, fbjs@^0.8.3, fbjs@^0.8.4:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
@@ -7059,6 +7059,12 @@ react-native-vector-icons@~4.1.1:
     lodash "^4.0.0"
     prop-types "^15.5.8"
     yargs "^6.3.0"
+
+react-native-wkwebview-reborn@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/react-native-wkwebview-reborn/-/react-native-wkwebview-reborn-1.14.0.tgz#29f948fddf866665f9654dbf4c4632d8c262ae9e"
+  dependencies:
+    fbjs "^0.8.3"
 
 react-native-youtube@^1.0.1:
   version "1.0.1"
