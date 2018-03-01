@@ -120,7 +120,7 @@ class MediaModal extends PureComponent {
         <View style={styles.pickerRow}>
           <Layout.RowWrap alignItems="center">
             <ProgressiveImage
-              source={{ uri: item.posterImage.tiny }}
+              source={{ uri: item.posterImage && item.posterImage.tiny }}
               style={{ width: 60, height: 90 }}
             />
             <Layout.RowMain>
