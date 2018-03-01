@@ -25,9 +25,6 @@ import moment from 'moment';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
-const MINIMUM_DATE = new Date(moment().subtract(100, 'years'));
-const MAXIMUM_DATE = new Date(moment().subtract(13, 'years'));
-
 class AuthScreen extends React.Component {
   state = {
     authType: this.props.navigation.state.params.authType,
@@ -36,9 +33,6 @@ class AuthScreen extends React.Component {
     username: '',
     password: '',
     confirmPassword: '',
-    birthday: MAXIMUM_DATE,
-    isBirthdaySet: false,
-    showDateModalIOS: false,
     toastVisible: false,
     toastTitle: '',
   };
@@ -71,15 +65,14 @@ class AuthScreen extends React.Component {
 
   onSubmitSignup = (isFb) => {
     const { navigation } = this.props;
-    const { email, username, password, confirmPassword, birthday, isBirthdaySet } = this.state;
+    const { email, username, password, confirmPassword } = this.state;
     if (isFb) {
       this.props.loginUser(null, navigation, 'login');
     } else if (
       isEmpty(email) ||
       isEmpty(username) ||
       isEmpty(password) ||
-      isEmpty(confirmPassword) ||
-      !isBirthdaySet
+      isEmpty(confirmPassword)
     ) {
       this.setState({
         toastTitle: "Inputs can't be blank",
@@ -91,8 +84,7 @@ class AuthScreen extends React.Component {
         toastVisible: true,
       });
     } else {
-      const ISOBirthday = new Date(moment(birthday).format('YYYY-MM-DD')).toISOString(); // remove offsets caused by timezones.
-      this.props.createUser({ email, username, password, birthday: ISOBirthday }, navigation);
+      this.props.createUser({ email, username, password }, navigation);
     }
   };
 
@@ -124,42 +116,6 @@ class AuthScreen extends React.Component {
 
   onForgotPassword = () => {
     this.props.navigation.navigate('Recovery');
-  };
-
-  onBirthdayButtonPressed = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const { action, year, month, day } = await DatePickerAndroid.open({
-          // Use `new Date()` for current date.
-          // May 25 2020. Month 0 is January.
-          minDate: MINIMUM_DATE,
-          maxDate: MAXIMUM_DATE,
-          date: MAXIMUM_DATE,
-        });
-        if (action !== DatePickerAndroid.dismissedAction) {
-          // Selected year, month (0-11), day
-          this.setState({
-            birthday: new Date(year, month, day),
-            isBirthdaySet: true,
-          });
-        }
-      } catch ({ code, message }) {
-        console.warn('Cannot open date picker', message);
-      }
-    } else {
-      this.setState({ showDateModalIOS: true });
-    }
-  };
-
-  onDateModalIOSConfirm = () => {
-    this.setState({
-      showDateModalIOS: false,
-      isBirthdaySet: true,
-    });
-  };
-
-  onDateModalIOSCancel = () => {
-    this.setState({ showDateModalIOS: false });
   };
 
   onDismiss = () => {
@@ -194,10 +150,7 @@ class AuthScreen extends React.Component {
     const { signingIn, signingUp, loadFBuser } = this.props;
     const {
       authType,
-      birthday,
-      isBirthdaySet,
       loading,
-      showDateModalIOS,
       toastVisible,
       toastTitle,
     } = this.state;
@@ -238,9 +191,6 @@ class AuthScreen extends React.Component {
                   loading={signingUp || loading}
                   signingInFacebook={loadFBuser}
                   onSignInFacebook={this.onSignInFacebook}
-                  birthday={isBirthdaySet ? birthday.toLocaleDateString() : 'Birthday'} // Placeholder
-                  isBirthdaySet={isBirthdaySet} // use placeholder styles
-                  onBirthdayButtonPressed={this.onBirthdayButtonPressed}
                   onPressTerms={this.onPressTerms}
                 />
               ) : (
@@ -257,24 +207,6 @@ class AuthScreen extends React.Component {
             </View>
           </View>
         </AuthWrapper>
-        <Modal
-          visible={showDateModalIOS}
-          title={'Your Birth Date'}
-          bodyStyle={styles.dateModalBody}
-          onCancel={this.onDateModalIOSCancel}
-          onConfirm={this.onDateModalIOSConfirm}
-          onRequestClose={this.onDateModalIOSCancel}
-        >
-          <DatePickerIOS
-            date={birthday}
-            mode="date"
-            minimumDate={MINIMUM_DATE}
-            maximumDate={MAXIMUM_DATE}
-            onDateChange={(date) => {
-              this.setState({ birthday: date, isBirthdaySet: true });
-            }}
-          />
-        </Modal>
         <Toast
           visible={toastVisible}
           title={toastTitle}
