@@ -71,13 +71,12 @@ export const resolveAccountConflicts = account => async (dispatch, getState) => 
 
 export const createUser = (data, nav) => async (dispatch, getState) => {
   dispatch({ type: types.CREATE_USER });
-  const { username, email, password, birthday } = data;
+  const { username, email, password } = data;
   const { id, gender } = getState().auth.fbuser;
   const userObj = {
     name: username,
     email,
     password,
-    birthday,
   };
 
   if (id) {
