@@ -33,6 +33,11 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
     @Override
+    protected String getJSMainModuleName() {
+      return "index";
+    }
+
+    @Override
     protected String getJSBundleFile() {
       return CodePush.getJSBundleFile();
     }
