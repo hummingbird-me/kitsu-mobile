@@ -46,6 +46,7 @@ class Reactions extends PureComponent {
     return (
       <TabContainer>
         <FlatList
+          listKey="reactions"
           data={data}
           renderItem={({ item }) => {
             const title =

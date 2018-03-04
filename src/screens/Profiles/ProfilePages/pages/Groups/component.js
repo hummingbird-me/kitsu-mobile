@@ -65,6 +65,7 @@ class Groups extends PureComponent {
     return (
       <TabContainer>
         <FlatList
+          listKey="groups"
           data={data}
           renderItem={this.renderGroupItem}
           ItemSeparatorComponent={() => <RowSeparator />}
