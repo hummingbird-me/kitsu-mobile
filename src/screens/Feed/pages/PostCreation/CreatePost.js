@@ -64,7 +64,7 @@ class CreatePost extends React.PureComponent {
         color: '#FFFFFF',
         fontSize: 15,
       },
-      headerLeft: <HeaderButton onPress={() => navigation.goBack()} title="Cancel" />,
+      headerLeft: <HeaderButton onPress={() => navigation.goBack(null)} title="Cancel" />,
       headerRight: (
         <HeaderButton
           highlighted

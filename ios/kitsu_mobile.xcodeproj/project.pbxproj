@@ -63,7 +63,6 @@
 		6A7C2EB1DA0A4BB18D13C2CF /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8585F7A95063461683F52E0D /* Entypo.ttf */; };
 		6F495AA596A54B8F854436AB /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 583B3F53C44A41819581E401 /* MaterialIcons.ttf */; };
 		771B7507592545E092384234 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2221571BBEC4788A0E756DA /* libRCTOneSignal.a */; };
-		790469D4E2224D83BA4AB2F4 /* libRNShimmer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0AD57CF1A14A05AB0F02EE /* libRNShimmer.a */; };
 		7B7089D51F021B18008C298B /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B7089B11F021AF2008C298B /* libART.a */; };
 		7BE3B0DC1ECFF1DE0012FD5C /* fontello.eot in Resources */ = {isa = PBXBuildFile; fileRef = 7BE3B0D71ECFF1DE0012FD5C /* fontello.eot */; };
 		7BE3B0DD1ECFF1DE0012FD5C /* fontello.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7BE3B0D81ECFF1DE0012FD5C /* fontello.svg */; };
@@ -687,7 +686,6 @@
 				0D0FBDB10EA245D1875EF08F /* libRCTActionSheet.a in Frameworks */,
 				C6A917661F45973800722EA9 /* FBSDKCoreKit.framework in Frameworks */,
 				FD2D5EEC2CE94BD494A797F8 /* libRCTYouTube.a in Frameworks */,
-				790469D4E2224D83BA4AB2F4 /* libRNShimmer.a in Frameworks */,
 				771B7507592545E092384234 /* libRCTOneSignal.a in Frameworks */,
 				31F93FD4710E49FDA70574E3 /* libRNSentry.a in Frameworks */,
 				5B8F3A180D4E492986BEDC27 /* libimageCropPicker.a in Frameworks */,
@@ -2202,7 +2200,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-youtube/**",
-					"$(SRCROOT)/../node_modules/react-native-shimmer/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
@@ -2250,7 +2247,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-youtube/**",
-					"$(SRCROOT)/../node_modules/react-native-shimmer/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",

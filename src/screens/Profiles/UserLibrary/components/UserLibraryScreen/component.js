@@ -65,7 +65,7 @@ export class UserLibraryScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title={profile.name}
-          onClickBack={navigation.goBack}
+          onClickBack={() => navigation.goBack(null)}
         />
       ),
     };

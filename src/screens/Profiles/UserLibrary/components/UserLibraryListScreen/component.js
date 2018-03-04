@@ -29,7 +29,7 @@ export class UserLibraryListScreenComponent extends Component {
         <ProfileHeader
           profile={profile}
           title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
-          onClickBack={props.navigation.goBack}
+          onClickBack={() => props.navigation.goBack(null)}
         />
       ),
     };

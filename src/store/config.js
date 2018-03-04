@@ -1,14 +1,16 @@
 /* global __DEV__, window */
-import { applyMiddleware, compose, combineReducers, createStore } from 'redux';
-import { AsyncStorage } from 'react-native';
+import { applyMiddleware, compose, createStore } from 'redux';
+import { REHYDRATE, persistStore, persistCombineReducers } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
-import { persistStore, autoRehydrate } from 'redux-persist';
-import { REHYDRATE } from 'redux-persist/constants';
-import createActionBuffer from 'redux-action-buffer';
-
 import * as reducers from './reducers';
 
-const middlewares = [thunk, createActionBuffer(REHYDRATE)];
+const config = {
+  key: 'primary',
+  storage,
+  blacklist: ['anime', 'feed'],
+  debug: true,
+};
 
 // if (__DEV__) {
 //   const { createLogger } = require('redux-logger');
@@ -17,10 +19,10 @@ const middlewares = [thunk, createActionBuffer(REHYDRATE)];
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
-  combineReducers(reducers),
-  composeEnhancers(applyMiddleware(...middlewares), autoRehydrate()),
+  persistCombineReducers(config, reducers),
+  undefined,
+  composeEnhancers(applyMiddleware(thunk)),
 );
 
-persistStore(store, { storage: AsyncStorage, blacklist: ['anime', 'feed'] });
-
+export const persistor = persistStore(store);
 export default store;
