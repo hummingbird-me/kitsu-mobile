@@ -129,9 +129,13 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
 };
 
 export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getState) => {
-  dispatch({ type: types.FETCH_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
   const { id } = getState().user.currentUser;
   const { notifications } = getState().feed;
+
+  // Make sure we have a valid id
+  if (!id) return;
+
+  dispatch({ type: types.FETCH_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },

@@ -88,9 +88,12 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       }
     } catch (e) {
       console.log(e);
-      Sentry.captureException(e, {
+      Sentry.captureMessage('Failed to log in facebook', {
         tags: {
           type: 'facebook',
+        },
+        extra: {
+          exception: e,
         },
       });
       dispatch({
