@@ -146,6 +146,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     type: actions.fetchStart,
     library: options.library,
     status: options.status,
+    userId: options.userId,
   });
 
   try {
@@ -181,6 +182,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       },
       library: options.library,
       status: options.status,
+      userId: options.userId,
     });
   } catch (error) {
     console.error(error);
@@ -189,6 +191,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       type: actions.fetchFail,
       library: options.library,
       status: options.status,
+      userId: options.userId,
     });
   }
 };
@@ -240,12 +243,14 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
 
     dispatch({
       type: actions.fetchSuccess,
+      userId: options.userId,
     });
   } catch (error) {
     console.error(error);
     dispatch({
       error,
       type: actions.fetchFail,
+      userId: options.userId,
     });
   }
 };

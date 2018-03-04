@@ -43,10 +43,7 @@ const INITIAL_STATE = {
   manga: {},
   anime: {},
   library: {},
-  userLibrary: {
-    ...userLibraryInitial,
-    loading: false,
-  },
+  userLibrary: {},
   userLibrarySearch: {
     ...userLibraryInitial,
     loading: false,
@@ -109,9 +106,11 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userLibrary: {
-          ...userLibraryInitial,
-          loading: true,
-          userId: action.userId,
+          ...state.userLibrary,
+          [action.userId]: {
+            ...userLibraryInitial,
+            loading: true,
+          },
         },
       };
     case types.FETCH_USER_LIBRARY_SUCCESS:
@@ -119,7 +118,10 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userLibrary: {
           ...state.userLibrary,
-          loading: false,
+          [action.userId]: {
+            ...state.userLibrary[action.userId],
+            loading: false,
+          },
         },
       };
     case types.FETCH_USER_LIBRARY_FAIL:
@@ -127,7 +129,10 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userLibrary: {
           ...state.userLibrary,
-          loading: false,
+          [action.userId]: {
+            ...state.userLibrary[action.userId],
+            loading: false,
+          },
         },
       };
     case types.FETCH_USER_LIBRARY_TYPE:
@@ -135,11 +140,14 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userLibrary: {
           ...state.userLibrary,
-          [action.library]: {
-            ...state.userLibrary[action.library],
-            [action.status]: {
-              ...state.userLibrary[action.library][action.status],
-              loading: true,
+          [action.userId]: {
+            ...state.userLibrary[action.userId],
+            [action.library]: {
+              ...state.userLibrary[action.userId][action.library],
+              [action.status]: {
+                ...state.userLibrary[action.userId][action.library][action.status],
+                loading: true,
+              },
             },
           },
         },
@@ -149,13 +157,16 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userLibrary: {
           ...state.userLibrary,
-          [action.library]: {
-            ...state.userLibrary[action.library],
-            [action.status]: {
-              data: action.data,
-              fetchMore: action.fetchMore,
-              meta: action.data.meta,
-              loading: false,
+          [action.userId]: {
+            ...state.userLibrary[action.userId],
+            [action.library]: {
+              ...state.userLibrary[action.userId][action.library],
+              [action.status]: {
+                data: action.data,
+                fetchMore: action.fetchMore,
+                meta: action.data.meta,
+                loading: false,
+              },
             },
           },
         },
@@ -165,11 +176,14 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userLibrary: {
           ...state.userLibrary,
-          [action.library]: {
-            ...state.userLibrary[action.library],
-            [action.status]: {
-              ...state.userLibrary[action.library][action.status],
-              loading: false,
+          [action.userId]: {
+            ...state.userLibrary[action.userId],
+            [action.library]: {
+              ...state.userLibrary[action.userId][action.library],
+              [action.status]: {
+                ...state.userLibrary[action.userId][action.library][action.status],
+                loading: false,
+              },
             },
           },
         },
@@ -180,25 +194,28 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           ...state,
           userLibrary: {
             ...state.userLibrary,
-            [action.libraryType]: {
-              ...state.userLibrary[action.libraryType],
+            [action.userId]: {
+              ...state.userLibrary[action.userId],
+              [action.libraryType]: {
+                ...state.userLibrary[action.userId][action.libraryType],
 
-              // remove from previousLibraryEntry.status
-              [action.previousLibraryStatus]: {
-                ...state.userLibrary[action.libraryType][action.previousLibraryStatus],
-                data: removeObjectFromArray(
-                  state.userLibrary[action.libraryType][action.previousLibraryStatus].data,
-                  action.newLibraryEntry,
-                ),
-              },
+                // remove from previousLibraryEntry.status
+                [action.previousLibraryStatus]: {
+                  ...state.userLibrary[action.userId][action.libraryType][action.previousLibraryStatus],
+                  data: removeObjectFromArray(
+                    state.userLibrary[action.userId][action.libraryType][action.previousLibraryStatus].data,
+                    action.newLibraryEntry,
+                  ),
+                },
 
-              // add to newLibraryEntry.status
-              [action.newLibraryStatus]: {
-                ...state.userLibrary[action.libraryType][action.newLibraryStatus],
-                data: [
-                  { ...action.previousLibraryEntry, ...action.newLibraryEntry },
-                  ...state.userLibrary[action.libraryType][action.newLibraryStatus].data,
-                ],
+                // add to newLibraryEntry.status
+                [action.newLibraryStatus]: {
+                  ...state.userLibrary[action.userId][action.libraryType][action.newLibraryStatus],
+                  data: [
+                    { ...action.previousLibraryEntry, ...action.newLibraryEntry },
+                    ...state.userLibrary[action.userId][action.libraryType][action.newLibraryStatus].data,
+                  ],
+                },
               },
             },
           },
@@ -209,14 +226,17 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userLibrary: {
           ...state.userLibrary,
-          [action.libraryType]: {
-            ...state.userLibrary[action.libraryType],
-            [action.libraryStatus]: {
-              ...state.userLibrary[action.libraryType][action.libraryStatus],
-              data: updateObjectInArray(
-                state.userLibrary[action.libraryType][action.libraryStatus].data,
-                action.newLibraryEntry,
-              ),
+          [action.userId]: {
+            ...state.userLibrary[action.userId],
+            [action.libraryType]: {
+              ...state.userLibrary[action.userId][action.libraryType],
+              [action.libraryStatus]: {
+                ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus],
+                data: updateObjectInArray(
+                  state.userLibrary[action.userId][action.libraryType][action.libraryStatus].data,
+                  action.newLibraryEntry,
+                ),
+              },
             },
           },
         },
