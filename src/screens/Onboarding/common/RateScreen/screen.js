@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
+  ImageBackground,
   TouchableOpacity,
   Dimensions,
   Platform,
@@ -492,7 +492,7 @@ class RateScreen extends React.Component {
   renderItem = ({ item }) => {
     const { posterImage, titles } = item;
     return (
-      <Image
+      <ImageBackground
         style={styles.poster}
         source={{ uri: posterImage.large }}
       >
@@ -505,7 +505,7 @@ class RateScreen extends React.Component {
             <Text style={styles.showTitle}>{titles.en || titles.en_us || titles.en_jp || titles.ja_jp}</Text>
           </LinearGradient>
         )}
-      </Image>
+      </ImageBackground>
     );
   };
 
