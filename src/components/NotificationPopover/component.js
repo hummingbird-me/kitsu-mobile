@@ -12,7 +12,7 @@ export const NotificationPopover = ({ style, onRequestClose, data }) => {
     <View style={style}>
       <TouchableOpacity activeOpacity={1} onPress={onRequestClose} style={styles.wrapper}>
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-        <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.content}>
+        <TouchableOpacity activeOpacity={0.9} onPress={onRequestClose} style={styles.content}>
           <View style={{ paddingRight: 10 }}>
             <Image style={styles.userAvatar} source={{ uri: actorAvatar }} />
           </View>
