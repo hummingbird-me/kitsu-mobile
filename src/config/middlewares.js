@@ -79,11 +79,12 @@ export const kitsuRequestMiddleware = {
           console.log('Failed to refresh tokens: ', e);
 
           // Log to sentry
-          Sentry.captureException(e, {
+          Sentry.message('Failed to refresh token', {
             tags: {
               type: 'refresh_token',
             },
             extra: {
+              exception: e,
               originalError: error,
               request,
               headers: request.headers,

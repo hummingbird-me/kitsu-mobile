@@ -72,8 +72,12 @@ class TabsNav extends React.PureComponent {
   };
 
   componentWillMount() {
-    this.props.fetchCurrentUser();
+    this.fetchCurrentUser();
     this.props.fetchAlgoliaKeys();
+  }
+
+  fetchCurrentUser = async () => {
+    await this.props.fetchCurrentUser();
     this.props.fetchNotifications();
   }
 
