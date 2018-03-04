@@ -178,7 +178,6 @@ dependencies {
     compile project(':react-native-onesignal')
     compile project(':react-native-youtube')
     compile project(':react-native-linear-gradient')
-    compile project(':lottie-react-native')
     compile project(':react-native-fbsdk')
     compile project(':react-native-vector-icons')
     compile project(':react-native-code-push')

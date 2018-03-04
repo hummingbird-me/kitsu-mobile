@@ -21,7 +21,6 @@
     "getstream": "^3.12.3",
     "glamorous-native": "^1.2.0",
     "lodash": "^4.17.4",
-    "lottie-react-native": "^2.3.2",
     "moment": "^2.18.1",
     "native-base": "2.3.9",
     "prop-types": "^15.6.1",

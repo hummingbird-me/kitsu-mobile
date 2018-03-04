@@ -8,7 +8,6 @@ import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.microsoft.codepush.react.CodePush;
@@ -55,7 +54,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
             new ReactNativeOneSignalPackage(),
             new ReactNativeYouTube(),
             new LinearGradientPackage(),
-            new LottiePackage(),
             new FBSDKPackage(mCallbackManager),
             new VectorIconsPackage(),
             new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG)
