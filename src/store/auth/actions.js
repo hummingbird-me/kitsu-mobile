@@ -6,6 +6,7 @@ import { kitsuConfig } from 'kitsu/config/env';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboarding/actions';
 import * as types from 'kitsu/store/types';
+import { Sentry } from 'react-native-sentry';
 import { isEmpty } from 'lodash';
 
 export const refreshTokens = (forceRefresh = false) => async (dispatch, getState) => {
@@ -57,8 +58,21 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
        * Otherwise set the tokens which means a user account is already associated with the fb account.
       */
       const userFb = await loginUserFb(dispatch);
+
       if (![401, 403].includes(userFb.status)) {
         tokens = await userFb.json();
+
+        // Log sentry for empty tokens
+        if (isEmpty(tokens)) {
+          Sentry.captureMessage('Empty tokens received', {
+            tags: {
+              type: 'facebook',
+            },
+            extra: {
+              userFb,
+            },
+          });
+        }
       // We only navigate to the signup screen
       // IF `createAccount` wasn't the one that called this function
       } else if (screen !== 'signup') {
@@ -73,6 +87,15 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       }
     } catch (e) {
       console.log(e);
+      Sentry.captureException(e, {
+        tags: {
+          type: 'facebook',
+        },
+      });
+      dispatch({
+        type: types.LOGIN_USER_FAIL,
+        payload: 'Failed to login with Facebook',
+      });
     }
   }
 
@@ -122,18 +145,29 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
 
 const loginUserFb = async (dispatch) => {
   const data = await AccessToken.getCurrentAccessToken();
-  const result = await fetch(`${kitsuConfig.baseUrl}/oauth/token`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      grant_type: 'assertion',
-      assertion: data.accessToken.toString(),
-      provider: 'facebook',
-    }),
-  });
+
+  // Make sure we have a token
+  if (!data.accessToken) {
+    throw new Error('Invalid Facebook Access Token');
+  }
+
+  let result = null;
+  try {
+    result = await fetch(`${kitsuConfig.baseUrl}/oauth/token`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        grant_type: 'assertion',
+        assertion: data.accessToken.toString(),
+        provider: 'facebook',
+      }),
+    });
+  } catch (e) {
+    throw e;
+  }
   // Create a graph request asking for user information with a callback to handle the response.
   dispatch({ type: types.GET_FBUSER });
   const infoRequest = new GraphRequest(
@@ -148,7 +182,11 @@ const loginUserFb = async (dispatch) => {
       },
     },
     (error, fbdata) => {
-      dispatch({ type: types.GET_FBUSER_SUCCESS, payload: fbdata });
+      if (error) {
+        dispatch({ type: types.GET_FBUSER_FAIL, payload: error });
+      } else {
+        dispatch({ type: types.GET_FBUSER_SUCCESS, payload: fbdata });
+      }
     },
   );
   // Start the graph request.
