@@ -70,6 +70,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
             },
             extra: {
               userFb,
+              status: userFb.status,
             },
           });
         }

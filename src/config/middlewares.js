@@ -2,6 +2,7 @@ import { logoutUser, refreshTokens } from 'kitsu/store/auth/actions';
 import store from 'kitsu/store/config';
 import { isNull } from 'lodash';
 import { setToken } from 'kitsu/config/api';
+import { Sentry } from 'react-native-sentry';
 
 let tokenPromise = null;
 
@@ -36,6 +37,17 @@ export const kitsuRequestMiddleware = {
         // If we don't then create the refresh token and set the promise
         if (isNull(tokenPromise)) {
           tokenPromise = store.dispatch(refreshTokens(true));
+
+          // Log to sentry
+          Sentry.captureMessage('Recieved a 401/403', {
+            tags: {
+              type: 'refresh_token',
+            },
+            extra: {
+              request: payload.req,
+              headers: payload.req.headers,
+            },
+          });
         }
 
         try {
@@ -58,6 +70,18 @@ export const kitsuRequestMiddleware = {
         } catch (e) {
           // Token refreshing failed! Abort!
           console.log('Failed to refresh tokens: ', e);
+
+          // Log to sentry
+          Sentry.captureException(e, {
+            tags: {
+              type: 'refresh_token',
+            },
+            extra: {
+              request: payload.req,
+              headers: payload.req.headers,
+            },
+          });
+
           store.dispatch(logoutUser());
           throw e;
         } finally {
