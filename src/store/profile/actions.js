@@ -327,6 +327,8 @@ export const updateUserLibraryEntry = (
   userId, libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
 ) => async (dispatch, getState) => {
   const { userLibrary } = getState().profile;
+  if (!userLibrary[userId]) return;
+
   const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
   const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
 

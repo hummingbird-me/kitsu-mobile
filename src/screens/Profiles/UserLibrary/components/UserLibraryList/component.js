@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, ActivityIndicator, Dimensions, RefreshControl } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
+import { intersectionWith, isEqual } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
 
@@ -37,7 +38,14 @@ export class UserLibraryList extends PureComponent {
 
   componentWillMount() {
     const dataProvider = new DataProvider((rowA, rowB) => {
-      return rowA.id !== rowB.id;
+      // If the rows are the same
+      // Then we check if the data within them is different
+      if (rowA.id === rowB.id) {
+        return !isEqual(rowA, rowB);
+      }
+
+      // Rows are different
+      return true;
     }).cloneWithRows(this.props.libraryEntries.slice());
     this.setState({ dataProvider });
 
@@ -65,11 +73,18 @@ export class UserLibraryList extends PureComponent {
   componentWillReceiveProps(newProps) {
     // Length is different, this will happen from a pagination event,
     // a removal of an entry, or a status update.
-    const lengthA = this.props.libraryEntries.length;
-    const lengthB = newProps.libraryEntries.length;
-    if (lengthA !== lengthB) {
+    const oldEntries = this.props.libraryEntries;
+    const newEntries = newProps.libraryEntries;
+    const differentLength = (oldEntries && oldEntries.length) !== (newEntries && newEntries.length);
+
+    // We need to check if there are any updated entries
+    const intersection = intersectionWith(oldEntries, newEntries, isEqual);
+    const hasUpdatedEntries = oldEntries.length !== intersection.length;
+
+    // Only update if we really need to
+    if (differentLength || hasUpdatedEntries) {
       this.setState({
-        dataProvider: this.state.dataProvider.cloneWithRows(newProps.libraryEntries),
+        dataProvider: this.state.dataProvider.cloneWithRows(newEntries),
       });
     }
   }
@@ -97,7 +112,7 @@ export class UserLibraryList extends PureComponent {
       updateUserLibraryEntry={this.props.onLibraryEntryUpdate}
       onSwipingItem={this.onSwipingItem}
     />
-  )
+  );
 
   render() {
     const { dataProvider, isSwiping } = this.state;
