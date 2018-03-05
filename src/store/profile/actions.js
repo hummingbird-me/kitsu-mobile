@@ -147,6 +147,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     library: options.library,
     status: options.status,
     userId: options.userId,
+    refresh: options.refresh || false,
   });
 
   try {
@@ -160,24 +161,38 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       include: 'anime,manga',
       page: {
         limit: options.limit,
-        offset: data.length,
+        offset: options.refresh ? 0 : data.length,
       },
       sort: '-updatedAt',
     });
 
-    if (options.searchTerm) {
+    if (options.searchTerm || options.refresh) {
       data = libraryEntries;
     } else {
+      // If we refresh then we need to reset data
       data = data.concat(libraryEntries);
-      data.meta = libraryEntries.meta;
     }
+
+    data.meta = libraryEntries.meta;
 
     dispatch({
       data,
       type: actions.fetchSuccess,
+      refresh: () => {
+        const newOptions = {
+          ...options,
+          refresh: true,
+        };
+        console.log(options);
+        fetchUserLibraryByType(newOptions)(dispatch, getState);
+      },
       fetchMore: () => {
         if (data.length < libraryEntries.meta.count) {
-          fetchUserLibraryByType(options)(dispatch, getState);
+          const newOptions = {
+            ...options,
+            refresh: false,
+          };
+          fetchUserLibraryByType(newOptions)(dispatch, getState);
         }
       },
       library: options.library,

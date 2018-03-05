@@ -5,7 +5,11 @@ import { UserLibraryListScreenComponent } from './component';
 const mapStateToProps = ({ user, profile }, ownProps) => {
   const { userLibrary } = profile;
   const { libraryStatus, libraryType, profile: userProfile } = ownProps.navigation.state.params;
-  const libraryEntries = userLibrary[userProfile.id][libraryType][libraryStatus];
+
+  const library = userLibrary && userLibrary[userProfile.id];
+  const libraryEntries = library && library[libraryType] && library[libraryType][libraryStatus];
+
+  console.log(libraryEntries);
 
   return {
     currentUser: user.currentUser,
@@ -13,7 +17,8 @@ const mapStateToProps = ({ user, profile }, ownProps) => {
     libraryStatus,
     libraryType,
     profile: userProfile,
-    loading: userLibrary[userProfile.id].loading || libraryEntries.loading,
+    loading: (library && library.loading) || (libraryEntries && libraryEntries.loading),
+    refreshing: libraryEntries && libraryEntries.refreshing,
   };
 };
 

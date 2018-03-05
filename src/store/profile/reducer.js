@@ -20,18 +20,18 @@ function removeObjectFromArray(array, entry) {
 
 const userLibraryInitial = {
   anime: {
-    completed: { data: [], loading: false },
-    current: { data: [], loading: false },
-    dropped: { data: [], loading: false },
-    on_hold: { data: [], loading: false },
-    planned: { data: [], loading: false },
+    completed: { data: [], loading: false, refreshing: false },
+    current: { data: [], loading: false, refreshing: false },
+    dropped: { data: [], loading: false, refreshing: false },
+    on_hold: { data: [], loading: false, refreshing: false },
+    planned: { data: [], loading: false, refreshing: false },
   },
   manga: {
-    completed: { data: [], loading: false },
-    current: { data: [], loading: false },
-    dropped: { data: [], loading: false },
-    on_hold: { data: [], loading: false },
-    planned: { data: [], loading: false },
+    completed: { data: [], loading: false, refreshing: false },
+    current: { data: [], loading: false, refreshing: false },
+    dropped: { data: [], loading: false, refreshing: false },
+    on_hold: { data: [], loading: false, refreshing: false },
+    planned: { data: [], loading: false, refreshing: false },
   },
 };
 
@@ -150,6 +150,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
               [action.status]: {
                 ...state.userLibrary[action.userId][action.library][action.status],
                 loading: true,
+                refreshing: action.refresh || false,
               },
             },
           },
@@ -168,8 +169,10 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
               [action.status]: {
                 data: action.data,
                 fetchMore: action.fetchMore,
+                refresh: action.refresh,
                 meta: action.data.meta,
                 loading: false,
+                refreshing: false,
               },
             },
           },
@@ -188,6 +191,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
               [action.status]: {
                 ...state.userLibrary[action.userId][action.library][action.status],
                 loading: false,
+                refreshing: false,
               },
             },
           },
