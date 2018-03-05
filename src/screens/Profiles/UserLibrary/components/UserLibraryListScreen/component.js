@@ -103,7 +103,7 @@ export class UserLibraryListScreenComponent extends Component {
   // that they were moved to a new section, we keep the list of moved entries in local state because
   // they've been completely removed from their respective arrays in redux and we only want to show
   // that something has been moved until the user navigates away
-  updateUserLibraryEntry = async (type, status, updates) => {
+  updateUserLibraryEntry = async (id, type, status, updates) => {
     const { libraryStatus } = this.props;
     const { dataProvider } = this.state;
     let movedEntry;
@@ -140,7 +140,7 @@ export class UserLibraryListScreenComponent extends Component {
       });
     }
 
-    await this.props.updateUserLibraryEntry(type, status, updates);
+    await this.props.updateUserLibraryEntry(id, type, status, updates);
   }
 
   onSwipingItem = (isSwiping) => {

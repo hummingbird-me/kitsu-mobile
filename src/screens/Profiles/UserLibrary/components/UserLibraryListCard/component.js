@@ -121,6 +121,8 @@ export class UserLibraryListCard extends React.Component {
         libraryType,
       } = this.props;
 
+      // FIXME: updated Library Entry doesn't get passed here.
+
       this.props.navigate(USER_LIBRARY_EDIT_SCREEN, {
         libraryEntry,
         libraryStatus,
@@ -137,10 +139,10 @@ export class UserLibraryListCard extends React.Component {
     // send the status from props because that is the list we're looking
     // at not the status from state because that is what the value of the
     // card may have just been changed to
-    const { libraryEntry, libraryType } = this.props;
+    const { libraryEntry, libraryType, profile } = this.props;
     const { libraryStatus: newStatus, progress, ratingTwenty } = this.state;
 
-    this.props.updateUserLibraryEntry(libraryType, libraryEntry.status, {
+    this.props.updateUserLibraryEntry(profile.id, libraryType, libraryEntry.status, {
       id: this.props.libraryEntry.id,
       progress,
       ratingTwenty,
@@ -157,7 +159,7 @@ export class UserLibraryListCard extends React.Component {
 
   // We maintain our own state of progress and rating on this component,
   // so update them here and then proxy pass to the update function.
-  updateUserLibraryEntry = async (type, status, updates) => {
+  updateUserLibraryEntry = async (id, type, status, updates) => {
     const { progress, ratingTwenty } = updates;
     const progressPercentage = Math.floor((progress / this.getMaxProgress()) * 100);
     this.setState({
@@ -165,7 +167,7 @@ export class UserLibraryListCard extends React.Component {
       progressPercentage,
       ratingTwenty
     });
-    await this.props.updateUserLibraryEntry(type, status, updates);
+    await this.props.updateUserLibraryEntry(id, type, status, updates);
   }
 
   render() {

@@ -126,10 +126,10 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
   let data;
   if (options.searchTerm) {
-    data = userLibrarySearch[options.library][options.status].data;
+    data = userLibrarySearch[options.userId][options.library][options.status].data;
     filter.title = options.searchTerm;
   } else {
-    data = userLibrary[options.library][options.status].data;
+    data = userLibrary[options.userId][options.library][options.status].data;
   }
 
   const actions = {
@@ -309,10 +309,10 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
 };
 
 export const updateUserLibraryEntry = (
-  libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
+  userId, libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
 ) => async (dispatch, getState) => {
   const { userLibrary } = getState().profile;
-  const libraryEntries = userLibrary[libraryType][libraryStatus].data;
+  const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
   const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
 
   try {
@@ -320,6 +320,7 @@ export const updateUserLibraryEntry = (
 
     // optimistically update state
     dispatch({
+      userId,
       libraryStatus,
       libraryType,
 
@@ -339,9 +340,9 @@ export const updateUserLibraryEntry = (
 };
 
 export const updateUserLibrarySearchEntry = (
-  libraryType, libraryStatus, newLibraryEntry,
+  userId, libraryType, libraryStatus, newLibraryEntry,
 ) => async (dispatch, getState) => {
-  updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
+  updateUserLibraryEntry(userId, libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
 };
 
 export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch) => {

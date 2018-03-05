@@ -110,6 +110,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
     // at not the status from state because that is what the value of the
     // card may have just been changed to
     const {
+      profile,
       libraryEntry,
       libraryStatus,
       libraryType,
@@ -145,7 +146,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
       }
     }
 
-    await updateUserLibraryEntry(libraryType, libraryStatus, {
+    await updateUserLibraryEntry(profile.id, libraryType, libraryStatus, {
       id: libraryEntry.id,
       finishedAt,
       notes: (notes && notes.trim()),

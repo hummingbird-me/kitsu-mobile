@@ -119,6 +119,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         userLibrary: {
           ...state.userLibrary,
           [action.userId]: {
+            ...userLibraryInitial,
             ...state.userLibrary[action.userId],
             loading: false,
           },
@@ -130,6 +131,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         userLibrary: {
           ...state.userLibrary,
           [action.userId]: {
+            ...userLibraryInitial,
             ...state.userLibrary[action.userId],
             loading: false,
           },
@@ -141,6 +143,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         userLibrary: {
           ...state.userLibrary,
           [action.userId]: {
+            ...userLibraryInitial,
             ...state.userLibrary[action.userId],
             [action.library]: {
               ...state.userLibrary[action.userId][action.library],
@@ -158,6 +161,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         userLibrary: {
           ...state.userLibrary,
           [action.userId]: {
+            ...userLibraryInitial,
             ...state.userLibrary[action.userId],
             [action.library]: {
               ...state.userLibrary[action.userId][action.library],
@@ -177,6 +181,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         userLibrary: {
           ...state.userLibrary,
           [action.userId]: {
+            ...userLibraryInitial,
             ...state.userLibrary[action.userId],
             [action.library]: {
               ...state.userLibrary[action.userId][action.library],
@@ -195,6 +200,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           userLibrary: {
             ...state.userLibrary,
             [action.userId]: {
+              ...userLibraryInitial,
               ...state.userLibrary[action.userId],
               [action.libraryType]: {
                 ...state.userLibrary[action.userId][action.libraryType],
@@ -227,6 +233,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         userLibrary: {
           ...state.userLibrary,
           [action.userId]: {
+            ...userLibraryInitial,
             ...state.userLibrary[action.userId],
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
