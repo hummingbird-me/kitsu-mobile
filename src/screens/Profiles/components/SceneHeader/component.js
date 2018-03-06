@@ -36,8 +36,8 @@ export class SceneHeader extends PureComponent {
             <ViewMoreStyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={4}>{description}</ViewMoreStyledText>
           </View>
           <View style={styles.statusView}>
-            <Status statusType="popularity" ranking={popularityRank} />
-            <Status statusType="rating" ranking={ratingRank} />
+            <Status statusType="popularity" ranking={isEmpty(popularityRank) ? '-' : popularityRank} />
+            <Status statusType="rating" ranking={isEmpty(ratingRank) ? '-' : ratingRank} />
           </View>
 
           {/* Categories pills */}
@@ -220,9 +220,9 @@ SceneHeader.propTypes = {
   onFollowButtonPress: PropTypes.func,
   onMainButtonOptionsSelected: PropTypes.func,
   onMoreButtonOptionsSelected: PropTypes.func,
-  popularityRank: PropTypes.string,
+  popularityRank: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   posterImage: PropTypes.string,
-  ratingRank: PropTypes.string,
+  ratingRank: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   title: PropTypes.string,
   type: PropTypes.string,
   subType: PropTypes.string,
@@ -244,9 +244,9 @@ SceneHeader.defaultProps = {
   onHeaderLeftButtonPress: null,
   onMainButtonOptionsSelected: null,
   onMoreButtonOptionsSelected: null,
-  popularityRank: '',
+  popularityRank: null,
   posterImage: '',
-  ratingRank: '',
+  ratingRank: null,
   title: '',
   type: '',
   subType: '',

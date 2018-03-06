@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, SectionList } from 'react-native';
+import { StatusBar, SectionList, View } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -21,6 +21,7 @@ import { isIdForCurrentUser } from 'kitsu/common/utils';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { parseURL } from 'kitsu/common/utils/url';
+import { StyledText } from 'kitsu/components/StyledText';
 import { isEmpty } from 'lodash';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
@@ -305,8 +306,19 @@ class ProfilePage extends PureComponent {
     }
 
     if (error) {
-      // Return error state.
-      return null;
+      return (
+        <SceneContainer>
+          <CustomHeader
+            leftButtonAction={this.goBack}
+            leftButtonTitle="Back"
+          />
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <StyledText color="light" textStyle={{ textAlignVertical: 'center', textAlign: 'center' }}>
+              An Error Occured.
+            </StyledText>
+          </View>
+        </SceneContainer>
+      );
     }
 
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;

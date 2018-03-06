@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -18,6 +18,7 @@ import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { capitalize, upperFirst } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { StyledText } from 'kitsu/components/StyledText';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
@@ -327,7 +328,19 @@ class MediaPages extends PureComponent {
     }
 
     if (error || !media) {
-      return null;
+      return (
+        <SceneContainer>
+          <CustomHeader
+            leftButtonAction={this.goBack}
+            leftButtonTitle="Back"
+          />
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <StyledText color="light" textStyle={{ textAlignVertical: 'center', textAlign: 'center' }}>
+              An Error Occured.
+            </StyledText>
+          </View>
+        </SceneContainer>
+      );
     }
 
     // Handle dynamic button options (TODO: Cleanup)
