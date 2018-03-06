@@ -81,7 +81,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
 
   onDeleteEntry = async () => {
     const { libraryEntry, libraryType } = this.props.navigation.state.params;
-    await this.props.deleteUserLibraryEntry(libraryEntry.id, libraryEntry.status, libraryType);
+    await this.props.deleteUserLibraryEntry(libraryEntry.id, libraryType, libraryEntry.status);
     this.props.navigation.goBack();
   }
 

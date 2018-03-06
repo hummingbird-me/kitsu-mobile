@@ -41,6 +41,7 @@ export class UserLibraryListScreenComponent extends PureComponent {
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
+    deleteUserLibraryEntry: PropTypes.func.isRequired,
     loading: PropTypes.bool,
     refreshing: PropTypes.bool,
   };
@@ -52,6 +53,11 @@ export class UserLibraryListScreenComponent extends PureComponent {
 
   onEntryUpdate = async (type, status, updates) => {
     await this.props.updateUserLibraryEntry(type, status, updates);
+  }
+
+  onEntryDelete = async (id, type, status) => {
+    if (!id) return;
+    await this.props.deleteUserLibraryEntry(id, type, status);
   }
 
   onRefresh = () => {
@@ -106,6 +112,7 @@ export class UserLibraryListScreenComponent extends PureComponent {
           onRefresh={this.onRefresh}
           onEndReached={this.onEndReached}
           onLibraryEntryUpdate={this.onEntryUpdate}
+          onLibraryEntryDelete={this.onEntryDelete}
         />
       </View>
     );

@@ -19,7 +19,7 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import { capitalize, upperFirst } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { StyledText } from 'kitsu/components/StyledText';
-import { KitsuLibrary } from 'kitsu/utils/kitsuLibrary';
+import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
@@ -72,6 +72,13 @@ class MediaPages extends PureComponent {
     this.fetchMedia(mediaType, mediaId);
     this.fetchFavorite(mediaType, mediaId);
     this.fetchLibraryEntry(mediaType, mediaId);
+    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
+    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeUpdate();
+    this.unsubscribeDelete();
   }
 
   onMainButtonOptionsSelected = async (option) => {
@@ -88,7 +95,7 @@ class MediaPages extends PureComponent {
       case 'remove':
         this.setState({ loadingLibrary: true });
         await Kitsu.destroy('libraryEntries', libraryEntry.id);
-        KitsuLibrary.onLibraryEntryDelete(libraryEntry.id, mediaType, libraryEntry.status);
+        KitsuLibrary.onLibraryEntryDelete(libraryEntry.id, mediaType, libraryEntry.status, 'mediapage');
         this.setState({ libraryEntry: null, loadingLibrary: false });
         break;
       default:
@@ -124,6 +131,28 @@ class MediaPages extends PureComponent {
     }
   }
 
+  onLibraryEntryUpdated = (data) => {
+    // Check to see if we got this event from something other than 'quickupdate'
+    const { id, newEntry, source } = data;
+    const { libraryEntry } = this.state;
+    if (!newEntry || source === 'mediapage') return;
+
+    if (libraryEntry && libraryEntry.id == id) {
+      this.setState({ libraryEntry: newEntry });
+    }
+  }
+
+  onLibraryEntryDeleted = (data) => {
+    // Check to see if we got this event from something other than 'quickupdate'
+    const { id, source } = data;
+    const { libraryEntry } = this.state;
+    if (source === 'mediapage') return;
+
+    if (libraryEntry && libraryEntry.id == id) {
+      this.setState({ libraryEntry: null });
+    }
+  }
+
   setActiveTab = (tab) => {
     this.setState({ active: tab });
   }
@@ -145,7 +174,7 @@ class MediaPages extends PureComponent {
       }, {
         include: 'anime,manga',
       });
-      KitsuLibrary.onLibraryEntryCreate(record, mediaType);
+      KitsuLibrary.onLibraryEntryCreate(record, mediaType, 'mediapage');
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error creating library entry:', err);
@@ -162,7 +191,7 @@ class MediaPages extends PureComponent {
         status,
       };
       const record = await Kitsu.update('libraryEntries', updates);
-      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, mediaType);
+      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, mediaType, 'mediapage');
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error updating library entry:', err);

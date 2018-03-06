@@ -105,11 +105,11 @@ class QuickUpdate extends Component {
 
   componentWillMount() {
     this.fetchLibrary();
-    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
-    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
   }
 
   componentDidMount() {
+    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
+    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
     this.props.navigation.setParams({
       tabListener: async ({ previousScene, scene, jumpToIndex }) => {
         // capture tap events and detect double press to fetch notifications

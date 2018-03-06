@@ -354,7 +354,7 @@ export const updateUserLibrarySearchEntry = (
   updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
 };
 
-export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch, getState) => {
+export const deleteUserLibraryEntry = (id, libraryType, libraryStatus) => async (dispatch, getState) => {
   const { currentUser } = getState().user;
   if (!currentUser || !currentUser.id) return;
 

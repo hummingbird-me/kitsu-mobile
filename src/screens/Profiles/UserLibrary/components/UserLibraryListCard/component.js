@@ -41,6 +41,7 @@ export class UserLibraryListCard extends React.PureComponent {
     onSwipingItem: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
+    deleteUserLibraryEntry: PropTypes.func.isRequired,
   }
 
   state = {
@@ -143,12 +144,18 @@ export class UserLibraryListCard extends React.PureComponent {
     const { libraryEntry, libraryType } = this.props;
     const { libraryStatus: newStatus, progress, ratingTwenty } = this.state;
 
-    this.props.updateUserLibraryEntry(libraryType, libraryEntry.status, {
-      id: this.props.libraryEntry.id,
-      progress,
-      ratingTwenty,
-      status: newStatus,
-    });
+    if (newStatus === 'remove') {
+      if (this.props.deleteUserLibraryEntry) {
+        this.props.deleteUserLibraryEntry(libraryEntry.id, libraryType, libraryEntry.status);
+      }
+    } else {
+      this.props.updateUserLibraryEntry(libraryType, libraryEntry.status, {
+        id: libraryEntry.id,
+        progress,
+        ratingTwenty,
+        status: newStatus,
+      });
+    }
   }
 
   debounceSave = debounce(this.saveEntry, 200);

@@ -18,6 +18,7 @@ export class UserLibraryList extends PureComponent {
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
     onLibraryEntryUpdate: PropTypes.func.isRequired,
+    onLibraryEntryDelete: PropTypes.func.isRequired,
     onRefresh: PropTypes.func,
     onEndReached: PropTypes.func,
     loading: PropTypes.bool,
@@ -110,6 +111,7 @@ export class UserLibraryList extends PureComponent {
       navigate={this.props.navigation.navigate}
       profile={this.props.profile}
       updateUserLibraryEntry={this.props.onLibraryEntryUpdate}
+      deleteUserLibraryEntry={this.props.onLibraryEntryDelete}
       onSwipingItem={this.onSwipingItem}
     />
   );
