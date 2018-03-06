@@ -186,7 +186,7 @@ class ImportLibrary extends React.Component {
                 target: '',
               },
             ]}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <MediaItem
                 onPress={() => this.onMediaItemPressed(item)}
@@ -202,7 +202,7 @@ class ImportLibrary extends React.Component {
         <SidebarTitle title={'Previous Imports'} />
         <FlatList
           data={imports}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <ImportItem
               total={item.total}

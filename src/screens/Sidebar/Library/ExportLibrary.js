@@ -11,7 +11,7 @@ import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
-const keyExtractor = (item, index) => index;
+const keyExtractor = (item, index) => index.toString();
 
 const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
   let icon = null;

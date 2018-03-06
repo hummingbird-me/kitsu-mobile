@@ -27,7 +27,7 @@ const settingsData = [
   { title: 'Contact Us', image: contact, target: 'mailto' },
 ];
 
-const keyExtractor = (item, index) => index;
+const keyExtractor = (item, index) => index.toString();
 
 class SidebarScreen extends React.Component {
   static navigationOptions = {
