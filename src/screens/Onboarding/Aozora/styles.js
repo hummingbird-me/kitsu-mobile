@@ -8,6 +8,9 @@ export const styles = StyleSheet.create({
   tutorialText: {
     marginHorizontal: 16,
   },
+  startButton: {
+    marginBottom: 12,
+  },
   profileImage: {
     width: 40,
     height: 40,
@@ -31,7 +34,7 @@ export const styles = StyleSheet.create({
     fontSize: 11,
   },
   ps: {
-    marginVertical: 32,
+    marginVertical: 16,
     color: colors.white,
     fontFamily: 'OpenSans',
     textAlign: 'center',
@@ -39,7 +42,7 @@ export const styles = StyleSheet.create({
   },
   iceBackground: {
     width: Dimensions.get('window').width,
-    height: 220,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

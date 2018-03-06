@@ -53,6 +53,7 @@ class WelcomeScreen extends React.Component {
             {subtitle}
           </Text>
           <Button
+            style={styles.startButton}
             onPress={this.onPress}
             title={"Let's get started!"}
             titleStyle={commonStyles.buttonTitleStyle}
