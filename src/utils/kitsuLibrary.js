@@ -64,13 +64,15 @@ class _KitsuLibrary {
    *
    * @param {any} entry The library entry that was created.
    * @param {string} libraryType The type of library. `anime` or `manga`.
+   * @param {string} source The source of the event.
    */
-  onLibraryEntryCreate(entry, libraryType) {
+  onLibraryEntryCreate(entry, libraryType, source = null) {
     this.publish(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, {
       id: entry.id,
       status: entry.status,
       type: libraryType,
       entry,
+      source,
     });
   }
 
@@ -95,7 +97,6 @@ class _KitsuLibrary {
 
     this.publish(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, {
       id: newEntry.id,
-      status: newEntry.status,
       type: libraryType,
       oldEntry,
       newEntry: combined,

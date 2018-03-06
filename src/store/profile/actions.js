@@ -360,15 +360,15 @@ export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async 
 
   await Kitsu.destroy('libraryEntries', id);
 
-  dispatch(onLibraryEntryDelete(currentUser.id, libraryType, libraryStatus, id));
+  dispatch(onLibraryEntryDelete(id, currentUser.id, libraryType, libraryStatus));
   KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, 'store');
 };
 
 export function onLibraryEntryCreate(
+  newLibraryEntry,
   userId,
   libraryType,
   libraryStatus,
-  newLibraryEntry,
 ) {
   return (dispatch, getState) => {
     const { userLibrary } = getState().profile;
@@ -430,10 +430,10 @@ export function onLibraryEntryUpdate(
 }
 
 export function onLibraryEntryDelete(
+  id,
   userId,
   libraryType,
   libraryStatus,
-  id,
 ) {
   return {
     type: types.DELETE_USER_LIBRARY_ENTRY,
