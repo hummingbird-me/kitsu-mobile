@@ -30,6 +30,7 @@ import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
 import styles from './styles';
+import { KitsuLibrary } from 'kitsu/utils/kitsuLibrary';
 
 // API request fields
 const LIBRARY_ENTRIES_FIELDS = [
@@ -165,8 +166,9 @@ class QuickUpdate extends Component {
           id: this.props.currentUser.id,
         },
       }, {
-        include: this._requestIncludeFields
+        include: this._requestIncludeFields,
       });
+      KitsuLibrary.onLibraryEntryUpdate(entry, record, media.type);
       this.updateLibraryEntry(record);
     } catch (error) {
       console.log('Error rating library entry:', error);
@@ -384,6 +386,7 @@ class QuickUpdate extends Component {
 
   markComplete = async (libraryEntry) => {
     this.setLibraryEntryLoading();
+    const media = getMedia(libraryEntry);
 
     const record = await Kitsu.update('libraryEntries', {
       id: libraryEntry.id,
@@ -395,6 +398,7 @@ class QuickUpdate extends Component {
         { text: 'OK', style: 'cancel' },
       ]);
     } else {
+      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, media.type);
       this.updateLibraryEntry(record);
       this.resetFeed(() => this.fetchEpisodeFeed());
     }

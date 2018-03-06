@@ -3,6 +3,7 @@ import map from 'lodash/map';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 import { getState } from '../user/actions';
+import { KitsuLibrary } from 'kitsu/utils/kitsuLibrary';
 
 export const fetchProfile = userId => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
@@ -331,13 +332,17 @@ export const updateUserLibraryEntry = (
   const { currentUser } = getState().user;
   if (!currentUser || !currentUser.id || !userLibrary[currentUser.id]) return;
 
+  const libraryEntries = userLibrary[currentUser.id][libraryType][libraryStatus].data;
+  const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+
   try {
     const updateEntry = { ...newLibraryEntry };
 
     // optimistically update state
     onLibraryEntryUpdate(currentUser.id, libraryType, libraryStatus, updateEntry, isSearchEntry)(dispatch, getState);
 
-    await Kitsu.update('libraryEntries', updateEntry);
+    const record = await Kitsu.update('libraryEntries', updateEntry);
+    KitsuLibrary.onLibraryEntryUpdate(previousLibraryEntry, record, libraryType, 'store');
   } catch (e) {
     // TODO: handle the case where the entry update fails
   }
@@ -356,6 +361,7 @@ export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async 
   await Kitsu.destroy('libraryEntries', id);
 
   dispatch(onLibraryEntryDelete(currentUser.id, libraryType, libraryStatus, id));
+  KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, 'store');
 };
 
 export function onLibraryEntryCreate(

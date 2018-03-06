@@ -19,6 +19,7 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import { capitalize, upperFirst } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { StyledText } from 'kitsu/components/StyledText';
+import { KitsuLibrary } from 'kitsu/utils/kitsuLibrary';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
@@ -75,6 +76,7 @@ class MediaPages extends PureComponent {
 
   onMainButtonOptionsSelected = async (option) => {
     const { libraryEntry } = this.state;
+    const { mediaType } = this.props.navigation.state.params;
     switch (option) {
       case 'current':
       case 'planned':
@@ -86,6 +88,7 @@ class MediaPages extends PureComponent {
       case 'remove':
         this.setState({ loadingLibrary: true });
         await Kitsu.destroy('libraryEntries', libraryEntry.id);
+        KitsuLibrary.onLibraryEntryDelete(libraryEntry.id, mediaType, libraryEntry.status);
         this.setState({ libraryEntry: null, loadingLibrary: false });
         break;
       default:
@@ -137,9 +140,12 @@ class MediaPages extends PureComponent {
         },
         user: {
           id: this.props.currentUser.id,
-          type: 'users'
-        }
+          type: 'users',
+        },
+      }, {
+        include: 'anime,manga',
       });
+      KitsuLibrary.onLibraryEntryCreate(record, mediaType);
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error creating library entry:', err);
@@ -151,10 +157,12 @@ class MediaPages extends PureComponent {
     const { mediaId, mediaType } = this.props.navigation.state.params;
     try {
       this.setState({ loadingLibrary: true });
-      const record = await Kitsu.update('libraryEntries', {
+      const updates = {
         id: libraryEntry.id,
-        status
-      });
+        status,
+      };
+      const record = await Kitsu.update('libraryEntries', updates);
+      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, mediaType);
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error updating library entry:', err);
@@ -275,6 +283,8 @@ class MediaPages extends PureComponent {
           user_id: this.props.currentUser.id,
           [`${type}_id`]: id,
         },
+      }, {
+        include: 'anime,manga',
       });
       const record = response && response[0];
       this.setState({ libraryEntry: record, loadingLibrary: false });
