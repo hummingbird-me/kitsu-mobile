@@ -25,12 +25,12 @@ import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { isEmpty, capitalize } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
 
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
 import styles from './styles';
-import { KitsuLibrary } from 'kitsu/utils/kitsuLibrary';
 
 // API request fields
 const LIBRARY_ENTRIES_FIELDS = [
@@ -105,6 +105,8 @@ class QuickUpdate extends Component {
 
   componentWillMount() {
     this.fetchLibrary();
+    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
+    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
   }
 
   componentDidMount() {
@@ -122,6 +124,11 @@ class QuickUpdate extends Component {
         }
       },
     });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeUpdate();
+    this.unsubscribeDelete();
   }
 
   shouldComponentUpdate(_nextProps, nextState) {
@@ -150,6 +157,67 @@ class QuickUpdate extends Component {
     }
   }
 
+  onLibraryEntryUpdated = (data) => {
+    // Check to see if we got this event from something other than 'quickupdate'
+    const { id, source } = data;
+    if (source === 'quickupdate') return;
+
+    // Find the entry
+    const index = this.state.library.findIndex(e => e.id == id);
+    if (index > -1) {
+      this.updateEntryAtIndex(index);
+    }
+  }
+
+  async updateEntryAtIndex(index) {
+    if (index >= this.state.library.length || index < 0) return;
+    // Fetch the entry
+    // We need to do this because the new entry that we recieved may not have the `nextUnit` or `unit` set
+    const library = [...this.state.library];
+
+    let { filterMode } = this.state;
+    filterMode = filterMode === 'all' ? undefined : filterMode;
+
+    const fields = getRequestFields(filterMode);
+    const record = await Kitsu.find('libraryEntries', library[index].id, {
+      fields,
+      include: this._requestIncludeFields,
+    });
+
+    library[index] = record;
+    this.setState({ library }, () => {
+      // Reset the feed
+      if (this.carousel.currentIndex === index) {
+        this.resetFeed(() => this.fetchEpisodeFeed());
+      }
+    });
+  }
+
+  onLibraryEntryDeleted = (data) => {
+    // Check to see if we got this event from something other than 'quickupdate'
+    const { id, source } = data;
+    if (source === 'quickupdate') return;
+
+    // Find the entry
+    const index = this.state.library.findIndex(e => e.id == id);
+    // Remove from library and adjust carousel if necessary
+    if (index > -1) {
+      this.deleteEntryAtIndex(index);
+    }
+  }
+
+  deleteEntryAtIndex(index) {
+    if (index >= this.state.library.length || index < 0) return;
+
+    const library = [...this.state.library];
+
+    // Remove from library
+    library.splice(index, 1);
+    this.setState({ library }, () => {
+      this.resetFeed(() => this.fetchEpisodeFeed());
+    });
+  }
+
   rateEntry = async (ratingTwenty) => {
     const { library } = this.state;
     const entry = library[this.carousel.currentIndex];
@@ -168,7 +236,7 @@ class QuickUpdate extends Component {
       }, {
         include: this._requestIncludeFields,
       });
-      KitsuLibrary.onLibraryEntryUpdate(entry, record, media.type);
+      KitsuLibrary.onLibraryEntryUpdate(entry, record, media.type, 'quickupdate');
       this.updateLibraryEntry(record);
     } catch (error) {
       console.log('Error rating library entry:', error);
@@ -398,7 +466,7 @@ class QuickUpdate extends Component {
         { text: 'OK', style: 'cancel' },
       ]);
     } else {
-      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, media.type);
+      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, media.type, 'quickupdate');
       this.updateLibraryEntry(record);
       this.resetFeed(() => this.fetchEpisodeFeed());
     }
