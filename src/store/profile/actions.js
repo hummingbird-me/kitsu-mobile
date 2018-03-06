@@ -2,6 +2,7 @@ import capitalize from 'lodash/capitalize';
 import map from 'lodash/map';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
+import { getState } from '../user/actions';
 
 export const fetchProfile = userId => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
@@ -324,18 +325,87 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
 };
 
 export const updateUserLibraryEntry = (
-  userId, libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
+  libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
 ) => async (dispatch, getState) => {
   const { userLibrary } = getState().profile;
-  if (!userLibrary[userId]) return;
-
-  const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
-  const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+  const { currentUser } = getState().user;
+  if (!currentUser || !currentUser.id || !userLibrary[currentUser.id]) return;
 
   try {
     const updateEntry = { ...newLibraryEntry };
 
     // optimistically update state
+    onLibraryEntryUpdate(currentUser.id, libraryType, libraryStatus, updateEntry, isSearchEntry)(dispatch, getState);
+
+    await Kitsu.update('libraryEntries', updateEntry);
+  } catch (e) {
+    // TODO: handle the case where the entry update fails
+  }
+};
+
+export const updateUserLibrarySearchEntry = (
+  libraryType, libraryStatus, newLibraryEntry,
+) => async (dispatch, getState) => {
+  updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
+};
+
+export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch, getState) => {
+  const { currentUser } = getState().user;
+  if (!currentUser || !currentUser.id) return;
+
+  await Kitsu.destroy('libraryEntries', id);
+
+  dispatch(onLibraryEntryDelete(currentUser.id, libraryType, libraryStatus, id));
+};
+
+export function onLibraryEntryCreate(
+  userId,
+  libraryType,
+  libraryStatus,
+  newLibraryEntry,
+) {
+  return (dispatch, getState) => {
+    const { userLibrary } = getState().profile;
+    if (!userLibrary[userId]) return {};
+
+    const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
+    const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+
+    // Make sure that we aren't adding a duplicate entry
+    if (previousLibraryEntry) {
+      onLibraryEntryUpdate(userId, libraryType, libraryStatus, newLibraryEntry)(dispatch, getState);
+    } else {
+      const updateEntry = { ...newLibraryEntry };
+
+      // Add the new entry
+      dispatch({
+        type: types.CREATE_USER_LIBRARY_ENTRY,
+        userId,
+        libraryStatus,
+        libraryType,
+        newLibraryEntry: updateEntry,
+      });
+    }
+  };
+}
+
+export function onLibraryEntryUpdate(
+  userId,
+  libraryType,
+  libraryStatus,
+  newLibraryEntry,
+  isSearchEntry,
+) {
+  return (dispatch, getState) => {
+    const { userLibrary } = getState().profile;
+    if (!userLibrary[userId]) return {};
+
+    const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
+    const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+
+    const updateEntry = { ...newLibraryEntry };
+
+    // update the state
     dispatch({
       userId,
       libraryStatus,
@@ -346,32 +416,27 @@ export const updateUserLibraryEntry = (
 
       previousLibraryEntry,
       newLibraryEntry: updateEntry,
+
       type: isSearchEntry ?
         types.UPDATE_USER_LIBRARY_SEARCH_ENTRY : types.UPDATE_USER_LIBRARY_ENTRY,
     });
+  };
+}
 
-    await Kitsu.update('libraryEntries', updateEntry);
-  } catch (e) {
-    // TODO: handle the case where the entry update fails
-  }
-};
-
-export const updateUserLibrarySearchEntry = (
-  userId, libraryType, libraryStatus, newLibraryEntry,
-) => async (dispatch, getState) => {
-  updateUserLibraryEntry(userId, libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
-};
-
-export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch) => {
-  await Kitsu.destroy('libraryEntries', id);
-
-  dispatch({
+export function onLibraryEntryDelete(
+  userId,
+  libraryType,
+  libraryStatus,
+  id,
+) {
+  return {
     type: types.DELETE_USER_LIBRARY_ENTRY,
-    id,
+    userId,
     libraryStatus,
     libraryType,
-  });
-};
+    id,
+  };
+}
 
 export function updateLibrarySearchTerm(searchTerm) {
   return {

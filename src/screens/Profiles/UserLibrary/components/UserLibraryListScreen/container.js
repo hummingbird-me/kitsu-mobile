@@ -9,8 +9,6 @@ const mapStateToProps = ({ user, profile }, ownProps) => {
   const library = userLibrary && userLibrary[userProfile.id];
   const libraryEntries = library && library[libraryType] && library[libraryType][libraryStatus];
 
-  console.log(libraryEntries);
-
   return {
     currentUser: user.currentUser,
     libraryEntries,

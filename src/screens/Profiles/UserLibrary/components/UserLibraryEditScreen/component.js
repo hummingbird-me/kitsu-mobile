@@ -146,7 +146,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
       }
     }
 
-    await updateUserLibraryEntry(profile.id, libraryType, libraryStatus, {
+    await updateUserLibraryEntry(libraryType, libraryStatus, {
       id: libraryEntry.id,
       finishedAt,
       notes: (notes && notes.trim()),
@@ -165,7 +165,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
     const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props.navigation.state.params;
     const maxProgress = this.getMaxProgress();
     // { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
-    const status = STATUS_SELECT_OPTIONS.filter(item => item.value === this.state.status)[0][libraryType]
+    const status = STATUS_SELECT_OPTIONS.filter(item => item.value === this.state.status)[0][libraryType];
     return (
       <View style={styles.container}>
         <SimpleHeader

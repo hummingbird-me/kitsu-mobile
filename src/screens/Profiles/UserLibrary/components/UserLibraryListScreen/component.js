@@ -50,8 +50,8 @@ export class UserLibraryListScreenComponent extends PureComponent {
     refreshing: false,
   };
 
-  onEntryUpdate = async (id, type, status, updates) => {
-    await this.props.updateUserLibraryEntry(id, type, status, updates);
+  onEntryUpdate = async (type, status, updates) => {
+    await this.props.updateUserLibraryEntry(type, status, updates);
   }
 
   onRefresh = () => {

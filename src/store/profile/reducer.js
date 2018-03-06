@@ -252,6 +252,27 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           },
         },
       };
+    case types.CREATE_USER_LIBRARY_ENTRY:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          [action.userId]: {
+            ...userLibraryInitial,
+            ...state.userLibrary[action.userId],
+            [action.libraryType]: {
+              ...state.userLibrary[action.userId][action.libraryType],
+              [action.libraryStatus]: {
+                ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus],
+                data: [
+                  action.newLibraryEntry,
+                  ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus].data,
+                ],
+              },
+            },
+          },
+        },
+      };
     case types.SEARCH_USER_LIBRARY:
       return {
         ...state,
@@ -375,12 +396,16 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userLibrary: {
           ...state.userLibrary,
-          [action.libraryType]: {
-            ...state.userLibrary[action.libraryType],
-            [action.libraryStatus]: {
-              ...state.userLibrary[action.libraryType][action.libraryStatus],
-              data: state.userLibrary[action.libraryType][action.libraryStatus].data
-                .filter(entry => entry.id !== action.id),
+          [action.userId]: {
+            ...userLibraryInitial,
+            ...state.userLibrary[action.userId],
+            [action.libraryType]: {
+              ...state.userLibrary[action.userId][action.libraryType],
+              [action.libraryStatus]: {
+                ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus],
+                data: state.userLibrary[action.userId][action.libraryType][action.libraryStatus]
+                  .data.filter(entry => entry.id !== action.id),
+              },
             },
           },
         },

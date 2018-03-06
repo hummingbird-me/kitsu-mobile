@@ -139,10 +139,10 @@ export class UserLibraryListCard extends React.Component {
     // send the status from props because that is the list we're looking
     // at not the status from state because that is what the value of the
     // card may have just been changed to
-    const { libraryEntry, libraryType, profile } = this.props;
+    const { libraryEntry, libraryType } = this.props;
     const { libraryStatus: newStatus, progress, ratingTwenty } = this.state;
 
-    this.props.updateUserLibraryEntry(profile.id, libraryType, libraryEntry.status, {
+    this.props.updateUserLibraryEntry(libraryType, libraryEntry.status, {
       id: this.props.libraryEntry.id,
       progress,
       ratingTwenty,
@@ -159,15 +159,15 @@ export class UserLibraryListCard extends React.Component {
 
   // We maintain our own state of progress and rating on this component,
   // so update them here and then proxy pass to the update function.
-  updateUserLibraryEntry = async (id, type, status, updates) => {
+  updateUserLibraryEntry = async (type, status, updates) => {
     const { progress, ratingTwenty } = updates;
     const progressPercentage = Math.floor((progress / this.getMaxProgress()) * 100);
     this.setState({
       progress,
       progressPercentage,
-      ratingTwenty
+      ratingTwenty,
     });
-    await this.props.updateUserLibraryEntry(id, type, status, updates);
+    await this.props.updateUserLibraryEntry(type, status, updates);
   }
 
   render() {
