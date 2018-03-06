@@ -9,7 +9,6 @@ const config = {
   key: 'primary',
   storage,
   blacklist: ['anime', 'feed'],
-  debug: true,
 };
 
 // if (__DEV__) {
