@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { FlatList, TouchableOpacity, View } from 'react-native';
+import { FlatList, TouchableOpacity, View, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
@@ -11,7 +11,7 @@ import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
-import { isEmpty, capitalize } from 'lodash';
+import { isEmpty, capitalize, isNull } from 'lodash';
 import { styles } from './styles';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
@@ -26,7 +26,11 @@ export class SceneHeader extends PureComponent {
       description,
       followersCount,
       followingCount,
+      averageRating,
     } = this.props;
+
+    // Truncate the rating
+    const rating = averageRating && Math.trunc(averageRating);
 
     if (variant === 'media') {
       return (
@@ -36,8 +40,18 @@ export class SceneHeader extends PureComponent {
             <ViewMoreStyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={4}>{description}</ViewMoreStyledText>
           </View>
           <View style={styles.statusView}>
-            <Status statusType="popularity" ranking={isEmpty(popularityRank) ? '-' : popularityRank} />
-            <Status statusType="rating" ranking={isEmpty(ratingRank) ? '-' : ratingRank} />
+            <View style={styles.kitsuScore}>
+              <StyledText size="xxsmall" color="grey" bold>
+                Kitsu Score
+              </StyledText>
+              <StyledText size="large" color="dark" bold textStyle={styles.kitsuScoreText}>
+                {(rating && `${rating}%`) || '-'}
+              </StyledText>
+            </View>
+            <View style={styles.subStatusView}>
+              <Status statusType="rating" ranking={isNull(ratingRank) ? ' -' : ratingRank} />
+              <Status statusType="popularity" ranking={isNull(popularityRank) ? ' -' : popularityRank} />
+            </View>
           </View>
 
           {/* Categories pills */}
@@ -167,7 +181,7 @@ export class SceneHeader extends PureComponent {
 }
 
 const Status = ({ statusType, ranking }) => (
-  <View style={[styles.statusItemView, styles[`statusItemView__${statusType}`]]}>
+  <View style={[styles.statusItemView, styles[`statusItem__${statusType}`]]}>
     <Icon
       name={statusType === 'popularity' ? 'md-heart' : 'ios-star'}
       style={[styles.statusIcon, styles[`statusIcon__${statusType}`]]}
@@ -220,9 +234,10 @@ SceneHeader.propTypes = {
   onFollowButtonPress: PropTypes.func,
   onMainButtonOptionsSelected: PropTypes.func,
   onMoreButtonOptionsSelected: PropTypes.func,
-  popularityRank: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   posterImage: PropTypes.string,
-  ratingRank: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  ratingRank: PropTypes.number,
+  popularityRank: PropTypes.number,
+  averageRating: PropTypes.number,
   title: PropTypes.string,
   type: PropTypes.string,
   subType: PropTypes.string,
@@ -244,9 +259,10 @@ SceneHeader.defaultProps = {
   onHeaderLeftButtonPress: null,
   onMainButtonOptionsSelected: null,
   onMoreButtonOptionsSelected: null,
-  popularityRank: null,
   posterImage: '',
+  popularityRank: null,
   ratingRank: null,
+  averageRating: null,
   title: '',
   type: '',
   subType: '',

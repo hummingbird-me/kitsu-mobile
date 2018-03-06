@@ -158,13 +158,32 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: scenePadding,
     marginTop: scenePadding,
+    alignItems: 'center',
+  },
+  kitsuScore: {
+    flexDirection: 'column',
+    borderWidth: 1,
+    borderColor: colors.lightestGrey,
+    paddingVertical: 4,
+    paddingHorizontal: 14,
+    marginRight: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  kitsuScoreText: {
+    margin: 2,
+  },
+  subStatusView: {
+    flexDirection: 'column',
+    padding: 4,
+    justifyContent: 'center',
   },
   statusItemView: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  statusItemView__rating: {
-    marginLeft: 10,
+  statusItem__rating: {
+    marginBottom: 4,
   },
   statusIcon: {
     fontSize: 17,
@@ -176,6 +195,7 @@ export const styles = StyleSheet.create({
   statusIcon__popularity: {
     color: colors.red,
   },
+
   followStatus: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -257,8 +257,8 @@ class MediaPages extends PureComponent {
         filter: {
           item_type: capitalize(type),
           item_id: id,
-          user_id: this.props.currentUser.id
-        }
+          user_id: this.props.currentUser.id,
+        },
       });
       const record = response && response[0];
       this.setState({ favorite: record });
@@ -273,8 +273,8 @@ class MediaPages extends PureComponent {
       const response = await Kitsu.findAll('libraryEntries', {
         filter: {
           user_id: this.props.currentUser.id,
-          [`${type}_id`]: id
-        }
+          [`${type}_id`]: id,
+        },
       });
       const record = response && response[0];
       this.setState({ libraryEntry: record, loadingLibrary: false });
@@ -417,6 +417,7 @@ class MediaPages extends PureComponent {
             posterImage={media.posterImage && media.posterImage.large}
             popularityRank={media.popularityRank}
             ratingRank={media.ratingRank}
+            averageRating={parseFloat(media.averageRating) || null}
             categories={media.categories}
             mainButtonTitle={mainButtonTitle}
             mainButtonOptions={MAIN_BUTTON_OPTIONS}
