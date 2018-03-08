@@ -195,7 +195,6 @@ class CreatePost extends React.PureComponent {
       media,
       currentFeed,
       content,
-      textInputHeight,
       giphyPickerModalIsVisible,
       mediaPickerModalIsVisible,
       nsfw,
@@ -231,19 +230,6 @@ class CreatePost extends React.PureComponent {
               inputRef={(el) => { this.postTextInput = el; }}
               multiline
               onChangeText={c => this.setState({ content: c })}
-              onContentSizeChange={({ nativeEvent }) => {
-                // On android the text box doesn't auto grow, so we have to manually set the height
-                if (Platform.OS === 'android') {
-                  this.setState({ textInputHeight: nativeEvent.contentSize.height });
-                }
-              }}
-              onSubmitEditing={() => {
-                if (!content.endsWith('\n')) {
-                  const updatedContent = `${content}\n`;
-                  this.setState({ content: updatedContent });
-                }
-              }}
-              height={Platform.select({ ios: null, android: (textInputHeight || 0) })}
               value={content}
               placeholder={placeholder}
               placeholderTextColor={colors.grey}

@@ -23,9 +23,9 @@ export const styles = StyleSheet.create({
     fontFamily: 'Open Sans',
     fontSize: 13,
     paddingHorizontal: scenePadding,
-    paddingVertical: 6,
+    paddingVertical: 4,
     minHeight: 30,
-    textAlignVertical: 'top',
+    textAlignVertical: 'center',
   },
   submitButton: {
     height: 36,
