@@ -129,11 +129,11 @@ export class SceneHeader extends PureComponent {
       moreButtonOptions,
       onMoreButtonOptionsSelected,
       showMoreButton,
-      subTitle,
+      subtitle,
     } = this.props;
 
     // Setup the media subtitles
-    let mediaSubTitle = isEmpty(subTitle) ? '' : subTitle;
+    let mediaSubTitle = isEmpty(subtitle) ? '' : subtitle;
     if (isArray(mediaSubTitle)) {
       // Join the subtitles
       mediaSubTitle = mediaSubTitle.filter(t => !isEmpty(t)).join(' · ');
@@ -247,7 +247,7 @@ SceneHeader.propTypes = {
   popularityRank: PropTypes.number,
   averageRating: PropTypes.number,
   title: PropTypes.string,
-  subTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   variant: PropTypes.oneOf(['profile', 'media', 'group']),
 };
 
@@ -271,6 +271,6 @@ SceneHeader.defaultProps = {
   ratingRank: null,
   averageRating: null,
   title: '',
-  subTitle: null,
+  subtitle: null,
   variant: 'profile',
 };

@@ -212,7 +212,7 @@ class MediaPages extends PureComponent {
   }
 
 
-  getSubTitles(media) {
+  getSubtitles(media) {
     if (!media) return null;
 
     // The media sub type
@@ -540,7 +540,7 @@ class MediaPages extends PureComponent {
             variant="media"
             media={media}
             title={media.canonicalTitle}
-            subTitle={this.getSubTitles(media)}
+            subtitle={this.getSubtitles(media)}
             description={media.synopsis}
             coverImage={getImgixCoverImage(media.coverImage)}
             posterImage={media.posterImage && media.posterImage.large}

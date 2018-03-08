@@ -2,12 +2,13 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import moment from 'moment';
 import { Text, TextInput, View, ActivityIndicator } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { STATUS_SELECT_OPTIONS } from 'kitsu/screens/Profiles/UserLibrary';
 import { Counter } from 'kitsu/components/Counter';
 import { Rating } from 'kitsu/components/Rating';
 import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { isNull } from 'lodash';
 import { styles } from './styles';
 
 const visibilityOptions = [
@@ -178,7 +179,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
 
   render() {
     const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props.navigation.state.params;
-    const { loading, error } = this.state;
+    const { loading, error, finishedAt, startedAt } = this.state;
 
     const rightTitle = loading ? 'Saving' : 'Save';
     const leftTitle = loading ? null : 'Cancel';
@@ -208,7 +209,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
           }
 
           {/* Error */}
-          {error &&
+          {isNull(error) &&
             <View style={styles.error}>
               <Text style={styles.errorText}>
                 Error: {error.detail || 'Something went wrong'}
@@ -294,14 +295,14 @@ export class UserLibraryEditScreenComponent extends React.Component {
                 <View>
                   <Text style={[
                     styles.editRowLabel,
-                    this.state.startedAt && styles.withValueLabel,
+                    startedAt && styles.withValueLabel,
                   ]}
                   >
                     Date Started
                   </Text>
-                  {this.state.startedAt &&
+                  {startedAt &&
                     <Text style={styles.editRowValue}>
-                      {moment(this.state.startedAt).format('MMM. DD, YYYY')}
+                      {moment(startedAt).format('MMM. DD, YYYY')}
                     </Text>
                   }
                 </View>
@@ -310,14 +311,14 @@ export class UserLibraryEditScreenComponent extends React.Component {
                 <View>
                   <Text style={[
                     styles.editRowLabel,
-                    this.state.finishedAt && styles.withValueLabel,
+                    finishedAt && styles.withValueLabel,
                   ]}
                   >
                     Date Finished
                   </Text>
-                  {this.state.finishedAt &&
+                  {finishedAt &&
                     <Text style={styles.editRowValue}>
-                      {moment(this.state.finishedAt).format('MMM. DD, YYYY')}
+                      {moment(finishedAt).format('MMM. DD, YYYY')}
                     </Text>
                   }
                 </View>

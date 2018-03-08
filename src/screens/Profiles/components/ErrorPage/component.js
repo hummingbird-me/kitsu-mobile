@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { StyledText } from 'kitsu/components/StyledText';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
+import { styles } from './styles';
 
 export const ErrorPage = ({ errorText, onBackPress }) => (
   <SceneContainer>
@@ -11,8 +12,8 @@ export const ErrorPage = ({ errorText, onBackPress }) => (
       leftButtonAction={onBackPress}
       leftButtonTitle="Back"
     />
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <StyledText color="light" textStyle={{ textAlignVertical: 'center', textAlign: 'center' }}>
+    <View style={styles.wrapper}>
+      <StyledText color="light" textStyle={styles.text}>
         {errorText}
       </StyledText>
     </View>
