@@ -37,10 +37,6 @@ export class SummaryProgress extends PureComponent {
     onEditPress: null,
   }
 
-  navigateToEdit = (props) => {
-    this.props.navigation.navigate('PostDetails', props);
-  }
-
   render() {
     const { libraryEntry, media, onPress, onEditPress } = this.props;
 

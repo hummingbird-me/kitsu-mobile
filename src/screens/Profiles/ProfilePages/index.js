@@ -21,8 +21,8 @@ import { isIdForCurrentUser } from 'kitsu/common/utils';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { parseURL } from 'kitsu/common/utils/url';
-import { StyledText } from 'kitsu/components/StyledText';
 import { isEmpty } from 'lodash';
+import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
 
@@ -306,19 +306,7 @@ class ProfilePage extends PureComponent {
     }
 
     if (error) {
-      return (
-        <SceneContainer>
-          <CustomHeader
-            leftButtonAction={this.goBack}
-            leftButtonTitle="Back"
-          />
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <StyledText color="light" textStyle={{ textAlignVertical: 'center', textAlign: 'center' }}>
-              An Error Occured.
-            </StyledText>
-          </View>
-        </SceneContainer>
-      );
+      return <ErrorPage onBackPress={this.goBack} />;
     }
 
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;

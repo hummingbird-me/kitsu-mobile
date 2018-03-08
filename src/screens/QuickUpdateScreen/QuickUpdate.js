@@ -25,7 +25,7 @@ import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { isEmpty, capitalize } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
-import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
+import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
@@ -158,9 +158,9 @@ class QuickUpdate extends Component {
   }
 
   onLibraryEntryUpdated = (data) => {
-    // Check to see if we got this event from something other than 'quickupdate'
+    // Check to see if we got this event from something other than quick update
     const { id, source } = data;
-    if (source === 'quickupdate') return;
+    if (source === KitsuLibraryEventSource.QUICK_UPDATE) return;
 
     // Find the entry
     const index = this.state.library.findIndex(e => e.id == id);
@@ -194,9 +194,9 @@ class QuickUpdate extends Component {
   }
 
   onLibraryEntryDeleted = (data) => {
-    // Check to see if we got this event from something other than 'quickupdate'
+    // Check to see if we got this event from something other than Quick update
     const { id, source } = data;
-    if (source === 'quickupdate') return;
+    if (source === KitsuLibraryEventSource.QUICK_UPDATE) return;
 
     // Find the entry
     const index = this.state.library.findIndex(e => e.id == id);
@@ -236,7 +236,7 @@ class QuickUpdate extends Component {
       }, {
         include: this._requestIncludeFields,
       });
-      KitsuLibrary.onLibraryEntryUpdate(entry, record, media.type, 'quickupdate');
+      KitsuLibrary.onLibraryEntryUpdate(entry, record, media.type, KitsuLibraryEventSource.QUICK_UPDATE);
       this.updateLibraryEntry(record);
     } catch (error) {
       console.log('Error rating library entry:', error);
@@ -466,7 +466,7 @@ class QuickUpdate extends Component {
         { text: 'OK', style: 'cancel' },
       ]);
     } else {
-      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, media.type, 'quickupdate');
+      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, media.type, KitsuLibraryEventSource.QUICK_UPDATE);
       this.updateLibraryEntry(record);
       this.resetFeed(() => this.fetchEpisodeFeed());
     }

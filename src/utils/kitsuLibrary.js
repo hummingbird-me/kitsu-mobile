@@ -16,6 +16,22 @@ export class KitsuLibraryEvents {
   }
 }
 
+/**
+ * Sources of the library events
+ */
+export class KitsuLibraryEventSource {
+  static get STORE() {
+    return 'store';
+  }
+
+  static get QUICK_UPDATE() {
+    return 'quickupdate';
+  }
+
+  static get MEDIA_PAGE() {
+    return 'mediapage';
+  }
+}
 
 /**
  * A helper class for keeping redux library state in sync
@@ -30,7 +46,7 @@ class _KitsuLibrary {
    *
    * @param {any} event The event to subscribe to. Can find them in `KitsuLibraryEvents` class.
    * @param {any} handler The handler function which takes in 1 argument.
-   * @returns The unsubsribe function.
+   * @returns The unsubscribe function.
    */
   subscribe(event, handler) {
     const eventHandler = { event, handler };

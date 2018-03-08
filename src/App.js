@@ -12,12 +12,12 @@ import PropTypes from 'prop-types';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
+import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import store, { persistor } from './store/config';
 import Root from './Router';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
 import * as profile from './store/profile/actions';
-import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
 
 // eslint-disable-next-line
 console.disableYellowBox = true;
@@ -141,7 +141,7 @@ class App extends PureComponent {
 
     // Check to see if we got this event from something other than 'store'
     const { status, type, entry, source } = data;
-    if (!entry || source === 'store') return;
+    if (!entry || source === KitsuLibraryEventSource.STORE) return;
 
     // Add  the store entry
     store.dispatch(profile.onLibraryEntryCreate(entry, currentUser.id, type, status));
@@ -154,7 +154,7 @@ class App extends PureComponent {
 
     // Check to see if we got this event from something other than 'store'
     const { type, oldEntry, newEntry, source } = data;
-    if (!oldEntry || !newEntry || source === 'store') return;
+    if (!oldEntry || !newEntry || source === KitsuLibraryEventSource.STORE) return;
 
     // Update the store entry
     store.dispatch(profile.onLibraryEntryUpdate(currentUser.id, type, oldEntry.status, newEntry));
@@ -167,7 +167,7 @@ class App extends PureComponent {
 
     // Check to see if we got this event from something other than 'store'
     const { id, type, status, source } = data;
-    if (!id || source === 'store') return;
+    if (!id || source === KitsuLibraryEventSource.STORE) return;
 
     // Delete the store entry
     store.dispatch(profile.onLibraryEntryDelete(id, currentUser.id, type, status));

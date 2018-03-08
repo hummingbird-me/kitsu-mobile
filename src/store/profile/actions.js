@@ -2,8 +2,8 @@ import capitalize from 'lodash/capitalize';
 import map from 'lodash/map';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
+import { KitsuLibrary, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { getState } from '../user/actions';
-import { KitsuLibrary } from 'kitsu/utils/kitsuLibrary';
 
 export const fetchProfile = userId => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
@@ -342,7 +342,7 @@ export const updateUserLibraryEntry = (
     onLibraryEntryUpdate(currentUser.id, libraryType, libraryStatus, updateEntry, isSearchEntry)(dispatch, getState);
 
     const record = await Kitsu.update('libraryEntries', updateEntry);
-    KitsuLibrary.onLibraryEntryUpdate(previousLibraryEntry, record, libraryType, 'store');
+    KitsuLibrary.onLibraryEntryUpdate(previousLibraryEntry, record, libraryType, KitsuLibraryEventSource.STORE);
   } catch (e) {
     throw e;
   }
@@ -361,7 +361,7 @@ export const deleteUserLibraryEntry = (id, libraryType, libraryStatus) => async 
   try {
     await Kitsu.destroy('libraryEntries', id);
     dispatch(onLibraryEntryDelete(id, currentUser.id, libraryType, libraryStatus));
-    KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, 'store');
+    KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, KitsuLibraryEventSource.STORE);
   } catch (e) {
     throw e;
   }

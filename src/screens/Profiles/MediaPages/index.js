@@ -19,7 +19,8 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import { capitalize, upperFirst } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { StyledText } from 'kitsu/components/StyledText';
-import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
+import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
@@ -90,14 +91,15 @@ class MediaPages extends PureComponent {
       case 'planned':
       case 'completed':
       case 'on_hold':
-      case 'dropped':
-        const data = { state: option };
+      case 'dropped': {
+        const data = { status: option };
         libraryEntry ? await this.updateLibraryEntry(data) : await this.createLibraryEntry(data);
         break;
+      }
       case 'remove':
         this.setState({ loadingLibrary: true });
         await Kitsu.destroy('libraryEntries', libraryEntry.id);
-        KitsuLibrary.onLibraryEntryDelete(libraryEntry.id, mediaType, libraryEntry.status, 'mediapage');
+        KitsuLibrary.onLibraryEntryDelete(libraryEntry.id, mediaType, libraryEntry.status, KitsuLibraryEventSource.MEDIA_PAGE);
         this.setState({ libraryEntry: null, loadingLibrary: false });
         break;
       default:
@@ -134,10 +136,10 @@ class MediaPages extends PureComponent {
   }
 
   onLibraryEntryUpdated = (data) => {
-    // Check to see if we got this event from something other than 'quickupdate'
+    // Check to see if we got this event from something other than media page
     const { id, newEntry, source } = data;
     const { libraryEntry } = this.state;
-    if (!newEntry || source === 'mediapage') return;
+    if (!newEntry || source === KitsuLibraryEventSource.MEDIA_PAGE) return;
 
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: newEntry });
@@ -145,10 +147,10 @@ class MediaPages extends PureComponent {
   }
 
   onLibraryEntryDeleted = (data) => {
-    // Check to see if we got this event from something other than 'quickupdate'
+    // Check to see if we got this event from something other than media page
     const { id, source } = data;
     const { libraryEntry } = this.state;
-    if (source === 'mediapage') return;
+    if (source === KitsuLibraryEventSource.MEDIA_PAGE) return;
 
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: null });
@@ -172,11 +174,10 @@ class MediaPages extends PureComponent {
     }
     changes = { ...changes, progress };
 
-    // Mark entry as completed if the media has finished airing and the progress is the same as the count.
+    // Mark entry as completed if the the progress is the same as the count.
     const libraryStatus = libraryEntry && libraryEntry.status;
     let status = libraryStatus || 'current';
-    if (mediaCount && progress === mediaCount && media.status === 'finished') {
-
+    if (mediaCount && progress === mediaCount) {
       // Check if we were reconsuming, if so increase the count
       if (libraryEntry && libraryEntry.reconsuming) {
         const reconsumeCount = libraryEntry.reconsumeCount + 1;
@@ -255,7 +256,7 @@ class MediaPages extends PureComponent {
       }, {
         include: 'anime,manga',
       });
-      KitsuLibrary.onLibraryEntryCreate(record, mediaType, 'mediapage');
+      KitsuLibrary.onLibraryEntryCreate(record, mediaType, KitsuLibraryEventSource.MEDIA_PAGE);
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error creating library entry:', err);
@@ -272,7 +273,7 @@ class MediaPages extends PureComponent {
         ...changes,
       };
       const record = await Kitsu.update('libraryEntries', updates);
-      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, mediaType, 'mediapage');
+      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, mediaType, KitsuLibraryEventSource.MEDIA_PAGE);
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error updating library entry:', err);
@@ -362,9 +363,10 @@ class MediaPages extends PureComponent {
   fetchOther = async (type, id) => {
     try {
       const [
-        castings,
+        // castings,
         mediaReactions,
       ] = await Promise.all([
+        /** Disabled until we improve our character db.
         Kitsu.findAll('castings', {
           filter: {
             mediaId: id,
@@ -374,6 +376,7 @@ class MediaPages extends PureComponent {
           sort: '-featured',
           include: 'character',
         }),
+        */
         Kitsu.findAll('mediaReactions', {
           filter: {
             [`${type}Id`]: id,
@@ -384,7 +387,7 @@ class MediaPages extends PureComponent {
       ]);
 
       this.setState({
-        castings,
+        // castings,
         mediaReactions,
       });
     } catch (error) {
@@ -471,19 +474,7 @@ class MediaPages extends PureComponent {
     }
 
     if (error || !media) {
-      return (
-        <SceneContainer>
-          <CustomHeader
-            leftButtonAction={this.goBack}
-            leftButtonTitle="Back"
-          />
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <StyledText color="light" textStyle={{ textAlignVertical: 'center', textAlign: 'center' }}>
-              An Error Occured.
-            </StyledText>
-          </View>
-        </SceneContainer>
-      );
+      return <ErrorPage onBackPress={this.goBack} />;
     }
 
     // Handle dynamic button options (TODO: Cleanup)
