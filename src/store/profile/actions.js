@@ -344,7 +344,7 @@ export const updateUserLibraryEntry = (
     const record = await Kitsu.update('libraryEntries', updateEntry);
     KitsuLibrary.onLibraryEntryUpdate(previousLibraryEntry, record, libraryType, 'store');
   } catch (e) {
-    // TODO: handle the case where the entry update fails
+    throw e;
   }
 };
 
@@ -358,10 +358,13 @@ export const deleteUserLibraryEntry = (id, libraryType, libraryStatus) => async 
   const { currentUser } = getState().user;
   if (!currentUser || !currentUser.id) return;
 
-  await Kitsu.destroy('libraryEntries', id);
-
-  dispatch(onLibraryEntryDelete(id, currentUser.id, libraryType, libraryStatus));
-  KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, 'store');
+  try {
+    await Kitsu.destroy('libraryEntries', id);
+    dispatch(onLibraryEntryDelete(id, currentUser.id, libraryType, libraryStatus));
+    KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, 'store');
+  } catch (e) {
+    throw e;
+  }
 };
 
 export function onLibraryEntryCreate(
@@ -409,7 +412,15 @@ export function onLibraryEntryUpdate(
     const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
     const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
 
-    const updateEntry = { ...newLibraryEntry };
+    // Combine relationship data on the entries
+    const combined = newLibraryEntry;
+    if (previousLibraryEntry) {
+      if (!combined.anime) combined.anime = previousLibraryEntry.anime;
+      if (!combined.manga) combined.manga = previousLibraryEntry.manga;
+      if (!combined.user) combined.user = previousLibraryEntry.user;
+    }
+
+    const updateEntry = { ...combined };
 
     // update the state
     dispatch({
@@ -418,7 +429,7 @@ export function onLibraryEntryUpdate(
       libraryType,
 
       previousLibraryStatus: previousLibraryEntry.status,
-      newLibraryStatus: newLibraryEntry.status,
+      newLibraryStatus: updateEntry.status,
 
       previousLibraryEntry,
       newLibraryEntry: updateEntry,

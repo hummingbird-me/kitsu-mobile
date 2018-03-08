@@ -26,7 +26,8 @@ const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
   { key: 'episodes', label: 'Episodes', screen: 'Episodes', if: (state) => state.media.type === 'anime'},
   { key: 'chapters', label: 'Chapters', screen: 'Episodes', if: (state) => state.media.type === 'manga'},
-  { key: 'characters', label: 'Characters', screen: 'Characters' },
+  // NOTE: Disabled until we improve char db
+  // { key: 'characters', label: 'Characters', screen: 'Characters' },
   { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
   { key: 'franchise', label: 'Franchise', screen: 'Franchise' },
 ];
@@ -63,7 +64,7 @@ class MediaPages extends PureComponent {
     mediaReactions: null,
     favorite: null,
     libraryEntry: null,
-    loadingLibrary: false,
+    loadingLibrary: false, // Check whether we are updating/loading library entry
     loadingAdditional: false, // Check whether episodes & Related are loading
   }
 
@@ -90,7 +91,8 @@ class MediaPages extends PureComponent {
       case 'completed':
       case 'on_hold':
       case 'dropped':
-        libraryEntry ? await this.updateLibraryEntry(option) : await this.createLibraryEntry(option);
+        const data = { state: option };
+        libraryEntry ? await this.updateLibraryEntry(data) : await this.createLibraryEntry(data);
         break;
       case 'remove':
         this.setState({ loadingLibrary: true });
@@ -153,16 +155,95 @@ class MediaPages extends PureComponent {
     }
   }
 
+  onEpisodeProgress = async (number) => {
+    const { media, libraryEntry } = this.state;
+    if (!media) return;
+
+    let changes = {};
+
+    // The media count
+    const mediaCount = media.episodeCount || media.chapterCount;
+
+    // Check progress is within the bounds
+    let progress = number;
+    if (progress < 0) progress = 0;
+    if (mediaCount && progress > mediaCount) {
+      progress = mediaCount;
+    }
+    changes = { ...changes, progress };
+
+    // Mark entry as completed if the media has finished airing and the progress is the same as the count.
+    const libraryStatus = libraryEntry && libraryEntry.status;
+    let status = libraryStatus || 'current';
+    if (mediaCount && progress === mediaCount && media.status === 'finished') {
+
+      // Check if we were reconsuming, if so increase the count
+      if (libraryEntry && libraryEntry.reconsuming) {
+        const reconsumeCount = libraryEntry.reconsumeCount + 1;
+        changes = { ...changes, reconsuming: false, reconsumeCount };
+      }
+
+      // Set the status to complete
+      status = 'completed';
+    }
+
+    // If entry was 'planned' and we progressed then move it to current
+    if (libraryStatus && libraryStatus === 'planned') {
+      status = 'current';
+    }
+
+    // If entry was 'completed' and we progressed then set reconsuming to true
+    if (libraryStatus && libraryStatus === 'completed' && mediaCount && progress !== mediaCount) {
+      changes = { ...changes, reconsuming: true };
+    }
+
+    // Set the new status
+    changes = { ...changes, status };
+
+
+    // Now we just call the relevant method
+    // Could have the case where user taps progress but doesn't have an entry
+    if (!libraryEntry) {
+      await this.createLibraryEntry(changes);
+    } else {
+      await this.updateLibraryEntry(changes);
+    }
+  }
+
+
+  getSubTitles(media) {
+    if (!media) return null;
+
+    // The media sub type
+    const type = (media.showType && upperFirst(media.showType)) ||
+      (media.mangaType && capitalize(media.mangaType)) ||
+      '';
+
+    // Date when media started
+    const startDate = media.startDate && (new Date(media.startDate));
+    const year = (startDate && startDate.getFullYear().toString()) || null;
+
+    // Episode or chapter counts
+    const countSuffix = media.type === 'anime' ? 'Eps' : 'Chs';
+    const count = media.episodeCount || media.chapterCount || null;
+    const countString = count && `${count} ${countSuffix}`;
+
+    // Finished status
+    const status = media.status === 'finished' ? 'Finished' : null;
+
+    return [type, year, status, countString];
+  }
+
   setActiveTab = (tab) => {
     this.setState({ active: tab });
   }
 
-  createLibraryEntry = async (status) => {
+  createLibraryEntry = async (options) => {
     const { mediaId, mediaType } = this.props.navigation.state.params;
     try {
       this.setState({ loadingLibrary: true });
       const record = await Kitsu.create('libraryEntries', {
-        status,
+        ...options,
         [mediaType]: {
           id: mediaId,
           type: mediaType
@@ -181,14 +262,14 @@ class MediaPages extends PureComponent {
     }
   }
 
-  updateLibraryEntry = async (status) => {
+  updateLibraryEntry = async (changes) => {
     const { libraryEntry } = this.state;
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaType } = this.props.navigation.state.params;
     try {
       this.setState({ loadingLibrary: true });
       const updates = {
         id: libraryEntry.id,
-        status,
+        ...changes,
       };
       const record = await Kitsu.update('libraryEntries', updates);
       KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, mediaType, 'mediapage');
@@ -199,6 +280,29 @@ class MediaPages extends PureComponent {
   }
 
   goBack = () => this.props.navigation.goBack();
+
+  navigateToEditEntry = () => {
+    const { libraryEntry, media } = this.state;
+    const { currentUser, navigation } = this.props;
+    if (!libraryEntry || !currentUser || !media) return;
+
+    // We need to combine the media with the entry
+    const entryWithMedia = {
+      ...libraryEntry,
+      [media.type]: media,
+    };
+
+    navigation.navigate('UserLibraryEdit', {
+      libraryEntry: entryWithMedia,
+      libraryStatus: entryWithMedia.status,
+      libraryType: media.type,
+      canEdit: true,
+      ratingSystem: currentUser.ratingSystem,
+      updateUserLibraryEntry: async (type, status, updates) => {
+        await this.updateLibraryEntry(updates);
+      },
+    });
+  }
 
   /**
    * Fetch the media information
@@ -324,10 +428,10 @@ class MediaPages extends PureComponent {
 
   renderTabNav = () => (
     <TabBar>
-      {TAB_ITEMS.map(tabItem => {
+      {TAB_ITEMS.map((tabItem) => {
         // If this tab item is conditional, run the check
         if (tabItem.if && !tabItem.if(this.state)) {
-          return;
+          return null;
         }
         return (
           <TabBarLink
@@ -444,13 +548,8 @@ class MediaPages extends PureComponent {
           <SceneHeader
             variant="media"
             media={media}
-            type={capitalize(media.type)}
-            subType={
-              (media.showType && upperFirst(media.showType)) ||
-              (media.mangaType && capitalize(media.mangaType)) ||
-              ''
-            }
             title={media.canonicalTitle}
+            subTitle={this.getSubTitles(media)}
             description={media.synopsis}
             coverImage={getImgixCoverImage(media.coverImage)}
             posterImage={media.posterImage && media.posterImage.large}
@@ -470,10 +569,14 @@ class MediaPages extends PureComponent {
             setActiveTab={tab => this.setActiveTab(tab)}
             media={media}
             mediaId={media.id}
+            libraryEntry={libraryEntry}
             mediaReactions={mediaReactions}
             castings={castings}
             navigation={this.props.navigation}
             loadingAdditional={loadingAdditional}
+            loadingLibrary={loadingLibrary}
+            onEpisodeProgress={this.onEpisodeProgress}
+            onLibraryEditPress={this.navigateToEditEntry}
           />
         </ParallaxScroll>
       </SceneContainer>

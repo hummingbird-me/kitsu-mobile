@@ -11,7 +11,7 @@ import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
-import { isEmpty, capitalize, isNull } from 'lodash';
+import { isEmpty, capitalize, isNull, isArray } from 'lodash';
 import { styles } from './styles';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
@@ -124,14 +124,20 @@ export class SceneHeader extends PureComponent {
   render() {
     const {
       variant,
-      type,
       title,
       posterImage,
       moreButtonOptions,
       onMoreButtonOptionsSelected,
       showMoreButton,
-      subType,
+      subTitle,
     } = this.props;
+
+    // Setup the media subtitles
+    let mediaSubTitle = isEmpty(subTitle) ? '' : subTitle;
+    if (isArray(mediaSubTitle)) {
+      // Join the subtitles
+      mediaSubTitle = mediaSubTitle.filter(t => !isEmpty(t)).join(' · ');
+    }
 
     return (
       <View style={[styles.container, styles[`container__${variant}`]]}>
@@ -152,10 +158,12 @@ export class SceneHeader extends PureComponent {
           <View style={[styles.titleView, styles[`titleView__${variant}`]]}>
             {/* Title */}
             <View style={[styles.titleTop, styles[`titleTop__${variant}`]]}>
-              <StyledText size="xsmall" color="light">
-                {type}{!isEmpty(subType) && subType !== type && ` · ${subType}`}
-              </StyledText>
-              <StyledText size="large" color="light" bold>{title}</StyledText>
+              {!isEmpty(mediaSubTitle) &&
+                <StyledText size="xsmall" color="light">
+                  {mediaSubTitle}
+                </StyledText>
+              }
+              <StyledText size="large" color="light" bold numberOfLines={4}>{title}</StyledText>
             </View>
 
             {/* Add to library button & more button */}
@@ -239,8 +247,7 @@ SceneHeader.propTypes = {
   popularityRank: PropTypes.number,
   averageRating: PropTypes.number,
   title: PropTypes.string,
-  type: PropTypes.string,
-  subType: PropTypes.string,
+  subTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   variant: PropTypes.oneOf(['profile', 'media', 'group']),
 };
 
@@ -264,7 +271,6 @@ SceneHeader.defaultProps = {
   ratingRank: null,
   averageRating: null,
   title: '',
-  type: '',
-  subType: '',
+  subTitle: null,
   variant: 'profile',
 };

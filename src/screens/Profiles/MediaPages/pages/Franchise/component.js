@@ -36,12 +36,14 @@ const renderItem = (item, navigation) => {
   let subtitle = `${type} · ${ROLE_LOOKUP_TABLE[item.role]}`;
   subtitle = !!year ? `${subtitle} · ${year}` : subtitle;
 
-  const onPress = () => (
+  const onPress = () => {
+    if (!item || !item.destination) return;
     navigation.navigate('MediaPages', {
       mediaId: item.destination.id,
       mediaType: item.destination.type,
-    })
-  );
+    });
+  };
+
   return (
     <TouchableOpacity onPress={onPress}>
       <MediaRow
@@ -56,10 +58,9 @@ const renderItem = (item, navigation) => {
 };
 
 export const component = ({ media: { mediaRelationships }, navigation }) => (
-  <TabContainer light padded>
+  <TabContainer light>
     <FlatList
       data={mediaRelationships}
-      ListHeaderComponent={() => <TabHeader title="Franchise" contentDark />}
       renderItem={({ item }) => renderItem(item, navigation)}
     />
   </TabContainer>

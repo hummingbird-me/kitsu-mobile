@@ -3,25 +3,31 @@ import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
-  loading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 100,
+  progressWrap: {
+    paddingVertical: scenePadding,
+    backgroundColor: colors.listBackPurple,
   },
-  itemWrap: {
-    padding: scenePadding,
+  progressContainer: {
     backgroundColor: colors.white,
+    marginHorizontal: scenePadding,
+    padding: 8,
+    marginVertical: 10,
+    borderRadius: 4,
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  itemTitle: {
+  progressStatus: {
     flex: 1,
+    flexDirection: 'row',
     marginLeft: 8,
+    marginRight: 16,
+    alignItems: 'center',
   },
-  progressIconContainer: {
-    paddingLeft: 8,
-    paddingVertical: 4,
+  progressBarBackground: {
+    backgroundColor: colors.lightGrey,
   },
+
   progressIconCircle: {
     width: 30,
     height: 30,
@@ -39,5 +45,10 @@ export const styles = StyleSheet.create({
     fontSize: 28,
     backgroundColor: 'transparent',
     paddingTop: Platform.select({ ios: 4, android: 0 }),
+  },
+  arrowIcon: {
+    fontSize: 20,
+    marginLeft: 10,
+    color: colors.lightGrey,
   },
 });

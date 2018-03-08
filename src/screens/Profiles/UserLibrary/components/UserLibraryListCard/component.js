@@ -123,8 +123,6 @@ export class UserLibraryListCard extends React.PureComponent {
         libraryType,
       } = this.props;
 
-      // FIXME: updated Library Entry doesn't get passed here.
-
       this.props.navigate(USER_LIBRARY_EDIT_SCREEN, {
         libraryEntry,
         libraryStatus,

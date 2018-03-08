@@ -7,12 +7,16 @@ import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
 import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
 import quickUpdateTabBarImage from 'kitsu/assets/img/tabbar_icons/update.png';
+import { UserLibraryEditScreen } from 'kitsu/screens/Profiles';
 import navigationOptions from './navigationOptions';
 
 const QuickUpdateStack = DismissableStackNavigator(
   {
     QuickUpdate: {
       screen: QuickUpdateScreen,
+    },
+    UserLibraryEdit: {
+      screen: UserLibraryEditScreen,
     },
     ProfilePages: {
       screen: ProfilePages,

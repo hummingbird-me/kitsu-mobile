@@ -92,8 +92,12 @@ class _KitsuLibrary {
     if (!combined.anime) combined.anime = oldEntry.anime;
     if (!combined.manga) combined.manga = oldEntry.manga;
     if (!combined.user) combined.user = oldEntry.user;
-    if (!combined.unit) combined.unit = oldEntry.unit;
-    if (!combined.nextUnit) combined.nextUnit = oldEntry.nextUnit;
+
+    // Only combine unit if progress are same, otherwise they'll be different.
+    if (oldEntry.progress === newEntry.progress) {
+      if (!combined.unit) combined.unit = oldEntry.unit;
+      if (!combined.nextUnit) combined.nextUnit = oldEntry.nextUnit;
+    }
 
     this.publish(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, {
       id: newEntry.id,

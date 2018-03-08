@@ -30,7 +30,10 @@ const getCardVisibilityCounts = () => {
 };
 
 const progressFromLibraryEntry = (libraryEntry) => {
+  if (!libraryEntry) return 0;
   const mediaData = libraryEntry.anime || libraryEntry.manga;
+
+  if (!mediaData) return 0;
 
   if (mediaData.type === 'anime') {
     return Math.floor((libraryEntry.progress / mediaData.episodeCount) * 100);
