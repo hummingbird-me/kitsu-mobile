@@ -88,7 +88,7 @@ class RegistrationScreen extends React.Component {
     });
   };
 
-  keyExtractor = (item, index) => index;
+  keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
     <Image

@@ -1,4 +1,4 @@
-import { REHYDRATE } from 'redux-persist/constants';
+import { REHYDRATE } from 'redux-persist';
 import * as types from 'kitsu/store/types';
 
 function updateObjectInArray(array, entry) {
@@ -473,9 +473,10 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
     case types.LOGOUT_USER:
       return INITIAL_STATE;
     case REHYDRATE:
+      const user = (action.payload && action.payload.user) || {};
       return {
         ...state,
-        ...action.payload.user,
+        ...user,
         signingIn: false,
         signingUp: false,
         signupError: {},

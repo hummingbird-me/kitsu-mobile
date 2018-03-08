@@ -12,19 +12,19 @@ import { Spinner } from 'native-base';
 import { styles } from './styles';
 import * as constants from './constants';
 
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const renderScrollTabBar = () => <ScrollableTabBar />;
 
 const getItemLayout = (_data, index) => {
   const width = constants.POSTER_CARD_WIDTH;
-  return { width, offset: width * index, index };
+  return { length: width, offset: width * index, index };
 };
 
 const getCardVisibilityCounts = () => {
-  const { height, width } = Dimensions.get('screen');
-  const maxWidth = height > width ? height : width;
+  const maxWidth = SCREEN_HEIGHT > SCREEN_WIDTH ? SCREEN_HEIGHT : SCREEN_WIDTH;
   return {
     countForMaxWidth: Math.ceil(maxWidth / constants.POSTER_CARD_WIDTH),
-    countForCurrentWidth: Math.ceil(width / constants.POSTER_CARD_WIDTH),
+    countForCurrentWidth: Math.ceil(SCREEN_WIDTH / constants.POSTER_CARD_WIDTH),
   };
 };
 
@@ -65,7 +65,7 @@ export class UserLibraryScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title={profile.name}
-          onClickBack={navigation.goBack}
+          onClickBack={() => navigation.goBack(null)}
         />
       ),
     };
@@ -178,7 +178,7 @@ export class UserLibraryScreenComponent extends React.Component {
 
       if (!loading && emptyItemsToAdd > 0) {
         for (let x = 0; x < emptyItemsToAdd; x += 1) {
-          dataFilled.push({ id: x, type: 'empty-item' });
+          dataFilled.push({ id: x.toString(), type: 'empty-item' });
         }
       }
 
@@ -229,7 +229,11 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ScrollableTabView locked renderTabBar={renderScrollTabBar}>
+        <ScrollableTabView
+          locked
+          style={{ width: SCREEN_WIDTH }}
+          renderTabBar={renderScrollTabBar}
+        >
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
             <UserLibrarySearchBox navigation={this.props.navigation} profile={profile} />
             {this.renderLists('anime')}

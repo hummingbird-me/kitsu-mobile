@@ -43,8 +43,9 @@ const Tabs = TabNavigator(
   },
   {
     lazy: true,
+    removeClippedSubviews: true,
     tabBarPosition: 'bottom',
-    swipeEnabled: Platform.OS === 'ios',
+    swipeEnabled: false,
     initialRouteName: 'Notifications',
     tabBarOptions: {
       activeTintColor: tabRed,
