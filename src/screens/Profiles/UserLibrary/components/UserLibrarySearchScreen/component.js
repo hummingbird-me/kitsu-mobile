@@ -32,7 +32,7 @@ export class UserLibrarySearchScreenComponent extends React.Component {
         <ProfileHeader
           profile={profile}
           title="Library Search"
-          onClickBack={props.navigation.goBack}
+          onClickBack={() => props.navigation.goBack(null)}
         />
       ),
     };

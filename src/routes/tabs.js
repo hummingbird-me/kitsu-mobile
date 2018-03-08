@@ -33,6 +33,7 @@ const Tabs = TabNavigator(
   },
   {
     lazy: true,
+    removeClippedSubviews: true,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     tabBarOptions: {

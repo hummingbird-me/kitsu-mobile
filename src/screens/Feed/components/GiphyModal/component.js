@@ -201,6 +201,7 @@ export class GiphyModal extends PureComponent {
           </View>
           {/* TODO: Fetch more gifs on scroll */}
           <FlatList
+            listKey="giphy"
             style={padding}
             data={gifs}
             getItemLayout={(data, index) => ({

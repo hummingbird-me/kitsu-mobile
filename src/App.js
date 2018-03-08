@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { Platform, View, StatusBar, Linking, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'
 import { identity, isNull, isEmpty } from 'lodash';
 import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
@@ -11,7 +12,7 @@ import PropTypes from 'prop-types';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
-import store from './store/config';
+import store, { persistor } from './store/config';
 import Root from './Router';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
@@ -58,7 +59,6 @@ class App extends PureComponent {
   onStoreUpdate() {
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
-
     // If the authentication state changed from true to false then take user to intro screen
     if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
       const resetAction = NavigationActions.reset({
@@ -66,7 +66,11 @@ class App extends PureComponent {
         actions: [NavigationActions.navigate({ routeName: 'Intro' })],
         key: null,
       });
-      this.navigation.dispatch(resetAction);
+      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
+      // blocking children from rendering until state has been rehydrated.
+      // Another solution could be to `setTimeout` here but it seems `onStoreUpdate`
+      // is called twice which results in 2x navigation actions being dispatched.
+      this.navigation && this.navigation.dispatch(resetAction);
     }
 
     // Update sentry
@@ -172,7 +176,9 @@ class App extends PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <ConnectedRoot />
+        <PersistGate loading={null} persistor={persistor}>
+          <ConnectedRoot />
+        </PersistGate>
       </Provider>
     );
   }

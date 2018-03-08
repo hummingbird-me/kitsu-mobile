@@ -5,7 +5,7 @@ import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-const keyExtractor = (item, index) => index;
+const keyExtractor = (item, index) => index.toString();
 
 export const ScrollableSection = ({
   contentDark,

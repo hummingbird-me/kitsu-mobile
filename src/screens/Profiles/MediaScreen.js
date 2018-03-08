@@ -26,7 +26,7 @@ import getTitleField from 'kitsu/utils/getTitleField';
 import { fetchMedia, fetchMediaReactions, fetchMediaCastings } from 'kitsu/store/media/actions';
 import { getMediaFeed } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
-import ParallaxScrollView from 'react-native-parallax-scroll-view';
+// import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
