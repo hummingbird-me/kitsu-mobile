@@ -5,13 +5,9 @@ import SearchScreen from 'kitsu/screens/Search/SearchScreen';
 import SearchCategory from 'kitsu/screens/Search/SearchCategory';
 import SearchResults from 'kitsu/screens/Search/SearchResults';
 import SeasonScreen from 'kitsu/screens/Search/SeasonScreen';
-import MediaPages from 'kitsu/screens/Profiles/MediaPages';
-import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import search from 'kitsu/assets/img/tabbar_icons/search.png';
-import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
-import { UserLibraryEditScreen } from 'kitsu/screens/Profiles';
 import navigationOptions from './navigationOptions';
-
+import { commonRoutes } from './common';
 
 const SearchStack = StackNavigator(
   {
@@ -27,18 +23,7 @@ const SearchStack = StackNavigator(
     SeasonScreen: {
       screen: SeasonScreen,
     },
-    UserLibraryEdit: {
-      screen: UserLibraryEditScreen,
-    },
-    MediaPages: {
-      screen: MediaPages,
-    },
-    ProfilePages: {
-      screen: ProfilePages,
-    },
-    PostDetails: {
-      screen: PostDetails,
-    },
+    ...commonRoutes,
   },
   {
     navigationOptions: () => ({
