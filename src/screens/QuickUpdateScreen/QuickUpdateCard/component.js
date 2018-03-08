@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
@@ -144,7 +144,11 @@ export default class QuickUpdateCard extends PureComponent {
       <View key={data.item.id} style={styles.wrapper}>
         {/* Episode Landscape Image */}
         <View style={[styles.posterImageWrapper, styles.shadow]}>
-          <Image source={{ uri: landscapeImage }} style={styles.posterImage}>
+          <ImageBackground
+            source={{ uri: landscapeImage }}
+            style={styles.posterImage}
+            imageStyle={{ resizeMode: 'cover' }}
+          >
             <LinearGradient
               colors={['transparent', 'rgba(0, 0, 0, 1)']}
               style={styles.posterImageGradient}
@@ -192,7 +196,7 @@ export default class QuickUpdateCard extends PureComponent {
                 )}
               </View>
             </View>
-          </Image>
+          </ImageBackground>
         </View>
 
         {/* Card */}

@@ -43,6 +43,7 @@ class About extends PureComponent {
     return (
       <TabContainer>
         <FlatList
+          listKey="about"
           data={aboutRows}
           renderItem={({ item }) => (
             <InfoRow

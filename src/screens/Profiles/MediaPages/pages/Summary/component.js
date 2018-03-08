@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
@@ -94,12 +95,23 @@ class SummaryComponent extends PureComponent {
     });
   }
 
+  renderItem = ({ item }) => (
+    <Post
+      post={item}
+      onPostPress={this.navigateToPost}
+      currentUser={this.props.currentUser}
+      navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
+      navigation={this.props.navigation}
+    />
+  );
+
   render() {
     const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
     const { loading, feed } = this.state;
 
     return (
       <SceneContainer>
+
         {/* Progress */}
         <SummaryProgress
           libraryEntry={libraryEntry}
@@ -179,16 +191,11 @@ class SummaryComponent extends PureComponent {
 
         {/* Feed */}
         { !loading &&
-          feed.map(item => (
-            <Post
-              key={item.id}
-              post={item}
-              onPostPress={this.navigateToPost}
-              currentUser={this.props.currentUser}
-              navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
-              navigation={this.props.navigation}
-            />
-          ))
+          <FlatList
+            data={feed || []}
+            keyExtractor={item => item.id}
+            renderItem={this.renderItem}
+          />
         }
 
       </SceneContainer>

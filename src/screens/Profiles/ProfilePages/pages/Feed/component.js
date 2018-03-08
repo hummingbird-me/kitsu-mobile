@@ -7,7 +7,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { View } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 class FeedComponent extends PureComponent {
   static propTypes = {
@@ -74,8 +74,17 @@ class FeedComponent extends PureComponent {
     }
   };
 
+  renderItem = ({ item }) => (
+    <Post
+      post={item}
+      onPostPress={this.navigateToPost}
+      currentUser={this.props.currentUser}
+      navigation={this.props.navigation}
+    />
+  );
+
   render() {
-    const { profile, currentUser, navigation } = this.props;
+    const { profile } = this.props;
     const { loading, feed } = this.state;
 
     // TODO: Show error state here
@@ -88,15 +97,12 @@ class FeedComponent extends PureComponent {
         { loading ?
           <SceneLoader />
           :
-          feed.map(item => (
-            <Post
-              key={item.id}
-              post={item}
-              onPostPress={this.navigateToPost}
-              currentUser={currentUser}
-              navigation={navigation}
-            />
-          ))
+          <FlatList
+            listKey="feed"
+            data={feed || []}
+            keyExtractor={item => item.id}
+            renderItem={this.renderItem}
+          />
         }
       </SceneContainer>
     );

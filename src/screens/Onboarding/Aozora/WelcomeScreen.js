@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ImageBackground } from 'react-native';
 import { Button } from 'kitsu/components/Button';
 import { NavigationActions } from 'react-navigation';
 import { iceBackground, iceCube } from 'kitsu/assets/img/onboarding/';
@@ -46,9 +46,13 @@ class WelcomeScreen extends React.Component {
           <Text style={[commonStyles.tutorialText, styles.tutorialText]}>
             {title}
           </Text>
-          <Image resizeMode="contain" style={styles.iceBackground} source={iceBackground}>
+          <ImageBackground
+            style={styles.iceBackground}
+            imageStyle={{ resizeMode: 'contain' }}
+            source={iceBackground}
+          >
             <Image style={styles.iceCube} source={iceCube} />
-          </Image>
+          </ImageBackground>
           <Text style={[styles.ps, { marginHorizontal: 24, textAlign: 'center' }]}>
             {subtitle}
           </Text>

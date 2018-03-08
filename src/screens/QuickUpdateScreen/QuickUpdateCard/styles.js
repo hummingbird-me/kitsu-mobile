@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   },
   posterImage: {
     flexGrow: 1,
-    resizeMode: 'cover',
     borderRadius: 10,
     justifyContent: 'flex-end',
     padding: 4,
