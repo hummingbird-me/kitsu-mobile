@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, TouchableOpacity, SectionList, Dimensions } fro
 import { connect } from 'react-redux';
 import { Button, Container, Content, Icon, Left, Right, Footer } from 'native-base';
 import PropTypes from 'prop-types';
-import MultiSlider from 'react-native-multi-slider';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 import { getCategories } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
