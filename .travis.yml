@@ -43,7 +43,7 @@ matrix:
         - google-gdk-license-.+
       before_install:
         - yes | sdkmanager "platforms;android-27" "build-tools;27.0.3" "build-tools;27.0.0"
-        - nvm install 7
+        - nvm install 8.10.0
         - node --version
         - travis_retry curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
         - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
