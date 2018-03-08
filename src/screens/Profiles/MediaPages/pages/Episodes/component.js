@@ -1,12 +1,10 @@
 import React, { PureComponent } from 'react';
 import { FlatList, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
-import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
-import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { StyledText } from 'kitsu/components/StyledText';
-import { isNull } from 'lodash';
+import { isNull, padStart } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { lightGrey, listBackPurple } from 'kitsu/constants/colors';
 import { styles } from './styles';
@@ -37,7 +35,7 @@ class Episodes extends PureComponent {
     const { libraryEntry, media, onEpisodeProgress, loadingLibrary } = this.props;
 
     const numberString = !isNull(item.number) && item.number.toString();
-    const paddedString = (numberString && numberString.padStart(2, '0')) || '-';
+    const paddedString = (numberString && padStart(numberString, 2, '0')) || '-';
 
     const prefix = media && media.type === 'anime' ? 'Episode' : 'Chapter';
     const title = item.canonicalTitle || `${prefix} ${item.number}`;
