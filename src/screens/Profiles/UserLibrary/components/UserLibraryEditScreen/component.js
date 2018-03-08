@@ -179,7 +179,16 @@ export class UserLibraryEditScreenComponent extends React.Component {
 
   render() {
     const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props.navigation.state.params;
-    const { loading, error, finishedAt, startedAt } = this.state;
+    const {
+      loading,
+      error,
+      finishedAt,
+      startedAt,
+      status: stateStatus,
+      ratingTwenty,
+      notes,
+      private: isPrivate,
+    } = this.state;
 
     const rightTitle = loading ? 'Saving' : 'Save';
     const leftTitle = loading ? null : 'Cancel';
@@ -187,7 +196,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
     const maxProgress = this.getMaxProgress();
 
     // { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
-    const status = STATUS_SELECT_OPTIONS.filter(item => item.value === this.state.status)[0][libraryType];
+    const status = STATUS_SELECT_OPTIONS.filter(item => item.value === stateStatus)[0][libraryType];
 
     return (
       <View style={styles.container}>
@@ -257,7 +266,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
                 viewType="single"
                 onRatingChanged={this.onRatingChanged}
                 style={styles.ratingStyle}
-                ratingTwenty={this.state.ratingTwenty}
+                ratingTwenty={ratingTwenty}
                 ratingSystem={ratingSystem}
               />
             </View>
@@ -284,7 +293,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
                 onOptionSelected={this.onVisibilityChanged}
               >
                 <Text style={styles.editRowValue}>
-                  {this.state.private ? 'Private' : 'Public'}
+                  {isPrivate ? 'Private' : 'Public'}
                 </Text>
               </SelectMenu>
             </View>
@@ -333,7 +342,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
                 </Text>
                 <TextInput
                   style={[styles.editRowValue, { height: this.state.notesHeight }]}
-                  value={this.state.notes}
+                  value={notes}
                   placeholder={canEdit ? "Type some notes..." : "User has no notes"}
                   onChangeText={this.onNotesChanged}
                   onContentSizeChange={this.onNotesContentSizeChanged}
