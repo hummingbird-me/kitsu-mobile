@@ -2,7 +2,7 @@ import capitalize from 'lodash/capitalize';
 import map from 'lodash/map';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
-import { KitsuLibrary, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { KitsuLibrary, KitsuLibraryEventSource, KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 import { getState } from '../user/actions';
 
 export const fetchProfile = userId => async (dispatch) => {
@@ -112,6 +112,30 @@ const defaultFetchUserLibraryOptions = {
   searchTerm: '',
 };
 
+/**
+ * Get the sort string.
+ *
+ * @param {any} sort An object with the format { by: <string>, ascending: <bool> }
+ * @param {string} kind 'anime' or 'manga'
+ * @returns The sort string.
+ */
+function getSortString(sort, kind) {
+  const titleSort = `${kind}.titles.canonical`;
+  if (!sort || !sort.by) return titleSort;
+
+  const ascending = sort.ascending ? '' : '-';
+  let defaultSort = sort.by;
+
+  if (sort.by === KitsuLibrarySort.TITLE) {
+    return `${ascending}${titleSort}`;
+  } else if (sort.by === KitsuLibrarySort.LENGTH) {
+    const itemType = kind === 'anime' ? 'episode_count' : 'chapter_count';
+    defaultSort = `${kind}.${itemType}`;
+  }
+
+  return `${ascending}${defaultSort},${titleSort}`;
+}
+
 export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState) => {
   const options = {
     ...defaultFetchUserLibraryOptions,
@@ -165,7 +189,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
         limit: options.limit,
         offset: options.refresh ? 0 : data.length,
       },
-      sort: '-updatedAt',
+      sort: getSortString(userLibrary.sort, options.library),
     });
 
     if (options.searchTerm || options.refresh) {
@@ -460,5 +484,13 @@ export function updateLibrarySearchTerm(searchTerm) {
   return {
     type: types.UPDATE_USER_LIBRARY_SEARCH_TERM,
     searchTerm,
+  };
+}
+
+export function setLibrarySort(sort, ascending) {
+  return {
+    type: types.UPDATE_LIBRARY_SORT,
+    by: sort,
+    ascending,
   };
 }

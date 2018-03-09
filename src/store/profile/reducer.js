@@ -1,5 +1,6 @@
 import { REHYDRATE } from 'redux-persist';
 import * as types from 'kitsu/store/types';
+import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 
 function updateObjectInArray(array, entry) {
   return array.map((currentItem) => {
@@ -44,7 +45,12 @@ const INITIAL_STATE = {
   manga: {},
   anime: {},
   library: {},
-  userLibrary: {},
+  userLibrary: {
+    sort: {
+      by: KitsuLibrarySort.DATE_UPDATED,
+      ascending: false,
+    },
+  },
   userLibrarySearch: {
     ...userLibraryInitial,
     loading: false,
@@ -426,6 +432,17 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
               data: state.userLibrarySearch[action.libraryType][action.libraryStatus].data
                 .filter(entry => entry.id !== action.id),
             },
+          },
+        },
+      };
+    case types.UPDATE_LIBRARY_SORT:
+      return {
+        ...state,
+        userLibrary: {
+          ...state.userLibrary,
+          sort: {
+            by: action.by,
+            ascending: action.ascending,
           },
         },
       };
