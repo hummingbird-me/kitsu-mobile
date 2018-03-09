@@ -28,6 +28,7 @@ export class LibraryScreenComponent extends PureComponent {
     fetchUserLibrary: PropTypes.func.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
+    setLibrarySort: PropTypes.func.isRequired,
   };
 
   state = {
@@ -47,6 +48,13 @@ export class LibraryScreenComponent extends PureComponent {
     // If we set the current user then fetch the library
     if (!this.props.currentUser && currentUser) {
       this.fetchLibrary(nextProps);
+    }
+  }
+
+  onOptionPress = () => {
+    const { navigation } = this.props;
+    if (navigation) {
+      navigation.navigate('LibraryOptions');
     }
   }
 
@@ -195,6 +203,7 @@ export class LibraryScreenComponent extends PureComponent {
             const toggle = typeSelectVisible ? this.hideTypeSelect : this.showTypeSelect;
             toggle();
           }}
+          onOptionPress={this.onOptionPress}
         />
         <View style={{ flex: 1 }}>
           {this.renderTabNav()}

@@ -108,4 +108,16 @@ export const styles = StyleSheet.create({
   typeText: {
     textAlignVertical: 'center',
   },
+
+  libraryOption: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: colors.extraDarkPurple,
+    height: 40,
+  },
+  optionSelectedIcon: {
+    fontSize: 24,
+  },
 });
