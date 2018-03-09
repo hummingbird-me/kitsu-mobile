@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { isNil } from 'lodash';
 import { styles } from './styles';
 
 export class Counter extends React.PureComponent {
@@ -19,6 +20,7 @@ export class Counter extends React.PureComponent {
     disabled: false,
     maxValue: undefined,
     minValue: 0,
+    value: 0,
     onValueChanged: () => {},
     progressCounter: false,
     inputRef: () => {},
@@ -51,7 +53,13 @@ export class Counter extends React.PureComponent {
     const { manualEditValue } = this.state;
     const { maxValue, minValue } = this.props;
     let { value } = this.state;
-    if (manualEditValue >= minValue && manualEditValue <= maxValue) {
+
+    // Check for boundary values
+    if (!isNil(minValue) && manualEditValue < minValue) {
+      value = minValue;
+    } else if (!isNil(maxValue) && manualEditValue > maxValue) {
+      value = maxValue;
+    } else {
       value = manualEditValue;
     }
 
@@ -66,7 +74,7 @@ export class Counter extends React.PureComponent {
   decrementCount = () => {
     const value = this.state.value - 1;
 
-    if (value < this.props.minValue) {
+    if (!isNil(this.props.minValue) && value < this.props.minValue) {
       return;
     }
 
@@ -77,7 +85,7 @@ export class Counter extends React.PureComponent {
   incrementCount = () => {
     const value = this.state.value + 1;
 
-    if (value > this.props.maxValue) {
+    if (!isNil(this.props.maxValue) && value > this.props.maxValue) {
       return;
     }
 

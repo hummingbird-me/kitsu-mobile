@@ -9,6 +9,7 @@ import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
 import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
 import { Spinner } from 'native-base';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
 import * as constants from './constants';
 
@@ -29,7 +30,10 @@ const getCardVisibilityCounts = () => {
 };
 
 const progressFromLibraryEntry = (libraryEntry) => {
+  if (!libraryEntry) return 0;
   const mediaData = libraryEntry.anime || libraryEntry.manga;
+
+  if (!mediaData) return 0;
 
   if (mediaData.type === 'anime') {
     return Math.floor((libraryEntry.progress / mediaData.episodeCount) * 100);
@@ -143,9 +147,14 @@ export class UserLibraryScreenComponent extends React.Component {
     );
   };
 
-  renderFetchingMoreSpinner = (type, status) => {
+  renderFetchingMoreSpinner = (userId, type, status) => {
     const { userLibrary } = this.props;
-    const { data, loading } = userLibrary[type][status];
+    const library = userLibrary[userId] &&
+                    userLibrary[userId][type] &&
+                    userLibrary[userId][type][status];
+
+    const data = (library && library.data) || [];
+    const loading = isEmpty(library) || library.loading;
 
     if (loading && data.length) {
       return (
@@ -158,7 +167,7 @@ export class UserLibraryScreenComponent extends React.Component {
     return null;
   }
 
-  renderLists = (type) => {
+  renderLists = (userId, type) => {
     const { userLibrary, navigation } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
@@ -170,7 +179,13 @@ export class UserLibraryScreenComponent extends React.Component {
 
     return listOrder.map((currentList, index) => {
       const { status } = currentList;
-      const { data, fetchMore, loading } = userLibrary[type][status];
+      const library = userLibrary[userId] &&
+                      userLibrary[userId][type] &&
+                      userLibrary[userId][type][status];
+
+      const data = (library && library.data) || [];
+      const loading = isEmpty(library) || library.loading;
+      const fetchMore = library && library.fetchMore;
 
       const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
       const emptyItemsToAdd = countForMaxWidth - data.length;
@@ -202,7 +217,7 @@ export class UserLibraryScreenComponent extends React.Component {
             this.renderEmptyList(type, status)
             :
             <FlatList
-              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
+              ListFooterComponent={this.renderFetchingMoreSpinner(userId, type, status)}
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}
@@ -236,11 +251,11 @@ export class UserLibraryScreenComponent extends React.Component {
         >
           <ScrollView key="Anime" tabLabel="Anime" id="anime">
             <UserLibrarySearchBox navigation={this.props.navigation} profile={profile} />
-            {this.renderLists('anime')}
+            {this.renderLists(profile.id, 'anime')}
           </ScrollView>
           <ScrollView key="Manga" tabLabel="Manga" id="manga">
             <UserLibrarySearchBox navigation={this.props.navigation} profile={profile} />
-            {this.renderLists('manga')}
+            {this.renderLists(profile.id, 'manga')}
           </ScrollView>
         </ScrollableTabView>
       </View>

@@ -1,47 +1,88 @@
 import React, { PureComponent } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
-import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
-import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
+import { StyledText } from 'kitsu/components/StyledText';
+import { isNull, padStart } from 'lodash';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { lightGrey, listBackPurple } from 'kitsu/constants/colors';
+import { styles } from './styles';
 
 class Episodes extends PureComponent {
   static propTypes = {
     media: PropTypes.shape({
       episodes: PropTypes.array.isRequired,
     }).isRequired,
+    libraryEntry: PropTypes.object,
+    loadingLibrary: PropTypes.bool,
+    onEpisodeProgress: PropTypes.func,
+    loadingAdditional: PropTypes.bool,
   }
 
-  formatData(data, numberOfItems = 20) {
-    return data.sort((a, b) => a.number - b.number).slice(0, numberOfItems);
+  static defaultProps = {
+    loadingLibrary: false,
+    libraryEntry: null,
+    onEpisodeProgress: null,
+    loadingAdditional: false,
+  }
+
+  sortData(data) {
+    return data.sort((a, b) => a.number - b.number);
+  }
+
+  renderItem = ({ item }) => {
+    const { libraryEntry, media, onEpisodeProgress, loadingLibrary } = this.props;
+
+    const numberString = !isNull(item.number) && item.number.toString();
+    const paddedString = (numberString && padStart(numberString, 2, '0')) || '-';
+
+    const prefix = media && media.type === 'anime' ? 'Episode' : 'Chapter';
+    const title = item.canonicalTitle || `${prefix} ${item.number}`;
+
+    // Check if we've completed the item
+    const completed = libraryEntry && !isNull(item.number) && libraryEntry.progress >= item.number;
+
+    return (
+      <View style={styles.itemWrap}>
+        <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
+        <StyledText color="black" size="small" textStyle={styles.itemTitle}>{title}</StyledText>
+        <TouchableOpacity
+          onPress={() => onEpisodeProgress && onEpisodeProgress(item.number)}
+          style={styles.progressIconContainer}
+          disabled={loadingLibrary}
+        >
+          <View
+            style={[styles.progressIconCircle, completed && styles.progressIconCircle__completed]}
+          >
+            {loadingLibrary && <ActivityIndicator color={lightGrey} />}
+            {!loadingLibrary && completed && <Icon name="ios-checkmark" color="#FFFFFF" style={styles.progressIcon} />}
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   render() {
-    const { media } = this.props;
+    const { media, loadingAdditional } = this.props;
     const isAnime = media.type === 'anime';
-    const data = this.formatData(isAnime ? media.episodes : media.chapters);
-    const prefix = isAnime ? "Episode" : "Chapter";
+    const data = this.sortData(isAnime ? media.episodes : media.chapters);
 
     return (
-      <TabContainer light padded>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <MediaRow
-              imageVariant="landscapeSmall"
-              title={item.canonicalTitle || `${prefix} ${item.number}`}
-              summary={item.synopsis || media.synopsis}
-              thumbnail={{
-                uri: (item.thumbnail && item.thumbnail.original) ||
-                    (media && media.posterImage && media.posterImage.large),
-              }}
-              summaryLines={2}
-            />
-          )}
-          ItemSeparatorComponent={() => <RowSeparator />}
-          ListHeaderComponent={() => <TabHeader title={`${prefix}s`} contentDark />}
-        />
+      <TabContainer light>
+        {loadingAdditional ?
+          <View style={styles.loading}>
+            <ActivityIndicator color={listBackPurple} />
+          </View>
+          :
+          <FlatList
+            data={data}
+            renderItem={this.renderItem}
+            keyExtractor={k => k.id}
+            ItemSeparatorComponent={() => <RowSeparator />}
+          />
+        }
+
       </TabContainer>
     );
   }

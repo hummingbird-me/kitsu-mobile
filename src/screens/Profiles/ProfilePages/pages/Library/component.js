@@ -11,6 +11,7 @@ import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
 import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
+import { isEmpty } from 'lodash';
 import { Spinner } from 'native-base';
 import { styles } from './styles';
 import * as constants from './constants';
@@ -118,9 +119,14 @@ class Library extends PureComponent {
     );
   };
 
-  renderFetchingMoreSpinner = (type, status) => {
+  renderFetchingMoreSpinner = (userId, type, status) => {
     const { userLibrary } = this.props;
-    const { data, loading } = userLibrary[type][status];
+    const library = userLibrary[userId] &&
+      userLibrary[userId][type] &&
+      userLibrary[userId][type][status];
+
+    const data = (library && library.data) || [];
+    const loading = isEmpty(library) || library.loading;
 
     if (loading && data.length) {
       return (
@@ -133,7 +139,7 @@ class Library extends PureComponent {
     return null;
   }
 
-  renderLists = (type) => {
+  renderLists = (userId, type) => {
     const { navigation, userLibrary, profile } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
@@ -145,7 +151,13 @@ class Library extends PureComponent {
 
     return listOrder.map((currentList, index) => {
       const { status } = currentList;
-      const { data, fetchMore, loading } = userLibrary[type][status];
+      const library = userLibrary[userId] &&
+        userLibrary[userId][type] &&
+        userLibrary[userId][type][status];
+
+      const data = (library && library.data) || [];
+      const loading = isEmpty(library) || library.loading;
+      const fetchMore = library && library.fetchMore;
 
       const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
       const emptyItemsToAdd = countForMaxWidth - data.length;
@@ -169,6 +181,7 @@ class Library extends PureComponent {
             profile={profile}
           />
 
+          {/* TODO: Fix this. It shouldn't show loading indicator if we already have data */}
           {loading && !data.length &&
             this.renderLoadingList()
           }
@@ -177,7 +190,7 @@ class Library extends PureComponent {
             this.renderEmptyList(type, status)
             :
             <FlatList
-              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
+              ListFooterComponent={this.renderFetchingMoreSpinner(userId, type, status)}
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}
@@ -198,7 +211,7 @@ class Library extends PureComponent {
   }
 
   render() {
-    const { profile, navigation } = this.props;
+    const { profile, navigation, userId } = this.props;
 
     return (
       <View style={styles.container}>
@@ -209,11 +222,11 @@ class Library extends PureComponent {
         >
           <View key="Anime" tabLabel="Anime" id="anime">
             <UserLibrarySearchBox navigation={navigation} profile={profile} />
-            {this.renderLists('anime')}
+            {this.renderLists(userId, 'anime')}
           </View>
           <View key="Manga" tabLabel="Manga" id="manga">
             <UserLibrarySearchBox navigation={navigation} profile={profile} />
-            {this.renderLists('manga')}
+            {this.renderLists(userId, 'manga')}
           </View>
         </ScrollableTabView>
       </View>

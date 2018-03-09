@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { Kitsu } from 'kitsu/config/api';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
@@ -12,6 +11,7 @@ import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { upperFirst, isNull } from 'lodash';
+import { SummaryProgress } from './progress';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -22,12 +22,16 @@ class SummaryComponent extends PureComponent {
     navigation: PropTypes.object.isRequired,
     setActiveTab: PropTypes.func.isRequired,
     loadingAdditional: PropTypes.bool,
+    libraryEntry: PropTypes.object,
+    onLibraryEditPress: PropTypes.func,
   }
 
   static defaultProps = {
     castings: null,
     mediaReactions: null,
     loadingAdditional: false,
+    libraryEntry: null,
+    onLibraryEditPress: null,
   }
 
   state = {
@@ -102,37 +106,18 @@ class SummaryComponent extends PureComponent {
   );
 
   render() {
-    const { media, castings, mediaReactions, loadingAdditional } = this.props;
+    const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
     const { loading, feed } = this.state;
-    const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
-    const seriesCount = series.length;
-
-    // What is a common name between episode and chapter???
-    const episodePrefix = media.type === 'anime' ? 'Ep.' : 'Ch.';
-    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
 
     return (
       <SceneContainer>
-        {/* Episodes */}
-        <ScrollableSection
-          title={`${media.type === 'anime' ? 'Episodes' : 'Chapters'}・${seriesCount}`}
-          onViewAllPress={() => this.navigateTo('Episodes')}
-          data={this.formatData(series)}
-          loading={loadingAdditional}
-          renderItem={({ item }) => (
-            <ScrollItem>
-              <ImageCard
-                subtitle={`${episodePrefix} ${item.number} ${episodeSuffix}`}
-                title={item.canonicalTitle}
-                variant="landscapeLarge"
-                source={{
-                  uri:
-                    (item.thumbnail && item.thumbnail.original) ||
-                    (media && media.posterImage && media.posterImage.large),
-                }}
-              />
-            </ScrollItem>
-          )}
+
+        {/* Progress */}
+        <SummaryProgress
+          libraryEntry={libraryEntry}
+          media={media}
+          onPress={() => this.navigateTo('Episodes')}
+          onEditPress={onLibraryEditPress}
         />
 
         {/* Related Media */}
@@ -144,6 +129,8 @@ class SummaryComponent extends PureComponent {
           loading={loadingAdditional}
           renderItem={({ item }) => {
             const destination = item.destination;
+            if (!destination) return null;
+
             const subheading = destination.type === 'anime' ? destination.showType : destination.mangaType;
 
             return (<ScrollItem spacing={4}>
@@ -180,7 +167,8 @@ class SummaryComponent extends PureComponent {
         />
 
         {/* Characters */}
-        <ScrollableSection
+        {/* Disabled for now until we fix up our character db */}
+        {/* <ScrollableSection
           contentDark
           title="Characters"
           onViewAllPress={() => this.navigateTo('Characters')}
@@ -199,7 +187,7 @@ class SummaryComponent extends PureComponent {
               />
             </ScrollItem>
           )}
-        />
+        /> */}
 
         {/* Feed */}
         { !loading &&
@@ -220,4 +208,4 @@ const mapStateToProps = ({ user }) => {
   return { currentUser };
 };
 
-export const Summary = connect(mapStateToProps)(SummaryComponent);
+export const component = connect(mapStateToProps)(SummaryComponent);

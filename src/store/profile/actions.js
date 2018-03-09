@@ -2,6 +2,8 @@ import capitalize from 'lodash/capitalize';
 import map from 'lodash/map';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
+import { KitsuLibrary, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { getState } from '../user/actions';
 
 export const fetchProfile = userId => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
@@ -126,10 +128,10 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
   let data;
   if (options.searchTerm) {
-    data = userLibrarySearch[options.library][options.status].data;
+    data = userLibrarySearch[options.userId][options.library][options.status].data;
     filter.title = options.searchTerm;
   } else {
-    data = userLibrary[options.library][options.status].data;
+    data = userLibrary[options.userId][options.library][options.status].data;
   }
 
   const actions = {
@@ -146,6 +148,8 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     type: actions.fetchStart,
     library: options.library,
     status: options.status,
+    userId: options.userId,
+    refresh: options.refresh || false,
   });
 
   try {
@@ -159,28 +163,43 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       include: 'anime,manga',
       page: {
         limit: options.limit,
-        offset: data.length,
+        offset: options.refresh ? 0 : data.length,
       },
       sort: '-updatedAt',
     });
 
-    if (options.searchTerm) {
+    if (options.searchTerm || options.refresh) {
       data = libraryEntries;
     } else {
+      // If we refresh then we need to reset data
       data = data.concat(libraryEntries);
-      data.meta = libraryEntries.meta;
     }
+
+    data.meta = libraryEntries.meta;
 
     dispatch({
       data,
       type: actions.fetchSuccess,
+      refresh: () => {
+        const newOptions = {
+          ...options,
+          refresh: true,
+        };
+        console.log(options);
+        fetchUserLibraryByType(newOptions)(dispatch, getState);
+      },
       fetchMore: () => {
         if (data.length < libraryEntries.meta.count) {
-          fetchUserLibraryByType(options)(dispatch, getState);
+          const newOptions = {
+            ...options,
+            refresh: false,
+          };
+          fetchUserLibraryByType(newOptions)(dispatch, getState);
         }
       },
       library: options.library,
       status: options.status,
+      userId: options.userId,
     });
   } catch (error) {
     console.error(error);
@@ -189,6 +208,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       type: actions.fetchFail,
       library: options.library,
       status: options.status,
+      userId: options.userId,
     });
   }
 };
@@ -240,12 +260,14 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
 
     dispatch({
       type: actions.fetchSuccess,
+      userId: options.userId,
     });
   } catch (error) {
     console.error(error);
     dispatch({
       error,
       type: actions.fetchFail,
+      userId: options.userId,
     });
   }
 };
@@ -307,29 +329,22 @@ export const updateUserLibraryEntry = (
   libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
 ) => async (dispatch, getState) => {
   const { userLibrary } = getState().profile;
-  const libraryEntries = userLibrary[libraryType][libraryStatus].data;
+  const { currentUser } = getState().user;
+  if (!currentUser || !currentUser.id || !userLibrary[currentUser.id]) return;
+
+  const libraryEntries = userLibrary[currentUser.id][libraryType][libraryStatus].data;
   const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
 
   try {
     const updateEntry = { ...newLibraryEntry };
 
     // optimistically update state
-    dispatch({
-      libraryStatus,
-      libraryType,
+    onLibraryEntryUpdate(currentUser.id, libraryType, libraryStatus, updateEntry, isSearchEntry)(dispatch, getState);
 
-      previousLibraryStatus: previousLibraryEntry.status,
-      newLibraryStatus: newLibraryEntry.status,
-
-      previousLibraryEntry,
-      newLibraryEntry: updateEntry,
-      type: isSearchEntry ?
-        types.UPDATE_USER_LIBRARY_SEARCH_ENTRY : types.UPDATE_USER_LIBRARY_ENTRY,
-    });
-
-    await Kitsu.update('libraryEntries', updateEntry);
+    const record = await Kitsu.update('libraryEntries', updateEntry);
+    KitsuLibrary.onLibraryEntryUpdate(previousLibraryEntry, record, libraryType, KitsuLibraryEventSource.STORE);
   } catch (e) {
-    // TODO: handle the case where the entry update fails
+    throw e;
   }
 };
 
@@ -339,16 +354,106 @@ export const updateUserLibrarySearchEntry = (
   updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
 };
 
-export const deleteUserLibraryEntry = (id, libraryStatus, libraryType) => async (dispatch) => {
-  await Kitsu.destroy('libraryEntries', id);
+export const deleteUserLibraryEntry = (id, libraryType, libraryStatus) => async (dispatch, getState) => {
+  const { currentUser } = getState().user;
+  if (!currentUser || !currentUser.id) return;
 
-  dispatch({
+  try {
+    await Kitsu.destroy('libraryEntries', id);
+    dispatch(onLibraryEntryDelete(id, currentUser.id, libraryType, libraryStatus));
+    KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, KitsuLibraryEventSource.STORE);
+  } catch (e) {
+    throw e;
+  }
+};
+
+export function onLibraryEntryCreate(
+  newLibraryEntry,
+  userId,
+  libraryType,
+  libraryStatus,
+) {
+  return (dispatch, getState) => {
+    const { userLibrary } = getState().profile;
+    if (!userLibrary[userId]) return {};
+
+    const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
+    const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+
+    // Make sure that we aren't adding a duplicate entry
+    if (previousLibraryEntry) {
+      onLibraryEntryUpdate(userId, libraryType, libraryStatus, newLibraryEntry)(dispatch, getState);
+    } else {
+      const updateEntry = { ...newLibraryEntry };
+
+      // Add the new entry
+      dispatch({
+        type: types.CREATE_USER_LIBRARY_ENTRY,
+        userId,
+        libraryStatus,
+        libraryType,
+        newLibraryEntry: updateEntry,
+      });
+    }
+  };
+}
+
+export function onLibraryEntryUpdate(
+  userId,
+  libraryType,
+  libraryStatus,
+  newLibraryEntry,
+  isSearchEntry,
+) {
+  return (dispatch, getState) => {
+    const { userLibrary } = getState().profile;
+    if (!userLibrary[userId]) return {};
+
+    const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
+    const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+
+    // Combine relationship data on the entries
+    const combined = newLibraryEntry;
+    if (previousLibraryEntry) {
+      if (!combined.anime) combined.anime = previousLibraryEntry.anime;
+      if (!combined.manga) combined.manga = previousLibraryEntry.manga;
+      if (!combined.user) combined.user = previousLibraryEntry.user;
+    }
+
+    const updateEntry = { ...combined };
+
+    // update the state
+    dispatch({
+      userId,
+      libraryStatus,
+      libraryType,
+
+      previousLibraryStatus: previousLibraryEntry.status,
+      newLibraryStatus: updateEntry.status,
+
+      previousLibraryEntry,
+      newLibraryEntry: updateEntry,
+
+      type: isSearchEntry ?
+        types.UPDATE_USER_LIBRARY_SEARCH_ENTRY : types.UPDATE_USER_LIBRARY_ENTRY,
+    });
+  };
+}
+
+export function onLibraryEntryDelete(
+  id,
+  userId,
+  libraryType,
+  libraryStatus,
+) {
+  return {
     type: types.DELETE_USER_LIBRARY_ENTRY,
-    id,
+    userId,
     libraryStatus,
     libraryType,
-  });
-};
+    id,
+  };
+}
 
 export function updateLibrarySearchTerm(searchTerm) {
   return {

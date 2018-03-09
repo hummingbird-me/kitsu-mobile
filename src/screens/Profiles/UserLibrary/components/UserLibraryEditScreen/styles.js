@@ -7,6 +7,25 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 666,
+  },
+  error: {
+    backgroundColor: colors.red,
+    padding: 6,
+  },
+  errorText: {
+    color: colors.white,
+    fontSize: 15,
+  },
   dateStarted: {
     flex: 1,
   },
