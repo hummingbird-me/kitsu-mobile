@@ -17,6 +17,7 @@ export class Counter extends React.PureComponent {
   }
 
   static defaultProps = {
+    identifier: null,
     disabled: false,
     maxValue: undefined,
     minValue: 0,
@@ -32,7 +33,7 @@ export class Counter extends React.PureComponent {
   };
 
   componentWillReceiveProps({ value }) {
-    if (value && value !== this.state.value) {
+    if (!isNil(value) && value !== this.state.value) {
       this.setState({ value });
     }
   }
