@@ -17,7 +17,6 @@ export class Counter extends React.PureComponent {
   }
 
   static defaultProps = {
-    identifier: null,
     disabled: false,
     maxValue: undefined,
     minValue: 0,
