@@ -1,4 +1,5 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
@@ -50,7 +51,7 @@ export const ProfileHeader = ({
           <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
             {showProfileImage &&
-              <Image style={styles.profileImage} source={{ uri: profileImageUri }} />
+              <FastImage style={styles.profileImage} source={{ uri: profileImageUri }} borderRadius={15} />
             }
             {showFollowButton &&
               <Text style={[

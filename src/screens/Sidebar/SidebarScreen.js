@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
@@ -213,9 +214,10 @@ class SidebarScreen extends React.Component {
               onPress={this.navigateUserProfile}
               disabled={isEmpty(currentUser)}
             >
-              <Image
+              <FastImage
                 style={styles.userProfileImage}
                 source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+                borderRadius={20}
               />
               <View style={styles.userProfileTextWrapper}>
                 <Text style={styles.userProfileName}>{name || '-'}</Text>

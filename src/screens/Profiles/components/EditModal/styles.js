@@ -21,6 +21,5 @@ export const styles = StyleSheet.create({
   profileImage: {
     width: 80,
     height: 80,
-    borderRadius: 40,
   },
 });

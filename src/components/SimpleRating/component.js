@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import awful from 'kitsu/assets/img/ratings/awful.png';
 import meh from 'kitsu/assets/img/ratings/meh.png';
 import good from 'kitsu/assets/img/ratings/good.png';
@@ -19,7 +20,7 @@ export const SimpleRating = ({ disabled, onRate, selected, imageStyle, shadowSty
             imageStyle,
           ]}
         />
-        <Image source={awful} style={imageSimpleStyle} />
+        <FastImage source={awful} style={imageSimpleStyle} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onRate('meh')} disabled={disabled}>
         <View
@@ -29,7 +30,7 @@ export const SimpleRating = ({ disabled, onRate, selected, imageStyle, shadowSty
             imageStyle,
           ]}
         />
-        <Image source={meh} style={imageSimpleStyle} />
+        <FastImage source={meh} style={imageSimpleStyle} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onRate('good')} disabled={disabled}>
         <View
@@ -39,7 +40,7 @@ export const SimpleRating = ({ disabled, onRate, selected, imageStyle, shadowSty
             imageStyle,
           ]}
         />
-        <Image source={good} style={imageSimpleStyle} />
+        <FastImage source={good} style={imageSimpleStyle} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onRate('great')} disabled={disabled}>
         <View
@@ -49,7 +50,7 @@ export const SimpleRating = ({ disabled, onRate, selected, imageStyle, shadowSty
             imageStyle,
           ]}
         />
-        <Image source={great} style={imageSimpleStyle} />
+        <FastImage source={great} style={imageSimpleStyle} />
       </TouchableOpacity>
     </View>
   );

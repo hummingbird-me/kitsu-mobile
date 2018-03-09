@@ -276,7 +276,6 @@ export default class PostDetails extends PureComponent {
         navigation={this.props.navigation}
         onAvatarPress={id => this.navigateToUserProfile(id)}
         onReplyPress={(user, callback) => this.onReplyPress(item, user, callback)}
-        overlayColor={colors.offWhite}
       />
     );
   };

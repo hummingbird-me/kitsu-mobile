@@ -202,6 +202,8 @@ class Feed extends React.PureComponent {
             data={this.state.data}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
             onMomentumScrollBegin={() => {
               // Prevent iOS calling onendreached when list is loaded.
               this.onEndReachedCalledDuringMomentum = false;
@@ -217,9 +219,6 @@ class Feed extends React.PureComponent {
             ListFooterComponent={() => this.state.isLoadingNextPage && (
               <SceneLoader color={offWhite} />
             )}
-            refreshControl={
-              <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
-            }
           />
         </View>
       </View>

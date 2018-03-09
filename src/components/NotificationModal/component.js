@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, StatusBar, Image, Modal, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, Text, StatusBar, Modal, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/screens/Notifications/NotificationsScreen';
 import { styles } from './styles';
@@ -24,7 +25,7 @@ export const NotificationModal = ({ style, visible, onRequestClose, data, ...oth
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
         <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.modalContent}>
           <View style={{ paddingRight: 10 }}>
-            <Image style={styles.userAvatar} source={{ uri: actorAvatar }} />
+            <FastImage style={styles.userAvatar} source={{ uri: actorAvatar }} borderRadius={20} />
           </View>
           <Text style={[styles.activityText, styles.activityTextHighlight]}>
             {actorName || 'Unknown'}

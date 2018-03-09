@@ -101,7 +101,7 @@ export const styles = StyleSheet.create({
   icon: { fontSize: 10, color: '#444' },
   iconUnread: { color: '#f0705a' },
   detailsContainer: { alignItems: 'center', flexDirection: 'row', flex: 1 },
-  userAvatar: { width: 40, height: 40, borderRadius: 20 },
+  userAvatar: { width: 40, height: 40 },
   activityContainer: { flex: 1, justifyContent: 'center', marginLeft: 4 },
   activityTextContainer: {
     alignItems: 'flex-start',

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator } from 'react-native';
+import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { isEmpty, range } from 'lodash';
@@ -188,7 +188,7 @@ export class GiphyModal extends PureComponent {
           leftButtonAction={this.handleCancelPress}
           rightButtonTitle=""
         />
-        <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
           <View style={styles.searchBoxContainer}>
             <SearchBox
               placeholder="Search for a GIF"
@@ -214,7 +214,7 @@ export class GiphyModal extends PureComponent {
             keyExtractor={item => item.id}
             renderItem={({ item }) => this.renderItem(item, bestSpacing)}
           />
-        </View>
+        </ScrollView>
       </Modal>
     );
   }

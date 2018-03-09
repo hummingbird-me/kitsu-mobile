@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
@@ -23,7 +24,7 @@ export const PostActionButton = ({ variant, isActive, onPress }) => {
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.postActionButton}>
-      <Image
+      <FastImage
         source={icons[variant]}
         resizeMode="cover"
         style={{ width: 20, height: 18 }}

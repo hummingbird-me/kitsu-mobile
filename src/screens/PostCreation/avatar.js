@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 const styles = StyleSheet.create({
   avatar: {
@@ -9,4 +10,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default props => <Image style={styles.avatar} {...props} />;
+export default props => <FastImage style={styles.avatar} {...props} />;

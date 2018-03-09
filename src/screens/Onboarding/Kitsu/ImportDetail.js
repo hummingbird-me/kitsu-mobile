@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, TextInput, Text, Modal } from 'react-native';
+import { View, TextInput, Text, Modal } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
@@ -75,7 +76,7 @@ class ImportDetail extends React.Component {
         <View style={styles.card}>
           <View style={{ padding: 8 }}>
             <View style={{ alignItems: 'center' }}>
-              <Image source={item.image} style={styles.cardLogo} />
+              <FastImage source={item.image} style={styles.cardLogo} />
             </View>
             <Text style={styles.cardText}>
               Enter your username below to import your existing anime and manga progress.

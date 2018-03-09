@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Image, Platform } from 'react-native';
+import { Platform } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
@@ -20,7 +21,7 @@ const QuickUpdateStack = DismissableStackNavigator(
       header: null,
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <Image source={quickUpdateTabBarImage} style={{ tintColor, width: 24, height: 24 }} />
+        <FastImage source={quickUpdateTabBarImage} style={{ tintColor, width: 24, height: 24 }} />
       ),
     }),
   },

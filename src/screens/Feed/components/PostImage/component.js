@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Image } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { styles } from './styles';
 
 export class PostImage extends PureComponent {
@@ -9,7 +10,6 @@ export class PostImage extends PureComponent {
     width: PropTypes.number,
     height: PropTypes.number,
     borderRadius: PropTypes.number,
-    overlayColor: PropTypes.string,
   };
 
   static defaultProps = {
@@ -17,7 +17,6 @@ export class PostImage extends PureComponent {
     width: null,
     height: null,
     borderRadius: 0,
-    overlayColor: null,
   };
 
   state = {
@@ -66,14 +65,14 @@ export class PostImage extends PureComponent {
   mounted = false
 
   render() {
-    const { uri, borderRadius, overlayColor } = this.props;
+    const { uri, borderRadius } = this.props;
     const { width, height } = this.state;
 
     return (
-      <Image
-        resizeMode="cover"
+      <FastImage
+        resizeMode={FastImage.resizeMode.cover}
         source={{ uri }}
-        style={{ width, height, borderRadius, overlayColor }}
+        style={{ width, height, borderRadius }}
       />
     );
   }

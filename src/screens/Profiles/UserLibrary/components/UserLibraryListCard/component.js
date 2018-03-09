@@ -1,7 +1,8 @@
 import * as React from 'react';
 import debounce from 'lodash/debounce';
 import { PropTypes } from 'prop-types';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { Counter } from 'kitsu/components/Counter';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
@@ -242,7 +243,7 @@ export class UserLibraryListCard extends React.PureComponent {
                     onOptionSelected={this.onStatusSelected}
                     style={styles.menuButtonContainer}
                   >
-                    <Image
+                    <FastImage
                       source={menuImage}
                       style={styles.menuButton}
                       resizeMode="contain"

@@ -8,7 +8,7 @@ export const StyledProgressiveImage = props => (
     style={{
       width: '100%',
       height: '100%',
-      borderRadius: Platform.OS !== 'ios' ? props.borderRadius : 0,
+      borderRadius: props.borderRadius,
     }}
     {...props}
   />

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
@@ -29,9 +30,9 @@ ItemSeparator.defaultProps = {
 export const SidebarListItem = ({ image, imageURL, title, onPress }) => (
   <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.item}>
     <View style={styles.leftContentWrapper}>
-      {(image && <Image source={image} style={styles.image} />) ||
+      {(image && <FastImage source={image} style={styles.image} />) ||
         (imageURL &&
-          <Image
+          <FastImage
             source={{ uri: imageURL }}
             style={[styles.image, { resizeMode: 'stretch', borderRadius: 4 }]}
           />)}

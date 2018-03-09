@@ -117,7 +117,6 @@ export const styles = StyleSheet.create({
   userProfileImage: {
     width: 40,
     height: 40,
-    borderRadius: 20,
   },
   userProfileTextWrapper: {
     marginLeft: 12,
