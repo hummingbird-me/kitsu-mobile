@@ -69,15 +69,25 @@ export class LibraryOptionsComponent extends PureComponent {
   };
 
   state = {
-    didChangeSort: false,
+    sort: null,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { sort } = nextProps.sort;
+    if (!this.state.sort && nextProps.sort) {
+      this.setState({ sort });
+    }
   }
 
   save = () => {
-    const { fetchUserLibrary, navigation, currentUser } = this.props;
-    const { didChangeSort } = this.state;
+    const { fetchUserLibrary, navigation, currentUser, setLibrarySort } = this.props;
+    const { sort } = this.state;
 
-    // Update theuser library
-    if (currentUser && didChangeSort) {
+    // Save the sort
+    setLibrarySort(sort.by, sort.ascending);
+
+    // Update the user library
+    if (currentUser) {
       fetchUserLibrary({ userId: currentUser.id, refresh: true });
     }
 
@@ -87,19 +97,11 @@ export class LibraryOptionsComponent extends PureComponent {
   goBack = () => this.props.navigation.goBack();
 
   updateSort(sortBy, ascending) {
-    const { setLibrarySort, sort, currentUser } = this.props;
-    if (!currentUser) return;
-
-    // Don't bother updating if nothing changed
-    if (sort && sort.by === sortBy && sort.ascending === ascending) return;
-
-    // Set the sort and update the library
-    setLibrarySort(sortBy, ascending);
-    this.setState({ didChangeSort: true });
+    this.setState({ sort: { by: sortBy, ascending } });
   }
 
   renderSortOptions() {
-    const { sort } = this.props;
+    const { sort } = this.state;
     return sortOptions.map(option => (
       <TouchableOpacity
         onPress={() => this.updateSort(option.key, sort.ascending)}
