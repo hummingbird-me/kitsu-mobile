@@ -84,6 +84,7 @@ export class UserLibraryListCard extends React.PureComponent {
   }
 
   onRatingChanged = (ratingTwenty) => {
+    this.onSwipeRelease();
     this.setState({ ratingTwenty }, this.debounceSave);
   }
 

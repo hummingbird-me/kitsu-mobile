@@ -126,11 +126,25 @@ function getSortString(sort, kind) {
   const ascending = sort.ascending ? '' : '-';
   let defaultSort = sort.by;
 
-  if (sort.by === KitsuLibrarySort.TITLE) {
-    return `${ascending}${titleSort}`;
-  } else if (sort.by === KitsuLibrarySort.LENGTH) {
-    const itemType = kind === 'anime' ? 'episode_count' : 'chapter_count';
-    defaultSort = `${kind}.${itemType}`;
+  switch (sort.by) {
+    case KitsuLibrarySort.TITLE:
+      return `${ascending}${titleSort}`;
+
+    case KitsuLibrarySort.LENGTH: {
+      const itemType = kind === 'anime' ? 'episode_count' : 'chapter_count';
+      defaultSort = `${kind}.${itemType}`;
+      break;
+    }
+    case KitsuLibrarySort.POPULARITY: {
+      defaultSort = `${kind}.user_count`;
+      break;
+    }
+    case KitsuLibrarySort.AVERAGE_RATING: {
+      defaultSort = `${kind}.average_rating`;
+      break;
+    }
+    default:
+      break;
   }
 
   return `${ascending}${defaultSort},${titleSort}`;

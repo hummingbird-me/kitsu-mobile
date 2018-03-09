@@ -38,6 +38,14 @@ export class KitsuLibrarySort {
   static get LENGTH() {
     return 'length';
   }
+
+  static get POPULARITY() {
+    return 'popularity';
+  }
+
+  static get AVERAGE_RATING() {
+    return 'average';
+  }
 }
 
 /**

@@ -18,6 +18,22 @@ const sortOptions = [
     value: 'Length',
   },
   {
+    key: KitsuLibrarySort.POPULARITY,
+    value: 'Media Popularity',
+  },
+  {
+    key: KitsuLibrarySort.AVERAGE_RATING,
+    value: 'Media Rating',
+  },
+  {
+    key: KitsuLibrarySort.RATING,
+    value: 'Entry Rating',
+  },
+  {
+    key: KitsuLibrarySort.PROGRESS,
+    value: 'Entry Progress',
+  },
+  {
     key: KitsuLibrarySort.DATE_UPDATED,
     value: 'Date Updated',
   },

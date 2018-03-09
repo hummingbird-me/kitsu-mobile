@@ -553,7 +553,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;
-    case REHYDRATE:
+    case REHYDRATE: {
       const user = (action.payload && action.payload.user) || {};
       return {
         ...state,
@@ -563,6 +563,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
         signupError: {},
         rehydratedAt: new Date(),
       };
+    }
     default:
       return state;
   }
