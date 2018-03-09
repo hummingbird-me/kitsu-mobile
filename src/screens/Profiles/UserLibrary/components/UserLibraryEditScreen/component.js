@@ -218,7 +218,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
           }
 
           {/* Error */}
-          {isNull(error) &&
+          {!isNull(error) &&
             <View style={styles.error}>
               <Text style={styles.errorText}>
                 Error: {error.detail || 'Something went wrong'}
