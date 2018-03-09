@@ -1,14 +1,11 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { updateUserLibraryEntry, deleteUserLibraryEntry, fetchUserLibrary, setLibrarySort } from 'kitsu/store/profile/actions';
 import { View, TouchableOpacity, ScrollView } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { PropTypes } from 'prop-types';
-import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
-import { capitalize, isEmpty } from 'lodash';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Button } from 'kitsu/components/Button';
 import { styles } from './styles';
 
 const sortOptions = [
@@ -42,7 +39,7 @@ const sortOptions = [
   },
 ];
 
-class LibraryOptionsComponent extends PureComponent {
+export class LibraryOptionsComponent extends PureComponent {
   static navigationOptions = () => ({
     header: null,
   });
@@ -59,7 +56,7 @@ class LibraryOptionsComponent extends PureComponent {
     didChangeSort: false,
   }
 
-  goBack = () => {
+  save = () => {
     const { fetchUserLibrary, navigation, currentUser } = this.props;
     const { didChangeSort } = this.state;
 
@@ -70,6 +67,8 @@ class LibraryOptionsComponent extends PureComponent {
 
     navigation.goBack();
   };
+
+  goBack = () => this.props.navigation.goBack();
 
   updateSort(sortBy, ascending) {
     const { setLibrarySort, sort, currentUser } = this.props;
@@ -103,30 +102,22 @@ class LibraryOptionsComponent extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <CustomHeader
-          leftButtonAction={this.goBack}
-          leftButtonTitle="Save"
-        />
+        <View style={styles.headerContainer}>
+          <CustomHeader
+            leftButtonAction={this.goBack}
+            leftButtonTitle="Back"
+          />
+        </View>
         <ScrollView style={{ flex: 1 }}>
           {this.renderSortOptions()}
+          <View style={styles.saveButtonContainer}>
+            <Button
+              title="Save"
+              onPress={this.save}
+            />
+          </View>
         </ScrollView>
       </View>
     );
   }
 }
-
-const mapStateToProps = ({ user, profile }) => {
-  const { currentUser } = user;
-  const { userLibrary } = profile;
-  const sort = userLibrary && userLibrary.sort;
-
-  return {
-    currentUser,
-    sort,
-  };
-};
-
-export const LibraryOptions = connect(mapStateToProps, {
-  fetchUserLibrary,
-  setLibrarySort,
-})(LibraryOptionsComponent);

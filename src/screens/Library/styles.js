@@ -37,54 +37,6 @@ export const styles = StyleSheet.create({
     color: colors.extraDarkPurple,
   },
 
-  headerContainer: {
-    height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
-    paddingTop: statusBarHeight + (isX ? paddingX : 0),
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.darkPurple,
-    shadowColor: 'rgba(0,0,0,0.2)',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.5,
-    zIndex: 2,
-  },
-  headerContent: {
-    flex: 1,
-    width: '100%',
-  },
-  headerTitle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    flex: 1,
-    paddingHorizontal: 4,
-  },
-  arrowIcon: {
-    fontSize: 14,
-    paddingTop: 2,
-    marginLeft: 6,
-  },
-
-  rightButtons: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    right: 8,
-    flexDirection: 'row',
-  },
-  rightButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-  },
-  rightIcon: {
-    fontSize: 22,
-  },
-
   typeContainer: {
     position: 'absolute',
     top: 0,
@@ -107,17 +59,5 @@ export const styles = StyleSheet.create({
   },
   typeText: {
     textAlignVertical: 'center',
-  },
-
-  libraryOption: {
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: colors.extraDarkPurple,
-    height: 40,
-  },
-  optionSelectedIcon: {
-    fontSize: 24,
   },
 });
