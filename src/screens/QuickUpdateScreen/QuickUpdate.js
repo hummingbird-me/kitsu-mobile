@@ -472,7 +472,7 @@ class QuickUpdate extends Component {
     }
   };
 
-  updateTextAndToggle = async (gif) => {
+  updateTextAndToggle = async (gif, nsfw, spoiler) => {
     // Restore any previous text, and then toggle the editor.
     const { library, editorText } = this.state;
 
@@ -492,6 +492,8 @@ class QuickUpdate extends Component {
     const current = library[this.carousel.currentIndex];
     try {
       const post = await Kitsu.create('posts', {
+        spoiler,
+        nsfw,
         content: updatedText.trim(),
         media: {
           id: getMedia(current).id, type: current.anime ? 'anime' : 'manga',

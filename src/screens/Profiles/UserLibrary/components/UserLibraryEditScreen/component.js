@@ -40,7 +40,6 @@ export class UserLibraryEditScreenComponent extends React.Component {
     reconsumeCount: this.getLibraryEntry().reconsumeCount,
     startedAt: this.getLibraryEntry().startedAt,
     status: this.getLibraryEntry().status,
-    notesHeight: 150,
     loading: false,
     error: null,
   }
@@ -51,11 +50,6 @@ export class UserLibraryEditScreenComponent extends React.Component {
 
   onNotesChanged = (notes) => {
     this.setState({ notes });
-  }
-
-  onNotesContentSizeChanged = (event) => {
-    const { contentSize } = event.nativeEvent;
-    this.setState({ notesHeight: contentSize.height + 5 });
   }
 
   onVisibilityChanged = (isPrivate) => {
@@ -336,16 +330,14 @@ export class UserLibraryEditScreenComponent extends React.Component {
             {/* Notes */}
             <View style={[styles.editRow, { maxHeight: 'auto' }]}>
               <View style={styles.notesSection}>
-                <Text style={[styles.editRowLabel, styles.withValueLabel]}
-                >
+                <Text style={[styles.editRowLabel, styles.withValueLabel]}>
                   Personal Notes
                 </Text>
                 <TextInput
-                  style={[styles.editRowValue, { height: this.state.notesHeight }]}
+                  style={[styles.editRowValue]}
                   value={notes}
                   placeholder={canEdit ? "Type some notes..." : "User has no notes"}
                   onChangeText={this.onNotesChanged}
-                  onContentSizeChange={this.onNotesContentSizeChanged}
                   editable={canEdit}
                   multiline
                 />

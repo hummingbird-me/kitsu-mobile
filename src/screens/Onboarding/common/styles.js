@@ -1,11 +1,14 @@
 import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX, safeAreaInsetX } from 'kitsu/utils/isX';
+
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.darkPurple,
     paddingTop: 77 + Platform.select({ ios: 0, android: 4 }),
+    paddingBottom: isX ? safeAreaInsetX.bottom : 0,
   },
   contentWrapper: {
     flex: 1,
