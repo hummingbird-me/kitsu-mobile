@@ -51,6 +51,10 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     zIndex: 2,
   },
+  headerContent: {
+    flex: 1,
+    width: '100%',
+  },
   headerTitle: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -63,6 +67,24 @@ export const styles = StyleSheet.create({
     paddingTop: 2,
     marginLeft: 6,
   },
+
+  rightButtons: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    right: 8,
+    flexDirection: 'row',
+  },
+  rightButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  rightIcon: {
+    fontSize: 22,
+  },
+
   typeContainer: {
     position: 'absolute',
     top: 0,
