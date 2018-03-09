@@ -11,6 +11,7 @@ export const fbBlueDark = '#3B5998'; // taken from invision app designs
 export const linkBlue = '#083d8d'; // sidebar seemore text
 
 /* purples */
+export const extraDarkPurple = '#302530';
 export const darkPurple = '#402F3F';
 export const lightPurple = '#624E5F';
 export const listBackPurple = '#443443';
