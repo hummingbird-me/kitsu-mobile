@@ -40,7 +40,6 @@ export const styles = StyleSheet.create({
   headerContainer: {
     height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
     paddingTop: statusBarHeight + (isX ? paddingX : 0),
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.darkPurple,
@@ -52,9 +51,39 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     zIndex: 2,
   },
+  headerTitle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    flex: 1,
+    paddingHorizontal: 4,
+  },
   arrowIcon: {
     fontSize: 14,
     paddingTop: 2,
     marginLeft: 6,
+  },
+  typeContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  opacityFill: {
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    flex: 1,
+  },
+  typeSelectContainer: {
+    backgroundColor: colors.darkPurple,
+  },
+  typeTextContainer: {
+    backgroundColor: colors.listBackPurple,
+    padding: 14,
+    justifyContent: 'center',
+    marginTop: 1,
+  },
+  typeText: {
+    textAlignVertical: 'center',
   },
 });

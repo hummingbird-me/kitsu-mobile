@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, Animated, TouchableWithoutFeedback } from 'react-native';
+import { StyledText } from 'kitsu/components/StyledText';
 import { PropTypes } from 'prop-types';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { capitalize, isEmpty } from 'lodash';
@@ -32,6 +33,8 @@ export class LibraryScreenComponent extends PureComponent {
   state = {
     type: 'anime',
     status: 'current',
+    opacity: new Animated.Value(0),
+    typeSelectVisible: false,
   }
 
   componentWillMount() {
@@ -92,6 +95,19 @@ export class LibraryScreenComponent extends PureComponent {
     }
   }
 
+  showTypeSelect = () => {
+    const { opacity } = this.state;
+    this.setState({ typeSelectVisible: true });
+    Animated.timing(opacity, { toValue: 1, duration: 100, useNativeDriver: true }).start();
+  }
+
+  hideTypeSelect = () => {
+    const { opacity } = this.state;
+    Animated.timing(opacity, { toValue: 0, duration: 100, useNativeDriver: true }).start(() => {
+      this.setState({ typeSelectVisible: false });
+    });
+  }
+
   renderTabNav = () => {
     const { type, status: currentStatus } = this.state;
     const { library } = this.props;
@@ -131,35 +147,75 @@ export class LibraryScreenComponent extends PureComponent {
     );
   }
 
+  renderTypeSelect() {
+    const { type: currentType, opacity } = this.state;
+
+    const touchableItem = (type, title) => (
+      <TouchableOpacity
+        onPress={() => {
+          this.setState({ type });
+          this.hideTypeSelect();
+        }}
+        style={styles.typeTextContainer}
+      >
+        <StyledText size="default" color="light" bold={currentType === type} textStyle={styles.typeText}>
+          {title}
+        </StyledText>
+      </TouchableOpacity>
+    );
+
+    return (
+      <View style={styles.typeContainer}>
+        <TouchableWithoutFeedback onPress={this.hideTypeSelect}>
+          <Animated.View style={[styles.opacityFill, { opacity }]}>
+            <View style={styles.typeSelectContainer}>
+              {touchableItem('anime', 'Anime')}
+              {touchableItem('manga', 'Manga')}
+            </View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      </View>
+    );
+  }
+
   render() {
     const {
       currentUser,
       navigation,
     } = this.props;
-    const { type, status } = this.state;
+    const { type, status, typeSelectVisible } = this.state;
 
     const currentLibrary = this.getCurrentLibrary();
 
     return (
       <View style={styles.container}>
-        <LibraryScreenHeader type={type} />
-        {this.renderTabNav()}
-        { currentUser && currentLibrary &&
-          <UserLibraryList
-            currentUser={currentUser}
-            profile={currentUser}
-            navigation={navigation}
-            libraryEntries={currentLibrary.data}
-            libraryStatus={status}
-            libraryType={type}
-            loading={currentLibrary.loading}
-            refreshing={currentLibrary.refreshing}
-            onRefresh={this.onRefresh}
-            onEndReached={this.onEndReached}
-            onLibraryEntryUpdate={this.onEntryUpdate}
-            onLibraryEntryDelete={this.onEntryDelete}
-          />
-        }
+        <LibraryScreenHeader
+          title={type}
+          onTitlePress={() => {
+            const toggle = typeSelectVisible ? this.hideTypeSelect : this.showTypeSelect;
+            toggle();
+          }}
+        />
+        <View style={{ flex: 1 }}>
+          {this.renderTabNav()}
+          { currentUser && currentLibrary &&
+            <UserLibraryList
+              currentUser={currentUser}
+              profile={currentUser}
+              navigation={navigation}
+              libraryEntries={currentLibrary.data}
+              libraryStatus={status}
+              libraryType={type}
+              loading={currentLibrary.loading}
+              refreshing={currentLibrary.refreshing}
+              onRefresh={this.onRefresh}
+              onEndReached={this.onEndReached}
+              onLibraryEntryUpdate={this.onEntryUpdate}
+              onLibraryEntryDelete={this.onEntryDelete}
+            />
+          }
+          {typeSelectVisible && this.renderTypeSelect()}
+        </View>
       </View>
     );
   }
