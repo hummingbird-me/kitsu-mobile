@@ -5,6 +5,7 @@ import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/U
 import { capitalize, isEmpty } from 'lodash';
 import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
 import { styles } from './styles';
+import { LibraryScreenHeader } from './LibraryScreenHeader';
 
 const TAB_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },
@@ -16,7 +17,6 @@ const TAB_TEXT_MAPPING = {
 
 export class LibraryScreenComponent extends PureComponent {
   static navigationOptions = () => ({
-    title: 'Library',
     header: null,
   });
 
@@ -24,7 +24,7 @@ export class LibraryScreenComponent extends PureComponent {
     currentUser: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
     library: PropTypes.object.isRequired,
-    fetchUserLibrary: PropTypes.object.func.isRequired,
+    fetchUserLibrary: PropTypes.func.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
   };
@@ -94,31 +94,34 @@ export class LibraryScreenComponent extends PureComponent {
 
   renderTabNav = () => {
     const { type, status: currentStatus } = this.state;
+    const { library } = this.props;
+
     const statuses = ['current', 'planned', 'completed', 'on_hold', 'dropped'];
 
     // The meta data
-    const currentLibrary = this.getCurrentLibrary();
-    const meta = currentLibrary && currentLibrary.data && currentLibrary.data.meta;
+    const meta = library && library.meta && library.meta[type];
 
     return (
-      <TabBar style={styles.tabBar}>
+      <TabBar style={styles.tabBar} containerStyle={styles.tabBarContainer}>
         {statuses.map((status) => {
           const isCurrent = currentStatus === status;
           const statusText = (TAB_TEXT_MAPPING[status] && TAB_TEXT_MAPPING[status][type]) ||
                               capitalize(status);
-          const countText = (meta && media.statusCounts && meta.statusCounts[status].toString()) || '';
+
+          const count = meta && meta.statusCounts && meta.statusCounts[status];
+          const countText = (count && count.toString()) || '0';
 
           return (
             <TouchableOpacity
-              style={[styles.tabItem, isCurrent && syles.tabItem__selected]}
+              style={[styles.tabItem, isCurrent && styles.tabItem__selected]}
               onPress={() => this.setState({ status })}
             >
-              <Text style={[styles.statusText, isCurrent && syles.tabText__selected]}>
+              <Text style={[styles.statusText, isCurrent && styles.tabText__selected]}>
                 {statusText}
               </Text>
               { !isEmpty(countText) &&
-                <Text style={[styles.countText, isCurrent && syles.tabText__selected]}>
-                  ({countText})
+                <Text style={[styles.countText, isCurrent && styles.tabText__selected]}>
+                  {` (${countText})`}
                 </Text>
               }
             </TouchableOpacity>
@@ -127,7 +130,6 @@ export class LibraryScreenComponent extends PureComponent {
       </TabBar>
     );
   }
-
 
   render() {
     const {
@@ -140,6 +142,7 @@ export class LibraryScreenComponent extends PureComponent {
 
     return (
       <View style={styles.container}>
+        <LibraryScreenHeader type={type} />
         {this.renderTabNav()}
         { currentUser && currentLibrary &&
           <UserLibraryList

@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    flex: 1,
     backgroundColor: offWhite,
     borderTopWidth: borderWidth.hairline,
     borderTopColor: lightestGrey,

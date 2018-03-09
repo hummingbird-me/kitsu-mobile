@@ -14,7 +14,7 @@ export const TabBar = props => (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.tab}
+      contentContainerStyle={[styles.tab, props.containerStyle]}
     >
       {props.children}
     </ScrollView>
@@ -30,11 +30,13 @@ export const TabBarLink = ({ onPress, label, isActive }) => (
 TabBar.propTypes = {
   children: PropTypes.node,
   style: ViewPropTypes.style,
+  containerStyle: ViewPropTypes.style,
 };
 
 TabBar.defaultProps = {
   children: null,
   style: null,
+  containerStyle: null,
 };
 
 TabBarLink.propTypes = {

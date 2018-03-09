@@ -179,6 +179,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
     dispatch({
       data,
+      meta: libraryEntries.meta,
       type: actions.fetchSuccess,
       refresh: () => {
         const newOptions = {

@@ -19,6 +19,7 @@ function removeObjectFromArray(array, entry) {
 }
 
 const userLibraryInitial = {
+  meta: {},
   anime: {
     completed: { data: [], loading: false, refreshing: false },
     current: { data: [], loading: false, refreshing: false },
@@ -164,6 +165,13 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           [action.userId]: {
             ...userLibraryInitial,
             ...state.userLibrary[action.userId],
+            meta: {
+              ...state.userLibrary[action.userId].meta,
+              [action.library]: {
+                ...state.userLibrary[action.userId].meta[action.library],
+                ...action.meta,
+              },
+            },
             [action.library]: {
               ...state.userLibrary[action.userId][action.library],
               [action.status]: {
