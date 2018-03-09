@@ -6,6 +6,7 @@ import * as colors from 'kitsu/constants/colors';
 import { GIFImage } from 'kitsu/screens/Feed/pages/PostCreation/GIFImage';
 import { AdditionalButton } from 'kitsu/screens/Feed/pages/PostCreation/AdditionalButton';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
+import { CheckBox } from 'react-native-elements';
 import styles from './styles';
 
 const HIT_SLOP = {
@@ -37,6 +38,8 @@ export default class QuickUpdateEditor extends PureComponent {
     headerOpacity: new Animated.Value(0),
     giphyPickerModalIsVisible: false,
     gif: null,
+    nsfw: false,
+    spoiler: true,
   };
 
   componentDidMount = () => {
@@ -62,7 +65,7 @@ export default class QuickUpdateEditor extends PureComponent {
 
   render() {
     const { progress, value, onCancel, onDone, media, currentEpisode } = this.props;
-    const { headerOpacity, giphyPickerModalIsVisible, gif } = this.state;
+    const { headerOpacity, giphyPickerModalIsVisible, gif, nsfw, spoiler } = this.state;
 
     return (
       <View style={styles.wrapper}>
@@ -73,7 +76,7 @@ export default class QuickUpdateEditor extends PureComponent {
             <Text style={styles.headerButtonText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.headerText}>Episode {progress}</Text>
-          <TouchableOpacity onPress={() => onDone(gif)} hitSlop={HIT_SLOP} style={styles.headerButton}>
+          <TouchableOpacity onPress={() => onDone(gif, nsfw, spoiler)} hitSlop={HIT_SLOP} style={styles.headerButton}>
             <Text style={styles.headerButtonText}>Done</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -93,6 +96,26 @@ export default class QuickUpdateEditor extends PureComponent {
             episode={currentEpisode}
             navigation={navigation}
           />
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              title="NSFW"
+              containerStyle={styles.checkbox}
+              checkedColor={colors.green}
+              checked={nsfw}
+              checkedIcon="check-circle"
+              uncheckedIcon="circle-thin"
+              onPress={() => this.setState({ nsfw: !nsfw })}
+            />
+            <CheckBox
+              title="Spoiler"
+              containerStyle={styles.checkbox}
+              checkedColor={colors.green}
+              checked={spoiler}
+              checkedIcon="check-circle"
+              uncheckedIcon="circle-thin"
+              onPress={() => this.setState({ spoiler: !spoiler })}
+            />
+          </View>
           <View style={styles.gifWrapper}>
             {gif ?
               <GIFImage

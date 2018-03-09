@@ -59,6 +59,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginHorizontal: -10,
   },
+  checkboxContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+  },
+  checkbox: {
+    marginRight: 0,
+    padding: 8,
+  },
 });
 
 export default styles;
