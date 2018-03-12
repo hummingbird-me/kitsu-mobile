@@ -1,17 +1,16 @@
 import React from 'react';
-import { TabNavigator } from 'react-navigation';
+import { DrawerNavigator, TabNavigator } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { fetchNotifications } from 'kitsu/store/feed/actions';
-import { tabRed, listBackPurple } from 'kitsu/constants/colors';
+import { tabRed, listBackPurple, extraDarkPurple } from 'kitsu/constants/colors';
 import SearchStack from './search';
 import NotificationsStack from './notification';
 import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
-import SidebarStack from './sidebar';
 import LibraryStack from './library';
 
 const Tabs = TabNavigator(
@@ -64,6 +63,14 @@ const Tabs = TabNavigator(
   },
 );
 
+const Drawer = DrawerNavigator({
+  Tabs: {
+    screen: Tabs,
+  },
+}, {
+  drawerBackgroundColor: extraDarkPurple,
+});
+
 class TabsNav extends React.PureComponent {
   static propTypes = {
     badge: PropTypes.number.isRequired,
@@ -85,7 +92,7 @@ class TabsNav extends React.PureComponent {
 
   render() {
     return (
-      <Tabs screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }} />
+      <Drawer screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }} />
     );
   }
 }
