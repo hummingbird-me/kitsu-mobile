@@ -8,8 +8,7 @@
  */
 
 import React from 'react';
-import { Platform } from 'react-native';
-import { TabNavigator } from 'react-navigation';
+import { DrawerNavigator, TabNavigator } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -17,10 +16,13 @@ import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { fetchNotifications } from 'kitsu/store/feed/actions';
 import { tabRed, listBackPurple } from 'kitsu/constants/colors';
+import { SidebarScreen } from 'kitsu/screens/Sidebar';
+
 import SearchStack from './search';
 import NotificationsStack from './notification';
 import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
+import LibraryStack from './library';
 
 const Tabs = TabNavigator(
   {
@@ -36,23 +38,34 @@ const Tabs = TabNavigator(
     Notifications: {
       screen: NotificationsStack,
     },
+    Library: {
+      screen: LibraryStack,
+    },
   },
   {
+    initialRouteName: 'Notifications',
     lazy: true,
     removeClippedSubviews: true,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
-    initialRouteName: 'Notifications',
     tabBarOptions: {
       activeTintColor: tabRed,
       inactiveBackgroundColor: listBackPurple,
       activeBackgroundColor: listBackPurple,
       showLabel: false,
       showIcon: true,
+      iconStyle: {
+        width: 44,
+        height: 44,
+      },
       style: {
         height: 44.96,
         borderTopWidth: 0,
         backgroundColor: listBackPurple,
+      },
+      tabStyle: {
+        height: 44.96,
+        borderTopWidth: 0,
       },
       indicatorStyle: {
         backgroundColor: tabRed,
@@ -61,6 +74,15 @@ const Tabs = TabNavigator(
     },
   },
 );
+
+const Drawer = DrawerNavigator({
+  Tabs: {
+    screen: Tabs,
+  },
+}, {
+  contentComponent: SidebarScreen, // Use our own component
+  drawerBackgroundColor: listBackPurple,
+});
 
 class TabsNav extends React.PureComponent {
   static propTypes = {
@@ -83,7 +105,9 @@ class TabsNav extends React.PureComponent {
 
   render() {
     return (
-      <Tabs screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }} />
+      <Drawer
+        screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }}
+      />
     );
   }
 }
