@@ -75,8 +75,7 @@ export class ProgressiveImage extends PureComponent {
             onLoad={this.onLoad}
             onLayout={this.onLayout}
             resizeMode={resizeMode}
-            source={source}
-            defaultSource={defaultSource}
+            source={source || defaultSource}
             style={[style, { opacity: thumbnailOpacity.Value }]}
             borderRadius={style.borderRadius}
           />
