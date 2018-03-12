@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
@@ -38,7 +38,7 @@ const TITLE_MAP = {
   ko_kr: 'Korean',
 };
 
-export class MediaDetails extends PureComponent {
+export class MediaDetails extends Component {
   static propTypes = {
     media: PropTypes.object.isRequired,
   };
@@ -69,8 +69,10 @@ export class MediaDetails extends PureComponent {
     let productions = animeProductions || [];
     productions = productions.filter(item => item.role === 'studio');
     return productions.length > 0 ?
-      productions.map(item => item.producer && item.producer.name) :
-      'TBD';
+      productions
+        .map(item => item.producer && item.producer.name)
+        .join(', ')
+      : 'TBD';
   };
 
   getUnitCount = () => (

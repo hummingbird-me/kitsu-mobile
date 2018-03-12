@@ -211,7 +211,6 @@ class MediaPages extends PureComponent {
     }
   }
 
-
   getSubtitles(media) {
     if (!media) return null;
 
