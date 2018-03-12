@@ -531,6 +531,33 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'animeProductions',
+  {
+    role: '',
+    anime: {
+      jsonApi: 'hasOne',
+      type: 'anime',
+    },
+    producer: {
+      jsonApi: 'hasOne',
+      type: 'producers',
+    },
+  },
+);
+
+Kitsu.define(
+  'producers',
+  {
+    name: '',
+    slug: '',
+    animeProductions: {
+      jsonApi: 'hasMany',
+      type: 'animeProductions'
+    },
+  },
+);
+
+Kitsu.define(
   'reviews',
   {
     id: '',

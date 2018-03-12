@@ -314,8 +314,12 @@ class MediaPages extends PureComponent {
     this.setState({ loading: true, loadingAdditional: true });
     try {
       // Fetch the media with categories
+      const includes = ['categories'];
+      if (type === 'anime') {
+        includes.push('animeProductions.producer');
+      }
       const media = await Kitsu.one(type, id).get({
-        include: 'categories',
+        include: includes.join(),
       });
 
       // Set the initial media info
@@ -338,6 +342,7 @@ class MediaPages extends PureComponent {
 
   /**
    * Fetch the episodes/chapter and related media types
+   * @TODO: Fetch this data properly rather than overwriting media
    */
   fetchEpisodesAndRelated = async (type, id) => {
     try {
@@ -349,10 +354,12 @@ class MediaPages extends PureComponent {
       const previousCategories = (this.state.media && this.state.media.categories) || null;
       const categories = (previousCategories && { categories: previousCategories }) || {};
 
+      const previousProductions = (this.state.media && this.state.media.animeProductions) || null;
+      const productions = (previousProductions && { animeProductions: previousProductions }) || {};
+
       // Combine the 2 object that we have
       this.setState({
-        media: { ...media, ...categories },
-        loadingAdditional: false,
+        media: { ...media, ...categories, ...productions },
       });
     } catch (error) {
       console.log(error);
@@ -391,6 +398,7 @@ class MediaPages extends PureComponent {
       this.setState({
         // castings,
         mediaReactions,
+        loadingAdditional: false,
       });
     } catch (error) {
       console.log(error);

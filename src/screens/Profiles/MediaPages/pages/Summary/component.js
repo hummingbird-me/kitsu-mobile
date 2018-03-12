@@ -9,6 +9,7 @@ import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
+import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { upperFirst, isNull } from 'lodash';
 import { SummaryProgress } from './progress';
@@ -38,17 +39,12 @@ class SummaryComponent extends PureComponent {
     loading: true,
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.fetchFeed();
-  }
-
-  navigateTo = (scene) => {
-    this.props.setActiveTab(scene);
   }
 
   formatData(data, numberOfItems = 12) {
     if (!data) return [];
-
     return data.sort((a, b) => a.number - b.number).slice(0, numberOfItems);
   }
 
@@ -70,7 +66,6 @@ class SummaryComponent extends PureComponent {
       });
 
       const feed = preprocessFeed(result).filter(i => i.type === 'posts');
-
       this.setState({
         feed,
         loading: false,
@@ -80,20 +75,12 @@ class SummaryComponent extends PureComponent {
     }
   }
 
-  navigateToPost = (props) => {
-    this.props.navigation.navigate('PostDetails', props);
-  }
-
-  navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
-  }
-
-  navigateToMedia = (type, id) => {
-    this.props.navigation.navigate('MediaPages', {
-      mediaId: id,
-      mediaType: type,
-    });
-  }
+  navigateTo = scene => this.props.setActiveTab(scene);
+  navigateToPost = props => this.props.navigation.navigate('PostDetails', props);
+  navigateToUserProfile = userId => this.props.navigation.navigate('ProfilePages', { userId });
+  navigateToMedia = (mediaType, mediaId) => (
+    this.props.navigation.navigate('MediaPages', { mediaId, mediaType, })
+  );
 
   renderItem = ({ item }) => (
     <Post
@@ -118,6 +105,27 @@ class SummaryComponent extends PureComponent {
           media={media}
           onPress={() => this.navigateTo('Episodes')}
           onEditPress={onLibraryEditPress}
+        />
+
+        {/* Details */}
+        <MediaDetails media={media} />
+
+        {/* Reactions */}
+        {/* @TODO: Reactions Empty State - Render nothing until we support writing */}
+        <ScrollableSection
+          title="Reactions"
+          onViewAllPress={() => this.navigateTo('Reactions')}
+          data={mediaReactions}
+          loading={loadingAdditional}
+          renderItem={({ item }) => (
+            <ScrollItem>
+              <ReactionBox
+                boxed
+                reactedMedia={media.canonicalTitle}
+                reaction={item}
+              />
+            </ScrollItem>
+          )}
         />
 
         {/* Related Media */}
@@ -147,23 +155,6 @@ class SummaryComponent extends PureComponent {
               />
             </ScrollItem>);
           }}
-        />
-
-        {/* Reactions */}
-        <ScrollableSection
-          title="Reactions"
-          onViewAllPress={() => this.navigateTo('Reactions')}
-          data={mediaReactions}
-          loading={isNull(mediaReactions)}
-          renderItem={({ item }) => (
-            <ScrollItem>
-              <ReactionBox
-                boxed
-                reactedMedia={media.canonicalTitle}
-                reaction={item}
-              />
-            </ScrollItem>
-          )}
         />
 
         {/* Characters */}
