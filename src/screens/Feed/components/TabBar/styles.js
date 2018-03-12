@@ -8,14 +8,20 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: statusBarHeight,
     paddingHorizontal: scenePadding,
-    backgroundColor: colors.listBackPurple,
+    backgroundColor: colors.extraDarkPurple,
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
   tabStyle: {
     flex: 1,
     height: navigationBarHeight,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tabStyle__active: {
+    borderBottomWidth: 4,
+    borderBottomColor: colors.orange,
+  },
+  tabAvatar: {
+    marginRight: 20,
   },
 });
