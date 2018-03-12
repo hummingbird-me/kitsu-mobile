@@ -3,13 +3,11 @@ import { View, Switch, Text } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import { navigationOptions, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import { styles } from './styles';
 
 class PrivacySettings extends React.Component {
-  static navigationOptions = {
-    title: 'Privacy',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Privacy');
 
   state = {
     modified: false,

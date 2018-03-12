@@ -9,7 +9,7 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
-import { SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { navigationOptions, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
@@ -83,9 +83,7 @@ const ImportItem = ({ kind, status, date, total }) => {
 };
 
 class ImportLibrary extends React.Component {
-  static navigationOptions = {
-    title: 'Import Library',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Import Library');
 
   state = {
     imports: [],

@@ -1,25 +1,21 @@
-import React from 'react';
-import { View, Text, SectionList, Platform, TouchableOpacity, Linking } from 'react-native';
+import React, { PureComponent } from 'react';
 import FastImage from 'react-native-fast-image';
+import { View, Text, SectionList, Linking } from 'react-native';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
+
+import { logoutUser } from 'kitsu/store/auth/actions';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import * as colors from 'kitsu/constants/colors';
-import { bugs, contact, library, suggest, settings } from 'kitsu/assets/img/sidebar_icons/';
+import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import defaultCover from 'kitsu/assets/img/default_cover.png';
-import {
-  defaultAvatar as defaultGroupAvatar,
-  defaultCover as defaultCoverUri,
-} from 'kitsu/constants/app';
-import { commonStyles } from 'kitsu/common/styles';
-import { logoutUser } from 'kitsu/store/auth/actions';
-import { fetchGroupMemberships } from 'kitsu/store/groups/actions';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
-import { SidebarListItem, SidebarTitle, ItemSeparator } from './common/';
-import { styles } from './styles';
+import { library, settings, bugs, suggest, contact } from 'kitsu/assets/img/sidebar_icons';
+import { extraDarkPurple } from 'kitsu/constants/colors';
 
+import { SidebarListItem, SidebarTitle } from './common';
+import { styles } from './styles';
+import { Button } from 'kitsu/components/Button';
+
+/*
 const settingsData = [
   { title: 'Settings & Preferences', image: settings, target: 'Settings' },
   { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
@@ -29,7 +25,9 @@ const settingsData = [
 ];
 
 const keyExtractor = (item, index) => index.toString();
+*/
 
+/*
 class SidebarScreen extends React.Component {
   static navigationOptions = {
     header: null, // overlaps statusbar
@@ -192,7 +190,7 @@ class SidebarScreen extends React.Component {
         ItemSeparatorComponent: () => <ItemSeparator underlineImage={false} />,
       });
     }
-    */
+
     return (
       <View style={{ backgroundColor: colors.listBackPurple, flex: 1 }}>
         <ProgressiveImage
@@ -240,15 +238,132 @@ class SidebarScreen extends React.Component {
       </View>
     );
   }
+}*/
+
+class SidebarScreen extends PureComponent {
+  get accountSections() {
+    return {
+      title: 'Account Settings',
+      data: [
+        { title: 'Settings & Preferences', image: settings, target: 'Settings' },
+        { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
+        { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
+        { title: 'Database Requests', image: suggest, target: 'DatabaseRequests' },
+        { title: 'Contact Us', image: contact, target: 'mailto' },
+      ],
+    };
+  }
+
+  onViewProfile = () => {
+    const { currentUser, navigation } = this.props;
+    navigation.navigate('ProfilePages', { userId: currentUser.id });
+  };
+
+  onActionPress = (item) => {
+    const { navigation, accessToken } = this.props;
+    switch (item.target) {
+      case 'Settings':
+        navigation.navigate(item.target);
+        break;
+      case 'ReportBugs':
+        navigation.navigate(item.target, {
+          title: item.title,
+          type: 'bugReport',
+          token: accessToken,
+        });
+        break;
+      case 'SuggestFeatures':
+        navigation.navigate(item.target, {
+          title: item.title,
+          type: 'featureRequest',
+          token: accessToken,
+        });
+        break;
+      case 'DatabaseRequests':
+        navigation.navigate(item.target, {
+          title: item.title,
+          type: 'databaseRequest',
+          token: accessToken,
+        });
+        break;
+      case 'mailto':
+        Linking.openURL('mailto:josh@kitsu.io');
+        break;
+      default:
+        break;
+    }
+  };
+
+  onLogout = () => {
+    this.props.logoutUser();
+  };
+
+  renderSectionHeader = (section) => (
+    <SidebarTitle title={section.title} />
+  );
+
+  renderSectionItem = (item) => {
+    return (
+      <SidebarListItem
+        key={item.title}
+        style={styles.sidebarListItem}
+        image={item.image}
+        title={item.title}
+        onPress={() => this.onActionPress(item)}
+      />
+    );
+  };
+
+  render() {
+    const { avatar, coverImage, name } = this.props.currentUser;
+    return (
+      <View style={{ flex: 1 }}>
+        {/* Header */}
+        <ProgressiveImage
+          hasOverlay
+          style={styles.headerCoverImage}
+          source={( coverImage && { uri: getImgixCoverImage(coverImage) }) || defaultCover }
+        >
+          <View style={styles.userProfileContainer}>
+            <FastImage
+              style={styles.userProfileImage}
+              source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+            />
+            <View style={styles.userProfileTextWrapper}>
+              <Text style={styles.userProfileName}>{name}</Text>
+            </View>
+          </View>
+        </ProgressiveImage>
+
+        {/* View Profile */}
+        <SidebarListItem
+          style={styles.sidebarListItem}
+          image={library}
+          title="View Profile"
+          onPress={this.onViewProfile}
+        />
+
+        {/* Account Settings */}
+        {this.renderSectionHeader(this.accountSections)}
+        {this.accountSections.data.map(item => (
+          this.renderSectionItem(item)
+        ))}
+
+        {/* Logout */}
+        <Button
+          style={styles.logoutButton}
+          title="Logout"
+          icon="sign-out"
+          onPress={this.onLogout}
+        />
+      </View>
+    );
+  }
 }
 
-const mapStateToProps = ({ auth, user, groups }) => ({
+const mapStateToProps = ({ auth, user }) => ({
   accessToken: auth.tokens.access_token,
-  currentUser: user.currentUser || {},
-  userId: (user.currentUser && user.currentUser.id) || null,
-  groupMemberships: groups.groupMemberships,
+  currentUser: user.currentUser,
 });
 
-SidebarScreen.propTypes = {};
-
-export default connect(mapStateToProps, { fetchGroupMemberships, logoutUser })(SidebarScreen);
+export default connect(mapStateToProps, { logoutUser })(SidebarScreen);

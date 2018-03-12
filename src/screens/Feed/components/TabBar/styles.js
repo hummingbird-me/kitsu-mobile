@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: statusBarHeight,
     paddingHorizontal: scenePadding,
-    backgroundColor: colors.extraDarkPurple,
+    backgroundColor: colors.listBackPurple,
     alignItems: 'center',
   },
   tabStyle: {

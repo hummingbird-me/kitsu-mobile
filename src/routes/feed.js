@@ -7,6 +7,7 @@ import CreatePost from 'kitsu/screens/Feed/pages/PostCreation/CreatePost';
 import homeIcon from 'kitsu/assets/img/tabbar_icons/home.png';
 import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { commonRoutes } from './common';
+import { sidebarRoutes } from './sidebar';
 import navigationOptions from './navigationOptions';
 
 const PostStack = StackNavigator(
@@ -14,6 +15,7 @@ const PostStack = StackNavigator(
     FeedActivity: {
       screen: Feed,
     },
+    ...sidebarRoutes,
     ...commonRoutes,
   },
   {

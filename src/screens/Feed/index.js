@@ -7,7 +7,7 @@ import URL from 'url-parse';
 
 import { Kitsu } from 'kitsu/config/api';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { listBackPurple, offWhite, extraDarkPurple } from 'kitsu/constants/colors';
+import { listBackPurple, offWhite } from 'kitsu/constants/colors';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
@@ -188,7 +188,7 @@ class Feed extends React.PureComponent {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: extraDarkPurple, paddingTop: isX ? paddingX : 0 }}>
+      <View style={{ flex: 1, backgroundColor: listBackPurple, paddingTop: isX ? paddingX : 0 }}>
         <StatusBar barStyle="light-content" />
         <TabBar currentUser={this.props.currentUser} onPress={this.onDrawer}>
           {feedStreams.map(tabItem => (

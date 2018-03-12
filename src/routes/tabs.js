@@ -6,7 +6,9 @@ import { connect } from 'react-redux';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { fetchNotifications } from 'kitsu/store/feed/actions';
-import { tabRed, listBackPurple, extraDarkPurple } from 'kitsu/constants/colors';
+import { tabRed, listBackPurple } from 'kitsu/constants/colors';
+import { SidebarScreen } from 'kitsu/screens/Sidebar';
+
 import SearchStack from './search';
 import NotificationsStack from './notification';
 import QuickUpdateStack from './quickUpdate';
@@ -68,7 +70,8 @@ const Drawer = DrawerNavigator({
     screen: Tabs,
   },
 }, {
-  drawerBackgroundColor: extraDarkPurple,
+  contentComponent: SidebarScreen, // Use our own component
+  drawerBackgroundColor: listBackPurple,
 });
 
 class TabsNav extends React.PureComponent {
@@ -92,7 +95,9 @@ class TabsNav extends React.PureComponent {
 
   render() {
     return (
-      <Drawer screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }} />
+      <Drawer
+        screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }}
+      />
     );
   }
 }

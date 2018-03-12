@@ -21,7 +21,6 @@ import SearchStack from './search';
 import NotificationsStack from './notification';
 import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
-import SidebarStack from './sidebar';
 
 const Tabs = TabNavigator(
   {
@@ -36,9 +35,6 @@ const Tabs = TabNavigator(
     },
     Notifications: {
       screen: NotificationsStack,
-    },
-    Menu: {
-      screen: SidebarStack,
     },
   },
   {

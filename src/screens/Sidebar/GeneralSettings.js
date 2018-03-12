@@ -5,13 +5,11 @@ import PropTypes from 'prop-types';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import isEmpty from 'lodash/isEmpty';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import { navigationOptions, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import { styles } from './styles';
 
 class GeneralSettings extends React.Component {
-  static navigationOptions = {
-    title: 'General',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'General');
 
   constructor(props) {
     super(props);

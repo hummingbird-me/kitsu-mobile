@@ -6,7 +6,7 @@ import startCase from 'lodash/startCase';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
+import { navigationOptions, SidebarListItem, SidebarTitle, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
 const mediaPreferenceKeyToTitle = (key) => {
@@ -28,9 +28,7 @@ const mediaPreferenceTitleToKey = (title) => {
 };
 
 class LibraryScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Library',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Library');
 
   // No mapping needed for Rating System, since API uses it as it is.
   // We just need to translate Canonical to Most Common Usage.

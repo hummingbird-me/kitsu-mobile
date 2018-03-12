@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
 import PropTypes from 'prop-types';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
+import { navigationOptions, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
 class ImportDetail extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.item.title,
-  });
+  static navigationOptions = ({ navigation }) => (
+    navigationOptions(navigation, navigation.state.params.item.title)
+  );
 
   state = {
     showModal: false,
