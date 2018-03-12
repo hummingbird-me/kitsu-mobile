@@ -10,30 +10,17 @@ import { commonRoutes } from './common';
 import { sidebarRoutes } from './sidebar';
 import navigationOptions from './navigationOptions';
 
-const PostStack = StackNavigator(
+const options = navigationOptions();
+const FeedStack = StackNavigator(
   {
     FeedActivity: {
       screen: Feed,
     },
-    ...sidebarRoutes,
-    ...commonRoutes,
-  },
-  {
-    headerMode: 'none',
-    // eslint-disable-next-line react/prop-types
-  },
-);
-
-const options = navigationOptions();
-
-const FeedStack = StackNavigator(
-  {
-    PostStack: {
-      screen: PostStack,
-    },
     CreatePost: {
       screen: CreatePost,
     },
+    ...sidebarRoutes,
+    ...commonRoutes,
   },
   {
     mode: 'modal',
