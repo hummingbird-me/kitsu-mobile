@@ -260,6 +260,7 @@ class MediaPages extends PureComponent {
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error creating library entry:', err);
+      this.setState({ loadingLibrary: false });
     }
   }
 
@@ -277,6 +278,7 @@ class MediaPages extends PureComponent {
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error updating library entry:', err);
+      this.setState({ loadingLibrary: false });
     }
   }
 

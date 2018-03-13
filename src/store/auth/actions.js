@@ -54,12 +54,12 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
     try {
       /**
        * The flow here is:
-       * If we get a 401 or 403 from the Kitsu server, Send the user to the signup page.
+       * If we get a 401 from the Kitsu server, Send the user to the signup page.
        * Otherwise set the tokens which means a user account is already associated with the fb account.
       */
       const userFb = await loginUserFb(dispatch);
 
-      if (![401, 403].includes(userFb.status)) {
+      if (userFb.status !== 401) {
         tokens = await userFb.json();
 
         // Log sentry for empty tokens

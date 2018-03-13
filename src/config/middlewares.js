@@ -28,20 +28,20 @@ export const kitsuRequestMiddleware = {
   req: async (payload) => {
     const jsonApi = payload.jsonApi;
     const request = payload.req;
+    const currentTokens = store.getState().auth.tokens;
 
     // Add auth to kitsu requests
     if (request.url && request.url.includes('kitsu.io')) {
-      const tokens = store.getState().auth.tokens;
-      setTokens(tokens, request);
+      setTokens(currentTokens, request);
     }
 
     // Send the request
     try {
       return await jsonApi.axios(request);
     } catch (error) {
-      // Check if we got an 401 or 403 error
+      // Check if we got a 401 error
       // If so then refresh our tokens
-      if ([401, 403].includes(error.status)) {
+      if (parseInt(error.status, 10) === 401) {
         console.log(`Recieved a ${error.status}`);
 
         // Check if there's already a promise for refreshing tokens
@@ -50,11 +50,12 @@ export const kitsuRequestMiddleware = {
           tokenPromise = store.dispatch(refreshTokens(true));
 
           // Log to sentry
-          Sentry.captureMessage('Recieved a 401/403', {
+          Sentry.captureMessage('Recieved a 401', {
             tags: {
               type: 'refresh_token',
             },
             extra: {
+              isTokenEmpty: !currentTokens || isEmpty(currentTokens.access_token),
               originalError: error,
               request,
               headers: request.headers,
