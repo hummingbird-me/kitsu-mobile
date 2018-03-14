@@ -70,6 +70,7 @@ export class LibraryOptionsComponent extends PureComponent {
 
   state = {
     sort: this.props.sort,
+    saving: false,
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,7 +82,12 @@ export class LibraryOptionsComponent extends PureComponent {
 
   save = () => {
     const { fetchUserLibrary, navigation, currentUser, setLibrarySort } = this.props;
-    const { sort } = this.state;
+    const { sort, saving } = this.state;
+
+    // Only save if we're not already saving
+    if (saving) return;
+
+    this.setState({ saving: true });
 
     // Save the sort
     setLibrarySort(sort.by, sort.ascending);
@@ -91,7 +97,9 @@ export class LibraryOptionsComponent extends PureComponent {
       fetchUserLibrary({ userId: currentUser.id, refresh: true });
     }
 
-    navigation.goBack();
+    this.setState({ saving: false });
+
+    if (navigation) navigation.goBack();
   };
 
   goBack = () => this.props.navigation.goBack();
@@ -124,22 +132,19 @@ export class LibraryOptionsComponent extends PureComponent {
   }
 
   render() {
+    const { saving } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <CustomHeader
             leftButtonAction={this.goBack}
             leftButtonTitle="Back"
+            rightButtonAction={this.save}
+            rightButtonTitle={saving ? 'Saving' : 'Save'}
           />
         </View>
         <ScrollView style={{ flex: 1 }}>
           {this.renderSortOptions()}
-          <View style={styles.saveButtonContainer}>
-            <Button
-              title="Save"
-              onPress={this.save}
-            />
-          </View>
         </ScrollView>
       </View>
     );

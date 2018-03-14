@@ -27,7 +27,4 @@ export const styles = StyleSheet.create({
   optionSelectedIcon: {
     fontSize: 24,
   },
-  saveButtonContainer: {
-    padding: 10,
-  },
 });
