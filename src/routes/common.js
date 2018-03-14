@@ -34,9 +34,6 @@ export const commonRoutes = {
   UserLibraryList: {
     screen: ProfileScreens.UserLibraryListScreen,
   },
-  UserLibrarySearch: {
-    screen: ProfileScreens.UserLibrarySearchScreen,
-  },
   Network: {
     screen: ProfileScreens.NetworkScreen,
   },

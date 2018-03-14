@@ -4,7 +4,7 @@ import { Dimensions, FlatList, Text, TouchableOpacity, View, ActivityIndicator }
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { fetchUserLibrary } from 'kitsu/store/profile/actions';
-import { LibraryHeader, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
+import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
