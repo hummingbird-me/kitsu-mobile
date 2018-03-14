@@ -6,7 +6,7 @@ import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/U
 import { capitalize, isEmpty } from 'lodash';
 import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
 import { styles } from './styles';
-import { LibraryScreenHeader } from './LibraryScreenHeader';
+import { LibraryScreenHeader } from '../LibraryScreenHeader';
 
 const TAB_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },
@@ -25,10 +25,9 @@ export class LibraryScreenComponent extends PureComponent {
     currentUser: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
     library: PropTypes.object,
-    fetchUserLibrary: PropTypes.func.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
-    setLibrarySort: PropTypes.func.isRequired,
+    fetchUserLibrary: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
   };
 
   static defaultProps = {

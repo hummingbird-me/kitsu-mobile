@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { updateUserLibraryEntry, deleteUserLibraryEntry, fetchUserLibrary, setLibrarySort } from 'kitsu/store/profile/actions';
-import { LibraryScreenComponent } from './LibraryScreen';
+import { updateUserLibraryEntry, deleteUserLibraryEntry, fetchUserLibrary } from 'kitsu/store/profile/actions';
+import { LibraryScreenComponent } from './component';
 
 const mapStateToProps = ({ user, profile }) => {
   const { currentUser } = user;
@@ -17,5 +17,4 @@ export const LibraryScreen = connect(mapStateToProps, {
   fetchUserLibrary,
   updateUserLibraryEntry,
   deleteUserLibraryEntry,
-  setLibrarySort,
 })(LibraryScreenComponent);
