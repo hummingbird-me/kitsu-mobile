@@ -45,12 +45,11 @@ const INITIAL_STATE = {
   manga: {},
   anime: {},
   library: {},
-  userLibrary: {
-    sort: {
-      by: KitsuLibrarySort.DATE_UPDATED,
-      ascending: false,
-    },
+  librarySort: {
+    by: KitsuLibrarySort.DATE_UPDATED,
+    ascending: false,
   },
+  userLibrary: {},
   userLibrarySearch: {
     ...userLibraryInitial,
     loading: false,
@@ -438,12 +437,9 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
     case types.UPDATE_LIBRARY_SORT:
       return {
         ...state,
-        userLibrary: {
-          ...state.userLibrary,
-          sort: {
-            by: action.by,
-            ascending: action.ascending,
-          },
+        librarySort: {
+          by: action.by,
+          ascending: action.ascending,
         },
       };
     case types.UPDATE_USER_LIBRARY_SEARCH_TERM:
@@ -554,10 +550,17 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
     case types.LOGOUT_USER:
       return INITIAL_STATE;
     case REHYDRATE: {
-      const user = (action.payload && action.payload.user) || {};
+      const payload = action && action.payload;
+      const user = (payload && payload.user) || {};
+      const sort = (payload && payload.profile && payload.profile.librarySort) || {};
+
       return {
         ...state,
         ...user,
+        librarySort: {
+          ...state.librarySort,
+          ...sort,
+        },
         signingIn: false,
         signingUp: false,
         signupError: {},

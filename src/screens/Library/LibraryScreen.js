@@ -24,12 +24,16 @@ export class LibraryScreenComponent extends PureComponent {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
-    library: PropTypes.object.isRequired,
+    library: PropTypes.object,
     fetchUserLibrary: PropTypes.func.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
     setLibrarySort: PropTypes.func.isRequired,
   };
+
+  static defaultProps = {
+    library: null,
+  }
 
   state = {
     type: 'anime',
@@ -137,6 +141,7 @@ export class LibraryScreenComponent extends PureComponent {
 
           return (
             <TouchableOpacity
+              key={status}
               style={[styles.tabItem, isCurrent && styles.tabItem__selected]}
               onPress={() => this.setState({ status })}
             >

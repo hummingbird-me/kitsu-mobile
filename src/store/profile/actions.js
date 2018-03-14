@@ -162,7 +162,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     kind: options.library,
   };
 
-  const { userLibrary, userLibrarySearch } = getState().profile;
+  const { userLibrary, userLibrarySearch, librarySort } = getState().profile;
 
   let data;
   if (options.searchTerm) {
@@ -203,7 +203,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
         limit: options.limit,
         offset: options.refresh ? 0 : data.length,
       },
-      sort: getSortString(userLibrary.sort, options.library),
+      sort: getSortString(librarySort, options.library),
     });
 
     if (options.searchTerm || options.refresh) {

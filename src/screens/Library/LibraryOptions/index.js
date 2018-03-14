@@ -4,8 +4,7 @@ import { LibraryOptionsComponent } from './component';
 
 const mapStateToProps = ({ user, profile }) => {
   const { currentUser } = user;
-  const { userLibrary } = profile;
-  const sort = userLibrary && userLibrary.sort;
+  const { librarySort: sort } = profile;
 
   return {
     currentUser,

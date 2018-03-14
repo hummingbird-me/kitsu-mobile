@@ -69,7 +69,7 @@ export class LibraryOptionsComponent extends PureComponent {
   };
 
   state = {
-    sort: null,
+    sort: this.props.sort,
   }
 
   componentWillReceiveProps(nextProps) {
@@ -102,19 +102,25 @@ export class LibraryOptionsComponent extends PureComponent {
 
   renderSortOptions() {
     const { sort } = this.state;
-    return sortOptions.map(option => (
-      <TouchableOpacity
-        onPress={() => this.updateSort(option.key, sort.ascending)}
-        style={styles.libraryOption}
-      >
-        <View style={{ flex: 1 }}>
-          <StyledText color="light" size="small" textStle={styles.libraryOptionText}>{option.value}</StyledText>
-        </View>
-        { sort && sort.by === option.key &&
-          <Icon name="ios-checkmark" color="white" style={styles.optionSelectedIcon} />
-        }
-      </TouchableOpacity>
-    ));
+    return sortOptions.map((option) => {
+      const sortKey = (sort && `${sort.by}-${sort.ascending}`) || '-';
+      const key = `${sortKey}-${option.key}`;
+
+      return (
+        <TouchableOpacity
+          key={key}
+          onPress={() => sort && this.updateSort(option.key, sort.ascending)}
+          style={styles.libraryOption}
+        >
+          <View style={{ flex: 1 }}>
+            <StyledText color="light" size="small" textStle={styles.libraryOptionText}>{option.value}</StyledText>
+          </View>
+          { sort && sort.by === option.key &&
+            <Icon name="ios-checkmark" color="white" style={styles.optionSelectedIcon} />
+          }
+        </TouchableOpacity>
+      );
+    });
   }
 
   render() {
