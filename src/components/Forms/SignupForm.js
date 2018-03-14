@@ -72,7 +72,6 @@ SignupForm.propTypes = {
   loading: PropTypes.bool.isRequired,
   signingInFacebook: PropTypes.bool.isRequired,
   onSignInFacebook: PropTypes.func.isRequired,
-  onBirthdayButtonPressed: PropTypes.func.isRequired,
   birthday: PropTypes.string.isRequired,
   isBirthdaySet: PropTypes.bool.isRequired,
   onPressTerms: PropTypes.func.isRequired,

@@ -5,9 +5,12 @@ import { PropTypes } from 'prop-types';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
+import { SidebarListItem } from 'kitsu/screens/Sidebar/common/';
+import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-const sortOptions = [
+const SORT_OPTIONS = [
   {
     key: KitsuLibrarySort.TITLE,
     value: 'Title',
@@ -111,9 +114,70 @@ export class LibrarySettingsComponent extends PureComponent {
     this.setState({ sort: { by: sortBy, ascending } });
   }
 
+  librarySorting() {
+    return {
+      heading: 'Library Sorting',
+      rows: [
+        {
+          title: 'Sort by',
+          value: 'Last Updated',
+        },
+        {
+          title: 'Direction',
+          value: 'Descending',
+        },
+      ],
+    };
+  }
+
+  mediaPreferences() {
+    return {
+      heading: 'Media Preferences',
+      rows: [
+        {
+          title: 'Rating System',
+          value: 'Simple',
+        },
+      ],
+    };
+  }
+
+  manageLibrary() {
+    return {
+      heading: 'Manage Library',
+      rows: [
+        {
+          renderRow: this.renderSideBarRow,
+          title: 'Import Library',
+          image: libraryImport,
+          target: 'ImportLibrary',
+        },
+        {
+          renderRow: this.renderSideBarRow,
+          title: 'Export Library',
+          image: libraryExport,
+          target: 'ExportLibrary',
+        },
+      ],
+    };
+  }
+
+  renderSideBarRow = (row) => {
+    const { navigation } = this.props;
+    return (
+      <SidebarListItem
+        title={row.title}
+        image={row.image}
+        onPress={() => navigation.navigate(row.target)}
+        style={styles.customRow}
+      />
+    );
+  }
+
+
   renderSortOptions() {
     const { sort } = this.state;
-    return sortOptions.map((option) => {
+    return SORT_OPTIONS.map((option) => {
       const sortKey = (sort && `${sort.by}-${sort.ascending}`) || '-';
       const key = `${sortKey}-${option.key}`;
 
@@ -134,8 +198,38 @@ export class LibrarySettingsComponent extends PureComponent {
     });
   }
 
+  renderSettingRow(row) {
+    if (row.renderRow) return row.renderRow(row);
+    return (
+      <TouchableOpacity style={styles.settingRow}>
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          <StyledText color="grey" size="xxsmall" textStyle={styles.settingText}>{row.title}</StyledText>
+          <StyledText color="black" size="small" textStyle={styles.settingText}>{row.value}</StyledText>
+        </View>
+        <Icon
+          style={{ marginRight: 2 }}
+          name={'ios-arrow-forward'}
+          color={colors.lightGrey}
+          size={16}
+        />
+      </TouchableOpacity>
+    );
+  }
+
+  renderSettings(settings) {
+    return settings.map(setting => (
+      <View style={styles.settingContainer}>
+        <StyledText color="lightGrey" size="xsmall" textStyle={styles.settingHeader}>{setting.heading}</StyledText>
+        {setting.rows.map(row => this.renderSettingRow(row))}
+      </View>
+    ));
+  }
+
   render() {
     const { saving } = this.state;
+
+    const settings = [this.librarySorting(), this.mediaPreferences(), this.manageLibrary()];
+
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -148,7 +242,7 @@ export class LibrarySettingsComponent extends PureComponent {
           />
         </View>
         <ScrollView style={{ flex: 1 }}>
-          {this.renderSortOptions()}
+          {this.renderSettings(settings)}
         </ScrollView>
       </View>
     );

@@ -27,4 +27,28 @@ export const styles = StyleSheet.create({
   optionSelectedIcon: {
     fontSize: 24,
   },
+  settingContainer: {
+    paddingVertical: 14,
+  },
+  settingRow: {
+    backgroundColor: colors.white,
+    paddingLeft: 12,
+    paddingRight: 8,
+    paddingVertical: 6,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.lightGrey,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingHeader: {
+    paddingHorizontal: 12,
+    marginBottom: 8,
+  },
+  settingText: {
+    paddingVertical: 2,
+  },
+  customRow: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.lightGrey,
+  },
 });

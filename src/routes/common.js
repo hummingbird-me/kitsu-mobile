@@ -5,6 +5,12 @@ import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import PostCreation from 'kitsu/screens/PostCreation';
 import MediaUploadScreen from 'kitsu/screens/PostCreation/MediaUploadScreen';
 import { LibrarySearch } from 'kitsu/screens/Library/LibrarySearch';
+import {
+  LinkedAccounts,
+  ImportLibrary,
+  ImportDetail,
+  ExportLibrary,
+} from 'kitsu/screens/Sidebar';
 
 export const commonRoutes = {
   Creation: {
@@ -45,5 +51,17 @@ export const commonRoutes = {
   },
   LibrarySearch: {
     screen: LibrarySearch,
+  },
+  ExportLibrary: {
+    screen: ExportLibrary,
+  },
+  ImportLibrary: {
+    screen: ImportLibrary,
+  },
+  ImportDetail: {
+    screen: ImportDetail,
+  },
+  LinkedAccounts: {
+    screen: LinkedAccounts,
   },
 };
