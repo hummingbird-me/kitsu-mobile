@@ -61,6 +61,15 @@ export class LibraryScreenComponent extends PureComponent {
     }
   }
 
+  onSearchPress = () => {
+    const { navigation, currentUser } = this.props;
+    if (navigation && currentUser) {
+      navigation.navigate('LibrarySearch', {
+        profile: currentUser,
+      });
+    }
+  }
+
   onEntryUpdate = async (type, status, updates) => {
     await this.props.updateUserLibraryEntry(type, status, updates);
   }
@@ -208,6 +217,7 @@ export class LibraryScreenComponent extends PureComponent {
             toggle();
           }}
           onOptionPress={this.onOptionPress}
+          onSearchPress={this.onSearchPress}
         />
         <View style={{ flex: 1 }}>
           {this.renderTabNav()}

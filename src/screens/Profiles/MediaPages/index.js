@@ -74,6 +74,7 @@ class MediaPages extends PureComponent {
     this.fetchMedia(mediaType, mediaId);
     this.fetchFavorite(mediaType, mediaId);
     this.fetchLibraryEntry(mediaType, mediaId);
+    this.unsubscribeCreate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, this.onLibraryEntryCreated);
     this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
     this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
   }
@@ -135,23 +136,38 @@ class MediaPages extends PureComponent {
     }
   }
 
-  onLibraryEntryUpdated = (data) => {
-    // Check to see if we got this event from something other than media page
-    const { id, newEntry, source } = data;
+  onLibraryEntryCreated = (data) => {
+    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { type, entry } = data;
     const { libraryEntry } = this.state;
-    if (!newEntry || source === KitsuLibraryEventSource.MEDIA_PAGE) return;
 
+    // Don't continue if we already have an entry
+    // Or if the types don't match
+    if (libraryEntry || !entry || mediaType !== type) return;
+
+    // If the entry has the same media id as this page then add it
+    const media = entry[type];
+    if (media && media.id == mediaId) {
+      this.setState({ libraryEntry: entry });
+    }
+  }
+
+  onLibraryEntryUpdated = (data) => {
+    const { id, newEntry } = data;
+    const { libraryEntry } = this.state;
+    if (!newEntry) return;
+
+    // Only update if we have the same entry
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: newEntry });
     }
   }
 
   onLibraryEntryDeleted = (data) => {
-    // Check to see if we got this event from something other than media page
-    const { id, source } = data;
+    const { id } = data;
     const { libraryEntry } = this.state;
-    if (source === KitsuLibraryEventSource.MEDIA_PAGE) return;
 
+    // Only update if we have the same entry
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: null });
     }

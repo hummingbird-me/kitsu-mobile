@@ -47,7 +47,8 @@ export class UserLibrarySearchScreenComponent extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    const media = item.anime || item.manga;
+    const media = item && (item.anime || item.manga);
+    if (!media) return null;
     return (
       <UserLibraryListCard
         currentUser={this.props.currentUser}

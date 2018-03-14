@@ -411,7 +411,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           ...state.userLibrary,
           [action.userId]: {
             ...userLibraryInitial,
-            ...state.userLibrary[action.userId],
+            ...(state.userLibrary[action.userId] || {}),
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
               [action.libraryStatus]: {

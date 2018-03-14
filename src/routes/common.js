@@ -4,6 +4,7 @@ import * as ProfileScreens from 'kitsu/screens/Profiles';
 import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
 import PostCreation from 'kitsu/screens/PostCreation';
 import MediaUploadScreen from 'kitsu/screens/PostCreation/MediaUploadScreen';
+import { LibrarySearch } from 'kitsu/screens/Library/LibrarySearch';
 
 export const commonRoutes = {
   Creation: {
@@ -41,5 +42,8 @@ export const commonRoutes = {
   },
   FavoriteMedia: {
     screen: ProfileScreens.FavoriteMedia,
+  },
+  LibrarySearch: {
+    screen: LibrarySearch,
   },
 };

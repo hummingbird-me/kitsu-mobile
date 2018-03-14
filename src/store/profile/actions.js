@@ -485,12 +485,19 @@ export function onLibraryEntryDelete(
   libraryType,
   libraryStatus,
 ) {
-  return {
-    type: types.DELETE_USER_LIBRARY_ENTRY,
-    userId,
-    libraryStatus,
-    libraryType,
-    id,
+  return (dispatch, getState) => {
+    const { userLibrary } = getState().profile;
+
+    // Delete if we have the state set
+    if (userLibrary && userId in userLibrary) {
+      dispatch({
+        type: types.DELETE_USER_LIBRARY_ENTRY,
+        userId,
+        libraryStatus,
+        libraryType,
+        id,
+      });
+    }
   };
 }
 

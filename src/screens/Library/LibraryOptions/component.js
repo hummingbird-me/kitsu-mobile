@@ -137,6 +137,7 @@ export class LibraryOptionsComponent extends PureComponent {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <CustomHeader
+            title="Library Options"
             leftButtonAction={this.goBack}
             leftButtonTitle="Back"
             rightButtonAction={this.save}
