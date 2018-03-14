@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.listBackPurple,
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowOffset: {
       width: 0,

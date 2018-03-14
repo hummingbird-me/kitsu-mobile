@@ -10,6 +10,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: scenePadding,
     backgroundColor: colors.listBackPurple,
     alignItems: 'center',
+    shadowColor: 'rgba(0,0,0,0.3)',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.7,
+    zIndex: 2,
   },
   tabStyle: {
     flex: 1,

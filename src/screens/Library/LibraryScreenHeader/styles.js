@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     paddingTop: statusBarHeight + (isX ? paddingX : 0),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.listBackPurple,
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowOffset: {
       width: 0,

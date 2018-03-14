@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
-import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
-import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
   container: {
@@ -9,7 +7,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   tabBar: {
-    backgroundColor: '#3C2D3B',
+    backgroundColor: colors.darkPurple,
     borderTopWidth: 0,
   },
   tabBarContainer: {
