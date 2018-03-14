@@ -10,12 +10,12 @@ export const SORT_OPTIONS = [
     text: 'Length',
   },
   {
-    key: KitsuLibrarySort.POPULARITY,
-    text: 'Media Popularity',
-  },
-  {
     key: KitsuLibrarySort.AVERAGE_RATING,
     text: 'Media Rating',
+  },
+  {
+    key: KitsuLibrarySort.POPULARITY,
+    text: 'Media Popularity',
   },
   {
     key: KitsuLibrarySort.RATING,
@@ -27,11 +27,11 @@ export const SORT_OPTIONS = [
   },
   {
     key: KitsuLibrarySort.DATE_UPDATED,
-    text: 'Date Updated',
+    text: 'Last Updated',
   },
   {
     key: KitsuLibrarySort.DATE_PROGRESSED,
-    text: 'Date Progressed',
+    text: 'Last Progressed',
   },
   {
     key: KitsuLibrarySort.DATE_ADDED,
