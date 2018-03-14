@@ -1,61 +1,17 @@
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { PropTypes } from 'prop-types';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
-import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import { SidebarListItem } from 'kitsu/screens/Sidebar/common/';
 import * as colors from 'kitsu/constants/colors';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { capitalize } from 'lodash';
+import { Kitsu } from 'kitsu/config/api';
 import { styles } from './styles';
-
-const SORT_OPTIONS = [
-  {
-    key: KitsuLibrarySort.TITLE,
-    value: 'Title',
-  },
-  {
-    key: KitsuLibrarySort.LENGTH,
-    value: 'Length',
-  },
-  {
-    key: KitsuLibrarySort.POPULARITY,
-    value: 'Media Popularity',
-  },
-  {
-    key: KitsuLibrarySort.AVERAGE_RATING,
-    value: 'Media Rating',
-  },
-  {
-    key: KitsuLibrarySort.RATING,
-    value: 'Entry Rating',
-  },
-  {
-    key: KitsuLibrarySort.PROGRESS,
-    value: 'Entry Progress',
-  },
-  {
-    key: KitsuLibrarySort.DATE_UPDATED,
-    value: 'Date Updated',
-  },
-  {
-    key: KitsuLibrarySort.DATE_PROGRESSED,
-    value: 'Date Progressed',
-  },
-  {
-    key: KitsuLibrarySort.DATE_ADDED,
-    value: 'Date Added',
-  },
-  {
-    key: KitsuLibrarySort.DATE_STARTED,
-    value: 'Date Started',
-  },
-  {
-    key: KitsuLibrarySort.DATE_FINSIHED,
-    value: 'Date Finished',
-  },
-];
+import { SORT_OPTIONS } from './sortOptions';
 
 export class LibrarySettingsComponent extends PureComponent {
   static navigationOptions = () => ({
@@ -70,21 +26,22 @@ export class LibrarySettingsComponent extends PureComponent {
     setLibrarySort: PropTypes.func.isRequired,
   };
 
-  state = {
-    sort: this.props.sort,
-    saving: false,
+  constructor(props) {
+    super(props);
+
+    const { sort, currentUser } = props;
+
+    this.state = {
+      sortBy: (sort && sort.by) || 'updated_at',
+      ascending: !!(sort && sort.ascending),
+      ratingSystem: (currentUser && currentUser.ratingSystem) || 'simple',
+      saving: false,
+    };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { sort } = nextProps.sort;
-    if (!this.state.sort && nextProps.sort) {
-      this.setState({ sort });
-    }
-  }
-
-  save = () => {
-    const { fetchUserLibrary, navigation, currentUser, setLibrarySort } = this.props;
-    const { sort, saving } = this.state;
+  save = async () => {
+    const { fetchUserLibrary, navigation, currentUser, setLibrarySort, fetchCurrentUser } = this.props;
+    const { sortBy, ascending, saving, ratingSystem } = this.state;
 
     // Only save if we're not already saving
     if (saving) return;
@@ -92,7 +49,16 @@ export class LibrarySettingsComponent extends PureComponent {
     this.setState({ saving: true });
 
     // Save the sort
-    setLibrarySort(sort.by, sort.ascending);
+    setLibrarySort(sortBy, ascending);
+
+    // Check if rating needs to be changed
+    if (currentUser && currentUser.ratingSystem !== ratingSystem) {
+      // Update the rating system
+      await Kitsu.update('users', { id: currentUser.id, ratingSystem });
+
+      // Fetch the new user object
+      await fetchCurrentUser();
+    }
 
     // Update the user library
     if (currentUser) {
@@ -110,33 +76,53 @@ export class LibrarySettingsComponent extends PureComponent {
     }
   }
 
-  updateSort(sortBy, ascending) {
-    this.setState({ sort: { by: sortBy, ascending } });
-  }
-
   librarySorting() {
+    const { sortBy, ascending } = this.state;
+    const filteredOption = SORT_OPTIONS.filter(e => e.key === sortBy);
+    const currentSort = filteredOption && filteredOption[0] && filteredOption[0].text;
+
     return {
       heading: 'Library Sorting',
       rows: [
         {
           title: 'Sort by',
-          value: 'Last Updated',
+          value: currentSort || '-',
+          options: [...SORT_OPTIONS, 'Nevermind'],
+          onOptionSelected: (value, option) => {
+            this.setState({
+              sortBy: option.key,
+            });
+          },
         },
         {
           title: 'Direction',
-          value: 'Descending',
+          value: ascending ? 'Ascending' : 'Descending',
+          options: ['Ascending', 'Descending', 'Nevermind'],
+          onOptionSelected: (value) => {
+            this.setState({
+              ascending: value === 'Ascending',
+            });
+          },
         },
       ],
     };
   }
 
   mediaPreferences() {
+    const { ratingSystem } = this.state;
+
     return {
       heading: 'Media Preferences',
       rows: [
         {
           title: 'Rating System',
-          value: 'Simple',
+          value: capitalize(ratingSystem),
+          options: ['Simple', 'Regular', 'Advanced', 'Nevermind'],
+          onOptionSelected: (value) => {
+            this.setState({
+              ratingSystem: value.toLowerCase(),
+            });
+          },
         },
       ],
     };
@@ -166,6 +152,7 @@ export class LibrarySettingsComponent extends PureComponent {
     const { navigation } = this.props;
     return (
       <SidebarListItem
+        key={row.title}
         title={row.title}
         image={row.image}
         onPress={() => navigation.navigate(row.target)}
@@ -174,51 +161,33 @@ export class LibrarySettingsComponent extends PureComponent {
     );
   }
 
-
-  renderSortOptions() {
-    const { sort } = this.state;
-    return SORT_OPTIONS.map((option) => {
-      const sortKey = (sort && `${sort.by}-${sort.ascending}`) || '-';
-      const key = `${sortKey}-${option.key}`;
-
-      return (
-        <TouchableOpacity
-          key={key}
-          onPress={() => sort && this.updateSort(option.key, sort.ascending)}
-          style={styles.libraryOption}
-        >
-          <View style={{ flex: 1 }}>
-            <StyledText color="light" size="small" textStle={styles.libraryOptionText}>{option.value}</StyledText>
-          </View>
-          { sort && sort.by === option.key &&
-            <Icon name="ios-checkmark" color="white" style={styles.optionSelectedIcon} />
-          }
-        </TouchableOpacity>
-      );
-    });
-  }
-
   renderSettingRow(row) {
     if (row.renderRow) return row.renderRow(row);
     return (
-      <TouchableOpacity style={styles.settingRow}>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          <StyledText color="grey" size="xxsmall" textStyle={styles.settingText}>{row.title}</StyledText>
-          <StyledText color="black" size="small" textStyle={styles.settingText}>{row.value}</StyledText>
+      <SelectMenu
+        key={row.title}
+        options={row.options}
+        onOptionSelected={row.onOptionSelected}
+        activeOpacity={0.8}
+      >
+        <View style={styles.settingRow}>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <StyledText color="grey" size="xxsmall" textStyle={styles.settingText}>{row.title}</StyledText>
+            <StyledText color="black" size="small" textStyle={styles.settingText}>{row.value}</StyledText>
+          </View>
+          <Icon
+            name={'ios-arrow-forward'}
+            color={colors.lightGrey}
+            size={16}
+          />
         </View>
-        <Icon
-          style={{ marginRight: 2 }}
-          name={'ios-arrow-forward'}
-          color={colors.lightGrey}
-          size={16}
-        />
-      </TouchableOpacity>
+      </SelectMenu>
     );
   }
 
   renderSettings(settings) {
     return settings.map(setting => (
-      <View style={styles.settingContainer}>
+      <View key={setting.heading} style={styles.settingContainer}>
         <StyledText color="lightGrey" size="xsmall" textStyle={styles.settingHeader}>{setting.heading}</StyledText>
         {setting.rows.map(row => this.renderSettingRow(row))}
       </View>
