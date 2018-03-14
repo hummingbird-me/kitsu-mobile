@@ -8,7 +8,6 @@ export {
   User,
   UserLibraryEditScreen,
   UserLibraryListScreen,
-  UserLibraryScreen,
   UserLibrarySearchScreen,
 } from './UserLibrary';
 

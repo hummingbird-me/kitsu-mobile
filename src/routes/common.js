@@ -28,9 +28,6 @@ export const commonRoutes = {
   ProfilePages: {
     screen: ProfilePages,
   },
-  UserLibraryScreen: {
-    screen: ProfileScreens.UserLibraryScreen,
-  },
   UserLibraryEdit: {
     screen: ProfileScreens.UserLibraryEditScreen,
   },
