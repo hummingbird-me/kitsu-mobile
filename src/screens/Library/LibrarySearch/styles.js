@@ -40,4 +40,42 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 12,
   },
+
+  emptyStateContainer: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statusWrapper: {
+    marginTop: 4,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.darkPurple,
+  },
+  statusTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: colors.white,
+    fontFamily: 'OpenSans',
+    textAlign: 'center',
+    margin: 4,
+    maxWidth: '85%',
+  },
+  statusText: {
+    maxWidth: '85%',
+    fontSize: 12,
+    color: colors.lightGrey,
+    fontFamily: 'OpenSans',
+    textAlign: 'center',
+    margin: 4,
+  },
+  statusImage: {
+    marginTop: 16,
+    width: 140,
+    height: 160,
+    resizeMode: 'contain',
+  },
 });

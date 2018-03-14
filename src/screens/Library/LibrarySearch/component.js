@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, FlatList, ScrollView, Keyboard, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, ScrollView, Keyboard, ActivityIndicator, Text, Image } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { capitalize, isEmpty } from 'lodash';
 import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
@@ -7,6 +7,7 @@ import { SearchBox } from 'kitsu/components/SearchBox';
 import { Kitsu } from 'kitsu/config/api';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
+import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import { styles } from './styles';
 
 const HEADER_MAPPING = {
@@ -262,8 +263,42 @@ export class LibrarySearchComponent extends PureComponent {
     );
   }
 
-  render() {
+  renderContent() {
+    return (
+      <View>
+        {this.renderList('anime')}
+        {this.renderList('manga')}
+      </View>
+    );
+  }
+
+  renderEmptyContent() {
+    const { searchTerm } = this.state;
     const { profile } = this.props;
+
+    const name = profile && capitalize(profile.name);
+
+    const emptyTermTitle = isEmpty(name) ? 'Search for Media' : `Search ${name}'s Library`;
+    const title = isEmpty(searchTerm) ? emptyTermTitle : 'We couldn\'t find any results';
+    const subText = isEmpty(searchTerm) ? 'Type in a media title to start searching!' : 'Please try search for a different term.';
+
+    return (
+      <View style={styles.emptyStateContainer}>
+        <View style={styles.statusWrapper}>
+          <Text style={styles.statusTitle}>{title}</Text>
+          <Text style={styles.statusText}>{subText}</Text>
+          <Image style={styles.statusImage} source={unstarted} />
+        </View>
+      </View>
+    );
+  }
+
+  render() {
+    const { anime, manga, loadingAnime, loadingManga } = this.state;
+    const { profile } = this.props;
+
+    const dataEmpty = isEmpty(anime) && isEmpty(manga);
+    const dataLoading = loadingAnime || loadingManga;
 
     return (
       <View style={styles.container}>
@@ -278,9 +313,10 @@ export class LibrarySearchComponent extends PureComponent {
         {this.renderSearchBox()}
         <ScrollView
           style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
-          {this.renderList('anime')}
-          {this.renderList('manga')}
+          {!dataLoading && dataEmpty && this.renderEmptyContent()}
+          {(dataLoading || !dataEmpty) && this.renderContent()}
         </ScrollView>
       </View>
     );
