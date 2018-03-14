@@ -44,7 +44,7 @@ const progressFromLibraryEntry = (libraryEntry) => {
 
 class Library extends PureComponent {
   static propTypes = {
-    userId: PropTypes.number.isRequired,
+    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
