@@ -2,12 +2,12 @@ import React, { PureComponent } from 'react';
 import { View, FlatList, ScrollView, Keyboard, ActivityIndicator, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { capitalize, isEmpty } from 'lodash';
-import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { Kitsu } from 'kitsu/config/api';
-import { styles } from './styles';
+import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
+import { styles } from './styles';
 
 const HEADER_MAPPING = {
   anime: {
@@ -268,10 +268,11 @@ export class LibrarySearchComponent extends PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <CustomHeader
-            title={(profile && profile.name) || ''}
-            leftButtonAction={this.goBack}
-            leftButtonTitle="Back"
+          <ProfileHeader
+            profile={profile}
+            title="Library Search"
+            onClickBack={this.goBack}
+            hasOverlay
           />
         </View>
         {this.renderSearchBox()}
