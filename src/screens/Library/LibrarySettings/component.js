@@ -5,7 +5,6 @@ import { PropTypes } from 'prop-types';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Button } from 'kitsu/components/Button';
 import { styles } from './styles';
 
 const sortOptions = [
@@ -55,7 +54,7 @@ const sortOptions = [
   },
 ];
 
-export class LibraryOptionsComponent extends PureComponent {
+export class LibrarySettingsComponent extends PureComponent {
   static navigationOptions = () => ({
     header: null,
   });
@@ -102,7 +101,11 @@ export class LibraryOptionsComponent extends PureComponent {
     if (navigation) navigation.goBack();
   };
 
-  goBack = () => this.props.navigation.goBack();
+  goBack = () => {
+    if (!this.state.saving) {
+      this.props.navigation.goBack();
+    }
+  }
 
   updateSort(sortBy, ascending) {
     this.setState({ sort: { by: sortBy, ascending } });
@@ -137,7 +140,7 @@ export class LibraryOptionsComponent extends PureComponent {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <CustomHeader
-            title="Library Options"
+            title="Library Settings"
             leftButtonAction={this.goBack}
             leftButtonTitle="Back"
             rightButtonAction={this.save}

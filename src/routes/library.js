@@ -4,7 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import library from 'kitsu/assets/img/tabbar_icons/library.png';
 import { LibraryScreen } from 'kitsu/screens/Library/LibraryScreen';
 import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
-import { LibraryOptions } from 'kitsu/screens/Library/LibraryOptions';
+import { LibrarySettings } from 'kitsu/screens/Library/LibrarySettings';
 import navigationOptions from './navigationOptions';
 import { commonRoutes } from './common';
 
@@ -13,8 +13,8 @@ const LibraryStack = StackNavigator({
   LibraryScreen: {
     screen: LibraryScreen,
   },
-  LibraryOptions: {
-    screen: LibraryOptions,
+  LibrarySettings: {
+    screen: LibrarySettings,
   },
   ...commonRoutes,
 },
