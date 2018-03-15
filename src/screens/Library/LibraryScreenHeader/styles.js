@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
       height: 1,
     },
     shadowOpacity: 0.5,
+    elevation: 3,
     zIndex: 2,
   },
   headerContent: {

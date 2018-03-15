@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
       height: 3,
     },
     shadowOpacity: 0.7,
+    elevation: 3,
     zIndex: 2,
   },
   tabStyle: {

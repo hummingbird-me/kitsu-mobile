@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
       height: 3,
     },
     shadowOpacity: 0.5,
+    elevation: 3,
     zIndex: 2,
   },
   libraryOption: {
