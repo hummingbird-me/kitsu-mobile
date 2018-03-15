@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   View,
-  Image,
   TouchableOpacity,
   FlatList,
   Keyboard,
   Text,
   ActivityIndicator,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits, connectSearchBox } from 'react-instantsearch/connectors';
@@ -28,9 +28,10 @@ const RowItem = ({ type, item, onPress }) => {
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
-            <Image
+            <FastImage
               source={(item.avatar && { uri: item.avatar.small }) || defaultAvatar}
-              style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
+              style={{ resizeMode: 'contain', width: 24, height: 24 }}
+              borderRadius={12}
             />
           </View>
           <Text

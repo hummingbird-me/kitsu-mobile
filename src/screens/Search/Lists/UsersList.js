@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Text, FlatList, StyleSheet, Image, TouchableHighlight } from 'react-native';
+import { View, TouchableOpacity, Text, FlatList, StyleSheet, TouchableHighlight } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import * as PropTypes from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
@@ -75,7 +76,7 @@ const User = ({ navigation, user, onFollow }) => {
   return (
     <TouchableOpacity onPress={() => onUserPress(navigation, user.id)} activeOpacity={0.6} style={styles.userContainer}>
       <View style={styles.userLeftSection}>
-        <Image source={userAvatar} style={styles.userAvatar} />
+        <FastImage source={userAvatar} style={styles.userAvatar} />
         <View style={styles.userMetaContainer}>
           <Text style={styles.userNameText}>{user.name}</Text>
           <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>

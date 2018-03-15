@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
@@ -155,7 +156,7 @@ export default class QuickUpdateCard extends PureComponent {
             />
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity onPress={() => this.onMediaTapped(media)}>
-                <Image source={{ uri: squareImage }} style={styles.avatarImage} />
+                <FastImage source={{ uri: squareImage }} style={styles.avatarImage} />
               </TouchableOpacity>
               <View style={styles.descriptionRow}>
                 <TouchableOpacity onPress={() => this.onMediaTapped(media)}>

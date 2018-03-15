@@ -4,11 +4,11 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  Image,
   Platform,
   ActivityIndicator,
   PushNotificationIOS,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
@@ -263,7 +263,7 @@ class NotificationsScreen extends PureComponent {
           </View>
           <View style={styles.detailsContainer}>
             <View style={{ paddingRight: 10 }}>
-              <Image style={styles.userAvatar} source={{ uri: ava }} />
+              <FastImage style={styles.userAvatar} source={{ uri: ava }} borderRadius={20} />
             </View>
             <View style={styles.activityContainer}>
               <View style={styles.activityTextContainer}>

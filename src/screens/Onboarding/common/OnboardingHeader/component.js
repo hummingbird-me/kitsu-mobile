@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, ViewPropTypes } from 'react-native';
+import { View, Text, TouchableOpacity, ViewPropTypes } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import kitsuLogo from 'kitsu/assets/img/kitsu-logo.png';
@@ -25,7 +26,7 @@ export const OnboardingHeader = ({
           <View />
         )}
       </View>
-      <Image style={styles.logo} source={kitsuLogo} />
+      <FastImage style={styles.logo} source={kitsuLogo} />
       <TouchableOpacity
         onPress={buttonRightOnPress}
         disabled={!buttonRightEnabled}

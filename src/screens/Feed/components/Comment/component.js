@@ -167,7 +167,6 @@ export class Comment extends PureComponent {
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
       navigation={this.props.navigation}
-      overlayColor={this.props.overlayColor}
     />
   )
 
@@ -177,7 +176,6 @@ export class Comment extends PureComponent {
       comment,
       isTruncated,
       onAvatarPress,
-      overlayColor,
       hideEmbeds,
     } = this.props;
 
@@ -230,7 +228,6 @@ export class Comment extends PureComponent {
               maxWidth={maxEmbedWidth}
               minWidth={minEmbedWidth}
               borderRadius={20}
-              overlayColor={overlayColor}
               style={isEmpty(content) ? null : styles.embed}
               navigation={navigation}
             />
@@ -302,7 +299,6 @@ Comment.propTypes = {
   isTruncated: PropTypes.bool,
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
-  overlayColor: PropTypes.string,
   hideEmbeds: PropTypes.bool,
 };
 
@@ -310,7 +306,6 @@ Comment.defaultProps = {
   isTruncated: false,
   onAvatarPress: null,
   onReplyPress: null,
-  overlayColor: null,
   hideEmbeds: false,
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, Platform } from 'react-native';
+import { Platform } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { StackNavigator } from 'react-navigation';
 import Feed from 'kitsu/screens/Feed';
 import CreatePost from 'kitsu/screens/Feed/pages/PostCreation/CreatePost';
@@ -45,7 +46,7 @@ const FeedStack = StackNavigator(
       },
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <Image source={homeIcon} style={{ tintColor, width: 21, height: 21 }} />
+        <FastImage source={homeIcon} style={{ tintColor, width: 21, height: 21 }} />
       ),
     }),
   },

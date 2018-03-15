@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
@@ -8,7 +9,7 @@ import { styles as commonStyles } from '../common/styles';
 
 const MediaItem = ({ style, onPress, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={[styles.buttonMedia, style]}>
-    <Image source={image} style={styles.buttonLogo} />
+    <FastImage source={image} style={styles.buttonLogo} />
   </TouchableOpacity>
 );
 

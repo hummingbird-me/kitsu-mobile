@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { styles } from './styles';
 
-const StyledImage = ({ ...props }) => <Image style={styles.imageView} {...props} />;
+const StyledImage = ({ ...props }) => <FastImage style={styles.imageView} {...props} />;
 
 export const MaskedImage = ({
   maskedTop = false,

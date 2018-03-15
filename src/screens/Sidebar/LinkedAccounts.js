@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, ScrollView, Text } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Text } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
@@ -37,7 +38,7 @@ class LinkedAccounts extends React.Component {
         <View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ width: 90, alignItems: 'center' }}>
-              <Image
+              <FastImage
                 source={fblogo}
                 style={{ resizeMode: 'contain', width: 90, height: 40 }}
               />

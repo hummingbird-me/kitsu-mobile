@@ -1,8 +1,6 @@
 import React from 'react';
-import {
-  Image,
-  Dimensions,
-} from 'react-native';
+import { Dimensions } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 const {width} = Dimensions.get('window');
 
@@ -51,6 +49,6 @@ export default class AutoSizedImage extends React.Component {
       source = Object.assign(source, this.props.source, finalSize);
     }
 
-    return <Image style={style} source={source} />;
+    return <FastImage style={style} source={source} />;
   }
 }

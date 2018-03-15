@@ -9,13 +9,11 @@ export class CommentFlatList extends PureComponent {
     hideEmbeds: PropTypes.bool,
     latestComments: PropTypes.array.isRequired,
     navigation: PropTypes.object.isRequired,
-    overlayColor: PropTypes.string,
     isTruncated: PropTypes.bool,
   }
 
   static defaultProps = {
     hideEmbeds: false,
-    overlayColor: null,
     isTruncated: false,
   }
 
@@ -25,7 +23,6 @@ export class CommentFlatList extends PureComponent {
       hideEmbeds,
       navigation,
       latestComments,
-      overlayColor,
       isTruncated,
     } = this.props;
     return (
@@ -38,7 +35,6 @@ export class CommentFlatList extends PureComponent {
             comment={item}
             onAvatarPress={id => navigation.navigate('ProfilePages', { userId: id })}
             isTruncated={isTruncated}
-            overlayColor={overlayColor}
             hideEmbeds={hideEmbeds}
             navigation={navigation}
           />

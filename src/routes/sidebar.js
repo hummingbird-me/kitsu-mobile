@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { StackNavigator } from 'react-navigation';
 import sidebar from 'kitsu/assets/img/tabbar_icons/sidebar.png';
 import {
@@ -78,7 +78,7 @@ const SidebarStack = StackNavigator(
       },
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <Image source={sidebar} style={{ tintColor, width: 21, height: 21 }} />
+        <FastImage source={sidebar} style={{ tintColor, width: 21, height: 21 }} />
       ),
     }),
   },

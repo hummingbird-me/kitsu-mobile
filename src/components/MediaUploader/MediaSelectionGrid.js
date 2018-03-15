@@ -4,12 +4,12 @@ import {
   CameraRoll,
   Dimensions,
   FlatList,
-  Image,
   PermissionsAndroid,
   Platform,
   Text,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 import * as colors from 'kitsu/constants/colors';
 
@@ -224,7 +224,7 @@ export default class MediaSelectionGrid extends Component {
     if (allMedia.length === 0) {
       return (
         <View style={styles.emptyWrapper}>
-          <Image source={require('../../assets/img/empty.png')} resizeMode="contain" style={styles.emptyImage} />
+          <FastImage source={require('../../assets/img/empty.png')} resizeMode="contain" style={styles.emptyImage} />
           <Text style={styles.emptyText}>Oh... there&rsquo;s nothing here.</Text>
         </View>
       );

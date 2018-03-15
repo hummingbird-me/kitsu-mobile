@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Image, ViewPropTypes } from 'react-native';
+import { View, ViewPropTypes } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { slidelogo } from 'kitsu/assets/img/intro/';
 import styles from './styles';
 
 const IntroHeader = ({ style }) => (
   <View style={[styles.logoWrapper, style]}>
-    <Image style={styles.logo} source={slidelogo} />
+    <FastImage style={styles.logo} source={slidelogo} />
   </View>
 );
 

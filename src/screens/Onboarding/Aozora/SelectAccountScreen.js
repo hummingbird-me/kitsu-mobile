@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { upperFirst, toLower } from 'lodash';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
@@ -23,14 +24,14 @@ const AccountView = ({ style, data, selected, onSelectAccount }) => {
       onPress={() => onSelectAccount(data.accountType)}
       style={[commonStyles.rowWrapper, selectedRowStyle, style]}
     >
-      <Image style={styles.profileImage} source={{ uri: profileImageURL || defaultAvatar }} />
+      <FastImage style={styles.profileImage} source={{ uri: profileImageURL || defaultAvatar }} />
       <View style={styles.textWrapper}>
         <Text style={[commonStyles.text, selectedTextStyle]}>{username}</Text>
         <Text style={[styles.libraryCount, selectedTextStyle]}>
           {libraryCount ? `${libraryCount} library entries` : 'Empty Library'}
         </Text>
       </View>
-      <Image style={styles.brandImage} source={accountType === 'kitsu' ? kitsuLogo : aozoraLogo} />
+      <FastImage style={styles.brandImage} source={accountType === 'kitsu' ? kitsuLogo : aozoraLogo} />
     </TouchableOpacity>
   );
 };

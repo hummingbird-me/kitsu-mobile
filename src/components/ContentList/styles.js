@@ -61,7 +61,6 @@ export const styles = StyleSheet.create({
     height: 100,
     resizeMode: 'cover',
     zIndex: 0,
-    borderRadius: 8,
   },
   landscapeImageTitle: {
     color: colors.white,

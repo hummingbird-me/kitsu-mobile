@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { View, Animated } from 'react-native';
-
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
@@ -71,13 +71,13 @@ export class ProgressiveImage extends PureComponent {
     return (
       <View style={[styles.imageBackground, backgroundStyle, style]}>
         {source.uri && (
-          <Animated.Image
+          <FastImage
             onLoad={this.onLoad}
             onLayout={this.onLayout}
             resizeMode={resizeMode}
-            source={source}
-            defaultSource={defaultSource}
-            style={[style, { opacity: thumbnailOpacity }]}
+            source={source || defaultSource}
+            style={[style, { opacity: thumbnailOpacity.Value }]}
+            borderRadius={style.borderRadius}
           />
         )}
 

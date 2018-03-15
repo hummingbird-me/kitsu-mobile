@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform, Image, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, WebView, Platform, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -46,7 +47,6 @@ export class EmbeddedContent extends PureComponent {
     maxWidth: PropTypes.number.isRequired,
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
-    overlayColor: PropTypes.string,
     navigation: PropTypes.object.isRequired,
   }
 
@@ -54,7 +54,6 @@ export class EmbeddedContent extends PureComponent {
     style: null,
     minWidth: null,
     borderRadius: 0,
-    overlayColor: null,
   }
 
   /**
@@ -67,7 +66,7 @@ export class EmbeddedContent extends PureComponent {
   renderImage(embed) {
     if (!embed.image) return null;
 
-    const { maxWidth, minWidth, borderRadius, overlayColor } = this.props;
+    const { maxWidth, minWidth, borderRadius } = this.props;
     const imageWidth = embed.image.width || maxWidth;
 
     let width = parseInt(imageWidth, 10);
@@ -80,7 +79,6 @@ export class EmbeddedContent extends PureComponent {
         uri={embed.image.url}
         width={width}
         borderRadius={borderRadius}
-        overlayColor={overlayColor}
       />
     );
   }
@@ -173,7 +171,7 @@ export class EmbeddedContent extends PureComponent {
         <Layout.RowWrap style={styles.kitsuContent} alignItems="center">
           {/* Make sure embed image doesn't break if they change it */}
           {typeof embed.image === 'string' &&
-            <Image
+            <FastImage
               source={image}
               style={styles.userPoster}
             />

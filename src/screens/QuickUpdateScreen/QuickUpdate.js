@@ -4,7 +4,6 @@ import {
   Alert,
   Animated,
   Dimensions,
-  Image,
   Text,
   RefreshControl,
   View,
@@ -12,6 +11,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -662,7 +662,7 @@ class QuickUpdate extends Component {
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <Image source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
+        <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
         <Animated.Image
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
@@ -783,7 +783,7 @@ const StatusComponent = ({ title, text, image }) => (
   <View style={styles.statusWrapper}>
     <Text style={styles.statusTitle}>{title}</Text>
     <Text style={styles.statusText}>{text}</Text>
-    <Image style={styles.statusImage} source={image} />
+    <FastImage style={styles.statusImage} source={image} />
   </View>
 );
 
