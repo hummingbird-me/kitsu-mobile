@@ -3,7 +3,7 @@ import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.listBackPurple,
     flex: 1,
   },
   tabBar: {
