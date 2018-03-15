@@ -39,7 +39,7 @@ export class Counter extends React.PureComponent {
 
   onManualValueChanged = (value) => {
     const newValue = parseInt(value, 10);
-    const current = this.state.value;
+    const current = this.state.value || 0;
     this.setState({
       manualEditValue: isNaN(newValue) ? current : newValue,
     });
@@ -48,6 +48,7 @@ export class Counter extends React.PureComponent {
   activateManualEdit = () => {
     this.setState({
       manualEditMode: true,
+      manualEditValue: (this.state.value || 0),
     });
   }
 
@@ -74,7 +75,7 @@ export class Counter extends React.PureComponent {
   }
 
   decrementCount = () => {
-    const value = this.state.value - 1;
+    const value = (this.state.value || 0) - 1;
 
     if (!isNil(this.props.minValue) && value < this.props.minValue) {
       return;
@@ -85,7 +86,7 @@ export class Counter extends React.PureComponent {
   }
 
   incrementCount = () => {
-    const value = this.state.value + 1;
+    const value = (this.state.value || 0) + 1;
 
     if (!isNil(this.props.maxValue) && value > this.props.maxValue) {
       return;
