@@ -29,27 +29,38 @@ export const styles = StyleSheet.create({
     fontSize: 24,
   },
   settingContainer: {
-    paddingVertical: 14,
+    marginTop: 8,
   },
   settingRow: {
     backgroundColor: colors.white,
-    paddingLeft: 12,
-    paddingRight: 8,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.lightGrey,
     flexDirection: 'row',
     alignItems: 'center',
   },
   settingHeader: {
+    fontFamily: 'OpenSans',
+    fontSize: 12,
+    fontWeight: 'normal',
+    color: colors.white,
     paddingHorizontal: 12,
-    marginBottom: 8,
-  },
-  settingText: {
-    paddingVertical: 2,
+    paddingVertical: 8,
   },
   customRow: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.lightGrey,
+  },
+  hintText: {
+    fontFamily: 'OpenSans',
+    fontSize: 10,
+    color: colors.grey,
+  },
+  valueText: {
+    fontFamily: 'OpenSans',
+    fontSize: 13,
+    marginTop: 3,
+    color: colors.softBlack,
   },
 });

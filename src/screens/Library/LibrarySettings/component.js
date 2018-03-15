@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, ScrollView } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
+import { View, ScrollView, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -172,8 +171,8 @@ export class LibrarySettingsComponent extends PureComponent {
       >
         <View style={styles.settingRow}>
           <View style={{ flex: 1, flexDirection: 'column' }}>
-            <StyledText color="grey" size="xxsmall" textStyle={styles.settingText}>{row.title}</StyledText>
-            <StyledText color="black" size="small" textStyle={styles.settingText}>{row.value}</StyledText>
+            <Text style={styles.hintText}>{row.title}</Text>
+            <Text style={styles.valueText}>{row.value}</Text>
           </View>
           <Icon
             name={'ios-arrow-forward'}
@@ -188,7 +187,7 @@ export class LibrarySettingsComponent extends PureComponent {
   renderSettings(settings) {
     return settings.map(setting => (
       <View key={setting.heading} style={styles.settingContainer}>
-        <StyledText color="lightGrey" size="xsmall" textStyle={styles.settingHeader}>{setting.heading}</StyledText>
+        <Text style={styles.settingHeader}>{setting.heading}</Text>
         {setting.rows.map(row => this.renderSettingRow(row))}
       </View>
     ));
