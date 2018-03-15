@@ -5,8 +5,10 @@ import { PropTypes } from 'prop-types';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { capitalize, isEmpty } from 'lodash';
 import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
+import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import { styles } from './styles';
 import { LibraryScreenHeader } from '../LibraryScreenHeader';
+import { LibraryTabBar } from './tabbar';
 
 const TAB_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },
@@ -36,7 +38,6 @@ export class LibraryScreenComponent extends PureComponent {
 
   state = {
     type: 'anime',
-    status: 'current',
     opacity: new Animated.Value(0),
     typeSelectVisible: false,
   }
@@ -79,9 +80,9 @@ export class LibraryScreenComponent extends PureComponent {
     await this.props.deleteUserLibraryEntry(id, type, status);
   }
 
-  onRefresh = () => {
+  onRefresh = (status) => {
     const { currentUser } = this.props;
-    const currentLibrary = this.getCurrentLibrary();
+    const currentLibrary = this.getLibrary(status);
     if (!currentUser || !currentLibrary) return;
 
     // Only refresh if we need to
@@ -90,9 +91,9 @@ export class LibraryScreenComponent extends PureComponent {
     }
   }
 
-  onEndReached = () => {
+  onEndReached = (status) => {
     const { currentUser } = this.props;
-    const currentLibrary = this.getCurrentLibrary();
+    const currentLibrary = this.getLibrary(status);
     if (!currentUser || !currentLibrary) return;
 
     if (!currentLibrary.loading && currentLibrary.fetchMore) {
@@ -100,8 +101,24 @@ export class LibraryScreenComponent extends PureComponent {
     }
   }
 
-  getCurrentLibrary() {
-    const { type, status } = this.state;
+  getTabLabel(type, status) {
+    const { library } = this.props;
+
+    // The meta data
+    const meta = library && library.meta && library.meta[type];
+
+    const statusText = (TAB_TEXT_MAPPING[status] && TAB_TEXT_MAPPING[status][type]) ||
+      capitalize(status);
+
+    const count = meta && meta.statusCounts && meta.statusCounts[status];
+    const countText = (count && count.toString()) || '0';
+
+    return `${statusText} (${countText})`;
+  }
+
+
+  getLibrary(status) {
+    const { type } = this.state;
     const { library } = this.props;
     if (!library) return null;
 
@@ -126,46 +143,6 @@ export class LibraryScreenComponent extends PureComponent {
     Animated.timing(opacity, { toValue: 0, duration: 100, useNativeDriver: true }).start(() => {
       this.setState({ typeSelectVisible: false });
     });
-  }
-
-  renderTabNav = () => {
-    const { type, status: currentStatus } = this.state;
-    const { library } = this.props;
-
-    const statuses = ['current', 'planned', 'completed', 'on_hold', 'dropped'];
-
-    // The meta data
-    const meta = library && library.meta && library.meta[type];
-
-    return (
-      <TabBar style={styles.tabBar} containerStyle={styles.tabBarContainer}>
-        {statuses.map((status) => {
-          const isCurrent = currentStatus === status;
-          const statusText = (TAB_TEXT_MAPPING[status] && TAB_TEXT_MAPPING[status][type]) ||
-                              capitalize(status);
-
-          const count = meta && meta.statusCounts && meta.statusCounts[status];
-          const countText = (count && count.toString()) || '0';
-
-          return (
-            <TouchableOpacity
-              key={status}
-              style={[styles.tabItem, isCurrent && styles.tabItem__selected]}
-              onPress={() => this.setState({ status })}
-            >
-              <Text style={[styles.statusText, isCurrent && styles.tabText__selected]}>
-                {statusText}
-              </Text>
-              { !isEmpty(countText) &&
-                <Text style={[styles.countText, isCurrent && styles.tabText__selected]}>
-                  {` (${countText})`}
-                </Text>
-              }
-            </TouchableOpacity>
-          );
-        })}
-      </TabBar>
-    );
   }
 
   renderTypeSelect() {
@@ -199,14 +176,59 @@ export class LibraryScreenComponent extends PureComponent {
     );
   }
 
-  render() {
-    const {
-      currentUser,
-      navigation,
-    } = this.props;
-    const { type, status, typeSelectVisible } = this.state;
+  renderTabItem(name, page, active, goToPage) {
+    return (
+      <TouchableOpacity
+        key={name}
+        style={[styles.tabItem, active && styles.tabItem__selected]}
+        onPress={() => goToPage(page)}
+      >
+        <Text style={[styles.statusText, active && styles.tabText__selected]}>
+          {name}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
 
-    const currentLibrary = this.getCurrentLibrary();
+  renderLibraryLists(type) {
+    const { currentUser, navigation } = this.props;
+    const statuses = ['current', 'planned', 'completed', 'on_hold', 'dropped'];
+    if (!currentUser) return null;
+
+    return statuses.map((status) => {
+      const currentLibrary = this.getLibrary(status);
+      if (!currentLibrary) return null;
+      return (
+        <UserLibraryList
+          key={`${type}-${status}`}
+          tabLabel={this.getTabLabel(type, status)}
+          currentUser={currentUser}
+          profile={currentUser}
+          navigation={navigation}
+          libraryEntries={currentLibrary.data}
+          libraryStatus={status}
+          libraryType={type}
+          loading={currentLibrary.loading}
+          refreshing={currentLibrary.refreshing}
+          onRefresh={() => this.onRefresh(status)}
+          onEndReached={() => this.onEndReached(status)}
+          onLibraryEntryUpdate={this.onEntryUpdate}
+          onLibraryEntryDelete={this.onEntryDelete}
+        />
+      );
+    });
+  }
+
+  renderTabBar = () => (
+    <LibraryTabBar
+      tabBarStyle={styles.tabBar}
+      tabBarContainerStyle={styles.tabBarContainer}
+      renderTab={this.renderTabItem}
+    />
+  );
+
+  render() {
+    const { type, typeSelectVisible } = this.state;
 
     return (
       <View style={styles.container}>
@@ -220,23 +242,13 @@ export class LibraryScreenComponent extends PureComponent {
           onSearchPress={this.onSearchPress}
         />
         <View style={{ flex: 1 }}>
-          {this.renderTabNav()}
-          { currentUser && currentLibrary &&
-            <UserLibraryList
-              currentUser={currentUser}
-              profile={currentUser}
-              navigation={navigation}
-              libraryEntries={currentLibrary.data}
-              libraryStatus={status}
-              libraryType={type}
-              loading={currentLibrary.loading}
-              refreshing={currentLibrary.refreshing}
-              onRefresh={this.onRefresh}
-              onEndReached={this.onEndReached}
-              onLibraryEntryUpdate={this.onEntryUpdate}
-              onLibraryEntryDelete={this.onEntryDelete}
-            />
-          }
+          <ScrollableTabView
+            locked
+            initialPage={0}
+            renderTabBar={this.renderTabBar}
+          >
+            {this.renderLibraryLists(type)}
+          </ScrollableTabView>
           {typeSelectVisible && this.renderTypeSelect()}
         </View>
       </View>
