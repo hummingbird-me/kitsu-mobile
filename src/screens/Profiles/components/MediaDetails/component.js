@@ -5,7 +5,7 @@ import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
 import { styles } from './styles';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
 import { StyledText } from 'kitsu/components/StyledText';
-import { isNull } from 'lodash';
+import { isNull, isEmpty } from 'lodash';
 import moment from 'moment';
 
 const STATUS_MAP = {

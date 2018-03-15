@@ -103,6 +103,7 @@ class SidebarScreen extends PureComponent {
             <FastImage
               style={styles.userProfileImage}
               source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+              borderRadius={25}
             />
             <View style={styles.userProfileTextWrapper}>
               <Text style={styles.userProfileName}>{name}</Text>
