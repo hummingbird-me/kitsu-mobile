@@ -12,7 +12,7 @@ import { styles } from './styles';
 export const TabBar = ({ currentUser, onPress, children }) => (
   <View style={styles.tabBar}>
     <TouchableOpacity style={styles.tabAvatar} onPress={onPress}>
-      <Avatar size="small" avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar} />
+      <Avatar size="small" avatar={(currentUser && currentUser.avatar && currentUser.avatar.medium) || defaultAvatar} />
     </TouchableOpacity>
     {children}
   </View>

@@ -138,6 +138,10 @@ export class MediaDetails extends Component {
     const { media } = this.props;
     const { isViewingMore } = this.state;
 
+    if (isNull(media)) {
+      return null;
+    }
+
     return (
       <View style={styles.container}>
         <SectionHeader contentDark title="Details" />
@@ -180,8 +184,8 @@ export class MediaDetails extends Component {
 const DetailComponent = ({ label, content, details }) => (
   <View style={styles.detailRow}>
     <StyledText textStyle={styles.detailLabel} size="xxsmall" color="grey" bold>{label}</StyledText>
-    <StyledText textStyle={isNull(details) ? styles.detailContent : {}} size="xxsmall" color="dark" bold>{content}</StyledText>
-    {!isNull(details) && (
+    <StyledText textStyle={isEmpty(details) ? styles.detailContent : {}} size="xxsmall" color="dark" bold>{content}</StyledText>
+    {!isEmpty(details) && (
       <StyledText textStyle={styles.detailContent} size="xxsmall" color="grey" bold>{details}</StyledText>
     )}
   </View>
