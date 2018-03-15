@@ -20,7 +20,7 @@ export class Counter extends React.PureComponent {
     disabled: false,
     maxValue: undefined,
     minValue: 0,
-    value: 0,
+    value: null,
     onValueChanged: () => {},
     progressCounter: false,
     inputRef: () => {},
@@ -38,8 +38,10 @@ export class Counter extends React.PureComponent {
   }
 
   onManualValueChanged = (value) => {
+    const newValue = parseInt(value, 10);
+    const current = this.state.value;
     this.setState({
-      manualEditValue: parseInt(value, 10),
+      manualEditValue: isNaN(newValue) ? current : newValue,
     });
   }
 

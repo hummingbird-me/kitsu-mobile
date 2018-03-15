@@ -21,7 +21,7 @@ export const LibraryTabBar = ({
 
 
 LibraryTabBar.propTypes = {
-  goToPage: PropTypes.func.isRequired,
+  goToPage: PropTypes.func,
   renderTab: PropTypes.func.isRequired,
   activeTab: PropTypes.number,
   tabs: PropTypes.array,
@@ -30,6 +30,7 @@ LibraryTabBar.propTypes = {
 };
 
 LibraryTabBar.defaultProps = {
+  goToPage: () => null,
   activeTab: null,
   tabs: [],
   tabBarStyle: {},

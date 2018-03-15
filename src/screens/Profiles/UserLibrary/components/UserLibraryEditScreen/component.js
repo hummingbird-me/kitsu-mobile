@@ -182,6 +182,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
       ratingTwenty,
       notes,
       private: isPrivate,
+      progress,
     } = this.state;
 
     const rightTitle = loading ? 'Saving' : 'Save';
@@ -245,6 +246,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
               <Counter
                 inputRef={(r) => { this.progressInput = r; }}
                 disabled={!canEdit}
+                value={progress}
                 initialValue={libraryEntry.progress}
                 maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
                 progressCounter={typeof maxProgress === 'number'}
