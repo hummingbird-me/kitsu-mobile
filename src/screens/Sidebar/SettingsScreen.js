@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { blocking, library, privacy, settings, linked } from 'kitsu/assets/img/sidebar_icons/';
-import { SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
+import { navigationOptions, SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
 import { styles } from './styles';
 
-class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Settings',
-  };
+class SettingsScreen extends PureComponent {
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Settings');
 
   render() {
     const { navigation } = this.props;
@@ -20,7 +18,7 @@ class SettingsScreen extends React.Component {
             { title: 'General', image: settings, target: 'GeneralSettings' },
             { title: 'Privacy', image: privacy, target: 'PrivacySettings' },
             { title: 'Linked Accounts', image: linked, target: 'LinkedAccounts' },
-            { title: 'Library', image: library, target: 'Library' },
+            { title: 'Library', image: library, target: 'LibrarySettings' },
             { title: 'Blocking', image: blocking, target: 'Blocking' },
           ]}
           keyExtractor={item => item.title}

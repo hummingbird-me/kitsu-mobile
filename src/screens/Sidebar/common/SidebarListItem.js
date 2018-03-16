@@ -27,8 +27,8 @@ ItemSeparator.defaultProps = {
   underlineImage: true,
 };
 
-export const SidebarListItem = ({ image, imageURL, title, onPress }) => (
-  <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.item}>
+export const SidebarListItem = ({ image, imageURL, title, onPress, style }) => (
+  <TouchableOpacity activeOpacity={1} onPress={onPress} style={[styles.item, style]}>
     <View style={styles.leftContentWrapper}>
       {(image && <FastImage source={image} style={styles.image} />) ||
         (imageURL &&
@@ -56,6 +56,7 @@ SidebarListItem.propTypes = {
   image: PropTypes.number,
   imageURL: PropTypes.string,
   onPress: PropTypes.func,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
 SidebarListItem.defaultProps = {
@@ -63,6 +64,7 @@ SidebarListItem.defaultProps = {
   image: null,
   imageURL: null,
   onPress: null,
+  style: null,
 };
 
 const styles = StyleSheet.create({

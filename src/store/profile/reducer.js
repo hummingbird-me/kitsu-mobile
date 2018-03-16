@@ -1,5 +1,6 @@
 import { REHYDRATE } from 'redux-persist';
 import * as types from 'kitsu/store/types';
+import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 
 function updateObjectInArray(array, entry) {
   return array.map((currentItem) => {
@@ -19,6 +20,7 @@ function removeObjectFromArray(array, entry) {
 }
 
 const userLibraryInitial = {
+  meta: {},
   anime: {
     completed: { data: [], loading: false, refreshing: false },
     current: { data: [], loading: false, refreshing: false },
@@ -43,12 +45,11 @@ const INITIAL_STATE = {
   manga: {},
   anime: {},
   library: {},
-  userLibrary: {},
-  userLibrarySearch: {
-    ...userLibraryInitial,
-    loading: false,
-    searchTerm: '',
+  librarySort: {
+    by: KitsuLibrarySort.DATE_UPDATED,
+    ascending: false,
   },
+  userLibrary: {},
   followed: {},
   follower: {},
   errorFav: {},
@@ -164,6 +165,13 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           [action.userId]: {
             ...userLibraryInitial,
             ...state.userLibrary[action.userId],
+            meta: {
+              ...state.userLibrary[action.userId].meta,
+              [action.library]: {
+                ...state.userLibrary[action.userId].meta[action.library],
+                ...action.meta,
+              },
+            },
             [action.library]: {
               ...state.userLibrary[action.userId][action.library],
               [action.status]: {
@@ -273,124 +281,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           },
         },
       };
-    case types.SEARCH_USER_LIBRARY:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...userLibraryInitial,
-          loading: true,
-          searchTerm: action.searchTerm,
-          userId: action.userId,
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_SUCCESS:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          loading: false,
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_FAIL:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          loading: false,
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_TYPE:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.library]: {
-            ...state.userLibrarySearch[action.library],
-            [action.status]: {
-              ...state.userLibrarySearch[action.library][action.status],
-              loading: true,
-            },
-          },
-          searchTerm: action.searchTerm,
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_TYPE_SUCCESS:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.library]: {
-            ...state.userLibrarySearch[action.library],
-            [action.status]: {
-              data: action.data,
-              fetchMore: action.fetchMore,
-              meta: action.data.meta,
-              loading: false,
-            },
-          },
-        },
-      };
-    case types.SEARCH_USER_LIBRARY_TYPE_FAIL:
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.library]: {
-            ...state.userLibrarySearch[action.library],
-            [action.status]: {
-              ...state.userLibrarySearch[action.library][action.status],
-              loading: false,
-            },
-          },
-        },
-      };
-    case types.UPDATE_USER_LIBRARY_SEARCH_ENTRY:
-      if (action.previousLibraryStatus !== action.newLibraryStatus) {
-        return {
-          ...state,
-          userLibrarySearch: {
-            ...state.userLibrarySearch,
-            [action.libraryType]: {
-              ...state.userLibrarySearch[action.libraryType],
 
-              // remove from previousLibraryEntry.status
-              [action.previousLibraryStatus]: {
-                ...state.userLibrarySearch[action.libraryType][action.previousLibraryStatus],
-                data: removeObjectFromArray(
-                  state.userLibrarySearch[action.libraryType][action.previousLibraryStatus].data,
-                  action.newLibraryEntry,
-                ),
-              },
-
-              // add to newLibraryEntry.status (newLibraryStatus alias on_hold to on_hold for us)
-              [action.newLibraryStatus]: {
-                ...state.userLibrarySearch[action.libraryType][action.newLibraryStatus],
-                data: [
-                  { ...action.previousLibraryEntry, ...action.newLibraryEntry },
-                  ...state.userLibrarySearch[action.libraryType][action.newLibraryStatus].data,
-                ],
-              },
-            },
-          },
-        };
-      }
-
-      return {
-        ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.libraryType]: {
-            ...state.userLibrarySearch[action.libraryType],
-            [action.libraryStatus]: {
-              ...state.userLibrarySearch[action.libraryType][action.libraryStatus],
-              data: updateObjectInArray(
-                state.userLibrarySearch[action.libraryType][action.libraryStatus].data,
-                action.newLibraryEntry,
-              ),
-            },
-          },
-        },
-      };
     case types.DELETE_USER_LIBRARY_ENTRY:
       return {
         ...state,
@@ -398,7 +289,7 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           ...state.userLibrary,
           [action.userId]: {
             ...userLibraryInitial,
-            ...state.userLibrary[action.userId],
+            ...(state.userLibrary[action.userId] || {}),
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
               [action.libraryStatus]: {
@@ -409,24 +300,13 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
             },
           },
         },
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          [action.libraryType]: {
-            ...state.userLibrarySearch[action.libraryType],
-            [action.libraryStatus]: {
-              ...state.userLibrarySearch[action.libraryType][action.libraryStatus],
-              data: state.userLibrarySearch[action.libraryType][action.libraryStatus].data
-                .filter(entry => entry.id !== action.id),
-            },
-          },
-        },
       };
-    case types.UPDATE_USER_LIBRARY_SEARCH_TERM:
+    case types.UPDATE_LIBRARY_SORT:
       return {
         ...state,
-        userLibrarySearch: {
-          ...state.userLibrarySearch,
-          searchTerm: action.searchTerm,
+        librarySort: {
+          by: action.by,
+          ascending: action.ascending,
         },
       };
     case types.FETCH_USER_FAVORITES:
@@ -528,16 +408,24 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;
-    case REHYDRATE:
-      const user = (action.payload && action.payload.user) || {};
+    case REHYDRATE: {
+      const payload = action && action.payload;
+      const user = (payload && payload.user) || {};
+      const sort = (payload && payload.profile && payload.profile.librarySort) || {};
+
       return {
         ...state,
         ...user,
+        librarySort: {
+          ...state.librarySort,
+          ...sort,
+        },
         signingIn: false,
         signingUp: false,
         signupError: {},
         rehydratedAt: new Date(),
       };
+    }
     default:
       return state;
   }

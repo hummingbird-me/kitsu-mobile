@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { kitsuConfig } from 'kitsu/config/env/';
 import { commonStyles } from 'kitsu/common/styles';
 import WKWebView from 'react-native-wkwebview-reborn';
+import { navigationOptions } from 'kitsu/screens/Sidebar/common';
 import { styles } from './styles';
 
 class Board extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.title,
-    tabBarVisible: false,
-  });
+  static navigationOptions = ({ navigation }) => (
+    navigationOptions(navigation, navigation.state.params.title)
+  );
 
   state = {
     token: null,

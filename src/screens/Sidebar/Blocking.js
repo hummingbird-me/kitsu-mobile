@@ -18,7 +18,7 @@ import { Feedback } from 'kitsu/components/Feedback';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { SidebarTitle, ItemSeparator } from './common/';
+import { navigationOptions, SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
 
 const RowItem = ({ type, item, onPress }) => {
@@ -106,9 +106,7 @@ const InstantSearchBox = connectSearchBox(
   ));
 
 class Blocking extends React.Component {
-  static navigationOptions = {
-    title: 'Blocking',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Blocking');
 
   state = {
     loading: true,

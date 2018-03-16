@@ -6,13 +6,11 @@ import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
 import fblogo from 'kitsu/assets/img/fblogo.png';
 import { connectFBUser, disconnectFBUser } from 'kitsu/store/user/actions';
-import { SidebarTitle, ItemSeparator } from './common/';
+import { navigationOptions, SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
 
 class LinkedAccounts extends React.Component {
-  static navigationOptions = {
-    title: 'Linked Accounts',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Linked Accounts');
 
   handleFacebookLinking = async (isLinked) => {
     if (isLinked) { // if linked, unlink the account

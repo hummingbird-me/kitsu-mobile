@@ -2,7 +2,7 @@ import capitalize from 'lodash/capitalize';
 import map from 'lodash/map';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
-import { KitsuLibrary, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { KitsuLibrary, KitsuLibraryEventSource, KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 import { getState } from '../user/actions';
 
 export const fetchProfile = userId => async (dispatch) => {
@@ -109,8 +109,45 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
 
 const defaultFetchUserLibraryOptions = {
   limit: 10,
-  searchTerm: '',
 };
+
+/**
+ * Get the sort string.
+ *
+ * @param {any} sort An object with the format { by: <string>, ascending: <bool> }
+ * @param {string} kind 'anime' or 'manga'
+ * @returns The sort string.
+ */
+function getSortString(sort, kind) {
+  const titleSort = `${kind}.titles.canonical`;
+  if (!sort || !sort.by) return titleSort;
+
+  const ascending = sort.ascending ? '' : '-';
+  let defaultSort = sort.by;
+
+  switch (sort.by) {
+    case KitsuLibrarySort.TITLE:
+      return `${ascending}${titleSort}`;
+
+    case KitsuLibrarySort.LENGTH: {
+      const itemType = kind === 'anime' ? 'episode_count' : 'chapter_count';
+      defaultSort = `${kind}.${itemType}`;
+      break;
+    }
+    case KitsuLibrarySort.POPULARITY: {
+      defaultSort = `${kind}.user_count`;
+      break;
+    }
+    case KitsuLibrarySort.AVERAGE_RATING: {
+      defaultSort = `${kind}.average_rating`;
+      break;
+    }
+    default:
+      break;
+  }
+
+  return `${ascending}${defaultSort},${titleSort}`;
+}
 
 export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState) => {
   const options = {
@@ -124,28 +161,12 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     kind: options.library,
   };
 
-  const { userLibrary, userLibrarySearch } = getState().profile;
+  const { userLibrary, librarySort } = getState().profile;
 
-  let data;
-  if (options.searchTerm) {
-    data = userLibrarySearch[options.userId][options.library][options.status].data;
-    filter.title = options.searchTerm;
-  } else {
-    data = userLibrary[options.userId][options.library][options.status].data;
-  }
-
-  const actions = {
-    fetchStart: options.searchTerm.length ?
-      types.SEARCH_USER_LIBRARY_TYPE : types.FETCH_USER_LIBRARY_TYPE,
-    fetchSuccess: options.searchTerm.length ?
-      types.SEARCH_USER_LIBRARY_TYPE_SUCCESS : types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
-    fetchFail: options.searchTerm.length ?
-      types.SEARCH_USER_LIBRARY_TYPE_FAIL : types.FETCH_USER_LIBRARY_TYPE_FAIL,
-  };
+  let data = userLibrary[options.userId][options.library][options.status].data;
 
   dispatch({
-    searchTerm: options.searchTerm,
-    type: actions.fetchStart,
+    type: types.FETCH_USER_LIBRARY_TYPE,
     library: options.library,
     status: options.status,
     userId: options.userId,
@@ -165,10 +186,10 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
         limit: options.limit,
         offset: options.refresh ? 0 : data.length,
       },
-      sort: '-updatedAt',
+      sort: getSortString(librarySort, options.library),
     });
 
-    if (options.searchTerm || options.refresh) {
+    if (options.refresh) {
       data = libraryEntries;
     } else {
       // If we refresh then we need to reset data
@@ -179,7 +200,8 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
     dispatch({
       data,
-      type: actions.fetchSuccess,
+      meta: libraryEntries.meta,
+      type: types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
       refresh: () => {
         const newOptions = {
           ...options,
@@ -205,7 +227,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
     console.error(error);
     dispatch({
       error,
-      type: actions.fetchFail,
+      type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
       library: options.library,
       status: options.status,
       userId: options.userId,
@@ -215,30 +237,18 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
 export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
   const options = {
-    searchTerm: '',
     limit: 10,
     ...fetchOptions,
   };
 
-  const actions = {
-    fetchStart: options.searchTerm.length ?
-      types.SEARCH_USER_LIBRARY : types.FETCH_USER_LIBRARY,
-    fetchSuccess: options.searchTerm.length ?
-      types.SEARCH_USER_LIBRARY_SUCCESS : types.FETCH_USER_LIBRARY_SUCCESS,
-    fetchFail: options.searchTerm.length ?
-      types.SEARCH_USER_LIBRARY_FAIL : types.FETCH_USER_LIBRARY_FAIL,
-  };
-
   dispatch({
-    searchTerm: options.searchTerm,
     userId: options.userId,
-    type: actions.fetchStart,
+    type: types.FETCH_USER_LIBRARY,
   });
 
   const fetchUserTypeOptions = {
     limit: options.limit,
     userId: options.userId,
-    searchTerm: options.searchTerm,
   };
 
   try {
@@ -259,14 +269,14 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
     ]);
 
     dispatch({
-      type: actions.fetchSuccess,
+      type: types.FETCH_USER_LIBRARY_SUCCESS,
       userId: options.userId,
     });
   } catch (error) {
     console.error(error);
     dispatch({
       error,
-      type: actions.fetchFail,
+      type: types.FETCH_USER_LIBRARY_FAIL,
       userId: options.userId,
     });
   }
@@ -326,7 +336,7 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
 };
 
 export const updateUserLibraryEntry = (
-  libraryType, libraryStatus, newLibraryEntry, isSearchEntry,
+  libraryType, libraryStatus, newLibraryEntry,
 ) => async (dispatch, getState) => {
   const { userLibrary } = getState().profile;
   const { currentUser } = getState().user;
@@ -339,19 +349,13 @@ export const updateUserLibraryEntry = (
     const updateEntry = { ...newLibraryEntry };
 
     // optimistically update state
-    onLibraryEntryUpdate(currentUser.id, libraryType, libraryStatus, updateEntry, isSearchEntry)(dispatch, getState);
+    onLibraryEntryUpdate(currentUser.id, libraryType, libraryStatus, updateEntry)(dispatch, getState);
 
     const record = await Kitsu.update('libraryEntries', updateEntry);
     KitsuLibrary.onLibraryEntryUpdate(previousLibraryEntry, record, libraryType, KitsuLibraryEventSource.STORE);
   } catch (e) {
     throw e;
   }
-};
-
-export const updateUserLibrarySearchEntry = (
-  libraryType, libraryStatus, newLibraryEntry,
-) => async (dispatch, getState) => {
-  updateUserLibraryEntry(libraryType, libraryStatus, newLibraryEntry, true)(dispatch, getState);
 };
 
 export const deleteUserLibraryEntry = (id, libraryType, libraryStatus) => async (dispatch, getState) => {
@@ -403,7 +407,6 @@ export function onLibraryEntryUpdate(
   libraryType,
   libraryStatus,
   newLibraryEntry,
-  isSearchEntry,
 ) {
   return (dispatch, getState) => {
     const { userLibrary } = getState().profile;
@@ -424,6 +427,7 @@ export function onLibraryEntryUpdate(
 
     // update the state
     dispatch({
+      type: types.UPDATE_USER_LIBRARY_ENTRY,
       userId,
       libraryStatus,
       libraryType,
@@ -433,9 +437,6 @@ export function onLibraryEntryUpdate(
 
       previousLibraryEntry,
       newLibraryEntry: updateEntry,
-
-      type: isSearchEntry ?
-        types.UPDATE_USER_LIBRARY_SEARCH_ENTRY : types.UPDATE_USER_LIBRARY_ENTRY,
     });
   };
 }
@@ -446,18 +447,26 @@ export function onLibraryEntryDelete(
   libraryType,
   libraryStatus,
 ) {
-  return {
-    type: types.DELETE_USER_LIBRARY_ENTRY,
-    userId,
-    libraryStatus,
-    libraryType,
-    id,
+  return (dispatch, getState) => {
+    const { userLibrary } = getState().profile;
+
+    // Delete if we have the state set
+    if (userLibrary && userId in userLibrary) {
+      dispatch({
+        type: types.DELETE_USER_LIBRARY_ENTRY,
+        userId,
+        libraryStatus,
+        libraryType,
+        id,
+      });
+    }
   };
 }
 
-export function updateLibrarySearchTerm(searchTerm) {
+export function setLibrarySort(sort, ascending) {
   return {
-    type: types.UPDATE_USER_LIBRARY_SEARCH_TERM,
-    searchTerm,
+    type: types.UPDATE_LIBRARY_SORT,
+    by: sort,
+    ascending,
   };
 }

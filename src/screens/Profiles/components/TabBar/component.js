@@ -4,16 +4,17 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  ViewPropTypes,
 } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
 export const TabBar = props => (
-  <View style={styles.container}>
+  <View style={[styles.container, props.style]}>
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.tab}
+      contentContainerStyle={[styles.tab, props.containerStyle]}
     >
       {props.children}
     </ScrollView>
@@ -28,10 +29,14 @@ export const TabBarLink = ({ onPress, label, isActive }) => (
 
 TabBar.propTypes = {
   children: PropTypes.node,
+  style: ViewPropTypes.style,
+  containerStyle: ViewPropTypes.style,
 };
 
 TabBar.defaultProps = {
   children: null,
+  style: null,
+  containerStyle: null,
 };
 
 TabBarLink.propTypes = {

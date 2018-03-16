@@ -6,7 +6,6 @@ import TabsNotification from './tabsNotification';
 import PostStack from './post';
 import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
-import SidebarStack from './sidebar';
 import OnboardingStack from './onboarding';
 
 export default {
@@ -18,6 +17,5 @@ export default {
   TabsNotification,
   PostStack,
   FeedStack,
-  SidebarStack,
   OnboardingStack,
 };

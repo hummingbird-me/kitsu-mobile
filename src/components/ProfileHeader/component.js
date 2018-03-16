@@ -17,6 +17,7 @@ export const ProfileHeader = ({
   title,
   onClickBack,
   onClickFollow,
+  hasOverlay,
 }) => {
   const coverImageUri = getImgixCoverImage(profile.coverImage) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
@@ -24,6 +25,7 @@ export const ProfileHeader = ({
 
   return (
     <View style={styles.headerContainer}>
+      {hasOverlay && <View style={styles.overlay} />}
       {showCoverImage &&
         <ProgressiveImage
           hasOverlay
@@ -83,6 +85,7 @@ ProfileHeader.propTypes = {
   showFollowButton: PropTypes.bool,
   showProfileImage: PropTypes.bool,
   title: PropTypes.string,
+  hasOverlay: PropTypes.bool,
 };
 
 ProfileHeader.defaultProps = {
@@ -92,4 +95,5 @@ ProfileHeader.defaultProps = {
   showFollowButton: false,
   showProfileImage: true,
   title: '',
+  hasOverlay: false,
 };

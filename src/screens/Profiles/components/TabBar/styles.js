@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    flex: 1,
     backgroundColor: offWhite,
     borderTopWidth: borderWidth.hairline,
     borderTopColor: lightestGrey,
@@ -20,6 +19,7 @@ export const styles = StyleSheet.create({
       width: 0,
       height: 3,
     },
+    elevation: 3,
     shadowOpacity: 0.5,
   },
   link: {

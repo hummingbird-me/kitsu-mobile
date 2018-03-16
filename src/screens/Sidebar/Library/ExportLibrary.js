@@ -9,7 +9,7 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { navigationOptions, SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
 const keyExtractor = (item, index) => index.toString();
@@ -63,9 +63,7 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
 };
 
 class ExportLibrary extends React.Component {
-  static navigationOptions = {
-    title: 'MyAnimeList Sync',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'MyAnimeList Sync');
 
   state = {
     loading: true,

@@ -36,8 +36,8 @@ export class UserLibraryListCard extends React.PureComponent {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     libraryEntry: PropTypes.object.isRequired,
-    libraryStatus: PropTypes.string.isRequired,
-    libraryType: PropTypes.string.isRequired,
+    libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
+    libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
     navigate: PropTypes.func.isRequired,
     onSwipingItem: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
@@ -84,6 +84,7 @@ export class UserLibraryListCard extends React.PureComponent {
   }
 
   onRatingChanged = (ratingTwenty) => {
+    this.onSwipeRelease();
     this.setState({ ratingTwenty }, this.debounceSave);
   }
 
@@ -172,7 +173,12 @@ export class UserLibraryListCard extends React.PureComponent {
       progress,
       ratingTwenty,
     });
-    await this.props.updateUserLibraryEntry(type, status, updates);
+
+    try {
+      await this.props.updateUserLibraryEntry(type, status, updates);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   render() {

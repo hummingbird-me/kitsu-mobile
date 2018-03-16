@@ -74,6 +74,7 @@ class MediaPages extends PureComponent {
     this.fetchMedia(mediaType, mediaId);
     this.fetchFavorite(mediaType, mediaId);
     this.fetchLibraryEntry(mediaType, mediaId);
+    this.unsubscribeCreate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, this.onLibraryEntryCreated);
     this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
     this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
   }
@@ -135,23 +136,38 @@ class MediaPages extends PureComponent {
     }
   }
 
-  onLibraryEntryUpdated = (data) => {
-    // Check to see if we got this event from something other than media page
-    const { id, newEntry, source } = data;
+  onLibraryEntryCreated = (data) => {
+    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { type, entry } = data;
     const { libraryEntry } = this.state;
-    if (!newEntry || source === KitsuLibraryEventSource.MEDIA_PAGE) return;
 
+    // Don't continue if we already have an entry
+    // Or if the types don't match
+    if (libraryEntry || !entry || mediaType !== type) return;
+
+    // If the entry has the same media id as this page then add it
+    const media = entry[type];
+    if (media && media.id == mediaId) {
+      this.setState({ libraryEntry: entry });
+    }
+  }
+
+  onLibraryEntryUpdated = (data) => {
+    const { id, newEntry } = data;
+    const { libraryEntry } = this.state;
+    if (!newEntry) return;
+
+    // Only update if we have the same entry
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: newEntry });
     }
   }
 
   onLibraryEntryDeleted = (data) => {
-    // Check to see if we got this event from something other than media page
-    const { id, source } = data;
+    const { id } = data;
     const { libraryEntry } = this.state;
-    if (source === KitsuLibraryEventSource.MEDIA_PAGE) return;
 
+    // Only update if we have the same entry
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: null });
     }
@@ -210,7 +226,6 @@ class MediaPages extends PureComponent {
       await this.updateLibraryEntry(changes);
     }
   }
-
 
   getSubtitles(media) {
     if (!media) return null;
@@ -314,8 +329,12 @@ class MediaPages extends PureComponent {
     this.setState({ loading: true, loadingAdditional: true });
     try {
       // Fetch the media with categories
+      const includes = ['categories'];
+      if (type === 'anime') {
+        includes.push('animeProductions.producer');
+      }
       const media = await Kitsu.one(type, id).get({
-        include: 'categories',
+        include: includes.join(),
       });
 
       // Set the initial media info
@@ -338,6 +357,7 @@ class MediaPages extends PureComponent {
 
   /**
    * Fetch the episodes/chapter and related media types
+   * @TODO: Fetch this data properly rather than overwriting media
    */
   fetchEpisodesAndRelated = async (type, id) => {
     try {
@@ -349,10 +369,12 @@ class MediaPages extends PureComponent {
       const previousCategories = (this.state.media && this.state.media.categories) || null;
       const categories = (previousCategories && { categories: previousCategories }) || {};
 
+      const previousProductions = (this.state.media && this.state.media.animeProductions) || null;
+      const productions = (previousProductions && { animeProductions: previousProductions }) || {};
+
       // Combine the 2 object that we have
       this.setState({
-        media: { ...media, ...categories },
-        loadingAdditional: false,
+        media: { ...media, ...categories, ...productions },
       });
     } catch (error) {
       console.log(error);
@@ -391,6 +413,7 @@ class MediaPages extends PureComponent {
       this.setState({
         // castings,
         mediaReactions,
+        loadingAdditional: false,
       });
     } catch (error) {
       console.log(error);

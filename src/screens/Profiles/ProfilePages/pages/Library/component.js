@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { Dimensions, FlatList, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import { Kitsu } from 'kitsu/config/api';
 import { fetchUserLibrary } from 'kitsu/store/profile/actions';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { LibraryHeader, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
+import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
 import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
 import { isEmpty } from 'lodash';
 import { Spinner } from 'native-base';
+import { StyledText } from 'kitsu/components/StyledText';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
 import * as constants from './constants';
 
@@ -42,10 +42,9 @@ const progressFromLibraryEntry = (libraryEntry) => {
   return Math.floor((libraryEntry.progress / mediaData.chapterCount) * 100);
 };
 
-
 class Library extends PureComponent {
   static propTypes = {
-    userId: PropTypes.number.isRequired,
+    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
@@ -210,6 +209,25 @@ class Library extends PureComponent {
     });
   }
 
+  navigateToSearch = () => {
+    const { profile, navigation } = this.props;
+    if (profile && navigation) {
+      navigation.navigate('LibrarySearch', { profile });
+    }
+  };
+
+  renderSearchBox() {
+    return (
+      <TouchableOpacity style={styles.searchBox} onPress={this.navigateToSearch}>
+        <Icon
+          name="search"
+          style={styles.searchIcon}
+        />
+        <StyledText color="dark" textStyle={styles.searchText}>Search Library</StyledText>
+      </TouchableOpacity>
+    );
+  }
+
   render() {
     const { profile, navigation, userId } = this.props;
 
@@ -221,11 +239,11 @@ class Library extends PureComponent {
           renderTabBar={renderScrollTabBar}
         >
           <View key="Anime" tabLabel="Anime" id="anime">
-            <UserLibrarySearchBox navigation={navigation} profile={profile} />
+            {this.renderSearchBox()}
             {this.renderLists(userId, 'anime')}
           </View>
           <View key="Manga" tabLabel="Manga" id="manga">
-            <UserLibrarySearchBox navigation={navigation} profile={profile} />
+            {this.renderSearchBox()}
             {this.renderLists(userId, 'manga')}
           </View>
         </ScrollableTabView>

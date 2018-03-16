@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
-import { View, ActivityIndicator, Dimensions } from 'react-native';
+import { View, ActivityIndicator, Dimensions, TouchableOpacity } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { PropTypes } from 'prop-types';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
-import { UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
+import { StyledText } from 'kitsu/components/StyledText';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
 
 const HEADER_TEXT_MAPPING = {
@@ -52,12 +53,20 @@ export class UserLibraryListScreenComponent extends PureComponent {
   };
 
   onEntryUpdate = async (type, status, updates) => {
-    await this.props.updateUserLibraryEntry(type, status, updates);
+    try {
+      await this.props.updateUserLibraryEntry(type, status, updates);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   onEntryDelete = async (id, type, status) => {
     if (!id) return;
-    await this.props.deleteUserLibraryEntry(id, type, status);
+    try {
+      await this.props.deleteUserLibraryEntry(id, type, status);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   onRefresh = () => {
@@ -74,16 +83,24 @@ export class UserLibraryListScreenComponent extends PureComponent {
     }
   }
 
-  renderSearchBar = () => {
+  navigateToSearch = () => {
     const { profile } = this.props.navigation.state.params;
-    return (
-      <UserLibrarySearchBox
-        navigation={this.props.navigation}
-        profile={profile}
-        style={styles.searchBox}
+    const { navigation } = this.props;
+
+    if (profile && navigation) {
+      navigation.navigate('LibrarySearch', { profile });
+    }
+  };
+
+  renderSearchBar = () => (
+    <TouchableOpacity style={styles.searchBox} onPress={this.navigateToSearch}>
+      <Icon
+        name="search"
+        style={styles.searchIcon}
       />
-    );
-  }
+      <StyledText color="dark" textStyle={styles.searchText}>Search Library</StyledText>
+    </TouchableOpacity>
+  );
 
   render() {
     const {

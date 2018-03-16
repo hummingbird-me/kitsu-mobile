@@ -20,7 +20,7 @@ export class Counter extends React.PureComponent {
     disabled: false,
     maxValue: undefined,
     minValue: 0,
-    value: 0,
+    value: null,
     onValueChanged: () => {},
     progressCounter: false,
     inputRef: () => {},
@@ -32,20 +32,23 @@ export class Counter extends React.PureComponent {
   };
 
   componentWillReceiveProps({ value }) {
-    if (value && value !== this.state.value) {
+    if (!isNil(value) && value !== this.state.value) {
       this.setState({ value });
     }
   }
 
   onManualValueChanged = (value) => {
+    const newValue = parseInt(value, 10);
+    const current = this.state.value || 0;
     this.setState({
-      manualEditValue: parseInt(value, 10),
+      manualEditValue: isNaN(newValue) ? current : newValue,
     });
   }
 
   activateManualEdit = () => {
     this.setState({
       manualEditMode: true,
+      manualEditValue: (this.state.value || 0),
     });
   }
 
@@ -72,7 +75,7 @@ export class Counter extends React.PureComponent {
   }
 
   decrementCount = () => {
-    const value = this.state.value - 1;
+    const value = (this.state.value || 0) - 1;
 
     if (!isNil(this.props.minValue) && value < this.props.minValue) {
       return;
@@ -83,7 +86,7 @@ export class Counter extends React.PureComponent {
   }
 
   incrementCount = () => {
-    const value = this.state.value + 1;
+    const value = (this.state.value || 0) + 1;
 
     if (!isNil(this.props.maxValue) && value > this.props.maxValue) {
       return;

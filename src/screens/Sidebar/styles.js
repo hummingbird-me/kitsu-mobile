@@ -9,9 +9,10 @@ export const styles = StyleSheet.create({
     paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
   headerCoverImage: {
-    height: isX ? 100 + paddingX : 100,
+    height: isX ? 150 + paddingX : 150,
     justifyContent: 'center',
   },
+
   hintText: {
     fontFamily: 'OpenSans',
     fontSize: 10,
@@ -96,42 +97,39 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: 'grey',
   },
+
+  sidebarListItem: {
+    maxHeight: 38,
+  },
+
   logoutButton: {
     marginTop: 20,
-    marginBottom: 40,
-    padding: 12,
-    backgroundColor: colors.white,
-    alignItems: 'center',
+    marginHorizontal: 10,
+    backgroundColor: colors.extraDarkPurple,
+    width: 120,
   },
-  logoutButtonText: {
-    fontWeight: '500',
-    color: colors.activeRed,
-  },
-  userProfileButton: {
-    marginTop: 12,
+
+  userProfileContainer: {
+    flex: 1,
     marginHorizontal: 12,
-    padding: 8,
+    marginVertical: 12,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   userProfileImage: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
   },
   userProfileTextWrapper: {
     marginLeft: 12,
+    marginBottom: 12,
     backgroundColor: 'transparent',
   },
   userProfileName: {
     fontFamily: 'OpenSans',
     color: colors.white,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
-  },
-  userProfileDetailsText: {
-    fontFamily: 'OpenSans',
-    color: colors.white,
-    fontSize: 10,
   },
 });
 

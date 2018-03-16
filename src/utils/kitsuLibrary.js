@@ -1,5 +1,54 @@
 
 /**
+ * Library sort options
+ */
+export class KitsuLibrarySort {
+  static get DATE_UPDATED() {
+    return 'updated_at';
+  }
+
+  static get DATE_PROGRESSED() {
+    return 'progressed_at';
+  }
+
+  static get DATE_STARTED() {
+    return 'started_at';
+  }
+
+  static get DATE_FINSIHED() {
+    return 'finished_at';
+  }
+
+  static get DATE_ADDED() {
+    return 'created_at';
+  }
+
+  static get PROGRESS() {
+    return 'progress';
+  }
+
+  static get RATING() {
+    return 'rating';
+  }
+
+  static get TITLE() {
+    return 'title';
+  }
+
+  static get LENGTH() {
+    return 'length';
+  }
+
+  static get POPULARITY() {
+    return 'popularity';
+  }
+
+  static get AVERAGE_RATING() {
+    return 'average';
+  }
+}
+
+/**
  * Events of the library
  */
 export class KitsuLibraryEvents {
