@@ -53,12 +53,20 @@ export class UserLibraryListScreenComponent extends PureComponent {
   };
 
   onEntryUpdate = async (type, status, updates) => {
-    await this.props.updateUserLibraryEntry(type, status, updates);
+    try {
+      await this.props.updateUserLibraryEntry(type, status, updates);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   onEntryDelete = async (id, type, status) => {
     if (!id) return;
-    await this.props.deleteUserLibraryEntry(id, type, status);
+    try {
+      await this.props.deleteUserLibraryEntry(id, type, status);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   onRefresh = () => {

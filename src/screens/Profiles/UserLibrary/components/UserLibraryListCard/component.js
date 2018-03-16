@@ -173,7 +173,12 @@ export class UserLibraryListCard extends React.PureComponent {
       progress,
       ratingTwenty,
     });
-    await this.props.updateUserLibraryEntry(type, status, updates);
+
+    try {
+      await this.props.updateUserLibraryEntry(type, status, updates);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   render() {

@@ -72,12 +72,20 @@ export class LibraryScreenComponent extends PureComponent {
   }
 
   onEntryUpdate = async (type, status, updates) => {
-    await this.props.updateUserLibraryEntry(type, status, updates);
+    try {
+      await this.props.updateUserLibraryEntry(type, status, updates);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   onEntryDelete = async (id, type, status) => {
     if (!id) return;
-    await this.props.deleteUserLibraryEntry(id, type, status);
+    try {
+      await this.props.deleteUserLibraryEntry(id, type, status);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   onRefresh = (status) => {
@@ -134,15 +142,19 @@ export class LibraryScreenComponent extends PureComponent {
 
   showTypeSelect = () => {
     const { opacity } = this.state;
-    this.setState({ typeSelectVisible: true });
-    Animated.timing(opacity, { toValue: 1, duration: 100, useNativeDriver: true }).start();
+    if (!this.state.typeSelectVisible) {
+      this.setState({ typeSelectVisible: true });
+      Animated.timing(opacity, { toValue: 1, duration: 100, useNativeDriver: true }).start();
+    }
   }
 
   hideTypeSelect = () => {
     const { opacity } = this.state;
-    Animated.timing(opacity, { toValue: 0, duration: 100, useNativeDriver: true }).start(() => {
-      this.setState({ typeSelectVisible: false });
-    });
+    if (this.state.typeSelectVisible) {
+      Animated.timing(opacity, { toValue: 0, duration: 100, useNativeDriver: true }).start(() => {
+        this.setState({ typeSelectVisible: false });
+      });
+    }
   }
 
   renderTypeSelect() {

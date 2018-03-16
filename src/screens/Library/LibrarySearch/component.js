@@ -60,26 +60,20 @@ export class LibrarySearchComponent extends PureComponent {
   }
 
   onEntryUpdate = async (type, status, updates) => {
-    await this.props.updateUserLibraryEntry(type, status, updates);
-
-    // If entry was updated then update our local copies
-    if (entry) {
-      const newEntries = this.state[type].map((oldEntry) => {
-        if (oldEntry.id !== entry.id) {
-          return oldEntry;
-        }
-        return {
-          ...oldEntry,
-          ...entry,
-        };
-      });
-      this.setState({ [type]: newEntries });
+    try {
+      await this.props.updateUserLibraryEntry(type, status, updates);
+    } catch (e) {
+      console.warn(e);
     }
   }
 
   onEntryDelete = async (id, type, status) => {
     if (!id) return;
-    await this.props.deleteUserLibraryEntry(id, type, status);
+    try {
+      await this.props.deleteUserLibraryEntry(id, type, status);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   onSwipingItem = (isSwiping) => {
