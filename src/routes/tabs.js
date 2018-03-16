@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabNavigator } from 'react-navigation';
+import { TabNavigator, NavigationActions } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -36,6 +36,28 @@ const Tabs = TabNavigator(
     removeClippedSubviews: true,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
+    navigationOptions: ({ navigation }) => ({
+      tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
+        // The routes we should reset nav for
+        const resetRoutes = ['Notifications', 'Sidebar', 'QuickUpdate'];
+        const { routes } = previousScene;
+
+        // Check if we have pushed any other routes
+        if (!scene.focused && routes.length > 1) {
+          const { routeName } = routes[0];
+
+          // Check if the route is the one we have to reset
+          if (resetRoutes.includes(routeName)) {
+            navigation.dispatch(NavigationActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName })],
+            }));
+          }
+        }
+        // Move to the tab
+        jumpToIndex(scene.index);
+      },
+    }),
     tabBarOptions: {
       activeTintColor: tabRed,
       inactiveBackgroundColor: listBackPurple,
