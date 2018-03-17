@@ -223,7 +223,7 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
   try {
     // TODO: Use Devour: Manually fetching results in ugly response,
     // which also makes reducer more complicated than it should be.
-    const results = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_${type}`, {
+    const response = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_${type}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -231,7 +231,10 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
         'content-type': 'application/json',
       },
       body: JSON.stringify(notificationsFiltered),
-    }).then(response => response.json());
+    });
+
+    const results = response.json();
+
     dispatch({
       type: types[`MARK_AS_${type.toUpperCase()}_SUCCESS`],
       payload: results.data,
