@@ -204,6 +204,17 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
   }
   const token = getState().auth.tokens.access_token;
   const { id } = getState().user.currentUser;
+
+  // Make sure we have a user
+  if (!id) {
+    throw Error('User ID is not valid');
+  }
+
+  // Make sure we have a token
+  if (!token) {
+    throw Error('User Tokens are not valid');
+  }
+
   const notificationsFiltered = notifications
     .filter(v => !v[type === 'seen' ? 'isSeen' : 'isRead'])
     .map(v => v.id);
