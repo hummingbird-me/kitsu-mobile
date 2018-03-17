@@ -429,11 +429,11 @@ export const parseNotificationData = (activities, currentUserId) => {
       notificationData.text = 'liked your reaction.';
       break;
     case 'aired':
-      const isAnime = actor.type === 'anime';
+      const isAnime = actor && actor.type === 'anime';
       const type = isAnime ? 'Episode' : 'Chapter';
       const state = isAnime ? 'aired' : 'released';
       notificationData.actorName = type;
-      notificationData.actorAvatar = actor.posterImage && actor.posterImage.tiny ||
+      notificationData.actorAvatar = actor && actor.posterImage && actor.posterImage.tiny ||
         notificationData.actorAvatar; // Fallback to default avatar
       notificationData.text = `${subject.number} of ${actor.canonicalTitle} ${state}!`
       break;
