@@ -56,6 +56,8 @@ class SearchScreen extends Component {
   };
 
   doSearch = (query, route) => {
+    if (!route || !route.apiKey) return;
+
     const algoliaClient = algolia(kitsuConfig.algoliaAppId, route.apiKey);
     const algoliaIndex = algoliaClient.initIndex(route.indexName);
 

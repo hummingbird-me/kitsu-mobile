@@ -18,13 +18,14 @@ class MediaModal extends PureComponent {
     visible: PropTypes.bool,
     onCancelPress: PropTypes.func,
     onMediaSelect: PropTypes.func,
-    algoliaKeys: PropTypes.object.isRequired,
+    algoliaKeys: PropTypes.object,
   }
 
   static defaultProps = {
     visible: false,
     onCancelPress: null,
     onMediaSelect: null,
+    algoliaKeys: null,
   }
 
   state = {
@@ -33,8 +34,8 @@ class MediaModal extends PureComponent {
     page: 0,
     loading: false,
     selected: null,
-    apiKey: this.props.algoliaKeys.media.key,
-    indexName: this.props.algoliaKeys.media.index,
+    apiKey: null,
+    indexName: null,
   }
 
   componentDidMount() {
@@ -44,7 +45,15 @@ class MediaModal extends PureComponent {
   componentWillReceiveProps(nextProps) {
     const { algoliaKeys } = nextProps;
     // Check if we get new algolia keys
-    if (this.props.algoliaKeys !== algoliaKeys) {
+    if (this.props.algoliaKeys !== algoliaKeys && algoliaKeys) {
+      this.setState({
+        apiKey: algoliaKeys.media && algoliaKeys.media.key,
+        indexName: algoliaKeys.media && algoliaKeys.media.index,
+      });
+    }
+
+    // Check that keys are set
+    if (algoliaKeys && (!this.state.apiKey || !this.state.indexName)) {
       this.setState({
         apiKey: algoliaKeys.media && algoliaKeys.media.key,
         indexName: algoliaKeys.media && algoliaKeys.media.index,
@@ -54,6 +63,8 @@ class MediaModal extends PureComponent {
 
   doSearch = (query, page) => {
     const { apiKey, indexName } = this.state;
+    if (!apiKey) return;
+
     const algoliaClient = algolia(kitsuConfig.algoliaAppId, apiKey);
     const algoliaIndex = algoliaClient.initIndex(indexName);
 
@@ -179,8 +190,8 @@ class MediaModal extends PureComponent {
   }
 }
 
-const mapper = (state) => {
-  const { algoliaKeys } = state.app;
+const mapper = ({ app }) => {
+  const { algoliaKeys } = app;
   return {
     algoliaKeys,
   };
