@@ -13,6 +13,7 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* kitsu_mobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* kitsu_mobileTests.m */; };
+		06D7D12E3F6448BA94C75A39 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D4F1A76AFF44AFAA0FE6AA /* libFastImage.a */; };
 		0A4FBAF16D644C4EBE2768F8 /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F5C99850F22455FAE4EDCEE /* OpenSans-ExtraBold.ttf */; };
 		0A6D63601F3DCC8C00181D81 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A6D63431F3DCC5B00181D81 /* libRCTCameraRoll.a */; };
 		0D0FBDB10EA245D1875EF08F /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32B99BDC2D7D4547AD86C3AF /* libRCTActionSheet.a */; };
@@ -109,7 +110,6 @@
 		F743ACFD56F641BEA63F5B1D /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 008C13A99553484BA0B2963B /* OpenSans-Italic.ttf */; };
 		FD2D5EEC2CE94BD494A797F8 /* libRCTYouTube.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */; };
 		FFF738ABC088423B91E45FD7 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 694A904745DB4D368E2CB836 /* config.json */; };
-		06D7D12E3F6448BA94C75A39 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D4F1A76AFF44AFAA0FE6AA /* libFastImage.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -530,6 +530,7 @@
 		4138ED52D35F41FA8AB2D1DF /* Asap-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Asap-Bold.otf"; path = "../src/assets/fonts/open-sans/Asap-Bold.otf"; sourceTree = "<group>"; };
 		43EDA51C326A421186F9964A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		449FEEEDC0714FF1834E6158 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		57E39DD138074CFCA41A5D1A /* FastImage.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
 		583B3F53C44A41819581E401 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		58A1A7A508704D6CAE65A165 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		598A6C24D00143C7AA010E08 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
@@ -544,6 +545,7 @@
 		694A904745DB4D368E2CB836 /* config.json */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = config.json; path = ../src/assets/fonts/icons/config.json; sourceTree = "<group>"; };
 		69A28D16F61B4F57A9149738 /* OpenSans-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Semibold.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-Semibold.ttf"; sourceTree = "<group>"; };
 		6A88679DAC954129B29D40C1 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		71D4F1A76AFF44AFAA0FE6AA /* libFastImage.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libFastImage.a; sourceTree = "<group>"; };
 		74969B8DCCF9439185D3D9FD /* libRCTWKWebView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTWKWebView.a; sourceTree = "<group>"; };
 		74F436878F9E4560BCD4200F /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		7744E0A2AD94416581E0CA6A /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -599,8 +601,6 @@
 		FD61A198D0A948A68EDEFB8F /* Asap-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Asap-Medium.otf"; path = "../src/assets/fonts/open-sans/Asap-Medium.otf"; sourceTree = "<group>"; };
 		FF0AD57CF1A14A05AB0F02EE /* libRNShimmer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShimmer.a; sourceTree = "<group>"; };
 		FF2549FBAE04493884146CC1 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
-		57E39DD138074CFCA41A5D1A /* FastImage.xcodeproj */ = {isa = PBXFileReference; name = "FastImage.xcodeproj"; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		71D4F1A76AFF44AFAA0FE6AA /* libFastImage.a */ = {isa = PBXFileReference; name = "libFastImage.a"; path = "libFastImage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1015,6 +1015,7 @@
 				F5CCFDBC7B404237A304EC24 /* libRNSentry.a */,
 				FF2549FBAE04493884146CC1 /* libimageCropPicker.a */,
 				74969B8DCCF9439185D3D9FD /* libRCTWKWebView.a */,
+				71D4F1A76AFF44AFAA0FE6AA /* libFastImage.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
