@@ -317,6 +317,7 @@ class ProfilePage extends PureComponent {
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
           style={{ flex: 1 }}
+          useNativeDriver
           headerHeight={HEADER_HEIGHT}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
