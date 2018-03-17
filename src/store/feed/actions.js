@@ -139,7 +139,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },
-      include: 'target.user,target.post,actor,target.manga,target.anime',
+      include: 'actor,subject,target.user,target.post,target.manga,target.anime',
       fields: {
         activities: 'time,verb,id',
       },

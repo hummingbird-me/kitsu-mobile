@@ -391,13 +391,12 @@ export const parseNotificationData = (activities, currentUserId) => {
   };
 
   const activity = activities[0];
-  const { replyToType, replyToUser, mentionedUsers, target, actor } = activity;
+  const { replyToType, replyToUser, mentionedUsers, target, subject, actor } = activity;
 
   // actor
-  notificationData.actorName = (actor && `${actor.name} `) || '-';
+  notificationData.actorName = (actor && actor.name && `${actor.name} `) || '-';
 
-  notificationData.actorAvatar =
-    actor && actor.avatar
+  notificationData.actorAvatar = actor && actor.avatar && actor.avatar.tiny
       ? actor.avatar.tiny
       : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
@@ -410,7 +409,7 @@ export const parseNotificationData = (activities, currentUserId) => {
   }
 
   // text
-  switch (activities[0].verb) {
+  switch (activity.verb) {
     case 'follow':
       notificationData.text = 'followed you.';
       break;
@@ -428,6 +427,15 @@ export const parseNotificationData = (activities, currentUserId) => {
       break;
     case 'vote':
       notificationData.text = 'liked your reaction.';
+      break;
+    case 'aired':
+      const isAnime = actor && actor.type === 'anime';
+      const type = isAnime ? 'Episode' : 'Chapter';
+      const state = isAnime ? 'aired' : 'released';
+      notificationData.actorName = type;
+      notificationData.actorAvatar = actor && actor.posterImage && actor.posterImage.tiny ||
+        notificationData.actorAvatar; // Fallback to default avatar
+      notificationData.text = `${subject.number} of ${actor.canonicalTitle} ${state}!`
       break;
     case 'comment':
       if (replyToUser && currentUserId === replyToUser.split(':')[1]) {
