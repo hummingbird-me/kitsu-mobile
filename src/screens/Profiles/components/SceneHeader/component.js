@@ -253,7 +253,6 @@ SceneHeader.propTypes = {
 
 SceneHeader.defaultProps = {
   categories: [],
-  coverImage: '',
   description: '',
   followersCount: 0,
   followingCount: 0,

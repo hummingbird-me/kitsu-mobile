@@ -568,7 +568,6 @@ class MediaPages extends PureComponent {
             title={media.canonicalTitle}
             subtitle={this.getSubtitles(media)}
             description={media.synopsis}
-            coverImage={getImgixCoverImage(media.coverImage)}
             posterImage={media.posterImage && media.posterImage.large}
             popularityRank={media.popularityRank}
             ratingRank={media.ratingRank}
