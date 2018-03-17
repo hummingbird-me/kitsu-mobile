@@ -104,40 +104,58 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   }
 
   if (tokens) {
-    dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
-    const user = await fetchCurrentUser()(dispatch, getState);
+    try {
+      const user = await fetchCurrentUser()(dispatch, getState);
+      dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
 
-    /**
-     * Now over here, aozora users will always have their status set to `aozora`, until they complete onboarding which will set their status to `registered`.
-     * However for regular users we can't differentiate if they just signed up or not,since their status is always `registered` from the start.
-     * Thus we check the screen name to see if it's a `signup`.
-     * Note: `signup` is passed in from `createUser` function. It shouldn't be passed in from anywhere else
-       otherwise users might always be sent to onboarding when logging in with fb.
-    */
-    if (user.status === 'aozora') {
-      await getAccountConflicts()(dispatch, getState);
-      const onboardingAction = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
-        key: null,
+      /**
+       * Now over here, aozora users will always have their status set to `aozora`, until they complete onboarding which will set their status to `registered`.
+       * However for regular users we can't differentiate if they just signed up or not,since their status is always `registered` from the start.
+       * Thus we check the screen name to see if it's a `signup`.
+       * Note: `signup` is passed in from `createUser` function. It shouldn't be passed in from anywhere else
+         otherwise users might always be sent to onboarding when logging in with fb.
+      */
+      if (user.status === 'aozora') {
+        await getAccountConflicts()(dispatch, getState);
+        const onboardingAction = NavigationActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+          key: null,
+        });
+        nav.dispatch(onboardingAction);
+      } else if (user.status !== 'registered' || screen === 'signup') {
+        await getAccountConflicts()(dispatch, getState);
+        const onboardingAction = NavigationActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
+          key: null,
+        });
+        nav.dispatch(onboardingAction);
+      } else {
+        setOnboardingComplete()(dispatch, getState);
+        const loginAction = NavigationActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+          key: null,
+        });
+        nav.dispatch(loginAction);
+      }
+    } catch (e) {
+      console.warn(e);
+
+      Sentry.captureMessage('Failed to fetch user while logging in', {
+        tags: {
+          type: 'auth',
+        },
+        extra: {
+          exception: e,
+        },
       });
-      nav.dispatch(onboardingAction);
-    } else if (user.status !== 'registered' || screen === 'signup') {
-      await getAccountConflicts()(dispatch, getState);
-      const onboardingAction = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
-        key: null,
+
+      dispatch({
+        type: types.LOGIN_USER_FAIL,
+        payload: 'Failed to fetch user',
       });
-      nav.dispatch(onboardingAction);
-    } else {
-      setOnboardingComplete()(dispatch, getState);
-      const loginAction = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-        key: null,
-      });
-      nav.dispatch(loginAction);
     }
   } else {
     dispatch({

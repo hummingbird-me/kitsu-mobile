@@ -23,10 +23,10 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
       return user[0];
     }
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'No user found in request' });
-    return null;
+    throw new Error('No user found in request');
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
-    return null;
+    throw e;
   }
 };
 
