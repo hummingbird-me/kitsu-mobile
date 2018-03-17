@@ -233,7 +233,7 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
       body: JSON.stringify(notificationsFiltered),
     });
 
-    const results = response.json();
+    const results = await response.json();
 
     dispatch({
       type: types[`MARK_AS_${type.toUpperCase()}_SUCCESS`],
