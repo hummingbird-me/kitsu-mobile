@@ -47,13 +47,9 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
 
   // Build the search params
   const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
-  const searchParams = mappings.join('&');
-
-  // Check if we have a cache buster applied, if not then we apply one ourselves
-  const cacheBust = isEmpty(search) ? `?${Date.now()}` : search;
+  let searchParams = mappings.join('&');
+  searchParams = isEmpty(search) ? `?${searchParams}` : searchParams;
 
   // Make the new url
-  const imgixURL = `https://${kitsuConfig.imgixBaseUrl}${pathname}${cacheBust}&${searchParams}`;
-
-  return imgixURL;
+  return `https://${kitsuConfig.imgixBaseUrl}${pathname}${searchParams}`;
 }
