@@ -47,9 +47,8 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
 
   // Build the search params
   const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
-  let searchParams = mappings.join('&');
-  searchParams = isEmpty(search) ? `?${searchParams}` : searchParams;
+  const searchParams = mappings.join('&');
 
   // Make the new url
-  return `https://${kitsuConfig.imgixBaseUrl}${pathname}${searchParams}`;
+  return `https://${kitsuConfig.imgixBaseUrl}${pathname}?${searchParams}`;
 }
