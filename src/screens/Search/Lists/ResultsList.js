@@ -4,6 +4,7 @@ import * as PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { getBestGridItemSpacing } from 'kitsu/common/utils';
+import { getComputedTitle } from 'kitsu/utils/getTitleField';
 
 const IMAGE_SIZE = { width: 100, height: 150 };
 
@@ -50,7 +51,7 @@ function getBestSpacing() {
 // Just need to calculate this once since we don't have landscape.
 const bestSpacing = getBestSpacing();
 
-const ResultsList = ({ hits, onPress, style, ...props }) => {
+const ResultsList = ({ hits, onPress, style, currentUser, ...props }) => {
   // This will make it so the list will be centred should we have any extra space left over
   const padding = { paddingLeft: bestSpacing.extra / 2, paddingTop: bestSpacing.margin / 2 };
 
@@ -67,7 +68,7 @@ const ResultsList = ({ hits, onPress, style, ...props }) => {
       numColumns={bestSpacing.columnCount}
       scrollEnabled
       contentContainerStyle={styles.list}
-      renderItem={e => renderItem(e, onPress, bestSpacing)}
+      renderItem={e => renderItem(e, onPress, bestSpacing, currentUser)}
       style={[styles.container, padding, style]}
       onEndReachedThreshold={0.5}
       {...props}
@@ -75,12 +76,12 @@ const ResultsList = ({ hits, onPress, style, ...props }) => {
   );
 };
 
-const renderItem = ({ item }, onPress, spacing) => {
+const renderItem = ({ item }, onPress, spacing, currentUser) => {
   let title = null;
   const imageSource = item.image || (item.posterImage || {}).small;
 
   if (item.titles) {
-    title = item.titles.en || item.titles.en_jp;
+    title = getComputedTitle(currentUser, item);
   }
 
   return (

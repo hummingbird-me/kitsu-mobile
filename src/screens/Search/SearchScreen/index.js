@@ -58,7 +58,7 @@ class SearchScreen extends PureComponent {
   executeSearch = (query, scene) => {
     const currentScene = this.state.scenes[scene];
     if (isNull(currentScene.apiKey)) { return; }
-    
+
     const client = algolia(kitsuConfig.algoliaAppId, currentScene.apiKey);
     const index = client.initIndex(currentScene.indexName);
     const filters = currentScene.kind ? `kind:${currentScene.kind}` : '';
@@ -139,7 +139,7 @@ class SearchScreen extends PureComponent {
         return isEmpty(query[scene]) ? (
           <TopsList mounted active={scene} navigation={navigation} />
         ) : (
-          <ResultsList hits={hits} onPress={this.navigateToMedia} />
+          <ResultsList hits={hits} onPress={this.navigateToMedia} currentUser={this.props.currentUser} />
         );
       }
       default: {
@@ -173,8 +173,8 @@ SearchScreen.propTypes = {
 };
 
 const mapper = (state) => {
-  const { algoliaKeys } = state.app;
-  return { algoliaKeys };
+  const { app: { algoliaKeys }, user: { currentUser } } = state;
+  return { algoliaKeys, currentUser };
 };
 
 export default connect(mapper, { followUser, captureUsersData })(SearchScreen);
