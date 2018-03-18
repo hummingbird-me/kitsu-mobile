@@ -107,7 +107,9 @@ export default class Summary extends PureComponent {
       if (data.status && data.status.length > 1) {
         caption = `${capitalize(data.status[1].replace('_', ' '))}`;
       } else if (data.progress && data.progress.length > 1) {
-        caption = `${entry.media.type === 'anime' ? 'Watched ep.' : 'Read ch.'} ${data.progress[1]}`;
+        caption = `${entry.media.type === 'anime' ? 'Watched Ep.' : 'Read Ch.'} ${data.progress[1]}`;
+      } else if (item.kind === 'rated') {
+        caption = 'Rated  ';
       }
     }
 
@@ -123,8 +125,9 @@ export default class Summary extends PureComponent {
               uri: entry.media.posterImage && entry.media.posterImage.original,
             }}
           />
-          <View style={{ alignItems: 'center', marginTop: 3 }}>
-            {item.kind === 'rated' ?
+          <View style={{ alignSelf: 'center', marginTop: 3, flexDirection: 'row' }}>
+            <StyledText size="xxsmall" color="dark">{caption}</StyledText>
+            {item.kind === 'rated' && (
               <Rating
                 disabled
                 ratingTwenty={rating}
@@ -133,9 +136,7 @@ export default class Summary extends PureComponent {
                 viewType="single"
                 showNotRated={false}
               />
-              :
-              <StyledText size="xxsmall" color="dark">{caption}</StyledText>
-            }
+            )}
           </View>
         </TouchableOpacity>
       </ScrollItem>
@@ -157,7 +158,7 @@ export default class Summary extends PureComponent {
         {/* Library Activity */}
         <ScrollableSection
           contentDark
-          title="Library activity"
+          title="Library Activity"
           onViewAllPress={() => this.navigateTo('Library')}
           data={libraryActivity}
           renderItem={({ item }) => this.renderLibraryActivity(item)}
