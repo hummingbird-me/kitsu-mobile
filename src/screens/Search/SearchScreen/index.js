@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
-import { capitalize, isEmpty, debounce } from 'lodash';
+import { capitalize, isEmpty, isNull, debounce } from 'lodash';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 import { followUser } from 'kitsu/store/user/actions';
@@ -57,6 +57,8 @@ class SearchScreen extends PureComponent {
 
   executeSearch = (query, scene) => {
     const currentScene = this.state.scenes[scene];
+    if (isNull(currentScene.apiKey)) { return; }
+    
     const client = algolia(kitsuConfig.algoliaAppId, currentScene.apiKey);
     const index = client.initIndex(currentScene.indexName);
     const filters = currentScene.kind ? `kind:${currentScene.kind}` : '';
