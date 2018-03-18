@@ -4,9 +4,9 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 
-export const fetchCurrentUser = () => async (dispatch, getState) => {
+export const fetchCurrentUser = tokens => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
-  const token = getState().auth.tokens.access_token;
+  const token = (tokens && tokens.access_token) || getState().auth.tokens.access_token;
   setToken(token);
   try {
     const user = await Kitsu.findAll('users', {
