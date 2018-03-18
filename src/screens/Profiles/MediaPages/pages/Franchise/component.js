@@ -57,14 +57,27 @@ const renderItem = (item, navigation) => {
   );
 };
 
-export const component = ({ media: { mediaRelationships }, navigation }) => (
-  <TabContainer light>
-    <FlatList
-      data={mediaRelationships}
-      renderItem={({ item }) => renderItem(item, navigation)}
-    />
-  </TabContainer>
-);
+export const component = ({ media: { mediaRelationships }, navigation }) => {
+  const relationships = mediaRelationships || [];
+  const sorted = relationships.sort((a, b) => {
+    const aStart = a.destination && a.destination.startDate;
+    const bStart = b.destination && b.destination.startDate;
+
+    const aStartDate = (aStart && Date.parse(aStart)) || null;
+    const bStartDate = (bStart && Date.parse(bStart)) || null;
+    const defaultDate = new Date(0);
+
+    return (aStartDate || defaultDate) - (bStartDate || defaultDate);
+  });
+  return (
+    <TabContainer light>
+      <FlatList
+        data={sorted}
+        renderItem={({ item }) => renderItem(item, navigation)}
+      />
+    </TabContainer>
+  );
+};
 
 component.propTypes = {
   media: PropTypes.shape({
