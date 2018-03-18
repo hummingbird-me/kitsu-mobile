@@ -20,6 +20,9 @@ class SearchResults extends Component {
       <NavigationHeader
         navigation={navigation}
         title={navigation.state.params.label}
+        leftAction={() => {
+          navigation.goBack(navigation.state.params.previousRoute || null);
+        }}
         rightIcon="sliders"
         rightAction={() => (
           screenProps.rootNavigation.navigate('SearchFilter', {
