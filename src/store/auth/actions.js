@@ -105,7 +105,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
 
   if (tokens) {
     try {
-      const user = await fetchCurrentUser()(dispatch, getState);
+      const user = await fetchCurrentUser(tokens)(dispatch, getState);
       dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
 
       /**

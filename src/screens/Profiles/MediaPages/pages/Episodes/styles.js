@@ -40,4 +40,16 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingTop: Platform.select({ ios: 4, android: 0 }),
   },
+
+  sortingContainer: {
+    backgroundColor: colors.listBackPurple,
+    justifyContent: 'flex-end',
+    padding: 8,
+  },
+  sortingText: {
+    fontSize: 12,
+    color: 'white',
+    textAlign: 'right',
+    textAlignVertical: 'center',
+  },
 });

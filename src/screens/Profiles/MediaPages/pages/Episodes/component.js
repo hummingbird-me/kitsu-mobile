@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FlatList, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { FlatList, TouchableOpacity, View, ActivityIndicator, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
@@ -27,8 +27,15 @@ class Episodes extends PureComponent {
     loadingAdditional: false,
   }
 
-  sortData(data) {
-    return data.sort((a, b) => a.number - b.number);
+  state = {
+    ascending: true,
+  }
+
+  sortData(data, ascending = true) {
+    return data.sort((a, b) => {
+      if (ascending) return a.number - b.number;
+      return b.number - a.number;
+    });
   }
 
   renderItem = ({ item }) => {
@@ -65,8 +72,10 @@ class Episodes extends PureComponent {
 
   render() {
     const { media, loadingAdditional } = this.props;
+    const { ascending } = this.state;
+
     const isAnime = media.type === 'anime';
-    const data = this.sortData(isAnime ? media.episodes : media.chapters);
+    const data = this.sortData(isAnime ? media.episodes : media.chapters, ascending);
 
     return (
       <TabContainer light>
@@ -75,12 +84,21 @@ class Episodes extends PureComponent {
             <ActivityIndicator color={listBackPurple} />
           </View>
           :
-          <FlatList
-            data={data}
-            renderItem={this.renderItem}
-            keyExtractor={k => k.id}
-            ItemSeparatorComponent={() => <RowSeparator />}
-          />
+          <View>
+            <TouchableOpacity
+              onPress={() => this.setState({ ascending: !ascending })}
+              style={styles.sortingContainer}
+              activeOpacity={0.9}
+            >
+              <Text style={styles.sortingText}>{ascending ? 'Ascending' : 'Descending'}</Text>
+            </TouchableOpacity>
+            <FlatList
+              data={data}
+              renderItem={this.renderItem}
+              keyExtractor={k => k.id}
+              ItemSeparatorComponent={() => <RowSeparator />}
+            />
+          </View>
         }
 
       </TabContainer>

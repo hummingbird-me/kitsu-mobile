@@ -59,7 +59,6 @@ export const styles = StyleSheet.create({
   landscapeImage: {
     width: 210,
     height: 100,
-    resizeMode: 'cover',
     zIndex: 0,
   },
   landscapeImageTitle: {
