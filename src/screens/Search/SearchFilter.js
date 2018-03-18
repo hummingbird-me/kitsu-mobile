@@ -293,7 +293,7 @@ class SearchFilter extends Component {
                     { key: 'categories', title: 'Category' },
                     { key: 'released', title: 'Released' },
                     { key: 'length', title: 'Length' },
-                    { key: 'avail', title: 'Availabitily' },
+                    { key: 'avail', title: 'Availability' },
                   ],
                   title: 'Browse by',
                   key: 'a1',

@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   userAvatar: {
     width: 61,
     height: 61,
-    borderRadius: 61 / 2,
+    borderRadius: 30.5,
   },
   userLeftSection: {
     flexDirection: 'row',
@@ -76,7 +76,7 @@ const User = ({ navigation, user, onFollow }) => {
   return (
     <TouchableOpacity onPress={() => onUserPress(navigation, user.id)} activeOpacity={0.6} style={styles.userContainer}>
       <View style={styles.userLeftSection}>
-        <FastImage source={userAvatar} style={styles.userAvatar} />
+        <FastImage source={userAvatar} style={styles.userAvatar} borderRadius={30.5} />
         <View style={styles.userMetaContainer}>
           <Text style={styles.userNameText}>{user.name}</Text>
           <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>
