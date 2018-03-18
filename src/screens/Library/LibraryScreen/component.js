@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, Animated, TouchableWithoutFeedback } from
 import { StyledText } from 'kitsu/components/StyledText';
 import { PropTypes } from 'prop-types';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
-import { capitalize, isEmpty } from 'lodash';
+import { capitalize, isEmpty, camelCase } from 'lodash';
 import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import { styles } from './styles';
@@ -118,7 +118,7 @@ export class LibraryScreenComponent extends PureComponent {
     const statusText = (TAB_TEXT_MAPPING[status] && TAB_TEXT_MAPPING[status][type]) ||
       capitalize(status);
 
-    const count = meta && meta.statusCounts && meta.statusCounts[status];
+    const count = meta && meta.statusCounts && meta.statusCounts[camelCase(status)];
     const countText = (count && count.toString()) || '0';
 
     return `${statusText} (${countText})`;
