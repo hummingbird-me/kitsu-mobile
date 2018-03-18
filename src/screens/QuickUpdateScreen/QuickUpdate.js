@@ -142,8 +142,12 @@ class QuickUpdate extends Component {
     return true;
   }
 
-  onNavigateToSearch = (navigation) => {
-    navigation.navigate('Search');
+  onNavigateToSearch = (index) => {
+    this.props.navigation.navigate('Search', {}, {
+      type: 'Navigation/NAVIGATE',
+      routeName: 'SearchAll',
+      params: { initialPage: index },
+    });
   };
 
   onEditorChanged = (editorText) => {
@@ -573,7 +577,7 @@ class QuickUpdate extends Component {
 
   renderEmptyState = () => {
     const { loading, headerOpacity, filterMode } = this.state;
-    const { navigation } = this.props;
+    const searchIndex = filterMode === 'manga' ? 1 : 0;
 
     const emptyTitle =
       (filterMode === 'anime' && 'START WATCHING ANIME') ||
@@ -618,7 +622,7 @@ class QuickUpdate extends Component {
             />
             <TouchableOpacity
               style={styles.emptyStateButton}
-              onPress={() => this.onNavigateToSearch(navigation)}
+              onPress={() => this.onNavigateToSearch(searchIndex)}
             >
               <Text style={styles.emptyStateButtonText}>{buttonTitle}</Text>
             </TouchableOpacity>

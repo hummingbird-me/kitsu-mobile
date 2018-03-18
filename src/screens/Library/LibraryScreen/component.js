@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { capitalize, isEmpty, camelCase } from 'lodash';
 import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
-import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { styles } from './styles';
 import { LibraryScreenHeader } from '../LibraryScreenHeader';
 import { LibraryTabBar } from './tabbar';

@@ -109,7 +109,7 @@ export class GiphyModal extends PureComponent {
       console.log(e);
     }
   }
-  debouncedSearch = debounce(this.searchGIF, 250);
+  debouncedSearch = debounce(this.searchGIF, 150);
 
   renderItem = (item, spacing) => {
     const images = item.images;
