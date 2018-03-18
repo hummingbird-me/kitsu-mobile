@@ -66,7 +66,7 @@ class SearchScreen extends PureComponent {
       }
     });
   };
-  debouncedSearch = debounce(this.executeSearch, 250);
+  debouncedSearch = debounce(this.executeSearch, 150);
 
   navigateToMedia = (media) => {
     this.props.navigation.navigate('MediaPages', {
