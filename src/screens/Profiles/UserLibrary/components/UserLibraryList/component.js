@@ -113,7 +113,6 @@ export class UserLibraryList extends PureComponent {
       label: title,
       default: type,
       active: libraryType,
-      previousRoute: 'Search',
     });
   };
 
