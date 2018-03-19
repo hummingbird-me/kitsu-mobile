@@ -169,7 +169,7 @@ const loginUserFb = async (dispatch) => {
   const data = await AccessToken.getCurrentAccessToken();
 
   // Make sure we have a token
-  if (!data.accessToken) {
+  if (!data || !data.accessToken) {
     throw new Error('Invalid Facebook Access Token');
   }
 
