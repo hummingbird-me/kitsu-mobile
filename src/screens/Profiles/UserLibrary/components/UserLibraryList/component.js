@@ -3,11 +3,27 @@ import { View, ActivityIndicator, Dimensions, RefreshControl } from 'react-nativ
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { intersectionWith, isEqual } from 'lodash';
 import { PropTypes } from 'prop-types';
-import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
+import { UserLibraryListCard, LibraryEmptyState } from 'kitsu/screens/Profiles/UserLibrary';
 
 const LAYOUT_PROVIDER_TYPE = 'UserLibraryListCard';
 const LAYOUT_WIDTH = Dimensions.get('window').width;
 const LAYOUT_HEIGHT = 98;
+const SEARCH_MAP = {
+  anime: {
+    current: { title: 'Top Airing Anime', type: 'topAiring' },
+    planned: { title: 'Top Upcoming Anime', type: 'topUpcoming' },
+    completed: { title: 'Most Popular Anime', type: 'popular' },
+    on_hold: { title: 'Most Popular Anime', type: 'popular' },
+    dropped: { title: 'Most Popular Anime', type: 'popular' },
+  },
+  manga: {
+    current: { title: 'Top Publishing Manga', type: 'topAiring' },
+    planned: { title: 'Highest Rated Manga', type: 'highest' },
+    completed: { title: 'Most Popular Manga', type: 'popular' },
+    on_hold: { title: 'Most Popular Manga', type: 'popular' },
+    dropped: { title: 'Most Popular Manga', type: 'popular' },
+  },
+};
 
 export class UserLibraryList extends PureComponent {
   static propTypes = {
@@ -30,7 +46,7 @@ export class UserLibraryList extends PureComponent {
     onEndReached: () => {},
     loading: false,
     refreshing: false,
-  }
+  };
 
   state = {
     dataProvider: null,
@@ -90,9 +106,20 @@ export class UserLibraryList extends PureComponent {
     }
   }
 
+  navigateToSearch = () => {
+    const { libraryType, libraryStatus, navigation } = this.props;
+    const { title, type } = SEARCH_MAP[libraryType][libraryStatus];
+    navigation.navigate('SearchResults', {
+      label: title,
+      default: type,
+      active: libraryType,
+      previousRoute: 'Search',
+    });
+  };
+
   onSwipingItem = (isSwiping) => {
     this.setState({ isSwiping });
-  }
+  };
 
   renderFooter = () => {
     const { loading, refreshing } = this.props;
@@ -117,7 +144,15 @@ export class UserLibraryList extends PureComponent {
   );
 
   render() {
+    const { libraryType, libraryStatus, loading } = this.props;
     const { dataProvider, isSwiping } = this.state;
+    if (dataProvider.getSize() === 0 && !loading) {
+      return <LibraryEmptyState
+        type={libraryType}
+        status={libraryStatus}
+        onPress={this.navigateToSearch}
+      />;
+    }
     return (
       <RecyclerListView
         refreshControl={
