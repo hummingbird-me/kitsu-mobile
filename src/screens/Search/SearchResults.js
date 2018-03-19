@@ -84,7 +84,7 @@ class SearchResults extends Component {
 
   render() {
     // const { params } = this.props.navigation.state;
-    const { results, loading } = this.props;
+    const { results, loading, currentUser } = this.props;
     const data =
       !loading || results.length > 0
         ? this.props.results
@@ -106,6 +106,7 @@ class SearchResults extends Component {
           }
         }}
         style={styles.list}
+        currentUser={currentUser}
       />
     );
   }
@@ -116,18 +117,25 @@ SearchResults.propTypes = {
   navigation: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   search: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
 };
 
-const mapStateToProps = ({ anime }, ownProps) => {
+SearchResults.defaultProps = {
+  currentUser: null,
+};
+
+const mapStateToProps = ({ anime, user }, ownProps) => {
   const { resultsLoading } = anime;
+  const { currentUser } = user;
   const { navigation: { state: { params: { active } } } } = ownProps;
   const data = anime[`results${active}`].map(item => ({
     image: item.posterImage ? item.posterImage.small : 'none',
     titles: item.titles ? item.titles : {},
+    canonicalTitle: item.canonicalTitle,
     key: item.id,
     type: item.type,
     id: item.id,
   }));
-  return { results: data, loading: resultsLoading };
+  return { currentUser, results: data, loading: resultsLoading };
 };
 export default connect(mapStateToProps, { search })(SearchResults);

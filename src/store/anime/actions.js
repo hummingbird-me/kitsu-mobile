@@ -30,7 +30,7 @@ export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime')
   try {
     let query = {
       fields: {
-        [type]: 'posterImage,titles',
+        [type]: 'posterImage,titles,canonicalTitle',
       },
       filter,
       sort,
@@ -45,6 +45,7 @@ export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime')
         ...defaults[field],
       };
     }
+
     const results = await Kitsu.findAll([type], query);
     data = [...data, ...results];
 
@@ -58,7 +59,7 @@ export const getDefaults = (field, type = 'anime') => async (dispatch) => {
   try {
     let query = {
       fields: {
-        [type]: 'posterImage,titles',
+        [type]: 'posterImage,titles,canonicalTitle',
       },
     };
 
