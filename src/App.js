@@ -57,6 +57,8 @@ class App extends PureComponent {
   }
 
   onStoreUpdate() {
+    this.storeLoaded = true;
+
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
     // If the authentication state changed from true to false then take user to intro screen
@@ -90,12 +92,7 @@ class App extends PureComponent {
     this.authenticated = authenticated;
 
     // Check if we have a reset action that we need to perform
-    if (this.navigation && this.resetAction) {
-      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
-      // blocking children from rendering until state has been rehydrated.
-      this.navigation.dispatch(this.resetAction);
-      this.resetAction = null;
-    }
+    this.executeResetAction();
   }
 
   onIds(device) {
@@ -134,6 +131,10 @@ class App extends PureComponent {
       key: null,
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
+
+    if (this.storeLoaded) {
+      this.executeResetAction();
+    }
   }
 
   onLibraryEntryCreated = (data) => {
@@ -176,6 +177,16 @@ class App extends PureComponent {
   }
 
   resetAction = null;
+  storeLoaded = false;
+
+  executeResetAction() {
+    if (this.navigation && this.resetAction) {
+      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
+      // blocking children from rendering until state has been rehydrated.
+      this.navigation.dispatch(this.resetAction);
+      this.resetAction = null;
+    }
+  }
 
   render() {
     return (
