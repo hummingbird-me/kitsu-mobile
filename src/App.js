@@ -61,16 +61,11 @@ class App extends PureComponent {
     const authenticated = store.getState().auth.isAuthenticated;
     // If the authentication state changed from true to false then take user to intro screen
     if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
-      const resetAction = NavigationActions.reset({
+      this.resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Intro' })],
         key: null,
       });
-      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
-      // blocking children from rendering until state has been rehydrated.
-      // Another solution could be to `setTimeout` here but it seems `onStoreUpdate`
-      // is called twice which results in 2x navigation actions being dispatched.
-      if (this.navigation) { this.navigation.dispatch(resetAction); }
     }
 
     // Update sentry
@@ -93,6 +88,14 @@ class App extends PureComponent {
 
     // Set the new authentication value
     this.authenticated = authenticated;
+
+    // Check if we have a reset action that we need to perform
+    if (this.navigation && this.resetAction) {
+      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
+      // blocking children from rendering until state has been rehydrated.
+      this.navigation.dispatch(this.resetAction);
+      this.resetAction = null;
+    }
   }
 
   onIds(device) {
@@ -126,12 +129,11 @@ class App extends PureComponent {
      * Related issues: react-community/react-navigation
      *  #1127, #1715,
      */
-    const resetAction = NavigationActions.reset({
+    this.resetAction = NavigationActions.reset({
       index: 0,
       key: null,
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
-    if (this.navigation) { this.navigation.dispatch(resetAction); }
   }
 
   onLibraryEntryCreated = (data) => {
@@ -172,6 +174,8 @@ class App extends PureComponent {
     // Delete the store entry
     store.dispatch(profile.onLibraryEntryDelete(id, currentUser.id, type, status));
   }
+
+  resetAction = null;
 
   render() {
     return (
