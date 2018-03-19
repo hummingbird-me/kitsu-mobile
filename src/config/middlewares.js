@@ -1,7 +1,8 @@
 import { logoutUser, refreshTokens } from 'kitsu/store/auth/actions';
 import store from 'kitsu/store/config';
-import { isNull, isEmpty } from 'lodash';
+import { isNull, isEmpty, isArray } from 'lodash';
 import { Sentry } from 'react-native-sentry';
+import { getComputedTitle } from 'kitsu/utils/getTitleField';
 
 let tokenPromise = null;
 
@@ -102,4 +103,29 @@ export const kitsuRequestMiddleware = {
       throw error;
     }
   },
+};
+
+function applyTitle(item, currentUser) {
+  if (!item || !currentUser) { return; }
+  if ((item.type === 'anime' || item.type === 'manga') && item.canonicalTitle) {
+    item.canonicalTitle = getComputedTitle(currentUser, item);
+  }
+  if (item.anime) { applyTitle(item.anime, currentUser); }
+  if (item.manga) { applyTitle(item.manga, currentUser); }
+  if (item.media) { applyTitle(item.media, currentUser); }
+}
+
+export const titleMiddleware = {
+  name: 'title-middleware',
+  res: (payload) => {
+    const currentUser = store.getState().user.currentUser;
+    if (isArray(payload)) {
+      payload.forEach(item => {
+        applyTitle(item, currentUser);
+      });
+    } else {
+      applyTitle(payload, currentUser);
+    }
+    return payload;
+  }
 };
