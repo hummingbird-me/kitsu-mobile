@@ -22,7 +22,7 @@ const STATUS_MAP = {
     on_hold: 'you have on hold',
     dropped: 'you have dropped',
   },
-}
+};
 
 const BUTTON_MAP = {
   anime: {
