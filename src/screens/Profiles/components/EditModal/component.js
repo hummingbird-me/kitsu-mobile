@@ -171,6 +171,7 @@ export class EditModal extends Component {
       value={this.state.changeset.about}
       onChangeText={text => this.updateChanges('about', text)}
       style={{ textAlignVertical: 'top' }}
+      maxLength={500}
     />
   )
 
