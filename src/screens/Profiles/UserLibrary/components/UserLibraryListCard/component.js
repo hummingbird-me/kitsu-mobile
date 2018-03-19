@@ -10,7 +10,6 @@ import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import Swipeable from 'react-native-swipeable';
 import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
-import { getComputedTitle } from 'kitsu/utils/getTitleField';
 import { styles } from './styles';
 
 const USER_LIBRARY_EDIT_SCREEN = 'UserLibraryEdit';
@@ -189,7 +188,6 @@ export class UserLibraryListCard extends React.PureComponent {
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
     const progressPercentage = Math.floor((libraryEntry.progress / maxProgress) * 100);
-    const title = (mediaData && getComputedTitle(currentUser, mediaData)) || '-';
 
     return (
       <Swipeable
@@ -243,7 +241,7 @@ export class UserLibraryListCard extends React.PureComponent {
                   numberOfLines={1}
                   style={styles.titleText}
                 >
-                  {title}
+                  {mediaData.canonicalTitle}
                 </Text>
                 {canEdit && (
                   <SelectMenu
