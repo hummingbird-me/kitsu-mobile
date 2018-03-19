@@ -105,8 +105,8 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
 
   if (tokens) {
     try {
-      const user = await fetchCurrentUser(tokens)(dispatch, getState);
       dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
+      const user = await fetchCurrentUser(tokens)(dispatch, getState);
 
       /**
        * Now over here, aozora users will always have their status set to `aozora`, until they complete onboarding which will set their status to `registered`.

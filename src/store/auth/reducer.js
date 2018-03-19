@@ -53,6 +53,7 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         signingIn: false,
         isAuthenticated: false,
         loginError: action.payload,
+        tokens: [],
       };
     case types.GET_FBUSER:
       return {
