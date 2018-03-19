@@ -28,6 +28,9 @@ console.disableYellowBox = true;
 // tab useful again. If dev tools isn't running, this will have no effect.
 GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
+// A reset action for navigation
+let resetAction = null;
+
 class App extends PureComponent {
   componentWillMount() {
     OneSignal.inFocusDisplaying(2);
@@ -61,7 +64,7 @@ class App extends PureComponent {
     const authenticated = store.getState().auth.isAuthenticated;
     // If the authentication state changed from true to false then take user to intro screen
     if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
-      this.resetAction = NavigationActions.reset({
+      resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Intro' })],
         key: null,
@@ -90,11 +93,11 @@ class App extends PureComponent {
     this.authenticated = authenticated;
 
     // Check if we have a reset action that we need to perform
-    if (this.navigation && this.resetAction) {
+    if (this.navigation && resetAction) {
       // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
       // blocking children from rendering until state has been rehydrated.
-      this.navigation.dispatch(this.resetAction);
-      this.resetAction = null;
+      this.navigation.dispatch(resetAction);
+      resetAction = null;
     }
   }
 
@@ -129,17 +132,17 @@ class App extends PureComponent {
      * Related issues: react-community/react-navigation
      *  #1127, #1715,
      */
-    this.resetAction = NavigationActions.reset({
+    resetAction = NavigationActions.reset({
       index: 0,
       key: null,
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
 
-    if (this.navigation && this.resetAction) {
+    if (this.navigation && resetAction) {
       // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
       // blocking children from rendering until state has been rehydrated.
-      this.navigation.dispatch(this.resetAction);
-      this.resetAction = null;
+      this.navigation.dispatch(resetAction);
+      resetAction = null;
     }
   }
 
@@ -181,8 +184,6 @@ class App extends PureComponent {
     // Delete the store entry
     store.dispatch(profile.onLibraryEntryDelete(id, currentUser.id, type, status));
   }
-
-  resetAction = null;
 
   render() {
     return (
