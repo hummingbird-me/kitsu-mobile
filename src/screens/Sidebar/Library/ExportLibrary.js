@@ -39,7 +39,7 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
     <View style={[styles.item, { paddingHorizontal: 12 }]}>
       <FastImage
         style={{ width: 30, height: 30 }}
-        source={(defaultAvatar && { uri: posterImage.small || posterImage.large }) || defaultAvatar}
+        source={(defaultAvatar && posterImage && { uri: posterImage.small || posterImage.large }) || defaultAvatar}
       />
       <View style={{ flex: 1 }}>
         <View style={{ marginHorizontal: 12, justifyContent: 'center' }}>

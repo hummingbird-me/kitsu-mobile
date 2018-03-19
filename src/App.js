@@ -70,7 +70,7 @@ class App extends PureComponent {
       // blocking children from rendering until state has been rehydrated.
       // Another solution could be to `setTimeout` here but it seems `onStoreUpdate`
       // is called twice which results in 2x navigation actions being dispatched.
-      this.navigation && this.navigation.dispatch(resetAction);
+      if (this.navigation) { this.navigation.dispatch(resetAction); }
     }
 
     // Update sentry
@@ -108,7 +108,7 @@ class App extends PureComponent {
     console.log('Notification received: ', notification);
   }
 
-  onOpened(openResult) {
+  onOpened = (openResult) => {
     console.group('Opened Notification');
     console.log('Notification', openResult.notification);
     console.log('Message: ', openResult.notification.payload.body);
@@ -131,7 +131,7 @@ class App extends PureComponent {
       key: null,
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
-    this.navigation.dispatch(resetAction);
+    if (this.navigation) { this.navigation.dispatch(resetAction); }
   }
 
   onLibraryEntryCreated = (data) => {
