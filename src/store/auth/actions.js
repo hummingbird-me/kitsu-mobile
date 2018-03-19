@@ -173,9 +173,8 @@ const loginUserFb = async (dispatch) => {
     throw new Error('Invalid Facebook Access Token');
   }
 
-  let result = null;
   try {
-    result = await fetch(`${kitsuConfig.baseUrl}/oauth/token`, {
+    const result = await fetch(`${kitsuConfig.baseUrl}/oauth/token`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -187,33 +186,34 @@ const loginUserFb = async (dispatch) => {
         provider: 'facebook',
       }),
     });
+
+    // Create a graph request asking for user information with a callback to handle the response.
+    dispatch({ type: types.GET_FBUSER });
+    const infoRequest = new GraphRequest(
+      '/me',
+      {
+        httpMethod: 'GET',
+        version: 'v2.5',
+        parameters: {
+          fields: {
+            string: 'email, name, gender',
+          },
+        },
+      },
+      (error, fbdata) => {
+        if (error) {
+          dispatch({ type: types.GET_FBUSER_FAIL, payload: error });
+        } else {
+          dispatch({ type: types.GET_FBUSER_SUCCESS, payload: fbdata });
+        }
+      },
+    );
+    // Start the graph request.
+    new GraphRequestManager().addRequest(infoRequest).start();
+    return result;
   } catch (e) {
     throw e;
   }
-  // Create a graph request asking for user information with a callback to handle the response.
-  dispatch({ type: types.GET_FBUSER });
-  const infoRequest = new GraphRequest(
-    '/me',
-    {
-      httpMethod: 'GET',
-      version: 'v2.5',
-      parameters: {
-        fields: {
-          string: 'email, name, gender',
-        },
-      },
-    },
-    (error, fbdata) => {
-      if (error) {
-        dispatch({ type: types.GET_FBUSER_FAIL, payload: error });
-      } else {
-        dispatch({ type: types.GET_FBUSER_SUCCESS, payload: fbdata });
-      }
-    },
-  );
-  // Start the graph request.
-  new GraphRequestManager().addRequest(infoRequest).start();
-  return result;
 };
 
 export const logoutUser = () => (dispatch) => {
