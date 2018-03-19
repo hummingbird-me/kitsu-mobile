@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, FlatList, Platform } from 'react-native';
+import { View, FlatList, Platform } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { LoginManager } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
@@ -88,10 +89,10 @@ class RegistrationScreen extends React.Component {
     });
   };
 
-  keyExtractor = (item, index) => index;
+  keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
-    <Image
+    <FastImage
       source={(item.attributes && { uri: item.attributes.posterImage.large }) || placeholderImage}
       style={styles.squareImage}
     />

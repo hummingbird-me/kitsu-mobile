@@ -8,7 +8,7 @@ export const NavigationHeader = ({ navigation, title, leftIcon, rightIcon, ...pr
   <SimpleHeader
     titleContent={title}
     leftContent={leftIcon ? <Icon name={leftIcon} style={[styles.icon, { fontSize: 16 }]} /> : null}
-    leftAction={() => navigation.goBack()}
+    leftAction={() => navigation.goBack(null)}
     rightContent={rightIcon ? <Icon name={rightIcon} style={styles.icon} /> : null}
     {...props}
   />

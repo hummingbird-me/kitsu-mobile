@@ -3,7 +3,6 @@ import { View, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation';
-import Animation from 'lottie-react-native';
 
 import anim from 'kitsu/assets/animation/kitsu.json';
 import * as colors from 'kitsu/constants/colors';
@@ -19,7 +18,6 @@ class SplashScreen extends Component {
   }
 
   componentDidMount() {
-    this.animation.play();
     const { isAuthenticated, completed, refreshTokens, logoutUser, rehydratedAt } = this.props;
     if (rehydratedAt) {
       this.init(refreshTokens, logoutUser, isAuthenticated, completed);
@@ -82,19 +80,6 @@ class SplashScreen extends Component {
           backgroundColor: colors.darkPurple,
         }}
       >
-        <View>
-          <Animation
-            ref={(animation) => {
-              this.animation = animation;
-            }}
-            style={{
-              width: Dimensions.get('window').width,
-              height: Dimensions.get('window').height,
-            }}
-            loop
-            source={anim}
-          />
-        </View>
       </View>
     );
   }

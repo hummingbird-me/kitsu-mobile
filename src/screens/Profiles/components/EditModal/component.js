@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Modal, Image, TouchableOpacity, ImageEditor, ImageStore } from 'react-native';
+import { View, Modal, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
@@ -106,7 +107,7 @@ export class EditModal extends Component {
             this.onMediaSelect('coverImage', originalCoverImageDimensions.width, originalCoverImageDimensions.height)
           }
         >
-          <Image
+          <FastImage
             style={styles.profileCover}
             source={cover}
           />
@@ -124,9 +125,10 @@ export class EditModal extends Component {
     return (
       <View style={styles.profileImageWrapper}>
         <TouchableOpacity activeOpacity={0.6} onPress={() => this.onMediaSelect('avatar', 300, 300)}>
-          <Image
+          <FastImage
             style={styles.profileImage}
             source={avatar}
+            borderRadius={40}
           />
         </TouchableOpacity>
       </View>
@@ -169,6 +171,7 @@ export class EditModal extends Component {
       value={this.state.changeset.about}
       onChangeText={text => this.updateChanges('about', text)}
       style={{ textAlignVertical: 'top' }}
+      maxLength={500}
     />
   )
 

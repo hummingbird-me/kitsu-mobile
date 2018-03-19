@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, View, Text, Image } from 'react-native';
+import { Modal, View, Text } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { Spinner, Button, Container, Content } from 'native-base';
 import PropTypes from 'prop-types';
@@ -14,7 +15,7 @@ class HomeScreen extends Component {
     tabBarIcon: (
       { tintColor }, // <Icon ios="ios-body" android="md-body" style={{ fontSize: 20, color: tintColor }} />
     ) => (
-      <Image
+      <FastImage
         source={require('kitsu/assets/img/tabbar_icons/home.png')}
         style={{ tintColor, width: 20, height: 21 }}
       />
@@ -41,7 +42,7 @@ class HomeScreen extends Component {
             : <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row' }}>
                 {currentUser.avatar
-                    ? <Image
+                    ? <FastImage
                       style={{ width: 100, height: 100, borderRadius: 50 }}
                       source={{ uri: currentUser.avatar.medium.split('?')[0] }}
                     />

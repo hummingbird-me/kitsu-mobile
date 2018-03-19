@@ -304,7 +304,6 @@ export class Post extends PureComponent {
                     post={post}
                     latestComments={latestComments}
                     hideEmbeds={nsfw && !overlayRemoved}
-                    overlayColor={colors.offWhite}
                     isTruncated
                     navigation={navigation}
                   />

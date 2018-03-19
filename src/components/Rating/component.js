@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Image, Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
@@ -278,38 +279,38 @@ export class Rating extends PureComponent {
           disabled={this.props.disabled}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={noRatingStarImage} style={this.styleForRatingTwenty(ratingTwenty, 'no-rating-star')} />
-            <Image source={starImage} style={this.styleForRatingTwenty(ratingTwenty, 'star')} />
+            <FastImage source={noRatingStarImage} style={this.styleForRatingTwenty(ratingTwenty, 'no-rating-star')} />
+            <FastImage source={starImage} style={this.styleForRatingTwenty(ratingTwenty, 'star')} />
 
             <TouchableOpacity
               onPress={() => this.toggleModal('no-rating')}
               disabled={this.props.disabled}
             >
-              <Image source={noRatingImage} style={this.styleForRatingTwenty(ratingTwenty, 'no-rating')} />
+              <FastImage source={noRatingImage} style={this.styleForRatingTwenty(ratingTwenty, 'no-rating')} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal('awful')}
               disabled={this.props.disabled}
             >
-              <Image source={awfulImage} style={this.styleForRatingTwenty(ratingTwenty, 'awful')} />
+              <FastImage source={awfulImage} style={this.styleForRatingTwenty(ratingTwenty, 'awful')} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal('meh')}
               disabled={this.props.disabled}
             >
-              <Image source={mehImage} style={this.styleForRatingTwenty(ratingTwenty, 'meh')} />
+              <FastImage source={mehImage} style={this.styleForRatingTwenty(ratingTwenty, 'meh')} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal('good')}
               disabled={this.props.disabled}
             >
-              <Image source={goodImage} style={this.styleForRatingTwenty(ratingTwenty, 'good')} />
+              <FastImage source={goodImage} style={this.styleForRatingTwenty(ratingTwenty, 'good')} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal('great')}
               disabled={this.props.disabled}
             >
-              <Image source={greatImage} style={this.styleForRatingTwenty(ratingTwenty, 'great')} />
+              <FastImage source={greatImage} style={this.styleForRatingTwenty(ratingTwenty, 'great')} />
             </TouchableOpacity>
 
             {this.textForRatingTwenty(ratingTwenty)}

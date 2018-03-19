@@ -39,7 +39,6 @@ export class CommentTextInput extends PureComponent {
 
   state = {
     gifModalVisible: false,
-    textInputHeight: null,
   }
 
   onGifSelect = (gif) => {
@@ -61,7 +60,7 @@ export class CommentTextInput extends PureComponent {
       multiline,
     } = this.props;
 
-    const { gifModalVisible, textInputHeight } = this.state;
+    const { gifModalVisible } = this.state;
 
     return (
       <Layout.RowWrap alignItems="center">
@@ -81,20 +80,6 @@ export class CommentTextInput extends PureComponent {
               value={comment}
               underlineColorAndroid="transparent"
               multiline={multiline}
-              height={Platform.select({ ios: null, android: (textInputHeight || 0) })}
-              onContentSizeChange={({ nativeEvent }) => {
-                // On android the text box doesn't auto grow, so we have to manually set the height
-                // BUG: Once Max height has been reached, this will not allow scroll on android
-                if (multiline && Platform.OS === 'android') {
-                  this.setState({ textInputHeight: nativeEvent.contentSize.height });
-                }
-              }}
-              onSubmitEditing={() => {
-                if (multiline && !comment.endsWith('\n')) {
-                  const updatedContent = `${comment}\n`;
-                  onCommentChanged(updatedContent);
-                }
-              }}
               blurOnSubmit={!multiline}
             />
             <TouchableOpacity

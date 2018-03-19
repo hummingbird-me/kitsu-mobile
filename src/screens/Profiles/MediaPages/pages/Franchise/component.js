@@ -36,12 +36,14 @@ const renderItem = (item, navigation) => {
   let subtitle = `${type} · ${ROLE_LOOKUP_TABLE[item.role]}`;
   subtitle = !!year ? `${subtitle} · ${year}` : subtitle;
 
-  const onPress = () => (
+  const onPress = () => {
+    if (!item || !item.destination) return;
     navigation.navigate('MediaPages', {
       mediaId: item.destination.id,
       mediaType: item.destination.type,
-    })
-  );
+    });
+  };
+
   return (
     <TouchableOpacity onPress={onPress}>
       <MediaRow
@@ -55,15 +57,27 @@ const renderItem = (item, navigation) => {
   );
 };
 
-export const component = ({ media: { mediaRelationships }, navigation }) => (
-  <TabContainer light padded>
-    <FlatList
-      data={mediaRelationships}
-      ListHeaderComponent={() => <TabHeader title="Franchise" contentDark />}
-      renderItem={({ item }) => renderItem(item, navigation)}
-    />
-  </TabContainer>
-);
+export const component = ({ media: { mediaRelationships }, navigation }) => {
+  const relationships = mediaRelationships || [];
+  const sorted = relationships.sort((a, b) => {
+    const aStart = a.destination && a.destination.startDate;
+    const bStart = b.destination && b.destination.startDate;
+
+    const aStartDate = (aStart && Date.parse(aStart)) || null;
+    const bStartDate = (bStart && Date.parse(bStart)) || null;
+    const defaultDate = new Date(0);
+
+    return (aStartDate || defaultDate) - (bStartDate || defaultDate);
+  });
+  return (
+    <TabContainer light>
+      <FlatList
+        data={sorted}
+        renderItem={({ item }) => renderItem(item, navigation)}
+      />
+    </TabContainer>
+  );
+};
 
 component.propTypes = {
   media: PropTypes.shape({

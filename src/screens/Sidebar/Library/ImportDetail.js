@@ -1,16 +1,17 @@
 import React from 'react';
-import { View, Image, TextInput, Text, Modal } from 'react-native';
+import { View, TextInput, Text, Modal } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
 import PropTypes from 'prop-types';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
+import { navigationOptions, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
 class ImportDetail extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.item.title,
-  });
+  static navigationOptions = ({ navigation }) => (
+    navigationOptions(navigation, navigation.state.params.item.title)
+  );
 
   state = {
     showModal: false,
@@ -68,7 +69,7 @@ class ImportDetail extends React.Component {
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <Image source={item.image} style={styles.cardLogo} />
+                <FastImage source={item.image} style={styles.cardLogo} />
               </View>
               <Text style={styles.cardText}>
                 Enter your username below to import your existing anime and manga progress.

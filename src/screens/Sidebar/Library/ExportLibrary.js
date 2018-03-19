@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,10 +9,10 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { navigationOptions, SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
-const keyExtractor = (item, index) => index;
+const keyExtractor = (item, index) => index.toString();
 
 const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
   let icon = null;
@@ -36,7 +37,7 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
   }
   return (
     <View style={[styles.item, { paddingHorizontal: 12 }]}>
-      <Image
+      <FastImage
         style={{ width: 30, height: 30 }}
         source={(defaultAvatar && { uri: posterImage.small || posterImage.large }) || defaultAvatar}
       />
@@ -55,16 +56,14 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
         </View>
       </View>
       <View>
-        <Image source={icon} style={[styles.itemImage, { right: -2 }]} />
+        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} />
       </View>
     </View>
   );
 };
 
 class ExportLibrary extends React.Component {
-  static navigationOptions = {
-    title: 'MyAnimeList Sync',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'MyAnimeList Sync');
 
   state = {
     loading: true,
@@ -239,7 +238,7 @@ class ExportLibrary extends React.Component {
         >
           <View style={{ padding: 8 }}>
             <View style={{ alignItems: 'center' }}>
-              <Image
+              <FastImage
                 source={myanimelist}
                 style={styles.cardLogo}
               />
@@ -308,11 +307,11 @@ class ExportLibrary extends React.Component {
       <View style={styles.containerStyle}>
         <View style={[styles.card, { flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'space-between' }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-            <Image source={pending} style={{ width: 30, height: 30 }} />
+            <FastImage source={pending} style={{ width: 30, height: 30 }} />
             <Text style={{ marginLeft: 8, fontFamily: 'OpenSans', fontWeight: '500' }}>{linkedAccount.externalUserId}</Text>
           </View>
           <TouchableOpacity onPress={this.onDisconnectButtonPressed} style={{}}>
-            <Image source={failed} style={{ width: 16, height: 16 }} />
+            <FastImage source={failed} style={{ width: 16, height: 16 }} />
           </TouchableOpacity>
         </View>
         <SidebarTitle title={'Entries'} />

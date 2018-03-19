@@ -4,7 +4,6 @@ import {
   Alert,
   Animated,
   Dimensions,
-  Image,
   Text,
   RefreshControl,
   View,
@@ -12,6 +11,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -25,6 +25,7 @@ import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { isEmpty, capitalize } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
@@ -107,6 +108,8 @@ class QuickUpdate extends Component {
   }
 
   componentDidMount() {
+    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
+    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
     this.props.navigation.setParams({
       tabListener: async ({ previousScene, scene, jumpToIndex }) => {
         // capture tap events and detect double press to fetch notifications
@@ -123,6 +126,11 @@ class QuickUpdate extends Component {
     });
   }
 
+  componentWillUnmount() {
+    this.unsubscribeUpdate();
+    this.unsubscribeDelete();
+  }
+
   shouldComponentUpdate(_nextProps, nextState) {
     // Feed has finished loading
     if (this.state.isLoadingFeed && !nextState.isLoadingFeed) {
@@ -134,8 +142,12 @@ class QuickUpdate extends Component {
     return true;
   }
 
-  onNavigateToSearch = (navigation) => {
-    navigation.navigate('Search');
+  onNavigateToSearch = (index) => {
+    this.props.navigation.navigate('Search', {}, {
+      type: 'Navigation/NAVIGATE',
+      routeName: 'SearchAll',
+      params: { initialPage: index },
+    });
   };
 
   onEditorChanged = (editorText) => {
@@ -147,6 +159,67 @@ class QuickUpdate extends Component {
     if (media && navigation) {
       navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type });
     }
+  }
+
+  onLibraryEntryUpdated = (data) => {
+    // Check to see if we got this event from something other than quick update
+    const { id, source } = data;
+    if (source === KitsuLibraryEventSource.QUICK_UPDATE) return;
+
+    // Find the entry
+    const index = this.state.library.findIndex(e => e.id == id);
+    if (index > -1) {
+      this.updateEntryAtIndex(index);
+    }
+  }
+
+  async updateEntryAtIndex(index) {
+    if (index >= this.state.library.length || index < 0) return;
+    // Fetch the entry
+    // We need to do this because the new entry that we recieved may not have the `nextUnit` or `unit` set
+    const library = [...this.state.library];
+
+    let { filterMode } = this.state;
+    filterMode = filterMode === 'all' ? undefined : filterMode;
+
+    const fields = getRequestFields(filterMode);
+    const record = await Kitsu.find('libraryEntries', library[index].id, {
+      fields,
+      include: this._requestIncludeFields,
+    });
+
+    library[index] = record;
+    this.setState({ library }, () => {
+      // Reset the feed
+      if (this.carousel.currentIndex === index) {
+        this.resetFeed(() => this.fetchEpisodeFeed());
+      }
+    });
+  }
+
+  onLibraryEntryDeleted = (data) => {
+    // Check to see if we got this event from something other than Quick update
+    const { id, source } = data;
+    if (source === KitsuLibraryEventSource.QUICK_UPDATE) return;
+
+    // Find the entry
+    const index = this.state.library.findIndex(e => e.id == id);
+    // Remove from library and adjust carousel if necessary
+    if (index > -1) {
+      this.deleteEntryAtIndex(index);
+    }
+  }
+
+  deleteEntryAtIndex(index) {
+    if (index >= this.state.library.length || index < 0) return;
+
+    const library = [...this.state.library];
+
+    // Remove from library
+    library.splice(index, 1);
+    this.setState({ library }, () => {
+      this.resetFeed(() => this.fetchEpisodeFeed());
+    });
   }
 
   rateEntry = async (ratingTwenty) => {
@@ -165,8 +238,9 @@ class QuickUpdate extends Component {
           id: this.props.currentUser.id,
         },
       }, {
-        include: this._requestIncludeFields
+        include: this._requestIncludeFields,
       });
+      KitsuLibrary.onLibraryEntryUpdate(entry, record, media.type, KitsuLibraryEventSource.QUICK_UPDATE);
       this.updateLibraryEntry(record);
     } catch (error) {
       console.log('Error rating library entry:', error);
@@ -384,6 +458,7 @@ class QuickUpdate extends Component {
 
   markComplete = async (libraryEntry) => {
     this.setLibraryEntryLoading();
+    const media = getMedia(libraryEntry);
 
     const record = await Kitsu.update('libraryEntries', {
       id: libraryEntry.id,
@@ -395,12 +470,13 @@ class QuickUpdate extends Component {
         { text: 'OK', style: 'cancel' },
       ]);
     } else {
+      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, media.type, KitsuLibraryEventSource.QUICK_UPDATE);
       this.updateLibraryEntry(record);
       this.resetFeed(() => this.fetchEpisodeFeed());
     }
   };
 
-  updateTextAndToggle = async (gif) => {
+  updateTextAndToggle = async (gif, nsfw, spoiler) => {
     // Restore any previous text, and then toggle the editor.
     const { library, editorText } = this.state;
 
@@ -420,6 +496,8 @@ class QuickUpdate extends Component {
     const current = library[this.carousel.currentIndex];
     try {
       const post = await Kitsu.create('posts', {
+        spoiler,
+        nsfw,
         content: updatedText.trim(),
         media: {
           id: getMedia(current).id, type: current.anime ? 'anime' : 'manga',
@@ -499,7 +577,7 @@ class QuickUpdate extends Component {
 
   renderEmptyState = () => {
     const { loading, headerOpacity, filterMode } = this.state;
-    const { navigation } = this.props;
+    const searchIndex = filterMode === 'manga' ? 1 : 0;
 
     const emptyTitle =
       (filterMode === 'anime' && 'START WATCHING ANIME') ||
@@ -544,7 +622,7 @@ class QuickUpdate extends Component {
             />
             <TouchableOpacity
               style={styles.emptyStateButton}
-              onPress={() => this.onNavigateToSearch(navigation)}
+              onPress={() => this.onNavigateToSearch(searchIndex)}
             >
               <Text style={styles.emptyStateButtonText}>{buttonTitle}</Text>
             </TouchableOpacity>
@@ -588,7 +666,7 @@ class QuickUpdate extends Component {
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <Image source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
+        <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
         <Animated.Image
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
@@ -709,7 +787,7 @@ const StatusComponent = ({ title, text, image }) => (
   <View style={styles.statusWrapper}>
     <Text style={styles.statusTitle}>{title}</Text>
     <Text style={styles.statusText}>{text}</Text>
-    <Image style={styles.statusImage} source={image} />
+    <FastImage style={styles.statusImage} source={image} />
   </View>
 );
 

@@ -1,29 +1,19 @@
 import * as React from 'react';
-import { Image, Platform } from 'react-native';
+import { Platform } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
-import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
-import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
-import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import DismissableStackNavigator from 'kitsu/components/DismissableStackNavigator';
 import quickUpdateTabBarImage from 'kitsu/assets/img/tabbar_icons/update.png';
 import navigationOptions from './navigationOptions';
+import { commonRoutes } from './common';
 
 const QuickUpdateStack = DismissableStackNavigator(
   {
     QuickUpdate: {
       screen: QuickUpdateScreen,
     },
-    ProfilePages: {
-      screen: ProfilePages,
-    },
-    MediaPages: {
-      screen: MediaPages,
-    },
-    // @TODO: Handle all the sub-profile pages, should work on an easier way than c/p.
-    PostDetails: {
-      screen: PostDetails,
-    },
+    ...commonRoutes,
   },
   {
     navigationOptions: () => ({
@@ -31,7 +21,7 @@ const QuickUpdateStack = DismissableStackNavigator(
       header: null,
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ tintColor }) => (
-        <Image source={quickUpdateTabBarImage} style={{ tintColor, width: 24, height: 24 }} />
+        <FastImage source={quickUpdateTabBarImage} style={{ tintColor, width: 24, height: 24 }} />
       ),
     }),
   },

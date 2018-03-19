@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,13 +9,13 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
-import { SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { navigationOptions, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
     <View style={{ justifyContent: 'center' }}>
-      <Image source={image} style={styles.itemLogo} />
+      <FastImage source={image} style={styles.itemLogo} />
       <Text style={styles.hintText}>
         {details}
       </Text>
@@ -75,16 +76,14 @@ const ImportItem = ({ kind, status, date, total }) => {
         </Text>
       </View>
       <View>
-        <Image source={icon} style={[styles.itemImage, { right: -2 }]} />
+        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} />
       </View>
     </View>
   );
 };
 
 class ImportLibrary extends React.Component {
-  static navigationOptions = {
-    title: 'Import Library',
-  };
+  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Import Library');
 
   state = {
     imports: [],
@@ -186,7 +185,7 @@ class ImportLibrary extends React.Component {
                 target: '',
               },
             ]}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <MediaItem
                 onPress={() => this.onMediaItemPressed(item)}
@@ -202,7 +201,7 @@ class ImportLibrary extends React.Component {
         <SidebarTitle title={'Previous Imports'} />
         <FlatList
           data={imports}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <ImportItem
               total={item.total}

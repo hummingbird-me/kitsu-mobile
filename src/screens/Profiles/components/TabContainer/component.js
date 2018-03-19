@@ -4,14 +4,16 @@ import { View } from 'react-native';
 import { styles } from './styles';
 
 export const TabContainer = ({ light, padded, ...props }) => (
-  <View
-    style={[
-      styles.tabContainer,
-      light && styles.tabContainer__light,
-      padded && styles.tabContainer__padded,
-    ]}
-    {...props}
-  />
+  <View style={styles.container}>
+    <View
+      style={[
+        styles.tabContainer,
+        light && styles.tabContainer__light,
+        padded && styles.tabContainer__padded,
+      ]}
+      {...props}
+    />
+  </View>
 );
 
 TabContainer.propTypes = {

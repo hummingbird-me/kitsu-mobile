@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, TouchableOpacity, SectionList, Switch } from 'r
 import { connect } from 'react-redux';
 import { Button, Container, Content, Icon, Left, Right, Footer } from 'native-base';
 import PropTypes from 'prop-types';
-import ModalPicker from 'react-native-modal-picker';
+import ModalSelector from 'react-native-modal-selector';
 import forOwn from 'lodash/forOwn';
 import isObjectLike from 'lodash/isObjectLike';
 import isEmpty from 'lodash/isEmpty';
@@ -177,7 +177,7 @@ class SearchFilter extends Component {
 
     if (['avail', 'release', 'released', 'watched', 'plan'].includes(key)) {
       return (
-        <ModalPicker
+        <ModalSelector
           data={pickerData[key]}
           initValue={this.state[key].label}
           onChange={(option) => {
@@ -197,7 +197,7 @@ class SearchFilter extends Component {
               <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
             </Right>
           </View>
-        </ModalPicker>
+        </ModalSelector>
       );
     }
     const { categories } = this.state;
@@ -293,7 +293,7 @@ class SearchFilter extends Component {
                     { key: 'categories', title: 'Category' },
                     { key: 'released', title: 'Released' },
                     { key: 'length', title: 'Length' },
-                    { key: 'avail', title: 'Availabitily' },
+                    { key: 'avail', title: 'Availability' },
                   ],
                   title: 'Browse by',
                   key: 'a1',

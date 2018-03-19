@@ -24,7 +24,7 @@ import CardActivity from 'kitsu/components/Card/CardActivity';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
 import ResultsList from 'kitsu/screens/Search/Lists/ResultsList';
-import ParallaxScrollView from 'react-native-parallax-scroll-view';
+// import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
 import {
   fetchProfile,

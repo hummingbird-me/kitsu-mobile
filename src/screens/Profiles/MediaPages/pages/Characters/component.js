@@ -25,7 +25,6 @@ class Characters extends PureComponent {
   render() {
     return (
       <TabContainer light padded>
-        <TabHeader title="Characters" contentDark />
         {this.renderCharacters()}
       </TabContainer>
     );

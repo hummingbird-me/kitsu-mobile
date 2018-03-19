@@ -1,4 +1,4 @@
-import { REHYDRATE } from 'redux-persist/constants';
+import { REHYDRATE } from 'redux-persist';
 import * as types from 'kitsu/store/types';
 
 const INITIAL_STATE = {
@@ -53,6 +53,7 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         signingIn: false,
         isAuthenticated: false,
         loginError: action.payload,
+        tokens: [],
       };
     case types.GET_FBUSER:
       return {
@@ -84,9 +85,10 @@ export const authReducer = (state = INITIAL_STATE, action) => {
     case types.LOGOUT_USER:
       return INITIAL_STATE;
     case REHYDRATE:
+      const auth = (action.payload && action.payload.auth) || {};
       return {
         ...state,
-        ...action.payload.auth,
+        ...auth,
         loginError: null,
         signingIn: false,
         fbError: '',

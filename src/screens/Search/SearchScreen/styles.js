@@ -1,10 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 
 // Don't need to check for iPhone X as the container is the one that will pad the content with it.
 const TABBAR_HEIGHT = (navigationBarHeight - 1) + statusBarHeight;
+const WINDOW_WIDTH = Dimensions.get('window').width;
 
 export const styles = StyleSheet.create({
   container: {
@@ -12,9 +13,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingTop: isX ? paddingX : 0,
   },
-  sceneContainer: {
-    flex: 1,
-    marginBottom: 10,
+  contentContainer: {
+    width: WINDOW_WIDTH,
   },
   scrollView: {
     backgroundColor: colors.listBackPurple,
@@ -35,29 +35,15 @@ export const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderLeftWidth: 0,
     height: TABBAR_HEIGHT,
-    justifyContent: 'flex-end',
-    shadowColor: 'black',
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flexDirection: 'row',
     marginVertical: 0,
   },
   tabBarItem: {
-    // Tab bar adds a padding of 8 around the item.
-    height: navigationBarHeight - 16,
-  },
-  textContainer: {
+    height: navigationBarHeight,
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  tabBarTextActive: {
-    color: colors.red,
-    fontWeight: 'bold',
-  },
-  tabBarText: {
-    color: '#ffffff',
-    fontFamily: 'OpenSans',
-    fontWeight: '600',
-    fontSize: 12,
+    justifyContent: 'center',
   },
 });

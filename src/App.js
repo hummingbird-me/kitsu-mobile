@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { Platform, View, StatusBar, Linking, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'
 import { identity, isNull, isEmpty } from 'lodash';
 import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
@@ -11,10 +12,12 @@ import PropTypes from 'prop-types';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
-import store from './store/config';
+import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import store, { persistor } from './store/config';
 import Root from './Router';
 import * as types from './store/types';
 import { markNotifications } from './store/feed/actions';
+import * as profile from './store/profile/actions';
 
 // eslint-disable-next-line
 console.disableYellowBox = true;
@@ -33,6 +36,9 @@ class App extends PureComponent {
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     this.unsubscribe = store.subscribe(this.onStoreUpdate);
+    this.unsubscribeCreate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, this.onLibraryEntryCreated);
+    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
+    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
   }
 
   componentDidMount() {
@@ -45,12 +51,14 @@ class App extends PureComponent {
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
     this.unsubscribe();
+    this.unsubscribeCreate();
+    this.unsubscribeUpdate();
+    this.unsubscribeDelete();
   }
 
   onStoreUpdate() {
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
-
     // If the authentication state changed from true to false then take user to intro screen
     if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
       const resetAction = NavigationActions.reset({
@@ -58,7 +66,11 @@ class App extends PureComponent {
         actions: [NavigationActions.navigate({ routeName: 'Intro' })],
         key: null,
       });
-      this.navigation.dispatch(resetAction);
+      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
+      // blocking children from rendering until state has been rehydrated.
+      // Another solution could be to `setTimeout` here but it seems `onStoreUpdate`
+      // is called twice which results in 2x navigation actions being dispatched.
+      this.navigation && this.navigation.dispatch(resetAction);
     }
 
     // Update sentry
@@ -122,10 +134,51 @@ class App extends PureComponent {
     this.navigation.dispatch(resetAction);
   }
 
+  onLibraryEntryCreated = (data) => {
+    const { currentUser } = store.getState().user;
+
+    if (!data || !currentUser || !currentUser.id) return;
+
+    // Check to see if we got this event from something other than 'store'
+    const { status, type, entry, source } = data;
+    if (!entry || source === KitsuLibraryEventSource.STORE) return;
+
+    // Add  the store entry
+    store.dispatch(profile.onLibraryEntryCreate(entry, currentUser.id, type, status));
+  }
+
+  onLibraryEntryUpdated = (data) => {
+    const { currentUser } = store.getState().user;
+
+    if (!data || !currentUser || !currentUser.id) return;
+
+    // Check to see if we got this event from something other than 'store'
+    const { type, oldEntry, newEntry, source } = data;
+    if (!oldEntry || !newEntry || source === KitsuLibraryEventSource.STORE) return;
+
+    // Update the store entry
+    store.dispatch(profile.onLibraryEntryUpdate(currentUser.id, type, oldEntry.status, newEntry));
+  }
+
+  onLibraryEntryDeleted = (data) => {
+    const { currentUser } = store.getState().user;
+
+    if (!data || !currentUser || !currentUser.id) return;
+
+    // Check to see if we got this event from something other than 'store'
+    const { id, type, status, source } = data;
+    if (!id || source === KitsuLibraryEventSource.STORE) return;
+
+    // Delete the store entry
+    store.dispatch(profile.onLibraryEntryDelete(id, currentUser.id, type, status));
+  }
+
   render() {
     return (
       <Provider store={store}>
-        <ConnectedRoot />
+        <PersistGate loading={null} persistor={persistor}>
+          <ConnectedRoot />
+        </PersistGate>
       </Provider>
     );
   }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
@@ -26,12 +27,12 @@ ItemSeparator.defaultProps = {
   underlineImage: true,
 };
 
-export const SidebarListItem = ({ image, imageURL, title, onPress }) => (
-  <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.item}>
+export const SidebarListItem = ({ image, imageURL, title, onPress, style }) => (
+  <TouchableOpacity activeOpacity={1} onPress={onPress} style={[styles.item, style]}>
     <View style={styles.leftContentWrapper}>
-      {(image && <Image source={image} style={styles.image} />) ||
+      {(image && <FastImage source={image} style={styles.image} />) ||
         (imageURL &&
-          <Image
+          <FastImage
             source={{ uri: imageURL }}
             style={[styles.image, { resizeMode: 'stretch', borderRadius: 4 }]}
           />)}
@@ -55,6 +56,7 @@ SidebarListItem.propTypes = {
   image: PropTypes.number,
   imageURL: PropTypes.string,
   onPress: PropTypes.func,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
 SidebarListItem.defaultProps = {
@@ -62,6 +64,7 @@ SidebarListItem.defaultProps = {
   image: null,
   imageURL: null,
   onPress: null,
+  style: null,
 };
 
 const styles = StyleSheet.create({

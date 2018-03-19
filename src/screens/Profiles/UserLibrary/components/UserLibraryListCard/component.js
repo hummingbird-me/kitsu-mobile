@@ -1,7 +1,8 @@
 import * as React from 'react';
 import debounce from 'lodash/debounce';
 import { PropTypes } from 'prop-types';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { Counter } from 'kitsu/components/Counter';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
@@ -31,56 +32,59 @@ const HEADER_TEXT_MAPPING = {
   dropped: { anime: 'Dropped', manga: 'Dropped' },
 };
 
-export class UserLibraryListCard extends React.Component {
+export class UserLibraryListCard extends React.PureComponent {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     libraryEntry: PropTypes.object.isRequired,
-    libraryStatus: PropTypes.string.isRequired,
-    libraryType: PropTypes.string.isRequired,
+    libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
+    libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
     navigate: PropTypes.func.isRequired,
     onSwipingItem: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
+    deleteUserLibraryEntry: PropTypes.func.isRequired,
   }
 
   state = {
     isUpdating: false,
     libraryStatus: this.props.libraryEntry.status,
     progress: this.props.libraryEntry.progress,
-    progressPercentage: Math.floor(
-      (this.props.libraryEntry.progress / this.getMaxProgress()) * 100,
-    ),
     ratingTwenty: this.props.libraryEntry.ratingTwenty,
     isSliderActive: false,
   }
 
   componentWillReceiveProps(nextProps) {
     const { libraryEntry, libraryType } = nextProps;
-    if (this.props.libraryEntry.id !== libraryEntry.id) {
-      const mediaData = libraryEntry[libraryType];
-      const maxProgress = mediaData.episodeCount || mediaData.chapterCount;
+    const currentEntry = this.props.libraryEntry;
 
+    const differentId = currentEntry.id !== libraryEntry.id;
+    const differentProgress = currentEntry.progress !== libraryEntry.progress;
+    const differentStatus = currentEntry.status !== libraryEntry.status;
+    const differentRating = currentEntry.ratingTwenty !== libraryEntry.ratingTwenty;
+
+    // Update state if library entry has changed
+    if (
+      differentId ||
+      differentProgress ||
+      differentStatus ||
+      differentRating
+    ) {
       this.setState({
         libraryStatus: libraryEntry.status,
         progress: libraryEntry.progress,
-        progressPercentage: Math.floor(
-          (libraryEntry.progress / maxProgress) * 100,
-        ),
-        ratingTwenty: libraryEntry.ratingTwenty
+        ratingTwenty: libraryEntry.ratingTwenty,
       });
     }
   }
 
   onProgressValueChanged = (newProgress) => {
-    const maxProgress = this.getMaxProgress();
-    const progressPercentage = Math.floor((newProgress / maxProgress) * 100);
     this.setState({
-      progressPercentage,
       progress: newProgress,
     }, this.debounceSave);
   }
 
   onRatingChanged = (ratingTwenty) => {
+    this.onSwipeRelease();
     this.setState({ ratingTwenty }, this.debounceSave);
   }
 
@@ -140,12 +144,18 @@ export class UserLibraryListCard extends React.Component {
     const { libraryEntry, libraryType } = this.props;
     const { libraryStatus: newStatus, progress, ratingTwenty } = this.state;
 
-    this.props.updateUserLibraryEntry(libraryType, libraryEntry.status, {
-      id: this.props.libraryEntry.id,
-      progress,
-      ratingTwenty,
-      status: newStatus,
-    });
+    if (newStatus === 'remove') {
+      if (this.props.deleteUserLibraryEntry) {
+        this.props.deleteUserLibraryEntry(libraryEntry.id, libraryType, libraryEntry.status);
+      }
+    } else {
+      this.props.updateUserLibraryEntry(libraryType, libraryEntry.status, {
+        id: libraryEntry.id,
+        progress,
+        ratingTwenty,
+        status: newStatus,
+      });
+    }
   }
 
   debounceSave = debounce(this.saveEntry, 200);
@@ -159,21 +169,25 @@ export class UserLibraryListCard extends React.Component {
   // so update them here and then proxy pass to the update function.
   updateUserLibraryEntry = async (type, status, updates) => {
     const { progress, ratingTwenty } = updates;
-    const progressPercentage = Math.floor((progress / this.getMaxProgress()) * 100);
     this.setState({
       progress,
-      progressPercentage,
-      ratingTwenty
+      ratingTwenty,
     });
-    await this.props.updateUserLibraryEntry(type, status, updates);
+
+    try {
+      await this.props.updateUserLibraryEntry(type, status, updates);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   render() {
     const { libraryEntry, libraryType, currentUser } = this.props;
-    const { progressPercentage, isSliderActive, ratingTwenty, progress } = this.state;
+    const { isSliderActive, ratingTwenty, progress } = this.state;
     const mediaData = libraryEntry[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
+    const progressPercentage = Math.floor((libraryEntry.progress / maxProgress) * 100);
 
     return (
       <Swipeable
@@ -235,7 +249,7 @@ export class UserLibraryListCard extends React.Component {
                     onOptionSelected={this.onStatusSelected}
                     style={styles.menuButtonContainer}
                   >
-                    <Image
+                    <FastImage
                       source={menuImage}
                       style={styles.menuButton}
                       resizeMode="contain"

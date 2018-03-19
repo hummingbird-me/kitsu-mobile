@@ -1,4 +1,5 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
@@ -16,6 +17,7 @@ export const ProfileHeader = ({
   title,
   onClickBack,
   onClickFollow,
+  hasOverlay,
 }) => {
   const coverImageUri = getImgixCoverImage(profile.coverImage) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
@@ -23,6 +25,7 @@ export const ProfileHeader = ({
 
   return (
     <View style={styles.headerContainer}>
+      {hasOverlay && <View style={styles.overlay} />}
       {showCoverImage &&
         <ProgressiveImage
           hasOverlay
@@ -50,7 +53,7 @@ export const ProfileHeader = ({
           <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
             {showProfileImage &&
-              <Image style={styles.profileImage} source={{ uri: profileImageUri }} />
+              <FastImage style={styles.profileImage} source={{ uri: profileImageUri }} borderRadius={15} />
             }
             {showFollowButton &&
               <Text style={[
@@ -82,6 +85,7 @@ ProfileHeader.propTypes = {
   showFollowButton: PropTypes.bool,
   showProfileImage: PropTypes.bool,
   title: PropTypes.string,
+  hasOverlay: PropTypes.bool,
 };
 
 ProfileHeader.defaultProps = {
@@ -91,4 +95,5 @@ ProfileHeader.defaultProps = {
   showFollowButton: false,
   showProfileImage: true,
   title: '',
+  hasOverlay: false,
 };

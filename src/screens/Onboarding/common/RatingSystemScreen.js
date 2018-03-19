@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { upperFirst, toLower } from 'lodash';
 import { Button } from 'kitsu/components/Button';
@@ -28,10 +29,10 @@ const getRatingSystem = (type) => {
 
 const Simple = () => (
   <View style={{ flexDirection: 'row' }}>
-    <Image source={awful} style={styles.imageSimple} />
-    <Image source={good} style={styles.imageSimple} />
-    <Image source={great} style={styles.imageSimple} />
-    <Image source={meh} style={styles.imageSimple} />
+    <FastImage source={awful} style={styles.imageSimple} />
+    <FastImage source={good} style={styles.imageSimple} />
+    <FastImage source={great} style={styles.imageSimple} />
+    <FastImage source={meh} style={styles.imageSimple} />
   </View>
 );
 
@@ -39,7 +40,7 @@ const Regular = () => (
   <View style={{ flexDirection: 'row' }}>
     {Array(5)
       .fill({})
-      .map((v, i) => <Image key={i} source={starFilled} style={styles.imageRegular} />)}
+      .map((v, i) => <FastImage key={i} source={starFilled} style={styles.imageRegular} />)}
   </View>
 );
 
@@ -47,7 +48,7 @@ const Advanced = () => (
   <View style={{ flexDirection: 'row' }}>
     {Array(10)
       .fill({})
-      .map((v, i) => <Image key={i} source={starFilled} style={styles.imageAdvanced} />)}
+      .map((v, i) => <FastImage key={i} source={starFilled} style={styles.imageAdvanced} />)}
   </View>
 );
 
@@ -119,7 +120,7 @@ class RatingSystemScreen extends React.Component {
           />
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Image source={fox} style={{ width: 50, height: 50, zIndex: 2 }} />
+          <FastImage source={fox} style={{ width: 50, height: 50, zIndex: 2 }} />
           <View
             style={{
               left: -10,

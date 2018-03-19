@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, StatusBar, Image, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, Text, StatusBar, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/screens/Notifications/NotificationsScreen';
 import { styles } from './styles';
@@ -12,9 +13,9 @@ export const NotificationPopover = ({ style, onRequestClose, data }) => {
     <View style={style}>
       <TouchableOpacity activeOpacity={1} onPress={onRequestClose} style={styles.wrapper}>
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-        <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.content}>
+        <TouchableOpacity activeOpacity={0.9} onPress={onRequestClose} style={styles.content}>
           <View style={{ paddingRight: 10 }}>
-            <Image style={styles.userAvatar} source={{ uri: actorAvatar }} />
+            <FastImage style={styles.userAvatar} source={{ uri: actorAvatar }} borderRadius={20} />
           </View>
           <Text style={[styles.activityText, styles.activityTextHighlight]}>
             {actorName || 'Unknown'}

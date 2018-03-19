@@ -128,15 +128,14 @@ class SearchCategory extends Component {
                       checkedIcon="check-circle"
                       uncheckedIcon="circle-thin"
                       checkedColor="#C8E6C9"
-                      size={5}
                       uncheckedColor="#8E818C"
-                      style={{ backgroundColor: 'transparent', paddingRight: 0, borderWidth: 0 }}
+                      containerStyle={{ backgroundColor: 'transparent', paddingRight: 0, borderWidth: 0 }}
                       onPress={() => {
-                        const aaa = {
+                        const state = {
                           ...selected,
                           [item.key]: !selected[item.key] ? item.label : false,
                         };
-                        this.setState({ selected: aaa });
+                        this.setState({ selected: state });
                       }}
                     />}
                   {level === 0 &&

@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { StackNavigator } from 'react-navigation';
 import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
-import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
-import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
-import MediaPages from 'kitsu/screens/Profiles/MediaPages';
 import notificationIcon from 'kitsu/assets/img/tabbar_icons/notification.png';
 import * as colors from 'kitsu/constants/colors';
+import { commonRoutes } from './common';
 import navigationOptions from './navigationOptions';
 
 const NotifStack = StackNavigator(
@@ -14,15 +13,7 @@ const NotifStack = StackNavigator(
     Notifications: {
       screen: NotificationsScreen,
     },
-    PostDetails: {
-      screen: PostDetails,
-    },
-    ProfilePages: {
-      screen: ProfilePages,
-    },
-    MediaPages: {
-      screen: MediaPages,
-    },
+    ...commonRoutes,
   },
   {
     navigationOptions: ({ screenProps }) => ({
@@ -51,7 +42,7 @@ const NotifStack = StackNavigator(
                   </Text>
                 </View>
               )}
-            <Image source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
+            <FastImage source={notificationIcon} style={[styles.tabBarIcon, { tintColor }]} />
           </View>
         );
       },

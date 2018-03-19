@@ -10,12 +10,26 @@ export const styles = StyleSheet.create({
     paddingHorizontal: scenePadding,
     backgroundColor: colors.listBackPurple,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    shadowColor: 'rgba(0,0,0,0.3)',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.7,
+    elevation: 3,
+    zIndex: 2,
   },
   tabStyle: {
     flex: 1,
     height: navigationBarHeight,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tabStyle__active: {
+    borderBottomWidth: 4,
+    borderBottomColor: colors.orange,
+  },
+  tabAvatar: {
+    marginRight: 20,
   },
 });

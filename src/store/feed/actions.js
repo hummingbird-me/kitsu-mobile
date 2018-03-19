@@ -129,13 +129,17 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
 };
 
 export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getState) => {
-  dispatch({ type: types.FETCH_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
   const { id } = getState().user.currentUser;
   const { notifications } = getState().feed;
+
+  // Make sure we have a valid id
+  if (!id) return;
+
+  dispatch({ type: types.FETCH_NOTIFICATIONS, loadingMoreNotifications: !!cursor });
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },
-      include: 'target.user,target.post,actor,target.manga,target.anime',
+      include: 'actor,subject,target.user,target.post,target.manga,target.anime',
       fields: {
         activities: 'time,verb,id',
       },
@@ -200,6 +204,17 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
   }
   const token = getState().auth.tokens.access_token;
   const { id } = getState().user.currentUser;
+
+  // Make sure we have a user
+  if (!id) {
+    throw Error('User ID is not valid');
+  }
+
+  // Make sure we have a token
+  if (!token) {
+    throw Error('User Tokens are not valid');
+  }
+
   const notificationsFiltered = notifications
     .filter(v => !v[type === 'seen' ? 'isSeen' : 'isRead'])
     .map(v => v.id);
@@ -208,7 +223,7 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
   try {
     // TODO: Use Devour: Manually fetching results in ugly response,
     // which also makes reducer more complicated than it should be.
-    const results = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_${type}`, {
+    const response = await fetch(`${kitsuConfig.baseUrl}/edge/feeds/notifications/${id}/_${type}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -216,7 +231,10 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
         'content-type': 'application/json',
       },
       body: JSON.stringify(notificationsFiltered),
-    }).then(response => response.json());
+    });
+
+    const results = await response.json();
+
     dispatch({
       type: types[`MARK_AS_${type.toUpperCase()}_SUCCESS`],
       payload: results.data,

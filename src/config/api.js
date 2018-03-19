@@ -1,7 +1,7 @@
 import OAuth2 from 'client-oauth2';
 import JsonApi from 'devour-client';
 import { kitsuConfig } from './env';
-import { errorMiddleware, kitsuRequestMiddleware } from './middlewares';
+import { errorMiddleware, kitsuRequestMiddleware, titleMiddleware } from './middlewares';
 
 export const auth = new OAuth2({
   clientId: kitsuConfig.authConfig.CLIENT_ID,
@@ -18,6 +18,7 @@ export const Kitsu = new JsonApi({
 Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
 Kitsu.replaceMiddleware('errors', errorMiddleware);
 Kitsu.replaceMiddleware('axios-request', kitsuRequestMiddleware);
+Kitsu.insertMiddlewareAfter('response', titleMiddleware);
 
 Kitsu.define(
   'users',
@@ -528,6 +529,33 @@ Kitsu.define(
     createdAt: '',
   },
   { collectionPath: 'episodes' },
+);
+
+Kitsu.define(
+  'animeProductions',
+  {
+    role: '',
+    anime: {
+      jsonApi: 'hasOne',
+      type: 'anime',
+    },
+    producer: {
+      jsonApi: 'hasOne',
+      type: 'producers',
+    },
+  },
+);
+
+Kitsu.define(
+  'producers',
+  {
+    name: '',
+    slug: '',
+    animeProductions: {
+      jsonApi: 'hasMany',
+      type: 'animeProductions'
+    },
+  },
 );
 
 Kitsu.define(

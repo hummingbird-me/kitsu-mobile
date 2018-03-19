@@ -3,31 +3,32 @@ import PropTypes from 'prop-types';
 import { Dimensions, FlatList, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import { Kitsu } from 'kitsu/config/api';
 import { fetchUserLibrary } from 'kitsu/store/profile/actions';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { LibraryHeader, UserLibrarySearchBox } from 'kitsu/screens/Profiles/UserLibrary';
+import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
 import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
+import { isEmpty } from 'lodash';
 import { Spinner } from 'native-base';
+import { StyledText } from 'kitsu/components/StyledText';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
 import * as constants from './constants';
 
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const renderScrollTabBar = () => <ScrollableTabBar />;
 
 const getItemLayout = (_data, index) => {
   const width = constants.POSTER_CARD_WIDTH;
-  return { width, offset: width * index, index };
+  return { length: width, offset: width * index, index };
 };
 
 const getCardVisibilityCounts = () => {
-  const { height, width } = Dimensions.get('screen');
-  const maxWidth = height > width ? height : width;
+  const maxWidth = SCREEN_HEIGHT > SCREEN_WIDTH ? SCREEN_HEIGHT : SCREEN_WIDTH;
   return {
     countForMaxWidth: Math.ceil(maxWidth / constants.POSTER_CARD_WIDTH),
-    countForCurrentWidth: Math.ceil(width / constants.POSTER_CARD_WIDTH),
+    countForCurrentWidth: Math.ceil(SCREEN_WIDTH / constants.POSTER_CARD_WIDTH),
   };
 };
 
@@ -41,10 +42,9 @@ const progressFromLibraryEntry = (libraryEntry) => {
   return Math.floor((libraryEntry.progress / mediaData.chapterCount) * 100);
 };
 
-
 class Library extends PureComponent {
   static propTypes = {
-    userId: PropTypes.number.isRequired,
+    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,
     navigation: PropTypes.object.isRequired,
@@ -118,9 +118,14 @@ class Library extends PureComponent {
     );
   };
 
-  renderFetchingMoreSpinner = (type, status) => {
+  renderFetchingMoreSpinner = (userId, type, status) => {
     const { userLibrary } = this.props;
-    const { data, loading } = userLibrary[type][status];
+    const library = userLibrary[userId] &&
+      userLibrary[userId][type] &&
+      userLibrary[userId][type][status];
+
+    const data = (library && library.data) || [];
+    const loading = isEmpty(library) || library.loading;
 
     if (loading && data.length) {
       return (
@@ -133,7 +138,7 @@ class Library extends PureComponent {
     return null;
   }
 
-  renderLists = (type) => {
+  renderLists = (userId, type) => {
     const { navigation, userLibrary, profile } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
@@ -145,7 +150,13 @@ class Library extends PureComponent {
 
     return listOrder.map((currentList, index) => {
       const { status } = currentList;
-      const { data, fetchMore, loading } = userLibrary[type][status];
+      const library = userLibrary[userId] &&
+        userLibrary[userId][type] &&
+        userLibrary[userId][type][status];
+
+      const data = (library && library.data) || [];
+      const loading = isEmpty(library) || library.loading;
+      const fetchMore = library && library.fetchMore;
 
       const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
       const emptyItemsToAdd = countForMaxWidth - data.length;
@@ -169,6 +180,7 @@ class Library extends PureComponent {
             profile={profile}
           />
 
+          {/* TODO: Fix this. It shouldn't show loading indicator if we already have data */}
           {loading && !data.length &&
             this.renderLoadingList()
           }
@@ -177,7 +189,7 @@ class Library extends PureComponent {
             this.renderEmptyList(type, status)
             :
             <FlatList
-              ListFooterComponent={this.renderFetchingMoreSpinner(type, status)}
+              ListFooterComponent={this.renderFetchingMoreSpinner(userId, type, status)}
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}
@@ -197,19 +209,42 @@ class Library extends PureComponent {
     });
   }
 
-  render() {
+  navigateToSearch = () => {
     const { profile, navigation } = this.props;
+    if (profile && navigation) {
+      navigation.navigate('LibrarySearch', { profile });
+    }
+  };
+
+  renderSearchBox() {
+    return (
+      <TouchableOpacity style={styles.searchBox} onPress={this.navigateToSearch}>
+        <Icon
+          name="search"
+          style={styles.searchIcon}
+        />
+        <StyledText color="dark" textStyle={styles.searchText}>Search Library</StyledText>
+      </TouchableOpacity>
+    );
+  }
+
+  render() {
+    const { profile, navigation, userId } = this.props;
 
     return (
       <View style={styles.container}>
-        <ScrollableTabView locked renderTabBar={renderScrollTabBar}>
+        <ScrollableTabView
+          locked
+          style={{ width: SCREEN_WIDTH }}
+          renderTabBar={renderScrollTabBar}
+        >
           <View key="Anime" tabLabel="Anime" id="anime">
-            <UserLibrarySearchBox navigation={navigation} profile={profile} />
-            {this.renderLists('anime')}
+            {this.renderSearchBox()}
+            {this.renderLists(userId, 'anime')}
           </View>
           <View key="Manga" tabLabel="Manga" id="manga">
-            <UserLibrarySearchBox navigation={navigation} profile={profile} />
-            {this.renderLists('manga')}
+            {this.renderSearchBox()}
+            {this.renderLists(userId, 'manga')}
           </View>
         </ScrollableTabView>
       </View>

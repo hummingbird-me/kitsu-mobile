@@ -9,7 +9,6 @@ export default (headerHeight = defaultHeight, marginTop = 0, extras = {}) => ({
   headerStyle: {
     backgroundColor: darkPurple,
     height: headerHeight,
-    justifyContent: 'center',
   },
   headerTitleStyle: {
     color: white,

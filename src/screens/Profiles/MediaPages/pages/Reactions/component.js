@@ -30,7 +30,6 @@ class Reactions extends PureComponent {
         ItemSeparatorComponent={() => <RowSeparator size="medium" />}
         ListHeaderComponent={() => (
           <TabHeader
-            padded
             contentDark
             title="Reactions"
             actionOnPress={() => {}}

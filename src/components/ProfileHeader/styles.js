@@ -37,11 +37,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-end',
+    zIndex: 2,
   },
   profileImage: {
     width: 30,
     height: 30,
-    borderRadius: 15,
     marginHorizontal: 5,
   },
   titleOnlyContainer: {
@@ -54,5 +54,10 @@ export const styles = StyleSheet.create({
   titleText: {
     backgroundColor: 'transparent',
     fontSize: 14,
+  },
+  overlay: {
+    zIndex: 1,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.35)',
   },
 });

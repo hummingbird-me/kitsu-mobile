@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
+import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { Kitsu } from 'kitsu/config/api';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
@@ -9,8 +9,10 @@ import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
+import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { upperFirst, isNull } from 'lodash';
+import { SummaryProgress } from './progress';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -21,29 +23,28 @@ class SummaryComponent extends PureComponent {
     navigation: PropTypes.object.isRequired,
     setActiveTab: PropTypes.func.isRequired,
     loadingAdditional: PropTypes.bool,
+    libraryEntry: PropTypes.object,
+    onLibraryEditPress: PropTypes.func,
   }
 
   static defaultProps = {
     castings: null,
     mediaReactions: null,
     loadingAdditional: false,
+    libraryEntry: null,
+    onLibraryEditPress: null,
   }
 
   state = {
     loading: true,
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.fetchFeed();
-  }
-
-  navigateTo = (scene) => {
-    this.props.setActiveTab(scene);
   }
 
   formatData(data, numberOfItems = 12) {
     if (!data) return [];
-
     return data.sort((a, b) => a.number - b.number).slice(0, numberOfItems);
   }
 
@@ -65,7 +66,6 @@ class SummaryComponent extends PureComponent {
       });
 
       const feed = preprocessFeed(result).filter(i => i.type === 'posts');
-
       this.setState({
         feed,
         loading: false,
@@ -75,50 +75,54 @@ class SummaryComponent extends PureComponent {
     }
   }
 
-  navigateToPost = (props) => {
-    this.props.navigation.navigate('PostDetails', props);
-  }
+  navigateTo = scene => this.props.setActiveTab(scene);
+  navigateToPost = props => this.props.navigation.navigate('PostDetails', props);
+  navigateToUserProfile = userId => this.props.navigation.navigate('ProfilePages', { userId });
+  navigateToMedia = (mediaType, mediaId) => (
+    this.props.navigation.navigate('MediaPages', { mediaId, mediaType, })
+  );
 
-  navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
-  }
-
-  navigateToMedia = (type, id) => {
-    this.props.navigation.navigate('MediaPages', {
-      mediaId: id,
-      mediaType: type,
-    });
-  }
+  renderItem = ({ item }) => (
+    <Post
+      post={item}
+      onPostPress={this.navigateToPost}
+      currentUser={this.props.currentUser}
+      navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
+      navigation={this.props.navigation}
+    />
+  );
 
   render() {
-    const { media, castings, mediaReactions, loadingAdditional } = this.props;
+    const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
     const { loading, feed } = this.state;
-    const series = media.type === 'anime' ? media.episodes || [] : media.chapters || [];
-    const seriesCount = series.length;
-
-    // What is a common name between episode and chapter???
-    const episodePrefix = media.type === 'anime' ? 'Ep.' : 'Ch.';
-    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
 
     return (
       <SceneContainer>
-        {/* Episodes */}
+
+        {/* Progress */}
+        <SummaryProgress
+          libraryEntry={libraryEntry}
+          media={media}
+          onPress={() => this.navigateTo('Episodes')}
+          onEditPress={onLibraryEditPress}
+        />
+
+        {/* Details */}
+        <MediaDetails media={media} />
+
+        {/* Reactions */}
+        {/* @TODO: Reactions Empty State - Render nothing until we support writing */}
         <ScrollableSection
-          title={`${media.type === 'anime' ? 'Episodes' : 'Chapters'}・${seriesCount}`}
-          onViewAllPress={() => this.navigateTo('Episodes')}
-          data={this.formatData(series)}
+          title="Reactions"
+          onViewAllPress={() => this.navigateTo('Reactions')}
+          data={mediaReactions}
           loading={loadingAdditional}
           renderItem={({ item }) => (
             <ScrollItem>
-              <ImageCard
-                subtitle={`${episodePrefix} ${item.number} ${episodeSuffix}`}
-                title={item.canonicalTitle}
-                variant="landscapeLarge"
-                source={{
-                  uri:
-                    (item.thumbnail && item.thumbnail.original) ||
-                    (media && media.posterImage && media.posterImage.large),
-                }}
+              <ReactionBox
+                boxed
+                reactedMedia={media.canonicalTitle}
+                reaction={item}
               />
             </ScrollItem>
           )}
@@ -133,6 +137,8 @@ class SummaryComponent extends PureComponent {
           loading={loadingAdditional}
           renderItem={({ item }) => {
             const destination = item.destination;
+            if (!destination) return null;
+
             const subheading = destination.type === 'anime' ? destination.showType : destination.mangaType;
 
             return (<ScrollItem spacing={4}>
@@ -151,25 +157,9 @@ class SummaryComponent extends PureComponent {
           }}
         />
 
-        {/* Reactions */}
-        <ScrollableSection
-          title="Reactions"
-          onViewAllPress={() => this.navigateTo('Reactions')}
-          data={mediaReactions}
-          loading={isNull(mediaReactions)}
-          renderItem={({ item }) => (
-            <ScrollItem>
-              <ReactionBox
-                boxed
-                reactedMedia={media.canonicalTitle}
-                reaction={item}
-              />
-            </ScrollItem>
-          )}
-        />
-
         {/* Characters */}
-        <ScrollableSection
+        {/* Disabled for now until we fix up our character db */}
+        {/* <ScrollableSection
           contentDark
           title="Characters"
           onViewAllPress={() => this.navigateTo('Characters')}
@@ -188,20 +178,15 @@ class SummaryComponent extends PureComponent {
               />
             </ScrollItem>
           )}
-        />
+        /> */}
 
         {/* Feed */}
         { !loading &&
-          feed.map(item => (
-            <Post
-              key={item.id}
-              post={item}
-              onPostPress={this.navigateToPost}
-              currentUser={this.props.currentUser}
-              navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
-              navigation={this.props.navigation}
-            />
-          ))
+          <FlatList
+            data={feed || []}
+            keyExtractor={item => item.id}
+            renderItem={this.renderItem}
+          />
         }
 
       </SceneContainer>
@@ -214,4 +199,4 @@ const mapStateToProps = ({ user }) => {
   return { currentUser };
 };
 
-export const Summary = connect(mapStateToProps)(SummaryComponent);
+export const component = connect(mapStateToProps)(SummaryComponent);

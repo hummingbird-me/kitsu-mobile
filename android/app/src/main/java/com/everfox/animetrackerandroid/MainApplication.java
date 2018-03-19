@@ -4,11 +4,11 @@ import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import com.dylanvann.fastimage.FastImageViewPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.microsoft.codepush.react.CodePush;
@@ -33,6 +33,11 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
     @Override
+    protected String getJSMainModuleName() {
+      return "index";
+    }
+
+    @Override
     protected String getJSBundleFile() {
       return CodePush.getJSBundleFile();
     }
@@ -46,11 +51,11 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FastImageViewPackage(),
             new PickerPackage(),
             new ReactNativeOneSignalPackage(),
             new ReactNativeYouTube(),
             new LinearGradientPackage(),
-            new LottiePackage(),
             new FBSDKPackage(mCallbackManager),
             new VectorIconsPackage(),
             new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG)

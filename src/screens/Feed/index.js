@@ -1,10 +1,9 @@
 import React from 'react';
-import { RefreshControl, StatusBar, View } from 'react-native';
+import { RefreshControl, StatusBar, View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
 import URL from 'url-parse';
-
 import { Kitsu } from 'kitsu/config/api';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { listBackPurple, offWhite } from 'kitsu/constants/colors';
@@ -15,6 +14,18 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { isEmpty } from 'lodash';
 import { feedStreams } from './feedStreams';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: listBackPurple,
+    paddingTop: isX ? paddingX : 0,
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: listBackPurple,
+  },
+});
 
 class Feed extends React.PureComponent {
   static propTypes = {
@@ -182,11 +193,15 @@ class Feed extends React.PureComponent {
     }
   };
 
+  onDrawer = () => {
+    this.props.navigation.navigate('DrawerToggle');
+  }
+
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: listBackPurple, paddingTop: isX ? paddingX : 0 }}>
+      <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <TabBar>
+        <TabBar currentUser={this.props.currentUser} onPress={this.onDrawer}>
           {feedStreams.map(tabItem => (
             <TabBarLink
               key={tabItem.key}
@@ -197,11 +212,13 @@ class Feed extends React.PureComponent {
           ))}
         </TabBar>
 
-        <View style={{ flex: 1 }}>
+        <View style={styles.contentContainer}>
           <KeyboardAwareFlatList
             data={this.state.data}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderPost}
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
             onMomentumScrollBegin={() => {
               // Prevent iOS calling onendreached when list is loaded.
               this.onEndReachedCalledDuringMomentum = false;
@@ -217,9 +234,6 @@ class Feed extends React.PureComponent {
             ListFooterComponent={() => this.state.isLoadingNextPage && (
               <SceneLoader color={offWhite} />
             )}
-            refreshControl={
-              <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
-            }
           />
         </View>
       </View>

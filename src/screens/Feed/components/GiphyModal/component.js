@@ -1,15 +1,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator } from 'react-native';
+import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
-import { isEmpty, range } from 'lodash';
+import { isEmpty, range, debounce } from 'lodash';
 import { getBestGridItemSpacing } from 'kitsu/common/utils';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Feed/constants';
 import { kitsuConfig } from 'kitsu/config/env';
+import { cachedFetch } from 'kitsu/utils/fetch-cache';
 import { styles } from './styles';
 
 const IMAGE_SIZE = { width: 150, height: 100 };
@@ -82,7 +83,7 @@ export class GiphyModal extends PureComponent {
 
   handleSearchStateChange = (query) => {
     this.setState({ query }, () => {
-      this.searchGIF(query);
+      this.debouncedSearch(query);
     });
   }
 
@@ -100,8 +101,7 @@ export class GiphyModal extends PureComponent {
 
     // Fetch the GIFS!
     try {
-      const response = await fetch(url);
-      const giphy = await response.json();
+      const giphy = await cachedFetch(url);
       const gifs = giphy.data;
 
       if (this.mounted) this.setState({ gifs });
@@ -109,6 +109,7 @@ export class GiphyModal extends PureComponent {
       console.log(e);
     }
   }
+  debouncedSearch = debounce(this.searchGIF, 150);
 
   renderItem = (item, spacing) => {
     const images = item.images;
@@ -188,7 +189,7 @@ export class GiphyModal extends PureComponent {
           leftButtonAction={this.handleCancelPress}
           rightButtonTitle=""
         />
-        <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
           <View style={styles.searchBoxContainer}>
             <SearchBox
               placeholder="Search for a GIF"
@@ -201,6 +202,7 @@ export class GiphyModal extends PureComponent {
           </View>
           {/* TODO: Fetch more gifs on scroll */}
           <FlatList
+            listKey="giphy"
             style={padding}
             data={gifs}
             getItemLayout={(data, index) => ({
@@ -213,7 +215,7 @@ export class GiphyModal extends PureComponent {
             keyExtractor={item => item.id}
             renderItem={({ item }) => this.renderItem(item, bestSpacing)}
           />
-        </View>
+        </ScrollView>
       </Modal>
     );
   }

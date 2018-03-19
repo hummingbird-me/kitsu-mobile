@@ -5,5 +5,6 @@ export const styles = StyleSheet.create({
   wrap: {
     backgroundColor: '#FFFFFF',
     padding: scenePadding,
+    marginTop: 10,
   },
 });
