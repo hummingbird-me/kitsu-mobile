@@ -49,7 +49,7 @@ class SidebarScreen extends PureComponent {
         });
         break;
       case 'mailto':
-        Linking.openURL('mailto:josh@kitsu.io');
+        Linking.openURL('mailto:help@kitsu.io');
         break;
       default:
         break;
