@@ -57,8 +57,6 @@ class App extends PureComponent {
   }
 
   onStoreUpdate() {
-    this.storeLoaded = true;
-
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
     // If the authentication state changed from true to false then take user to intro screen
@@ -137,7 +135,7 @@ class App extends PureComponent {
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
 
-    if (this.storeLoaded && this.navigation && this.resetAction) {
+    if (this.navigation && this.resetAction) {
       // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
       // blocking children from rendering until state has been rehydrated.
       this.navigation.dispatch(this.resetAction);
@@ -185,7 +183,6 @@ class App extends PureComponent {
   }
 
   resetAction = null;
-  storeLoaded = false;
 
   render() {
     return (
