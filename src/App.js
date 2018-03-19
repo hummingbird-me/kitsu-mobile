@@ -92,7 +92,12 @@ class App extends PureComponent {
     this.authenticated = authenticated;
 
     // Check if we have a reset action that we need to perform
-    this.executeResetAction();
+    if (this.navigation && this.resetAction) {
+      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
+      // blocking children from rendering until state has been rehydrated.
+      this.navigation.dispatch(this.resetAction);
+      this.resetAction = null;
+    }
   }
 
   onIds(device) {
@@ -132,8 +137,11 @@ class App extends PureComponent {
       actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
     });
 
-    if (this.storeLoaded) {
-      this.executeResetAction();
+    if (this.storeLoaded && this.navigation && this.resetAction) {
+      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
+      // blocking children from rendering until state has been rehydrated.
+      this.navigation.dispatch(this.resetAction);
+      this.resetAction = null;
     }
   }
 
@@ -178,15 +186,6 @@ class App extends PureComponent {
 
   resetAction = null;
   storeLoaded = false;
-
-  executeResetAction() {
-    if (this.navigation && this.resetAction) {
-      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
-      // blocking children from rendering until state has been rehydrated.
-      this.navigation.dispatch(this.resetAction);
-      this.resetAction = null;
-    }
-  }
 
   render() {
     return (
