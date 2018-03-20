@@ -102,7 +102,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
        * Note: `signup` is passed in from `createUser` function. It shouldn't be passed in from anywhere else
          otherwise users might always be sent to onboarding when logging in with fb.
       */
-      if (user.status === 'aozora') {
+      if (user && user.status === 'aozora') {
         await getAccountConflicts()(dispatch, getState);
         const onboardingAction = NavigationActions.reset({
           index: 0,
@@ -110,7 +110,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
           key: null,
         });
         nav.dispatch(onboardingAction);
-      } else if (user.status !== 'registered' || screen === 'signup') {
+      } else if ((user && user.status !== 'registered') || screen === 'signup') {
         await getAccountConflicts()(dispatch, getState);
         const onboardingAction = NavigationActions.reset({
           index: 0,
