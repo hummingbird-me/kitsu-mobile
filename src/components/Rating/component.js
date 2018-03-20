@@ -272,8 +272,10 @@ export class Rating extends PureComponent {
   }
 
   render() {
-    const { ratingSystem } = this.props;
+    const { ratingSystem, viewType } = this.props;
     const { ratingTwenty } = this.state;
+
+    const isSelectView = viewType === 'select';
 
     return (
       <View {...this.props} style={[styles.wrapper, this.props.style]}>
@@ -286,31 +288,31 @@ export class Rating extends PureComponent {
             <FastImage source={starImage} style={this.styleForRatingTwenty(ratingTwenty, 'star')} />
 
             <TouchableOpacity
-              onPress={() => this.toggleModal('no-rating')}
+              onPress={() => this.toggleModal(isSelectView && 'no-rating')}
               disabled={this.props.disabled}
             >
               <FastImage source={noRatingImage} style={this.styleForRatingTwenty(ratingTwenty, 'no-rating')} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.toggleModal('awful')}
+              onPress={() => this.toggleModal(isSelectView && 'awful')}
               disabled={this.props.disabled}
             >
               <FastImage source={awfulImage} style={this.styleForRatingTwenty(ratingTwenty, 'awful')} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.toggleModal('meh')}
+              onPress={() => this.toggleModal(isSelectView && 'meh')}
               disabled={this.props.disabled}
             >
               <FastImage source={mehImage} style={this.styleForRatingTwenty(ratingTwenty, 'meh')} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.toggleModal('good')}
+              onPress={() => this.toggleModal(isSelectView && 'good')}
               disabled={this.props.disabled}
             >
               <FastImage source={goodImage} style={this.styleForRatingTwenty(ratingTwenty, 'good')} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.toggleModal('great')}
+              onPress={() => this.toggleModal(isSelectView && 'great')}
               disabled={this.props.disabled}
             >
               <FastImage source={greatImage} style={this.styleForRatingTwenty(ratingTwenty, 'great')} />
