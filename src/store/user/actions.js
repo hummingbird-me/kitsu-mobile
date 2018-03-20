@@ -7,8 +7,10 @@ import { kitsuConfig } from 'kitsu/config/env';
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
   try {
-    const token = getState().auth.tokens.access_token;
-    setToken(token);
+    const { tokens } = getState().auth;
+    if (tokens && tokens.access_token) {
+      setToken(tokens.access_token);
+    }
 
     const user = await Kitsu.findAll('users', {
       fields: {
