@@ -6,14 +6,13 @@ import { connect } from 'react-redux';
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
-import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import defaultCover from 'kitsu/assets/img/default_cover.png';
 import { library, settings, bugs, suggest, contact } from 'kitsu/assets/img/sidebar_icons';
 import { extraDarkPurple } from 'kitsu/constants/colors';
-
+import { Button } from 'kitsu/components/Button';
+import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
-import { Button } from 'kitsu/components/Button';
+
 
 class SidebarScreen extends PureComponent {
   onViewProfile = () => {
@@ -97,12 +96,12 @@ class SidebarScreen extends PureComponent {
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
-          source={( coverImage && { uri: getImgixCoverImage(coverImage) }) || defaultCover }
+          source={{ uri: (coverImage && getImgixCoverImage(coverImage)) || defaultCover }}
         >
           <View style={styles.userProfileContainer}>
             <FastImage
               style={styles.userProfileImage}
-              source={(avatar && { uri: avatar.tiny }) || defaultAvatar}
+              source={{ uri: (avatar && avatar.tiny) || defaultAvatar }}
               borderRadius={25}
             />
             <View style={styles.userProfileTextWrapper}>
