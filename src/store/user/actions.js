@@ -4,11 +4,12 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 
-export const fetchCurrentUser = tokens => async (dispatch, getState) => {
+export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
-  const token = (tokens && tokens.access_token) || getState().auth.tokens.access_token;
-  setToken(token);
   try {
+    const token = getState().auth.tokens.access_token;
+    setToken(token);
+
     const user = await Kitsu.findAll('users', {
       fields: {
         users:
@@ -22,8 +23,9 @@ export const fetchCurrentUser = tokens => async (dispatch, getState) => {
       createOneSignalPlayer(dispatch, getState);
       return user[0];
     }
+
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'No user found in request' });
-    throw new Error('No user found in request');
+    throw Error('No user found in request');
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
     throw e;
