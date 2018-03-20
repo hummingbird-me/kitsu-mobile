@@ -96,6 +96,7 @@ export class Rating extends PureComponent {
   static propTypes = {
     disabled: PropTypes.bool,
     onRatingChanged: PropTypes.func,
+    onRatingModalDisplay: PropTypes.func,
     ratingTwenty: PropTypes.number,
     ratingSystem: PropTypes.oneOf(['simple', 'regular', 'advanced']),
     showNotRated: PropTypes.bool,
@@ -107,6 +108,7 @@ export class Rating extends PureComponent {
   static defaultProps = {
     disabled: false,
     onRatingChanged: () => { },
+    onRatingModalDisplay: () => { },
     ratingTwenty: null,
     ratingSystem: 'simple',
     showNotRated: true,
@@ -136,7 +138,7 @@ export class Rating extends PureComponent {
   }
 
   toggleModal = (selectedButton) => {
-    const { ratingSystem } = this.props;
+    const { ratingSystem, onRatingModalDisplay, onRatingChanged } = this.props;
 
     // If there's a specific simple system rating we can action, just do that, otherwise
     // go down to the two modals.
@@ -146,12 +148,13 @@ export class Rating extends PureComponent {
         modalVisible: false,
         ratingTwenty,
       });
-
-      this.props.onRatingChanged(ratingTwenty === 0 ? null : ratingTwenty);
+      onRatingModalDisplay(false);
+      onRatingChanged(ratingTwenty === 0 ? null : ratingTwenty);
     } else {
       // All other modes get the modal, which should render itself correctly
       // based on our ratingSystem prop.
       this.setState({ modalVisible: !this.state.modalVisible });
+      onRatingModalDisplay(!this.state.modalVisible);
     }
   }
 
