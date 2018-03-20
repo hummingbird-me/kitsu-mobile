@@ -27,7 +27,11 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
     }
 
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'No user found in request' });
-    throw Error('No user found in request');
+
+    // Right interesting case here, there may be a case where api returns empty data array. No idea what causes it (maybe null tokens)
+    // Now tokens might be null because redux persist hasn't loaded in the data yet.
+    // Just incase, we return null since if it is indeed a user not logged in then somewhere down the line we'll get a 401 and the app will handle it
+    return null;
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
     throw e;
