@@ -48,7 +48,7 @@ export const kitsuRequestMiddleware = {
         // Check if there's already a promise for refreshing tokens
         // If we don't then create the refresh token and set the promise
         if (isNull(tokenPromise)) {
-          tokenPromise = store.dispatch(refreshTokens(true));
+          tokenPromise = store.dispatch(refreshTokens());
 
           // Log to sentry
           Sentry.captureMessage('Recieved a 401', {

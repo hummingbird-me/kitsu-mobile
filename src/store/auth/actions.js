@@ -9,23 +9,10 @@ import * as types from 'kitsu/store/types';
 import { Sentry } from 'react-native-sentry';
 import { isEmpty } from 'lodash';
 
-export const refreshTokens = (forceRefresh = false) => async (dispatch, getState) => {
+export const refreshTokens = () => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
   if (isEmpty(tokens)) return null;
   if (getState().auth.isRefreshingTokens) return tokens;
-
-  if (!forceRefresh) {
-    // Make sure old token is expired before we refresh
-    const milliseconds = (tokens.created_at + tokens.expires_in) * 1000;
-    const expiredAt = new Date(milliseconds);
-    const current = new Date();
-    if (current < expiredAt) return tokens;
-
-    // Check if we have a connection to the net
-    // If not then we just return old tokens
-    const isConnected = await NetInfo.isConnected.fetch();
-    if (!isConnected) return tokens;
-  }
 
   dispatch({ type: types.TOKEN_REFRESH });
 
@@ -143,12 +130,13 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
     } catch (e) {
       console.warn(e);
 
-      Sentry.captureMessage('Failed to fetch user while logging in', {
+      Sentry.captureException(e, {
         tags: {
           type: 'auth',
         },
         extra: {
-          exception: e,
+          detail: 'Failed to fetch user while loggin in',
+          error: getState().user.error,
         },
       });
 
