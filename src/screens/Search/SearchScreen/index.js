@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, ScrollView, Keyboard, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
 import { capitalize, isEmpty, isNull, debounce } from 'lodash';
@@ -20,6 +20,7 @@ class SearchScreen extends PureComponent {
   };
 
   state = {
+    isScrollingScene: false,
     query: {
       anime: undefined,
       manga: undefined,
@@ -45,7 +46,7 @@ class SearchScreen extends PureComponent {
         apiKey: this.props.algoliaKeys.users && this.props.algoliaKeys.users.key,
         indexName: this.props.algoliaKeys.users && this.props.algoliaKeys.users.index,
       },
-    }
+    },
   };
 
   handleQuery = (scene, query) => {
@@ -75,6 +76,10 @@ class SearchScreen extends PureComponent {
       mediaId: media.id,
       mediaType: media.kind,
     });
+  };
+
+  handleSceneScroll = (value) => {
+    this.setState({ isScrollingScene: value });
   };
 
   renderTabBar = ({ tabs, activeTab, goToPage }) => (
@@ -137,9 +142,18 @@ class SearchScreen extends PureComponent {
       case 'anime':
       case 'manga': {
         return isEmpty(query[scene]) ? (
-          <TopsList mounted active={scene} navigation={navigation} />
+          <TopsList
+            mounted
+            onScroll={this.handleSceneScroll}
+            active={scene}
+            navigation={navigation}
+          />
         ) : (
-          <ResultsList hits={hits} onPress={this.navigateToMedia} currentUser={this.props.currentUser} />
+          <ResultsList
+            hits={hits}
+            onPress={this.navigateToMedia}
+            currentUser={this.props.currentUser}
+          />
         );
       }
       default: {
@@ -156,6 +170,7 @@ class SearchScreen extends PureComponent {
         style={styles.container}
         initialPage={(params && params.initialPage) || 0}
         renderTabBar={this.renderTabBar}
+        locked={this.state.isScrollingScene}
       >
         {this.renderScenes()}
       </ScrollableTabView>
