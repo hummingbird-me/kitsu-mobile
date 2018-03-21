@@ -72,7 +72,8 @@ export class PostImage extends PureComponent {
       <FastImage
         resizeMode="cover"
         source={{ uri }}
-        style={{ width, height, borderRadius }}
+        style={{ width, height, borderRadius, overflow: 'hidden' }}
+        borderRadius={borderRadius}
       />
     );
   }
