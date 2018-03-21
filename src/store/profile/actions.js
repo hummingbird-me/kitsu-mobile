@@ -1,9 +1,8 @@
-import capitalize from 'lodash/capitalize';
-import map from 'lodash/map';
+import { capitalize, map, lowerCase } from 'lodash';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 import { KitsuLibrary, KitsuLibraryEventSource, KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
-import { getState } from '../user/actions';
+import { getTitleField } from 'kitsu/utils/getTitleField';
 
 export const fetchProfile = userId => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
@@ -116,10 +115,15 @@ const defaultFetchUserLibraryOptions = {
  *
  * @param {any} sort An object with the format { by: <string>, ascending: <bool> }
  * @param {string} kind 'anime' or 'manga'
+ * @param {any} user The current user or null.
  * @returns The sort string.
  */
-function getSortString(sort, kind) {
-  const titleSort = `${kind}.titles.canonical`;
+function getSortString(sort, kind, user) {
+  // Get the user preference
+  const preference = (user && lowerCase(user.titleLanguagePreference));
+  const key = (preference && getTitleField(preference)) || 'canonical';
+
+  const titleSort = `${kind}.titles.${key}`;
   if (!sort || !sort.by) return titleSort;
 
   const ascending = sort.ascending ? '' : '-';
@@ -162,6 +166,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
   };
 
   const { userLibrary, librarySort } = getState().profile;
+  const { currentUser } = getState().user;
 
   let data = userLibrary[options.userId][options.library][options.status].data;
 
@@ -186,7 +191,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
         limit: options.limit,
         offset: options.refresh ? 0 : data.length,
       },
-      sort: getSortString(librarySort, options.library),
+      sort: getSortString(librarySort, options.library, currentUser),
     });
 
     if (options.refresh) {

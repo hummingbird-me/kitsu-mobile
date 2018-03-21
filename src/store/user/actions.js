@@ -175,8 +175,10 @@ export const updateLibrarySettings = data => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_LIBRARY_SETTINGS });
   const { user, auth } = getState();
   const { id } = user.currentUser;
-  const token = auth.tokens.access_token;
-  setToken(token);
+  const token = auth.tokens && auth.tokens.access_token;
+  if (token) {
+    setToken(token);
+  }
   try {
     await Kitsu.update('users', { id, ...data });
     dispatch({ type: types.UPDATE_LIBRARY_SETTINGS_SUCCESS, payload: data });
