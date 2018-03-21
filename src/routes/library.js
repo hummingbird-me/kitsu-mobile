@@ -8,7 +8,6 @@ import { LibrarySettings } from 'kitsu/screens/Library/LibrarySettings';
 import navigationOptions from './navigationOptions';
 import { commonRoutes } from './common';
 
-
 const LibraryStack = StackNavigator({
   LibraryScreen: {
     screen: LibraryScreen,
