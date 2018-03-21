@@ -218,7 +218,7 @@ class TopsList extends PureComponent {
     }));
 
     const categoryData = {
-      title: `${type} By Categeory`,
+      title: `${type} By Category`,
       data: mappedCategories,
       dark: true,
       type: 'static',
