@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, ScrollView, Keyboard, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Keyboard, TouchableOpacity, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
@@ -170,7 +170,7 @@ class SearchScreen extends PureComponent {
         style={styles.container}
         initialPage={(params && params.initialPage) || 0}
         renderTabBar={this.renderTabBar}
-        locked={this.state.isScrollingScene}
+        locked={Platform.OS === 'android'}
       >
         {this.renderScenes()}
       </ScrollableTabView>
