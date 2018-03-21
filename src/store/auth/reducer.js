@@ -84,7 +84,7 @@ export const authReducer = (state = INITIAL_STATE, action) => {
       };
     case types.LOGOUT_USER:
       return INITIAL_STATE;
-    case REHYDRATE:
+    case REHYDRATE: {
       const auth = (action.payload && action.payload.auth) || {};
       return {
         ...state,
@@ -95,6 +95,7 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         isRefreshingTokens: false,
         rehydratedAt: new Date(),
       };
+    }
     default:
       return state;
   }

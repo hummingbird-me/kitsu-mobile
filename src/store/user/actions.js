@@ -4,11 +4,14 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 
-export const fetchCurrentUser = tokens => async (dispatch, getState) => {
+export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
-  const token = (tokens && tokens.access_token) || getState().auth.tokens.access_token;
-  setToken(token);
   try {
+    const { tokens } = getState().auth;
+    if (tokens && tokens.access_token) {
+      setToken(tokens.access_token);
+    }
+
     const user = await Kitsu.findAll('users', {
       fields: {
         users:
@@ -22,8 +25,13 @@ export const fetchCurrentUser = tokens => async (dispatch, getState) => {
       createOneSignalPlayer(dispatch, getState);
       return user[0];
     }
+
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'No user found in request' });
-    throw new Error('No user found in request');
+
+    // Right interesting case here, there may be a case where api returns empty data array. No idea what causes it (maybe null tokens)
+    // Now tokens might be null because redux persist hasn't loaded in the data yet.
+    // Just incase, we return null since if it is indeed a user not logged in then somewhere down the line we'll get a 401 and the app will handle it
+    return null;
   } catch (e) {
     dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
     throw e;

@@ -51,6 +51,7 @@ export class UserLibraryListCard extends React.PureComponent {
     progress: this.props.libraryEntry.progress,
     ratingTwenty: this.props.libraryEntry.ratingTwenty,
     isSliderActive: false,
+    isRating: false,
   }
 
   componentWillReceiveProps(nextProps) {
@@ -86,6 +87,10 @@ export class UserLibraryListCard extends React.PureComponent {
   onRatingChanged = (ratingTwenty) => {
     this.onSwipeRelease();
     this.setState({ ratingTwenty }, this.debounceSave);
+  }
+
+  onRatingModalDisplay = (visible) => {
+    this.setState({ isRating: visible });
   }
 
   onRightActionActivate = () => {
@@ -183,7 +188,7 @@ export class UserLibraryListCard extends React.PureComponent {
 
   render() {
     const { libraryEntry, libraryType, currentUser } = this.props;
-    const { isSliderActive, ratingTwenty, progress } = this.state;
+    const { isSliderActive, ratingTwenty, progress, isRating } = this.state;
     const mediaData = libraryEntry[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
@@ -197,7 +202,7 @@ export class UserLibraryListCard extends React.PureComponent {
         onSwipeStart={this.onSwipeStart}
         onSwipeRelease={this.onSwipeRelease}
         rightActionActivationDistance={145}
-        rightContent={[
+        rightContent={!isRating && [
           <View
             key={0}
             style={[
@@ -283,6 +288,7 @@ export class UserLibraryListCard extends React.PureComponent {
                   style={styles.ratingStyle}
                   ratingTwenty={ratingTwenty}
                   ratingSystem={currentUser.ratingSystem}
+                  onRatingModalDisplay={this.onRatingModalDisplay}
                 />
               </View>
             </View>
