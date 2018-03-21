@@ -3,8 +3,9 @@ import React, { PureComponent } from 'react';
 import { Platform, View, StatusBar, Linking, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react'
-import { identity, isNull, isEmpty } from 'lodash';
+import { PersistGate } from 'redux-persist/integration/react';
+import * as colors from 'kitsu/constants/colors';
+import { identity, isNil, isEmpty } from 'lodash';
 import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
@@ -13,6 +14,7 @@ import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { ActivityIndicator } from 'react-native';
 import store, { persistor } from './store/config';
 import Root from './Router';
 import * as types from './store/types';
@@ -63,7 +65,12 @@ class App extends PureComponent {
     // Check if authentication state changed
     const authenticated = store.getState().auth.isAuthenticated;
     // If the authentication state changed from true to false then take user to intro screen
-    if (!isNull(this.authenticated) && this.authenticated !== authenticated && !authenticated) {
+    if (
+      !isNil(this.authenticated) &&
+      !isNil(authenticated) &&
+      this.authenticated !== authenticated && !authenticated
+    ) {
+      // Take user back to intro
       resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Intro' })],
@@ -188,13 +195,26 @@ class App extends PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+        <PersistGate loading={<Loading />} persistor={persistor}>
           <ConnectedRoot />
         </PersistGate>
       </Provider>
     );
   }
 }
+
+const Loading = () => (
+  <View
+    style={{
+      flex: 1,
+      backgroundColor: colors.darkPurple,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <ActivityIndicator color="white" size="large" />
+  </View>
+);
 
 const RootContainer = ({ inAppNotification }) => (
   <View style={{ flex: 1 }}>
