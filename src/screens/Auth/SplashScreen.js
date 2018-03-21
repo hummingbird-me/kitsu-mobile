@@ -19,8 +19,10 @@ class SplashScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, completed } = nextProps;
-    this.navigate(isAuthenticated, completed);
+    const { isAuthenticated, completed, rehydratedAt } = nextProps;
+    if (rehydratedAt) {
+      this.navigate(isAuthenticated, completed);
+    }
   }
 
   navigate(authorized, completed) {
