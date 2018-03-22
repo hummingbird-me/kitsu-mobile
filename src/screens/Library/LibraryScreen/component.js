@@ -58,7 +58,9 @@ export class LibraryScreenComponent extends PureComponent {
   onOptionPress = () => {
     const { navigation } = this.props;
     if (navigation) {
-      navigation.navigate('LibrarySettings');
+      navigation.navigate('LibrarySettings', {
+        navigateBackOnSave: true,
+      });
     }
   }
 
