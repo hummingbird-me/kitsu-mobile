@@ -22,6 +22,7 @@ import { createUser } from 'kitsu/store/user/actions';
 import { TERMS_URL } from 'kitsu/constants/app';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
+import { Sentry } from 'react-native-sentry';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
@@ -109,6 +110,11 @@ class AuthScreen extends React.Component {
         }
       },
       (error) => {
+        Sentry.captureMessage('FBSDK - Facebook Login Failed', {
+          extra: {
+            error,
+          },
+        });
         console.log(`Login fail with error: ${error}`);
       },
     );
