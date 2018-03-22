@@ -17,6 +17,7 @@ class LinkedAccounts extends React.Component {
     if (isLinked) { // if linked, unlink the account
       this.props.disconnectFBUser();
     } else { // link the account
+      LoginManager.logOut();
       LoginManager.logInWithReadPermissions(['public_profile'])
         .then((result) => {
           if (!result.isCancelled) {

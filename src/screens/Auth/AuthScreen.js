@@ -103,6 +103,7 @@ class AuthScreen extends React.Component {
   };
 
   onSignInFacebook = () => {
+    LoginManager.logOut();
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (!result.isCancelled) {
