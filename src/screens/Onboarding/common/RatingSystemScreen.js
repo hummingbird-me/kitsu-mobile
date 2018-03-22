@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { upperFirst, toLower } from 'lodash';
@@ -91,7 +91,7 @@ class RatingSystemScreen extends React.Component {
     const { loading } = this.props;
     return (
       <View style={styles.container}>
-        <View style={styles.contentWrapper}>
+        <ScrollView style={styles.contentWrapper}>
           <Text style={styles.tutorialText}>
             How would you prefer to rate the things you’ve seen and read?
           </Text>
@@ -118,7 +118,7 @@ class RatingSystemScreen extends React.Component {
             title={`Use ${upperFirst(toLower(ratingSystem))} Ratings`}
             titleStyle={styles.buttonTitleStyle}
           />
-        </View>
+        </ScrollView>
         <View style={{ flexDirection: 'row' }}>
           <FastImage source={fox} style={{ width: 50, height: 50, zIndex: 2 }} />
           <View
