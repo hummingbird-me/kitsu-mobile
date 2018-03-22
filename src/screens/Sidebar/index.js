@@ -1,6 +1,6 @@
 import Blocking from './Blocking';
 import GeneralSettings from './GeneralSettings';
-import { LibraryScreen, ExportLibrary, ImportLibrary, ImportDetail } from './Library';
+import { LibrarySettings, ExportLibrary, ImportLibrary, ImportDetail } from './Library';
 import LinkedAccounts from './LinkedAccounts';
 import PrivacySettings from './PrivacySettings';
 import SettingsScreen from './SettingsScreen';
@@ -13,7 +13,7 @@ export {
   ImportDetail,
   ImportLibrary,
   ExportLibrary,
-  LibraryScreen,
+  LibrarySettings,
   LinkedAccounts,
   PrivacySettings,
   SettingsScreen,

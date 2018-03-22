@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { LoginManager } from 'react-native-fbsdk';
 import * as colors from 'kitsu/constants/colors';
 import fblogo from 'kitsu/assets/img/fblogo.png';
+import { Sentry } from 'react-native-sentry';
 import { connectFBUser, disconnectFBUser } from 'kitsu/store/user/actions';
 import { navigationOptions, SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
@@ -23,6 +24,11 @@ class LinkedAccounts extends React.Component {
           }
         },
         (error) => {
+          Sentry.captureMessage('FBSDK - Facebook Login Failed', {
+            extra: {
+              error,
+            },
+          });
           console.log(`Login fail with error: ${error}`);
         });
     }

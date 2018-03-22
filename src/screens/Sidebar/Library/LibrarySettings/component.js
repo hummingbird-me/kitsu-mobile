@@ -1,16 +1,34 @@
 import React, { PureComponent } from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
-import { SidebarListItem } from 'kitsu/screens/Sidebar/common/';
 import * as colors from 'kitsu/constants/colors';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { capitalize } from 'lodash';
+import { capitalize, lowerCase, isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
+import { navigationOptions, SidebarListItem, SidebarTitle, SidebarButton } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 import { SORT_OPTIONS } from './sortOptions';
+import SidebarHeader from '../../common/SidebarHeader';
+
+const mediaPreferenceKeyToTitle = (key) => {
+  const mapper = {
+    romanized: 'Romanized',
+    canonical: 'Most Common Usage',
+    english: 'English',
+  };
+  return mapper[key] || '-';
+};
+
+const mediaPreferenceTitleToKey = (title) => {
+  switch (title) {
+    case 'Romanized': return 'romanized';
+    case 'Most Common Usage': return 'canonical';
+    case 'English': return 'english';
+    default: return null;
+  }
+};
 
 export class LibrarySettingsComponent extends PureComponent {
   static navigationOptions = () => ({
@@ -23,7 +41,12 @@ export class LibrarySettingsComponent extends PureComponent {
     navigation: PropTypes.object.isRequired,
     fetchUserLibrary: PropTypes.func.isRequired,
     setLibrarySort: PropTypes.func.isRequired,
+    navigateBackOnSave: PropTypes.bool,
   };
+
+  static defaultProps = {
+    navigateBackOnSave: false,
+  }
 
   constructor(props) {
     super(props);
@@ -34,13 +57,21 @@ export class LibrarySettingsComponent extends PureComponent {
       sortBy: (sort && sort.by) || 'updated_at',
       ascending: !!(sort && sort.ascending),
       ratingSystem: (currentUser && currentUser.ratingSystem) || 'simple',
+      titleLanguagePreference: (currentUser && lowerCase(currentUser.titleLanguagePreference)) || 'canonical',
       saving: false,
     };
   }
 
   save = async () => {
-    const { fetchUserLibrary, navigation, currentUser, setLibrarySort, fetchCurrentUser } = this.props;
-    const { sortBy, ascending, saving, ratingSystem } = this.state;
+    const {
+      fetchUserLibrary,
+      navigation,
+      currentUser,
+      setLibrarySort,
+      fetchCurrentUser,
+      navigateBackOnSave,
+    } = this.props;
+    const { sortBy, ascending, saving, ratingSystem, titleLanguagePreference } = this.state;
 
     // Only save if we're not already saving
     if (saving) return;
@@ -50,30 +81,37 @@ export class LibrarySettingsComponent extends PureComponent {
     // Save the sort
     setLibrarySort(sortBy, ascending);
 
-    // Check if rating needs to be changed
-    if (currentUser && currentUser.ratingSystem !== ratingSystem) {
-      // Update the rating system
-      await Kitsu.update('users', { id: currentUser.id, ratingSystem });
-
-      // Fetch the new user object
-      await fetchCurrentUser();
-    }
-
-    // Update the user library
+    // See if any changes need to be made
     if (currentUser) {
+      const changes = {};
+
+      // Rating
+      if (currentUser.ratingSystem !== ratingSystem) {
+        changes.ratingSystem = ratingSystem;
+      }
+
+      // Media title preferences
+      if (lowerCase(currentUser.titleLanguagePreference) !== titleLanguagePreference) {
+        changes.titleLanguagePreference = titleLanguagePreference;
+      }
+
+      // Only update user if we have changes
+      if (!isEmpty(changes)) {
+        // Update the rating system
+        await Kitsu.update('users', { id: currentUser.id, ...changes });
+
+        // Fetch the new user object
+        await fetchCurrentUser();
+      }
+
+      // Update the user library
       fetchUserLibrary({ userId: currentUser.id, refresh: true });
     }
 
     this.setState({ saving: false });
 
-    if (navigation) navigation.goBack();
+    if (navigation && navigateBackOnSave) navigation.goBack();
   };
-
-  goBack = () => {
-    if (!this.state.saving) {
-      this.props.navigation.goBack();
-    }
-  }
 
   librarySorting() {
     const { sortBy, ascending } = this.state;
@@ -108,13 +146,26 @@ export class LibrarySettingsComponent extends PureComponent {
   }
 
   mediaPreferences() {
-    const { ratingSystem } = this.state;
+    const { ratingSystem, titleLanguagePreference } = this.state;
 
     return {
       heading: 'Media Preferences',
       rows: [
         {
-          title: 'Rating System',
+          title: 'Title Display',
+          value: mediaPreferenceKeyToTitle(titleLanguagePreference),
+          options: ['Romanized', 'Most Common Usage', 'English', 'Nevermind'],
+          onOptionSelected: (value) => {
+            const newValue = mediaPreferenceTitleToKey(value);
+            if (newValue) {
+              this.setState({
+                titleLanguagePreference: newValue,
+              });
+            }
+          },
+        },
+        {
+          title: 'Rating Type',
           value: capitalize(ratingSystem),
           options: ['Simple', 'Regular', 'Advanced', 'Nevermind'],
           onOptionSelected: (value) => {
@@ -145,6 +196,12 @@ export class LibrarySettingsComponent extends PureComponent {
         },
       ],
     };
+  }
+
+  goBack = () => {
+    if (!this.state.saving) {
+      this.props.navigation.goBack();
+    }
   }
 
   renderSideBarRow = (row) => {
@@ -186,14 +243,15 @@ export class LibrarySettingsComponent extends PureComponent {
 
   renderSettings(settings) {
     return settings.map(setting => (
-      <View key={setting.heading} style={styles.settingContainer}>
-        <Text style={styles.settingHeader}>{setting.heading}</Text>
+      <View key={setting.heading}>
+        <SidebarTitle title={setting.heading} />
         {setting.rows.map(row => this.renderSettingRow(row))}
       </View>
     ));
   }
 
   render() {
+    const { navigation } = this.props;
     const { saving } = this.state;
 
     const settings = [this.librarySorting(), this.mediaPreferences(), this.manageLibrary()];
@@ -201,16 +259,20 @@ export class LibrarySettingsComponent extends PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <CustomHeader
-            title="Library Settings"
-            leftButtonAction={this.goBack}
-            leftButtonTitle="Back"
-            rightButtonAction={this.save}
-            rightButtonTitle={saving ? 'Saving' : 'Save'}
+          <SidebarHeader
+            navigation={navigation}
+            headerTitle={'Library Settings'}
+            onBackPress={this.goBack}
           />
         </View>
         <ScrollView style={{ flex: 1 }}>
           {this.renderSettings(settings)}
+          <SidebarButton
+            title={'Save'}
+            onPress={this.save}
+            loading={saving}
+            disabled={false}
+          />
         </ScrollView>
       </View>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ImageBackground } from 'react-native';
+import { View, Text, ImageBackground, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Button } from 'kitsu/components/Button';
 import { NavigationActions } from 'react-navigation';
@@ -43,7 +43,10 @@ class WelcomeScreen extends React.Component {
 
     return (
       <View style={commonStyles.container}>
-        <View style={styles.contentWrapper}>
+        <ScrollView
+          style={styles.contentWrapper}
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
           <Text style={[commonStyles.tutorialText, styles.tutorialText]}>
             {title}
           </Text>
@@ -63,7 +66,7 @@ class WelcomeScreen extends React.Component {
             title={"Let's get started!"}
             titleStyle={commonStyles.buttonTitleStyle}
           />
-        </View>
+        </ScrollView>
       </View>
     );
   }

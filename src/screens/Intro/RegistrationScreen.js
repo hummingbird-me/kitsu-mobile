@@ -8,6 +8,7 @@ import { loginUser } from 'kitsu/store/auth/actions';
 import * as colors from 'kitsu/constants/colors';
 import { placeholderImage } from 'kitsu/assets/img/intro';
 import { kitsuConfig } from 'kitsu/config/env';
+import { Sentry } from 'react-native-sentry';
 import { IntroHeader } from './common/';
 import styles from './styles';
 
@@ -77,6 +78,11 @@ class RegistrationScreen extends React.Component {
       },
       (error) => {
         this.setState({ loggingUser: false });
+        Sentry.captureMessage('FBSDK - Facebook Login Failed', {
+          extra: {
+            error,
+          },
+        });
         console.log(`Login fail with error: ${error}`);
       },
     );

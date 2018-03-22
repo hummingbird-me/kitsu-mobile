@@ -9,37 +9,45 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import PropTypes from 'prop-types';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
-const SidebarHeader = ({ navigation, headerTitle, coverImage }) => (
-  <View style={styles.absolute}>
-    <ProgressiveImage
-      hasOverlay
-      style={styles.header}
-      source={{ uri: getImgixCoverImage(coverImage) || defaultCoverUri }}
-    >
-      <View style={styles.headerContainer}>
-        <View style={{ width: 30 }}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Icon name="ios-arrow-back" color={colors.white} size={22} />
-          </TouchableOpacity>
+const SidebarHeader = ({ navigation, headerTitle, coverImage, onBackPress }) => {
+  const goBack = onBackPress || navigation.goBack;
+  return (
+    <View style={styles.absolute}>
+      <ProgressiveImage
+        hasOverlay
+        style={styles.header}
+        source={{ uri: getImgixCoverImage(coverImage) || defaultCoverUri }}
+      >
+        <View style={styles.headerContainer}>
+          <View style={{ width: 30 }}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => goBack()}
+            >
+              <Icon name="ios-arrow-back" color={colors.white} size={22} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.title}>{headerTitle}</Text>
+          <View style={{ width: 30 }}>
+            <View />
+          </View>
         </View>
-        <Text style={styles.title}>{headerTitle}</Text>
-        <View style={{ width: 30 }}>
-          <View />
-        </View>
-      </View>
-    </ProgressiveImage>
-  </View>
-);
+      </ProgressiveImage>
+    </View>
+  );
+};
 
 SidebarHeader.propTypes = {
   headerTitle: PropTypes.string.isRequired,
   navigation: PropTypes.object.isRequired,
   coverImage: PropTypes.object,
+  onBackPress: PropTypes.func,
 };
 
 SidebarHeader.defaultProps = {
   headerTitle: 'Settings',
   coverImage: null,
+  onBackPress: null,
 };
 
 const styles = {

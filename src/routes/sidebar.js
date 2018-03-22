@@ -3,7 +3,7 @@ import {
   SettingsScreen,
   GeneralSettings,
   PrivacySettings,
-  LibraryScreen,
+  LibrarySettings,
   Blocking,
   LinkedAccounts,
   ImportLibrary,
@@ -23,7 +23,7 @@ export const sidebarRoutes = {
     screen: PrivacySettings,
   },
   LibrarySettings: {
-    screen: LibraryScreen,
+    screen: LibrarySettings,
   },
   Blocking: {
     screen: Blocking,
