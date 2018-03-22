@@ -92,7 +92,7 @@ export class LibrarySettingsComponent extends PureComponent {
       }
 
       // Media title preferences
-      if (currentUser.titleLanguagePreference !== titleLanguagePreference) {
+      if (lowerCase(currentUser.titleLanguagePreference) !== titleLanguagePreference) {
         changes.titleLanguagePreference = titleLanguagePreference;
       }
     }
