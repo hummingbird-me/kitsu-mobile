@@ -82,9 +82,8 @@ export class LibrarySettingsComponent extends PureComponent {
     setLibrarySort(sortBy, ascending);
 
     // See if any changes need to be made
-    const changes = {};
     if (currentUser) {
-      changes.id = currentUser.id;
+      const changes = {};
 
       // Rating
       if (currentUser.ratingSystem !== ratingSystem) {
@@ -95,20 +94,17 @@ export class LibrarySettingsComponent extends PureComponent {
       if (lowerCase(currentUser.titleLanguagePreference) !== titleLanguagePreference) {
         changes.titleLanguagePreference = titleLanguagePreference;
       }
-    }
 
+      // Only update user if we have changes
+      if (!isEmpty(changes)) {
+        // Update the rating system
+        await Kitsu.update('users', { id: currentUser.id, ...changes });
 
-    // Only update user if we have changes
-    if (!isEmpty(changes)) {
-      // Update the rating system
-      await Kitsu.update('users', { ...changes });
+        // Fetch the new user object
+        await fetchCurrentUser();
+      }
 
-      // Fetch the new user object
-      await fetchCurrentUser();
-    }
-
-    // Update the user library
-    if (currentUser) {
+      // Update the user library
       fetchUserLibrary({ userId: currentUser.id, refresh: true });
     }
 
