@@ -218,7 +218,7 @@ class TopsList extends PureComponent {
     }));
 
     const categoryData = {
-      title: `${type} By Categeory`,
+      title: `${type} By Category`,
       data: mappedCategories,
       dark: true,
       type: 'static',
@@ -301,6 +301,7 @@ class TopsList extends PureComponent {
             key={listItem.name || listItem.title}
             navigate={navigate}
             onPress={() => this.handleViewAllPress(listItem.title, listItem.type, listItem.action)}
+            onScroll={this.props.onScroll}
           />
         ))}
       </ScrollView>

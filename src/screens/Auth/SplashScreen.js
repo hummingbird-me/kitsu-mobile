@@ -4,44 +4,24 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation';
 
-import anim from 'kitsu/assets/animation/kitsu.json';
 import * as colors from 'kitsu/constants/colors';
-import { refreshTokens, logoutUser } from 'kitsu/store/auth/actions';
 
 class SplashScreen extends Component {
   static navigationOptions = {
     header: null,
   };
 
-  state = {
-    refreshingToken: false,
-  }
-
   componentDidMount() {
-    const { isAuthenticated, completed, refreshTokens, logoutUser, rehydratedAt } = this.props;
+    const { isAuthenticated, completed, rehydratedAt } = this.props;
     if (rehydratedAt) {
-      this.init(refreshTokens, logoutUser, isAuthenticated, completed);
+      this.navigate(isAuthenticated, completed);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, completed, refreshTokens, logoutUser } = nextProps;
-    this.init(refreshTokens, logoutUser, isAuthenticated, completed);
-  }
-
-  async init(refresh, logout, authorized, completed) {
-    if (this.state.refreshingToken) return;
-    this.setState({ refreshingToken: true });
-
-    try {
-      const tokens = await refresh();
-      console.log('tokens: ', tokens);
-      this.setState({ refreshingToken: false });
-      this.navigate(authorized, completed);
-    } catch (e) {
-      this.setState({ refreshingToken: false });
-      console.log('token refresh error: ', e);
-      logout(this.props.navigation);
+    const { isAuthenticated, completed, rehydratedAt } = nextProps;
+    if (rehydratedAt) {
+      this.navigate(isAuthenticated, completed);
     }
   }
 
@@ -79,8 +59,7 @@ class SplashScreen extends Component {
           alignItems: 'center',
           backgroundColor: colors.darkPurple,
         }}
-      >
-      </View>
+      />
     );
   }
 }
@@ -96,4 +75,4 @@ SplashScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { refreshTokens, logoutUser })(SplashScreen);
+export default connect(mapStateToProps)(SplashScreen);
