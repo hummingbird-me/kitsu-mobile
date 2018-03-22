@@ -181,7 +181,7 @@ const loginUserFb = async (dispatch) => {
       '/me',
       {
         httpMethod: 'GET',
-        version: 'v2.5',
+        version: 'v2.9',
         parameters: {
           fields: {
             string: 'email, name, gender',
