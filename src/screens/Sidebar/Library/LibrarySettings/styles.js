@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
+    height: Platform.select({ ios: 77, android: 72 }),
     backgroundColor: colors.listBackPurple,
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowOffset: {
