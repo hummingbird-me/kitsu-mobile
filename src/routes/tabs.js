@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { DrawerNavigator, TabNavigator } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -14,6 +14,14 @@ import NotificationsStack from './notification';
 import QuickUpdateStack from './quickUpdate';
 import FeedStack from './feed';
 import LibraryStack from './library';
+
+const TOP_LEVEL_ROUTES = [
+  'FeedActivity',
+  'SearchAll',
+  'QuickUpdate',
+  'Notifications',
+  'LibraryScreen',
+];
 
 const Tabs = TabNavigator(
   {
@@ -74,13 +82,17 @@ const Drawer = DrawerNavigator({
   drawerBackgroundColor: listBackPurple,
 });
 
-class TabsNav extends React.PureComponent {
+class TabsNav extends PureComponent {
   static propTypes = {
     badge: PropTypes.number.isRequired,
     navigation: PropTypes.object.isRequired,
     fetchCurrentUser: PropTypes.func.isRequired,
     fetchAlgoliaKeys: PropTypes.func.isRequired,
     fetchNotifications: PropTypes.func.isRequired,
+  };
+
+  state = {
+    drawerLockMode: 'unlocked',
   };
 
   componentWillMount() {
@@ -95,12 +107,39 @@ class TabsNav extends React.PureComponent {
     } catch (e) {
       console.warn(e);
     }
+  };
+
+  onNavigationStateChange = (prevState, currentState) => {
+    const current = this._getRouteName(currentState);
+    const previous = this._getRouteName(prevState);
+    // route changed?
+    if (previous !== current) {
+      // top-level route?
+      if (TOP_LEVEL_ROUTES.includes(current)) {
+        this.setState({ drawerLockMode: 'unlocked' });
+      } else {
+        this.setState({ drawerLockMode: 'locked-closed' });
+      }
+    }
+  };
+
+  _getRouteName(state) {
+    if (!state) return null;
+    const route = state.routes[state.index];
+    if (route.routes) {
+      return this._getRouteName(route);
+    }
+    return route.routeName;
   }
 
   render() {
+    const { navigation: rootNavigation, badge } = this.props;
+    const { drawerLockMode } = this.state;
+    const props = { rootNavigation, badge, drawerLockMode };
     return (
       <Drawer
-        screenProps={{ rootNavigation: this.props.navigation, badge: this.props.badge }}
+        screenProps={props}
+        onNavigationStateChange={this.onNavigationStateChange}
       />
     );
   }
