@@ -68,6 +68,7 @@ class RegistrationScreen extends React.Component {
   loginFacebook = () => {
     const { navigation } = this.props;
     this.setState({ loggingUser: true });
+    LoginManager.logOut();
     LoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (!result.isCancelled) {
