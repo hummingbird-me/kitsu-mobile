@@ -13,14 +13,14 @@ const STATUS_MAP = {
     planned: 'you plan to watch',
     completed: 'you\'ve completed',
     on_hold: 'you have on hold',
-    dropped: 'you have dropped',
+    dropped: 'you\'ve dropped',
   },
   manga: {
     current: 'you\'re currently reading',
     planned: 'you plan to read',
     completed: 'you\'ve completed',
     on_hold: 'you have on hold',
-    dropped: 'you have dropped',
+    dropped: 'you\'ve dropped',
   },
 };
 
