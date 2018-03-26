@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Clipboard, ToastAndroid, Platform } from 'react-native';
+import { View, TouchableOpacity, Clipboard, ToastAndroid, Platform, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -19,12 +19,18 @@ export const PostHeader = ({
   name,
   time,
   onBackButtonPress,
+  onEditPress,
+  onDelete,
   currentUser,
 }) => {
   const user = (post && post.user);
   const isCurrentUser = (user && currentUser && user.id === currentUser.id);
 
   const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
+  const canMutate = () => {
+    const isStaffOrMod = currentUser.title === 'Staff' || currentUser.title === 'Mod';
+    return isCurrentUser || isStaffOrMod;
+  };
   const ACTION_OPTIONS = [
     {
       onSelected: async () => {
@@ -43,17 +49,31 @@ export const PostHeader = ({
       },
       text: 'Copy Link to Post',
     },
-    // TODO: Implement post deletion
-    // isCurrentUser ?
-    //   {
-    //     onSelected: null,
-    //     text: 'Delete Post',
-    //   } : {},
+    {
+      condition: canMutate,
+      onSelected: onEditPress,
+      text: 'Edit Post',
+    },
+    {
+      condition: canMutate,
+      onSelected: () => {
+        Alert.alert('Delete Post', 'Are you sure you want to delete this post?', [
+          { text: 'Cancel', onPress: null, },
+          { text: 'I\'m sure', onPress: onDelete, },
+        ], { cancelable: false });
+      },
+      text: 'Delete Post',
+    },
     {
       onSelected: null,
       text: 'Nevermind',
     },
-  ];
+  ].filter((action) => {
+    if (action.condition) {
+      return action.condition();
+    }
+    return true;
+  });
 
   return (
     <View style={styles.postHeader}>
@@ -74,7 +94,7 @@ export const PostHeader = ({
 
         {/* Todo KB: hook up with real action for each options */}
         <SelectMenu
-          options={ACTION_OPTIONS.filter(s => !isEmpty(s))}
+          options={ACTION_OPTIONS}
           onOptionSelected={(value, option) => {
             if (option.onSelected) option.onSelected();
           }}
