@@ -12,6 +12,10 @@ import { isEmpty } from 'lodash';
 import { kitsuConfig } from 'kitsu/config/env';
 import { styles } from './styles';
 
+const formatTime = (time) => (
+  moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMMM')} at ${moment(time).format('H:MMA')}`
+);
+
 export const PostHeader = ({
   post,
   avatar,
@@ -26,11 +30,14 @@ export const PostHeader = ({
   const user = (post && post.user);
   const isCurrentUser = (user && currentUser && user.id === currentUser.id);
 
-  const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
+  const postDateTime = formatTime(time);
+  const editDateTime = `Edited ${formatTime(post.editedAt)}`;
+
   const canMutate = () => {
     const isStaffOrMod = currentUser.title === 'Staff' || currentUser.title === 'Mod';
     return isCurrentUser || isStaffOrMod;
   };
+
   const ACTION_OPTIONS = [
     {
       onSelected: async () => {
@@ -88,7 +95,11 @@ export const PostHeader = ({
           <Avatar avatar={avatar} />
           <Layout.RowMain>
             <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
-            <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>{postDateTime}</StyledText>
+            <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>
+              {postDateTime}
+              {post.editedAt && " · "}
+              {post.editedAt && editDateTime}
+            </StyledText>
           </Layout.RowMain>
         </TouchableOpacity>
 
