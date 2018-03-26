@@ -301,7 +301,6 @@ class TopsList extends PureComponent {
             key={listItem.name || listItem.title}
             navigate={navigate}
             onPress={() => this.handleViewAllPress(listItem.title, listItem.type, listItem.action)}
-            onScroll={this.props.onScroll}
           />
         ))}
       </ScrollView>

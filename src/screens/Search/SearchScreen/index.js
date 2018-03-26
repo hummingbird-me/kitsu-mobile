@@ -20,7 +20,6 @@ class SearchScreen extends PureComponent {
   };
 
   state = {
-    isScrollingScene: false,
     query: {
       anime: undefined,
       manga: undefined,
@@ -76,10 +75,6 @@ class SearchScreen extends PureComponent {
       mediaId: media.id,
       mediaType: media.kind,
     });
-  };
-
-  handleSceneScroll = (value) => {
-    this.setState({ isScrollingScene: value });
   };
 
   renderTabBar = ({ tabs, activeTab, goToPage }) => (
@@ -144,7 +139,6 @@ class SearchScreen extends PureComponent {
         return isEmpty(query[scene]) ? (
           <TopsList
             mounted
-            onScroll={this.handleSceneScroll}
             active={scene}
             navigation={navigation}
           />
