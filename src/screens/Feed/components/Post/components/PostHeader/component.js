@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Clipboard, ToastAndroid, Platform } from 'react-native';
+import { View, TouchableOpacity, Clipboard, ToastAndroid, Platform, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -12,6 +12,10 @@ import { isEmpty } from 'lodash';
 import { kitsuConfig } from 'kitsu/config/env';
 import { styles } from './styles';
 
+const formatTime = (time) => (
+  moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMMM')} at ${moment(time).format('H:MMA')}`
+);
+
 export const PostHeader = ({
   post,
   avatar,
@@ -19,12 +23,21 @@ export const PostHeader = ({
   name,
   time,
   onBackButtonPress,
+  onEditPress,
+  onDelete,
   currentUser,
 }) => {
   const user = (post && post.user);
   const isCurrentUser = (user && currentUser && user.id === currentUser.id);
 
-  const postDateTime = moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMM')} at ${moment(time).format('H:MMA')}`;
+  const postDateTime = formatTime(time);
+  const editDateTime = `Edited ${formatTime(post.editedAt)}`;
+
+  const canMutate = () => {
+    const isStaffOrMod = currentUser.title === 'Staff' || currentUser.title === 'Mod';
+    return isCurrentUser || isStaffOrMod;
+  };
+
   const ACTION_OPTIONS = [
     {
       onSelected: async () => {
@@ -43,17 +56,31 @@ export const PostHeader = ({
       },
       text: 'Copy Link to Post',
     },
-    // TODO: Implement post deletion
-    // isCurrentUser ?
-    //   {
-    //     onSelected: null,
-    //     text: 'Delete Post',
-    //   } : {},
+    {
+      condition: canMutate,
+      onSelected: onEditPress,
+      text: 'Edit Post',
+    },
+    {
+      condition: canMutate,
+      onSelected: () => {
+        Alert.alert('Delete Post', 'Are you sure you want to delete this post?', [
+          { text: 'Cancel', onPress: null, },
+          { text: 'I\'m sure', onPress: onDelete, },
+        ], { cancelable: false });
+      },
+      text: 'Delete Post',
+    },
     {
       onSelected: null,
       text: 'Nevermind',
     },
-  ];
+  ].filter((action) => {
+    if (action.condition) {
+      return action.condition();
+    }
+    return true;
+  });
 
   return (
     <View style={styles.postHeader}>
@@ -68,12 +95,16 @@ export const PostHeader = ({
           <Avatar avatar={avatar} />
           <Layout.RowMain>
             <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
-            <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>{postDateTime}</StyledText>
+            <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>
+              {postDateTime}
+              {post.editedAt && " · "}
+              {post.editedAt && editDateTime}
+            </StyledText>
           </Layout.RowMain>
         </TouchableOpacity>
 
         <SelectMenu
-          options={ACTION_OPTIONS.filter(s => !isEmpty(s))}
+          options={ACTION_OPTIONS}
           onOptionSelected={(value, option) => {
             if (option.onSelected) option.onSelected();
           }}

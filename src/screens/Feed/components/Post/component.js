@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
@@ -26,6 +26,7 @@ export class Post extends PureComponent {
   }
 
   state = {
+    post: this.props.post,
     comment: '',
     comments: [],
     latestComments: [],
@@ -36,6 +37,7 @@ export class Post extends PureComponent {
     postLikesCount: parseInt(this.props.post.postLikesCount, 10) || 0,
     overlayRemoved: false,
     isPostingComment: false,
+    isDeleted: false,
   };
 
   mounted = false
@@ -53,7 +55,7 @@ export class Post extends PureComponent {
 
   onPostPress = () => {
     this.props.onPostPress({
-      post: this.props.post,
+      post: this.state.post,
       comments: this.state.comments,
       commentsCount: this.state.commentsCount,
       topLevelCommentsCount: this.state.topLevelCommentsCount,
@@ -93,7 +95,7 @@ export class Post extends PureComponent {
       const comment = await Kitsu.create('comments', {
         content: this.state.comment.trim(),
         post: {
-          id: this.props.post.id,
+          id: this.state.post.id,
           type: 'posts',
         },
         user: {
@@ -124,7 +126,7 @@ export class Post extends PureComponent {
       // they can do so without a refetch.
       const comments = await Kitsu.findAll('comments', {
         filter: {
-          postId: this.props.post.id,
+          postId: this.state.post.id,
           parentId: '_none',
         },
         fields: {
@@ -151,7 +153,7 @@ export class Post extends PureComponent {
     try {
       const likes = await Kitsu.findAll('postLikes', {
         filter: {
-          postId: this.props.post.id,
+          postId: this.state.post.id,
           userId: this.props.currentUser.id,
         },
         include: 'user',
@@ -168,8 +170,8 @@ export class Post extends PureComponent {
 
   toggleLike = async () => {
     try {
-      const { currentUser, post } = this.props;
-      let { like, isLiked, postLikesCount } = this.state;
+      const { currentUser } = this.props;
+      let { like, isLiked, post, postLikesCount } = this.state;
 
       this.setState({
         isLiked: !isLiked,
@@ -203,6 +205,41 @@ export class Post extends PureComponent {
     }
   };
 
+  deletePost = async () => {
+    try {
+      const { post } = this.state;
+      this.setState({ isDeleted: true });
+      await Kitsu.destroy('posts', post.id);
+    } catch (err) {
+      console.log('Error deleting post:', err);
+      this.setState({ isDeleted: false });
+      Alert.alert('Sorry', 'There was an issue deleting the post.', [
+        { text: 'OK', onPress: null },
+      ]);
+    }
+  };
+
+  toggleEditor = () => {
+    if (this.props.currentUser) {
+      this.props.navigation.navigate('CreatePost', {
+        isEditing: true,
+        post: this.state.post,
+        onNewPostCreated: (post) => {
+          const { user, targetUser, spoiledUnit, media, targetGroup } = this.state.post;
+          // Keep the relationships in order since the update call will strip them
+          // and we don't need the additional include payload
+          const postWithRelationships = post;
+          postWithRelationships.user = user;
+          postWithRelationships.targetUser = targetUser;
+          postWithRelationships.spoiledUnit = spoiledUnit;
+          postWithRelationships.media = media;
+          postWithRelationships.targetGroup = targetGroup;
+          this.setState({ post: postWithRelationships });
+        },
+      });
+    }
+  };
+
   focusOnCommentInput = () => {
     if (this.commentInput) this.commentInput.focus();
   }
@@ -214,7 +251,17 @@ export class Post extends PureComponent {
   }
 
   render() {
-    const { navigation, post, currentUser } = this.props;
+    const { navigation, currentUser } = this.props;
+    const {
+      post,
+      comment,
+      latestComments,
+      overlayRemoved,
+      postLikesCount,
+      commentsCount,
+      isPostingComment,
+      isDeleted,
+    } = this.state;
     const {
       createdAt,
       content,
@@ -226,14 +273,7 @@ export class Post extends PureComponent {
       spoiledUnit,
       user,
     } = post;
-    const {
-      comment,
-      latestComments,
-      overlayRemoved,
-      postLikesCount,
-      commentsCount,
-      isPostingComment,
-    } = this.state;
+    if (isDeleted) { return null; }
 
     const isSpoilerOrNSFW = (spoiler || nsfw);
 
@@ -276,6 +316,8 @@ export class Post extends PureComponent {
             onAvatarPress={() => {
               if (user) navigation.navigate('ProfilePages', { userId: user.id });
             }}
+            onEditPress={this.toggleEditor}
+            onDelete={this.deletePost}
             name={user.name}
             time={createdAt}
           />
