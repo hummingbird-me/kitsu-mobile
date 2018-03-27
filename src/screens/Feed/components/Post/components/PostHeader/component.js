@@ -72,7 +72,6 @@ export const PostHeader = ({
           </Layout.RowMain>
         </TouchableOpacity>
 
-        {/* Todo KB: hook up with real action for each options */}
         <SelectMenu
           options={ACTION_OPTIONS.filter(s => !isEmpty(s))}
           onOptionSelected={(value, option) => {
@@ -80,7 +79,7 @@ export const PostHeader = ({
           }}
           activeOpacity={0.8}
         >
-          <Icon name="ios-more" color={colors.lightGrey} style={{ fontSize: 32, paddingVertical: 10 }} />
+          <Icon name="ios-more" color={colors.lightGrey} style={styles.postHeaderActions} />
         </SelectMenu>
       </Layout.RowWrap>
     </View>
