@@ -10,8 +10,9 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
 export const TabBar = props => (
-  <View style={[styles.container, props.style]}>
+  <View style={[styles.container, props.style]} onLayout={props.onLayout}>
     <ScrollView
+      ref={r => { props.onRef && props.onRef(r) }}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={[styles.tab, props.containerStyle]}
