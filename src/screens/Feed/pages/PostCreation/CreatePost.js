@@ -99,7 +99,7 @@ class CreatePost extends React.PureComponent {
 
     // Editing an existing post?
     const { state: { params } } = navigation;
-    if (!params.isEditing) { return ;}
+    if (!params.isEditing) { return; }
     const { post } = params;
     this.setState({
       content: post.content,
