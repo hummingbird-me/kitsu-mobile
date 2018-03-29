@@ -526,9 +526,33 @@ Kitsu.define(
     media: {
       jsonApi: 'hasOne',
     },
+    videos: {
+      jsonApi: 'hasMany',
+      type: 'videos',
+    },
     createdAt: '',
   },
   { collectionPath: 'episodes' },
+);
+
+Kitsu.define(
+  'videos',
+  {
+    url: '',
+    availableRegions: [],
+    subLang: '',
+    dubLang: '',
+    embedData: {},
+    episode: {
+      jsonApi: 'hasOne',
+      type: 'episodes',
+    },
+    streamer: {
+      jsonApi: 'hasOne',
+      type: 'streamers',
+    },
+  },
+  { collectionPath: 'videos' },
 );
 
 Kitsu.define(
