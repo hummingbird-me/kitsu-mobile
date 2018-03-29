@@ -255,6 +255,7 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
   const fetchUserTypeOptions = {
     limit: options.limit,
     userId: options.userId,
+    refresh: options.refresh,
   };
 
   try {
