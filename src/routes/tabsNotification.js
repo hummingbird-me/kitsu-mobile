@@ -123,7 +123,6 @@ class TabsNav extends PureComponent {
   onNavigationStateChange = (prevState, currentState) => {
     const current = this._getRouteName(currentState);
     const previous = this._getRouteName(prevState);
-    console.debug('debug:', previous, current);
     // route changed?
     if (previous !== current) {
       // top-level route?

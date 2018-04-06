@@ -16,6 +16,7 @@ const TAB_TEXT_MAPPING = {
   on_hold: { anime: 'On Hold', manga: 'On Hold' },
   dropped: { anime: 'Dropped', manga: 'Dropped' },
 };
+const LIBRARY_PAGINATION_LIMIT = 60;
 
 export class LibraryScreenComponent extends PureComponent {
   static navigationOptions = () => ({
@@ -106,7 +107,7 @@ export class LibraryScreenComponent extends PureComponent {
     if (!currentUser || !currentLibrary) return;
 
     if (!currentLibrary.loading && currentLibrary.fetchMore) {
-      currentLibrary.fetchMore();
+      currentLibrary.fetchMore(LIBRARY_PAGINATION_LIMIT);
     }
   }
 

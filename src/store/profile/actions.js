@@ -215,10 +215,11 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
         console.log(options);
         fetchUserLibraryByType(newOptions)(dispatch, getState);
       },
-      fetchMore: () => {
+      fetchMore: (limit = 10) => {
         if (data.length < libraryEntries.meta.count) {
           const newOptions = {
             ...options,
+            limit,
             refresh: false,
           };
           fetchUserLibraryByType(newOptions)(dispatch, getState);
@@ -242,7 +243,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
 export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
   const options = {
-    limit: 10,
+    ...defaultFetchUserLibraryOptions,
     ...fetchOptions,
   };
 
@@ -254,6 +255,7 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
   const fetchUserTypeOptions = {
     limit: options.limit,
     userId: options.userId,
+    refresh: options.refresh,
   };
 
   try {
