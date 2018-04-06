@@ -40,7 +40,8 @@ class Episodes extends PureComponent {
 
   navigateToUnitPage = (unit) => {
     this.props.navigation.navigate('UnitDetails', {
-      unit
+      unit,
+      media: this.props.media,
     });
   }
 
