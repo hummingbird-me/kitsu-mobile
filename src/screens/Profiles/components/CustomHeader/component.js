@@ -11,8 +11,9 @@ export const CustomHeader = ({
   leftButtonAction,
   rightButtonTitle,
   rightButtonAction,
+  backgroundColor,
 }) => (
-  <View style={styles.headerView}>
+  <View style={[styles.headerView, { backgroundColor }]}>
     <View style={[styles.buttonView, styles.buttonView__left]}>
       {leftButtonAction && (
         <TouchableOpacity onPress={leftButtonAction} style={styles.button}>
@@ -26,7 +27,6 @@ export const CustomHeader = ({
         <StyledText color="light" size="default" bold>{title}</StyledText>
       </View>
     )}
-
     <View style={[styles.buttonView, styles.buttonView__right]}>
       {rightButtonAction && (
         <TouchableOpacity onPress={rightButtonAction} style={styles.button}>
@@ -44,6 +44,7 @@ CustomHeader.propTypes = {
   rightButtonAction: PropTypes.func,
   rightButtonTitle: PropTypes.string,
   title: PropTypes.string,
+  backgroundColor: PropTypes.string,
 };
 
 CustomHeader.defaultProps = {
@@ -52,4 +53,5 @@ CustomHeader.defaultProps = {
   rightButtonAction: null,
   rightButtonTitle: null,
   title: null,
+  backgroundColor: 'transparent',
 };

@@ -44,6 +44,7 @@ const Tabs = TabNavigator(
     },
   },
   {
+    initialRouteName: 'Search',
     lazy: true,
     removeClippedSubviews: true,
     tabBarPosition: 'bottom',

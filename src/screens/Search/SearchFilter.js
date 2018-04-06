@@ -13,7 +13,7 @@ import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 
 class SearchFilter extends Component {
-  static navigationOptions = () => ({
+  static navigationOptions = ({ navigation }) => ({
     header: (
       <NavigationHeader
         navigation={navigation}

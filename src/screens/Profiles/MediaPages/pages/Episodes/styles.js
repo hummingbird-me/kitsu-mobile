@@ -14,8 +14,11 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  itemTitle: {
+  textContainer: {
     flex: 1,
+    flexDirection: 'row',
+  },
+  itemTitle: {
     marginLeft: 8,
   },
   progressIconContainer: {

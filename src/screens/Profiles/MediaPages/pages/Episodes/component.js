@@ -38,6 +38,12 @@ class Episodes extends PureComponent {
     });
   }
 
+  navigateToUnitPage = (unit) => {
+    this.props.navigation.navigate('UnitDetails', {
+      unit
+    });
+  }
+
   renderItem = ({ item }) => {
     const { libraryEntry, media, onEpisodeProgress, loadingLibrary } = this.props;
 
@@ -52,8 +58,10 @@ class Episodes extends PureComponent {
 
     return (
       <View style={styles.itemWrap}>
-        <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
-        <StyledText color="black" size="small" textStyle={styles.itemTitle}>{title}</StyledText>
+        <TouchableOpacity style={styles.textContainer} onPress={() => this.navigateToUnitPage(item)}>
+          <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
+          <StyledText color="black" size="small" textStyle={styles.itemTitle}>{title}</StyledText>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => onEpisodeProgress && onEpisodeProgress(item.number)}
           style={styles.progressIconContainer}
