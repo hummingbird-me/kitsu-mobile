@@ -85,9 +85,10 @@ class CreatePost extends React.PureComponent {
     currentFeed: feedStreams[0],
     error: '',
     gif: null,
-    media: null,
-    nsfw: false,
-    spoiler: false,
+    media: this.props.navigation.state.params.media || null,
+    nsfw: this.props.navigation.state.params.nsfw || false,
+    spoiler: this.props.navigation.state.params.spoiler || false,
+    spoiledUnit: this.props.navigation.state.params.spoiledUnit || null,
   };
 
   componentDidMount() {
@@ -131,7 +132,7 @@ class CreatePost extends React.PureComponent {
     const { navigation } = this.props;
     const { targetUser } = navigation.state.params;
     const currentUserId = this.props.currentUser.id;
-    const { content, currentFeed, gif, media, nsfw, spoiler } = this.state;
+    const { content, currentFeed, gif, media, nsfw, spoiler, spoiledUnit } = this.state;
 
     if (navigation.state.params.busy) return;
 
@@ -154,8 +155,15 @@ class CreatePost extends React.PureComponent {
     const mediaData = media ? {
       media: {
         id: media.id,
-        type: media.kind,
+        type: media.kind || media.type,
       },
+    } : {};
+
+    const spoiledData = spoiledUnit ? {
+      spoiledUnit: {
+        id: spoiledUnit.id,
+        type: spoiledUnit.type,
+      }
     } : {};
 
     const targetData = (targetUser && targetUser.id !== currentUserId) ? {
@@ -193,6 +201,7 @@ class CreatePost extends React.PureComponent {
           ...mediaData,
           nsfw,
           spoiler,
+          ...spoiledData,
         });
       }
 
@@ -222,7 +231,7 @@ class CreatePost extends React.PureComponent {
       nsfw,
       spoiler,
     } = this.state;
-    const { busy, targetUser, isEditing } = navigation.state.params;
+    const { busy, targetUser, isEditing, isMediaDisabled } = navigation.state.params;
 
     const isValidTargetUser = (targetUser && targetUser.id !== currentUser.id && targetUser.name);
     const placeholder = isValidTargetUser ? `Write something to ${targetUser.name}` : 'Write something....';
@@ -284,7 +293,7 @@ class CreatePost extends React.PureComponent {
             <View>
               {media ?
                 <MediaItem
-                  disabled={busy || isEditing}
+                  disabled={busy || isEditing || isMediaDisabled}
                   media={media}
                   onClear={() => this.setState({ media: null })}
                 />

@@ -8,12 +8,12 @@ import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { styles } from './styles';
 
-const CreatePostRowComponent = ({ currentUser, targetUser, onPress, title }) => {
+const CreatePostRowComponent = ({ currentUser, targetUser, onPress, title, style }) => {
   const defaultTitle = `Want to share an update, ${currentUser.name}?`;
   const shareTitle = `Share an update with ${targetUser ? targetUser.name : 'Someone'}`;
   const isTargetCurrentUser = targetUser ? targetUser.id === currentUser.id : true;
   return (
-    <View style={styles.wrap}>
+    <View style={[styles.wrap, style]}>
       <TouchableOpacity onPress={onPress}>
         <Layout.RowWrap alignItems="center">
           <Avatar avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar} />
@@ -42,6 +42,7 @@ CreatePostRowComponent.propTypes = {
   }),
   onPress: PropTypes.func,
   title: PropTypes.string,
+  style: PropTypes.object,
 };
 
 CreatePostRowComponent.defaultProps = {
@@ -49,6 +50,7 @@ CreatePostRowComponent.defaultProps = {
   targetUser: null,
   onPress: null,
   title: null,
+  style: null,
 };
 
 const mapStateToProps = ({ user }) => {
