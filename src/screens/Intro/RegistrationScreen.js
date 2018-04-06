@@ -69,7 +69,7 @@ class RegistrationScreen extends React.Component {
     const { navigation } = this.props;
     this.setState({ loggingUser: true });
     LoginManager.logOut();
-    LoginManager.logInWithReadPermissions(['public_profile']).then(
+    LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
       (result) => {
         if (!result.isCancelled) {
           this.props.loginUser(null, navigation, 'registration');
