@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { ScrollView, View, WebView, Platform, Text, ActivityIndicator, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import FastImage from 'react-native-fast-image';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import WKWebView from 'react-native-wkwebview-reborn';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
@@ -11,16 +10,17 @@ import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
 import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { ImageStatus } from 'kitsu/components/ImageStatus';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import moment from 'moment';
 import URL from 'url-parse';
+import { styles } from './styles';
 
 const WebComponent = Platform.OS === 'ios' ? WKWebView : WebView;
 const LANGUAGE_LOOKUP = {
@@ -155,13 +155,13 @@ class Unit extends PureComponent {
     if (languageOptions) { languageOptions.push('Nevermind'); }
 
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.listBackPurple }}>
+      <ScrollView style={styles.container}>
         {/* Video */}
         {hasVideo && (
-          <View style={{ backgroundColor: colors.white }}>
+          <View style={styles.videoContainer}>
             <WebComponent
               ref={ref => { this.webview = ref; }}
-              style={{ width: Dimensions.get('window').width, height: 200 }}
+              style={styles.webContainer}
               // @TODO: replace with a Kitsu-based link
               source={{ uri: 'https://reminiscent-team.surge.sh' }}
               onMessage={this.onMessage}
@@ -171,14 +171,13 @@ class Unit extends PureComponent {
               injectedJavaScript="window.initializeHulu();"
             />
             {/* Type selector */}
-            <View style={{ paddingVertical: 20 }}>
-              <View style={{ width: Dimensions.get('window').width, height: 1, backgroundColor: colors.lightGrey }} />
+            <View style={styles.languageContainer}>
               <SelectMenu
                 options={languageOptions}
                 onOptionSelected={this.onLanguageChange}
               >
-                <View style={{ padding: 5, borderWidth: 1, borderColor: colors.lightGrey }}>
-                  <StyledText color="dark">{this.getLanguageTitle(selectedVideo)}</StyledText>
+                <View style={styles.languageButton}>
+                  <StyledText color="dark" size="small">{this.getLanguageTitle(selectedVideo)}</StyledText>
                 </View>
               </SelectMenu>
             </View>
@@ -187,7 +186,7 @@ class Unit extends PureComponent {
         )}
 
         {/* Unit information */}
-        <View style={{ backgroundColor: colors.white, padding: 20 }}>
+        <View style={styles.unitContainer}>
           <View style={{ marginBottom: 10 }}>
             <View style={{ flexDirection: 'row' }}>
               <StyledText color="dark" bold>{unitPrefix} {unit.number} </StyledText>
