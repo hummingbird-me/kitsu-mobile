@@ -1,26 +1,33 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, WebView, Platform, Text, ActivityIndicator } from 'react-native';
+import { ScrollView, View, WebView, Platform, Text, ActivityIndicator, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import WKWebView from 'react-native-wkwebview-reborn';
-import HuluHTML from 'kitsu/assets/html/hulu-iframe';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
+import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
+import { Post } from 'kitsu/screens/Feed/components/Post';
+import { ImageStatus } from 'kitsu/components/ImageStatus';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import moment from 'moment';
 import URL from 'url-parse';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
-import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { ImageStatus } from 'kitsu/components/ImageStatus';
+
+const WebComponent = Platform.OS === 'ios' ? WKWebView : WebView;
+const LANGUAGE_LOOKUP = {
+  en: 'English',
+  ja: 'Japanese',
+  es: 'Spanish',
+};
 
 class Unit extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -40,6 +47,7 @@ class Unit extends PureComponent {
   state = {
     hasVideo: false,
     isFeedLoading: true,
+    selectedVideo: null,
     discussions: [],
   };
 
@@ -47,7 +55,7 @@ class Unit extends PureComponent {
     const { navigation: { state: { params } } } = this.props;
     const hasVideos = (params.unit.videos || []).length >= 1;
     if (hasVideos) {
-      this.setState({ hasVideo: true });
+      this.setState({ hasVideo: true, selectedVideo: params.unit.videos[0] });
     }
     this.fetchFeed();
   }
@@ -73,12 +81,28 @@ class Unit extends PureComponent {
     const { nativeEvent: { data } } = event;
     switch (data) {
       case 'loaded':
-        this.webview.postMessage('initialize');
+        const video = this.state.selectedVideo;
+        const message = { message: 'initialize', id: video.embedData.eid };
+        this.webview.postMessage(JSON.stringify(message));
         break;
       default:
-        console.debug('Unhandled message sent from WebView');
+        console.debug('Unhandled message sent from WebView:', event.nativeEvent.data);
         break;
     }
+  };
+
+  onLanguageChange = (video) => {
+    this.setState({ selectedVideo: video });
+    const message = { message: 'change', id: video.embedData.eid };
+    this.webview.postMessage(JSON.stringify(message));
+  };
+
+  getLanguageTitle = (video) => {
+    const { dubLang, subLang } = video;
+    if (dubLang !== 'ja') {
+      return `${LANGUAGE_LOOKUP[dubLang]} Dub`;
+    }
+    return `${LANGUAGE_LOOKUP[subLang]} Sub`;
   };
 
   navigateToCreatePost = () => {
@@ -118,27 +142,47 @@ class Unit extends PureComponent {
   );
 
   render() {
-    const { hasVideo, isFeedLoading, discussions } = this.state;
+    const { hasVideo, isFeedLoading, selectedVideo, discussions } = this.state;
     const { unit } = this.props.navigation.state.params;
 
+    // @TODO: Cleanup, not needed to recompute each render
     const unitPrefix = unit.type === 'episodes' ? 'EP' : 'CH';
     const lowerUnitPrefix = unit.type === 'episodes' ? 'episode' : 'chapter';
     const releaseText = unit.type === 'episodes' ? 'Aired' : 'Published';
     let unitDate = unit.type === 'episodes' ? unit.airdate : unit.published;
     unitDate = unitDate && moment(unitDate).format('MMMM Do, YYYY');
+    const languageOptions = hasVideo && unit.videos.map((video) => ({ text: this.getLanguageTitle(video), value: video }));
+    if (languageOptions) { languageOptions.push('Nevermind'); }
 
-    const WebComponent = Platform.OS === 'ios' ? WKWebView : WebView;
     return (
       <ScrollView style={{ flex: 1, backgroundColor: colors.listBackPurple }}>
+        {/* Video */}
         {hasVideo && (
-          <View style={{ flex: 1, backgroundColor: 'black' }}>
+          <View style={{ backgroundColor: colors.white }}>
             <WebComponent
               ref={ref => { this.webview = ref; }}
-              source={{ html: HuluHTML }}
+              style={{ width: Dimensions.get('window').width, height: 200 }}
+              // @TODO: replace with a Kitsu-based link
+              source={{ uri: 'https://reminiscent-team.surge.sh' }}
               onMessage={this.onMessage}
               renderLoading={this.renderLoading}
               renderError={this.renderError}
+              // This ensures `postMessage` has been patched by React-Native
+              injectedJavaScript="window.initializeHulu();"
             />
+            {/* Type selector */}
+            <View style={{ paddingVertical: 20 }}>
+              <View style={{ width: Dimensions.get('window').width, height: 1, backgroundColor: colors.lightGrey }} />
+              <SelectMenu
+                options={languageOptions}
+                onOptionSelected={this.onLanguageChange}
+              >
+                <View style={{ padding: 5, borderWidth: 1, borderColor: colors.lightGrey }}>
+                  <StyledText color="dark">{this.getLanguageTitle(selectedVideo)}</StyledText>
+                </View>
+              </SelectMenu>
+            </View>
+            {/* Episode selector */}
           </View>
         )}
 
