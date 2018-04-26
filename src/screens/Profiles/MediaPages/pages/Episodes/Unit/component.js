@@ -89,13 +89,14 @@ class Unit extends PureComponent {
 
   onVideoChange = (item) => {
     // Could be a video change within the current unit or a unit change
+    let video = null;
     if (typeof item === 'number') {
       this.setState({ selectedVideoIndex: item });
+      video = this.state.selectedUnit.videos[item];
     } else {
-      this.setState({ selectedUnit: item, selectedVideoIndex: 0 });
-      this.fetchFeed();
+      this.setState({ selectedUnit: item, selectedVideoIndex: 0 }, this.fetchFeed);
+      video = item.videos[0];
     }
-    const video = this.state.selectedUnit.videos[this.state.selectedVideoIndex];
     const message = { message: 'initialize', id: video.embedData.eid };
     this.webview.postMessage(JSON.stringify(message));
   };
