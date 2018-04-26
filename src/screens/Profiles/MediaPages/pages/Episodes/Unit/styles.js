@@ -1,7 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
-
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -28,7 +27,24 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   unitContainer: {
+    flex: 1,
+    paddingVertical: 5,
+  },
+  unitButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginHorizontal: 5,
+    borderWidth: 1,
+    borderColor: colors.lightGrey,
+    borderRadius: 5,
+    backgroundColor: '#F1F1F1',
+    alignItems: 'center',
+  },
+  unitButton__active: {
     backgroundColor: colors.white,
-    padding: 20,
+  },
+  metaContainer: {
+    backgroundColor: colors.white,
+    padding: 15,
   },
 });
