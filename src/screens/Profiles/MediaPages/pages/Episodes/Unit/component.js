@@ -118,6 +118,10 @@ class Unit extends PureComponent {
     });
   };
 
+  navigateToPost = (props) => {
+    this.props.navigation.navigate('PostDetails', props);
+  };
+
   renderLoading = () => (
     <SceneLoader />
   );
