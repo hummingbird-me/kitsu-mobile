@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, WebView, Platform, Text, ActivityIndicator, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Platform, Text, WebView, ActivityIndicator, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
@@ -70,20 +70,6 @@ class Unit extends PureComponent {
     } catch (error) {
       console.log('Failed to fetch feed:', error);
       this.setState({ discussions: [], isFeedLoading: false });
-    }
-  };
-
-  onMessage = (event) => {
-    const { nativeEvent: { data } } = event;
-    switch (data) {
-      case 'loaded':
-        const video = this.state.selectedUnit.videos[this.state.selectedVideoIndex];
-        const message = { message: 'initialize', id: video.embedData.eid };
-        this.webview.postMessage(JSON.stringify(message));
-        break;
-      default:
-        console.debug('Unhandled message sent from WebView:', event.nativeEvent.data);
-        break;
     }
   };
 
@@ -196,6 +182,10 @@ class Unit extends PureComponent {
       item.videos.filter(video => video === selectedVideo).length === 1
     ));
 
+    // Injected javascript
+    const selectedVideoId = selectedVideo && selectedVideo.embedData.eid;
+    const injectedJavaScript = `window.initializeHulu('${selectedVideoId}');`;
+
     return (
       <ScrollView style={styles.container}>
         {/* Video */}
@@ -206,11 +196,9 @@ class Unit extends PureComponent {
               style={styles.webContainer}
               // @TODO: replace with a Kitsu-based link
               source={{ uri: 'https://reminiscent-team.surge.sh' }}
-              onMessage={this.onMessage}
               renderLoading={this.renderLoading}
               renderError={this.renderError}
-              // This ensures `postMessage` has been patched by React-Native
-              injectedJavaScript="window.initializeHulu();"
+              injectedJavaScript={injectedJavaScript}
             />
             {/* Type selector */}
             <View style={styles.languageContainer}>
