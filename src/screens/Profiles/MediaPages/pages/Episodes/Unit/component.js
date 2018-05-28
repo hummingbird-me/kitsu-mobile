@@ -195,7 +195,7 @@ class Unit extends PureComponent {
               ref={ref => { this.webview = ref; }}
               style={styles.webContainer}
               // @TODO: replace with a Kitsu-based link
-              source={{ uri: 'https://reminiscent-team.surge.sh' }}
+              source={{ uri: 'https://kitsu.io/hulu-embed-frame.html' }}
               renderLoading={this.renderLoading}
               renderError={this.renderError}
               injectedJavaScript={injectedJavaScript}
