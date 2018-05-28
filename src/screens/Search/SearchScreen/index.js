@@ -64,7 +64,12 @@ class SearchScreen extends PureComponent {
     const filters = currentScene.kind ? `kind:${currentScene.kind}` : '';
     index.search({ query, filters}, (err, content) => {
       if (!err) {
-        this.setState({ searchResults: { [scene]: content.hits } });
+        this.setState({
+          searchResults: {
+            ...this.state.searchResults,
+            [scene]: content.hits,
+          },
+        });
       }
     });
   };
@@ -123,16 +128,18 @@ class SearchScreen extends PureComponent {
   renderSubScene = (scene) => {
     const { query } = this.state;
     const { navigation, followUser, captureUsersData } = this.props;
-    const hits = this.state.searchResults[scene];
+    const hits = this.state.searchResults[scene] || [];
 
     switch (scene) {
       case 'users': {
-        return <UsersList
-          hits={hits}
-          onFollow={followUser}
-          onData={captureUsersData}
-          navigation={navigation}
-        />
+        return (
+          <UsersList
+            hits={hits}
+            onFollow={followUser}
+            onData={captureUsersData}
+            navigation={navigation}
+          />
+        );
       }
       case 'anime':
       case 'manga': {
