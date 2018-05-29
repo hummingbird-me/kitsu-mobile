@@ -4,24 +4,32 @@ import * as colors from 'kitsu/constants/colors';
 export const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: colors.white,
     borderRadius: 3,
     height: 40,
   },
   searchIcon: {
-    position: 'absolute',
     backgroundColor: 'transparent',
-    paddingHorizontal: 10,
+    paddingLeft: 8,
+    paddingRight: 6,
   },
-  searchIconFocus: {
-    left: 0,
-    paddingRight: 0,
+  clearContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+  },
+  clearIcon: {
+    paddingHorizontal: 8,
   },
   input: {
     flex: 1,
+    height: '80%',
     color: colors.black,
-    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 0,
+    margin: 0,
+    borderWidth: 0,
   },
 });

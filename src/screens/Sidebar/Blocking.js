@@ -95,12 +95,11 @@ const Hits = connectInfiniteHits(({ hits, hasMore, refine, onPress, currentUser 
 });
 
 const InstantSearchBox = connectSearchBox(
-  ({ refine, currentRefinement, placeholder, searchIconOffset, style }) => (
+  ({ refine, currentRefinement, placeholder, style }) => (
     <SearchBox
       onChangeText={refine}
       value={currentRefinement}
       placeholder={placeholder}
-      searchIconOffset={searchIconOffset}
       style={style}
     />
   ));
@@ -274,7 +273,7 @@ class Blocking extends React.Component {
             searchState={searchState}
             onSearchStateChange={this.handleSearchStateChange}
           >
-            <InstantSearchBox placeholder={'Search Users to Block'} searchIconOffset={160} />
+            <InstantSearchBox placeholder={'Search Users to Block'} />
             {this.renderResults()}
           </InstantSearch>
         </View>

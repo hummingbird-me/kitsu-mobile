@@ -107,7 +107,6 @@ class SearchScreen extends PureComponent {
         <View key={scene} style={styles.contentContainer} tabLabel={label}>
           <SearchBox
             placeholder={`Search ${label}`}
-            searchIconOffset={108}
             style={styles.searchBox}
             value={this.state.query[scene]}
             onChangeText={t => this.handleQuery(scene, t)}
