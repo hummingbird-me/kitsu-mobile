@@ -51,6 +51,10 @@ class RecoveryScreen extends Component {
     this.setState({ [name]: text });
   }
 
+  goBack = () => {
+    this.props.navigation.goBack();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -76,6 +80,7 @@ class RecoveryScreen extends Component {
               handleChange={this.handleChange}
               onReset={this.onReset}
               loading={this.props.signingIn || this.state.loading}
+              onCancel={this.goBack}
             />
           </View>
         </AuthWrapper>
