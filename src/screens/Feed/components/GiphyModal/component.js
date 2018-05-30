@@ -193,7 +193,6 @@ export class GiphyModal extends PureComponent {
           <View style={styles.searchBoxContainer}>
             <SearchBox
               placeholder="Search for a GIF"
-              searchIconOffset={116}
               style={styles.searchBox}
               value={query}
               onChangeText={this.handleSearchStateChange}

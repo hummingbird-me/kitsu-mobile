@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
-import { TextInput, View, ViewPropTypes } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { TextInput, View, ViewPropTypes, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { commonStyles } from 'kitsu/common/styles';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
 export class SearchBox extends React.PureComponent {
@@ -11,42 +12,54 @@ export class SearchBox extends React.PureComponent {
     defaultValue: PropTypes.string,
     onChangeText: PropTypes.func,
     placeholder: PropTypes.string,
-    searchIconOffset: PropTypes.number,
     value: PropTypes.string,
+    showClearButton: PropTypes.bool,
   };
 
   static defaultProps = {
     defaultValue: '',
     onChangeText: () => {},
     placeholder: 'Search',
-    searchIconOffset: 80,
     style: null,
     value: '',
+    showClearButton: true,
   };
 
   render() {
-    const { searchIconOffset, value, ...restProps } = this.props;
+    const { value, onChangeText, showClearButton, ...restProps } = this.props;
 
     return (
       <View style={[styles.searchContainer, this.props.style]}>
         <Icon
-          name="search"
+          name="ios-search"
           style={[
             styles.searchIcon,
             commonStyles.colorLightGrey,
-            { paddingRight: searchIconOffset },
-            value && styles.searchIconFocus,
           ]}
+          size={18}
         />
         <TextInput
           {...restProps}
           value={value}
           style={[commonStyles.text, styles.input]}
+          onChangeText={onChangeText}
           underlineColorAndroid="transparent"
           autoCapitalize={'none'}
           autoCorrect={false}
           keyboardAppearance={'dark'}
         />
+        {showClearButton && !isEmpty(value) &&
+          <TouchableOpacity style={styles.clearContainer} onPress={() => onChangeText('')}>
+            <Icon
+              name="ios-close-circle"
+              style={[
+                styles.clearIcon,
+                commonStyles.colorLightGrey,
+              ]}
+              size={16}
+            />
+          </TouchableOpacity>
+        }
       </View>
     );
   }
