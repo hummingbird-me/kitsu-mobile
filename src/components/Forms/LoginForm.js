@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
+import { PasswordInput } from 'kitsu/components/PasswordInput';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
@@ -24,12 +25,10 @@ const LoginForm = ({
       keyboardType={'email-address'}
       onChangeText={text => handleChange(text, 'email')}
     />
-    <Input
+    <PasswordInput
       placeholder="Password"
-      secureTextEntry
       value={data.password}
       onChangeText={text => handleChange(text, 'password')}
-      autoCapitalize="none"
     />
     <Button
       loading={loading}

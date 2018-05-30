@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import { setScreenName } from 'kitsu/store/onboarding/actions';
 import { isEmpty, isNull } from 'lodash';
+import { PasswordInput } from 'kitsu/components/PasswordInput';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
 
@@ -27,12 +28,12 @@ class CreateAccountScreen extends React.Component {
     if (usernameConfirmed) {
       const { username, email, password, confirmPassword } = this.state;
       const { currentUser, navigation } = this.props;
-      const isValidPass = !isEmpty(password) && password === confirmPassword;
+      const isValidPass = !isEmpty(password) && password.trim() === confirmPassword.trim();
 
       const valuesToUpdate = {
         ...((username !== currentUser.name && { name: username.trim() }) || {}),
         ...((email !== currentUser.email && { email: email.trim() }) || {}),
-        ...((!currentUser.hasPassword && isValidPass && { password }) || {}),
+        ...((!currentUser.hasPassword && isValidPass && { password: password.trim() }) || {}),
       };
       console.log('values to update', valuesToUpdate);
 
@@ -64,15 +65,29 @@ class CreateAccountScreen extends React.Component {
   render() {
     const { email, username, password, confirmPassword, usernameConfirmed } = this.state;
     const { currentUser, error, loading } = this.props;
-    const isValidPass = password.length >= 8 && password === confirmPassword;
+    const isValidPass = password.trim().length >= 8 && password.trim() === confirmPassword.trim();
     const passwordSet = currentUser.hasPassword || isValidPass;
 
     const isEmailValid = !isEmpty(email) && email.includes('@');
     const fieldsValid = isEmailValid && !isEmpty(username);
 
-    const passwordText = passwordSet ? 'Looks good!' : 'You need to set a password!';
+    const passwordText = passwordSet ? 'Looks good!' : 'Password needs to be atleast 8 characters long';
     const usernameText = !usernameConfirmed ? 'Confirm Username' : passwordText;
     const buttonText = !fieldsValid ? 'Please fill out the fields above' : usernameText;
+
+    // We need to extract the error contents
+    // We can't be sure if it's a kitsu error object or just a string
+    // Thus we check both below
+    let errorString = null;
+    if (!isEmpty(error)) {
+      if (error instanceof Array && error[0]) {
+        errorString = error[0].detail || error[0].title || 'Something went wrong';
+      } else if (error instanceof String) {
+        errorString = error;
+      } else {
+        errorString = error.detail || error.title || 'Something went wrong';
+      }
+    }
 
     return (
       <View style={commonStyles.container}>
@@ -98,18 +113,15 @@ class CreateAccountScreen extends React.Component {
         />
         {usernameConfirmed && !currentUser.hasPassword ? (
           <View>
-            <Input
+            <PasswordInput
               placeholder="Password"
-              secureTextEntry
               value={password}
               onChangeText={text => this.onChangeText(text, 'password')}
             />
-            <Input
+            <PasswordInput
               placeholder="Confirm Password"
-              secureTextEntry
               value={confirmPassword}
               onChangeText={text => this.onChangeText(text, 'confirmPassword')}
-              autoCapitalize="none"
             />
           </View>
         ) : (
@@ -123,10 +135,10 @@ class CreateAccountScreen extends React.Component {
           titleStyle={commonStyles.buttonTitleStyle}
           loading={loading}
         />
-        { !isEmpty(error) &&
+        {!isEmpty(errorString) &&
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>
-              An Error Occurred: {error.detail || 'Something went wrong!'}
+              An Error Occurred: {errorString}
             </Text>
           </View>
         }

@@ -53,7 +53,7 @@ class AuthScreen extends React.Component {
     if (!signingUp && !signingIn && signupError && signupError[0]) {
       this.setState({
         toastVisible: true,
-        toastTitle: signupError[0].title,
+        toastTitle: signupError[0].detail,
       });
     }
     if (!signingUp && !signingIn && loginError) {
@@ -79,13 +79,13 @@ class AuthScreen extends React.Component {
         toastTitle: "Inputs can't be blank",
         toastVisible: true,
       });
-    } else if (confirmPassword !== password) {
+    } else if (confirmPassword.trim() !== password.trim()) {
       this.setState({
         toastTitle: 'Passwords do not match',
         toastVisible: true,
       });
     } else {
-      this.props.createUser({ email, username, password }, navigation);
+      this.props.createUser({ email, username, password: password.trim() }, navigation);
     }
   };
 

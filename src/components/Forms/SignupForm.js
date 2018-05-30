@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
+import { PasswordInput } from 'kitsu/components/PasswordInput';
 import styles from './styles';
 
 const SignupForm = ({
@@ -30,18 +31,15 @@ const SignupForm = ({
       value={data.username}
       onChangeText={text => handleChange(text, 'username')}
     />
-    <Input
+    <PasswordInput
       placeholder="Password"
-      secureTextEntry
       value={data.password}
       onChangeText={text => handleChange(text, 'password')}
     />
-    <Input
+    <PasswordInput
       placeholder="Confirm Password"
-      secureTextEntry
       value={data.confirmPassword}
       onChangeText={text => handleChange(text, 'confirmPassword')}
-      autoCapitalize="none"
     />
     <Button
       loading={loading}
