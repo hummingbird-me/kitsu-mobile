@@ -363,7 +363,7 @@ class MediaPages extends PureComponent {
     try {
       // To make this simple, we'll just refetch the media object with these fields.
       const media = await Kitsu.one(type, id).get({
-        include: `mediaRelationships.destination,${type === 'anime' ? 'episodes' : 'chapters'}`,
+        include: `mediaRelationships.destination,${type === 'anime' ? 'episodes.videos' : 'chapters'}`,
       });
 
       const previousCategories = (this.state.media && this.state.media.categories) || null;

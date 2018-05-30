@@ -26,7 +26,7 @@ import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { isEmpty, capitalize } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-
+import { ImageStatus } from 'kitsu/components/ImageStatus';
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
@@ -615,7 +615,7 @@ class QuickUpdate extends Component {
           contentContainerStyle={{ flexGrow: 1 }}
         >
           <View style={styles.emptyStateContainer}>
-            <StatusComponent
+            <ImageStatus
               title={emptyTitle}
               text={`As you add ${descriptionType} to your library, they'll start to displaying here and you'll be able to update them and join community discussions.`}
               image={unstarted}
@@ -739,7 +739,7 @@ class QuickUpdate extends Component {
                   }
                   ListFooterComponent={() => isLoadingNextFeedPage && <ActivityIndicator />}
                   ListEmptyComponent={() => (
-                    <StatusComponent
+                    <ImageStatus
                       title="START THE DISCUSSION"
                       text={`Be the first to share your thoughts about ${episodeOrChapter} ${progress}`}
                       image={emptyComment}
@@ -755,7 +755,7 @@ class QuickUpdate extends Component {
             </View>
           ) : (
             <ScrollView style={styles.unstartedWrapper}>
-              <StatusComponent
+              <ImageStatus
                 title={`START ${media && media.type === 'manga' ? 'READING' : 'WATCHING'} TO JOIN IN`}
                 text={`As you update your progress, you'll see the thoughts from the community on the ${episodeOrChapter}s you've ${watchedOrRead}!`}
                 image={unstarted}
@@ -782,20 +782,6 @@ class QuickUpdate extends Component {
     );
   }
 }
-
-const StatusComponent = ({ title, text, image }) => (
-  <View style={styles.statusWrapper}>
-    <Text style={styles.statusTitle}>{title}</Text>
-    <Text style={styles.statusText}>{text}</Text>
-    <FastImage style={styles.statusImage} source={image} />
-  </View>
-);
-
-StatusComponent.propTypes = {
-  title: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  image: PropTypes.object.isRequired,
-};
 
 function getRequestFields(filterMode) {
   const fields = {
