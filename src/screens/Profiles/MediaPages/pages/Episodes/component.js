@@ -59,9 +59,12 @@ class Episodes extends PureComponent {
 
     return (
       <View style={styles.itemWrap}>
-        <TouchableOpacity style={styles.textContainer} onPress={() => this.navigateToUnitPage(item)}>
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={() => this.navigateToUnitPage(item)}
+        >
           <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
-          <StyledText color="black" size="small" textStyle={styles.itemTitle}>{title}</StyledText>
+          <StyledText color="black" size="small" textStyle={styles.itemTitle} numberOfLines={1}>{title}</StyledText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => onEpisodeProgress && onEpisodeProgress(item.number)}

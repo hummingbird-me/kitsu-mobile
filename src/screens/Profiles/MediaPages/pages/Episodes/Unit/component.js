@@ -229,10 +229,10 @@ class Unit extends PureComponent {
         {/* Unit information */}
         <View style={styles.metaContainer}>
           <View style={{ marginBottom: 10 }}>
-            <ScrollView style={{ flexDirection: 'row' }} horizontal showsHorizontalScrollIndicator={false}>
+            <View style={{ flexDirection: 'row' }}>
               <StyledText color="dark" bold>{unitPrefix} {selectedUnit.number} </StyledText>
-              <StyledText color="dark" numberOfLines={1}>{selectedUnit.canonicalTitle}</StyledText>
-            </ScrollView>
+              <StyledText color="dark" textStyle={{ flex: 1 }}>{selectedUnit.canonicalTitle}</StyledText>
+            </View>
             {unitDate && (
               <StyledText color="grey" size="xsmall">First {releaseText}: {unitDate}</StyledText>
             )}

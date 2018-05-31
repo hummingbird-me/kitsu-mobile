@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
   },
   itemTitle: {
     marginLeft: 8,
+    flex: 1,
   },
   progressIconContainer: {
     paddingLeft: 8,

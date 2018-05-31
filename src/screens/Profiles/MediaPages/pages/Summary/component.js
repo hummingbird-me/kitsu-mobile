@@ -102,13 +102,17 @@ class SummaryComponent extends PureComponent {
     const { loadingAdditional } = this.props;
 
     // We only want to show episodes and not chapters
-    if (!media || media.type !== 'anime' || isEmpty(media.episodes)) return null;
+    if (!media || media.type !== 'anime') return null;
 
-    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
+    // We want to show the loading indicator to the user
+    // But once that is done and we don't have any episodes then we just don't render anything
+    if (!loadingAdditional && isEmpty(media.episodes)) return null;
 
     console.log(media);
 
     // TODO: Filter episodes based on regions here
+    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
+
     return (
       <ScrollableSection
         title="Episodes"
