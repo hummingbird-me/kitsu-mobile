@@ -109,7 +109,6 @@ class SummaryComponent extends PureComponent {
     if (!media || media.type !== 'anime') return null;
 
     // Filter out episodes that have videos associated with them
-    // TODO: Filter region?
     const episodesWithVideos = (media.episodes || []).filter(e => !isEmpty(e.videos));
     const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
 
@@ -146,8 +145,8 @@ class SummaryComponent extends PureComponent {
 
     // Only show the streaming links that we have images for
     const filtered = media.streamingLinks.filter((link) => {
-      const name = link.streamer && link.streamer.siteName.toLowerCase();
-      return name && Object.keys(STREAMING_SERVICES).includes(name);
+      const name = link.streamer && link.streamer.siteName;
+      return name && Object.keys(STREAMING_SERVICES).includes(name.toLowerCase());
     });
 
     return (
