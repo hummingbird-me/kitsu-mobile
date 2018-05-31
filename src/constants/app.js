@@ -40,3 +40,16 @@ export const originalCoverImageDimensions = {
 };
 
 export const TERMS_URL = 'https://kitsu.io/terms';
+
+export const STREAMING_SERVICES = {
+  netflix: require('kitsu/assets/img/streaming-services/netflix.png'),
+  hulu: require('kitsu/assets/img/streaming-services/hulu.png'),
+  crunchyroll: require('kitsu/assets/img/streaming-services/crunchyroll.png'),
+  funimation: require('kitsu/assets/img/streaming-services/funimation.png'),
+  hidive: require('kitsu/assets/img/streaming-services/hidive.png'),
+  amazon: null,
+  tubitv: null,
+  daisuki: null,
+  viewster: null,
+  youtube: null,
+};

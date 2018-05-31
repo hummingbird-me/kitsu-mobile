@@ -331,7 +331,7 @@ class MediaPages extends PureComponent {
       // Fetch the media with categories
       const includes = ['categories'];
       if (type === 'anime') {
-        includes.push('animeProductions.producer');
+        includes.push('animeProductions.producer,streamingLinks.streamer');
       }
       const media = await Kitsu.one(type, id).get({
         include: includes.join(),
