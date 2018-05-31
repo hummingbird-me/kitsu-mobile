@@ -11,7 +11,7 @@ import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { upperFirst, isNull } from 'lodash';
+import { upperFirst, isNull, isEmpty } from 'lodash';
 import { SummaryProgress } from './progress';
 
 class SummaryComponent extends PureComponent {
@@ -81,6 +81,12 @@ class SummaryComponent extends PureComponent {
   navigateToMedia = (mediaType, mediaId) => (
     this.props.navigation.navigate('MediaPages', { mediaId, mediaType, })
   );
+  navigateToUnitPage = (unit, media) => {
+    this.props.navigation.navigate('UnitDetails', {
+      unit,
+      media: media,
+    });
+  }
 
   renderItem = ({ item }) => (
     <Post
@@ -91,6 +97,41 @@ class SummaryComponent extends PureComponent {
       navigation={this.props.navigation}
     />
   );
+
+  renderEpisodes = (media) => {
+    const { loadingAdditional } = this.props;
+
+    // We only want to show episodes and not chapters
+    if (!media || media.type !== 'anime' || isEmpty(media.episodes)) return null;
+
+    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
+
+    console.log(media);
+
+    // TODO: Filter episodes based on regions here
+    return (
+      <ScrollableSection
+        title="Episodes"
+        onViewAllPress={() => this.navigateTo('Episodes')}
+        data={this.formatData(media.episodes)}
+        loading={loadingAdditional}
+        renderItem={({ item }) => (
+          <ScrollItem>
+            <ImageCard
+              subtitle={`Ep. ${item.number} ${episodeSuffix}`}
+              title={item.canonicalTitle}
+              variant="landscapeLarge"
+              source={{
+                uri: (item.thumbnail && item.thumbnail.original) ||
+                      (media.posterImage && media.posterImage.medium),
+              }}
+              onPress={() => this.navigateToUnitPage(item, media)}
+            />
+          </ScrollItem>
+        )}
+      />
+    );
+  }
 
   render() {
     const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
@@ -106,6 +147,9 @@ class SummaryComponent extends PureComponent {
           onPress={() => this.navigateTo('Episodes')}
           onEditPress={onLibraryEditPress}
         />
+
+        {/* Episodes */}
+        {this.renderEpisodes(media)}
 
         {/* Details */}
         <MediaDetails media={media} />
