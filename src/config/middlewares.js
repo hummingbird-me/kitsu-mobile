@@ -124,7 +124,7 @@ export const titleMiddleware = {
   res: (payload) => {
     const currentUser = store.getState().user.currentUser;
     if (isArray(payload)) {
-      payload.forEach((item => applyTitle(item, currentUser)));
+      payload.forEach(item => applyTitle(item, currentUser));
     } else {
       applyTitle(payload, currentUser);
     }
