@@ -115,7 +115,7 @@ class SummaryComponent extends PureComponent {
 
     return (
       <ScrollableSection
-        title="Episodes・Watch Now"
+        title="Episodes"
         onViewAllPress={() => this.navigateTo('Episodes')}
         data={this.formatData(episodesWithVideos)}
         loading={loadingAdditional}

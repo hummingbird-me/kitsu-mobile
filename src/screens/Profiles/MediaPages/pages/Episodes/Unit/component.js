@@ -177,8 +177,8 @@ class Unit extends PureComponent {
     if (languageOptions) { languageOptions.push('Nevermind'); }
 
     // Select only units that have videos
-    const units = hasVideo && media.episodes.filter(item => item.videos.length >= 1);
-    const unitsIndex = hasVideo && units.findIndex((item) => (
+    const units = hasVideo && media.episodes.filter(item => item.videos.length >= 1).sort((a, b) => a.number - b.number);
+    const unitsIndex = hasVideo && units.findIndex(item => (
       item.videos.filter(video => video === selectedVideo).length === 1
     ));
 
@@ -192,9 +192,8 @@ class Unit extends PureComponent {
         {hasVideo && (
           <View style={styles.videoContainer}>
             <WebComponent
-              ref={ref => { this.webview = ref; }}
+              ref={(ref) => { this.webview = ref; }}
               style={styles.webContainer}
-              // @TODO: replace with a Kitsu-based link
               source={{ uri: 'https://kitsu.io/hulu-embed-frame.html' }}
               renderLoading={this.renderLoading}
               renderError={this.renderError}
