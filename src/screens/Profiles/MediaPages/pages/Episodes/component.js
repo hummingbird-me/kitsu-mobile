@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { StyledText } from 'kitsu/components/StyledText';
-import { isNull, padStart } from 'lodash';
+import { isNull, padStart, isEmpty } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { lightGrey, listBackPurple } from 'kitsu/constants/colors';
 import { styles } from './styles';
@@ -65,6 +65,9 @@ class Episodes extends PureComponent {
         >
           <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
           <StyledText color="black" size="small" textStyle={styles.itemTitle} numberOfLines={1}>{title}</StyledText>
+          { !isEmpty(item.videos) &&
+            <Icon name="ios-desktop-outline" style={styles.watchIcon} size={18} />
+          }
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => onEpisodeProgress && onEpisodeProgress(item.number)}
