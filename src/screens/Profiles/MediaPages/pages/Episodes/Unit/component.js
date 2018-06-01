@@ -177,8 +177,8 @@ class Unit extends PureComponent {
     if (languageOptions) { languageOptions.push('Nevermind'); }
 
     // Select only units that have videos
-    const units = hasVideo && media.episodes.filter(item => item.videos.length >= 1);
-    const unitsIndex = hasVideo && units.findIndex((item) => (
+    const units = hasVideo && media.episodes.filter(item => item.videos.length >= 1).sort((a, b) => a.number - b.number);
+    const unitsIndex = hasVideo && units.findIndex(item => (
       item.videos.filter(video => video === selectedVideo).length === 1
     ));
 
@@ -192,9 +192,8 @@ class Unit extends PureComponent {
         {hasVideo && (
           <View style={styles.videoContainer}>
             <WebComponent
-              ref={ref => { this.webview = ref; }}
+              ref={(ref) => { this.webview = ref; }}
               style={styles.webContainer}
-              // @TODO: replace with a Kitsu-based link
               source={{ uri: 'https://kitsu.io/hulu-embed-frame.html' }}
               renderLoading={this.renderLoading}
               renderError={this.renderError}
@@ -229,10 +228,10 @@ class Unit extends PureComponent {
         {/* Unit information */}
         <View style={styles.metaContainer}>
           <View style={{ marginBottom: 10 }}>
-            <ScrollView style={{ flexDirection: 'row' }} horizontal showsHorizontalScrollIndicator={false}>
+            <View style={{ flexDirection: 'row' }}>
               <StyledText color="dark" bold>{unitPrefix} {selectedUnit.number} </StyledText>
-              <StyledText color="dark" numberOfLines={1}>{selectedUnit.canonicalTitle}</StyledText>
-            </ScrollView>
+              <StyledText color="dark" textStyle={{ flex: 1 }}>{selectedUnit.canonicalTitle}</StyledText>
+            </View>
             {unitDate && (
               <StyledText color="grey" size="xsmall">First {releaseText}: {unitDate}</StyledText>
             )}

@@ -1015,11 +1015,32 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'streamingLinks',
+  {
+    url: '',
+    createdAt: '',
+    updatedAt: '',
+    streamer: {
+      jsonApi: 'hasOne',
+      type: 'streamers',
+    },
+    media: {
+      jsonApi: 'hasOne',
+      type: ['anime', 'manga', 'drama'],
+    },
+  },
+  { collectionPath: 'streaming-links' },
+);
+
+Kitsu.define(
   'streamers',
   {
     siteName: '',
     logo: '',
-    streamingLinks: '',
+    streamingLinks: {
+      jsonApi: 'hasMany',
+      type: 'streamingLinks',
+    },
   },
   { collectionPath: 'streamers' },
 );

@@ -17,9 +17,11 @@ export const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   itemTitle: {
     marginLeft: 8,
+    flexShrink: 1,
   },
   progressIconContainer: {
     paddingLeft: 8,
@@ -54,5 +56,10 @@ export const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'right',
     textAlignVertical: 'center',
+  },
+  watchIcon: {
+    color: colors.darkGrey,
+    paddingHorizontal: 8,
+    paddingVertical: 0,
   },
 });

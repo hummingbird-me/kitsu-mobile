@@ -107,7 +107,11 @@ export const kitsuRequestMiddleware = {
 
 function applyTitle(item, currentUser) {
   if (!item || !currentUser) { return; }
-  if ((item.type === 'anime' || item.type === 'manga') && item.canonicalTitle) {
+
+  // The objects we want to apply title preferences to
+  const whitelist = ['anime', 'manga', 'episodes'];
+
+  if (whitelist.includes(item.type) && item.canonicalTitle) {
     item.canonicalTitle = getComputedTitle(currentUser, item);
   }
   if (item.anime) { applyTitle(item.anime, currentUser); }
@@ -120,9 +124,7 @@ export const titleMiddleware = {
   res: (payload) => {
     const currentUser = store.getState().user.currentUser;
     if (isArray(payload)) {
-      payload.forEach(item => {
-        applyTitle(item, currentUser);
-      });
+      payload.forEach(item => applyTitle(item, currentUser));
     } else {
       applyTitle(payload, currentUser);
     }
