@@ -140,14 +140,14 @@ class SummaryComponent extends PureComponent {
     );
   }
 
-  renderStreamingLinks= (media) => {
+  renderStreamingLinks = (media) => {
     if (!media || media.type !== 'anime' || isEmpty(media.streamingLinks)) return null;
 
     // Only show the streaming links that we have images for
     const filtered = media.streamingLinks.filter((link) => {
       const name = link.streamer && link.streamer.siteName;
       return name && Object.keys(STREAMING_SERVICES).includes(name.toLowerCase());
-    });
+    }).sort((a, b) => a.streamer.siteName.localeCompare(b.streamer.siteName));
 
     return (
       <FlatList
