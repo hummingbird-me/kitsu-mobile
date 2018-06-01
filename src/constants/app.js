@@ -47,9 +47,8 @@ export const STREAMING_SERVICES = {
   crunchyroll: require('kitsu/assets/img/streaming-services/crunchyroll.png'),
   funimation: require('kitsu/assets/img/streaming-services/funimation.png'),
   hidive: require('kitsu/assets/img/streaming-services/hidive.png'),
-  amazon: null,
-  tubitv: null,
-  daisuki: null,
-  viewster: null,
-  youtube: null,
+  amazon: require('kitsu/assets/img/streaming-services/amazon.png'),
+  viewster: require('kitsu/assets/img/streaming-services/viewster.png'),
+  tubitv: require('kitsu/assets/img/streaming-services/tubitv.png'),
+  youtube: require('kitsu/assets/img/streaming-services/youtube.png'),
 };
