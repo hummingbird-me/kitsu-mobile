@@ -34,3 +34,8 @@ If you run **OSX** then download the [iOS FacebookSDK](https://developers.facebo
 
 ### Known Issues :warning:
 1. Packager fails to resolve aliases at first run. Do `yarn start:reset` instead of `yarn start` at first launch. Same applies when running the app with `react-native run-ios` or `react-native run-android`. Kill the packager and type `yarn start:reset`
+
+## Download
+
+<a href="https://play.google.com/store/apps/details?id=com.everfox.animetrackerandroid&utm_source=github&utm_campaign=kitsu-mobile"><img src="https://i.imgur.com/HqUNEEU.png" alt="Kitsu on Google Play"></a>
+<a href="https://itunes.apple.com/us/app/kitsu-anime/id590452826?mt=8&utm_source=github&utm_campaign=kitsu-mobile"><img src="https://devimages-cdn.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" alt="Kitsu on the App Store"></a>
