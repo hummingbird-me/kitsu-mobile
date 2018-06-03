@@ -65,7 +65,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onTimesRewatchedChanged = (timesRewatched) => {
-    this.setState({ timesRewatched });
+    this.setState({ reconsumeCount: timesRewatched });
   }
 
   onStartedAtChanged = (startedAt) => {

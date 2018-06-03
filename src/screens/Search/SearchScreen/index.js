@@ -20,7 +20,6 @@ class SearchScreen extends PureComponent {
   };
 
   state = {
-    isScrollingScene: false,
     query: {
       anime: undefined,
       manga: undefined,
@@ -65,7 +64,12 @@ class SearchScreen extends PureComponent {
     const filters = currentScene.kind ? `kind:${currentScene.kind}` : '';
     index.search({ query, filters}, (err, content) => {
       if (!err) {
-        this.setState({ searchResults: { [scene]: content.hits } });
+        this.setState({
+          searchResults: {
+            ...this.state.searchResults,
+            [scene]: content.hits,
+          },
+        });
       }
     });
   };
@@ -76,10 +80,6 @@ class SearchScreen extends PureComponent {
       mediaId: media.id,
       mediaType: media.kind,
     });
-  };
-
-  handleSceneScroll = (value) => {
-    this.setState({ isScrollingScene: value });
   };
 
   renderTabBar = ({ tabs, activeTab, goToPage }) => (
@@ -107,7 +107,6 @@ class SearchScreen extends PureComponent {
         <View key={scene} style={styles.contentContainer} tabLabel={label}>
           <SearchBox
             placeholder={`Search ${label}`}
-            searchIconOffset={108}
             style={styles.searchBox}
             value={this.state.query[scene]}
             onChangeText={t => this.handleQuery(scene, t)}
@@ -128,23 +127,24 @@ class SearchScreen extends PureComponent {
   renderSubScene = (scene) => {
     const { query } = this.state;
     const { navigation, followUser, captureUsersData } = this.props;
-    const hits = this.state.searchResults[scene];
+    const hits = this.state.searchResults[scene] || [];
 
     switch (scene) {
       case 'users': {
-        return <UsersList
-          hits={hits}
-          onFollow={followUser}
-          onData={captureUsersData}
-          navigation={navigation}
-        />
+        return (
+          <UsersList
+            hits={hits}
+            onFollow={followUser}
+            onData={captureUsersData}
+            navigation={navigation}
+          />
+        );
       }
       case 'anime':
       case 'manga': {
         return isEmpty(query[scene]) ? (
           <TopsList
             mounted
-            onScroll={this.handleSceneScroll}
             active={scene}
             navigation={navigation}
           />

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
@@ -11,8 +11,12 @@ import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { upperFirst, isNull } from 'lodash';
+import { upperFirst, isNull, isEmpty } from 'lodash';
+import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { STREAMING_SERVICES } from 'kitsu/constants/app';
 import { SummaryProgress } from './progress';
+import { styles } from './styles';
+
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -81,6 +85,12 @@ class SummaryComponent extends PureComponent {
   navigateToMedia = (mediaType, mediaId) => (
     this.props.navigation.navigate('MediaPages', { mediaId, mediaType, })
   );
+  navigateToUnitPage = (unit, media) => {
+    this.props.navigation.navigate('UnitDetails', {
+      unit,
+      media,
+    });
+  }
 
   renderItem = ({ item }) => (
     <Post
@@ -91,6 +101,78 @@ class SummaryComponent extends PureComponent {
       navigation={this.props.navigation}
     />
   );
+
+  renderEpisodes = (media) => {
+    const { loadingAdditional } = this.props;
+
+    // We only want to show episodes and not chapters
+    if (!media || media.type !== 'anime') return null;
+
+    // Filter out episodes that have videos associated with them
+    const episodesWithVideos = (media.episodes || []).filter(e => !isEmpty(e.videos));
+    const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
+
+    // We want to show the loading indicator to the user
+    // But once that is done and we don't have any episodes then we just don't render anything
+    if (!loadingAdditional && isEmpty(episodesWithVideos)) return null;
+
+    return (
+      <ScrollableSection
+        title="Episodes"
+        onViewAllPress={() => this.navigateTo('Episodes')}
+        data={this.formatData(episodesWithVideos)}
+        loading={loadingAdditional}
+        renderItem={({ item }) => (
+          <ScrollItem>
+            <ImageCard
+              subtitle={`Ep. ${item.number} ${episodeSuffix}`}
+              title={item.canonicalTitle}
+              variant="landscapeLarge"
+              source={{
+                uri: (item.thumbnail && item.thumbnail.original) ||
+                      (media.posterImage && media.posterImage.medium),
+              }}
+              onPress={() => this.navigateToUnitPage(item, media)}
+            />
+          </ScrollItem>
+        )}
+      />
+    );
+  }
+
+  renderStreamingLinks = (media) => {
+    if (!media || media.type !== 'anime' || isEmpty(media.streamingLinks)) return null;
+
+    // Only show the streaming links that we have images for
+    const filtered = media.streamingLinks.filter((link) => {
+      const name = link.streamer && link.streamer.siteName;
+      return name && Object.keys(STREAMING_SERVICES).includes(name.toLowerCase());
+    }).sort((a, b) => a.streamer.siteName.localeCompare(b.streamer.siteName));
+
+    return (
+      <FlatList
+        data={filtered}
+        keyExtractor={i => i.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.streamingLinksContent}
+        renderItem={({ item }) => (
+          <ScrollItem spacing={scenePadding / 2}>
+            <ImageCard
+              variant="landscapeSmall"
+              source={item.streamer && STREAMING_SERVICES[item.streamer.siteName.toLowerCase()]}
+              onPress={() => {
+                if (!isEmpty(item.url)) {
+                  Linking.openURL(item.url);
+                }
+              }}
+            />
+          </ScrollItem>
+        )}
+        style={styles.streamingLinks}
+      />
+    );
+  }
 
   render() {
     const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
@@ -106,6 +188,12 @@ class SummaryComponent extends PureComponent {
           onPress={() => this.navigateTo('Episodes')}
           onEditPress={onLibraryEditPress}
         />
+
+        {/* Streaming Links */}
+        {this.renderStreamingLinks(media)}
+
+        {/* Episodes */}
+        {this.renderEpisodes(media)}
 
         {/* Details */}
         <MediaDetails media={media} />

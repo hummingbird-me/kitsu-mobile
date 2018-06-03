@@ -3,7 +3,6 @@ import { Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { StackNavigator } from 'react-navigation';
 import Feed from 'kitsu/screens/Feed';
-import CreatePost from 'kitsu/screens/Feed/pages/PostCreation/CreatePost';
 import homeIcon from 'kitsu/assets/img/tabbar_icons/home.png';
 import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { commonRoutes } from './common';
@@ -14,9 +13,6 @@ const FeedStack = StackNavigator(
   {
     FeedActivity: {
       screen: Feed,
-    },
-    CreatePost: {
-      screen: CreatePost,
     },
     ...commonRoutes,
   },

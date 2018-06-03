@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { upperFirst, isEmpty } from 'lodash';
+import { upperFirst, isEmpty, isNull } from 'lodash';
 import { getDefaults, getCategories } from 'kitsu/store/anime/actions';
 import { ContentList } from 'kitsu/components/ContentList';
 import { showSeasonResults, showStreamerResults, showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
+import { STREAMING_SERVICES } from 'kitsu/constants/app';
 import { styles } from './styles';
 
 class TopsList extends PureComponent {
@@ -173,32 +174,19 @@ class TopsList extends PureComponent {
       action: 'season',
     };
 
-    const streamingServices = [
-      {
-        name: 'netflix',
-        image: require('kitsu/assets/img/streaming-services/netflix.png'),
-      },
-      {
-        name: 'hulu',
-        image: require('kitsu/assets/img/streaming-services/hulu.png'),
-      },
-      {
-        name: 'crunchyroll',
-        image: require('kitsu/assets/img/streaming-services/crunchyroll.png'),
-      },
-      {
-        name: 'funimation',
-        image: require('kitsu/assets/img/streaming-services/funimation.png'),
-      },
-      {
-        name: 'hidive',
-        image: require('kitsu/assets/img/streaming-services/hidive.png'),
-      },
-    ].map(streamer => ({
-      ...streamer,
-      // Add the touch handler for the streamers
-      onPress: () => showStreamerResults(this.props.navigation, streamer.name),
-    }));
+    // Construct the streaming object
+    const streamingServices = Object.keys(STREAMING_SERVICES).map(k => (
+      !isNull(STREAMING_SERVICES[k]) && {
+        name: k,
+        image: STREAMING_SERVICES[k],
+      }
+    ))
+      .filter(s => !isEmpty(s))
+      .map(streamer => ({
+        ...streamer,
+        // Add the touch handler for the streamers
+        onPress: () => showStreamerResults(this.props.navigation, streamer.name),
+      }));
 
     const streamingData = {
       title: `${type} By Streaming`,
@@ -301,7 +289,6 @@ class TopsList extends PureComponent {
             key={listItem.name || listItem.title}
             navigate={navigate}
             onPress={() => this.handleViewAllPress(listItem.title, listItem.type, listItem.action)}
-            onScroll={this.props.onScroll}
           />
         ))}
       </ScrollView>

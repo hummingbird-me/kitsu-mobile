@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { StyledText } from 'kitsu/components/StyledText';
-import { isNull, padStart } from 'lodash';
+import { isNull, padStart, isEmpty } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { lightGrey, listBackPurple } from 'kitsu/constants/colors';
 import { styles } from './styles';
@@ -38,6 +38,13 @@ class Episodes extends PureComponent {
     });
   }
 
+  navigateToUnitPage = (unit) => {
+    this.props.navigation.navigate('UnitDetails', {
+      unit,
+      media: this.props.media,
+    });
+  }
+
   renderItem = ({ item }) => {
     const { libraryEntry, media, onEpisodeProgress, loadingLibrary } = this.props;
 
@@ -52,8 +59,16 @@ class Episodes extends PureComponent {
 
     return (
       <View style={styles.itemWrap}>
-        <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
-        <StyledText color="black" size="small" textStyle={styles.itemTitle}>{title}</StyledText>
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={() => this.navigateToUnitPage(item)}
+        >
+          <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
+          <StyledText color="black" size="small" textStyle={styles.itemTitle} numberOfLines={1}>{title}</StyledText>
+          { !isEmpty(item.videos) &&
+            <Icon name="ios-desktop-outline" style={styles.watchIcon} size={18} />
+          }
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => onEpisodeProgress && onEpisodeProgress(item.number)}
           style={styles.progressIconContainer}

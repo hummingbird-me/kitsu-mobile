@@ -13,7 +13,7 @@ export class ProgressiveImage extends PureComponent {
     duration: PropTypes.number,
     style: PropTypes.any,
     resizeMode: PropTypes.string,
-    source: PropTypes.object.isRequired,
+    source: PropTypes.any.isRequired,
     defaultSource: PropTypes.number,
     hasOverlay: PropTypes.bool,
   };
@@ -70,7 +70,7 @@ export class ProgressiveImage extends PureComponent {
 
     return (
       <View style={[styles.imageBackground, backgroundStyle, style]}>
-        {source.uri && (
+        {source && (
           <FastImage
             onLoad={this.onLoad}
             onLayout={this.onLayout}

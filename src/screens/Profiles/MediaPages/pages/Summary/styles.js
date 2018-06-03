@@ -51,4 +51,10 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     color: colors.lightGrey,
   },
+  streamingLinks: {
+    paddingBottom: scenePadding,
+  },
+  streamingLinksContent: {
+    paddingLeft: scenePadding,
+  },
 });

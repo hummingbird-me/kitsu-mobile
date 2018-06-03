@@ -4,7 +4,6 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { PropTypes } from 'prop-types';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { capitalize, isEmpty, camelCase } from 'lodash';
-import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { styles } from './styles';
 import { LibraryScreenHeader } from '../LibraryScreenHeader';
@@ -17,6 +16,7 @@ const TAB_TEXT_MAPPING = {
   on_hold: { anime: 'On Hold', manga: 'On Hold' },
   dropped: { anime: 'Dropped', manga: 'Dropped' },
 };
+const LIBRARY_PAGINATION_LIMIT = 60;
 
 export class LibraryScreenComponent extends PureComponent {
   static navigationOptions = () => ({
@@ -107,7 +107,7 @@ export class LibraryScreenComponent extends PureComponent {
     if (!currentUser || !currentLibrary) return;
 
     if (!currentLibrary.loading && currentLibrary.fetchMore) {
-      currentLibrary.fetchMore();
+      currentLibrary.fetchMore(LIBRARY_PAGINATION_LIMIT);
     }
   }
 
@@ -190,12 +190,13 @@ export class LibraryScreenComponent extends PureComponent {
     );
   }
 
-  renderTabItem(name, page, active, goToPage) {
+  renderTabItem(name, page, active, goToPage, onLayout) {
     return (
       <TouchableOpacity
         key={name}
         style={[styles.tabItem, active && styles.tabItem__selected]}
         onPress={() => goToPage(page)}
+        onLayout={onLayout}
       >
         <Text style={[styles.statusText, active && styles.tabText__selected]}>
           {name}

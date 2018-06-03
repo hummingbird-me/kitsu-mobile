@@ -172,7 +172,6 @@ export class LibrarySearchComponent extends PureComponent {
         style={styles.searchBox}
         onChangeText={this.onSearchTermChanged}
         placeholder="Search Library"
-        searchIconOffset={120}
         value={this.state.searchTerm}
         onSubmitEditing={Keyboard.dismiss}
       />

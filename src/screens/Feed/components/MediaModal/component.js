@@ -169,7 +169,6 @@ class MediaModal extends PureComponent {
           <View style={styles.searchBoxContainer}>
             <SearchBox
               placeholder={'Search for Media'}
-              searchIconOffset={130}
               style={styles.searchBox}
               value={query}
               onChangeText={this.handleSearchStateChange}

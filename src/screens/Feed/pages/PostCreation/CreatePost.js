@@ -58,7 +58,7 @@ class CreatePost extends React.PureComponent {
     const { params = {} } = navigation.state;
 
     return {
-      title: 'Create Post',
+      title: params.isEditing ? 'Edit Post' : 'Create Post',
       headerTitleStyle: {
         color: '#FFFFFF',
         fontSize: 15,
@@ -72,7 +72,7 @@ class CreatePost extends React.PureComponent {
           disabled={params.busy}
           loading={params.busy}
           onPress={params.handlePressPost}
-          title="Post"
+          title={params.isEditing ? "Edit" : "Post"}
         />
       ),
     };
@@ -85,15 +85,28 @@ class CreatePost extends React.PureComponent {
     currentFeed: feedStreams[0],
     error: '',
     gif: null,
-    media: null,
-    nsfw: false,
-    spoiler: false,
+    media: this.props.navigation.state.params.media || null,
+    nsfw: this.props.navigation.state.params.nsfw || false,
+    spoiler: this.props.navigation.state.params.spoiler || false,
+    spoiledUnit: this.props.navigation.state.params.spoiledUnit || null,
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({
+    const { navigation } = this.props;
+    navigation.setParams({
       handlePressPost: this.handlePressPost,
       busy: false,
+    });
+
+    // Editing an existing post?
+    const { state: { params } } = navigation;
+    if (!params.isEditing) { return; }
+    const { post } = params;
+    this.setState({
+      content: post.content,
+      spoiler: post.spoiler || false,
+      nsfw: post.nsfw || false,
+      media: post.media,
     });
   }
 
@@ -119,7 +132,7 @@ class CreatePost extends React.PureComponent {
     const { navigation } = this.props;
     const { targetUser } = navigation.state.params;
     const currentUserId = this.props.currentUser.id;
-    const { content, currentFeed, gif, media, nsfw, spoiler } = this.state;
+    const { content, currentFeed, gif, media, nsfw, spoiler, spoiledUnit } = this.state;
 
     if (navigation.state.params.busy) return;
 
@@ -142,8 +155,15 @@ class CreatePost extends React.PureComponent {
     const mediaData = media ? {
       media: {
         id: media.id,
-        type: media.kind,
+        type: media.kind || media.type,
       },
+    } : {};
+
+    const spoiledData = spoiledUnit ? {
+      spoiledUnit: {
+        id: spoiledUnit.id,
+        type: spoiledUnit.type,
+      }
     } : {};
 
     const targetData = (targetUser && targetUser.id !== currentUserId) ? {
@@ -161,18 +181,29 @@ class CreatePost extends React.PureComponent {
     const targetInterestData = isEmpty(targetData) ? { targetInterest } : {};
 
     try {
-      const post = await Kitsu.create('posts', {
-        content: additionalContent,
-        ...targetInterestData,
-        user: {
-          type: 'users',
-          id: currentUserId,
-        },
-        ...targetData,
-        ...mediaData,
-        nsfw,
-        spoiler,
-      });
+      let post = null;
+      if (navigation.state.params.isEditing) {
+        post = await Kitsu.update('posts', {
+          id: navigation.state.params.post.id,
+          content: additionalContent,
+          nsfw,
+          spoiler,
+        });
+      } else {
+        post = await Kitsu.create('posts', {
+          content: additionalContent,
+          ...targetInterestData,
+          user: {
+            type: 'users',
+            id: currentUserId,
+          },
+          ...targetData,
+          ...mediaData,
+          nsfw,
+          spoiler,
+          ...spoiledData,
+        });
+      }
 
       if (navigation.state.params.onNewPostCreated) {
         navigation.state.params.onNewPostCreated(post);
@@ -200,7 +231,7 @@ class CreatePost extends React.PureComponent {
       nsfw,
       spoiler,
     } = this.state;
-    const { busy, targetUser } = navigation.state.params;
+    const { busy, targetUser, isEditing, isMediaDisabled } = navigation.state.params;
 
     const isValidTargetUser = (targetUser && targetUser.id !== currentUser.id && targetUser.name);
     const placeholder = isValidTargetUser ? `Write something to ${targetUser.name}` : 'Write something....';
@@ -262,7 +293,7 @@ class CreatePost extends React.PureComponent {
             <View>
               {media ?
                 <MediaItem
-                  disabled={busy}
+                  disabled={busy || isEditing || isMediaDisabled}
                   media={media}
                   onClear={() => this.setState({ media: null })}
                 />
@@ -271,7 +302,7 @@ class CreatePost extends React.PureComponent {
                   text="Tag Anime or Manga"
                   icon="tag"
                   color={colors.blue}
-                  disabled={busy}
+                  disabled={busy || isEditing}
                   onPress={() => this.handleMediaPickerModal(true)}
                   style={styles.tagMedia}
                 />

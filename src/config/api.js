@@ -526,9 +526,33 @@ Kitsu.define(
     media: {
       jsonApi: 'hasOne',
     },
+    videos: {
+      jsonApi: 'hasMany',
+      type: 'videos',
+    },
     createdAt: '',
   },
   { collectionPath: 'episodes' },
+);
+
+Kitsu.define(
+  'videos',
+  {
+    url: '',
+    availableRegions: [],
+    subLang: '',
+    dubLang: '',
+    embedData: {},
+    episode: {
+      jsonApi: 'hasOne',
+      type: 'episodes',
+    },
+    streamer: {
+      jsonApi: 'hasOne',
+      type: 'streamers',
+    },
+  },
+  { collectionPath: 'videos' },
 );
 
 Kitsu.define(
@@ -931,7 +955,6 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
     spoiledUnit: {
-      type: 'episodes',
       jsonApi: 'hasOne',
     },
     targetUser: {
@@ -992,11 +1015,32 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'streamingLinks',
+  {
+    url: '',
+    createdAt: '',
+    updatedAt: '',
+    streamer: {
+      jsonApi: 'hasOne',
+      type: 'streamers',
+    },
+    media: {
+      jsonApi: 'hasOne',
+      type: ['anime', 'manga', 'drama'],
+    },
+  },
+  { collectionPath: 'streaming-links' },
+);
+
+Kitsu.define(
   'streamers',
   {
     siteName: '',
     logo: '',
-    streamingLinks: '',
+    streamingLinks: {
+      jsonApi: 'hasMany',
+      type: 'streamingLinks',
+    },
   },
   { collectionPath: 'streamers' },
 );

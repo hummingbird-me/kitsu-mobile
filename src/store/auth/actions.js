@@ -1,4 +1,4 @@
-import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
 import { NavigationActions } from 'react-navigation';
 import { NetInfo } from 'react-native';
 import { auth } from 'kitsu/config/api';
@@ -181,7 +181,7 @@ const loginUserFb = async (dispatch) => {
       '/me',
       {
         httpMethod: 'GET',
-        version: 'v2.5',
+        version: 'v2.9',
         parameters: {
           fields: {
             string: 'email, name, gender',
@@ -205,5 +205,6 @@ const loginUserFb = async (dispatch) => {
 };
 
 export const logoutUser = () => (dispatch) => {
+  LoginManager.logOut();
   dispatch({ type: types.LOGOUT_USER });
 };
