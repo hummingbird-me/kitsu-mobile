@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, isNull } from 'lodash';
@@ -13,6 +13,7 @@ export class ImageGrid extends PureComponent {
     width: PropTypes.number,
     compact: PropTypes.bool,
     imageBorderWidth: PropTypes.number,
+    borderRadius: PropTypes.number,
   };
 
   static defaultProps = {
@@ -21,15 +22,16 @@ export class ImageGrid extends PureComponent {
     width: null,
     compact: false,
     imageBorderWidth: 1,
+    borderRadius: 0,
   };
 
   state = {
   }
 
-  renderImage(image, width, height) {
+  renderImage(image, width, height, count = null) {
     if (isEmpty(image)) return null;
 
-    const { widthToHeightRatio, imageBorderWidth } = this.props;
+    const { widthToHeightRatio, imageBorderWidth, borderRadius } = this.props;
 
     const newHeight = height || (width / widthToHeightRatio);
     return (
@@ -39,14 +41,19 @@ export class ImageGrid extends PureComponent {
             uri={image.uri}
             width={width}
             height={height}
-            borderRadius={0}
+            borderRadius={borderRadius}
           />
           :
           <Image
             source={image}
             resizeMode="cover"
-            style={{ width, height: newHeight }}
+            style={{ width, height: newHeight, borderRadius, overflow: 'hidden' }}
           />
+        }
+        { !isEmpty(count) && count > 0 &&
+          <View style={styles.countContainer}>
+            <Text style={styles.countText}>+{count}</Text>
+          </View>
         }
       </View>
     );
@@ -96,7 +103,7 @@ export class ImageGrid extends PureComponent {
             {this.renderImage(images[0], currentWidth - borderOffset, null)}
             {this.renderImage(images[1], ratioWidth, ratioHeight)}
             {this.renderImage(images[2], ratioWidth, ratioHeight)}
-            {this.renderImage(images[3], ratioWidth, ratioHeight)}
+            {this.renderImage(images[3], ratioWidth, ratioHeight, images.length - 4)}
           </View>
         );
     }

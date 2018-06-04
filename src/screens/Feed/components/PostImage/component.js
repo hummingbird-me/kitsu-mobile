@@ -40,27 +40,34 @@ export class PostImage extends PureComponent {
   }
 
   updateImageSize() {
-    const { width, height, uri } = this.props;
-    if (width && height) {
-      this.setState({ width: this.props.width, height: this.props.height });
+    /*
+    If we do: const { width, height, uri } = this.props
+    Then the view updates incorrectly, i.e nextProps.width won't be applied to the state
+    Thus i have chosen to leave the implementation as is, but i don't know if there is a work-around
+    */
+    if (this.props.width && this.props.height) {
+      this.setState({
+        width: this.props.width,
+        height: this.props.height,
+      });
     } else {
-      Image.getSize(uri, (imageWidth, imageHeight) => {
+      Image.getSize(this.props.uri, (width, height) => {
         if (!this.mounted) return;
 
-        if (width && !height) {
+        if (this.props.width && !this.props.height) {
           this.setState({
-            width,
-            height: imageHeight * (width / imageWidth),
+            width: this.props.width,
+            height: height * (this.props.width / width),
           });
-        } else if (!width && height) {
+        } else if (!this.props.width && this.props.height) {
           this.setState({
-            width: imageWidth * (height / imageHeight),
-            height,
+            width: width * (this.props.height / height),
+            height: this.props.height,
           });
         } else {
           this.setState({
-            width: imageWidth,
-            height: imageHeight,
+            width,
+            height,
           });
         }
       });

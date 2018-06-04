@@ -10,6 +10,7 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { startCase } from 'lodash';
 import { styles } from './styles';
+import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 
 export class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -73,10 +74,9 @@ export class EmbeddedContent extends PureComponent {
     if (minWidth && width < minWidth) width = minWidth;
     if (width > maxWidth) width = maxWidth;
 
-    // PostImage will auto scale the image
     return (
-      <PostImage
-        uri={embed.image.url}
+      <ImageGrid
+        images={[{ uri: embed.image.url }]}
         width={width}
         borderRadius={borderRadius}
       />
