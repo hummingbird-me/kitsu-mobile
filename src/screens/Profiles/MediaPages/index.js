@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, View } from 'react-native';
+import { StatusBar, View, Share } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -111,6 +111,7 @@ class MediaPages extends PureComponent {
 
   onMoreButtonOptionsSelected = async (option) => {
     const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { media } = this.state;
     switch (option) {
       case 'add': {
         const record = await Kitsu.create('favorites', {
@@ -130,6 +131,12 @@ class MediaPages extends PureComponent {
         await Kitsu.destroy('favorites', this.state.favorite.id);
         this.setState({ favorite: null });
         break;
+      case 'Share': {
+        const message = (media && `${media.canonicalTitle} - `) || '';
+        const url = `https://kitsu.io/${mediaType}/${mediaId}`;
+        Share.share({ message, url }, { dialogTitle: 'Share Media' });
+        break;
+      }
       default:
         console.log('unhandled option selected:', option);
         break;
@@ -528,7 +535,7 @@ class MediaPages extends PureComponent {
     }
     MAIN_BUTTON_OPTIONS.push('Nevermind');
 
-    const MORE_BUTTON_OPTIONS = ['Nevermind'];
+    const MORE_BUTTON_OPTIONS = ['Share', 'Nevermind'];
     if (favorite) {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Remove from Favorites', value: 'remove' });
     } else {

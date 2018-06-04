@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, SectionList, View } from 'react-native';
+import { StatusBar, SectionList, View, Share } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -27,9 +27,6 @@ import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
-
-// There's no way to Report Profiles at the moment in the API.
-const MORE_BUTTON_OPTIONS = ['Block', /* 'Report Profile', */ 'Nevermind'];
 
 const tabPage = name => ({ key: name.toLowerCase(), label: name, screen: name });
 
@@ -78,7 +75,7 @@ class ProfilePage extends PureComponent {
     feed: null,
     follow: null,
     isLoadingFollow: false,
-    editModalVisible: false
+    editModalVisible: false,
   }
 
   componentWillMount() {
@@ -101,14 +98,27 @@ class ProfilePage extends PureComponent {
   }
 
   onMoreButtonOptionsSelected = async (button) => {
-    if (button === 'Block') {
-      await Kitsu.create('blocks', {
-        blocked: { id: this.props.userId },
-        user: { id: this.props.currentUser.id },
-      });
-    } else if (button === 'Report Profile') {
-      // There's no current way to report users from the site.
-      // Once there is, the API call goes here.
+    const { currentUser } = this.props;
+    const { profile } = this.state;
+    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+
+    switch (button) {
+      case 'Block': {
+        await Kitsu.create('blocks', {
+          blocked: { id: userId },
+          user: { id: currentUser.id },
+        });
+        break;
+      }
+      case 'Share': {
+        const message = (profile && `${profile.name} - `) || '';
+        const url = `https://kitsu.io/users/${userId}`;
+        Share.share({ message, url }, { dialogTitle: 'Share User' });
+        break;
+      }
+      default:
+        console.log('unhandled profile option selected:', option);
+        break;
     }
   }
 
@@ -312,6 +322,13 @@ class ProfilePage extends PureComponent {
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
     const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
     const mainButtonTitle = isCurrentUser ? 'Edit' : follow ? 'Unfollow' : 'Follow';
+
+    // There's no way to Report Profiles at the moment in the API.
+    const MORE_BUTTON_OPTIONS = ['Share', /* 'Report Profile', */ 'Nevermind'];
+    if (!isCurrentUser) {
+      MORE_BUTTON_OPTIONS.unshift('Block');
+    }
+
     return (
       <SceneContainer>
         <StatusBar barStyle="light-content" />
@@ -348,7 +365,6 @@ class ProfilePage extends PureComponent {
             posterImage={profile.avatar && profile.avatar.large}
             followersCount={profile.followersCount}
             followingCount={profile.followingCount}
-            showMoreButton={!isCurrentUser}
             moreButtonOptions={MORE_BUTTON_OPTIONS}
             mainButtonTitle={mainButtonTitle}
             mainButtonLoading={isLoadingFollow}
