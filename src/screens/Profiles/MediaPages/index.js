@@ -133,7 +133,8 @@ class MediaPages extends PureComponent {
         break;
       case 'Share': {
         const message = (media && `${media.canonicalTitle} - `) || '';
-        const url = `https://kitsu.io/${mediaType}/${mediaId}`;
+        const id = (media && media.slug) || mediaId;
+        const url = `https://kitsu.io/${mediaType}/${id}`;
         Share.share({ message, url }, { dialogTitle: 'Share Media' });
         break;
       }

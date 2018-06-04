@@ -112,7 +112,8 @@ class ProfilePage extends PureComponent {
       }
       case 'Share': {
         const message = (profile && `${profile.name} - `) || '';
-        const url = `https://kitsu.io/users/${userId}`;
+        const id = (profile && profile.slug) || userId;
+        const url = `https://kitsu.io/users/${id}`;
         Share.share({ message, url }, { dialogTitle: 'Share User' });
         break;
       }
