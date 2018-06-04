@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, SectionList, View, Share } from 'react-native';
+import { StatusBar, SectionList, View, Clipboard, ToastAndroid, Platform } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -23,6 +23,7 @@ import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { parseURL } from 'kitsu/common/utils/url';
 import { isEmpty } from 'lodash';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
+import { kitsuConfig } from 'kitsu/config/env';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
 
@@ -110,11 +111,19 @@ class ProfilePage extends PureComponent {
         });
         break;
       }
-      case 'Share': {
-        const message = (profile && `${profile.name} - `) || '';
+      case 'copy': {
         const id = (profile && profile.slug) || userId;
-        const url = `https://kitsu.io/users/${id}`;
-        Share.share({ message, url }, { dialogTitle: 'Share User' });
+        const url = `${kitsuConfig.kitsuUrl}/users/${id}`;
+        await Clipboard.setString(url);
+        if (Platform.OS === 'android') {
+          ToastAndroid.showWithGravity(
+            'Copied profile link!',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM,
+          );
+        } else {
+          alert('Copied profile link!');
+        }
         break;
       }
       default:
@@ -190,7 +199,7 @@ class ProfilePage extends PureComponent {
           id: userId,
         },
         fields: {
-          users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
+          users: 'slug,waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
           characters: 'name,image,description',
         },
         include: 'waifu',
@@ -325,7 +334,7 @@ class ProfilePage extends PureComponent {
     const mainButtonTitle = isCurrentUser ? 'Edit' : follow ? 'Unfollow' : 'Follow';
 
     // There's no way to Report Profiles at the moment in the API.
-    const MORE_BUTTON_OPTIONS = ['Share', /* 'Report Profile', */ 'Nevermind'];
+    const MORE_BUTTON_OPTIONS = [{ text: 'Copy Link to Profile', value: 'copy' }, /* 'Report Profile', */ 'Nevermind'];
     if (!isCurrentUser) {
       MORE_BUTTON_OPTIONS.unshift('Block');
     }

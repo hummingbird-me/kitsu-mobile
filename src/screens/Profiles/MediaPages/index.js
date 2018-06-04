@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, View, Share } from 'react-native';
+import { StatusBar, View, Clipboard, ToastAndroid, Platform } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -20,6 +20,7 @@ import { capitalize, upperFirst } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { StyledText } from 'kitsu/components/StyledText';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
@@ -131,11 +132,19 @@ class MediaPages extends PureComponent {
         await Kitsu.destroy('favorites', this.state.favorite.id);
         this.setState({ favorite: null });
         break;
-      case 'Share': {
-        const message = (media && `${media.canonicalTitle} - `) || '';
+      case 'copy': {
         const id = (media && media.slug) || mediaId;
-        const url = `https://kitsu.io/${mediaType}/${id}`;
-        Share.share({ message, url }, { dialogTitle: 'Share Media' });
+        const url = `${kitsuConfig.kitsuUrl}/${mediaType}/${id}`;
+        await Clipboard.setString(url);
+        if (Platform.OS === 'android') {
+          ToastAndroid.showWithGravity(
+            'Copied media link!',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM,
+          );
+        } else {
+          alert('Copied media link!');
+        }
         break;
       }
       default:
@@ -536,7 +545,7 @@ class MediaPages extends PureComponent {
     }
     MAIN_BUTTON_OPTIONS.push('Nevermind');
 
-    const MORE_BUTTON_OPTIONS = ['Share', 'Nevermind'];
+    const MORE_BUTTON_OPTIONS = [{ text: 'Copy Link to Media', value: 'copy' }, 'Nevermind'];
     if (favorite) {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Remove from Favorites', value: 'remove' });
     } else {
