@@ -40,26 +40,31 @@ export class PostImage extends PureComponent {
   }
 
   updateImageSize() {
-    Image.getSize(this.props.uri, (width, height) => {
-      if (!this.mounted) return;
+    const { width, height, uri } = this.props;
+    if (width && height) {
+      this.setState({ width: this.props.width, height: this.props.height });
+    } else {
+      Image.getSize(uri, (imageWidth, imageHeight) => {
+        if (!this.mounted) return;
 
-      if (this.props.width && !this.props.height) {
-        this.setState({
-          width: this.props.width,
-          height: height * (this.props.width / width),
-        });
-      } else if (!this.props.width && this.props.height) {
-        this.setState({
-          width: width * (this.props.height / height),
-          height: this.props.height,
-        });
-      } else {
-        this.setState({
-          width,
-          height,
-        });
-      }
-    });
+        if (width && !height) {
+          this.setState({
+            width,
+            height: imageHeight * (width / imageWidth),
+          });
+        } else if (!width && height) {
+          this.setState({
+            width: imageWidth * (height / imageHeight),
+            height,
+          });
+        } else {
+          this.setState({
+            width: imageWidth,
+            height: imageHeight,
+          });
+        }
+      });
+    }
   }
 
   mounted = false
