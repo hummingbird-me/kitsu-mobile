@@ -8,7 +8,9 @@ import { styles } from './styles';
 
 export class ImageGrid extends PureComponent {
   static propTypes = {
-    images: PropTypes.arrayOf(PropTypes.any),
+    images: PropTypes.arrayOf(PropTypes.shape({
+      uri: PropTypes.string.isRequired,
+    })),
     widthToHeightRatio: PropTypes.number,
     width: PropTypes.number,
     compact: PropTypes.bool,
@@ -29,29 +31,20 @@ export class ImageGrid extends PureComponent {
   }
 
   renderImage(image, width, height, count = null) {
-    if (isEmpty(image)) return null;
+    if (isEmpty(image) || isEmpty(image.uri)) return null;
 
-    const { widthToHeightRatio, imageBorderWidth, borderRadius } = this.props;
+    const { imageBorderWidth, borderRadius, compact } = this.props;
 
-    const newHeight = height || (width / widthToHeightRatio);
     return (
-      <View style={[styles.imageWrap, { borderWidth: imageBorderWidth }]}>
-        {!isNull(image.uri) ?
-          <PostImage
-            uri={image.uri}
-            width={width}
-            height={height}
-            borderRadius={borderRadius}
-          />
-          :
-          <Image
-            source={image}
-            resizeMode="cover"
-            style={{ width, height: newHeight, borderRadius, overflow: 'hidden' }}
-          />
-        }
-        { !isEmpty(count) && count > 0 &&
-          <View style={styles.countContainer}>
+      <View style={[styles.imageWrap, { borderWidth: !compact && imageBorderWidth }]}>
+        <PostImage
+          uri={image.uri}
+          width={width}
+          height={height}
+          borderRadius={borderRadius}
+        />
+        { !isNull(count) && count > 0 &&
+          <View style={[styles.countContainer, { borderRadius }]}>
             <Text style={styles.countText}>+{count}</Text>
           </View>
         }
@@ -78,11 +71,17 @@ export class ImageGrid extends PureComponent {
     const ratioWidth = (currentWidth * ratio) - borderOffset;
     const ratioHeight = ratioWidth / widthToHeightRatio;
 
-    // TODO: Clean this code up
+    // Compact view will just show the number straight up
+    if (compact) {
+      return this.renderImage(images[0], currentWidth, null, images.length - 1);
+    }
+
     switch (currentImages.length) {
       case 1:
+        // 1 landscape image
         return this.renderImage(images[0], currentWidth - borderOffset, null);
       case 2:
+        // 2 square images
         return (
           <View style={styles.row}>
             {this.renderImage(images[0], ratioWidth, ratioHeight)}
@@ -90,6 +89,7 @@ export class ImageGrid extends PureComponent {
           </View>
         );
       case 3:
+        // 1 landscape and 2 square images
         return (
           <View style={styles.row}>
             {this.renderImage(images[0], currentWidth - borderOffset, null)}
@@ -98,6 +98,7 @@ export class ImageGrid extends PureComponent {
           </View>
         );
       default:
+        // 1 landscape and 3 square images with a count on the last one
         return (
           <View style={styles.row}>
             {this.renderImage(images[0], currentWidth - borderOffset, null)}

@@ -9,8 +9,8 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { startCase } from 'lodash';
-import { styles } from './styles';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
+import { styles } from './styles';
 
 export class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -49,12 +49,14 @@ export class EmbeddedContent extends PureComponent {
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
     navigation: PropTypes.object.isRequired,
+    compact: PropTypes.bool,
   }
 
   static defaultProps = {
     style: null,
     minWidth: null,
     borderRadius: 0,
+    compact: false,
   }
 
   /**
@@ -67,7 +69,7 @@ export class EmbeddedContent extends PureComponent {
   renderImage(embed) {
     if (!embed.image) return null;
 
-    const { maxWidth, minWidth, borderRadius } = this.props;
+    const { maxWidth, minWidth, borderRadius, compact } = this.props;
     const imageWidth = embed.image.width || maxWidth;
 
     let width = parseInt(imageWidth, 10);
@@ -79,6 +81,7 @@ export class EmbeddedContent extends PureComponent {
         images={[{ uri: embed.image.url }]}
         width={width}
         borderRadius={borderRadius}
+        compact={compact}
       />
     );
   }
