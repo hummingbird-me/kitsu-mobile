@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import isEmpty from 'lodash/isEmpty';
 import * as colors from 'kitsu/constants/colors';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { setDataSaver } from 'kitsu/store/app/actions';
+import { setDataSaver, setInitialPage } from 'kitsu/store/app/actions';
 import { navigationOptions, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import { styles } from './styles';
 
@@ -17,15 +17,21 @@ class AppSettings extends PureComponent {
   static propTypes = {
     dataSaver: PropTypes.bool,
     setDataSaver: PropTypes.func,
+    setInitialPage: PropTypes.func,
+    initialPage: PropTypes.string,
   };
 
   static defaultProps = {
     dataSaver: false,
     setDataSaver: null,
+    setInitialPage: null,
+    initialPage: '-',
   }
 
   onStartingPageChange = (option) => {
-
+    if (this.props.setInitialPage) {
+      this.props.setInitialPage(option);
+    }
   }
 
   toggleDataSaver = () => {
@@ -35,9 +41,10 @@ class AppSettings extends PureComponent {
   }
 
   render() {
-    const { dataSaver } = this.props;
+    const { dataSaver, initialPage } = this.props;
 
-    const pages = ['Feed', 'Library', 'Nevermind'];
+    const pages = ['Feed', 'Search', 'Library', 'Nevermind'];
+
     return (
       <View style={styles.containerStyle}>
         <ScrollView scrollEnabled={false}>
@@ -46,7 +53,7 @@ class AppSettings extends PureComponent {
           <SelectMenu
             style={styles.selectMenu}
             onOptionSelected={this.onStartingPageChange}
-            cancelButtonIndex={2}
+            cancelButtonIndex={pages.length - 1}
             options={pages}
           >
             <View>
@@ -54,7 +61,7 @@ class AppSettings extends PureComponent {
                 Starting Page
               </Text>
               <Text style={styles.valueText}>
-                Feed
+                {initialPage}
               </Text>
             </View>
           </SelectMenu>
@@ -81,8 +88,8 @@ class AppSettings extends PureComponent {
 }
 
 const mapStateToProps = ({ app }) => {
-  const { dataSaver } = app;
-  return { dataSaver };
+  const { dataSaver, initialPage } = app;
+  return { dataSaver, initialPage };
 };
 
-export default connect(mapStateToProps, { setDataSaver })(AppSettings);
+export default connect(mapStateToProps, { setDataSaver, setInitialPage })(AppSettings);

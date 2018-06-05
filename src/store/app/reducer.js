@@ -8,6 +8,7 @@ const initialState = {
   },
   dataSaver: false,
   pushNotificationEnabled: false,
+  initialPage: 'Feed',
 };
 
 export const appReducer = (state = initialState, action) => {
@@ -22,12 +23,16 @@ export const appReducer = (state = initialState, action) => {
         ...state,
         pushNotificationEnabled: true,
       };
-    case types.SETTING_DATA_SAVER: {
+    case types.SETTING_DATA_SAVER:
       return {
         ...state,
         dataSaver: action.payload,
       };
-    }
+    case types.SETTING_INITIAL_PAGE:
+      return {
+        ...state,
+        initialPage: action.payload || 'Feed',
+      };
     case REHYDRATE: {
       const payload = action && action.payload;
       const app = (payload && payload.app) || {};
