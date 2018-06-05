@@ -18,4 +18,11 @@ export const styles = StyleSheet.create({
     height: 64,
     borderRadius: 32,
   },
+  dataSaver: {
+    backgroundColor: colors.darkGrey,
+    flex: 1,
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

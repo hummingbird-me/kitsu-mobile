@@ -9,6 +9,7 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { startCase } from 'lodash';
+import { getDataSaver } from 'kitsu/utils/storage';
 import { styles } from './styles';
 
 export class EmbeddedContent extends PureComponent {
@@ -56,6 +57,20 @@ export class EmbeddedContent extends PureComponent {
     borderRadius: 0,
   }
 
+  state = {
+    dataSaver: false,
+    visible: false,
+  }
+
+  async componentDidMount() {
+    const dataSaver = await getDataSaver();
+    this.setState({ dataSaver: !!dataSaver });
+  }
+
+  toggleVisibility = () => {
+    this.setState({ visible: !this.state.visible });
+  }
+
   /**
    * Render an image embed.
    * This will render the image with given image width or maxWidth if it exceeds it.
@@ -66,12 +81,27 @@ export class EmbeddedContent extends PureComponent {
   renderImage(embed) {
     if (!embed.image) return null;
 
+    const { dataSaver, visible } = this.state;
+
     const { maxWidth, minWidth, borderRadius } = this.props;
     const imageWidth = embed.image.width || maxWidth;
 
     let width = parseInt(imageWidth, 10);
     if (minWidth && width < minWidth) width = minWidth;
     if (width > maxWidth) width = maxWidth;
+
+    if (dataSaver && !visible) {
+      return (
+        <TouchableOpacity
+          style={[styles.dataSaver, { borderRadius }]}
+          onPress={this.toggleVisibility}
+        >
+          <StyledText color="light" size="default" numberOfLines={1}>
+            Tap to load image
+          </StyledText>
+        </TouchableOpacity>
+      );
+    }
 
     // PostImage will auto scale the image
     return (
