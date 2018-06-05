@@ -43,13 +43,25 @@ class AppSettings extends PureComponent {
   render() {
     const { dataSaver, initialPage } = this.props;
 
-    const pages = ['Feed', 'Search', 'Library', 'Nevermind'];
+    // The pages
+    const pages = [
+      'Feed',
+      'Search',
+      { text: 'Quick Update', value: 'QuickUpdate' },
+      'Library',
+      'Nevermind',
+    ];
+
+    // Page title display
+    let pageText = initialPage;
+    if (initialPage === 'QuickUpdate') {
+      pageText = 'Quick Update';
+    }
 
     return (
       <View style={styles.containerStyle}>
         <ScrollView scrollEnabled={false}>
           <SidebarTitle title={'General'} />
-          {/* TODO: Flesh this out further */}
           <SelectMenu
             style={styles.selectMenu}
             onOptionSelected={this.onStartingPageChange}
@@ -61,7 +73,7 @@ class AppSettings extends PureComponent {
                 Starting Page
               </Text>
               <Text style={styles.valueText}>
-                {initialPage}
+                {pageText}
               </Text>
             </View>
           </SelectMenu>
