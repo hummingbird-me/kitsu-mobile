@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, ViewPropTypes, WebView, Platform, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -9,10 +10,9 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { startCase } from 'lodash';
-import { getDataSaver } from 'kitsu/utils/storage';
 import { styles } from './styles';
 
-export class EmbeddedContent extends PureComponent {
+class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
   // sometimes the embeds return width/height as strings
   // othertimes as numbers ...
@@ -49,22 +49,18 @@ export class EmbeddedContent extends PureComponent {
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
     navigation: PropTypes.object.isRequired,
+    dataSaver: PropTypes.bool,
   }
 
   static defaultProps = {
     style: null,
     minWidth: null,
     borderRadius: 0,
+    dataSaver: false,
   }
 
   state = {
-    dataSaver: false,
     visible: false,
-  }
-
-  async componentDidMount() {
-    const dataSaver = await getDataSaver();
-    this.setState({ dataSaver: !!dataSaver });
   }
 
   toggleVisibility = () => {
@@ -81,7 +77,8 @@ export class EmbeddedContent extends PureComponent {
   renderImage(embed) {
     if (!embed.image) return null;
 
-    const { dataSaver, visible } = this.state;
+    const { dataSaver } = this.props;
+    const { visible } = this.state;
 
     const { maxWidth, minWidth, borderRadius } = this.props;
     const imageWidth = embed.image.width || maxWidth;
@@ -241,3 +238,10 @@ export class EmbeddedContent extends PureComponent {
     );
   }
 }
+
+const mapper = ({ app }) => {
+  const { dataSaver } = app;
+  return { dataSaver };
+};
+
+export default connect(mapper, null)(EmbeddedContent);

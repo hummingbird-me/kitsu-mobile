@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation';
 import * as colors from 'kitsu/constants/colors';
-import { getDataSaver, setDataSaver } from 'kitsu/utils/storage';
 
 class SplashScreen extends Component {
   static navigationOptions = {
@@ -16,25 +15,12 @@ class SplashScreen extends Component {
     if (rehydratedAt) {
       this.navigate(isAuthenticated, completed);
     }
-    this.updateAppSettings();
   }
 
   componentWillReceiveProps(nextProps) {
     const { isAuthenticated, completed, rehydratedAt } = nextProps;
     if (rehydratedAt) {
       this.navigate(isAuthenticated, completed);
-    }
-  }
-
-  async updateAppSettings() {
-    try {
-      const value = await getDataSaver();
-      if (value === null) {
-        await setDataSaver(false);
-      }
-    } catch (error) {
-      console.log(error);
-      console.warn('Failed to initialize data saver value');
     }
   }
 

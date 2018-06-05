@@ -6,48 +6,36 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import isEmpty from 'lodash/isEmpty';
 import * as colors from 'kitsu/constants/colors';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { getDataSaver, setDataSaver } from 'kitsu/utils/storage';
+import { setDataSaver } from 'kitsu/store/app/actions';
 import { navigationOptions, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
 import { styles } from './styles';
 
-export class AppSettings extends PureComponent {
+
+class AppSettings extends PureComponent {
   static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'App');
 
-  state = {
-    dataSaver: false,
+  static propTypes = {
+    dataSaver: PropTypes.bool,
+    setDataSaver: PropTypes.func,
   };
 
-  componentDidMount() {
-    this.fetchSettings();
+  static defaultProps = {
+    dataSaver: false,
+    setDataSaver: null,
   }
 
   onStartingPageChange = (option) => {
 
   }
 
-  fetchSettings = async () => {
-    try {
-      const value = await getDataSaver();
-      if (value !== null) {
-        this.setState({ dataSaver: value });
-      }
-    } catch (error) {
-      console.warn('Failed to fetch data saver value');
-    }
-  }
-
-
-  toggleDataSaver = async () => {
-    try {
-      await setDataSaver(!this.state.dataSaver);
-      this.setState({ dataSaver: !this.state.dataSaver });
-    } catch (error) {
-      console.warn('Failed to set data saver value');
+  toggleDataSaver = () => {
+    if (this.props.setDataSaver) {
+      this.props.setDataSaver(!this.props.dataSaver);
     }
   }
 
   render() {
-    const { dataSaver } = this.state;
+    const { dataSaver } = this.props;
 
     const pages = ['Feed', 'Library', 'Nevermind'];
     return (
@@ -91,3 +79,10 @@ export class AppSettings extends PureComponent {
     );
   }
 }
+
+const mapStateToProps = ({ app }) => {
+  const { dataSaver } = app;
+  return { dataSaver };
+};
+
+export default connect(mapStateToProps, { setDataSaver })(AppSettings);
