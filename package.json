@@ -37,6 +37,7 @@
     "react-native-htmlview": "^0.12.1",
     "react-native-hyperlink": "^0.0.12",
     "react-native-image-crop-picker": "^0.19.3",
+    "react-native-image-zoom-viewer": "^2.2.5",
     "react-native-keyboard-aware-scroll-view": "^0.4.4",
     "react-native-linear-gradient": "^2.4.0",
     "react-native-modal-selector": "^0.0.25",

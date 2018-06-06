@@ -7835,6 +7835,16 @@ react-native-image-crop-picker@^0.19.3:
   version "0.19.3"
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.19.3.tgz#ef4f10875fd9b6eff10df2b55e3cdb966b875d70"
 
+react-native-image-pan-zoom@^2.1.2:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.3.tgz#1f1847518eb0d10a43fce20ee387a9f273dacd9a"
+
+react-native-image-zoom-viewer@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-image-zoom-viewer/-/react-native-image-zoom-viewer-2.2.5.tgz#ad06f7b4666ef554ab2a900b92b56d2658570464"
+  dependencies:
+    react-native-image-pan-zoom "^2.1.2"
+
 react-native-iphone-x-helper@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.0.2.tgz#7dbca530930f7c1ce8633cc8fd13ba94102992e1"

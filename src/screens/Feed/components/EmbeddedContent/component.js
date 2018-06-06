@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, WebView, Platform, TouchableOpacity, Modal } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
@@ -10,6 +9,8 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { startCase } from 'lodash';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
 
 export class EmbeddedContent extends PureComponent {
@@ -59,6 +60,62 @@ export class EmbeddedContent extends PureComponent {
     compact: false,
   }
 
+  state = {
+    imageModalVisible: false,
+  };
+
+  shareImage = (image) => {
+    console.log(image);
+  }
+
+  /**
+   * Render the image lightbox modal
+   *
+   * @param {[string]} images An array of image urls.
+   */
+  renderImageModal(images) {
+    const { imageModalVisible } = this.state;
+    const closeModal = () => { this.setState({ imageModalVisible: false }); };
+    const imageUrls = [
+      { url: images[0] },
+      { url: 'https://media.kitsu.io/anime/cover_images/1/original.jpg?1519178801' },
+      { url: 'https://media.kitsu.io/anime/cover_images/7/original.jpg' },
+    ];
+    return (
+      <Modal visible={imageModalVisible} transparent>
+        <ImageViewer
+          imageUrls={imageUrls}
+          onCancel={closeModal}
+          onLongPress={this.shareImage}
+          saveToLocalByLongPress={false}
+          renderFooter={currentIndex => (
+            <View style={styles.imageModalFooter}>
+              {/* Close */}
+              <TouchableOpacity style={styles.iconContainer} onPress={closeModal}>
+                <Icon
+                  style={[styles.icon, styles.closeIcon]}
+                  name={Platform.select({ ios: 'ios-close', android: 'md-close' })}
+                />
+              </TouchableOpacity>
+
+              {/* Share */}
+              <TouchableOpacity
+                style={styles.iconContainer}
+                onPress={() => this.shareImage(imageUrls[currentIndex])}
+              >
+                <Icon
+                  style={styles.icon}
+                  name={Platform.select({ ios: 'ios-share-outline', android: 'md-share' })}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          footerContainerStyle={styles.imageModalFooterContainer}
+        />
+      </Modal>
+    );
+  }
+
   /**
    * Render an image embed.
    * This will render the image with given image width or maxWidth if it exceeds it.
@@ -70,6 +127,8 @@ export class EmbeddedContent extends PureComponent {
     if (!embed.image) return null;
 
     const { maxWidth, minWidth, borderRadius, compact } = this.props;
+    const { imageModalVisible } = this.state;
+
     const imageWidth = embed.image.width || maxWidth;
 
     let width = parseInt(imageWidth, 10);
@@ -77,12 +136,18 @@ export class EmbeddedContent extends PureComponent {
     if (width > maxWidth) width = maxWidth;
 
     return (
-      <ImageGrid
-        images={[embed.image.url]}
-        width={width}
-        borderRadius={borderRadius}
-        compact={compact}
-      />
+      <View>
+        <ImageGrid
+          images={[embed.image.url]}
+          width={width}
+          borderRadius={borderRadius}
+          compact={compact}
+          onImageTapped={() => {
+            this.setState({ imageModalVisible: true });
+          }}
+        />
+        {this.renderImageModal([embed.image.url])}
+      </View>
     );
   }
 
