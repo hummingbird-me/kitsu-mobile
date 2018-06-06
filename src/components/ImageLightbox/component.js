@@ -33,10 +33,6 @@ export class ImageLightbox extends PureComponent {
 
   downloadImage = (image) => {
     console.log(image);
-    const url = typeof image === 'string' ? image : (image && image.url) || null;
-    if (isEmpty(url)) return;
-
-    CameraRoll.saveToCameraRoll(url);
   }
 
   renderFooter(imageUrls) {
@@ -66,7 +62,15 @@ export class ImageLightbox extends PureComponent {
         </TouchableOpacity>
 
         {/* Download */}
-        <TouchableOpacity
+        {/*
+        Disabled for now ...
+        Several issues with this at the moment:
+          1. Need to find a way to download images to gallery on android.
+          2. `CameraRoll` has `saveToCameraRoll` which can save remote urls to iOS only.
+              see: https://facebook.github.io/react-native/docs/cameraroll.html#savetocameraroll
+          3. To get `CameraRoll.saveToCameraRoll` to work, you need to ask user for permission beforehand, otherwise app just crashes.
+         */}
+        {/* <TouchableOpacity
           style={styles.iconContainer}
           onPress={() => downloadImage(imageUrls[currentIndex])}
         >
@@ -74,7 +78,7 @@ export class ImageLightbox extends PureComponent {
             style={[styles.icon, styles.downloadIcon]}
             name={Platform.select({ ios: 'ios-cloud-download-outline', android: 'md-cloud-download' })}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }
