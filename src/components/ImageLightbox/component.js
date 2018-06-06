@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Platform, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
+import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, CameraRoll, Share } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Share from 'react-native-share';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
@@ -27,22 +26,17 @@ export class ImageLightbox extends PureComponent {
 
   shareImage = (image) => {
     // This only shares the url
-    // If we can get the base64 representation of an image when we can allow users to share that directly
-    // TODO: Add a download option on top of the share image url option
     const url = typeof image === 'string' ? image : (image && image.url) || null;
-    if (!isEmpty(url)) {
-      try {
-        Share.open({
-          url,
-        });
-      } catch (error) {
-        console.warn('Failed to share image.', error);
-      }
-    }
+    if (isEmpty(url)) return;
+    Share.share({ url });
   }
 
   downloadImage = (image) => {
     console.log(image);
+    const url = typeof image === 'string' ? image : (image && image.url) || null;
+    if (isEmpty(url)) return;
+
+    CameraRoll.saveToCameraRoll(url);
   }
 
   renderFooter(imageUrls) {

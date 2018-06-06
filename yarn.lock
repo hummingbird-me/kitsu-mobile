@@ -2312,9 +2312,9 @@ cli-width@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-2.2.0.tgz#ff19ede8a9a5e579324147b0c11f0fbcbabed639"
 
-"client-oauth2@https://github.com/magneticz/js-client-oauth2.git":
+"client-oauth2@https://github.com/hummingbird-me/js-client-oauth2.git":
   version "4.1.0"
-  resolved "https://github.com/magneticz/js-client-oauth2.git#3e62337a58915bd3f4fc5bb5be2be4054b2f98c0"
+  resolved "https://github.com/hummingbird-me/js-client-oauth2.git#3e62337a58915bd3f4fc5bb5be2be4054b2f98c0"
   dependencies:
     base-64 "^0.1.0"
     popsicle "^9.1.0"
@@ -7901,10 +7901,6 @@ react-native-sentry@^0.34.1:
   dependencies:
     "@sentry/wizard" "^0.8.1"
     raven-js "^3.22.1"
-
-react-native-share@^1.0.27:
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.0.27.tgz#1861afe0d1256bde95d19520ca5d5c3cd348ffad"
 
 react-native-snap-carousel@^3.6.0:
   version "3.6.0"
