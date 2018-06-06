@@ -1,16 +1,17 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform, TouchableOpacity, Modal } from 'react-native';
+import { View, ViewPropTypes, WebView, Platform, TouchableOpacity, Modal, Image, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { startCase } from 'lodash';
+import { startCase, isEmpty } from 'lodash';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Share from 'react-native-share';
 import { styles } from './styles';
 
 export class EmbeddedContent extends PureComponent {
@@ -65,7 +66,20 @@ export class EmbeddedContent extends PureComponent {
   };
 
   shareImage = (image) => {
-    console.log(image);
+    // This only shares the url
+    // If we can get the base64 representation of an image when we can allow users to share that directly
+    // TODO: Add a download option on top of the share image url option
+    const url = typeof image === 'string' ? image : (image && image.url) || null;
+    if (!isEmpty(url)) {
+      try {
+        Share.open({
+          url,
+          message: '',
+        });
+      } catch (error) {
+        console.warn('Failed to share image.', error);
+      }
+    }
   }
 
   /**
@@ -75,12 +89,12 @@ export class EmbeddedContent extends PureComponent {
    */
   renderImageModal(images) {
     const { imageModalVisible } = this.state;
+
     const closeModal = () => { this.setState({ imageModalVisible: false }); };
-    const imageUrls = [
-      { url: images[0] },
-      { url: 'https://media.kitsu.io/anime/cover_images/1/original.jpg?1519178801' },
-      { url: 'https://media.kitsu.io/anime/cover_images/7/original.jpg' },
-    ];
+    const imageUrls = images.map(i => ({
+      url: i,
+    }));
+
     return (
       <Modal visible={imageModalVisible} transparent>
         <ImageViewer
@@ -88,6 +102,17 @@ export class EmbeddedContent extends PureComponent {
           onCancel={closeModal}
           onLongPress={this.shareImage}
           saveToLocalByLongPress={false}
+          backgroundColor={'rgba(0,0,0,0.97)'}
+          loadingRender={() => (
+            <View style={styles.loading}>
+              <ActivityIndicator size="small" color="white" />
+            </View>
+          )}
+          renderImage={props => (
+            <FastImage
+              {...props}
+            />
+          )}
           renderFooter={currentIndex => (
             <View style={styles.imageModalFooter}>
               {/* Close */}
