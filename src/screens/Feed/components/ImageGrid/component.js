@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, isNull } from 'lodash';
@@ -19,7 +19,7 @@ export class ImageGrid extends PureComponent {
 
   static defaultProps = {
     images: [],
-    heightToWidthRatio: 1,
+    heightToWidthRatio: Dimensions.get('window').width > 600 ? (1 / 2) : 1,
     width: null,
     compact: false,
     imageBorderWidth: 1,

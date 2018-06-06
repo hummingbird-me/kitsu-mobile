@@ -10,6 +10,7 @@ export class PostImage extends PureComponent {
     width: PropTypes.number,
     height: PropTypes.number,
     borderRadius: PropTypes.number,
+    maxAutoHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -17,6 +18,7 @@ export class PostImage extends PureComponent {
     width: null,
     height: null,
     borderRadius: 0,
+    maxAutoHeight: 350,
   };
 
   state = {
@@ -57,7 +59,7 @@ export class PostImage extends PureComponent {
         if (this.props.width && !this.props.height) {
           this.setState({
             width: this.props.width,
-            height: height * (this.props.width / width),
+            height: Math.min(this.props.maxAutoHeight, height * (this.props.width / width)),
           });
         } else if (!this.props.width && this.props.height) {
           this.setState({
