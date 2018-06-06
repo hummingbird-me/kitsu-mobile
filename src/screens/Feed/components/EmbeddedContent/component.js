@@ -1,18 +1,17 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform, TouchableOpacity, Modal, Image, ActivityIndicator } from 'react-native';
+import { View, ViewPropTypes, WebView, Platform, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { startCase, isEmpty } from 'lodash';
+import { startCase } from 'lodash';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
-import ImageViewer from 'react-native-image-zoom-viewer';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Share from 'react-native-share';
+import { ImageLightbox } from 'kitsu/components/ImageLightbox';
 import { styles } from './styles';
+
 
 export class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -66,85 +65,6 @@ export class EmbeddedContent extends PureComponent {
     imageIndex: 0,
   };
 
-  shareImage = (image) => {
-    // This only shares the url
-    // If we can get the base64 representation of an image when we can allow users to share that directly
-    // TODO: Add a download option on top of the share image url option
-    const url = typeof image === 'string' ? image : (image && image.url) || null;
-    if (!isEmpty(url)) {
-      try {
-        Share.open({
-          url,
-          message: '',
-        });
-      } catch (error) {
-        console.warn('Failed to share image.', error);
-      }
-    }
-  }
-
-  /**
-   * Render the image lightbox modal
-   *
-   * @param {[string]} images An array of image urls.
-   */
-  renderImageModal(images) {
-    const { imageModalVisible, imageIndex } = this.state;
-
-    const closeModal = () => { this.setState({ imageModalVisible: false }); };
-    const imageUrls = images.map(i => ({
-      url: i,
-    }));
-
-    const currentIndex = Math.min(images.length - 1, Math.max(imageIndex, 0));
-
-    return (
-      <Modal visible={imageModalVisible} transparent>
-        <ImageViewer
-          imageUrls={imageUrls}
-          onCancel={closeModal}
-          onLongPress={this.shareImage}
-          saveToLocalByLongPress={false}
-          backgroundColor={'rgba(0,0,0,0.97)'}
-          index={currentIndex}
-          loadingRender={() => (
-            <View style={styles.loading}>
-              <ActivityIndicator size="small" color="white" />
-            </View>
-          )}
-          renderImage={props => (
-            <FastImage
-              {...props}
-            />
-          )}
-          renderFooter={currentIndex => (
-            <View style={styles.imageModalFooter}>
-              {/* Close */}
-              <TouchableOpacity style={styles.iconContainer} onPress={closeModal}>
-                <Icon
-                  style={[styles.icon, styles.closeIcon]}
-                  name={Platform.select({ ios: 'ios-close', android: 'md-close' })}
-                />
-              </TouchableOpacity>
-
-              {/* Share */}
-              <TouchableOpacity
-                style={styles.iconContainer}
-                onPress={() => this.shareImage(imageUrls[currentIndex])}
-              >
-                <Icon
-                  style={styles.icon}
-                  name={Platform.select({ ios: 'ios-share-outline', android: 'md-share' })}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
-          footerContainerStyle={styles.imageModalFooterContainer}
-        />
-      </Modal>
-    );
-  }
-
   /**
    * Render an image embed.
    * This will render the image with given image width or maxWidth if it exceeds it.
@@ -156,6 +76,7 @@ export class EmbeddedContent extends PureComponent {
     if (!embed.image) return null;
 
     const { maxWidth, minWidth, borderRadius, compact } = this.props;
+    const { imageModalVisible, imageIndex } = this.state;
 
     const imageWidth = embed.image.width || maxWidth;
 
@@ -163,10 +84,12 @@ export class EmbeddedContent extends PureComponent {
     if (minWidth && width < minWidth) width = minWidth;
     if (width > maxWidth) width = maxWidth;
 
+    const images = [embed.image.url];
+
     return (
       <View>
         <ImageGrid
-          images={[embed.image.url]}
+          images={images}
           width={width}
           borderRadius={borderRadius}
           compact={compact}
@@ -174,7 +97,12 @@ export class EmbeddedContent extends PureComponent {
             this.setState({ imageIndex: (index || 0), imageModalVisible: true });
           }}
         />
-        {this.renderImageModal([embed.image.url])}
+        <ImageLightbox
+          images={images}
+          visible={imageModalVisible}
+          initialImageIndex={imageIndex}
+          onClose={() => this.setState({ imageModalVisible: false })}
+        />
       </View>
     );
   }
