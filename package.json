@@ -44,6 +44,7 @@
     "react-native-onesignal": "^3.1.1",
     "react-native-scrollable-tab-view": "hummingbird-me/react-native-scrollable-tab-view#fixes_android",
     "react-native-sentry": "^0.34.1",
+    "react-native-share": "^1.0.27",
     "react-native-snap-carousel": "^3.6.0",
     "react-native-swipeable": "^0.6.0",
     "react-native-vector-icons": "^4.5.0",

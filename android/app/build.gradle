@@ -173,6 +173,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-share')
     compile project(':react-native-fast-image')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-sentry')

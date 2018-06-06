@@ -9,4 +9,6 @@ target 'kitsu_mobile' do
   pod 'RSKImageCropper'
   pod 'QBImagePickerController'
 
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
 end

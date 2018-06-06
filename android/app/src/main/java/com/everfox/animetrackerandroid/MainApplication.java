@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import cl.json.RNSharePackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
@@ -51,6 +52,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSharePackage(),
             new FastImageViewPackage(),
             new PickerPackage(),
             new ReactNativeOneSignalPackage(),
