@@ -63,6 +63,7 @@ export class EmbeddedContent extends PureComponent {
 
   state = {
     imageModalVisible: false,
+    imageIndex: 0,
   };
 
   shareImage = (image) => {
@@ -88,12 +89,14 @@ export class EmbeddedContent extends PureComponent {
    * @param {[string]} images An array of image urls.
    */
   renderImageModal(images) {
-    const { imageModalVisible } = this.state;
+    const { imageModalVisible, imageIndex } = this.state;
 
     const closeModal = () => { this.setState({ imageModalVisible: false }); };
     const imageUrls = images.map(i => ({
       url: i,
     }));
+
+    const currentIndex = Math.min(images.length - 1, Math.max(imageIndex, 0));
 
     return (
       <Modal visible={imageModalVisible} transparent>
@@ -103,6 +106,7 @@ export class EmbeddedContent extends PureComponent {
           onLongPress={this.shareImage}
           saveToLocalByLongPress={false}
           backgroundColor={'rgba(0,0,0,0.97)'}
+          index={currentIndex}
           loadingRender={() => (
             <View style={styles.loading}>
               <ActivityIndicator size="small" color="white" />
@@ -152,7 +156,6 @@ export class EmbeddedContent extends PureComponent {
     if (!embed.image) return null;
 
     const { maxWidth, minWidth, borderRadius, compact } = this.props;
-    const { imageModalVisible } = this.state;
 
     const imageWidth = embed.image.width || maxWidth;
 
@@ -167,8 +170,8 @@ export class EmbeddedContent extends PureComponent {
           width={width}
           borderRadius={borderRadius}
           compact={compact}
-          onImageTapped={() => {
-            this.setState({ imageModalVisible: true });
+          onImageTapped={(index) => {
+            this.setState({ imageIndex: (index || 0), imageModalVisible: true });
           }}
         />
         {this.renderImageModal([embed.image.url])}
