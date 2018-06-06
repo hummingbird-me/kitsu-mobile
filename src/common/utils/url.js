@@ -1,10 +1,22 @@
 import { Linking } from 'react-native';
 
 /**
+ * Checks whether a url is a data url.
+ * E.g data:image/png;base64, data:text/plain, etc ...
+ *
+ * @param {string} url The url to check.
+ * @returns If the url is a data url.
+ */
+export function isDataUrl(url) {
+  const regex = /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z0-9-.!#$%*+.{}|~`]+=[a-z0-9-.!#$%*+.{}|~`]+)*)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)$/i;
+  return regex.test((url || '').trim());
+}
+
+/**
  * Open the given url in `Linking`.
  * Checks to see if the url is supported by an app before opening it.
  *
- * @param {any} url The url to open
+ * @param {string} url The url to open
  */
 async function openUrl(url) {
   try {

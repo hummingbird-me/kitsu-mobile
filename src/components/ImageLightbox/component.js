@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, Share, Linking } from 'react-native';
+import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, Share, Linking, Image } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { isDataUrl } from 'kitsu/common/utils/url';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
@@ -113,7 +114,28 @@ export class ImageLightbox extends PureComponent {
           </TouchableOpacity> */}
         </View>
       );
-    }
+    };
+  }
+
+  renderImage = (props) => {
+    const uri = (props && props.source && props.source.uri) || '';
+
+    /*
+    Data url images don't work on android with FastImage.
+    Thus we have to fallback to a regular image component.
+
+    Same thing is done in `PostImage`
+
+    Relevant PRs:
+      - https://github.com/DylanVann/react-native-fast-image/pull/91
+      - https://github.com/DylanVann/react-native-fast-image/pull/205
+    */
+    const ImageComponent = (isDataUrl(uri) && Platform.OS === 'android') ? Image : FastImage;
+    return (
+      <ImageComponent
+        {...props}
+      />
+    );
   }
 
   render() {
@@ -144,11 +166,7 @@ export class ImageLightbox extends PureComponent {
               <ActivityIndicator size="small" color="white" />
             </View>
           )}
-          renderImage={props => (
-            <FastImage
-              {...props}
-            />
-          )}
+          renderImage={this.renderImage}
           renderFooter={this.renderFooter(imageUrls)}
           footerContainerStyle={styles.imageModalFooterContainer}
         />

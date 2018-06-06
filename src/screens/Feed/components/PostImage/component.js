@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image } from 'react-native';
+import { View, Image, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { isDataUrl } from 'kitsu/common/utils/url';
 import { styles } from './styles';
 
 export class PostImage extends PureComponent {
@@ -82,8 +83,20 @@ export class PostImage extends PureComponent {
     const { uri, borderRadius } = this.props;
     const { width, height } = this.state;
 
+    /*
+    Data url images don't work on android with FastImage.
+    Thus we have to fallback to a regular image component.
+
+    Same thing is done in `ImageLightbox`
+
+    Relevant PRs:
+      - https://github.com/DylanVann/react-native-fast-image/pull/91
+      - https://github.com/DylanVann/react-native-fast-image/pull/205
+    */
+    const ImageComponent = (isDataUrl(uri) && Platform.OS === 'android') ? Image : FastImage;
+
     return (
-      <FastImage
+      <ImageComponent
         resizeMode="cover"
         source={{ uri }}
         style={{ width, height, borderRadius, overflow: 'hidden' }}
