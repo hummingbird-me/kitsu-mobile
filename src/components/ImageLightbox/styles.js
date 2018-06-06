@@ -21,6 +21,9 @@ export const styles = StyleSheet.create({
   closeIcon: {
     fontSize: Platform.select({ ios: 36, android: 28 }),
   },
+  openIcon: {
+    fontSize: 28,
+  },
   iconContainer: {
     height: '100%',
     paddingHorizontal: 12,

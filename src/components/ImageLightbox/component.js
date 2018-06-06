@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, CameraRoll, Share } from 'react-native';
+import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, Share, Linking } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,6 +15,7 @@ export class ImageLightbox extends PureComponent {
     onClose: PropTypes.func.isRequired,
     onShare: PropTypes.func,
     onDownload: PropTypes.func,
+    onOpen: PropTypes.func,
   }
 
   static defaultProps = {
@@ -22,65 +23,97 @@ export class ImageLightbox extends PureComponent {
     initialImageIndex: 0,
     onShare: null,
     onDownload: null,
+    onOpen: null,
   }
 
-  shareImage = (image) => {
-    // This only shares the url
-    const url = typeof image === 'string' ? image : (image && image.url) || null;
+  shareImage = (url) => {
     if (isEmpty(url)) return;
     Share.share({ url });
   }
 
-  downloadImage = (image) => {
-    console.log(image);
+  downloadImage = (url) => {
+    console.log(url);
+  }
+
+  openImage = async (url) => {
+    if (isEmpty(url)) return;
+
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        Linking.openURL(url);
+      }
+    } catch (e) {
+      console.log(`Error handling ${url}: ${e}`);
+    }
   }
 
   renderFooter(imageUrls) {
-    const { onClose, onShare, onDownload } = this.props;
+    const { onClose, onShare, onDownload, onOpen } = this.props;
     const shareImage = onShare || this.shareImage;
     const downloadImage = onDownload || this.downloadImage;
+    const openImage = onOpen || this.openImage;
 
-    return currentIndex => (
-      <View style={styles.imageModalFooter}>
-        {/* Close */}
-        <TouchableOpacity style={styles.iconContainer} onPress={onClose}>
-          <Icon
-            style={[styles.icon, styles.closeIcon]}
-            name={Platform.select({ ios: 'ios-close', android: 'md-close' })}
-          />
-        </TouchableOpacity>
+    return (currentIndex) => {
+      const currentImage = imageUrls[currentIndex];
+      const url = typeof currentImage === 'string' ? currentImage : (currentImage && currentImage.url) || null;
+      const isRemoteUrl = url && url.includes('http');
 
-        {/* Share */}
-        <TouchableOpacity
-          style={styles.iconContainer}
-          onPress={() => shareImage(imageUrls[currentIndex])}
-        >
-          <Icon
-            style={[styles.icon, styles.shareIcon]}
-            name={Platform.select({ ios: 'ios-share-outline', android: 'md-share' })}
-          />
-        </TouchableOpacity>
+      return (
+        <View style={styles.imageModalFooter}>
+          {/* Close */}
+          <TouchableOpacity style={styles.iconContainer} onPress={onClose}>
+            <Icon
+              style={[styles.icon, styles.closeIcon]}
+              name={Platform.select({ ios: 'ios-close', android: 'md-close' })}
+            />
+          </TouchableOpacity>
 
-        {/* Download */}
-        {/*
-        Disabled for now ...
-        Several issues with this at the moment:
-          1. Need to find a way to download images to gallery on android.
-          2. `CameraRoll` has `saveToCameraRoll` which can save remote urls to iOS only.
-              see: https://facebook.github.io/react-native/docs/cameraroll.html#savetocameraroll
-          3. To get `CameraRoll.saveToCameraRoll` to work, you need to ask user for permission beforehand, otherwise app just crashes.
-         */}
-        {/* <TouchableOpacity
-          style={styles.iconContainer}
-          onPress={() => downloadImage(imageUrls[currentIndex])}
-        >
-          <Icon
-            style={[styles.icon, styles.downloadIcon]}
-            name={Platform.select({ ios: 'ios-cloud-download-outline', android: 'md-cloud-download' })}
-          />
-        </TouchableOpacity> */}
-      </View>
-    );
+          {/* Open */}
+          {isRemoteUrl &&
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={() => openImage(url)}
+            >
+              <Icon
+                style={[styles.icon, styles.openIcon]}
+                name={Platform.select({ ios: 'ios-open-outline', android: 'md-open' })}
+              />
+            </TouchableOpacity>
+          }
+
+          {/* Share */}
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => shareImage(url)}
+          >
+            <Icon
+              style={styles.icon}
+              name={Platform.select({ ios: 'ios-share-outline', android: 'md-share' })}
+            />
+          </TouchableOpacity>
+
+          {/* Download */}
+          {/*
+          Disabled for now ...
+          Several issues with this at the moment:
+            1. Need to find a way to download images to gallery on android.
+            2. `CameraRoll` has `saveToCameraRoll` which can save remote urls to iOS only.
+                see: https://facebook.github.io/react-native/docs/cameraroll.html#savetocameraroll
+            3. To get `CameraRoll.saveToCameraRoll` to work, you need to ask user for permission beforehand, otherwise app just crashes.
+          */}
+          {/* <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => downloadImage(url)}
+          >
+            <Icon
+              style={styles.icon}
+              name={Platform.select({ ios: 'ios-cloud-download-outline', android: 'md-cloud-download' })}
+            />
+          </TouchableOpacity> */}
+        </View>
+      );
+    }
   }
 
   render() {
