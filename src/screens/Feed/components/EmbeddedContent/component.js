@@ -78,7 +78,7 @@ export class EmbeddedContent extends PureComponent {
 
     return (
       <ImageGrid
-        images={[{ uri: embed.image.url }]}
+        images={[embed.image.url]}
         width={width}
         borderRadius={borderRadius}
         compact={compact}
