@@ -4,7 +4,7 @@ import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, Share, Link
 import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { isDataUrl } from 'kitsu/common/utils/url';
+import { isDataUrl, parseURL } from 'kitsu/common/utils/url';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
@@ -57,8 +57,11 @@ export class ImageLightbox extends PureComponent {
 
     return (currentIndex) => {
       const currentImage = imageUrls[currentIndex];
-      const url = typeof currentImage === 'string' ? currentImage : (currentImage && currentImage.url) || null;
-      const isRemoteUrl = url && url.includes('http');
+      const url = currentImage && currentImage.url;
+
+      // Check if we have a remote URL
+      const parsed = parseURL(url);
+      const isRemoteUrl = parsed && parsed.protocol && parsed.protocol.includes('http');
 
       return (
         <View style={styles.imageModalFooter}>
@@ -157,7 +160,7 @@ export class ImageLightbox extends PureComponent {
         <ImageViewer
           imageUrls={imageUrls}
           onCancel={onClose}
-          onLongPress={shareImage}
+          onLongPress={i => shareImage(i && i.url)}
           saveToLocalByLongPress={false}
           backgroundColor={'rgba(0,0,0,0.97)'}
           index={index}
