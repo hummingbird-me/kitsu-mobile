@@ -65,7 +65,6 @@ class AppSettings extends PureComponent {
           <SelectMenu
             style={styles.selectMenu}
             onOptionSelected={this.onStartingPageChange}
-            cancelButtonIndex={pages.length - 1}
             options={pages}
           >
             <View>
