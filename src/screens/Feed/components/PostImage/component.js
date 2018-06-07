@@ -11,6 +11,7 @@ export class PostImage extends PureComponent {
     width: PropTypes.number,
     height: PropTypes.number,
     borderRadius: PropTypes.number,
+    // The maximum height an image can be if the width is set and height is not set.
     maxAutoHeight: PropTypes.number,
   };
 
@@ -19,7 +20,7 @@ export class PostImage extends PureComponent {
     width: null,
     height: null,
     borderRadius: 0,
-    maxAutoHeight: 350,
+    maxAutoHeight: 400,
   };
 
   state = {

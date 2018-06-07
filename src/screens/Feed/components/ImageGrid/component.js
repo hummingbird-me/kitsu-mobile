@@ -19,7 +19,7 @@ export class ImageGrid extends PureComponent {
 
   static defaultProps = {
     images: [],
-    heightToWidthRatio: Dimensions.get('window').width > 600 ? (1 / 2) : 1,
+    heightToWidthRatio: Dimensions.get('window').width > 600 ? (3 / 4) : 1,
     width: null,
     compact: false,
     imageBorderWidth: 1,
