@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -19,10 +19,22 @@ export const styles = StyleSheet.create({
     borderRadius: 32,
   },
   dataSaver: {
-    backgroundColor: colors.darkGrey,
+    backgroundColor: colors.darkPurple,
     flex: 1,
+    flexDirection: 'row',
     height: 150,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'center',
+    paddingHorizontal: 8,
+  },
+  dataBunny: {
+    height: 135,
+    width: 80,
+  },
+  dataSaverTextContainer: {
+    height: '100%',
+    justifyContent: 'center',
+    marginLeft: 8,
+    paddingLeft: 8,
   },
 });

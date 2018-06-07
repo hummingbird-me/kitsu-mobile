@@ -9,7 +9,8 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { startCase } from 'lodash';
+import { startCase, isEmpty } from 'lodash';
+import dataBunny from 'kitsu/assets/img/data-bunny.png';
 import { styles } from './styles';
 
 class EmbeddedContent extends PureComponent {
@@ -67,6 +68,36 @@ class EmbeddedContent extends PureComponent {
     this.setState({ visible: !this.state.visible });
   }
 
+  renderTapToLoad(width) {
+    const { borderRadius } = this.props;
+    const showDataBunny = !isNaN(width) && width > 300;
+
+    const textContainerStyle = (!showDataBunny && { alignItems: 'center' }) || {};
+
+    return (
+      <TouchableOpacity
+        style={[styles.dataSaver, { borderRadius }]}
+        onPress={this.toggleVisibility}
+      >
+        {showDataBunny &&
+          <FastImage
+            source={dataBunny}
+            style={styles.dataBunny}
+            resizeMode="contain"
+          />
+        }
+        <View style={[styles.dataSaverTextContainer, textContainerStyle]}>
+          <StyledText color="light" size="default" bold numberOfLines={1} textStyle={{ marginBottom: 4 }}>
+            Tap to load image
+          </StyledText>
+          <StyledText color="light" size="xxsmall">
+            Data-saving mode is currently enabled.
+          </StyledText>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   /**
    * Render an image embed.
    * This will render the image with given image width or maxWidth if it exceeds it.
@@ -88,16 +119,7 @@ class EmbeddedContent extends PureComponent {
     if (width > maxWidth) width = maxWidth;
 
     if (dataSaver && !visible) {
-      return (
-        <TouchableOpacity
-          style={[styles.dataSaver, { borderRadius }]}
-          onPress={this.toggleVisibility}
-        >
-          <StyledText color="light" size="default" numberOfLines={1}>
-            Tap to load image
-          </StyledText>
-        </TouchableOpacity>
-      );
+      return this.renderTapToLoad(maxWidth);
     }
 
     // PostImage will auto scale the image
