@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Clipboard, ToastAndroid, Platform, Alert } from 'react-native';
+import { View, TouchableOpacity, Share, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -8,7 +8,6 @@ import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { isEmpty } from 'lodash';
 import { kitsuConfig } from 'kitsu/config/env';
 import { styles } from './styles';
 
@@ -42,19 +41,10 @@ export const PostHeader = ({
     {
       onSelected: async () => {
         if (!post) return;
-        await Clipboard.setString(`${kitsuConfig.kitsuUrl}/posts/${post.id}`);
-        if (Platform.OS === 'android') {
-          ToastAndroid.showWithGravity(
-            'Copied post link!',
-            ToastAndroid.SHORT,
-            ToastAndroid.BOTTOM,
-          );
-        } else {
-          alert('Copied post link!');
-        }
-
+        const url = `${kitsuConfig.kitsuUrl}/posts/${post.id}`;
+        Share.share({ url });
       },
-      text: 'Copy Link to Post',
+      text: 'Share Post Link',
     },
     {
       condition: canMutate,

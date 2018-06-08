@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, SectionList, View, Clipboard, ToastAndroid, Platform } from 'react-native';
+import { StatusBar, SectionList, Share } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -21,7 +21,7 @@ import { isIdForCurrentUser } from 'kitsu/common/utils';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 import { parseURL } from 'kitsu/common/utils/url';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { kitsuConfig } from 'kitsu/config/env';
 import Summary from './pages/Summary';
@@ -111,19 +111,11 @@ class ProfilePage extends PureComponent {
         });
         break;
       }
-      case 'copy': {
+      case 'share': {
         const id = (profile && profile.slug) || userId;
+        if (isNull(id)) return;
         const url = `${kitsuConfig.kitsuUrl}/users/${id}`;
-        await Clipboard.setString(url);
-        if (Platform.OS === 'android') {
-          ToastAndroid.showWithGravity(
-            'Copied profile link!',
-            ToastAndroid.SHORT,
-            ToastAndroid.BOTTOM,
-          );
-        } else {
-          alert('Copied profile link!');
-        }
+        Share.share({ url });
         break;
       }
       default:
@@ -334,7 +326,7 @@ class ProfilePage extends PureComponent {
     const mainButtonTitle = isCurrentUser ? 'Edit' : follow ? 'Unfollow' : 'Follow';
 
     // There's no way to Report Profiles at the moment in the API.
-    const MORE_BUTTON_OPTIONS = [{ text: 'Copy Link to Profile', value: 'copy' }, /* 'Report Profile', */ 'Nevermind'];
+    const MORE_BUTTON_OPTIONS = [{ text: 'Share Profile Link', value: 'share' }, /* 'Report Profile', */ 'Nevermind'];
     if (!isCurrentUser) {
       MORE_BUTTON_OPTIONS.unshift('Block');
     }
