@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, Platform, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
@@ -9,7 +9,9 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { startCase } from 'lodash';
+import { WebComponent } from 'kitsu/common/utils/components';
 import { styles } from './styles';
+
 
 export class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -107,7 +109,7 @@ export class EmbeddedContent extends PureComponent {
           style={style}
         />
         :
-        <WebView
+        <WebComponent
           style={style}
           source={{ uri: `${video.url}?rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1` }}
         />
