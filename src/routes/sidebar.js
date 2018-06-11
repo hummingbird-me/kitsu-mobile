@@ -10,6 +10,7 @@ import {
   ImportDetail,
   ExportLibrary,
   CannyBoard,
+  AppSettings,
 } from 'kitsu/screens/Sidebar';
 
 export const sidebarRoutes = {
@@ -33,6 +34,9 @@ export const sidebarRoutes = {
   },
   ExportLibrary: {
     screen: ExportLibrary,
+  },
+  AppSettings: {
+    screen: AppSettings,
   },
   ImportLibrary: {
     screen: ImportLibrary,

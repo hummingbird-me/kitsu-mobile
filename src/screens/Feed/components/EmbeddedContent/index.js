@@ -1,1 +1,3 @@
-export * from './component';
+import EmbeddedContent from './component';
+
+export { EmbeddedContent };
