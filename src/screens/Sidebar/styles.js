@@ -54,6 +54,14 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
   },
+  checkBoxContainer: {
+    backgroundColor: colors.white,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   item: {
     backgroundColor: colors.white,
     paddingHorizontal: 12,

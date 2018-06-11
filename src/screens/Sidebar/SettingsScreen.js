@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { blocking, library, privacy, settings, linked } from 'kitsu/assets/img/sidebar_icons/';
+import { blocking, library, privacy, settings, linked, app } from 'kitsu/assets/img/sidebar_icons/';
 import { navigationOptions, SidebarTitle, ItemSeparator, SidebarListItem } from './common/';
 import { styles } from './styles';
 
@@ -20,6 +20,7 @@ class SettingsScreen extends PureComponent {
             { title: 'Linked Accounts', image: linked, target: 'LinkedAccounts' },
             { title: 'Library', image: library, target: 'LibrarySettings' },
             { title: 'Blocking', image: blocking, target: 'Blocking' },
+            { title: 'App', image: app, target: 'AppSettings' },
           ]}
           keyExtractor={item => item.title}
           renderItem={({ item }) => (

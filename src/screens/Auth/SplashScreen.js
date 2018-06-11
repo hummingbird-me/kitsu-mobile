@@ -3,7 +3,6 @@ import { View, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation';
-
 import * as colors from 'kitsu/constants/colors';
 
 class SplashScreen extends Component {
