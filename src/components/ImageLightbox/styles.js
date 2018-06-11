@@ -15,14 +15,14 @@ export const styles = StyleSheet.create({
   icon: {
     color: colors.white,
     marginHorizontal: 8,
-    fontSize: Platform.select({ ios: 30, android: 28 }),
+    fontSize: Platform.select({ ios: 30, android: 24 }),
     backgroundColor: 'transparent',
   },
   closeIcon: {
-    fontSize: Platform.select({ ios: 36, android: 28 }),
+    fontSize: Platform.select({ ios: 36, android: 24 }),
   },
   openIcon: {
-    fontSize: 28,
+    fontSize: Platform.select({ ios: 28, android: 24 }),
   },
   iconContainer: {
     height: '100%',

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, View } from 'react-native';
+import { StatusBar, Share } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -16,10 +16,10 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import { capitalize, upperFirst } from 'lodash';
+import { capitalize, upperFirst, isNull } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/coverImage';
-import { StyledText } from 'kitsu/components/StyledText';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
@@ -111,6 +111,7 @@ class MediaPages extends PureComponent {
 
   onMoreButtonOptionsSelected = async (option) => {
     const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { media } = this.state;
     switch (option) {
       case 'add': {
         const record = await Kitsu.create('favorites', {
@@ -130,6 +131,13 @@ class MediaPages extends PureComponent {
         await Kitsu.destroy('favorites', this.state.favorite.id);
         this.setState({ favorite: null });
         break;
+      case 'share': {
+        const id = (media && media.slug) || mediaId;
+        if (isNull(id) || isNull(mediaType)) return;
+        const url = `${kitsuConfig.kitsuUrl}/${mediaType}/${id}`;
+        Share.share({ url });
+        break;
+      }
       default:
         console.log('unhandled option selected:', option);
         break;
@@ -528,7 +536,7 @@ class MediaPages extends PureComponent {
     }
     MAIN_BUTTON_OPTIONS.push('Nevermind');
 
-    const MORE_BUTTON_OPTIONS = ['Nevermind'];
+    const MORE_BUTTON_OPTIONS = [{ text: 'Share Media Link', value: 'share' }, 'Nevermind'];
     if (favorite) {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Remove from Favorites', value: 'remove' });
     } else {

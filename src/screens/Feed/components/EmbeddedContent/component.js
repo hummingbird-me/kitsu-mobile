@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, ViewPropTypes, WebView, Platform, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -10,10 +11,10 @@ import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { startCase } from 'lodash';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { ImageLightbox } from 'kitsu/components/ImageLightbox';
+import dataBunny from 'kitsu/assets/img/data-bunny.png';
 import { styles } from './styles';
 
-
-export class EmbeddedContent extends PureComponent {
+class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
   // sometimes the embeds return width/height as strings
   // othertimes as numbers ...
@@ -51,6 +52,7 @@ export class EmbeddedContent extends PureComponent {
     borderRadius: PropTypes.number,
     navigation: PropTypes.object.isRequired,
     compact: PropTypes.bool,
+    dataSaver: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -58,12 +60,48 @@ export class EmbeddedContent extends PureComponent {
     minWidth: null,
     borderRadius: 0,
     compact: false,
+    dataSaver: false,
   }
 
   state = {
     imageModalVisible: false,
     imageIndex: 0,
+    visible: false,
   };
+
+  toggleVisibility = () => {
+    this.setState({ visible: !this.state.visible });
+  }
+
+  renderTapToLoad(width) {
+    const { borderRadius } = this.props;
+    const showDataBunny = !isNaN(width) && width > 300;
+
+    const textContainerStyle = (!showDataBunny && { alignItems: 'center' }) || {};
+
+    return (
+      <TouchableOpacity
+        style={[styles.dataSaver, { borderRadius }]}
+        onPress={this.toggleVisibility}
+      >
+        {showDataBunny &&
+          <FastImage
+            source={dataBunny}
+            style={styles.dataBunny}
+            resizeMode="contain"
+          />
+        }
+        <View style={[styles.dataSaverTextContainer, textContainerStyle]}>
+          <StyledText color="light" size="default" bold numberOfLines={1} textStyle={{ marginBottom: 4 }}>
+            Tap to load image
+          </StyledText>
+          <StyledText color="light" size="xxsmall">
+            Data-saving mode is currently enabled.
+          </StyledText>
+        </View>
+      </TouchableOpacity>
+    );
+  }
 
   /**
    * Render an image embed.
@@ -75,8 +113,8 @@ export class EmbeddedContent extends PureComponent {
   renderImage(embed) {
     if (!embed.image) return null;
 
-    const { maxWidth, minWidth, borderRadius, compact } = this.props;
-    const { imageModalVisible, imageIndex } = this.state;
+    const { maxWidth, minWidth, borderRadius, compact, dataSaver } = this.props;
+    const { imageModalVisible, imageIndex, visible } = this.state;
 
     const imageWidth = embed.image.width || maxWidth;
 
@@ -85,6 +123,10 @@ export class EmbeddedContent extends PureComponent {
     if (width > maxWidth) width = maxWidth;
 
     const images = [embed.image.url];
+
+    if (dataSaver && !visible) {
+      return this.renderTapToLoad(maxWidth);
+    }
 
     return (
       <View>
@@ -235,3 +277,10 @@ export class EmbeddedContent extends PureComponent {
     );
   }
 }
+
+const mapper = ({ app }) => {
+  const { dataSaver } = app;
+  return { dataSaver };
+};
+
+export default connect(mapper, null)(EmbeddedContent);

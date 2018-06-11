@@ -12,6 +12,7 @@ import settings from './settings.png';
 import success from './success.png';
 import suggest from './suggest.png';
 import queued from './queued.png';
+import app from './app.png';
 
 export {
   blocking,
@@ -28,4 +29,5 @@ export {
   success,
   suggest,
   queued,
+  app,
 };

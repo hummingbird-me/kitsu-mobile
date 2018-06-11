@@ -6,6 +6,7 @@ import PrivacySettings from './PrivacySettings';
 import SettingsScreen from './SettingsScreen';
 import SidebarScreen from './SidebarScreen';
 import { CannyBoard } from './CannyBoard';
+import AppSettings from './AppSettings';
 
 export {
   Blocking,
@@ -19,4 +20,5 @@ export {
   SettingsScreen,
   SidebarScreen,
   CannyBoard,
+  AppSettings,
 };
