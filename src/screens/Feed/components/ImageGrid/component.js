@@ -34,7 +34,7 @@ export class ImageGrid extends PureComponent {
 
     return (
       <TouchableOpacity
-        style={[styles.imageWrap, { borderWidth: !compact && imageBorderWidth }]}
+        style={[styles.imageWrap, { borderWidth: (compact ? 0 : imageBorderWidth) }]}
         onPress={onPress}
       >
         <PostImage
