@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Platform, Text, WebView, ActivityIndicator, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
+import { ScrollView, View, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
-import WKWebView from 'react-native-wkwebview-reborn';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
@@ -19,10 +17,10 @@ import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import moment from 'moment';
-import URL from 'url-parse';
+import { WebComponent } from 'kitsu/common/utils/components';
 import { styles } from './styles';
 
-const WebComponent = Platform.OS === 'ios' ? WKWebView : WebView;
+
 const LANGUAGE_LOOKUP = {
   en: 'English',
   ja: 'Japanese',
