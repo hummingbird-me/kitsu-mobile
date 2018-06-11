@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, WebView, ActivityIndicator, Keyboard, Platform } from 'react-native';
+import { View, Text, ActivityIndicator, Keyboard, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { kitsuConfig } from 'kitsu/config/env/';
 import { commonStyles } from 'kitsu/common/styles';
-import WKWebView from 'react-native-wkwebview-reborn';
 import { navigationOptions } from 'kitsu/screens/Sidebar/common';
+import { WebComponent } from 'kitsu/common/utils/components';
 import { styles } from './styles';
 
 class Board extends React.Component {
@@ -75,7 +75,6 @@ class Board extends React.Component {
     const { navigation } = this.props;
     const boardToken = kitsuConfig.cannyBoardTokens[navigation.state.params.type];
     const uri = `https://webview.canny.io?boardToken=${boardToken}&ssoToken=${ssoToken}`;
-    const Web = Platform.OS === 'ios' ? WKWebView : WebView;
     const adjustProperty = Platform.OS === 'ios' ? 'paddingBottom' : 'marginBottom';
 
     return (
@@ -84,7 +83,7 @@ class Board extends React.Component {
           ? <View style={[commonStyles.centerCenter, { flex: 1 }]}>
             <ActivityIndicator />
           </View>
-          : <Web
+          : <WebComponent
             style={[styles.webView, { [adjustProperty]: keyboardHeight }]}
             source={{
               uri,

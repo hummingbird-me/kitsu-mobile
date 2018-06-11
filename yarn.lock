@@ -7726,6 +7726,10 @@ react-native-actionsheet@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.3.0.tgz#a9552a356dc5939829062353804d5e5609e8f969"
 
+"react-native-android-fullscreen-webview-video@https://github.com/Mikunj/react-native-android-fullscreen-webview-video.git":
+  version "1.0.4"
+  resolved "https://github.com/Mikunj/react-native-android-fullscreen-webview-video.git#4acddaf1e86ee9dbdbd376b06b29e3a36c917b33"
+
 react-native-animatable@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.4.tgz#b5fb7657e8f6edadbc26697057a327fb920b3039"
