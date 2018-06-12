@@ -107,7 +107,7 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
 };
 
 const defaultFetchUserLibraryOptions = {
-  limit: 10,
+  limit: 25,
 };
 
 /**
