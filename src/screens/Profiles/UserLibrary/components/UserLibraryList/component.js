@@ -146,11 +146,13 @@ export class UserLibraryList extends PureComponent {
     const { libraryType, libraryStatus, loading } = this.props;
     const { dataProvider, isSwiping } = this.state;
     if (dataProvider.getSize() === 0 && !loading) {
-      return <LibraryEmptyState
-        type={libraryType}
-        status={libraryStatus}
-        onPress={this.navigateToSearch}
-      />;
+      return (
+        <LibraryEmptyState
+          type={libraryType}
+          status={libraryStatus}
+          onPress={this.navigateToSearch}
+        />
+      );
     }
     return (
       <RecyclerListView
