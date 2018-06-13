@@ -101,7 +101,6 @@ export class PostImage extends PureComponent {
         resizeMode="cover"
         source={{ uri }}
         style={{ width, height, borderRadius, overflow: 'hidden' }}
-        borderRadius={borderRadius}
       />
     );
   }

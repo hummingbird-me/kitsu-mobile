@@ -15,7 +15,7 @@ export const NotificationPopover = ({ style, onRequestClose, data }) => {
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
         <TouchableOpacity activeOpacity={0.9} onPress={onRequestClose} style={styles.content}>
           <View style={{ paddingRight: 10 }}>
-            <FastImage style={styles.userAvatar} source={{ uri: actorAvatar }} borderRadius={20} />
+            <FastImage style={styles.userAvatar} source={{ uri: actorAvatar }} />
           </View>
           <Text style={[styles.activityText, styles.activityTextHighlight]}>
             {actorName || 'Unknown'}

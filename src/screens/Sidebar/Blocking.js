@@ -30,8 +30,7 @@ const RowItem = ({ type, item, onPress }) => {
           <View style={{ width: 25, alignItems: 'center' }}>
             <FastImage
               source={(item.avatar && { uri: item.avatar.small }) || defaultAvatar}
-              style={{ resizeMode: 'contain', width: 24, height: 24 }}
-              borderRadius={12}
+              style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
             />
           </View>
           <Text

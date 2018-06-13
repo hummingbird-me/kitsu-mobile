@@ -52,7 +52,6 @@ export class PhotoGrid extends React.Component {
       >
         <ImageCard
           variant="filled"
-          borderRadius={0}
           title={(character && character.name) || '-'}
           source={{ uri: image || null }}
         />

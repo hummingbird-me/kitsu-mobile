@@ -53,7 +53,7 @@ export const ProfileHeader = ({
           <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
             {showProfileImage &&
-              <FastImage style={styles.profileImage} source={{ uri: profileImageUri }} borderRadius={15} />
+              <FastImage style={styles.profileImage} source={{ uri: profileImageUri }} />
             }
             {showFollowButton &&
               <Text style={[

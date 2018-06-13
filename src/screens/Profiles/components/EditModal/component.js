@@ -128,7 +128,6 @@ export class EditModal extends Component {
           <FastImage
             style={styles.profileImage}
             source={avatar}
-            borderRadius={40}
           />
         </TouchableOpacity>
       </View>
