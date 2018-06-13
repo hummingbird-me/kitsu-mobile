@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 44.96,
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   icon: {
     color: colors.white,
