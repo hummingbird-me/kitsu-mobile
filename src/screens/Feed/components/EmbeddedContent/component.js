@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, ViewPropTypes, Platform, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import dataBunny from 'kitsu/assets/img/data-bunny.png';
+import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
+import { ImageLightbox } from 'kitsu/components/ImageLightbox';
 import { startCase } from 'lodash';
 import { WebComponent } from 'kitsu/common/utils/components';
 import { styles } from './styles';
@@ -51,6 +52,7 @@ class EmbeddedContent extends PureComponent {
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
     navigation: PropTypes.object.isRequired,
+    compact: PropTypes.bool,
     dataSaver: PropTypes.bool,
   }
 
@@ -58,12 +60,15 @@ class EmbeddedContent extends PureComponent {
     style: null,
     minWidth: null,
     borderRadius: 0,
+    compact: false,
     dataSaver: false,
   }
 
   state = {
+    imageModalVisible: false,
+    imageIndex: 0,
     visible: false,
-  }
+  };
 
   toggleVisibility = () => {
     this.setState({ visible: !this.state.visible });
@@ -109,27 +114,39 @@ class EmbeddedContent extends PureComponent {
   renderImage(embed) {
     if (!embed.image) return null;
 
-    const { dataSaver } = this.props;
-    const { visible } = this.state;
+    const { maxWidth, minWidth, borderRadius, compact, dataSaver } = this.props;
+    const { imageModalVisible, imageIndex, visible } = this.state;
 
-    const { maxWidth, minWidth, borderRadius } = this.props;
     const imageWidth = embed.image.width || maxWidth;
 
     let width = parseInt(imageWidth, 10);
     if (minWidth && width < minWidth) width = minWidth;
     if (width > maxWidth) width = maxWidth;
 
+    const images = [embed.image.url];
+
     if (dataSaver && !visible) {
       return this.renderTapToLoad(maxWidth);
     }
 
-    // PostImage will auto scale the image
     return (
-      <PostImage
-        uri={embed.image.url}
-        width={width}
-        borderRadius={borderRadius}
-      />
+      <View>
+        <ImageGrid
+          images={images}
+          width={width}
+          borderRadius={borderRadius}
+          compact={compact}
+          onImageTapped={(index) => {
+            this.setState({ imageIndex: (index || 0), imageModalVisible: true });
+          }}
+        />
+        <ImageLightbox
+          images={images}
+          visible={imageModalVisible}
+          initialImageIndex={imageIndex}
+          onClose={() => this.setState({ imageModalVisible: false })}
+        />
+      </View>
     );
   }
 
