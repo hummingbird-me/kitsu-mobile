@@ -4,7 +4,6 @@ import { StatusBar, SectionList, Share } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
-
 import { Kitsu } from 'kitsu/config/api';
 import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
@@ -24,6 +23,7 @@ import { parseURL } from 'kitsu/common/utils/url';
 import { isEmpty, isNull } from 'lodash';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { kitsuConfig } from 'kitsu/config/env';
+import { Lightbox } from 'kitsu/utils/lightbox';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
 
@@ -116,6 +116,18 @@ class ProfilePage extends PureComponent {
         if (isNull(id)) return;
         const url = `${kitsuConfig.kitsuUrl}/users/${id}`;
         Share.share({ url });
+        break;
+      }
+      case 'cover': {
+        if (!profile || !profile.coverImage) return;
+        const coverURL = profile.coverImage.original ||
+          profile.coverImage.large ||
+          profile.coverImage.medium ||
+          profile.coverImage.small ||
+          null;
+
+        if (isEmpty(coverURL)) return;
+        Lightbox.show([coverURL]);
         break;
       }
       default:
@@ -326,7 +338,13 @@ class ProfilePage extends PureComponent {
     const mainButtonTitle = isCurrentUser ? 'Edit' : follow ? 'Unfollow' : 'Follow';
 
     // There's no way to Report Profiles at the moment in the API.
-    const MORE_BUTTON_OPTIONS = [{ text: 'Share Profile Link', value: 'share' }, /* 'Report Profile', */ 'Nevermind'];
+    const MORE_BUTTON_OPTIONS = [
+      { text: 'Share Profile Link', value: 'share' },
+      // Only display if user has a valid cover image
+      { text: 'View Cover Image', value: 'cover', if: i => !!(i && i.coverImage) },
+      /* 'Report Profile', */
+      'Nevermind',
+    ].filter(item => (item.if ? item.if(profile) : true));
     if (!isCurrentUser) {
       MORE_BUTTON_OPTIONS.unshift('Block');
     }
