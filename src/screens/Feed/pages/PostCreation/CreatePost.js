@@ -16,37 +16,7 @@ import { CheckBox } from 'react-native-elements';
 import { GIFImage } from './GIFImage';
 import { AdditionalButton } from './AdditionalButton';
 import { MediaItem } from './MediaItem';
-
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  flex: {
-    flex: 1,
-  },
-  errorContainer: {
-    padding: 6,
-    backgroundColor: '#CC6549',
-  },
-  tagMedia: {
-    margin: 10,
-    marginBottom: 5,
-  },
-  addGIF: {
-    margin: 10,
-    marginTop: 5,
-  },
-  checkboxContainer: {
-    marginTop: 10,
-    flexDirection: 'row',
-    flex: 1,
-  },
-  checkbox: {
-    marginRight: 0,
-    padding: 8,
-  },
-});
+import { createPostStyles as styles } from './styles';
 
 class CreatePost extends React.PureComponent {
   static propTypes = {
@@ -218,12 +188,62 @@ class CreatePost extends React.PureComponent {
     navigation.setParams({ busy: false });
   }
 
+  renderMedia() {
+    const { media } = this.state;
+    const { busy, isEditing, isMediaDisabled } = this.props.navigation.state.params;
+
+    if (media) {
+      return (
+        <MediaItem
+          disabled={busy || isEditing || isMediaDisabled}
+          media={media}
+          onClear={() => this.setState({ media: null })}
+        />
+      );
+    }
+
+    return (
+      <AdditionalButton
+        text="Tag Anime or Manga"
+        icon="tag"
+        color={colors.blue}
+        disabled={busy || isEditing}
+        onPress={() => this.handleMediaPickerModal(true)}
+        style={styles.tagMedia}
+      />
+    );
+  }
+
+  renderGIF() {
+    const { gif } = this.state;
+    const { busy } = this.props.navigation.state.params;
+
+    if (gif) {
+      return (
+        <GIFImage
+          disabled={busy}
+          gif={gif}
+          onClear={() => this.setState({ gif: null })}
+        />
+      );
+    }
+
+    return (
+      <AdditionalButton
+        text="Search & Share Gif"
+        icon="plus"
+        color={colors.green}
+        disabled={busy}
+        onPress={() => this.handleGiphyPickerModal(true)}
+        style={styles.addGIF}
+      />
+    );
+  }
+
   render() {
     const { currentUser, navigation } = this.props;
     const {
       error,
-      gif,
-      media,
       currentFeed,
       content,
       giphyPickerModalIsVisible,
@@ -231,7 +251,7 @@ class CreatePost extends React.PureComponent {
       nsfw,
       spoiler,
     } = this.state;
-    const { busy, targetUser, isEditing, isMediaDisabled } = navigation.state.params;
+    const { targetUser } = navigation.state.params;
 
     const isValidTargetUser = (targetUser && targetUser.id !== currentUser.id && targetUser.name);
     const placeholder = isValidTargetUser ? `Write something to ${targetUser.name}` : 'Write something....';
@@ -291,38 +311,8 @@ class CreatePost extends React.PureComponent {
               />
             </View>
             <View>
-              {media ?
-                <MediaItem
-                  disabled={busy || isEditing || isMediaDisabled}
-                  media={media}
-                  onClear={() => this.setState({ media: null })}
-                />
-                :
-                <AdditionalButton
-                  text="Tag Anime or Manga"
-                  icon="tag"
-                  color={colors.blue}
-                  disabled={busy || isEditing}
-                  onPress={() => this.handleMediaPickerModal(true)}
-                  style={styles.tagMedia}
-                />
-              }
-              { gif ?
-                <GIFImage
-                  disabled={busy}
-                  gif={gif}
-                  onClear={() => this.setState({ gif: null })}
-                />
-                :
-                <AdditionalButton
-                  text="Search & Share Gif"
-                  icon="plus"
-                  color={colors.green}
-                  disabled={busy}
-                  onPress={() => this.handleGiphyPickerModal(true)}
-                  style={styles.addGIF}
-                />
-              }
+              { this.renderMedia() }
+              { this.renderGIF() }
             </View>
           </ScrollView>
         </View>
