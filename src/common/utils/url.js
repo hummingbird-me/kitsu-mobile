@@ -95,19 +95,17 @@ export async function handleURL(url, navigation) {
     return;
   }
 
+  // Check if it's an image url
+  if (isImageUrl(url)) {
+    Lightbox.show([url]);
+    return;
+  }
+
   const { hostname, pathname } = info;
   const paths = pathname.split('/').slice(1);
 
   // If it's not a kitsu url then we open it
   if (!hostname.toLowerCase().includes('kitsu') || paths.length < 2) {
-
-    // Check if it's an image url
-    if (isImageUrl(url)) {
-      Lightbox.show([url]);
-      return;
-    }
-
-    // It's not an image
     openUrl(url);
     return;
   }
