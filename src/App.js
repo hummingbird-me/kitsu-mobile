@@ -1,6 +1,6 @@
 /* global __DEV__ */
 import React, { PureComponent } from 'react';
-import { Platform, View, StatusBar, Linking, StyleSheet } from 'react-native';
+import { Platform, View, StatusBar, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -14,7 +14,8 @@ import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-import { ActivityIndicator } from 'react-native';
+import { ImageLightbox } from 'kitsu/components/ImageLightbox';
+import { Lightbox } from 'kitsu/utils/lightbox';
 import store, { persistor } from './store/config';
 import Root from './Router';
 import * as types from './store/types';
@@ -216,7 +217,7 @@ const Loading = () => (
   </View>
 );
 
-const RootContainer = ({ inAppNotification }) => (
+const RootContainer = ({ inAppNotification, lightBox }) => (
   <View style={{ flex: 1 }}>
     <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
     <Root
@@ -231,11 +232,24 @@ const RootContainer = ({ inAppNotification }) => (
         onRequestClose={() => store.dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION })}
       />
     }
+    { !isEmpty(lightBox) &&
+      <ImageLightbox
+        visible={lightBox.visible}
+        images={lightBox.images || []}
+        initialImageIndex={lightBox.initialIndex}
+        onClose={() => Lightbox.hide()}
+      />
+    }
   </View>
 );
 
 RootContainer.propTypes = {
   inAppNotification: PropTypes.object.isRequired,
+  lightBox: PropTypes.object,
+};
+
+RootContainer.defaultProps = {
+  lightBox: {},
 };
 
 const styles = StyleSheet.create({
@@ -248,8 +262,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ConnectedRoot = connect(({ feed }) => ({
+const ConnectedRoot = connect(({ feed, app }) => ({
   inAppNotification: feed.inAppNotification,
+  lightBox: app.imageLightbox,
 }))(RootContainer);
 
 // Check for Codepush only in production mode (Saves compile time & network calls in development).
