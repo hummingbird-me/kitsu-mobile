@@ -62,7 +62,7 @@ export class ImageGrid extends PureComponent {
 
     // The width of the gallery
     const currentWidth = width || scene.width;
-    const borderOffset = imageBorderWidth * 2;
+    const borderOffset = compact ? 0 : imageBorderWidth * 2;
 
     // Current Width to image width ratio
     // This is for the case when we have more than 1 image

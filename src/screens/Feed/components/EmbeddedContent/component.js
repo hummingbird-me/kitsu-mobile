@@ -14,6 +14,7 @@ import { ImageLightbox } from 'kitsu/components/ImageLightbox';
 import { startCase } from 'lodash';
 import { WebComponent } from 'kitsu/common/utils/components';
 import { styles } from './styles';
+import { Lightbox } from 'kitsu/utils/lightbox';
 
 class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -65,8 +66,6 @@ class EmbeddedContent extends PureComponent {
   }
 
   state = {
-    imageModalVisible: false,
-    imageIndex: 0,
     visible: false,
   };
 
@@ -115,7 +114,7 @@ class EmbeddedContent extends PureComponent {
     if (!embed.image) return null;
 
     const { maxWidth, minWidth, borderRadius, compact, dataSaver } = this.props;
-    const { imageModalVisible, imageIndex, visible } = this.state;
+    const { visible } = this.state;
 
     const imageWidth = embed.image.width || maxWidth;
 
@@ -130,23 +129,15 @@ class EmbeddedContent extends PureComponent {
     }
 
     return (
-      <View>
-        <ImageGrid
-          images={images}
-          width={width}
-          borderRadius={borderRadius}
-          compact={compact}
-          onImageTapped={(index) => {
-            this.setState({ imageIndex: (index || 0), imageModalVisible: true });
-          }}
-        />
-        <ImageLightbox
-          images={images}
-          visible={imageModalVisible}
-          initialImageIndex={imageIndex}
-          onClose={() => this.setState({ imageModalVisible: false })}
-        />
-      </View>
+      <ImageGrid
+        images={images}
+        width={width}
+        borderRadius={borderRadius}
+        compact={compact}
+        onImageTapped={(index) => {
+          Lightbox.show(images, (index || 0));
+        }}
+      />
     );
   }
 

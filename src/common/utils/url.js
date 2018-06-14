@@ -1,4 +1,5 @@
 import { Linking } from 'react-native';
+import { Lightbox } from 'kitsu/utils/lightbox';
 
 /**
  * Checks whether a url is a data url.
@@ -10,6 +11,23 @@ import { Linking } from 'react-native';
 export function isDataUrl(url) {
   const regex = /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z0-9-.!#$%*+.{}|~`]+=[a-z0-9-.!#$%*+.{}|~`]+)*)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)$/i;
   return regex.test((url || '').trim());
+}
+
+/**
+ * Checks whether a url is an image url.
+ * This is a very basic check and it supports gif, jpg, jpeg, png and bmp detection.
+ *
+ * @param {string} url The url to check
+ * @returns If the url is an image url.
+ */
+export function isImageUrl(url) {
+  const info = parseURL(url.toLowerCase());
+  if (!info) {
+    return false;
+  }
+
+  const regex = /\.(gif|jpg|jpeg|png|bmp)$/;
+  return regex.test((info.pathname || '').trim());
 }
 
 /**
@@ -70,11 +88,16 @@ export function parseURL(url) {
  * @param {object} navigation The navigation object.
  */
 export async function handleURL(url, navigation) {
-
   // Get url information
   const info = parseURL(url);
   if (!info) {
     openUrl(url);
+    return;
+  }
+
+  // Check if it's an image url
+  if (isImageUrl(url)) {
+    Lightbox.show([url]);
     return;
   }
 
