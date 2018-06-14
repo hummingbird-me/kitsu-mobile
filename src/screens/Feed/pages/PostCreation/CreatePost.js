@@ -13,10 +13,15 @@ import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
 import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
 import { CheckBox } from 'react-native-elements';
+import { ImageUploader } from 'kitsu/utils/imageuploader';
+import { kitsuConfig } from 'kitsu/config/env';
+import ImagePicker from 'react-native-image-crop-picker';
+import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { GIFImage } from './GIFImage';
 import { AdditionalButton } from './AdditionalButton';
 import { MediaItem } from './MediaItem';
 import { createPostStyles as styles } from './styles';
+
 
 class CreatePost extends React.PureComponent {
   static propTypes = {
@@ -42,11 +47,16 @@ class CreatePost extends React.PureComponent {
           disabled={params.busy}
           loading={params.busy}
           onPress={params.handlePressPost}
-          title={params.isEditing ? "Edit" : "Post"}
+          title={params.isEditing ? 'Edit' : 'Post'}
         />
       ),
     };
   };
+
+  constructor(props) {
+    super(props);
+    this.uploader = new ImageUploader(kitsuConfig.uploadUrl);
+  }
 
   state = {
     giphyPickerModalIsVisible: false,
@@ -55,6 +65,7 @@ class CreatePost extends React.PureComponent {
     currentFeed: feedStreams[0],
     error: '',
     gif: null,
+    uploads: [],
     media: this.props.navigation.state.params.media || null,
     nsfw: this.props.navigation.state.params.nsfw || false,
     spoiler: this.props.navigation.state.params.spoiler || false,
@@ -80,6 +91,13 @@ class CreatePost extends React.PureComponent {
     });
   }
 
+  componentWillUnmount() {
+    // Abort any uploading if user cancels
+    if (this.uploader) {
+      this.uploader.abort();
+    }
+  }
+
   handleMedia = (media) => {
     this.setState({ media });
     this.handleMediaPickerModal(false);
@@ -96,6 +114,24 @@ class CreatePost extends React.PureComponent {
 
   handleGiphyPickerModal = (giphyPickerModalIsVisible) => {
     this.setState({ giphyPickerModalIsVisible });
+  }
+
+  handlePressUpload = async () => {
+    try {
+      const images = await ImagePicker.openPicker({
+        mediaType: 'photo',
+        multiple: true,
+      });
+
+      const uploads = images.map(image => ({
+        ...image,
+        uri: Platform.select({ ios: image.sourceURL, android: image.path }),
+      }));
+
+      this.setState({ uploads });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   handlePressPost = async () => {
@@ -133,7 +169,7 @@ class CreatePost extends React.PureComponent {
       spoiledUnit: {
         id: spoiledUnit.id,
         type: spoiledUnit.type,
-      }
+      },
     } : {};
 
     const targetData = (targetUser && targetUser.id !== currentUserId) ? {
@@ -235,7 +271,34 @@ class CreatePost extends React.PureComponent {
         color={colors.green}
         disabled={busy}
         onPress={() => this.handleGiphyPickerModal(true)}
-        style={styles.addGIF}
+        style={styles.button}
+      />
+    );
+  }
+
+  renderUpload() {
+    const { uploads } = this.state;
+    const { busy } = this.props.navigation.state.params;
+
+    if (!isEmpty(uploads)) {
+      return (
+        <View style={styles.uploadContainer}>
+          <ImageGrid
+            images={uploads.map(u => u.uri)}
+            compact
+          />
+        </View>
+      );
+    }
+
+    return (
+      <AdditionalButton
+        text="Upload Images"
+        icon="upload"
+        color={colors.red}
+        disabled={busy}
+        onPress={this.handlePressUpload}
+        style={styles.button}
       />
     );
   }
@@ -250,8 +313,10 @@ class CreatePost extends React.PureComponent {
       mediaPickerModalIsVisible,
       nsfw,
       spoiler,
+      gif,
+      uploads,
     } = this.state;
-    const { targetUser } = navigation.state.params;
+    const { targetUser, isEditing } = navigation.state.params;
 
     const isValidTargetUser = (targetUser && targetUser.id !== currentUser.id && targetUser.name);
     const placeholder = isValidTargetUser ? `Write something to ${targetUser.name}` : 'Write something....';
@@ -312,7 +377,14 @@ class CreatePost extends React.PureComponent {
             </View>
             <View>
               { this.renderMedia() }
-              { this.renderGIF() }
+
+              {/* Don't allow gif selection if user is uploading images */}
+              { isEmpty(uploads) && this.renderGIF() }
+
+              {/* Only allow uploading if user is not editing post or gif is not selected */}
+              { !gif && !isEditing &&
+                this.renderUpload()
+              }
             </View>
           </ScrollView>
         </View>

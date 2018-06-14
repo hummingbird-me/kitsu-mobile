@@ -17,7 +17,7 @@ export const createPostStyles = StyleSheet.create({
     margin: 10,
     marginBottom: 5,
   },
-  addGIF: {
+  button: {
     margin: 10,
     marginTop: 5,
   },
@@ -29,6 +29,9 @@ export const createPostStyles = StyleSheet.create({
   checkbox: {
     marginRight: 0,
     padding: 8,
+  },
+  uploadContainer: {
+    marginBottom: 10,
   },
 });
 
