@@ -15,7 +15,7 @@ export const Kitsu = new JsonApi({
   pluralize: false,
 });
 
-Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
+Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version}`;
 Kitsu.replaceMiddleware('errors', errorMiddleware);
 Kitsu.replaceMiddleware('axios-request', kitsuRequestMiddleware);
 Kitsu.insertMiddlewareAfter('response', titleMiddleware);
