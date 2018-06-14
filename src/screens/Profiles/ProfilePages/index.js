@@ -115,7 +115,8 @@ class ProfilePage extends PureComponent {
         const id = (profile && profile.slug) || userId;
         if (isNull(id)) return;
         const url = `${kitsuConfig.kitsuUrl}/users/${id}`;
-        Share.share({ url });
+        const key = Platform.select({ ios: 'url', android: 'message' });
+        Share.share({ [key]: url });
         break;
       }
       case 'cover': {

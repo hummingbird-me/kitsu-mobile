@@ -29,7 +29,8 @@ export class ImageLightbox extends PureComponent {
 
   shareImage = (url) => {
     if (isEmpty(url)) return;
-    Share.share({ url });
+    const key = Platform.select({ ios: 'url', android: 'message' });
+    Share.share({ [key]: url });
   }
 
   downloadImage = (url) => {
