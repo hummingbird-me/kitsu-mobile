@@ -25,7 +25,6 @@ import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { kitsuConfig } from 'kitsu/config/env';
 import { Lightbox } from 'kitsu/utils/lightbox';
 import Summary from './pages/Summary';
-import { Feed } from './pages/Feed';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
@@ -33,7 +32,6 @@ const tabPage = name => ({ key: name.toLowerCase(), label: name, screen: name })
 
 const TAB_ITEMS = [
   tabPage('Summary'),
-  tabPage('Feed'),
   tabPage('About'),
   tabPage('Library'),
   tabPage('Groups'),
@@ -44,7 +42,6 @@ const TAB_ITEMS = [
 
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
-  Feed: { screen: Feed },
   About: { getScreen: () => require('./pages/About').About },
   Library: { getScreen: () => require('./pages/Library').Library },
   Groups: { getScreen: () => require('./pages/Groups').Groups },
