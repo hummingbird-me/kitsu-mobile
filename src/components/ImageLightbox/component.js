@@ -157,7 +157,11 @@ export class ImageLightbox extends PureComponent {
     const shareImage = onShare || this.shareImage;
 
     return (
-      <Modal visible={visible} transparent>
+      <Modal
+        visible={visible}
+        transparent
+        onRequestClose={onClose}
+      >
         <ImageViewer
           imageUrls={imageUrls}
           onCancel={onClose}
