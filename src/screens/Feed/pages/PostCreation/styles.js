@@ -13,6 +13,10 @@ export const createPostStyles = StyleSheet.create({
     padding: 6,
     backgroundColor: '#CC6549',
   },
+  uploadProgressContainer: {
+    padding: 6,
+    backgroundColor: '#16A085',
+  },
   tagMedia: {
     margin: 10,
     marginBottom: 5,

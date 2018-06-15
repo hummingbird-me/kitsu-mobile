@@ -10,11 +10,11 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import dataBunny from 'kitsu/assets/img/data-bunny.png';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
-import { ImageLightbox } from 'kitsu/components/ImageLightbox';
-import { startCase } from 'lodash';
+import { startCase, isNil, isEmpty } from 'lodash';
 import { WebComponent } from 'kitsu/common/utils/components';
-import { styles } from './styles';
 import { Lightbox } from 'kitsu/utils/lightbox';
+import { styles } from './styles';
+
 
 class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -37,7 +37,7 @@ class EmbeddedContent extends PureComponent {
 
   static propTypes = {
     embed: PropTypes.shape({
-      kind: PropTypes.string.isRequired,
+      kind: PropTypes.string,
       site: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
@@ -47,7 +47,15 @@ class EmbeddedContent extends PureComponent {
         width: this.typeStringNumber,
         height: this.typeStringNumber,
       }),
-    }).isRequired,
+    }),
+    uploads: PropTypes.arrayOf(
+      PropTypes.shape({
+        uploadOrder: PropTypes.number.isRequired,
+        content: PropTypes.shape({
+          original: PropTypes.string,
+        }),
+      }),
+    ),
     style: ViewPropTypes.style,
     maxWidth: PropTypes.number.isRequired,
     minWidth: PropTypes.number,
@@ -58,6 +66,8 @@ class EmbeddedContent extends PureComponent {
   }
 
   static defaultProps = {
+    embed: null,
+    uploads: null,
     style: null,
     minWidth: null,
     borderRadius: 0,
@@ -75,7 +85,7 @@ class EmbeddedContent extends PureComponent {
 
   renderTapToLoad(width) {
     const { borderRadius } = this.props;
-    const showDataBunny = !isNaN(width) && width > 300;
+    const showDataBunny = !isNil(width) && width > 300;
 
     const textContainerStyle = (!showDataBunny && { alignItems: 'center' }) || {};
 
@@ -104,25 +114,18 @@ class EmbeddedContent extends PureComponent {
   }
 
   /**
-   * Render an image embed.
-   * This will render the image with given image width or maxWidth if it exceeds it.
+   * Render a image grid.
+   * This also takes into consideration `dataSaver` prop.
    *
-   * @param {object} embed
-   * @returns The image component
+   * @param {[string]} images An array of image uris
+   * @param {number} width The width of the grid.
+   * @returns `Tap to load` component if `dataSaver` and `!visible` otherwise returns `ImageGrid`.
    */
-  renderImage(embed) {
-    if (!embed.image) return null;
+  renderImageGrid(images, width) {
+    if (isEmpty(images)) return null;
 
-    const { maxWidth, minWidth, borderRadius, compact, dataSaver } = this.props;
+    const { maxWidth, borderRadius, compact, dataSaver } = this.props;
     const { visible } = this.state;
-
-    const imageWidth = embed.image.width || maxWidth;
-
-    let width = parseInt(imageWidth, 10);
-    if (minWidth && width < minWidth) width = minWidth;
-    if (width > maxWidth) width = maxWidth;
-
-    const images = [embed.image.url];
 
     if (dataSaver && !visible) {
       return this.renderTapToLoad(maxWidth);
@@ -139,6 +142,29 @@ class EmbeddedContent extends PureComponent {
         }}
       />
     );
+  }
+
+  /**
+   * Render an image embed.
+   * This will render the image with given image width or maxWidth if it exceeds it.
+   *
+   * @param {object} embed
+   * @returns The image component
+   */
+  renderImage(embed) {
+    if (!embed.image) return null;
+
+    const { maxWidth, minWidth } = this.props;
+
+    const imageWidth = embed.image.width || maxWidth;
+
+    let width = parseInt(imageWidth, 10);
+    if (minWidth && width < minWidth) width = minWidth;
+    if (width > maxWidth) width = maxWidth;
+
+    const images = [embed.image.url];
+
+    return this.renderImageGrid(images, width);
   }
 
   renderYoutube(embed) {
@@ -242,29 +268,51 @@ class EmbeddedContent extends PureComponent {
     );
   }
 
-  renderItem(embed) {
-    if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
-      return this.renderYoutube(embed);
-    }
+  renderEmbeds() {
+    const { embed, uploads } = this.props;
+    if (isEmpty(embed)) return null;
 
-    if (embed.kind) {
-      if (embed.kind.includes('image') || embed.kind.includes('gif')) {
+    // Only render video & image embeds if we don't have uploads
+    if (isEmpty(uploads)) {
+      // Youtube
+      if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
+        return this.renderYoutube(embed);
+      }
+
+      // Image/GIF
+      if (embed.kind && (embed.kind.includes('image') || embed.kind.includes('gif'))) {
         return this.renderImage(embed);
       }
-
-      if (embed.kind.includes('kitsu')) {
-        return this.renderKitsu(embed);
-      }
     }
 
+    // Always render a kitsu embed
+    if (embed.kind && embed.kind.includes('kitsu')) {
+      return this.renderKitsu(embed);
+    }
+
+    // We don't support this embed ;-;
     return null;
   }
 
+  renderUploads() {
+    const { uploads } = this.props;
+    if (isEmpty(uploads)) return null;
+
+    const { maxWidth } = this.props;
+
+    const images = uploads.sort((a, b) => (a.uploadOrder - b.uploadOrder))
+      .map(u => u.content && u.content.original)
+      .filter(i => !isEmpty(i));
+
+    return this.renderImageGrid(images, maxWidth);
+  }
+
   render() {
-    const { style, embed } = this.props;
+    const { style } = this.props;
     return (
       <View style={style}>
-        {this.renderItem(embed)}
+        {this.renderEmbeds()}
+        {this.renderUploads()}
       </View>
     );
   }

@@ -88,8 +88,8 @@ export class ImageUploader {
 
       // Compile file data
       const data = new FormData();
-      images.forEach((i) => {
-        if (isEmpty(i.uri) || isEmpty(i.mime)) {
+      images.forEach((image, index) => {
+        if (isEmpty(image.uri) || isEmpty(image.mime)) {
           reject({
             status: -1,
             error: 'Images must contain `uri` and `mime` properties.',
@@ -97,9 +97,10 @@ export class ImageUploader {
           this.xhr = null;
         }
 
-        data.append('files', {
-          uri: i.uri,
-          type: i.mime,
+        data.append('files[]', {
+          uri: image.uri,
+          type: image.mime,
+          name: `image-${index}`,
         });
       });
 
@@ -121,6 +122,7 @@ export class ImageUploader {
   abort() {
     if (this.xhr) {
       this.xhr.abort();
+      this.xhr = null;
     }
   }
 }

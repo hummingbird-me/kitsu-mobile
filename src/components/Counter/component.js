@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { isNil } from 'lodash';
+import { isNil, isFinite } from 'lodash';
 import { styles } from './styles';
 
 export class Counter extends React.PureComponent {
@@ -41,7 +41,7 @@ export class Counter extends React.PureComponent {
     const newValue = parseInt(value, 10);
     const current = this.state.value || 0;
     this.setState({
-      manualEditValue: isNaN(newValue) ? current : newValue,
+      manualEditValue: isFinite(newValue) ? newValue : current,
     });
   }
 

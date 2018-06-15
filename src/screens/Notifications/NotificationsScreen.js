@@ -185,7 +185,7 @@ class NotificationsScreen extends PureComponent {
     let post;
     try {
       post = await Kitsu.find('posts', postId, {
-        include: 'user,targetUser,targetGroup,media',
+        include: 'user,targetUser,targetGroup,media,uploads',
       });
     } catch (e) {
       console.log(e);

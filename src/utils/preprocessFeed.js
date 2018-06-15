@@ -1,5 +1,5 @@
 
-import { trimStart, trimEnd } from 'lodash';
+import { trimStart, trimEnd, isEmpty } from 'lodash';
 
 const getHttpUrls = (url) => {
   // A quick hack to return both the http and https url
@@ -17,7 +17,8 @@ const getHttpUrls = (url) => {
  */
 export const preprocessFeedPost = (post) => {
   // Remove embed image & video url from the content
-  if (post.embed) {
+  // Only do this if we don't have uploads
+  if (post.embed && isEmpty(post.uploads)) {
     const image = post.embed.image;
     const video = post.embed.video;
 
