@@ -21,6 +21,7 @@ import { GIFImage } from './GIFImage';
 import { AdditionalButton } from './AdditionalButton';
 import { MediaItem } from './MediaItem';
 import { createPostStyles as styles } from './styles';
+import { ImageSortModal } from 'kitsu/screens/Feed/components/ImageSortModal';
 
 
 class CreatePost extends React.PureComponent {
@@ -61,6 +62,7 @@ class CreatePost extends React.PureComponent {
   state = {
     giphyPickerModalIsVisible: false,
     mediaPickerModalIsVisible: false,
+    imageSortModalIsVisible: false,
     content: '',
     currentFeed: feedStreams[0],
     error: '',
@@ -116,6 +118,10 @@ class CreatePost extends React.PureComponent {
     this.setState({ giphyPickerModalIsVisible });
   }
 
+  handleImageSortModal = (imageSortModalIsVisible) => {
+    this.setState({ imageSortModalIsVisible });
+  }
+
   handlePressUpload = async () => {
     try {
       const images = await ImagePicker.openPicker({
@@ -128,7 +134,9 @@ class CreatePost extends React.PureComponent {
         uri: Platform.select({ ios: image.sourceURL, android: image.path }),
       }));
 
-      this.setState({ uploads });
+      this.setState({
+        uploads: [...this.state.uploads, ...uploads],
+      });
     } catch (e) {
       console.log(e);
     }
@@ -286,6 +294,7 @@ class CreatePost extends React.PureComponent {
           <ImageGrid
             images={uploads.map(u => u.uri)}
             compact
+            onImageTapped={() => this.handleImageSortModal(true)}
           />
         </View>
       );
@@ -311,6 +320,7 @@ class CreatePost extends React.PureComponent {
       content,
       giphyPickerModalIsVisible,
       mediaPickerModalIsVisible,
+      imageSortModalIsVisible,
       nsfw,
       spoiler,
       gif,
@@ -388,6 +398,12 @@ class CreatePost extends React.PureComponent {
             </View>
           </ScrollView>
         </View>
+        <ImageSortModal
+          images={uploads}
+          visible={imageSortModalIsVisible}
+          onCancelPress={() => this.handleImageSortModal(false)}
+          onAddPress={this.handlePressUpload}
+        />
         <GiphyModal
           visible={giphyPickerModalIsVisible}
           onCancelPress={() => this.handleGiphyPickerModal(false)}
