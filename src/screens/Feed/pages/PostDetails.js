@@ -339,6 +339,7 @@ export default class PostDetails extends PureComponent {
               )}
               {comments.length > 0 && (
                 <FlatList
+                  listKey={`${post.id}`}
                   data={comments}
                   keyExtractor={this.keyExtractor}
                   renderItem={this.renderItem}
