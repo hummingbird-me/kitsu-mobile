@@ -175,7 +175,8 @@ class Unit extends PureComponent {
     if (languageOptions) { languageOptions.push('Nevermind'); }
 
     // Select only units that have videos
-    const units = hasVideo && media.episodes.filter(item => item.videos.length >= 1).sort((a, b) => a.number - b.number);
+    const episodes = (media && media.episodes) || [];
+    const units = hasVideo && episodes.filter(item => item.videos.length >= 1).sort((a, b) => a.number - b.number);
     const unitsIndex = hasVideo && units.findIndex(item => (
       item.videos.filter(video => video === selectedVideo).length === 1
     ));
