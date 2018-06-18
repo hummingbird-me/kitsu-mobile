@@ -155,28 +155,31 @@ class CreatePost extends React.PureComponent {
       const uploads = images.map(image => ({
         ...image,
         uri: image.path,
-      }))
-        .filter((u) => {
-          // Remove any image types that we don't accept
-          const mime = u.mime || '';
-          return ACCEPTED_UPLOAD_TYPES.includes(mime.toLowerCase().trim());
-        });
+      }));
 
-      // Disallow submitting the same image twice
+      // Properties needed for filters below
       const idKey = Platform.select({ ios: 'sourceURL', android: 'uri' });
       const currentUploads = this.state.uploads.map(u => u[idKey]);
-      const filtered = uploads.filter(u => (
-        !currentUploads.includes(u[idKey])
-      ));
 
-      // Make sure we don't go over the upload limit
-      const clipped = [
-        ...this.state.uploads,
-        ...filtered,
-      ].splice(0, MAX_UPLOAD_COUNT);
+      const filtered = uploads.filter((u) => {
+        // Remove any image types that we don't accept
+        const mime = u.mime || '';
+        const validType = ACCEPTED_UPLOAD_TYPES.includes(mime.toLowerCase().trim());
+
+        // Disallow submitting the same image twice
+        const duplicateUpload = currentUploads.includes(u[idKey]);
+
+        return validType && !duplicateUpload;
+      });
 
       // Only update if we have uploads to add
       if (!isEmpty(filtered)) {
+        // Make sure we don't go over the upload limit
+        const clipped = [
+          ...this.state.uploads,
+          ...filtered,
+        ].splice(0, MAX_UPLOAD_COUNT);
+
         this.setState({
           uploads: clipped,
         });
@@ -549,7 +552,7 @@ class CreatePost extends React.PureComponent {
               {/* Don't allow gif selection if user is uploading images */}
               { isEmpty(uploads) && this.renderGIF() }
 
-              {/* Only allow uploading if user is not editing post or gif is not selected */}
+              {/* Only allow uploading if gif is not selected */}
               { !gif &&
                 this.renderUpload()
               }
