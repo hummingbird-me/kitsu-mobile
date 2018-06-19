@@ -99,7 +99,7 @@ class Unit extends PureComponent {
       spoiler: true,
       spoiledUnit: this.state.selectedUnit,
       media: this.props.navigation.state.params.media,
-      isMediaDisabled: true,
+      disableMedia: true,
     });
   };
 

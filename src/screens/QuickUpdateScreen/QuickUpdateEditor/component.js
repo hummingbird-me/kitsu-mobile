@@ -3,8 +3,7 @@ import { Animated, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
-import { GIFImage } from 'kitsu/screens/Feed/pages/PostCreation/GIFImage';
-import { AdditionalButton } from 'kitsu/screens/Feed/pages/PostCreation/AdditionalButton';
+import { GIFImage, AdditionalButton } from 'kitsu/screens/Feed/components/PostCreator';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { CheckBox } from 'react-native-elements';
 import styles from './styles';
