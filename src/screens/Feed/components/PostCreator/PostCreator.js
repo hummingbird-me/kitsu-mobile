@@ -29,6 +29,12 @@ const MAX_UPLOAD_COUNT = 20;
 
 class PostCreator extends React.PureComponent {
   static propTypes = {
+    // Whether to apply `KeyboardAvoidingView` to the component
+    // Sometimes on android devices having this set to `true` will cause the component to mess up rendering
+    // So it's best to test and disable if needed
+    // In our case it messes up when you make this component a child of a `Modal`.
+    avoidKeyboard: PropTypes.bool,
+
     // The current user - provided by redux
     currentUser: PropTypes.object.isRequired,
 
@@ -81,6 +87,7 @@ class PostCreator extends React.PureComponent {
   }
 
   static defaultProps = {
+    avoidKeyboard: true,
     hideMeta: false,
     disableMedia: false,
     editorContainerStyle: null,
@@ -516,6 +523,7 @@ class PostCreator extends React.PureComponent {
       rightButtonAction={onPostPress}
       rightButtonDisabled={busy}
       rightButtonLoading={busy}
+      style={styles.header}
     />
   );
 
@@ -530,6 +538,7 @@ class PostCreator extends React.PureComponent {
       onCancel,
       style,
       editorContainerStyle,
+      avoidKeyboard,
     } = this.props;
 
     const {
@@ -553,9 +562,10 @@ class PostCreator extends React.PureComponent {
     const placeholder = propPlaceholder || defaultPlaceholder;
 
     const renderHeader = propHeaderRender || this.renderHeader;
+    const KeyboardView = avoidKeyboard ? KeyboardAvoidingView : View;
 
     return (
-      <KeyboardAvoidingView
+      <KeyboardView
         behavior="padding"
         style={[styles.main, style]}
       >
@@ -575,7 +585,10 @@ class PostCreator extends React.PureComponent {
               targetName={(isValidTargetUser && targetUser.name) || ''}
             />
           }
-          <ScrollView style={[styles.flex, hideMeta && styles.padTop]} >
+          <ScrollView
+            style={[styles.flex, hideMeta && styles.padTop]}
+            contentContainerStyle={{ paddingBottom: 10 }}
+          >
             <PostTextInput
               inputRef={(el) => { this.postTextInput = el; }}
               multiline
@@ -642,7 +655,7 @@ class PostCreator extends React.PureComponent {
           onCancelPress={() => this.handleMediaPickerModal(false)}
           onMediaSelect={this.handleMedia}
         />
-      </KeyboardAvoidingView>
+      </KeyboardView>
     );
   }
 }

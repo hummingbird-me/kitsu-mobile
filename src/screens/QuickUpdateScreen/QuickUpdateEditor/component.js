@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Animated, Text } from 'react-native';
+import { Animated, Text, Platform } from 'react-native';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
 import PropTypes from 'prop-types';
@@ -71,6 +71,9 @@ export default class QuickUpdateEditor extends PureComponent {
             />
           </Animated.View>
         )}
+        // For some reason if we have `avoidKeyboard` set to `true` on an android device,
+        // It messes up the layout and thus the user can't do anything
+        avoidKeyboard={Platform.OS === 'ios'}
       />
     );
   }

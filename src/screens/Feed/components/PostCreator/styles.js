@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX, paddingX } from 'kitsu/utils/isX';
+import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
 
 export const createPostStyles = StyleSheet.create({
   main: {
@@ -39,6 +41,10 @@ export const createPostStyles = StyleSheet.create({
   },
   padTop: {
     paddingTop: 10,
+  },
+  header: {
+    height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
+    paddingTop: statusBarHeight + (isX ? paddingX : 0),
   },
 });
 

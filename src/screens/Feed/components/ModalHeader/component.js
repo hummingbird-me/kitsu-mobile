@@ -15,8 +15,9 @@ export const ModalHeader = ({
   rightButtonAction,
   rightButtonDisabled,
   rightButtonLoading,
+  style,
 }) => (
-  <View style={styles.modalHeader}>
+  <View style={[styles.modalHeader, style]}>
     <View style={styles.modalButton}>
       <HeaderButton
         onPress={leftButtonAction}
@@ -50,6 +51,7 @@ ModalHeader.propTypes = {
   rightButtonAction: PropTypes.func,
   rightButtonDisabled: PropTypes.bool,
   rightButtonLoading: PropTypes.bool,
+  style: PropTypes.object,
 };
 
 ModalHeader.defaultProps = {
@@ -62,4 +64,5 @@ ModalHeader.defaultProps = {
   rightButtonAction: null,
   rightButtonDisabled: false,
   rightButtonLoading: false,
+  style: null,
 };
