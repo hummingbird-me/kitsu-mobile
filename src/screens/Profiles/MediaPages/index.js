@@ -136,7 +136,8 @@ class MediaPages extends PureComponent {
         const id = (media && media.slug) || mediaId;
         if (isNull(id) || isNull(mediaType)) return;
         const url = `${kitsuConfig.kitsuUrl}/${mediaType}/${id}`;
-        Share.share({ url });
+        const key = Platform.select({ ios: 'url', android: 'message' });
+        Share.share({ [key]: url });
         break;
       }
       case 'cover': {

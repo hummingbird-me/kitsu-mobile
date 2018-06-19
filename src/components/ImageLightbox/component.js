@@ -29,7 +29,8 @@ export class ImageLightbox extends PureComponent {
 
   shareImage = (url) => {
     if (isEmpty(url)) return;
-    Share.share({ url });
+    const key = Platform.select({ ios: 'url', android: 'message' });
+    Share.share({ [key]: url });
   }
 
   downloadImage = (url) => {
@@ -156,7 +157,11 @@ export class ImageLightbox extends PureComponent {
     const shareImage = onShare || this.shareImage;
 
     return (
-      <Modal visible={visible} transparent>
+      <Modal
+        visible={visible}
+        transparent
+        onRequestClose={onClose}
+      >
         <ImageViewer
           imageUrls={imageUrls}
           onCancel={onClose}

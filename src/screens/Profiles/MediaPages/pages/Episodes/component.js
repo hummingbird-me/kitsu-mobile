@@ -32,6 +32,7 @@ class Episodes extends PureComponent {
   }
 
   sortData(data, ascending = true) {
+    if (!data) return [];
     return data.sort((a, b) => {
       if (ascending) return a.number - b.number;
       return b.number - a.number;

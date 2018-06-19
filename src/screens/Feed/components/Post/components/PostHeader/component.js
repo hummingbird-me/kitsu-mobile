@@ -42,7 +42,8 @@ export const PostHeader = ({
       onSelected: async () => {
         if (!post) return;
         const url = `${kitsuConfig.kitsuUrl}/posts/${post.id}`;
-        Share.share({ url });
+        const key = Platform.select({ ios: 'url', android: 'message' });
+        Share.share({ [key]: url });
       },
       text: 'Share Post Link',
     },
