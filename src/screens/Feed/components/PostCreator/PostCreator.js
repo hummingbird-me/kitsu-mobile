@@ -224,7 +224,7 @@ class PostCreator extends React.PureComponent {
 
     // Don't allow posting if content and gif is empty
     if (isEmpty(content)) {
-      this.setState({ error: 'No content provided!' });
+      this.setState({ error: 'Please add a message to your post' });
       return;
     }
 
