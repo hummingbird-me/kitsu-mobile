@@ -185,7 +185,7 @@ class NotificationsScreen extends PureComponent {
     let post;
     try {
       post = await Kitsu.find('posts', postId, {
-        include: 'user,targetUser,targetGroup,media',
+        include: 'user,targetUser,targetGroup,media,uploads',
       });
     } catch (e) {
       console.log(e);
@@ -263,7 +263,7 @@ class NotificationsScreen extends PureComponent {
           </View>
           <View style={styles.detailsContainer}>
             <View style={{ paddingRight: 10 }}>
-              <FastImage style={styles.userAvatar} source={{ uri: ava }} borderRadius={20} />
+              <FastImage style={styles.userAvatar} source={{ uri: ava }} />
             </View>
             <View style={styles.activityContainer}>
               <View style={styles.activityTextContainer}>

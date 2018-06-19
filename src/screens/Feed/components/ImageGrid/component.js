@@ -15,6 +15,7 @@ export class ImageGrid extends PureComponent {
     imageBorderWidth: PropTypes.number,
     borderRadius: PropTypes.number,
     onImageTapped: PropTypes.func,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -25,17 +26,20 @@ export class ImageGrid extends PureComponent {
     imageBorderWidth: 1,
     borderRadius: 0,
     onImageTapped: () => {},
+    disabled: false,
   };
 
   renderImage(image, width, height, onPress, count = null) {
     if (isEmpty(image)) return null;
 
-    const { imageBorderWidth, borderRadius, compact } = this.props;
+    const { imageBorderWidth, borderRadius, compact, disabled } = this.props;
 
     return (
       <TouchableOpacity
+        key={`${image}-${width}`}
         style={[styles.imageWrap, { borderWidth: (compact ? 0 : imageBorderWidth) }]}
         onPress={onPress}
+        disabled={disabled}
       >
         <PostImage
           uri={image}

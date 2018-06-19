@@ -1,33 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity, StyleSheet, ViewPropTypes } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
+import { View, Text, TouchableOpacity, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-const styles = StyleSheet.create({
-  container: {
-    borderColor: colors.green,
-    borderWidth: 1,
-    borderRadius: 4,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  innerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    color: colors.green,
-    fontSize: 14,
-    marginRight: 4,
-  },
-  text: {
-    color: colors.green,
-    fontSize: 14,
-  },
-});
+import { additionalButtonStyles as styles } from './styles';
 
 export const AdditionalButton = ({ onPress, disabled, text, icon, color, style }) => (
   <TouchableOpacity

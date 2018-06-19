@@ -60,6 +60,7 @@ export const styles = StyleSheet.create({
     width: 210,
     height: 100,
     zIndex: 0,
+    borderRadius: 8,
   },
   landscapeImageTitle: {
     color: colors.white,

@@ -14,6 +14,7 @@ import { PostStatus } from '../PostStatus';
 export const PostMain = ({
   content,
   embed,
+  uploads,
   likesCount,
   commentsCount,
   taggedMedia,
@@ -41,9 +42,10 @@ export const PostMain = ({
           style={isEmpty(content) ? { marginTop: 0 } : null}
         />
       )}
-      {embed &&
+      {(embed || !isEmpty(uploads)) &&
         <EmbeddedContent
           embed={embed}
+          uploads={uploads}
           maxWidth={scene.width}
           minWidth={scene.width}
           style={[styles.postImagesView, !hasContentAbove && styles.postImagesView_noText]}
@@ -58,6 +60,7 @@ export const PostMain = ({
 PostMain.propTypes = {
   content: PropTypes.string,
   embed: PropTypes.object,
+  uploads: PropTypes.arrayOf(PropTypes.object),
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
   taggedMedia: PropTypes.object,
@@ -68,6 +71,7 @@ PostMain.propTypes = {
 PostMain.defaultProps = {
   content: null,
   embed: null,
+  uploads: null,
   likesCount: 0,
   commentsCount: 0,
   taggedMedia: null,

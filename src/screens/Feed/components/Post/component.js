@@ -132,7 +132,7 @@ export class Post extends PureComponent {
         fields: {
           users: 'slug,avatar,name',
         },
-        include: 'user',
+        include: 'user,uploads',
         sort: '-createdAt',
       });
 
@@ -265,13 +265,13 @@ export class Post extends PureComponent {
     const {
       createdAt,
       content,
-      images,
       embed,
       media,
       nsfw,
       spoiler,
       spoiledUnit,
       user,
+      uploads,
     } = post;
     if (isDeleted) { return null; }
 
@@ -295,8 +295,8 @@ export class Post extends PureComponent {
       (
         <PostMain
           content={content}
-          images={images}
           embed={embed}
+          uploads={uploads}
           likesCount={postLikesCount}
           commentsCount={commentsCount}
           taggedMedia={media}

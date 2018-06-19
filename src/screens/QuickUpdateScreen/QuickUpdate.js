@@ -254,7 +254,7 @@ class QuickUpdate extends Component {
       const [unit] = entry.unit;
       const posts = await Kitsu.find('episodeFeed', unit.id, {
         include:
-          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads',
         filter: { kind: 'posts' },
         page: {
           limit: 10,
@@ -504,7 +504,7 @@ class QuickUpdate extends Component {
         },
         spoiledUnit: { id: current.unit[0].id },
         user: { id: currentUser.id },
-      }, { include: 'media,spoiledUnit,user' }); // @TODO: Just assign these locally to reduce payload?
+      }, { include: 'media,spoiledUnit,user,uploads' }); // @TODO: Just assign these locally to reduce payload?
 
       // Unshift new post into discussions list
       const processed = preprocessFeedPost(post);

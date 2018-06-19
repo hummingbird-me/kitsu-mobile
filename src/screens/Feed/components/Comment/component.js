@@ -142,7 +142,7 @@ export class Comment extends PureComponent {
         fields: {
           users: 'slug,avatar,name',
         },
-        include: 'user',
+        include: 'user,uploads',
         sort: '-createdAt',
         page: { limit: 5 },
         ...requestOptions,
@@ -181,7 +181,7 @@ export class Comment extends PureComponent {
 
     const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
 
-    const { content, createdAt, user, embed } = comment;
+    const { content, createdAt, user, embed, uploads } = comment;
 
     // Get the user avatar and name
     const avatar = (user && user.avatar);
@@ -222,9 +222,10 @@ export class Comment extends PureComponent {
             }
           </View>
 
-          { embed && !hideEmbeds &&
+          {(embed || !isEmpty(uploads)) && !hideEmbeds &&
             <EmbeddedContent
               embed={embed}
+              uploads={uploads}
               maxWidth={maxEmbedWidth}
               minWidth={minEmbedWidth}
               borderRadius={20}

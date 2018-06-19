@@ -45,7 +45,7 @@ export class GiphyModal extends PureComponent {
 
   static defaultProps = {
     visible: false,
-    onCancelPress: null,
+    onCancelPress: () => {},
     onGifSelect: null,
   }
 

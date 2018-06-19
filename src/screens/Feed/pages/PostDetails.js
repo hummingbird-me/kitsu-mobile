@@ -217,7 +217,7 @@ export default class PostDetails extends PureComponent {
         fields: {
           users: 'slug,avatar,name',
         },
-        include: 'user',
+        include: 'user,uploads',
         sort: '-createdAt',
         ...requestOptions,
       });
@@ -289,7 +289,7 @@ export default class PostDetails extends PureComponent {
     const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
         isPostingComment } = this.state;
 
-    const { content, embed, media, spoiledUnit } = post;
+    const { content, embed, media, spoiledUnit, uploads } = post;
 
     return (
       <KeyboardAvoidingView
@@ -315,6 +315,7 @@ export default class PostDetails extends PureComponent {
             <PostMain
               content={content}
               embed={embed}
+              uploads={uploads}
               likesCount={postLikesCount}
               commentsCount={commentsCount}
               taggedMedia={media}

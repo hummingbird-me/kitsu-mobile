@@ -59,7 +59,7 @@ class Unit extends PureComponent {
     this.setState({ isFeedLoading: true });
     try {
       const posts = await Kitsu.find('episodeFeed', selectedUnit.id, {
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads',
         filter: { kind: 'posts' },
         page: { limit: 10, },
       });

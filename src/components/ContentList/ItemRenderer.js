@@ -12,7 +12,6 @@ const LandscapeMediaCard = ({ onPress, title, image, ...props }) => (
       source={image}
       {...props}
       style={styles.landscapeImage}
-      borderRadius={8}
       resizeMode={'cover'}
     />
     {title && <Text style={styles.landscapeImageTitle}>{title}</Text>}

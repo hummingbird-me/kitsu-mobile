@@ -52,3 +52,10 @@ export const STREAMING_SERVICES = {
   tubitv: require('kitsu/assets/img/streaming-services/tubitv.png'),
   youtube: require('kitsu/assets/img/streaming-services/youtube.png'),
 };
+
+export const ACCEPTED_UPLOAD_TYPES = [
+  'image/jpg',
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+];
