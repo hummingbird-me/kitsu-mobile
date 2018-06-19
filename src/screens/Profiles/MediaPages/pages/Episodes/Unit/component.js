@@ -95,7 +95,7 @@ class Unit extends PureComponent {
 
   navigateToCreatePost = () => {
     this.props.navigation.navigate('CreatePost', {
-      onNewPostCreated: this.fetchFeed,
+      onPostCreated: this.fetchFeed,
       spoiler: true,
       spoiledUnit: this.state.selectedUnit,
       media: this.props.navigation.state.params.media,

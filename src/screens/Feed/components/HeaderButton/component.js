@@ -4,16 +4,24 @@ import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-export const HeaderButton = ({ disabled, highlighted, title, onPress, loading }) => (
+export const HeaderButton = ({ disabled, highlighted, title, onPress, loading, style, textStyle, ...other }) => (
   <TouchableOpacity
+    {...other}
     disabled={disabled}
-    style={styles.headerButton}
+    style={[styles.headerButton, style]}
     onPress={onPress}
   >
     {loading ?
       <ActivityIndicator color={highlighted ? 'yellow' : 'lightGrey'} size="small" />
       :
-      <StyledText color={highlighted ? 'yellow' : 'lightGrey'} size="small" bold={highlighted}>{title}</StyledText>
+      <StyledText
+        color={highlighted ? 'yellow' : 'lightGrey'}
+        size="small"
+        bold={highlighted}
+        textStyle={textStyle}
+      >
+        {title}
+      </StyledText>
     }
   </TouchableOpacity>
 );
@@ -25,6 +33,8 @@ HeaderButton.propTypes = {
   highlighted: PropTypes.bool,
   onPress: PropTypes.func,
   loading: PropTypes.bool,
+  style: PropTypes.object,
+  textStyle: PropTypes.object,
 };
 
 HeaderButton.defaultProps = {
@@ -33,4 +43,6 @@ HeaderButton.defaultProps = {
   highlighted: false,
   onPress: null,
   loading: false,
+  style: null,
+  textStyle: null,
 };

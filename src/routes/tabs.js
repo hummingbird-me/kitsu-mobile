@@ -101,7 +101,7 @@ causing it to mess up some nav actions, specifically navigation from the drawer.
 */
 class DrawerWrapper extends Component {
   static propTypes = {
-    initialPage: PropTypes.bool,
+    initialPage: PropTypes.string,
   }
 
   static defaultProps = {

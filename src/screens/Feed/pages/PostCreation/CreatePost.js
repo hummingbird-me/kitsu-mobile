@@ -20,14 +20,14 @@ export default class CreatePost extends React.PureComponent {
       spoiler,
       media,
       post,
-      onNewPostCreated,
+      onPostCreated,
       disableMedia,
     } = navigation.state.params;
 
     return (
       <PostCreator
-        onNewPostCreated={(newPost) => {
-          onNewPostCreated(newPost);
+        onPostCreated={(newPost) => {
+          onPostCreated(newPost);
           navigation.goBack(null);
         }}
         onCancel={() => navigation.goBack(null)}

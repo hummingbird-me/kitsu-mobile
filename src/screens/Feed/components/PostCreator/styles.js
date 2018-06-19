@@ -37,6 +37,9 @@ export const createPostStyles = StyleSheet.create({
   uploadContainer: {
     marginBottom: 10,
   },
+  padTop: {
+    paddingTop: 10,
+  },
 });
 
 export const mediaItemStyles = StyleSheet.create({
@@ -67,6 +70,17 @@ export const mediaItemStyles = StyleSheet.create({
     borderTopLeftRadius: 4,
     borderBottomLeftRadius: 4,
     overflow: 'hidden',
+  },
+  image_episode: {
+    borderBottomLeftRadius: 0,
+  },
+  episodeTag: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.lightGrey,
+    padding: 4,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

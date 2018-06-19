@@ -224,7 +224,7 @@ export class Post extends PureComponent {
       this.props.navigation.navigate('CreatePost', {
         isEditing: true,
         post: this.state.post,
-        onNewPostCreated: (post) => {
+        onPostCreated: (post) => {
           const { user, targetUser, spoiledUnit, media, targetGroup } = this.state.post;
           // Keep the relationships in order since the update call will strip them
           // and we don't need the additional include payload

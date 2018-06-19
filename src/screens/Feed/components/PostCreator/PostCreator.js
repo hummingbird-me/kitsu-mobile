@@ -38,6 +38,9 @@ class PostCreator extends React.PureComponent {
     // Allow user to select media
     disableMedia: PropTypes.bool,
 
+    // Stlye of the editor container view (everything except header)
+    editorContainerStyle: PropTypes.object,
+
     // The media to associate with the post
     // Leave this blank if you're passing in `post` prop.
     media: PropTypes.object,
@@ -49,7 +52,7 @@ class PostCreator extends React.PureComponent {
     onCancel: PropTypes.func,
 
     // Callback handler for when post is created. The new post is passed back in this callback.
-    onNewPostCreated: PropTypes.func,
+    onPostCreated: PropTypes.func,
 
     // The placeholder text to use
     placeholder: PropTypes.string,
@@ -70,6 +73,9 @@ class PostCreator extends React.PureComponent {
     // Mark post as Spoiler?
     spoiler: PropTypes.bool,
 
+    // Main container style
+    style: PropTypes.object,
+
     // The user we are targetting in the post
     targetUser: PropTypes.object,
   }
@@ -77,15 +83,17 @@ class PostCreator extends React.PureComponent {
   static defaultProps = {
     hideMeta: false,
     disableMedia: false,
+    editorContainerStyle: null,
     media: null,
     nsfw: false,
     onCancel: null,
-    onNewPostCreated: null,
+    onPostCreated: null,
     placeholder: null,
     post: null,
     renderHeader: null,
     spoiledUnit: null,
     spoiler: false,
+    style: null,
     targetUser: null,
   }
 
@@ -102,7 +110,7 @@ class PostCreator extends React.PureComponent {
       media: post.media || props.media || null,
       nsfw: post.nsfw || props.nsfw || false,
       spoiler: post.spoiler || props.spoiler || false,
-      spoiledUnit: props.spoiledUnit || null,
+      spoiledUnit: post.spoiledUnit || props.spoiledUnit || null,
       currentFeed: feedStreams[0],
       error: '',
       gif: null,
@@ -206,7 +214,7 @@ class PostCreator extends React.PureComponent {
   }
 
   handlePressPost = async () => {
-    const { targetUser, post, onNewPostCreated, currentUser } = this.props;
+    const { targetUser, post, onPostCreated, currentUser } = this.props;
     const { busy, content, currentFeed, gif, media, nsfw, spoiler, spoiledUnit, uploads } = this.state;
 
     const currentUserId = currentUser && currentUser.id;
@@ -350,8 +358,8 @@ class PostCreator extends React.PureComponent {
         });
       }
 
-      if (onNewPostCreated) {
-        onNewPostCreated(newPost);
+      if (onPostCreated) {
+        onPostCreated(newPost);
       }
     } catch (err) {
       const string = (err && err[0].detail) || 'Failed to create post.';
@@ -419,7 +427,7 @@ class PostCreator extends React.PureComponent {
   }
 
   renderMedia() {
-    const { media, busy } = this.state;
+    const { media, busy, spoiledUnit } = this.state;
     const { post, disableMedia } = this.props;
     const isEditing = !isEmpty(post);
 
@@ -428,6 +436,7 @@ class PostCreator extends React.PureComponent {
         <MediaItem
           disabled={busy || isEditing || disableMedia}
           media={media}
+          episode={spoiledUnit}
           onClear={() => this.setState({ media: null })}
         />
       );
@@ -519,6 +528,8 @@ class PostCreator extends React.PureComponent {
       placeholder: propPlaceholder,
       renderHeader: propHeaderRender,
       onCancel,
+      style,
+      editorContainerStyle,
     } = this.props;
 
     const {
@@ -546,12 +557,11 @@ class PostCreator extends React.PureComponent {
     return (
       <KeyboardAvoidingView
         behavior="padding"
-        style={styles.main}
+        style={[styles.main, style]}
       >
-        <View style={styles.flex}>
-          {/* Header */}
-          { renderHeader(busy, isEditing, this.handlePressPost, onCancel) }
-
+        {/* Header */}
+        {renderHeader(busy, isEditing, this.handlePressPost, onCancel)}
+        <View style={[styles.flex, editorContainerStyle]}>
           {/* Upload  */}
           {this.renderUploadProgress()}
           { /* Error */}
@@ -565,7 +575,7 @@ class PostCreator extends React.PureComponent {
               targetName={(isValidTargetUser && targetUser.name) || ''}
             />
           }
-          <ScrollView style={styles.flex} >
+          <ScrollView style={[styles.flex, hideMeta && styles.padTop]} >
             <PostTextInput
               inputRef={(el) => { this.postTextInput = el; }}
               multiline

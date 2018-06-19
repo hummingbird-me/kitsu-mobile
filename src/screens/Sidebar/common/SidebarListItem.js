@@ -30,11 +30,14 @@ ItemSeparator.defaultProps = {
 export const SidebarListItem = ({ image, imageURL, title, onPress, style }) => (
   <TouchableOpacity activeOpacity={1} onPress={onPress} style={[styles.item, style]}>
     <View style={styles.leftContentWrapper}>
-      {(image && <FastImage source={image} style={styles.image} />) ||
+      {(image &&
+        <FastImage source={image} style={styles.image} resizeMode="contain" />
+      ) ||
         (imageURL &&
           <FastImage
             source={{ uri: imageURL }}
-            style={[styles.image, { resizeMode: 'stretch', borderRadius: 4 }]}
+            style={[styles.image, { borderRadius: 4 }]}
+            resizeMode="stretch"
           />)}
       <Text style={styles.text}>
         {title}
@@ -82,7 +85,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    resizeMode: 'contain',
     width: 18,
     height: 18,
     marginHorizontal: 4,

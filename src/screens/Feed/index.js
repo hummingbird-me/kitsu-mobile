@@ -154,7 +154,7 @@ class Feed extends React.PureComponent {
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
       this.props.navigation.navigate('CreatePost', {
-        onNewPostCreated: () => this.fetchFeed({ reset: true }),
+        onPostCreated: () => this.fetchFeed({ reset: true }),
       });
     }
   };
