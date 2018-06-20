@@ -81,7 +81,7 @@ export class PostImage extends PureComponent {
   mounted = false
 
   render() {
-    const { uri, borderRadius } = this.props;
+    const { uri, borderRadius, maxAutoHeight } = this.props;
     const { width, height } = this.state;
 
     /*
@@ -98,9 +98,9 @@ export class PostImage extends PureComponent {
 
     return (
       <ImageComponent
-        resizeMode="cover"
+        resizeMode={height >= maxAutoHeight ? 'contain' : 'cover'}
         source={{ uri }}
-        style={{ width, height, borderRadius, overflow: 'hidden' }}
+        style={{ width, height, borderRadius, overflow: 'hidden', backgroundColor: '#fcfcfc' }}
       />
     );
   }

@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   editorWrapper: {
     flex: 1,
     backgroundColor: colors.white,
-    borderRadius: 8,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
     overflow: 'hidden',
   },
   editor: {

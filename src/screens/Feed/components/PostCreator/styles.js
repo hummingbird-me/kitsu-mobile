@@ -19,10 +19,6 @@ export const createPostStyles = StyleSheet.create({
     padding: 6,
     backgroundColor: '#16A085',
   },
-  tagMedia: {
-    margin: 10,
-    marginBottom: 5,
-  },
   button: {
     margin: 10,
     marginTop: 5,
@@ -30,11 +26,17 @@ export const createPostStyles = StyleSheet.create({
   checkboxContainer: {
     marginTop: 10,
     flexDirection: 'row',
-    flex: 1,
+    justifyContent: 'space-between',
+    // flex: 1,
   },
   checkbox: {
-    marginRight: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 8,
+    flex: 1,
+  },
+  checkbox_checked: {
+    backgroundColor: colors.green,
   },
   uploadContainer: {
     marginBottom: 10,
@@ -45,6 +47,57 @@ export const createPostStyles = StyleSheet.create({
   header: {
     height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
     paddingTop: statusBarHeight + (isX ? paddingX : 0),
+  },
+  actionBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.offWhite,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.lightGrey,
+    height: 60,
+  },
+  actionBarText: {
+    padding: 12,
+    flex: 1,
+    color: colors.softBlack,
+  },
+  actionBarIcons: {
+    paddingRight: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionBarIcon: {
+    fontSize: 18,
+    marginLeft: 10,
+  },
+  actionModalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    zIndex: 2,
+  },
+  actionModalItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 60,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.lightGrey,
+    backgroundColor: colors.offWhite,
+    padding: 12,
+  },
+  actionModalIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 20,
+  },
+  actionModalIcon: {
+    fontSize: 18,
+    alignItems: 'center',
   },
 });
 
@@ -102,7 +155,7 @@ export const gifImageStyles = StyleSheet.create({
     width: 28,
     height: 28,
     borderColor: colors.white,
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
@@ -111,31 +164,6 @@ export const gifImageStyles = StyleSheet.create({
   },
   icon: {
     color: colors.white,
-    fontSize: 14,
-  },
-});
-
-export const additionalButtonStyles = StyleSheet.create({
-  container: {
-    borderColor: colors.green,
-    borderWidth: 1,
-    borderRadius: 4,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  innerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    color: colors.green,
-    fontSize: 14,
-    marginRight: 4,
-  },
-  text: {
-    color: colors.green,
     fontSize: 14,
   },
 });

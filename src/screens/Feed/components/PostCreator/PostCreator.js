@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, View, Text, ScrollView, Platform } from 'react-native';
+import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity, Keyboard, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { isEmpty, isNil } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
@@ -19,8 +19,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { ImageSortModal } from 'kitsu/screens/Feed/components/ImageSortModal';
 import { prettyBytes } from 'kitsu/utils/prettyBytes';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { GIFImage } from './GIFImage';
-import { AdditionalButton } from './AdditionalButton';
 import { MediaItem } from './MediaItem';
 import { createPostStyles as styles } from './styles';
 
@@ -126,8 +126,13 @@ class PostCreator extends React.PureComponent {
       giphyPickerModalIsVisible: false,
       mediaPickerModalIsVisible: false,
       imageSortModalIsVisible: false,
+      actionBarExpanded: false,
       busy: false,
     };
+  }
+
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   componentWillUnmount() {
@@ -135,9 +140,21 @@ class PostCreator extends React.PureComponent {
     if (this.uploader) {
       this.uploader.abort();
     }
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   pickerShown = false;
+
+  handleBackPress = () => {
+    // This is for handling hardware back button presses on android
+    // NOTE: This won't trigger if component is inside a `Modal` since it overrides it.
+    if (this.state.actionBarExpanded) {
+      this.handleActionBarExpand(false);
+      return true;
+    }
+
+    return false;
+  }
 
   handleMedia = (media) => {
     this.setState({ media });
@@ -150,18 +167,24 @@ class PostCreator extends React.PureComponent {
   }
 
   handleMediaPickerModal = (mediaPickerModalIsVisible) => {
-    this.setState({ mediaPickerModalIsVisible });
+    this.setState({ mediaPickerModalIsVisible, actionBarExpanded: false });
   }
 
   handleGiphyPickerModal = (giphyPickerModalIsVisible) => {
-    this.setState({ giphyPickerModalIsVisible });
+    this.setState({ giphyPickerModalIsVisible, actionBarExpanded: false });
   }
 
   handleImageSortModal = (imageSortModalIsVisible) => {
-    this.setState({ imageSortModalIsVisible });
+    this.setState({ imageSortModalIsVisible, actionBarExpanded: false });
+  }
+
+  handleActionBarExpand = (actionBarExpanded) => {
+    Keyboard.dismiss();
+    this.setState({ actionBarExpanded });
   }
 
   handlePressUpload = async () => {
+    this.handleActionBarExpand(false);
     if (this.pickerShown) return;
 
     // Don't show upload if user is editing post
@@ -393,6 +416,27 @@ class PostCreator extends React.PureComponent {
     this.setState({ uploads: [...newUploads] });
   }
 
+  canSetActions() {
+    const { post, disableMedia } = this.props;
+    const { gif, uploads, media } = this.state;
+    const isEditing = !isEmpty(post);
+
+    // Can only set media if it hasn't been set or it is disabled
+    const canSetMedia = !(media || disableMedia);
+
+    // Can only set uploads if we're not editing and user hasn't hit max count or gif isn't set
+    const canSetUploads = (!gif && !isEditing && uploads.length < MAX_UPLOAD_COUNT);
+
+    // Can only set gif if user hasn't uploaded anything
+    const canSetGIF = !gif && isEmpty(uploads);
+
+    return {
+      canSetMedia,
+      canSetUploads,
+      canSetGIF,
+    };
+  }
+
   renderUploadProgress() {
     const { uploading, progress } = this.state;
 
@@ -433,30 +477,47 @@ class PostCreator extends React.PureComponent {
     );
   }
 
+  renderCheckboxes() {
+    const { nsfw, spoiler } = this.state;
+    return (
+      <View style={styles.checkboxContainer}>
+        <CheckBox
+          title="NSFW"
+          containerStyle={[styles.checkbox, { marginRight: 0 }, nsfw && styles.checkbox_checked]}
+          textStyle={nsfw && { color: 'white' }}
+          checkedColor={colors.white}
+          checked={nsfw}
+          checkedIcon="check-circle"
+          uncheckedIcon="circle-thin"
+          onPress={() => this.setState({ nsfw: !nsfw })}
+        />
+        <CheckBox
+          title="Spoiler"
+          containerStyle={[styles.checkbox, spoiler && styles.checkbox_checked]}
+          checkedColor={colors.white}
+          textStyle={spoiler && { color: 'white' }}
+          checked={spoiler}
+          checkedIcon="check-circle"
+          uncheckedIcon="circle-thin"
+          onPress={() => this.setState({ spoiler: !spoiler })}
+        />
+      </View>
+    );
+  }
+
   renderMedia() {
     const { media, busy, spoiledUnit } = this.state;
     const { post, disableMedia } = this.props;
     const isEditing = !isEmpty(post);
 
-    if (media) {
-      return (
-        <MediaItem
-          disabled={busy || isEditing || disableMedia}
-          media={media}
-          episode={spoiledUnit}
-          onClear={() => this.setState({ media: null })}
-        />
-      );
-    }
+    if (!media) return null;
 
     return (
-      <AdditionalButton
-        text="Tag Anime or Manga"
-        icon="tag"
-        color={colors.blue}
-        disabled={busy || isEditing}
-        onPress={() => this.handleMediaPickerModal(true)}
-        style={styles.tagMedia}
+      <MediaItem
+        disabled={busy || isEditing || disableMedia}
+        media={media}
+        episode={spoiledUnit}
+        onClear={() => this.setState({ media: null })}
       />
     );
   }
@@ -464,24 +525,13 @@ class PostCreator extends React.PureComponent {
   renderGIF() {
     const { gif, busy } = this.state;
 
-    if (gif) {
-      return (
-        <GIFImage
-          disabled={busy}
-          gif={gif}
-          onClear={() => this.setState({ gif: null })}
-        />
-      );
-    }
+    if (!gif) return null;
 
     return (
-      <AdditionalButton
-        text="Search & Share Gif"
-        icon="plus"
-        color={colors.green}
+      <GIFImage
         disabled={busy}
-        onPress={() => this.handleGiphyPickerModal(true)}
-        style={styles.button}
+        gif={gif}
+        onClear={() => this.setState({ gif: null })}
       />
     );
   }
@@ -489,28 +539,96 @@ class PostCreator extends React.PureComponent {
   renderUpload() {
     const { uploads, busy } = this.state;
 
-    if (!isEmpty(uploads)) {
-      return (
-        <View style={styles.uploadContainer}>
-          <ImageGrid
-            images={uploads.map(u => (u.uri || (u.content && u.content.original)))}
-            compact
-            onImageTapped={() => this.handleImageSortModal(true)}
-            disabled={busy}
-          />
-        </View>
-      );
-    }
+    if (isEmpty(uploads)) return null;
 
     return (
-      <AdditionalButton
-        text={`Upload Images (Max: ${MAX_UPLOAD_COUNT})`}
-        icon="upload"
-        color={colors.red}
+      <View style={styles.uploadContainer}>
+        <ImageGrid
+          images={uploads.map(u => (u.uri || (u.content && u.content.original)))}
+          compact
+          onImageTapped={() => this.handleImageSortModal(true)}
+          disabled={busy}
+        />
+      </View>
+    );
+  }
+
+  renderActionBarModal() {
+    const { busy } = this.state;
+    if (busy) return null;
+
+    const actions = this.canSetActions();
+    return (
+      <TouchableOpacity
+        style={styles.actionModalContainer}
+        onPress={() => this.handleActionBarExpand(false)}
+        activeOpacity={0.9}
+      >
+        <View style={{ backgroundColor: 'white' }}>
+          {actions.canSetUploads &&
+            this.renderActionModalItem('folder-open', colors.red, `Attach Photos (max ${MAX_UPLOAD_COUNT})`, () => {
+              this.handlePressUpload();
+            })
+          }
+          {actions.canSetGIF &&
+            this.renderActionModalItem('image', '#8ABE53', 'Search & Share GIF', () => {
+              this.handleGiphyPickerModal(true);
+            })
+          }
+          {actions.canSetMedia &&
+            this.renderActionModalItem('tag', colors.blue, 'Tag Anime or Manga', () => {
+              this.handleMediaPickerModal(true);
+            })
+          }
+          {
+            this.renderActionModalItem('times', colors.red, 'Cancel', () => {
+              this.handleActionBarExpand(false);
+            })
+          }
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  renderActionModalItem = (icon, color, text, onPress) => (
+    <TouchableOpacity style={styles.actionModalItem} onPress={onPress}>
+      <View style={styles.actionModalIconContainer}>
+        <Icon name={icon} color={color} style={styles.actionModalIcon} />
+      </View>
+      <Text style={styles.actionBarText}>
+        {text}
+      </Text>
+    </TouchableOpacity>
+  )
+
+  renderActionBar() {
+    const { busy } = this.state;
+    const actions = this.canSetActions();
+
+    // Don't render anything if nothing can be set
+    if (!actions.canSetMedia && !(actions.canSetUploads || actions.canSetGIF)) return null;
+
+    return (
+      <TouchableOpacity
+        style={styles.actionBar}
         disabled={busy}
-        onPress={this.handlePressUpload}
-        style={styles.button}
-      />
+        onPress={() => this.handleActionBarExpand(true)}
+      >
+        <Text style={styles.actionBarText} numberOfLines={1}>
+          Add to your post
+        </Text>
+        <View style={styles.actionBarIcons}>
+          {actions.canSetUploads &&
+            <Icon name="folder-open" color={colors.red} style={styles.actionBarIcon} />
+          }
+          {actions.canSetGIF &&
+            <Icon name="image" color={'#8ABE53'} style={styles.actionBarIcon} />
+          }
+          {actions.canSetMedia &&
+            <Icon name="tag" color={colors.blue} style={styles.actionBarIcon} />
+          }
+        </View>
+      </TouchableOpacity>
     );
   }
 
@@ -547,11 +665,10 @@ class PostCreator extends React.PureComponent {
       giphyPickerModalIsVisible,
       mediaPickerModalIsVisible,
       imageSortModalIsVisible,
-      nsfw,
-      spoiler,
       gif,
       uploads,
       busy,
+      actionBarExpanded,
     } = this.state;
 
     const isEditing = !isEmpty(post);
@@ -589,6 +706,7 @@ class PostCreator extends React.PureComponent {
             style={[styles.flex, hideMeta && styles.padTop]}
             contentContainerStyle={{ paddingBottom: 10 }}
           >
+            {/* Text input */}
             <PostTextInput
               inputRef={(el) => { this.postTextInput = el; }}
               multiline
@@ -602,26 +720,11 @@ class PostCreator extends React.PureComponent {
               underlineColorAndroid="transparent"
               blurOnSubmit={false}
             />
-            <View style={styles.checkboxContainer}>
-              <CheckBox
-                title="NSFW"
-                containerStyle={styles.checkbox}
-                checkedColor={colors.green}
-                checked={nsfw}
-                checkedIcon="check-circle"
-                uncheckedIcon="circle-thin"
-                onPress={() => this.setState({ nsfw: !nsfw })}
-              />
-              <CheckBox
-                title="Spoiler"
-                containerStyle={styles.checkbox}
-                checkedColor={colors.green}
-                checked={spoiler}
-                checkedIcon="check-circle"
-                uncheckedIcon="circle-thin"
-                onPress={() => this.setState({ spoiler: !spoiler })}
-              />
-            </View>
+
+            {/* NSFW and Spoilers */}
+            {this.renderCheckboxes()}
+
+            {/* UI for media, gif and uploads */}
             <View>
               { this.renderMedia() }
 
@@ -634,6 +737,10 @@ class PostCreator extends React.PureComponent {
               }
             </View>
           </ScrollView>
+
+          {/* Action bar that users can press */}
+          {actionBarExpanded && this.renderActionBarModal()}
+          {this.renderActionBar()}
         </View>
         <ImageSortModal
           images={uploads}
