@@ -5,12 +5,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { StyledText } from 'kitsu/components/StyledText';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { mediaItemStyles as styles } from './styles';
 import { isEmpty } from 'lodash';
+import { mediaItemStyles as styles } from './styles';
 
 export const MediaItem = ({ media, episode, onClear, disabled }) => {
   const episodePrefix = media.type === 'manga' ? 'CH' : 'EP';
-  const episodeTitle = episode && !isEmpty(episode.canonicalTitle) && `- ${episode.canonicalTitle}`;
+  const episodeTitle = (episode && !isEmpty(episode.canonicalTitle) && `- ${episode.canonicalTitle}`) || '';
 
   return (
     <View style={styles.container}>

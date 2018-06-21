@@ -113,7 +113,7 @@ class PostCreator extends React.PureComponent {
     const sortedUploads = (post.uploads || []).sort((a, b) => (a.uploadOrder - b.uploadOrder));
 
     this.state = {
-      content: post.content || '',
+      content: post.originalContent || post.content || '',
       uploads: sortedUploads,
       media: post.media || props.media || null,
       nsfw: post.nsfw || props.nsfw || false,
