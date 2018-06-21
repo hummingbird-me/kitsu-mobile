@@ -61,13 +61,13 @@ export const createPostStyles = StyleSheet.create({
     flex: 1,
     color: colors.softBlack,
   },
-  actionBarIcons: {
+  actionBarImages: {
     paddingRight: 12,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  actionBarIcon: {
-    fontSize: 18,
+  actionBarImage: {
+    width: 20,
     marginLeft: 10,
   },
   actionModalContainer: {
@@ -90,7 +90,7 @@ export const createPostStyles = StyleSheet.create({
     backgroundColor: colors.offWhite,
     padding: 12,
   },
-  actionModalIconContainer: {
+  actionModalImage: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 20,
@@ -98,6 +98,35 @@ export const createPostStyles = StyleSheet.create({
   actionModalIcon: {
     fontSize: 18,
     alignItems: 'center',
+  },
+  actionModalCancelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 8,
+    paddingHorizontal: 12,
+  },
+  actionModalCancel: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  actionModalCancelIcon: {
+    color: 'white',
+    fontSize: 20,
+    marginRight: 8,
+  },
+  actionModalCancelText: {
+    color: colors.white,
+    fontSize: 16,
+    margin: 0,
+    padding: 0,
+    paddingBottom: 2,
   },
 });
 

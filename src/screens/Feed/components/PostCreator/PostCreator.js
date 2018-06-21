@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity, Keyboard, BackHandler } from 'react-native';
+import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity, Keyboard, BackHandler, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { isEmpty, isNil } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
@@ -18,8 +18,9 @@ import { kitsuConfig } from 'kitsu/config/env';
 import ImagePicker from 'react-native-image-crop-picker';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { ImageSortModal } from 'kitsu/screens/Feed/components/ImageSortModal';
+import { giphy, photo, tag } from 'kitsu/assets/img/post-creation';
 import { prettyBytes } from 'kitsu/utils/prettyBytes';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { GIFImage } from './GIFImage';
 import { MediaItem } from './MediaItem';
 import { createPostStyles as styles } from './styles';
@@ -558,55 +559,87 @@ class PostCreator extends React.PureComponent {
     if (busy) return null;
 
     const actions = this.canSetActions();
+    const data = [
+      {
+        image: photo,
+        color: colors.red,
+        title: `Attach Photos (max ${MAX_UPLOAD_COUNT})`,
+        onPress: () => this.handlePressUpload(),
+        visible: actions.canSetUploads,
+      },
+      {
+        image: giphy,
+        color: '#8ABE53',
+        title: 'Search & Share GIF',
+        onPress: () => this.handleGiphyPickerModal(true),
+        visible: actions.canSetGIF,
+      },
+      {
+        image: tag,
+        color: colors.blue,
+        title: 'Tag Anime or Manga',
+        onPress: () => this.handleMediaPickerModal(true),
+        visible: actions.canSetMedia,
+      },
+    ].filter(d => d.visible);
+
+    // Don't show if nothing can be selected
+    if (isEmpty(data)) return null;
+
+    const dismiss = () => this.handleActionBarExpand(false);
+
     return (
       <TouchableOpacity
         style={styles.actionModalContainer}
-        onPress={() => this.handleActionBarExpand(false)}
+        onPress={dismiss}
         activeOpacity={0.9}
       >
-        <View style={{ backgroundColor: 'white' }}>
-          {actions.canSetUploads &&
-            this.renderActionModalItem('folder-open', colors.red, `Attach Photos (max ${MAX_UPLOAD_COUNT})`, () => {
-              this.handlePressUpload();
-            })
-          }
-          {actions.canSetGIF &&
-            this.renderActionModalItem('image', '#8ABE53', 'Search & Share GIF', () => {
-              this.handleGiphyPickerModal(true);
-            })
-          }
-          {actions.canSetMedia &&
-            this.renderActionModalItem('tag', colors.blue, 'Tag Anime or Manga', () => {
-              this.handleMediaPickerModal(true);
-            })
-          }
-          {
-            this.renderActionModalItem('times', colors.red, 'Cancel', () => {
-              this.handleActionBarExpand(false);
-            })
-          }
+        <View style={styles.actionModalCancelContainer}>
+          <TouchableOpacity style={styles.actionModalCancel} onPress={dismiss}>
+            <Icon name="md-close" style={styles.actionModalCancelIcon} />
+            <Text style={styles.actionModalCancelText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ backgroundColor: colors.white }}>
+          {data.map(item => this.renderActionModalItem(item))}
         </View>
       </TouchableOpacity>
     );
   }
 
-  renderActionModalItem = (icon, color, text, onPress) => (
-    <TouchableOpacity style={styles.actionModalItem} onPress={onPress}>
-      <View style={styles.actionModalIconContainer}>
-        <Icon name={icon} color={color} style={styles.actionModalIcon} />
-      </View>
-      <Text style={styles.actionBarText}>
-        {text}
-      </Text>
-    </TouchableOpacity>
-  )
+  renderActionModalItem = (item) => {
+    const { image, title, onPress } = item;
+    return (
+      <TouchableOpacity key={title} style={styles.actionModalItem} onPress={onPress}>
+        <Image style={styles.actionModalImage} source={image} resizeMode="contain" />
+        <Text style={styles.actionBarText}>
+          {title}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
 
   renderActionBar() {
     const { busy } = this.state;
     const actions = this.canSetActions();
 
+    const data = [
+      {
+        image: photo,
+        visible: actions.canSetUploads,
+      },
+      {
+        image: giphy,
+        visible: actions.canSetGIF,
+      },
+      {
+        image: tag,
+        visible: actions.canSetMedia,
+      },
+    ].filter(d => d.visible);
+
     // Don't render anything if nothing can be set
-    if (!actions.canSetMedia && !(actions.canSetUploads || actions.canSetGIF)) return null;
+    if (isEmpty(data)) return null;
 
     return (
       <TouchableOpacity
@@ -617,16 +650,10 @@ class PostCreator extends React.PureComponent {
         <Text style={styles.actionBarText} numberOfLines={1}>
           Add to your post
         </Text>
-        <View style={styles.actionBarIcons}>
-          {actions.canSetUploads &&
-            <Icon name="folder-open" color={colors.red} style={styles.actionBarIcon} />
-          }
-          {actions.canSetGIF &&
-            <Icon name="image" color={'#8ABE53'} style={styles.actionBarIcon} />
-          }
-          {actions.canSetMedia &&
-            <Icon name="tag" color={colors.blue} style={styles.actionBarIcon} />
-          }
+        <View style={styles.actionBarImages}>
+          {data.map(item => (
+            <Image source={item.image} resizeMode="contain" style={styles.actionBarImage} />
+          ))}
         </View>
       </TouchableOpacity>
     );
