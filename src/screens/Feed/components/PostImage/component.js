@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Dimensions, Platform } from 'react-native';
+import { View, Image, Dimensions, Platform, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { styles } from './styles';
 
@@ -79,7 +79,7 @@ export class PostImage extends PureComponent {
 
     // The default dimensions if we haven't finished loading the image
     const defaultWidth = propWidth || maxAutoWidth;
-    const defaultHeight = propHeight || Math.min(defaultWidth * (3 / 4), maxAutoHeight);
+    const defaultHeight = propHeight || Math.min(defaultWidth / 2, maxAutoHeight);
 
     // Return values
     let width = 0;
@@ -119,31 +119,42 @@ export class PostImage extends PureComponent {
 
   render() {
     const { uri, borderRadius, maxAutoHeight } = this.props;
+    const { loading } = this.state;
     const { width, height, autoHeight } = this.calculateSize();
 
     return (
-      <FastImage
-        // If height is automatically set and it goes over the max auto height
-        // We need to make sure that the image is displayed in full to the user.
-        resizeMode={(autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
-        source={{ uri }}
-        style={{ width, height, borderRadius, overflow: 'hidden', backgroundColor: '#fcfcfc' }}
-        onLoad={(e) => {
-          // Currently on fast image version 4.0.14, it doesn't return image sizes in the load event for iOS
-          // Remove this once we update to the latest version
-          if (Platform.OS === 'ios') {
-            this.setState({ loading: false });
-            return;
-          }
+      <View>
+        {loading &&
+          <View style={[styles.loadingContainer, { borderRadius }]}>
+            <ActivityIndicator color="white" />
+          </View>
+        }
+        <FastImage
+          // If height is automatically set and it goes over the max auto height
+          // We need to make sure that the image is displayed in full to the user.
+          resizeMode={(autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
+          source={{ uri }}
+          style={{
+            width,
+            height,
+            borderRadius,
+            overflow: 'hidden',
+            backgroundColor: loading ? 'transparent' : '#fcfcfc',
+          }}
+          onLoad={(e) => {
+            // Currently on fast image version 4.0.14, it doesn't return image sizes in the load event for iOS
+            // Remove this once we update to the latest version
+            if (Platform.OS === 'ios') return;
 
-          const size = e.nativeEvent;
-          this.setState({
-            originalWidth: (size.width || 0),
-            originalHeight: (size.height || 0),
-            loading: false,
-          });
-        }}
-      />
+            const size = e.nativeEvent;
+            this.setState({
+              originalWidth: (size.width || 0),
+              originalHeight: (size.height || 0),
+              loading: false,
+            });
+          }}
+        />
+      </View>
     );
   }
 }

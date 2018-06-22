@@ -157,9 +157,6 @@ export class GiphyModal extends PureComponent {
           </TouchableOpacity>
         </View>
         <View style={styles.imageContainer}>
-          <View style={styles.loading}>
-            <ActivityIndicator color={colors.white} />
-          </View>
           <PostImage uri={images.downsized.url || images.original.url || ''} width={scene.width} />
         </View>
       </View>
