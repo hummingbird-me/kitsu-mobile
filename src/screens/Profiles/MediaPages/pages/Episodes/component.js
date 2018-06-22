@@ -111,7 +111,7 @@ class Episodes extends PureComponent {
             <FlatList
               data={data}
               renderItem={this.renderItem}
-              keyExtractor={k => k.id}
+              keyExtractor={k => `${k.id}`}
               ItemSeparatorComponent={() => <RowSeparator />}
             />
           </View>

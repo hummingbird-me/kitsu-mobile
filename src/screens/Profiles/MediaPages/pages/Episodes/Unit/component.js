@@ -214,7 +214,7 @@ class Unit extends PureComponent {
               <FlatList
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={item => item.id}
+                keyExtractor={item => `${item.id}`}
                 data={units}
                 getItemLayout={this.getItemLayout}
                 initialScrollIndex={unitsIndex}
@@ -254,7 +254,7 @@ class Unit extends PureComponent {
             ) : (
               <KeyboardAwareFlatList
                 data={discussions}
-                keyExtractor={item => item.id}
+                keyExtractor={item => `${item.id}`}
                 renderItem={this.renderPost}
                 ListEmptyComponent={this.renderEmptyFeed}
               />

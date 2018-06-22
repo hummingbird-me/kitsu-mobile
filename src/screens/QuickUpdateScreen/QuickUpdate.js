@@ -688,7 +688,7 @@ class QuickUpdate extends Component {
               {(!isLoadingFeed || isLoadingNextFeedPage) ? (
                 <KeyboardAwareFlatList
                   data={discussions || []}
-                  keyExtractor={item => item.id}
+                  keyExtractor={item => `${item.id}`}
                   renderItem={this.renderPostItem}
                   onEndReached={() => discussions && discussions.length && this.fetchNextFeedPage()}
                   onEndReachedThreshold={0.6}

@@ -209,7 +209,7 @@ export class GiphyModal extends PureComponent {
           })}
           numColumns={bestSpacing.columnCount}
           ItemSeparatorComponent={() => <View />}
-          keyExtractor={item => item.id}
+          keyExtractor={item => `${item.id}`}
           renderItem={({ item }) => this.renderItem(item, bestSpacing)}
         />
       </Modal>

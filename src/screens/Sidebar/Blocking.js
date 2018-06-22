@@ -80,7 +80,7 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
       onEndReachedThreshold={0.5}
       initialNumToRender={10}
       contentContainerStyle={styles.list}
-      keyExtractor={item => item.id}
+      keyExtractor={item => `${item.id}`}
       renderItem={({ item }) => <RowItem type={'search'} item={item} onPress={onPress} />}
       ItemSeparatorComponent={() => <ItemSeparator />}
       style={{ maxHeight: 200 }}
@@ -283,7 +283,7 @@ class Blocking extends React.Component {
             <SidebarTitle title={listTitle} />
             <FlatList
               data={blocks}
-              keyExtractor={item => item.blocked.id}
+              keyExtractor={item => `${item.blocked.id}`}
               renderItem={this.renderBlocksItem}
               ItemSeparatorComponent={this.renderItemSeparatorComponent}
               removeClippedSubviews={false}

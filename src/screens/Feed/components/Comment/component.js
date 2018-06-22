@@ -11,7 +11,7 @@ import Hyperlink from 'react-native-hyperlink';
 import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Kitsu } from 'kitsu/config/api';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
@@ -149,8 +149,9 @@ export class Comment extends PureComponent {
       });
 
       const processed = preprocessFeedPosts(replies);
+      const uniqueReplies = uniqBy([...processed.reverse(), ...this.state.replies], 'id');
 
-      this.setState({ replies: [...processed.reverse(), ...this.state.replies] });
+      this.setState({ replies: uniqueReplies });
     } catch (err) {
       console.log('Error fetching replies: ', err);
     } finally {
@@ -271,7 +272,7 @@ export class Comment extends PureComponent {
                   <FlatList
                     listKey={`${comment.id}`}
                     data={replies}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => `${item.id}`}
                     renderItem={this.renderItem}
                     ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
                   />

@@ -23,7 +23,7 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -122,16 +122,17 @@ export default class PostDetails extends PureComponent {
       this.setState({
         comment: '',
         isReplying: false,
-        commentsCount: this.state.commentsCount + 1
+        commentsCount: this.state.commentsCount + 1,
       });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
+        const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
         this.setState({
-          comments: [...this.state.comments, processed],
-          topLevelCommentsCount: this.state.topLevelCommentsCount + 1
+          comments: uniqueComments,
+          topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
         });
 
         // This is a top-level comment, we want to let the upstream
@@ -223,8 +224,9 @@ export default class PostDetails extends PureComponent {
       });
 
       const processed = preprocessFeedPosts(comments);
+      const uniqueComments = uniqBy([...processed.reverse(), ...this.state.comments], 'id');
 
-      this.setState({ comments: [...processed.reverse(), ...this.state.comments] });
+      this.setState({ comments: uniqueComments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -260,7 +262,7 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.goBack();
   };
 
-  keyExtractor = item => item.id;
+  keyExtractor = item => `${item.id}`;
 
   navigateToUserProfile = (userId) => {
     if (userId) this.props.navigation.navigate('ProfilePages', { userId });
