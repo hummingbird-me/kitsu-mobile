@@ -26,6 +26,7 @@ export class PostImage extends PureComponent {
   state = {
     width: 0,
     height: 0,
+    autoHeight: false,
   }
 
   componentWillMount() {
@@ -62,6 +63,7 @@ export class PostImage extends PureComponent {
           this.setState({
             width: this.props.width,
             height: Math.min(this.props.maxAutoHeight, height * (this.props.width / width)),
+            autoHeight: true,
           });
         } else if (!this.props.width && this.props.height) {
           this.setState({
@@ -81,8 +83,8 @@ export class PostImage extends PureComponent {
   mounted = false
 
   render() {
-    const { uri, borderRadius } = this.props;
-    const { width, height } = this.state;
+    const { uri, borderRadius, maxAutoHeight } = this.props;
+    const { width, height, autoHeight } = this.state;
 
     /*
     Data url images don't work on android with FastImage.
@@ -98,9 +100,11 @@ export class PostImage extends PureComponent {
 
     return (
       <ImageComponent
-        resizeMode="cover"
+        // If height is automatically set and it goes over the max auto height
+        // We need to make sure that the image is displayed in full to the user.
+        resizeMode={(autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
         source={{ uri }}
-        style={{ width, height, borderRadius, overflow: 'hidden' }}
+        style={{ width, height, borderRadius, overflow: 'hidden', backgroundColor: '#fcfcfc' }}
       />
     );
   }

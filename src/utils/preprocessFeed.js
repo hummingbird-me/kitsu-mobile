@@ -16,6 +16,11 @@ const getHttpUrls = (url) => {
  * @returns The processed post without embed links in their content
  */
 export const preprocessFeedPost = (post) => {
+
+  // Save original content before we make any edits to it
+  // eslint-disable-next-line no-param-reassign
+  post.originalContent = post.content;
+
   // Remove embed image & video url from the content
   // Only do this if we don't have uploads
   if (post.embed && isEmpty(post.uploads)) {

@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   modalTitle: {
-    flex: 2,
+    flex: 1,
     alignItems: 'center',
   },
 });

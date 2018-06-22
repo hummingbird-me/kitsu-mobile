@@ -8,9 +8,9 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
-import { isEmpty } from 'lodash';
 
 // Post
 export class Post extends PureComponent {
@@ -111,7 +111,7 @@ export class Post extends PureComponent {
         comments: [...this.state.comments, processed],
         latestComments: [...this.state.latestComments, processed],
         topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
-        commentsCount: this.state.commentsCount + 1
+        commentsCount: this.state.commentsCount + 1,
       });
     } catch (error) {
       console.log('Error submitting comment:', error);
@@ -224,17 +224,9 @@ export class Post extends PureComponent {
       this.props.navigation.navigate('CreatePost', {
         isEditing: true,
         post: this.state.post,
-        onNewPostCreated: (post) => {
-          const { user, targetUser, spoiledUnit, media, targetGroup } = this.state.post;
-          // Keep the relationships in order since the update call will strip them
-          // and we don't need the additional include payload
-          const postWithRelationships = post;
-          postWithRelationships.user = user;
-          postWithRelationships.targetUser = targetUser;
-          postWithRelationships.spoiledUnit = spoiledUnit;
-          postWithRelationships.media = media;
-          postWithRelationships.targetGroup = targetGroup;
-          this.setState({ post: postWithRelationships });
+        onPostCreated: (post) => {
+          const processed = preprocessFeedPost(post);
+          this.setState({ post: processed });
         },
       });
     }

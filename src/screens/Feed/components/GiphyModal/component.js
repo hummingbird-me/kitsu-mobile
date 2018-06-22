@@ -189,32 +189,29 @@ export class GiphyModal extends PureComponent {
           leftButtonAction={this.handleCancelPress}
           rightButtonTitle=""
         />
-        <ScrollView style={{ flex: 1 }}>
-          <View style={styles.searchBoxContainer}>
-            <SearchBox
-              placeholder="Search for a GIF"
-              style={styles.searchBox}
-              value={query}
-              onChangeText={this.handleSearchStateChange}
-              onSubmitEditing={Keyboard.dismiss}
-            />
-          </View>
-          {/* TODO: Fetch more gifs on scroll */}
-          <FlatList
-            listKey="giphy"
-            style={padding}
-            data={gifs}
-            getItemLayout={(data, index) => ({
-              length: bestSpacing.height,
-              offset: bestSpacing.height * index,
-              index,
-            })}
-            numColumns={bestSpacing.columnCount}
-            ItemSeparatorComponent={() => <View />}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => this.renderItem(item, bestSpacing)}
+        <View style={styles.searchBoxContainer}>
+          <SearchBox
+            placeholder="Search for a GIF"
+            style={styles.searchBox}
+            value={query}
+            onChangeText={this.handleSearchStateChange}
+            onSubmitEditing={Keyboard.dismiss}
           />
-        </ScrollView>
+        </View>
+        <FlatList
+          listKey="giphy"
+          style={padding}
+          data={gifs}
+          getItemLayout={(data, index) => ({
+            length: bestSpacing.height,
+            offset: bestSpacing.height * index,
+            index,
+          })}
+          numColumns={bestSpacing.columnCount}
+          ItemSeparatorComponent={() => <View />}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => this.renderItem(item, bestSpacing)}
+        />
       </Modal>
     );
   }

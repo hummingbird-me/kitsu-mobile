@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
-import { isX } from 'kitsu/utils/isX';
+import { StyleSheet, Platform } from 'react-native';
+import { isX, paddingX } from 'kitsu/utils/isX';
 import * as colors from 'kitsu/constants/colors';
+import { statusBarHeight } from 'kitsu/constants/app';
 
 const text = {
   color: colors.white,
@@ -10,24 +11,26 @@ const text = {
 
 const styles = StyleSheet.create({
   header: {
-    height: 60,
-    flexDirection: 'row',
+    // Height is different for android because the modal doesn't cover the status bar
+    // If it does in the future then the height would be the nav bar height + Status bar height
+    height: 60 + (isX ? paddingX : 0) + Platform.select({
+      ios: statusBarHeight,
+      android: 0,
+    }),
+    paddingTop: Platform.select({ ios: statusBarHeight, android: 0 }) + (isX ? paddingX : 0),
     backgroundColor: 'transparent',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: 10,
-    marginTop: 10,
   },
   headerText: {
-    flex: 1,
+    // flex: 1,
     ...text,
-    marginTop: isX ? 20 : 0,
     textAlign: 'center',
     alignSelf: 'center',
     fontWeight: '700',
   },
   headerButton: {
-    marginTop: isX ? 20 : 0,
     justifyContent: 'center',
   },
   headerButtonText: {
@@ -44,28 +47,13 @@ const styles = StyleSheet.create({
   editorWrapper: {
     flex: 1,
     backgroundColor: colors.white,
-    borderRadius: 8,
-    padding: 10,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    overflow: 'hidden',
   },
   editor: {
     ...text,
     color: 'black',
-  },
-  addGIF: {
-    margin: 10,
-    marginTop: 5,
-  },
-  gifWrapper: {
-    marginTop: 5,
-    marginHorizontal: -10,
-  },
-  checkboxContainer: {
-    marginTop: 10,
-    flexDirection: 'row',
-  },
-  checkbox: {
-    marginRight: 0,
-    padding: 8,
   },
 });
 
