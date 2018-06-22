@@ -525,7 +525,7 @@ class ProfileScreen extends Component {
               style={{ backgroundColor: colors.listBackPurple }}
               data={userFeed}
               ListHeaderComponent={this.renderHeader}
-              keyExtractor={item => item.id}
+              keyExtractor={item => `${item.id}`}
               renderItem={({ item }) => <CardActivity {...item} />}
               onEndReached={() => this.loadMore(profile.id)}
               onEndReachedThreshold={0.5}

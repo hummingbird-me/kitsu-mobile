@@ -316,7 +316,7 @@ class NotificationsScreen extends PureComponent {
           ListHeaderComponent={this.renderHeader}
           data={notifications}
           renderItem={this.renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => `${item.id}`}
           ItemSeparatorComponent={this.renderItemSeperator}
           initialNumToRender={10}
           refreshing={loadingNotifications}

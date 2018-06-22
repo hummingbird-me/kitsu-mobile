@@ -28,7 +28,7 @@ export class CommentFlatList extends PureComponent {
     return (
       <FlatList
         data={latestComments}
-        keyExtractor={item => item.id}
+        keyExtractor={item => `${item.id}`}
         renderItem={({ item }) => (
           <Comment
             post={post}

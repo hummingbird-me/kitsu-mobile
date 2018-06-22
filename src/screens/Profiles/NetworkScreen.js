@@ -164,7 +164,7 @@ class NetworkScreen extends Component {
       <FlatList
         removeClippedSubviews={false}
         data={data}
-        keyExtractor={item => item.id}
+        keyExtractor={item => `${item.id}`}
         refreshing={false}
         onRefresh={() => console.log('object')}
         ListHeaderComponent={() => this.renderHeader(type)}

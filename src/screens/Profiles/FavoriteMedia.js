@@ -71,7 +71,7 @@ class FavoriteMedia extends Component {
     return (
       <FlatList
         removeClippedSubviews={false}
-        keyExtractor={item => item.id}
+        keyExtractor={item => `${item.id}`}
         data={this.getData(this.props[type])}
         numColumns={4}
         onEndReached={() => console.log(type)}

@@ -97,7 +97,7 @@ class FavoriteCharacter extends Component {
       <FlatList
         removeClippedSubviews={false}
         data={data}
-        keyExtractor={item => item.id}
+        keyExtractor={item => `${item.id}`}
         numColumns={4}
         refreshing={loading}
         onRefresh={() => fetchProfileFavorites(userId, 'characters')}

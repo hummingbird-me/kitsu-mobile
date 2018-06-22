@@ -152,7 +152,7 @@ class SummaryComponent extends PureComponent {
     return (
       <FlatList
         data={filtered}
-        keyExtractor={i => i.id}
+        keyExtractor={i => `${i.id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.streamingLinksContent}
@@ -272,7 +272,7 @@ class SummaryComponent extends PureComponent {
         { !loading &&
           <FlatList
             data={feed || []}
-            keyExtractor={item => item.id}
+            keyExtractor={item => `${item.id}`}
             renderItem={this.renderItem}
           />
         }

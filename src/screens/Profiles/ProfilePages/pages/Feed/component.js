@@ -100,7 +100,7 @@ class FeedComponent extends PureComponent {
           <FlatList
             listKey="feed"
             data={feed || []}
-            keyExtractor={item => item.id}
+            keyExtractor={item => `${item.id}`}
             renderItem={this.renderItem}
           />
         }

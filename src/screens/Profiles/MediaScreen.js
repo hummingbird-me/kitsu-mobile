@@ -630,7 +630,7 @@ class MediaScreen extends Component {
             <FlatList
               data={mediaFeed}
               ListHeaderComponent={() => this.renderHeader()}
-              keyExtractor={item => item.id}
+              keyExtractor={item => `${item.id}`}
               renderItem={({ item }) => <CardActivity {...item} />}
 
               onEndReached={() => this.loadMore(media.id, media.type)}

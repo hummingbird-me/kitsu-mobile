@@ -271,7 +271,7 @@ export class Comment extends PureComponent {
                   <FlatList
                     listKey={`${comment.id}`}
                     data={replies}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => `${item.id}`}
                     renderItem={this.renderItem}
                     ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
                   />
