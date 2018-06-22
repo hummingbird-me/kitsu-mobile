@@ -8,7 +8,7 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
 
@@ -64,13 +64,14 @@ export class Post extends PureComponent {
       postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
       syncComments: (comments) => {
+        const uniqueComments = uniqBy([...this.state.comments, ...comments], 'id');
         this.setState({
-          comments: [...this.state.comments, ...comments],
+          comments: uniqueComments,
           latestComments: [...this.state.latestComments, ...comments],
           commentsCount: this.state.commentsCount + comments.length,
-          topLevelCommentsCount: this.state.commentsCount + comments.length
-        })
-      }
+          topLevelCommentsCount: this.state.commentsCount + comments.length,
+        });
+      },
     });
   }
 
@@ -106,9 +107,11 @@ export class Post extends PureComponent {
       comment.user = this.props.currentUser;
 
       const processed = preprocessFeedPost(comment);
+      const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
+
       this.setState({
         comment: '',
-        comments: [...this.state.comments, processed],
+        comments: uniqueComments,
         latestComments: [...this.state.latestComments, processed],
         topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
         commentsCount: this.state.commentsCount + 1,
@@ -137,11 +140,12 @@ export class Post extends PureComponent {
       });
 
       const processed = preprocessFeedPosts(comments);
+      const uniqueComments = uniqBy(processed, 'id');
 
       if (this.mounted) {
         this.setState({
-          latestComments: processed.slice(0, 2).reverse(),
-          comments: processed.reverse(),
+          latestComments: uniqueComments.slice(0, 2).reverse(),
+          comments: uniqueComments.reverse(),
         });
       }
     } catch (err) {
