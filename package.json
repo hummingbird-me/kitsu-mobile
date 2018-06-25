@@ -33,7 +33,7 @@
     "react-native-animated-progress-bar": "^1.1.0",
     "react-native-code-push": "^5.2.2",
     "react-native-elements": "^0.19.0",
-    "react-native-fast-image": "DylanVann/react-native-fast-image#05830ad",
+    "react-native-fast-image": "^4.0.14",
     "react-native-fbsdk": "^0.7.0",
     "react-native-hyperlink": "^0.0.14",
     "react-native-image-crop-picker": "^0.20.3",
