@@ -70,19 +70,27 @@ DEPENDENCIES:
   - RSKImageCropper
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - boost-for-react-native
+    - FLAnimatedImage
+    - QBImagePickerController
+    - RSKImageCropper
+    - SDWebImage
+
 EXTERNAL SOURCES:
   DoubleConversion:
-    :podspec: ../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec
+    :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   Folly:
-    :podspec: ../node_modules/react-native/third-party-podspecs/Folly.podspec
+    :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   GLog:
-    :podspec: ../node_modules/react-native/third-party-podspecs/glog.podspec
+    :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
-    :path: ../node_modules/react-native
+    :path: "../node_modules/react-native"
   react-native-fast-image:
-    :path: ../node_modules/react-native-fast-image
+    :path: "../node_modules/react-native-fast-image"
   yoga:
-    :path: ../node_modules/react-native/ReactCommon/yoga
+    :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
@@ -97,6 +105,6 @@ SPEC CHECKSUMS:
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: cb14d6d9b1684f7231a4aadaa464a27dd36e72f9
+PODFILE CHECKSUM: a8cda64225ed83f9996d6c1ad4103f36183fdccd
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

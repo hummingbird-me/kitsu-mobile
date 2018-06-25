@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -53,6 +54,7 @@
 		52271FE94BA34005A28D1CE2 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0DFBF46288641A59E7BF827 /* Entypo.ttf */; };
 		56ACC85D3CDC4A26854A3DD3 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7744E0A2AD94416581E0CA6A /* OpenSans-Regular.ttf */; };
 		5B8F3A180D4E492986BEDC27 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2549FBAE04493884146CC1 /* libimageCropPicker.a */; };
+		5C73C52D061343369F8D7B45 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 138892BE183C484DA4846C8B /* Feather.ttf */; };
 		5D4D03AEFDE54D9A98E799BB /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8942A9EF1C834A659FD5DF8B /* FontAwesome.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		609C40E8BBE646D28429CA1C /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97468AB6D60F4826A4758C18 /* EvilIcons.ttf */; };
@@ -109,7 +111,6 @@
 		F743ACFD56F641BEA63F5B1D /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 008C13A99553484BA0B2963B /* OpenSans-Italic.ttf */; };
 		FD2D5EEC2CE94BD494A797F8 /* libRCTYouTube.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */; };
 		FFF738ABC088423B91E45FD7 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 694A904745DB4D368E2CB836 /* config.json */; };
-		5C73C52D061343369F8D7B45 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 138892BE183C484DA4846C8B /* Feather.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -509,6 +510,7 @@
 		02B0EC9812B94201AB2627F9 /* libLottieReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libLottieReactNative.a; sourceTree = "<group>"; };
 		0A6D63351F3DCC5A00181D81 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		11B7C8A949554B108E8C2110 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
+		138892BE183C484DA4846C8B /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* kitsu_mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kitsu_mobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -608,7 +610,6 @@
 		FD61A198D0A948A68EDEFB8F /* Asap-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Asap-Medium.otf"; path = "../src/assets/fonts/open-sans/Asap-Medium.otf"; sourceTree = "<group>"; };
 		FF0AD57CF1A14A05AB0F02EE /* libRNShimmer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShimmer.a; sourceTree = "<group>"; };
 		FF2549FBAE04493884146CC1 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
-		138892BE183C484DA4846C8B /* Feather.ttf */ = {isa = PBXFileReference; name = "Feather.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1141,7 +1142,6 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				C6A9134B1F3DE0A800722EA9 /* ShellScript */,
 				F7BFDCB4BEEC4AE69BA6DD6E /* Upload Debug Symbols to Sentry */,
-				6F81E16EA5F9BAD09BE6B193 /* [CP] Embed Pods Frameworks */,
 				667C8D105DBEAA6284C4AA54 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -1869,21 +1869,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6F81E16EA5F9BAD09BE6B193 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C6A9134B1F3DE0A800722EA9 /* ShellScript */ = {
