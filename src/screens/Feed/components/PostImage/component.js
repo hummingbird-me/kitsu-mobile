@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Dimensions, Platform, ActivityIndicator } from 'react-native';
+import { View, Image, Dimensions, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { styles } from './styles';
+import { ImageSizeCache } from 'kitsu/utils/cache';
 
 export class PostImage extends PureComponent {
   static propTypes = {
@@ -22,19 +23,23 @@ export class PostImage extends PureComponent {
   };
 
   state = {
-    originalWidth: 0,
-    originalHeight: 0,
+    width: this.props.width || 0,
+    height: this.props.height || 0,
+    autoHeight: false,
     loading: true,
   }
 
   componentWillMount() {
     this.mounted = true;
-    this.updateImageSize();
+    this.fetchImageSize();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.uri !== nextProps.uri) {
-      this.updateImageSize();
+    if (this.props.uri !== nextProps.uri ||
+        this.props.width !== nextProps.width ||
+        this.props.height !== nextProps.height
+    ) {
+      this.fetchImageSize();
     }
   }
 
@@ -42,20 +47,36 @@ export class PostImage extends PureComponent {
     this.mounted = false;
   }
 
-  updateImageSize() {
-    // We have to default to using `Image.getSize` for iOS
-    // Because in fast image 4.0.14 it fails to give us width and height in the `onLoad` event.
-    if (Platform.OS === 'android') return;
+  fetchImageSize() {
+    const uri = this.props.uri;
 
-    Image.getSize(this.props.uri, (width, height) => {
-      if (!this.mounted) return;
-
+    // Get the cached size first, if not then load it in
+    if (ImageSizeCache.contains(uri)) {
+      const size = ImageSizeCache.get(uri) || {};
+      const imageSize = this.calculateSize(size.width, size.height, false);
       this.setState({
-        originalWidth: width,
-        originalHeight: height,
         loading: false,
+        ...imageSize,
       });
-    });
+    } else {
+      const { originalWidth, originalHeight, loading } = this.state;
+      const imageSize = this.calculateSize(originalWidth, originalHeight, loading);
+      this.setState({ ...imageSize });
+
+      // TODO: Convert this to a onLoad function for FastImage
+      // It's not done at the moment because on iOS the `onLoad` function doesn't pass in image dimensions
+      Image.getSize(uri, (width, height) => {
+        if (!this.mounted) return;
+
+        ImageSizeCache.set(uri, width, height);
+
+        const newImageSize = this.calculateSize(width, height, false);
+        this.setState({
+          loading: false,
+          ...newImageSize,
+        });
+      });
+    }
   }
 
   mounted = false
@@ -63,9 +84,8 @@ export class PostImage extends PureComponent {
   /*
   Calculate the size of the image.
   */
-  calculateSize() {
+  calculateSize(originalWidth, originalHeight, loading) {
     const { maxAutoHeight, width: propWidth, height: propHeight } = this.props;
-    const { originalWidth, originalHeight, loading } = this.state;
 
     const isWidthSet = !!propWidth;
     const isHeightSet = !!propHeight;
@@ -119,8 +139,7 @@ export class PostImage extends PureComponent {
 
   render() {
     const { uri, borderRadius, maxAutoHeight } = this.props;
-    const { loading } = this.state;
-    const { width, height, autoHeight } = this.calculateSize();
+    const { loading, width, height, autoHeight } = this.state;
 
     return (
       <View>
@@ -140,18 +159,6 @@ export class PostImage extends PureComponent {
             borderRadius,
             overflow: 'hidden',
             backgroundColor: loading ? 'transparent' : '#fcfcfc',
-          }}
-          onLoad={(e) => {
-            // Currently on fast image version 4.0.14, it doesn't return image sizes in the load event for iOS
-            // Remove this once we update to the latest version
-            if (Platform.OS === 'ios') return;
-
-            const size = e.nativeEvent;
-            this.setState({
-              originalWidth: (size.width || 0),
-              originalHeight: (size.height || 0),
-              loading: false,
-            });
           }}
         />
       </View>
