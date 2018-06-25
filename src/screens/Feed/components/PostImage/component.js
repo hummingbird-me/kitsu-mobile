@@ -128,8 +128,8 @@ export class PostImage extends PureComponent {
       height = propHeight;
     } else {
       // User hasn't set the anything
-      width = originalWidth;
-      height = originalHeight;
+      width = originalWidth || 0;
+      height = originalHeight || 0;
     }
 
     return {
