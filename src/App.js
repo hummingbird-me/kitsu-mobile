@@ -89,14 +89,16 @@ class App extends PureComponent {
           email: user.email,
           username: user.name,
         });
-        Sentry.setTagsContext({
-          environment: kitsuConfig.isProduction ? 'production' : 'staging',
-          react: true,
-        });
       }
     } else {
       Sentry.clearContext();
     }
+
+    Sentry.setTagsContext({
+      environment: kitsuConfig.isProduction ? 'production' : 'staging',
+      react: true,
+      version: kitsuConfig.version,
+    });
 
     // Set the new authentication value
     this.authenticated = authenticated;
