@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Image, Dimensions, ActivityIndicator, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { styles } from './styles';
 import { ImageSizeCache } from 'kitsu/utils/cache';
@@ -63,8 +63,10 @@ export class PostImage extends PureComponent {
       const imageSize = this.calculateSize(originalWidth, originalHeight, loading);
       this.setState({ ...imageSize });
 
-      // TODO: Convert this to a onLoad function for FastImage
-      // It's not done at the moment because on iOS the `onLoad` function doesn't pass in image dimensions
+      // Android sizes are fetched using FastImage
+      // on iOS, FastImage doesn't return image sizes, so we have to use the old way
+      if (Platform.OS === 'android') return;
+
       Image.getSize(uri, (width, height) => {
         if (!this.mounted) return;
 
@@ -161,6 +163,19 @@ export class PostImage extends PureComponent {
             backgroundColor: loading ? 'transparent' : '#fcfcfc',
           }}
           cache="web"
+          onLoad={(e) => {
+            // onLoad doesn't pass size params on iOS :/
+            if (Platform.OS === 'ios') return;
+
+            const size = e.nativeEvent;
+            ImageSizeCache.set(uri, size.width, size.height);
+
+            const imageSize = this.calculateSize(size.width, size.height, false);
+            this.setState({
+              loading: false,
+              ...imageSize,
+            });
+          }}
         />
       </View>
     );
