@@ -253,7 +253,13 @@ class PostCreator extends React.PureComponent {
 
     if (busy) return;
 
-    // Force user to add content unless they have uploads or gif set
+    /*
+      Force user to add content unless they have uploads or gif set
+      We use `trimStart` and `trimEnd` instead of `trim` so that we can maintain any whitespaces in the content itself,
+      `trim` reduces whitespace to 1 characer.
+      E.g if we had '__a___b____c__' (where _ = space) then `trim` would make that 'a_b_c'
+          where as `trimStart` and `trimEnd` would become 'a___b____c'
+    */
     const trimmed = trimStart(trimEnd(content));
     if (!gif && uploads.length === 0 && isEmpty(trimmed)) {
       this.setState({ error: 'Please add a message to your post' });
