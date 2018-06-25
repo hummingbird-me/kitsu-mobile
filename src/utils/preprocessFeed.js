@@ -1,5 +1,5 @@
 
-import { trimStart, trimEnd, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 
 const getHttpUrls = (url) => {
   // A quick hack to return both the http and https url
@@ -42,15 +42,9 @@ export const preprocessFeedPost = (post) => {
     }
   }
 
-  /*
-    Finally trim the content
-    We use`trimStart` and`trimEnd` instead of`trim` so that we can maintain any whitespaces in the content itself,
-    `trim` reduces whitespace to 1 characer.
-    E.g if we had '__a___b____c__'(where _ = space) then`trim` would make that 'a_b_c'
-        where as `trimStart` and`trimEnd` would become 'a___b____c'
-  */
+  // Finally trim the content
   // eslint-disable-next-line no-param-reassign
-  post.content = trimEnd(trimStart(post.content));
+  post.content = (post.content || '').trim();
 
   return post;
 };
