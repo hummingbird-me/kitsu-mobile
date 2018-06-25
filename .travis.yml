@@ -75,7 +75,6 @@ matrix:
         - yarn -version
         - gem install fastlane --no-rdoc --no-ri --no-document --quiet
         - gem install cocoapods --no-rdoc --no-ri --no-document
-        - pod update
         - openssl aes-256-cbc -K $encrypted_5a0bd94d6bee_key -iv $encrypted_5a0bd94d6bee_iv -in .deploy_key.enc -out ~/.ssh/deploy_key -d
         - echo -e "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/deploy_key\n" >> ~/.ssh/config
         - ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -84,6 +83,7 @@ matrix:
         - travis_retry yarn
       script:
         - cd ios
+        - pod update
         # We don't need to check for release branch here because alpha/beta are all handled in TestFlight
         - if [ "$TRAVIS_BRANCH" = "develop" ]; then fastlane alpha_testflight; fi
         - if [ "$TRAVIS_BRANCH" = "master" ]; then fastlane release; fi
