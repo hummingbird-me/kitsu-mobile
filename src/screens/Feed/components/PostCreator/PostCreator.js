@@ -253,8 +253,8 @@ class PostCreator extends React.PureComponent {
 
     if (busy) return;
 
-    // Don't allow posting if content and gif is empty
-    if (isEmpty(content)) {
+    // Force user to add content unless they have uploads or gif set
+    if (!gif && uploads.length === 0 && isEmpty(content)) {
       this.setState({ error: 'Please add a message to your post' });
       return;
     }
@@ -388,6 +388,9 @@ class PostCreator extends React.PureComponent {
           include: 'media,spoiledUnit,user,uploads',
         });
       }
+
+      // Clean up any tmp image files
+      ImagePicker.clean();
 
       if (onPostCreated) {
         onPostCreated(newPost);
