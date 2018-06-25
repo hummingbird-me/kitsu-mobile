@@ -1,15 +1,102 @@
 PODS:
+  - boost-for-react-native (1.63.0)
+  - DoubleConversion (1.1.5)
+  - FLAnimatedImage (1.0.12)
+  - Folly (2016.09.26.00):
+    - boost-for-react-native
+    - DoubleConversion
+    - GLog
+  - GLog (0.3.4)
   - QBImagePickerController (3.4.0)
+  - React (0.53.0):
+    - React/Core (= 0.53.0)
+  - react-native-fast-image (4.0.14):
+    - FLAnimatedImage
+    - React
+    - SDWebImage/Core
+    - SDWebImage/GIF
+  - React/Core (0.53.0):
+    - yoga (= 0.53.0.React)
+  - React/CxxBridge (0.53.0):
+    - Folly (= 2016.09.26.00)
+    - React/Core
+    - React/cxxreact
+  - React/cxxreact (0.53.0):
+    - boost-for-react-native (= 1.63.0)
+    - Folly (= 2016.09.26.00)
+    - React/jschelpers
+    - React/jsinspector
+  - React/DevSupport (0.53.0):
+    - React/Core
+    - React/RCTWebSocket
+  - React/fishhook (0.53.0)
+  - React/jschelpers (0.53.0):
+    - Folly (= 2016.09.26.00)
+    - React/PrivateDatabase
+  - React/jsinspector (0.53.0)
+  - React/PrivateDatabase (0.53.0)
+  - React/RCTAnimation (0.53.0):
+    - React/Core
+  - React/RCTBlob (0.53.0):
+    - React/Core
+  - React/RCTNetwork (0.53.0):
+    - React/Core
+  - React/RCTText (0.53.0):
+    - React/Core
+  - React/RCTWebSocket (0.53.0):
+    - React/Core
+    - React/fishhook
+    - React/RCTBlob
   - RSKImageCropper (2.0.0)
+  - SDWebImage/Core (4.4.1)
+  - SDWebImage/GIF (4.4.1):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - yoga (0.53.0.React)
 
 DEPENDENCIES:
+  - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
+  - GLog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - QBImagePickerController
+  - react-native-fast-image (from `../node_modules/react-native-fast-image`)
+  - React/Core (from `../node_modules/react-native`)
+  - React/CxxBridge (from `../node_modules/react-native`)
+  - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
   - RSKImageCropper
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+
+EXTERNAL SOURCES:
+  DoubleConversion:
+    :podspec: ../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec
+  Folly:
+    :podspec: ../node_modules/react-native/third-party-podspecs/Folly.podspec
+  GLog:
+    :podspec: ../node_modules/react-native/third-party-podspecs/glog.podspec
+  React:
+    :path: ../node_modules/react-native
+  react-native-fast-image:
+    :path: ../node_modules/react-native-fast-image
+  yoga:
+    :path: ../node_modules/react-native/ReactCommon/yoga
 
 SPEC CHECKSUMS:
+  boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  DoubleConversion: ebb6747c5b66026ad4f97b789c3ceac6f18e57a6
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  Folly: 0e765a0b56a1bf180dcbd51ee178cd3a1e2ab986
+  GLog: ed471a3ad6ad53eefb343a530f15dad283e5ef51
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
+  React: 988a7dbd5626e0dd4f4b63fb444fa7e3d975e5b7
+  react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
+  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
+  yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: c409099998033bd556a80b8ba0d44eb41aa184a1
+PODFILE CHECKSUM: cb14d6d9b1684f7231a4aadaa464a27dd36e72f9
 
 COCOAPODS: 1.4.0
