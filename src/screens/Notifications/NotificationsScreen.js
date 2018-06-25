@@ -263,7 +263,7 @@ class NotificationsScreen extends PureComponent {
           </View>
           <View style={styles.detailsContainer}>
             <View style={{ paddingRight: 10 }}>
-              <FastImage style={styles.userAvatar} source={{ uri: ava }} />
+              <FastImage style={styles.userAvatar} source={{ uri: ava }} cache="web" />
             </View>
             <View style={styles.activityContainer}>
               <View style={styles.activityTextContainer}>

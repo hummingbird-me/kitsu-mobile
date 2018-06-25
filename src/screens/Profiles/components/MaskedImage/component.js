@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { styles } from './styles';
 
-const StyledImage = ({ ...props }) => <FastImage style={styles.imageView} {...props} />;
+const StyledImage = ({ ...props }) => <FastImage style={styles.imageView} {...props} cache="web" />;
 
 export const MaskedImage = ({
   maskedTop = false,

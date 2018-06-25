@@ -8,7 +8,7 @@ export const ImageStatus = ({ title, text, image, style }) => (
   <View style={[styles.statusWrapper, style]}>
     <Text style={styles.statusTitle}>{title}</Text>
     <Text style={styles.statusText}>{text}</Text>
-    <FastImage style={styles.statusImage} source={image} />
+    <FastImage style={styles.statusImage} source={image} cache="web" />
   </View>
 );
 

@@ -13,6 +13,7 @@ const LandscapeMediaCard = ({ onPress, title, image, ...props }) => (
       {...props}
       style={styles.landscapeImage}
       resizeMode={'cover'}
+      cache="web"
     />
     {title && <Text style={styles.landscapeImageTitle}>{title}</Text>}
   </TouchableOpacity>

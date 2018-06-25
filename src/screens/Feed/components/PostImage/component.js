@@ -160,6 +160,7 @@ export class PostImage extends PureComponent {
             overflow: 'hidden',
             backgroundColor: loading ? 'transparent' : '#fcfcfc',
           }}
+          cache="web"
         />
       </View>
     );

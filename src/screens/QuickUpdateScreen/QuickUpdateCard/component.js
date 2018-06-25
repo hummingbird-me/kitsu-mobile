@@ -156,7 +156,7 @@ export default class QuickUpdateCard extends PureComponent {
             />
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity onPress={() => this.onMediaTapped(media)}>
-                <FastImage source={{ uri: squareImage }} style={styles.avatarImage} />
+                <FastImage source={{ uri: squareImage }} style={styles.avatarImage} cache="web" />
               </TouchableOpacity>
               <View style={styles.descriptionRow}>
                 <TouchableOpacity onPress={() => this.onMediaTapped(media)}>

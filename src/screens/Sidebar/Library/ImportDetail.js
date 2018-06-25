@@ -69,7 +69,7 @@ class ImportDetail extends React.Component {
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <FastImage source={item.image} style={styles.cardLogo} />
+                <FastImage source={item.image} style={styles.cardLogo} cache="web" />
               </View>
               <Text style={styles.cardText}>
                 Enter your username below to import your existing anime and manga progress.

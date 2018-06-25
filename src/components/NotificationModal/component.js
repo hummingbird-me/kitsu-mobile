@@ -25,7 +25,7 @@ export const NotificationModal = ({ style, visible, onRequestClose, data, ...oth
         <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
         <TouchableOpacity activeOpacity={0.9} onPress={() => {}} style={styles.modalContent}>
           <View style={{ paddingRight: 10 }}>
-            <FastImage style={styles.userAvatar} source={{ uri: actorAvatar }} />
+            <FastImage style={styles.userAvatar} source={{ uri: actorAvatar }} cache="web" />
           </View>
           <Text style={[styles.activityText, styles.activityTextHighlight]}>
             {actorName || 'Unknown'}

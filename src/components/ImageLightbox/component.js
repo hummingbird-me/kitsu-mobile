@@ -124,6 +124,7 @@ export class ImageLightbox extends PureComponent {
   renderImage = props => (
     <FastImage
       {...props}
+      cache="web"
     />
   );
 

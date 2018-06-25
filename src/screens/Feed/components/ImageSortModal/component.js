@@ -98,6 +98,7 @@ export class ImageSortModal extends PureComponent {
             source={{ uri }}
             style={{ width, height }}
             resizeMode={'contain'}
+            cache="web"
           />
         </View>
         <View style={styles.buttonContainer}>
