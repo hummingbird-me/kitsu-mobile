@@ -1,5 +1,5 @@
 
-import { trimStart, trimEnd, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 
 const getHttpUrls = (url) => {
   // A quick hack to return both the http and https url
@@ -42,9 +42,9 @@ export const preprocessFeedPost = (post) => {
     }
   }
 
-  // finally trim the content
+  // Finally trim the content
   // eslint-disable-next-line no-param-reassign
-  post.content = trimEnd(trimStart(post.content));
+  post.content = (post.content || '').trim();
 
   return post;
 };

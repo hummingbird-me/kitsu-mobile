@@ -7,7 +7,7 @@ import styles from './styles';
 const Step = ({ title, desc, image }) => (
   <View style={styles.stepContainer}>
     <View style={styles.slide}>
-      <FastImage style={styles.stepImage} source={image} />
+      <FastImage style={styles.stepImage} source={image} cache="web" />
       <Text style={styles.text}>{title.toUpperCase()}</Text>
       <Text style={styles.desc}>{desc}</Text>
     </View>

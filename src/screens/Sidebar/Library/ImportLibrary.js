@@ -15,7 +15,7 @@ import { styles } from './styles';
 const MediaItem = ({ onPress, title, details, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
     <View style={{ justifyContent: 'center' }}>
-      <FastImage source={image} style={styles.itemLogo} />
+      <FastImage source={image} style={styles.itemLogo} cache="web" />
       <Text style={styles.hintText}>
         {details}
       </Text>
@@ -76,7 +76,7 @@ const ImportItem = ({ kind, status, date, total }) => {
         </Text>
       </View>
       <View>
-        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} />
+        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} cache="web" />
       </View>
     </View>
   );

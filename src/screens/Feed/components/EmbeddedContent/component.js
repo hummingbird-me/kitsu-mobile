@@ -258,6 +258,7 @@ class EmbeddedContent extends PureComponent {
             <FastImage
               source={image}
               style={styles.userPoster}
+              cache="web"
             />
           }
           <Layout.RowMain>

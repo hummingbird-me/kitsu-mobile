@@ -9,7 +9,7 @@ import { styles as commonStyles } from '../common/styles';
 
 const MediaItem = ({ style, onPress, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={[styles.buttonMedia, style]}>
-    <FastImage source={image} style={styles.buttonLogo} />
+    <FastImage source={image} style={styles.buttonLogo} cache="web" />
   </TouchableOpacity>
 );
 

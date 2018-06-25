@@ -110,6 +110,7 @@ export class EditModal extends Component {
           <FastImage
             style={styles.profileCover}
             source={cover}
+            cache="web"
           />
         </TouchableOpacity>
       </View>
@@ -128,6 +129,7 @@ export class EditModal extends Component {
           <FastImage
             style={styles.profileImage}
             source={avatar}
+            cache="web"
           />
         </TouchableOpacity>
       </View>

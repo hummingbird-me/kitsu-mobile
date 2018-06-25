@@ -253,8 +253,8 @@ class PostCreator extends React.PureComponent {
 
     if (busy) return;
 
-    // Don't allow posting if content and gif is empty
-    if (isEmpty(content)) {
+    const trimmed = content.trim();
+    if (!gif && uploads.length === 0 && isEmpty(trimmed)) {
       this.setState({ error: 'Please add a message to your post' });
       return;
     }
@@ -297,7 +297,7 @@ class PostCreator extends React.PureComponent {
     }
 
     // Add the gif to the content
-    let additionalContent = content;
+    let additionalContent = trimmed;
     if (gif && gif.id) {
       const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
       additionalContent += `\n${gifURL}`;
@@ -388,6 +388,9 @@ class PostCreator extends React.PureComponent {
           include: 'media,spoiledUnit,user,uploads',
         });
       }
+
+      // Clean up any tmp image files
+      ImagePicker.clean();
 
       if (onPostCreated) {
         onPostCreated(newPost);

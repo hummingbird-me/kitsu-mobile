@@ -6,7 +6,7 @@ import styles from './styles';
 
 const IntroHeader = ({ style }) => (
   <View style={[styles.logoWrapper, style]}>
-    <FastImage style={styles.logo} source={slidelogo} />
+    <FastImage style={styles.logo} source={slidelogo} cache="web" />
   </View>
 );
 

@@ -31,6 +31,7 @@ const RowItem = ({ type, item, onPress }) => {
             <FastImage
               source={(item.avatar && { uri: item.avatar.small }) || defaultAvatar}
               style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
+              cache="web"
             />
           </View>
           <Text

@@ -31,13 +31,14 @@ export const SidebarListItem = ({ image, imageURL, title, onPress, style }) => (
   <TouchableOpacity activeOpacity={1} onPress={onPress} style={[styles.item, style]}>
     <View style={styles.leftContentWrapper}>
       {(image &&
-        <FastImage source={image} style={styles.image} resizeMode="contain" />
+        <FastImage source={image} style={styles.image} resizeMode="contain" cache="web" />
       ) ||
         (imageURL &&
           <FastImage
             source={{ uri: imageURL }}
             style={[styles.image, { borderRadius: 4 }]}
             resizeMode="stretch"
+            cache="web"
           />)}
       <Text style={styles.text}>
         {title}

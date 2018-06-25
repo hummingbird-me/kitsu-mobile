@@ -28,6 +28,7 @@ export const PostActionButton = ({ variant, isActive, onPress }) => {
         source={icons[variant]}
         resizeMode="cover"
         style={{ width: 20, height: 18 }}
+        cache="web"
       />
       <StyledText
         size="xsmall"

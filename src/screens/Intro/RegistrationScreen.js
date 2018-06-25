@@ -102,6 +102,7 @@ class RegistrationScreen extends React.Component {
     <FastImage
       source={(item.attributes && { uri: item.attributes.posterImage.large }) || placeholderImage}
       style={styles.squareImage}
+      cache="web"
     />
   );
 

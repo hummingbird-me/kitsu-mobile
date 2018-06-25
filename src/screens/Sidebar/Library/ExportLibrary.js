@@ -40,6 +40,7 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
       <FastImage
         style={{ width: 30, height: 30 }}
         source={(posterImage && { uri: posterImage.small || posterImage.large }) || defaultAvatar}
+        cache="web"
       />
       <View style={{ flex: 1 }}>
         <View style={{ marginHorizontal: 12, justifyContent: 'center' }}>
@@ -56,7 +57,7 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
         </View>
       </View>
       <View>
-        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} />
+        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} cache="web" />
       </View>
     </View>
   );
@@ -241,6 +242,7 @@ class ExportLibrary extends React.Component {
               <FastImage
                 source={myanimelist}
                 style={styles.cardLogo}
+                cache="web"
               />
             </View>
             <Text
@@ -307,11 +309,11 @@ class ExportLibrary extends React.Component {
       <View style={styles.containerStyle}>
         <View style={[styles.card, { flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'space-between' }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-            <FastImage source={pending} style={{ width: 30, height: 30 }} />
+            <FastImage source={pending} style={{ width: 30, height: 30 }} cache="web" />
             <Text style={{ marginLeft: 8, fontFamily: 'OpenSans', fontWeight: '500' }}>{linkedAccount.externalUserId}</Text>
           </View>
           <TouchableOpacity onPress={this.onDisconnectButtonPressed} style={{}}>
-            <FastImage source={failed} style={{ width: 16, height: 16 }} />
+            <FastImage source={failed} style={{ width: 16, height: 16 }} cache="web" />
           </TouchableOpacity>
         </View>
         <SidebarTitle title={'Entries'} />

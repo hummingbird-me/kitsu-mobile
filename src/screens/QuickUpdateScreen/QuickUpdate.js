@@ -627,7 +627,7 @@ class QuickUpdate extends Component {
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
+        <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} cache="web" />
         <Animated.Image
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
