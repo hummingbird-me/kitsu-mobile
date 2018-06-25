@@ -5271,9 +5271,11 @@ react-native-elements@^0.19.0:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-fast-image@DylanVann/react-native-fast-image#6e0e6f8:
+react-native-fast-image@^4.0.14:
   version "4.0.14"
-  resolved "https://codeload.github.com/DylanVann/react-native-fast-image/tar.gz/6e0e6f8f2b9c97dc4e31f5b3562944c1c0560870"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-4.0.14.tgz#1e84c9a01b1471793e294ef4e7c3cc20e09562a0"
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-fbsdk@^0.7.0:
   version "0.7.0"

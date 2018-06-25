@@ -1,32 +1,20 @@
 PODS:
-  - FLAnimatedImage (1.0.12)
   - QBImagePickerController (3.4.0)
   - RSKImageCropper (2.0.0)
-  - SDWebImage/Core (4.4.1)
-  - SDWebImage/GIF (4.4.1):
-    - FLAnimatedImage (~> 1.0)
-    - SDWebImage/Core
 
 DEPENDENCIES:
-  - FLAnimatedImage
   - QBImagePickerController
   - RSKImageCropper
-  - SDWebImage/Core
-  - SDWebImage/GIF
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - FLAnimatedImage
     - QBImagePickerController
     - RSKImageCropper
-    - SDWebImage
 
 SPEC CHECKSUMS:
-  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
-  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
 
-PODFILE CHECKSUM: b28d28b212fe7445bd8cb84d1064d358a9d27ae1
+PODFILE CHECKSUM: 5effe5ff74f049d1a27b91df714ddd9291059a54
 
 COCOAPODS: 1.5.3
