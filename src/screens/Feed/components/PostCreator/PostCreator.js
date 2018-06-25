@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity, Keyboard, BackHandler, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil, trimStart, trimEnd } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar, ACCEPTED_UPLOAD_TYPES } from 'kitsu/constants/app';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
@@ -254,7 +254,8 @@ class PostCreator extends React.PureComponent {
     if (busy) return;
 
     // Force user to add content unless they have uploads or gif set
-    if (!gif && uploads.length === 0 && isEmpty(content)) {
+    const trimmed = trimStart(trimEnd(content));
+    if (!gif && uploads.length === 0 && isEmpty(trimmed)) {
       this.setState({ error: 'Please add a message to your post' });
       return;
     }
@@ -297,7 +298,7 @@ class PostCreator extends React.PureComponent {
     }
 
     // Add the gif to the content
-    let additionalContent = content;
+    let additionalContent = trimmed;
     if (gif && gif.id) {
       const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
       additionalContent += `\n${gifURL}`;
