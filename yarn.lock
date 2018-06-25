@@ -1437,9 +1437,9 @@ cli-width@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-2.2.0.tgz#ff19ede8a9a5e579324147b0c11f0fbcbabed639"
 
-"client-oauth2@https://github.com/hummingbird-me/js-client-oauth2.git":
+client-oauth2@hummingbird-me/js-client-oauth2:
   version "4.1.1"
-  resolved "https://github.com/hummingbird-me/js-client-oauth2.git#379d09d5e2f92441a5785115124b6694fbddd226"
+  resolved "https://codeload.github.com/hummingbird-me/js-client-oauth2/tar.gz/379d09d5e2f92441a5785115124b6694fbddd226"
   dependencies:
     base-64 "^0.1.0"
     popsicle "^9.1.0"
@@ -5199,9 +5199,9 @@ react-native-actionsheet@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.3.0.tgz#a9552a356dc5939829062353804d5e5609e8f969"
 
-"react-native-android-fullscreen-webview-video@https://github.com/Mikunj/react-native-android-fullscreen-webview-video.git":
+react-native-android-fullscreen-webview-video@hummingbird-me/react-native-android-fullscreen-webview-video:
   version "1.0.4"
-  resolved "https://github.com/Mikunj/react-native-android-fullscreen-webview-video.git#4acddaf1e86ee9dbdbd376b06b29e3a36c917b33"
+  resolved "https://codeload.github.com/hummingbird-me/react-native-android-fullscreen-webview-video/tar.gz/f1dabf3a40e02b445f8b7a1647d61e0f942ab4bd"
 
 react-native-animatable@^1.2.4:
   version "1.2.4"
@@ -5271,7 +5271,7 @@ react-native-elements@^0.19.0:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-fast-image@DylanVann/react-native-fast-image:
+react-native-fast-image@DylanVann/react-native-fast-image#05830ad:
   version "4.0.14"
   resolved "https://codeload.github.com/DylanVann/react-native-fast-image/tar.gz/05830ad8a70f243dc4a6e089714866070f48f58a"
 
