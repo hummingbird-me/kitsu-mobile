@@ -28,6 +28,15 @@ const TOP_LEVEL_ROUTES = [
   'DrawerOpen',
 ];
 
+const getRouteName = (state) => {
+  if (!state) return null;
+  const route = state.routes[state.index];
+  if (route.routes) {
+    return getRouteName(route);
+  }
+  return route.routeName;
+};
+
 const Tabs = (initialRouteName = 'Feed') => (
   TabNavigator(
     {
@@ -77,6 +86,18 @@ const Tabs = (initialRouteName = 'Feed') => (
         },
         backgroundColor: listBackPurple,
       },
+      navigationOptions: ({ navigation }) => {
+        const route = getRouteName(navigation.state);
+
+        // By default have the drawer be openable
+        let drawerLockMode = 'unlocked';
+        if (route && !TOP_LEVEL_ROUTES.includes(route)) {
+          drawerLockMode = 'locked-closed';
+        }
+        return {
+          drawerLockMode,
+        };
+      },
     },
   )
 );
@@ -99,7 +120,7 @@ There is no other easy way to navigate to a specific Tab using `NavigationAction
 We have to have a wrapper for the `Drawer` otherwise `TabsNav` keeps re-rendering it,
 causing it to mess up some nav actions, specifically navigation from the drawer.
 */
-class DrawerWrapper extends Component {
+class DrawerWrapper extends PureComponent {
   static propTypes = {
     initialPage: PropTypes.string,
   }
@@ -108,15 +129,18 @@ class DrawerWrapper extends Component {
     initialPage: null,
   }
 
-  shouldComponentUpdate(nextProps) {
-    return isNull(this.props.initialPage) && !isNull(nextProps.initialPage);
-  }
+  Wrapper = null;
 
   render() {
     const { initialPage, ...otherProps } = this.props;
-    const Wrapper = Drawer(initialPage);
+
+    // Create the drawer if we haven't
+    if (!this.Wrapper) {
+      this.Wrapper = Drawer(initialPage);
+    }
+
     return (
-      <Wrapper
+      <this.Wrapper
         {...otherProps}
       />
     );
@@ -137,28 +161,10 @@ class TabsNav extends PureComponent {
     initialPage: null,
   };
 
-  state = {
-    drawerLockMode: 'unlocked',
-  };
-
   componentWillMount() {
     this.fetchCurrentUser();
     this.props.fetchAlgoliaKeys();
   }
-
-  onNavigationStateChange = (prevState, currentState) => {
-    const current = this._getRouteName(currentState);
-    const previous = this._getRouteName(prevState);
-    // route changed?
-    if (previous !== current) {
-      // top-level route?
-      if (TOP_LEVEL_ROUTES.includes(current)) {
-        this.setState({ drawerLockMode: 'unlocked' });
-      } else {
-        this.setState({ drawerLockMode: 'locked-closed' });
-      }
-    }
-  };
 
   fetchCurrentUser = async () => {
     try {
@@ -169,24 +175,13 @@ class TabsNav extends PureComponent {
     }
   };
 
-  _getRouteName(state) {
-    if (!state) return null;
-    const route = state.routes[state.index];
-    if (route.routes) {
-      return this._getRouteName(route);
-    }
-    return route.routeName;
-  }
-
   render() {
     const { navigation: rootNavigation, badge, initialPage } = this.props;
-    const { drawerLockMode } = this.state;
-    const props = { rootNavigation, badge, drawerLockMode };
+    const props = { rootNavigation, badge };
     return (
       <DrawerWrapper
         initialPage={initialPage}
         screenProps={props}
-        onNavigationStateChange={this.onNavigationStateChange}
       />
     );
   }
