@@ -234,9 +234,9 @@ class PostCreator extends React.PureComponent {
         const duplicateUpload = currentUploads.includes(u[idKey]);
 
         return validType && !duplicateUpload;
-      }).filter((f) => {
+      }).filter((i) => {
         // Filter out images that don't fit into our size limit
-        const imageSize = f.size || null;
+        const imageSize = i.size;
         const imageWithinSizeLimit = !!(imageSize && imageSize + currentSize <= MAX_UPLOAD_SIZE_LIMIT);
 
         if (imageWithinSizeLimit) currentSize += imageSize;
