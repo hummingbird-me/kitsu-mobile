@@ -128,6 +128,11 @@ export const createPostStyles = StyleSheet.create({
     padding: 0,
     paddingBottom: 2,
   },
+  imageSizeContainer: {
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export const mediaItemStyles = StyleSheet.create({

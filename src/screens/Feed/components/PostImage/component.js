@@ -63,10 +63,7 @@ export class PostImage extends PureComponent {
       const imageSize = this.calculateSize(originalWidth, originalHeight, loading);
       this.setState({ ...imageSize });
 
-      // Android sizes are fetched using FastImage
-      // on iOS, FastImage doesn't return image sizes, so we have to use the old way
-      if (Platform.OS === 'android') return;
-
+      // Remove this once FastImage fixes local image support and passes size in its `onLoad` event
       Image.getSize(uri, (width, height) => {
         if (!this.mounted) return;
 
@@ -163,19 +160,6 @@ export class PostImage extends PureComponent {
             backgroundColor: loading ? 'transparent' : '#fcfcfc',
           }}
           cache="web"
-          onLoad={(e) => {
-            // onLoad doesn't pass size params on iOS :/
-            if (Platform.OS === 'ios') return;
-
-            const size = e.nativeEvent;
-            ImageSizeCache.set(uri, size.width, size.height);
-
-            const imageSize = this.calculateSize(size.width, size.height, false);
-            this.setState({
-              loading: false,
-              ...imageSize,
-            });
-          }}
         />
       </View>
     );

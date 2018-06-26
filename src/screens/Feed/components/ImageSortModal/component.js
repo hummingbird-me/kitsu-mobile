@@ -19,6 +19,8 @@ export class ImageSortModal extends PureComponent {
     images: PropTypes.array,
     disableAddButton: PropTypes.bool,
     disableRemoveButton: PropTypes.bool,
+    maxUploadSize: PropTypes.number,
+    currentImagesSize: PropTypes.number,
   }
 
   static defaultProps = {
@@ -30,6 +32,8 @@ export class ImageSortModal extends PureComponent {
     images: [],
     disableAddButton: false,
     disableRemoveButton: false,
+    maxUploadSize: null,
+    currentImagesSize: 0,
   }
 
   constructor(props) {
@@ -128,7 +132,7 @@ export class ImageSortModal extends PureComponent {
   }
 
   render() {
-    const { visible, images, disableAddButton } = this.props;
+    const { visible, images, disableAddButton, maxUploadSize, currentImagesSize } = this.props;
 
     return (
       <Modal
@@ -144,6 +148,13 @@ export class ImageSortModal extends PureComponent {
           rightButtonTitle={!disableAddButton && 'Add'}
           rightButtonAction={this.handleAddPress}
         />
+        {!isNil(maxUploadSize) && currentImagesSize > 0 &&
+          <View style={styles.imageSize}>
+            <Text style={styles.imageSizeText} numberOfLines={1}>
+              Current Size: {prettyBytes(currentImagesSize)} (Max: {prettyBytes(maxUploadSize)})
+            </Text>
+          </View>
+        }
         <ScrollView style={styles.container}>
           <FlatList
             listKey="images"

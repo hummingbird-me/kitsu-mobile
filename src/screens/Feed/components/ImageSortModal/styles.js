@@ -44,6 +44,17 @@ export const styles = StyleSheet.create({
   sizeIndicator: {
     padding: 8,
     fontSize: 14,
-    color: 'white',
+    color: colors.white,
+  },
+  imageSize: {
+    padding: 8,
+    backgroundColor: colors.offWhite,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.lightGrey,
+  },
+  imageSizeText: {
+    fontSize: 14,
   },
 });
