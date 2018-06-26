@@ -28,6 +28,9 @@ import { createPostStyles as styles } from './styles';
 // Maximum number of images that are allowed to be uploaded
 const MAX_UPLOAD_COUNT = 20;
 
+// Maximum upload limit (20mb)
+const MAX_UPLOAD_SIZE_LIMIT = 20000000;
+
 class PostCreator extends React.PureComponent {
   static propTypes = {
     // Whether to apply `KeyboardAvoidingView` to the component
@@ -144,6 +147,12 @@ class PostCreator extends React.PureComponent {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
 
+  getUploadsSize() {
+    return (this.state.uploads || []).reduce((size, current) => {
+      return size + (current.size || 0);
+    }, 0);
+  }
+
   pickerShown = false;
 
   handleBackPress = () => {
@@ -191,8 +200,8 @@ class PostCreator extends React.PureComponent {
     // Don't show upload if user is editing post
     if (!isEmpty(this.props.post)) return;
 
-    // Don't allow more uploads than neccessary
-    if (this.state.uploads.length >= MAX_UPLOAD_COUNT) return;
+    // Don't allow uploading if we can't
+    if (!this.canUploadImages()) return;
 
     try {
       this.pickerShown = true;
@@ -212,6 +221,7 @@ class PostCreator extends React.PureComponent {
       }));
 
       // Properties needed for filters below
+      let currentSize = this.getUploadsSize();
       const idKey = Platform.select({ ios: 'sourceURL', android: 'uri' });
       const currentUploads = this.state.uploads.map(u => u[idKey]);
 
@@ -224,6 +234,13 @@ class PostCreator extends React.PureComponent {
         const duplicateUpload = currentUploads.includes(u[idKey]);
 
         return validType && !duplicateUpload;
+      }).filter((i) => {
+        // Filter out images that don't fit into our size limit
+        const imageSize = i.size;
+        const imageWithinSizeLimit = !!(imageSize && imageSize + currentSize <= MAX_UPLOAD_SIZE_LIMIT);
+
+        if (imageWithinSizeLimit) currentSize += imageSize;
+        return imageWithinSizeLimit;
       });
 
       // Only update if we have uploads to add
@@ -429,7 +446,7 @@ class PostCreator extends React.PureComponent {
     const canSetMedia = !(media || disableMedia);
 
     // Can only set uploads if we're not editing and user hasn't hit max count or gif isn't set
-    const canSetUploads = (!gif && !isEditing && uploads.length < MAX_UPLOAD_COUNT);
+    const canSetUploads = (!gif && !isEditing && this.canUploadImages());
 
     // Can only set gif if user hasn't uploaded anything
     const canSetGIF = !gif && isEmpty(uploads);
@@ -439,6 +456,12 @@ class PostCreator extends React.PureComponent {
       canSetUploads,
       canSetGIF,
     };
+  }
+
+  canUploadImages() {
+    const { uploads } = this.state;
+    const currentSize = this.getUploadsSize();
+    return (uploads.length < MAX_UPLOAD_COUNT) && (currentSize < MAX_UPLOAD_SIZE_LIMIT);
   }
 
   renderUploadProgress() {
@@ -545,6 +568,8 @@ class PostCreator extends React.PureComponent {
 
     if (isEmpty(uploads)) return null;
 
+    const size = this.getUploadsSize();
+
     return (
       <View style={styles.uploadContainer}>
         <ImageGrid
@@ -553,6 +578,13 @@ class PostCreator extends React.PureComponent {
           onImageTapped={() => this.handleImageSortModal(true)}
           disabled={busy}
         />
+        { size > 0 &&
+          <View style={styles.imageSizeContainer}>
+            <Text numberOfLines={1}>
+              Size: {prettyBytes(size)}
+            </Text>
+          </View>
+        }
       </View>
     );
   }
@@ -566,7 +598,7 @@ class PostCreator extends React.PureComponent {
       {
         image: photo,
         color: colors.red,
-        title: `Attach Photos (max ${MAX_UPLOAD_COUNT})`,
+        title: `Attach Photos (Max ${prettyBytes(MAX_UPLOAD_SIZE_LIMIT)} or ${MAX_UPLOAD_COUNT} Images)`,
         onPress: () => this.handlePressUpload(),
         visible: actions.canSetUploads,
       },
@@ -779,8 +811,10 @@ class PostCreator extends React.PureComponent {
           onAddPress={this.handlePressUpload}
           onChangeImageOrder={this.swapImages}
           onRemoveImage={this.removeImage}
-          disableAddButton={isEditing || (uploads.length >= MAX_UPLOAD_COUNT)}
+          disableAddButton={isEditing || !this.canUploadImages()}
           disableRemoveButton={isEditing}
+          maxUploadSize={MAX_UPLOAD_SIZE_LIMIT}
+          currentImagesSize={this.getUploadsSize()}
         />
         <GiphyModal
           visible={giphyPickerModalIsVisible}
