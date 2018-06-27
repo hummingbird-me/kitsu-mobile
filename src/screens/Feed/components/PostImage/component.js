@@ -154,7 +154,7 @@ export class PostImage extends PureComponent {
 
     // We need to apply 'contain' to any non-kitsu url that has gove over maxAutoHeight
     // We don't need to do it for kitsu urls because imgix smart crops the image
-    const isAKitsuUri = isKitsuUrl(uri);
+    const isExternalUrl = !isKitsuUrl(uri);
 
     return (
       <View>
@@ -167,7 +167,7 @@ export class PostImage extends PureComponent {
           // If height is automatically set and it goes over the max auto height
           // We need to make sure that the image is displayed in full to the user.
           // Only applies to non-kitsu images
-          resizeMode={(!isAKitsuUri && autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
+          resizeMode={(isExternalUrl && autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
           source={{ uri: imgixUri }}
           style={{
             width,
