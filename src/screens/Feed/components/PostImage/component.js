@@ -150,7 +150,7 @@ export class PostImage extends PureComponent {
     const imgixUri = getImgixImage(uri, {
       w: width,
       h: height,
-    });
+    }) || '';
 
     // We need to apply 'contain' to any non-kitsu url that has gove over maxAutoHeight
     // We don't need to do it for kitsu urls because imgix smart crops the image
