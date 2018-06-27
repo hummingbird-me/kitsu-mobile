@@ -211,7 +211,6 @@ class PostCreator extends React.PureComponent {
         maxFiles: 20,
         compressImageMaxWidth: 2000,
         compressImageMaxHeight: 2000,
-        compressImageQuality: 0.8,
       });
 
       this.pickerShown = false;

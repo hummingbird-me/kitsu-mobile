@@ -1,27 +1,7 @@
 import { parseURL } from 'kitsu/common/utils/url';
 import { kitsuConfig } from 'kitsu/config/env';
 import { coverImageDimensions } from 'kitsu/constants/app';
-import { isEmpty, isNull } from 'lodash';
-
-
-/**
- * Check whether a url is a kitsu url.
- * This can be a handy function when you need to check if imgix is going to be applied to a url.
- *
- * @param {string} url The url to check.
- * @returns Whether a url is a kitsu url.
- */
-export function isKitsuUrl(url) {
-  if (isEmpty(url)) return false;
-
-  // Parse it
-  const parsed = parseURL(url);
-  if (!parsed) return false;
-
-  // Check if we have a kitsu image
-  const { hostname } = parsed;
-  return hostname.toLowerCase().includes('kitsu');
-}
+import { isEmpty } from 'lodash';
 
 export const defaultImgixOptions = {
   fit: 'crop',

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { View, Image, Dimensions, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageSizeCache } from 'kitsu/utils/cache';
-import { getImgixImage, isKitsuUrl } from 'kitsu/utils/imgix';
+import { getImgixImage } from 'kitsu/utils/imgix';
+import { isKitsuUrl, isGIFUrl } from 'kitsu/common/utils/url';
 import { styles } from './styles';
 
 // The maximum width to classify as a phone
@@ -156,6 +157,13 @@ export class PostImage extends PureComponent {
     // We don't need to do it for kitsu urls because imgix smart crops the image
     const isExternalUrl = !isKitsuUrl(uri);
 
+    // Imgix doesn't work well with gifs so we we force it to use the original url
+    const isGIF = isGIFUrl(uri);
+    const imageUri = isGIF ? uri : imgixUri;
+
+    // Check if images height is above max autoheight
+    const isImageMaxAutoHeight = autoHeight && height >= maxAutoHeight;
+
     return (
       <View>
         {loading &&
@@ -166,9 +174,9 @@ export class PostImage extends PureComponent {
         <FastImage
           // If height is automatically set and it goes over the max auto height
           // We need to make sure that the image is displayed in full to the user.
-          // Only applies to non-kitsu images
-          resizeMode={(isExternalUrl && autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
-          source={{ uri: imgixUri }}
+          // Only applies to non-kitsu images or kitsu images which are gifs
+          resizeMode={(isGIF || isExternalUrl) && isImageMaxAutoHeight ? 'contain' : 'cover'}
+          source={{ uri: imageUri }}
           style={{
             width,
             height,
