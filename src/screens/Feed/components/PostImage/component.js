@@ -1,9 +1,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Dimensions, ActivityIndicator, Platform } from 'react-native';
+import { View, Image, Dimensions, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { styles } from './styles';
 import { ImageSizeCache } from 'kitsu/utils/cache';
+import { getImgixImage, isKitsuUrl } from 'kitsu/utils/imgix';
+import { styles } from './styles';
+
+// The maximum width to classify as a phone
+const MAX_PHONE_WIDTH = 480;
+
+// Change the auto height value based on device
+const MAX_AUTO_HEIGHT = Dimensions.get('window').width > MAX_PHONE_WIDTH ? 400 : 325;
 
 export class PostImage extends PureComponent {
   static propTypes = {
@@ -19,7 +26,7 @@ export class PostImage extends PureComponent {
     width: null,
     height: null,
     borderRadius: 0,
-    maxAutoHeight: 400,
+    maxAutoHeight: MAX_AUTO_HEIGHT,
   };
 
   state = {
@@ -140,6 +147,15 @@ export class PostImage extends PureComponent {
     const { uri, borderRadius, maxAutoHeight } = this.props;
     const { loading, width, height, autoHeight } = this.state;
 
+    const imgixUri = getImgixImage(uri, {
+      w: width,
+      h: height,
+    });
+
+    // We need to apply 'contain' to any non-kitsu url that has gove over maxAutoHeight
+    // We don't need to do it for kitsu urls because imgix smart crops the image
+    const isAKitsuUri = isKitsuUrl(uri);
+
     return (
       <View>
         {loading &&
@@ -150,8 +166,9 @@ export class PostImage extends PureComponent {
         <FastImage
           // If height is automatically set and it goes over the max auto height
           // We need to make sure that the image is displayed in full to the user.
-          resizeMode={(autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
-          source={{ uri }}
+          // Only applies to non-kitsu images
+          resizeMode={(!isAKitsuUri && autoHeight && height >= maxAutoHeight) ? 'contain' : 'cover'}
+          source={{ uri: imgixUri }}
           style={{
             width,
             height,

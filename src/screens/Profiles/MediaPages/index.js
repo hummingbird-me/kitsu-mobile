@@ -17,7 +17,7 @@ import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { capitalize, upperFirst, isNull, isEmpty } from 'lodash';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';

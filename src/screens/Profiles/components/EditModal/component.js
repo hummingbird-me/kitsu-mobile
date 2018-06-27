@@ -12,8 +12,8 @@ import * as colors from 'kitsu/constants/colors';
 import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
 import ImagePicker from 'react-native-image-crop-picker';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { styles } from './styles';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
 export class EditModal extends Component {
   static defaultProps = {

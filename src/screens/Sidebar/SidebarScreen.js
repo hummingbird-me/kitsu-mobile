@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { library, settings, bugs, suggest, contact } from 'kitsu/assets/img/sidebar_icons';
 import { extraDarkPurple } from 'kitsu/constants/colors';
 import { Button } from 'kitsu/components/Button';
