@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash';
  * @returns Whether a url is a kitsu url.
  */
 export function isKitsuUrl(url) {
-  if (isEmpty(url)) return null;
+  if (isEmpty(url)) return false;
 
   // Parse it
   const parsed = parseURL(url);
