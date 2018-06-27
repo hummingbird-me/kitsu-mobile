@@ -203,12 +203,18 @@ class PostCreator extends React.PureComponent {
     // Don't allow uploading if we can't
     if (!this.canUploadImages()) return;
 
+    // Only allow user to select upto the maximum upload count
+    // Also cap it to the max value of images they can still upload
+    // E.g max uploads = 20
+    // If user has chose 4 images, then when they choose the next, they can only select 16
+    const maxFiles = Math.max(0, MAX_UPLOAD_COUNT - (this.state.uploads || []).length);
+
     try {
       this.pickerShown = true;
       const images = await ImagePicker.openPicker({
         mediaType: 'photo',
         multiple: true,
-        maxFiles: 20,
+        maxFiles,
         compressImageMaxWidth: 2000,
         compressImageMaxHeight: 2000,
       });
