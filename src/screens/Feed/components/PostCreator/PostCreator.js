@@ -208,6 +208,7 @@ class PostCreator extends React.PureComponent {
       const images = await ImagePicker.openPicker({
         mediaType: 'photo',
         multiple: true,
+        maxFiles: 20,
         compressImageMaxWidth: 2000,
         compressImageMaxHeight: 2000,
         compressImageQuality: 0.8,
