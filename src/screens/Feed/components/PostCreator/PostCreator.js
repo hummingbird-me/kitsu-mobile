@@ -145,6 +145,7 @@ class PostCreator extends React.PureComponent {
       this.uploader.abort();
     }
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    ImagePicker.clean();
   }
 
   getUploadsSize() {
