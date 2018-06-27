@@ -27,7 +27,7 @@ import { getMediaFeed } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
 // import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
 const { width } = Dimensions.get('window');
 

@@ -1,5 +1,25 @@
 import { Linking } from 'react-native';
 import { Lightbox } from 'kitsu/utils/lightbox';
+import { isEmpty } from 'lodash';
+
+/**
+ * Check whether a url is a kitsu url.
+ * Kitsu url being that it has the `kitsu` in the host name.
+ *
+ * @param {string} url The url to check.
+ * @returns Whether a url is a kitsu url.
+ */
+export function isKitsuUrl(url) {
+  if (isEmpty(url)) return false;
+
+  // Parse it
+  const parsed = parseURL(url);
+  if (!parsed) return false;
+
+  // Check if we have a kitsu image
+  const { hostname } = parsed;
+  return hostname.toLowerCase().includes('kitsu');
+}
 
 /**
  * Checks whether a url is a data url.
@@ -11,6 +31,23 @@ import { Lightbox } from 'kitsu/utils/lightbox';
 export function isDataUrl(url) {
   const regex = /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z0-9-.!#$%*+.{}|~`]+=[a-z0-9-.!#$%*+.{}|~`]+)*)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)$/i;
   return regex.test((url || '').trim());
+}
+
+
+/**
+ * Checks whether a url is a gif url.
+ *
+ * @param {string} url The url to check.
+ * @returns If the url is a gif url.
+ */
+export function isGIFUrl(url) {
+  const info = parseURL(url.toLowerCase());
+  if (!info) {
+    return false;
+  }
+
+  const regex = /\.(gif)$/;
+  return regex.test((info.pathname || '').trim());
 }
 
 /**

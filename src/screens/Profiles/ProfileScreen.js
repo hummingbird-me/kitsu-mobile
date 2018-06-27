@@ -32,7 +32,7 @@ import {
   fetchUserFeed,
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
 const Loader = <ActivityIndicator size="small" color="grey" />;
 

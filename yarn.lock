@@ -5296,9 +5296,9 @@ react-native-hyperlink@^0.0.14:
     linkify-it "^1.2.0"
     mdurl "^1.0.0"
 
-react-native-image-crop-picker@^0.20.3:
+react-native-image-crop-picker@hummingbird-me/react-native-image-crop-picker:
   version "0.20.3"
-  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.20.3.tgz#565d69c1764e96abef23871fe4d6d58b1ee35e18"
+  resolved "https://codeload.github.com/hummingbird-me/react-native-image-crop-picker/tar.gz/0156828ed65558c59fa9638b74e3082f029a9794"
 
 react-native-image-pan-zoom@^2.1.2:
   version "2.1.3"
