@@ -29,7 +29,7 @@ export class ImageGrid extends PureComponent {
     disabled: false,
   };
 
-  renderImage(image, width, height, onPress, count = null) {
+  renderImage(image, width, height, onPress, count = null, showGIFOverlay = false) {
     if (isEmpty(image)) return null;
 
     const { imageBorderWidth, borderRadius, compact, disabled } = this.props;
@@ -46,6 +46,13 @@ export class ImageGrid extends PureComponent {
           width={width}
           height={height}
           borderRadius={borderRadius}
+
+          // Only show the gif overlay if we're not showing the count
+          showGIFOverlayForKitsu={showGIFOverlay && (isNull(count) || count === 0)}
+
+          // If user has chosen to show the overlay and we are showing the count
+          // We don't want the gif to animate
+          showAnimatedGIF={!showGIFOverlay}
         />
         { !isNull(count) && count > 0 &&
           <View style={[styles.countContainer, { borderRadius }]}>
@@ -95,6 +102,8 @@ export class ImageGrid extends PureComponent {
         imageHeight,
         () => { onImageTapped(index); },
         count,
+        // Only show the GIF overlay on images if we have more than 1 displaying
+        currentImages.length > 1,
       );
     });
 
