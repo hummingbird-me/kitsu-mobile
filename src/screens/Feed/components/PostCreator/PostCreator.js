@@ -374,7 +374,7 @@ class PostCreator extends React.PureComponent {
           await Promise.all(uploads.map((upload, index) => (
             Kitsu.update('uploads', {
               id: upload.id,
-              uploadOrder: index,
+              uploadOrder: index + 1,
             })
           )));
         }
