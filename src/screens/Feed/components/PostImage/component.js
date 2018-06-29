@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Image, Dimensions, ActivityIndicator, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageSizeCache } from 'kitsu/utils/cache';
 import { getImgixImage } from 'kitsu/utils/imgix';
 import { isKitsuUrl, isGIFUrl } from 'kitsu/common/utils/url';
 import { styles } from './styles';
+import { isNil } from 'lodash';
 
 // The maximum width to classify as a phone
 const MAX_PHONE_WIDTH = 480;
@@ -21,6 +22,15 @@ export class PostImage extends PureComponent {
     borderRadius: PropTypes.number,
     // The maximum height an image can be if the width is set and height is not set.
     maxAutoHeight: PropTypes.number,
+
+    // Whether to show a GIF overlay on *Kitsu* GIF images
+    // This will ignore any external gif urls since we don't have a way to show only 1 frame of a gif yet :/
+    showGIFOverlayForKitsu: PropTypes.bool,
+
+    // Whether to show the Animated Kitsu GIF
+    // This will default to true if `showGIFOverlayForKitsu` is `false`
+    // If this is set to false then the GIF will get passed to imgix which will convert it to a 1 frame image
+    showAnimatedGIF: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -28,6 +38,8 @@ export class PostImage extends PureComponent {
     height: null,
     borderRadius: 0,
     maxAutoHeight: MAX_AUTO_HEIGHT,
+    showGIFOverlayForKitsu: false,
+    showAnimatedGIF: null,
   };
 
   state = {
@@ -145,7 +157,7 @@ export class PostImage extends PureComponent {
   }
 
   render() {
-    const { uri, borderRadius, maxAutoHeight } = this.props;
+    const { uri, borderRadius, maxAutoHeight, showGIFOverlayForKitsu } = this.props;
     const { loading, width, height, autoHeight } = this.state;
 
     const imgixUri = getImgixImage(uri, {
@@ -156,10 +168,18 @@ export class PostImage extends PureComponent {
     // We need to apply 'contain' to any non-kitsu url that has gove over maxAutoHeight
     // We don't need to do it for kitsu urls because imgix smart crops the image
     const isExternalUrl = !isKitsuUrl(uri);
-
-    // Imgix doesn't work well with gifs so we we force it to use the original url
     const isGIF = isGIFUrl(uri);
-    const imageUri = isGIF ? uri : imgixUri;
+
+    // We show the overlay if it's a kitsu GIF link and the setting is active
+    // This is possible because imgix just returns a single frame of the GIF.
+    // If we find a way to get the single frame of a GIF from external URLs then we can apply it to those too
+    const showGIFOverlay = showGIFOverlayForKitsu && !isExternalUrl && isGIF;
+
+    // If we have `showGIFOverlayForKitsu` set to false then we just go ahead and show the animated gif
+    // Or if user has set `showAnimatedGIF` use that value
+    const showAnimatedGIF = isNil(this.props.showAnimatedGIF) ? !showGIFOverlayForKitsu : this.props.showAnimatedGIF;
+    const animateGIF = isGIF && showAnimatedGIF;
+    const imageUri = (animateGIF) ? uri : imgixUri;
 
     // Check if images height is above max autoheight
     const isImageMaxAutoHeight = autoHeight && height >= maxAutoHeight;
@@ -171,11 +191,20 @@ export class PostImage extends PureComponent {
             <ActivityIndicator color="white" />
           </View>
         }
+        {!loading && showGIFOverlay &&
+          <View style={[styles.gifOverlay, { borderRadius }]}>
+            <View style={styles.gifOverlayTextContainer}>
+              <Text style={styles.gifOverlayText}>
+                GIF
+              </Text>
+            </View>
+          </View>
+        }
         <FastImage
           // If height is automatically set and it goes over the max auto height
           // We need to make sure that the image is displayed in full to the user.
-          // Only applies to non-kitsu images or kitsu images which are gifs
-          resizeMode={(isGIF || isExternalUrl) && isImageMaxAutoHeight ? 'contain' : 'cover'}
+          // Only applies to non-kitsu images or if we are showing the animated kitsu GIF.
+          resizeMode={(animateGIF || isExternalUrl) && isImageMaxAutoHeight ? 'contain' : 'cover'}
           source={{ uri: imageUri }}
           style={{
             width,

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import io.sentry.RNSentryPackage;
 import com.airship.customwebview.CustomWebViewPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
@@ -52,6 +53,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSentryPackage(MainApplication.this),
             new CustomWebViewPackage(),
             new FastImageViewPackage(),
             new PickerPackage(),

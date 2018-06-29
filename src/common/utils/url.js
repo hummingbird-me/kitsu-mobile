@@ -10,15 +10,13 @@ import { isEmpty } from 'lodash';
  * @returns Whether a url is a kitsu url.
  */
 export function isKitsuUrl(url) {
-  if (isEmpty(url)) return false;
-
   // Parse it
-  const parsed = parseURL(url);
+  const parsed = parseURL((url || ''));
   if (!parsed) return false;
 
   // Check if we have a kitsu image
   const { hostname } = parsed;
-  return hostname.toLowerCase().includes('kitsu');
+  return (hostname || '').toLowerCase().includes('kitsu');
 }
 
 /**
@@ -41,10 +39,8 @@ export function isDataUrl(url) {
  * @returns If the url is a gif url.
  */
 export function isGIFUrl(url) {
-  const info = parseURL(url.toLowerCase());
-  if (!info) {
-    return false;
-  }
+  const info = parseURL((url || '').toLowerCase());
+  if (!info) return false;
 
   const regex = /\.(gif)$/;
   return regex.test((info.pathname || '').trim());
@@ -58,10 +54,8 @@ export function isGIFUrl(url) {
  * @returns If the url is an image url.
  */
 export function isImageUrl(url) {
-  const info = parseURL(url.toLowerCase());
-  if (!info) {
-    return false;
-  }
+  const info = parseURL((url || '').toLowerCase());
+  if (!info) return false;
 
   const regex = /\.(gif|jpg|jpeg|png|bmp)$/;
   return regex.test((info.pathname || '').trim());
@@ -100,7 +94,7 @@ export function parseURL(url) {
     '(\\?[^#]*|)', search params
     '(#.*|)$' hash
   */
-  if (typeof url !== 'string') return null;
+  if (typeof url !== 'string' || isEmpty(url)) return null;
 
   const regex = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/;
   const match = url.match(regex);

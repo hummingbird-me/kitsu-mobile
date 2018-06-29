@@ -1,4 +1,4 @@
-import { parseURL } from 'kitsu/common/utils/url';
+import { parseURL, isKitsuUrl } from 'kitsu/common/utils/url';
 import { kitsuConfig } from 'kitsu/config/env';
 import { coverImageDimensions } from 'kitsu/constants/app';
 import { isEmpty } from 'lodash';
@@ -26,13 +26,14 @@ export function getImgixImage(url, imageOptions = {}) {
 
   if (isEmpty(url)) return null;
 
+  // Don't continue if it's not a kitsu image
+  if (!isKitsuUrl(url)) return url;
+
   // Parse it
   const parsed = parseURL(url);
   if (!parsed) return url;
 
-  // Check if we have a kitsu image
-  const { hostname, pathname } = parsed;
-  if (!hostname.toLowerCase().includes('kitsu')) return url;
+  const { pathname } = parsed;
 
   // Build the search params
   const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
