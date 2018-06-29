@@ -59,10 +59,10 @@ matrix:
       script:
         - cd android && ./gradlew clean
         - if [ "$TRAVIS_BRANCH" = "develop" ]; then
-            fastlane alpha_googleplay;
-            fastlane alpha_crashlytics;
+            travis_wait fastlane alpha_googleplay;
+            travis_wait fastlane alpha_crashlytics;
           fi
-        - if [ "$TRAVIS_BRANCH" = "master" ]; then fastlane release; fi
+        - if [ "$TRAVIS_BRANCH" = "master" ]; then travis_wait fastlane release; fi
 
     - language: objective-c
       os: osx
@@ -83,7 +83,7 @@ matrix:
         - travis_retry yarn
       script:
         - cd ios
-        - pod update
+        - pod update --silent
         # We don't need to check for release branch here because alpha/beta are all handled in TestFlight
-        - if [ "$TRAVIS_BRANCH" = "develop" ]; then fastlane alpha_testflight; fi
-        - if [ "$TRAVIS_BRANCH" = "master" ]; then fastlane release; fi
+        - if [ "$TRAVIS_BRANCH" = "develop" ]; then travis_wait fastlane alpha_testflight; fi
+        - if [ "$TRAVIS_BRANCH" = "master" ]; then travis_wait fastlane release; fi
