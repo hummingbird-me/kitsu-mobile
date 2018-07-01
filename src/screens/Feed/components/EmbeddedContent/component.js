@@ -122,7 +122,9 @@ class EmbeddedContent extends PureComponent {
    * @returns `Tap to load` component if `dataSaver` and `!visible` otherwise returns `ImageGrid`.
    */
   renderImageGrid(images, width) {
-    if (isEmpty(images)) return null;
+    // Make sure that the image url strings are not empty
+    const filtered = (images || []).filter(i => !isEmpty(i));
+    if (isEmpty(filtered)) return null;
 
     const { maxWidth, borderRadius, compact, dataSaver } = this.props;
     const { visible } = this.state;
@@ -133,12 +135,12 @@ class EmbeddedContent extends PureComponent {
 
     return (
       <ImageGrid
-        images={images}
+        images={filtered}
         width={width}
         borderRadius={borderRadius}
         compact={compact}
         onImageTapped={(index) => {
-          Lightbox.show(images, (index || 0));
+          Lightbox.show(filtered, (index || 0));
         }}
       />
     );
@@ -162,9 +164,9 @@ class EmbeddedContent extends PureComponent {
     if (minWidth && width < minWidth) width = minWidth;
     if (width > maxWidth) width = maxWidth;
 
-    const images = [embed.image.url];
-
-    return this.renderImageGrid(images, width);
+    // embed.image could be a string or an embed object
+    const url = typeof embed.image === 'string' ? embed.image : embed.image.url;
+    return this.renderImageGrid([url], width);
   }
 
   renderYoutube(embed) {

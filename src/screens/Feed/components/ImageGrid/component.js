@@ -93,8 +93,13 @@ export class ImageGrid extends PureComponent {
       const imageWidth = isLandscapeImage ? (currentWidth - borderOffset) : ratioWidth;
       const imageHeight = isLandscapeImage ? null : ratioHeight;
 
-      // When in compact the count of currentImages is 1
-      const count = (index === 3 || compact) ? images.length - currentImages.length : null;
+      // We only show count if we have 4 images OR if `compact` is set to `true`
+      // If `compact` is set to `true` and only 1 image is displaying then we don't want to show the count on it.
+      const shouldShowCount = (index === 3 || compact) && images.length > 1;
+
+      // The text shown should count the image hidden by the overlay
+      // E.g if we had 5 images then the count would show up as +2 since the 4th image is hidden by the text.
+      const count = shouldShowCount ? images.length - (currentImages.length - 1) : null;
 
       return this.renderImage(
         image,
