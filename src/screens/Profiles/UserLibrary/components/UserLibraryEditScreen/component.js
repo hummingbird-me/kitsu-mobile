@@ -92,6 +92,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   getMaxProgress() {
     const { libraryEntry, libraryType } = this.props.navigation.state.params;
     const mediaData = libraryEntry[libraryType];
+    if (!mediaData) return null;
 
     if (mediaData.type === 'anime') {
       return mediaData.episodeCount;
