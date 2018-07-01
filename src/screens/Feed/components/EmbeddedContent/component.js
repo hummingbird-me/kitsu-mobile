@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, Platform, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, Platform, TouchableOpacity, Linking } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -47,6 +47,9 @@ class EmbeddedContent extends PureComponent {
         width: this.typeStringNumber,
         height: this.typeStringNumber,
       }),
+      url: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
     }),
     uploads: PropTypes.arrayOf(
       PropTypes.shape({
@@ -78,6 +81,11 @@ class EmbeddedContent extends PureComponent {
   state = {
     visible: false,
   };
+
+  getImageUrl(embed) {
+    if (!embed || !embed.image) return null;
+    return typeof embed.image === 'string' ? embed.image : embed.image.url;
+  }
 
   toggleVisibility = () => {
     this.setState({ visible: !this.state.visible });
@@ -154,7 +162,7 @@ class EmbeddedContent extends PureComponent {
    * @returns The image component
    */
   renderImage(embed) {
-    if (!embed.image) return null;
+    if (!embed || !embed.image) return null;
 
     const { maxWidth, minWidth } = this.props;
 
@@ -165,12 +173,12 @@ class EmbeddedContent extends PureComponent {
     if (width > maxWidth) width = maxWidth;
 
     // embed.image could be a string or an embed object
-    const url = typeof embed.image === 'string' ? embed.image : embed.image.url;
+    const url = this.getImageUrl(embed);
     return this.renderImageGrid([url], width);
   }
 
   renderYoutube(embed) {
-    if (!embed.video) return null;
+    if (!embed || !embed.video) return null;
     const { maxWidth } = this.props;
     const video = embed.video;
 
@@ -206,7 +214,7 @@ class EmbeddedContent extends PureComponent {
       if (embed.url.includes('users')) return this.renderUser(embed);
     }
 
-    return null;
+    return this.renderLink(embed);
   }
 
   renderMedia(embed) {
@@ -215,6 +223,7 @@ class EmbeddedContent extends PureComponent {
 
     const { navigation, maxWidth } = this.props;
     const type = embed.url && embed.url.includes('anime') ? 'anime' : 'manga';
+    const image = this.getImageUrl(embed);
 
     return (
       <TouchableOpacity
@@ -222,10 +231,9 @@ class EmbeddedContent extends PureComponent {
         onPress={() => navigation.navigate('MediaPages', { mediaId: id, mediaType: type })}
       >
         <Layout.RowWrap style={styles.kitsuContent}>
-          {/* Make sure embed image doesn't break if they change it */}
-          {typeof embed.image === 'string' &&
+          {!isNil(image) &&
             <ProgressiveImage
-              source={{ uri: embed.image || '' }}
+              source={{ uri: image }}
               style={styles.mediaPoster}
             />
           }
@@ -247,7 +255,8 @@ class EmbeddedContent extends PureComponent {
 
     const { navigation, maxWidth } = this.props;
 
-    const image = (embed.image.includes('http') && { uri: embed.image }) || defaultAvatar;
+    const imageUri = this.getImageUrl(embed);
+    const image = (imageUri && imageUri.includes('http') && { uri: imageUri }) || defaultAvatar;
 
     return (
       <TouchableOpacity
@@ -255,16 +264,45 @@ class EmbeddedContent extends PureComponent {
         onPress={() => navigation.navigate('ProfilePages', { userId: id })}
       >
         <Layout.RowWrap style={styles.kitsuContent} alignItems="center">
-          {/* Make sure embed image doesn't break if they change it */}
-          {typeof embed.image === 'string' &&
-            <FastImage
-              source={image}
-              style={styles.userPoster}
-              cache="web"
+          <FastImage
+            source={image}
+            style={styles.userPoster}
+            cache="web"
+          />
+          <Layout.RowMain>
+            <StyledText color="dark" size="small" numberOfLines={2} bold>{embed.title || '-'}</StyledText>
+          </Layout.RowMain>
+        </Layout.RowWrap>
+      </TouchableOpacity>
+    );
+  }
+
+  renderLink(embed) {
+    if (!embed || !embed.url) return null;
+
+    const { maxWidth } = this.props;
+
+    const openUrl = (url) => {
+      Linking.openURL(url).catch(err => console.log(`An error occurred while opening url ${url}:`, err));
+    };
+
+    const image = this.getImageUrl(embed);
+
+    return (
+      <TouchableOpacity
+        style={{ width: maxWidth }}
+        onPress={() => openUrl(embed.url)}
+      >
+        <Layout.RowWrap style={styles.kitsuContent}>
+          {!isNil(image) &&
+            <ProgressiveImage
+              source={{ uri: image }}
+              style={styles.linkImage}
             />
           }
           <Layout.RowMain>
-            <StyledText color="dark" size="small" numberOfLines={2} bold>{embed.title || '-'}</StyledText>
+            <StyledText color="dark" size="small" numberOfLines={1} bold>{embed.title || '-'}</StyledText>
+            <StyledText color="dark" size="xsmall" numberOfLines={3}>{embed.description || '-'}</StyledText>
           </Layout.RowMain>
         </Layout.RowWrap>
       </TouchableOpacity>
@@ -293,8 +331,8 @@ class EmbeddedContent extends PureComponent {
       return this.renderKitsu(embed);
     }
 
-    // We don't support this embed ;-;
-    return null;
+    // Render it as an embed link
+    return this.renderLink(embed);
   }
 
   renderUploads() {
