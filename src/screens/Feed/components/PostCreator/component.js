@@ -23,7 +23,6 @@ import { prettyBytes } from 'kitsu/utils/prettyBytes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { extractUrls } from 'kitsu/common/utils/url';
 import { Sentry } from 'react-native-sentry';
-import { GIFImage } from './components/GIFImage';
 import { MediaItem } from './components/MediaItem';
 import { EmbedItem } from './components/EmbedItem';
 import { styles } from './styles';
@@ -128,7 +127,6 @@ class PostCreator extends React.PureComponent {
       spoiledUnit: post.spoiledUnit || props.spoiledUnit || null,
       currentFeed: feedStreams[0],
       error: '',
-      gif: null,
       uploading: false,
       progress: { loaded: 0, total: 1 },
       giphyPickerModalIsVisible: false,
@@ -182,7 +180,11 @@ class PostCreator extends React.PureComponent {
   };
 
   handleGiphy = (gif) => {
-    this.setState({ gif });
+    if (gif && gif.id) {
+      const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+      const content = `${this.state.content}\n${gifURL}`.trim();
+      this.setState({ content, currentEmbedUrl: gifURL });
+    }
     this.handleGiphyPickerModal(false);
   }
 
@@ -285,15 +287,25 @@ class PostCreator extends React.PureComponent {
 
   handlePressPost = async () => {
     const { targetUser, post, onPostCreated, currentUser } = this.props;
-    const { busy, content, currentFeed, gif, media, nsfw, spoiler, spoiledUnit, uploads, currentEmbedUrl } = this.state;
+    const { busy, content, currentFeed, media, nsfw, spoiler, spoiledUnit, uploads, currentEmbedUrl } = this.state;
 
     const currentUserId = currentUser && currentUser.id;
     const isEditing = !isEmpty(post);
 
     if (busy) return;
 
+    // Work out the embed which we want to use
     const trimmed = content.trim();
-    if (!gif && uploads.length === 0 && isEmpty(trimmed)) {
+    const urls = extractUrls(trimmed);
+    const defaultEmbed = (!isEmpty(urls) && urls[0]) || null;
+    let embedUrl = isNull(currentEmbedUrl) ? defaultEmbed : currentEmbedUrl;
+
+    // Don't embed if uploads are set
+    if (uploads.length > 0) {
+      embedUrl = null;
+    }
+
+    if (isEmpty(embedUrl) && uploads.length === 0 && isEmpty(trimmed)) {
       this.setState({ error: 'Please add a message to your post' });
       return;
     }
@@ -343,20 +355,6 @@ class PostCreator extends React.PureComponent {
         });
         return;
       }
-    }
-
-
-    // Work out the embed which we want to use
-    const urls = extractUrls(trimmed);
-    const defaultEmbed = (!isEmpty(urls) && urls[0]) || null;
-    let embedUrl = isNull(currentEmbedUrl) ? defaultEmbed : currentEmbedUrl;
-
-    // Add the gif to the content
-    let additionalContent = trimmed;
-    if (gif && gif.id) {
-      const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
-      embedUrl = gifURL;
-      additionalContent += `\n${gifURL}`;
     }
 
     const mediaData = media ? {
@@ -412,7 +410,7 @@ class PostCreator extends React.PureComponent {
         // Update post
         newPost = await Kitsu.update('posts', {
           id: post.id,
-          content: additionalContent,
+          content: trimmed,
           nsfw,
           spoiler,
           embedUrl,
@@ -429,7 +427,7 @@ class PostCreator extends React.PureComponent {
         newPost.targetGroup = post.targetGroup;
       } else {
         newPost = await Kitsu.create('posts', {
-          content: additionalContent,
+          content: trimmed,
           ...targetInterestData,
           user: {
             type: 'users',
@@ -480,22 +478,18 @@ class PostCreator extends React.PureComponent {
 
   canSetActions() {
     const { post, disableMedia } = this.props;
-    const { gif, uploads, media } = this.state;
+    const { media } = this.state;
     const isEditing = !isEmpty(post);
 
     // Can only set media if it hasn't been set or it is disabled
     const canSetMedia = !(media || disableMedia);
 
-    // Can only set uploads if we're not editing and user hasn't hit max count or gif isn't set
-    const canSetUploads = (!gif && !isEditing && this.canUploadImages());
-
-    // Can only set gif if user hasn't uploaded anything
-    const canSetGIF = !gif && isEmpty(uploads);
+    // Can only set uploads if we're not editing and user hasn't hit max count
+    const canSetUploads = !isEditing && this.canUploadImages();
 
     return {
       canSetMedia,
       canSetUploads,
-      canSetGIF,
     };
   }
 
@@ -590,20 +584,6 @@ class PostCreator extends React.PureComponent {
     );
   }
 
-  renderGIF() {
-    const { gif, busy } = this.state;
-
-    if (!gif) return null;
-
-    return (
-      <GIFImage
-        disabled={busy}
-        gif={gif}
-        onClear={() => this.setState({ gif: null })}
-      />
-    );
-  }
-
   renderUpload() {
     const { uploads, busy } = this.state;
 
@@ -631,12 +611,18 @@ class PostCreator extends React.PureComponent {
   }
 
   renderEmbed() {
-    const { content, currentEmbedUrl, gif, embedModalIsVisible } = this.state;
+    const { content, currentEmbedUrl, embedModalIsVisible, busy } = this.state;
 
     const urls = extractUrls(content);
 
-    // Only show embed if we have urls or gif is not set
-    if (isEmpty(urls) || gif) return null;
+    // If user has chose to not embed anything and they clear the textinput completely
+    // We need to reset the state
+    if (isEmpty(urls) && currentEmbedUrl === '') {
+      this.setState({ currentEmbedUrl: null });
+    }
+
+    // Only show embed if we have urls or an embed already
+    if (isEmpty(urls) && isNull(currentEmbedUrl)) return null;
 
     // Use either the current embed or the first url
     const embed = isNull(currentEmbedUrl) ? urls[0] : currentEmbedUrl;
@@ -655,13 +641,19 @@ class PostCreator extends React.PureComponent {
           <TouchableOpacity
             style={[styles.embedText, validEmbed && { marginRight: 4 }]}
             onPress={() => this.handleEmbedModal(true)}
+            disabled={busy}
           >
             <Text>Change Embed</Text>
           </TouchableOpacity>
           {validEmbed &&
             <TouchableOpacity
               style={[styles.embedText, styles.clearEmbed]}
-              onPress={() => this.setState({ currentEmbedUrl: '' })}
+              onPress={() => {
+                // If user clears embed and we don't have any other url to pick, then we reset the state
+                const url = isEmpty(urls) ? null : '';
+                this.setState({ currentEmbedUrl: url });
+              }}
+              disabled={busy}
             >
               <Text style={{ color: 'white' }}>Clear Embed</Text>
             </TouchableOpacity>
@@ -675,7 +667,7 @@ class PostCreator extends React.PureComponent {
             if (url) state.currentEmbedUrl = url;
             this.setState(state);
           }}
-          urls={urls}
+          urls={[currentEmbedUrl, ...urls]}
           currentEmbed={embed}
         />
       </View>
@@ -700,7 +692,7 @@ class PostCreator extends React.PureComponent {
         color: '#8ABE53',
         title: 'Search & Share GIF',
         onPress: () => this.handleGiphyPickerModal(true),
-        visible: actions.canSetGIF,
+        visible: true,
       },
       {
         image: tag,
@@ -758,7 +750,7 @@ class PostCreator extends React.PureComponent {
       },
       {
         image: giphy,
-        visible: actions.canSetGIF,
+        visible: true,
       },
       {
         image: tag,
@@ -820,7 +812,6 @@ class PostCreator extends React.PureComponent {
       giphyPickerModalIsVisible,
       mediaPickerModalIsVisible,
       imageSortModalIsVisible,
-      gif,
       uploads,
       busy,
       actionBarExpanded,
@@ -879,19 +870,14 @@ class PostCreator extends React.PureComponent {
             {/* NSFW and Spoilers */}
             {this.renderCheckboxes()}
 
-            {/* UI for media, gif and uploads */}
+            {/* UI for media, embeds and uploads */}
             <View>
               { this.renderMedia() }
 
-              { this.renderEmbed() }
+              {/* Don't allow embeds if user is uploading images */}
+              { isEmpty(uploads) && this.renderEmbed() }
 
-              {/* Don't allow gif selection if user is uploading images */}
-              { isEmpty(uploads) && this.renderGIF() }
-
-              {/* Only allow uploading if gif is not selected */}
-              { !gif &&
-                this.renderUpload()
-              }
+              { this.renderUpload() }
             </View>
           </ScrollView>
 

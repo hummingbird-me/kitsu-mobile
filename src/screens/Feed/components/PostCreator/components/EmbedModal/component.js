@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, Modal, FlatList, TouchableOpacity, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { EmbedItem } from 'kitsu/screens/Feed/components/PostCreator/components/EmbedItem';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -74,7 +74,7 @@ export class EmbedModal extends PureComponent {
   render() {
     const { visible, urls } = this.props;
 
-    const filtered = (urls || []).filter(u => !isEmpty(u));
+    const filtered = uniq(urls || []).filter(u => !isEmpty(u));
 
     return (
       <Modal
