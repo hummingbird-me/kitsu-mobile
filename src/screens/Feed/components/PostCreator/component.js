@@ -26,6 +26,7 @@ import { GIFImage } from './components/GIFImage';
 import { MediaItem } from './components/MediaItem';
 import { EmbedItem } from './components/EmbedItem';
 import { styles } from './styles';
+import { EmbedModal } from './components/EmbedModal';
 
 // Maximum number of images that are allowed to be uploaded
 const MAX_UPLOAD_COUNT = 20;
@@ -132,12 +133,13 @@ class PostCreator extends React.PureComponent {
       giphyPickerModalIsVisible: false,
       mediaPickerModalIsVisible: false,
       imageSortModalIsVisible: false,
+      embedModalIsVisible: false,
       actionBarExpanded: false,
       busy: false,
 
       // This is null when a user hasn't set an embed (we can auto generate embed)
       // OR it will be ''(empty) if user chose to set no embed.
-      currentEmbedUrl: null,
+      currentEmbedUrl: (post.embed && post.embed.url) || null,
     };
   }
 
@@ -193,6 +195,10 @@ class PostCreator extends React.PureComponent {
 
   handleImageSortModal = (imageSortModalIsVisible) => {
     this.setState({ imageSortModalIsVisible, actionBarExpanded: false });
+  }
+
+  handleEmbedModal = (embedModalIsVisible) => {
+    this.setState({ embedModalIsVisible });
   }
 
   handleActionBarExpand = (actionBarExpanded) => {
@@ -278,7 +284,7 @@ class PostCreator extends React.PureComponent {
 
   handlePressPost = async () => {
     const { targetUser, post, onPostCreated, currentUser } = this.props;
-    const { busy, content, currentFeed, gif, media, nsfw, spoiler, spoiledUnit, uploads } = this.state;
+    const { busy, content, currentFeed, gif, media, nsfw, spoiler, spoiledUnit, uploads, currentEmbedUrl } = this.state;
 
     const currentUserId = currentUser && currentUser.id;
     const isEditing = !isEmpty(post);
@@ -328,10 +334,17 @@ class PostCreator extends React.PureComponent {
       }
     }
 
+
+    // Work out the embed which we want to use
+    const urls = extractUrls(trimmed);
+    const defaultEmbed = (!isEmpty(urls) && urls[0]) || null;
+    let embedUrl = currentEmbedUrl || defaultEmbed;
+
     // Add the gif to the content
     let additionalContent = trimmed;
     if (gif && gif.id) {
       const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+      embedUrl = gifURL;
       additionalContent += `\n${gifURL}`;
     }
 
@@ -391,6 +404,7 @@ class PostCreator extends React.PureComponent {
           content: additionalContent,
           nsfw,
           spoiler,
+          embedUrl,
         }, {
           // We need to get the new uploads with their new order
           include: 'uploads',
@@ -416,6 +430,7 @@ class PostCreator extends React.PureComponent {
           nsfw,
           spoiler,
           ...spoiledData,
+          embedUrl,
         }, {
           include: 'media,spoiledUnit,user,uploads',
         });
@@ -605,7 +620,8 @@ class PostCreator extends React.PureComponent {
   }
 
   renderEmbed() {
-    const { content, currentEmbedUrl, gif } = this.state;
+    const { content, currentEmbedUrl, gif, embedModalIsVisible } = this.state;
+
     const urls = extractUrls(content);
 
     // Only show embed if we have urls or gif is not set
@@ -615,7 +631,26 @@ class PostCreator extends React.PureComponent {
     const embed = currentEmbedUrl || urls[0];
 
     return (
-      <EmbedItem url={embed} />
+      <View style={styles.embed}>
+        <EmbedItem url={embed} />
+        <TouchableOpacity
+          style={styles.embedText}
+          onPress={() => this.handleEmbedModal(true)}
+        >
+          <Text>Change Embed</Text>
+        </TouchableOpacity>
+        <EmbedModal
+          visible={embedModalIsVisible}
+          onCancelPress={() => this.handleEmbedModal(false)}
+          onEmbedSelect={(url) => {
+            const state = { embedModalIsVisible: false };
+            if (url) state.currentEmbedUrl = url;
+            this.setState(state);
+          }}
+          urls={urls}
+          currentEmbed={embed}
+        />
+      </View>
     );
   }
 

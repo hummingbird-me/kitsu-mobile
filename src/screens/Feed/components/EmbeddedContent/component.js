@@ -141,7 +141,7 @@ class EmbeddedContent extends PureComponent {
     const filtered = (images || []).filter(i => !isEmpty(i));
     if (isEmpty(filtered)) return null;
 
-    const { maxWidth, borderRadius, compact, dataSaver, ignoreDataSaver } = this.props;
+    const { maxWidth, borderRadius, compact, dataSaver, ignoreDataSaver, disabled } = this.props;
     const { visible } = this.state;
 
     if (!ignoreDataSaver && dataSaver && !visible) {
@@ -157,6 +157,7 @@ class EmbeddedContent extends PureComponent {
         onImageTapped={(index) => {
           Lightbox.show(filtered, (index || 0));
         }}
+        disabled={disabled}
       />
     );
   }

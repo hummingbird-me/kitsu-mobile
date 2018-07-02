@@ -133,4 +133,16 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  embed: {
+    marginVertical: 4,
+  },
+  embedText: {
+    marginHorizontal: 8,
+    marginTop: 4,
+    borderWidth: 1,
+    borderColor: colors.lightestGrey,
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
