@@ -338,7 +338,7 @@ class PostCreator extends React.PureComponent {
     // Work out the embed which we want to use
     const urls = extractUrls(trimmed);
     const defaultEmbed = (!isEmpty(urls) && urls[0]) || null;
-    let embedUrl = currentEmbedUrl || defaultEmbed;
+    let embedUrl = isNull(currentEmbedUrl) ? defaultEmbed : currentEmbedUrl;
 
     // Add the gif to the content
     let additionalContent = trimmed;
@@ -628,17 +628,34 @@ class PostCreator extends React.PureComponent {
     if (isEmpty(urls) || gif) return null;
 
     // Use either the current embed or the first url
-    const embed = currentEmbedUrl || urls[0];
+    const embed = isNull(currentEmbedUrl) ? urls[0] : currentEmbedUrl;
+    const validEmbed = !isEmpty(embed);
 
     return (
       <View style={styles.embed}>
-        <EmbedItem url={embed} />
-        <TouchableOpacity
-          style={styles.embedText}
-          onPress={() => this.handleEmbedModal(true)}
-        >
-          <Text>Change Embed</Text>
-        </TouchableOpacity>
+        {validEmbed ?
+          <EmbedItem url={embed} />
+          :
+          <View style={styles.emptyEmbed}>
+            <Text style={styles.emptyEmbedText}>No Embed Selected</Text>
+          </View>
+        }
+        <View style={styles.embedOptions}>
+          <TouchableOpacity
+            style={[styles.embedText, validEmbed && { marginRight: 4 }]}
+            onPress={() => this.handleEmbedModal(true)}
+          >
+            <Text>Change Embed</Text>
+          </TouchableOpacity>
+          {validEmbed &&
+            <TouchableOpacity
+              style={[styles.embedText, styles.clearEmbed]}
+              onPress={() => this.setState({ currentEmbedUrl: '' })}
+            >
+              <Text style={{ color: 'white' }}>Clear Embed</Text>
+            </TouchableOpacity>
+          }
+        </View>
         <EmbedModal
           visible={embedModalIsVisible}
           onCancelPress={() => this.handleEmbedModal(false)}

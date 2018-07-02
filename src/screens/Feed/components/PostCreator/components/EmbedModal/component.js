@@ -30,7 +30,7 @@ export class EmbedModal extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (!this.state.selected) {
+    if (!this.state.selected || this.props.currentEmbed !== props.currentEmbed) {
       this.setState({
         selected: props.currentEmbed,
       });

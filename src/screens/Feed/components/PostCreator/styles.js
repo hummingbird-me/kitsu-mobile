@@ -136,13 +136,38 @@ export const styles = StyleSheet.create({
   embed: {
     marginVertical: 4,
   },
-  embedText: {
+  embedOptions: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-around',
     marginHorizontal: 8,
     marginTop: 4,
+  },
+  embedText: {
     borderWidth: 1,
     borderColor: colors.lightestGrey,
     padding: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+  },
+  changeEmbed: {
+    marginRight: 4,
+  },
+  clearEmbed: {
+    backgroundColor: colors.red,
+  },
+  emptyEmbed: {
+    borderWidth: 1,
+    borderColor: colors.lightestGrey,
+    height: 70,
+    marginHorizontal: 8,
+    marginTop: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.lightestGrey,
+  },
+  emptyEmbedText: {
+    color: colors.darkGrey,
   },
 });
