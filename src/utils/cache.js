@@ -1,5 +1,4 @@
 
-import { isNil } from 'lodash';
 class _FetchCache {
   FETCH_CACHE = {};
   CACHE_TIME_HOUR = 2;
@@ -59,3 +58,30 @@ class _ImageSizeCache {
 }
 
 export const ImageSizeCache = new _ImageSizeCache();
+
+// Cache for storing embed objects belonging to a url
+class _EmbedUrlCache {
+  CACHE = {};
+
+  get(url) {
+    if (!url) return null;
+    return this.CACHE[url.toLowerCase()];
+  }
+
+  set(url, embed) {
+    if (url) {
+      this.CACHE[url.toLowerCase()] = embed;
+    }
+  }
+
+  clear() {
+    this.CACHE = {};
+  }
+
+  contains(url) {
+    if (!url) return false;
+    return Object.keys(this.CACHE).includes(url.toLowerCase());
+  }
+}
+
+export const EmbedUrlCache = new _EmbedUrlCache();

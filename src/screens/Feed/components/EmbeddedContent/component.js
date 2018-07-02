@@ -63,9 +63,13 @@ class EmbeddedContent extends PureComponent {
     maxWidth: PropTypes.number.isRequired,
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
-    navigation: PropTypes.object.isRequired,
+    navigation: PropTypes.object,
     compact: PropTypes.bool,
     dataSaver: PropTypes.bool,
+
+    // Manual override for data saver
+    ignoreDataSaver: PropTypes.bool,
+    disabled: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -76,6 +80,9 @@ class EmbeddedContent extends PureComponent {
     borderRadius: 0,
     compact: false,
     dataSaver: false,
+    navigation: null,
+    ignoreDataSaver: false,
+    disabled: false,
   }
 
   state = {
@@ -134,10 +141,10 @@ class EmbeddedContent extends PureComponent {
     const filtered = (images || []).filter(i => !isEmpty(i));
     if (isEmpty(filtered)) return null;
 
-    const { maxWidth, borderRadius, compact, dataSaver } = this.props;
+    const { maxWidth, borderRadius, compact, dataSaver, ignoreDataSaver } = this.props;
     const { visible } = this.state;
 
-    if (dataSaver && !visible) {
+    if (!ignoreDataSaver && dataSaver && !visible) {
       return this.renderTapToLoad(maxWidth);
     }
 
@@ -221,14 +228,19 @@ class EmbeddedContent extends PureComponent {
     const id = embed.kitsu && embed.kitsu.id;
     if (!id) return null;
 
-    const { navigation, maxWidth } = this.props;
+    const { navigation, maxWidth, disabled } = this.props;
     const type = embed.url && embed.url.includes('anime') ? 'anime' : 'manga';
     const image = this.getImageUrl(embed);
 
     return (
       <TouchableOpacity
         style={{ width: maxWidth }}
-        onPress={() => navigation.navigate('MediaPages', { mediaId: id, mediaType: type })}
+        onPress={() => {
+          if (navigation) {
+            navigation.navigate('MediaPages', { mediaId: id, mediaType: type });
+          }
+        }}
+        disabled={disabled}
       >
         <Layout.RowWrap style={styles.kitsuContent}>
           {!isNil(image) &&
@@ -253,7 +265,7 @@ class EmbeddedContent extends PureComponent {
     const id = embed.kitsu && embed.kitsu.id;
     if (!id) return null;
 
-    const { navigation, maxWidth } = this.props;
+    const { navigation, maxWidth, disabled } = this.props;
 
     const imageUri = this.getImageUrl(embed);
     const image = (imageUri && imageUri.includes('http') && { uri: imageUri }) || defaultAvatar;
@@ -261,7 +273,12 @@ class EmbeddedContent extends PureComponent {
     return (
       <TouchableOpacity
         style={{ width: maxWidth }}
-        onPress={() => navigation.navigate('ProfilePages', { userId: id })}
+        onPress={() => {
+          if (navigation) {
+            navigation.navigate('ProfilePages', { userId: id });
+          }
+        }}
+        disabled={disabled}
       >
         <Layout.RowWrap style={styles.kitsuContent} alignItems="center">
           <FastImage
@@ -280,7 +297,7 @@ class EmbeddedContent extends PureComponent {
   renderLink(embed) {
     if (!embed || !embed.url) return null;
 
-    const { maxWidth } = this.props;
+    const { maxWidth, disabled } = this.props;
 
     const openUrl = (url) => {
       Linking.openURL(url).catch(err => console.log(`An error occurred while opening url ${url}:`, err));
@@ -292,6 +309,7 @@ class EmbeddedContent extends PureComponent {
       <TouchableOpacity
         style={{ width: maxWidth }}
         onPress={() => openUrl(embed.url)}
+        disabled={disabled}
       >
         <Layout.RowWrap style={styles.kitsuContent}>
           {!isNil(image) &&

@@ -24,6 +24,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { extractUrls } from 'kitsu/common/utils/url';
 import { GIFImage } from './components/GIFImage';
 import { MediaItem } from './components/MediaItem';
+import { EmbedItem } from './components/EmbedItem';
 import { styles } from './styles';
 
 // Maximum number of images that are allowed to be uploaded
@@ -603,6 +604,21 @@ class PostCreator extends React.PureComponent {
     );
   }
 
+  renderEmbed() {
+    const { content, currentEmbedUrl, gif } = this.state;
+    const urls = extractUrls(content);
+
+    // Only show embed if we have urls or gif is not set
+    if (isEmpty(urls) || gif) return null;
+
+    // Use either the current embed or the first url
+    const embed = currentEmbedUrl || urls[0];
+
+    return (
+      <EmbedItem url={embed} />
+    );
+  }
+
   renderActionBarModal() {
     const { busy } = this.state;
     if (busy) return null;
@@ -745,7 +761,6 @@ class PostCreator extends React.PureComponent {
       uploads,
       busy,
       actionBarExpanded,
-      currentEmbedUrl,
     } = this.state;
 
     const isEditing = !isEmpty(post);
@@ -757,10 +772,6 @@ class PostCreator extends React.PureComponent {
 
     const renderHeader = propHeaderRender || this.renderHeader;
     const KeyboardView = avoidKeyboard ? KeyboardAvoidingView : View;
-
-    const urls = extractUrls(content);
-    const hasChosenEmbed = !isNull(currentEmbedUrl);
-
 
     return (
       <KeyboardView
@@ -808,6 +819,8 @@ class PostCreator extends React.PureComponent {
             {/* UI for media, gif and uploads */}
             <View>
               { this.renderMedia() }
+
+              { this.renderEmbed() }
 
               {/* Don't allow gif selection if user is uploading images */}
               { isEmpty(uploads) && this.renderGIF() }
