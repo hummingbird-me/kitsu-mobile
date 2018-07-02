@@ -110,6 +110,7 @@ export class EmbedItem extends PureComponent {
         <EmbeddedContent
           embed={embed}
           ignoreDataSaver
+          minWidth={maxWidth}
           maxWidth={maxWidth}
           disabled
         />

@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import { isEmpty } from 'lodash';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { EmbedItem } from 'kitsu/screens/Feed/components/PostCreator/components/EmbedItem';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
 
 export class EmbedModal extends PureComponent {
@@ -57,9 +58,14 @@ export class EmbedModal extends PureComponent {
     return (
       <TouchableOpacity
         onPress={() => this.setState({ selected: url })}
-        style={[styles.item, isSelected && styles.item__selected]}
+        style={styles.item}
       >
-        <Text style={[styles.itemUrl, isSelected && styles.itemUrl__selected]}>{url}</Text>
+        <View style={[styles.itemContainer, isSelected && styles.item__selected]}>
+          <Text style={[styles.itemUrl, isSelected && styles.itemUrl__selected]}>{url}</Text>
+          <View style={[styles.checkmark, isSelected && styles.checkmark__selected]}>
+            <Icon name="ios-checkmark" color="#FFFFFF" style={styles.checkmarkIcon} />
+          </View>
+        </View>
         <EmbedItem url={url} disabled />
       </TouchableOpacity>
     );
