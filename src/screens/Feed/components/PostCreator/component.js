@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity, Keyboard, BackHandler, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil, isNull } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar, ACCEPTED_UPLOAD_TYPES } from 'kitsu/constants/app';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
@@ -21,9 +21,10 @@ import { ImageSortModal } from 'kitsu/screens/Feed/components/ImageSortModal';
 import { giphy, photo, tag } from 'kitsu/assets/img/post-creation';
 import { prettyBytes } from 'kitsu/utils/prettyBytes';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { GIFImage } from './GIFImage';
-import { MediaItem } from './MediaItem';
-import { createPostStyles as styles } from './styles';
+import { extractUrls } from 'kitsu/common/utils/url';
+import { GIFImage } from './components/GIFImage';
+import { MediaItem } from './components/MediaItem';
+import { styles } from './styles';
 
 // Maximum number of images that are allowed to be uploaded
 const MAX_UPLOAD_COUNT = 20;
@@ -132,6 +133,10 @@ class PostCreator extends React.PureComponent {
       imageSortModalIsVisible: false,
       actionBarExpanded: false,
       busy: false,
+
+      // This is null when a user hasn't set an embed (we can auto generate embed)
+      // OR it will be ''(empty) if user chose to set no embed.
+      currentEmbedUrl: null,
     };
   }
 
@@ -740,6 +745,7 @@ class PostCreator extends React.PureComponent {
       uploads,
       busy,
       actionBarExpanded,
+      currentEmbedUrl,
     } = this.state;
 
     const isEditing = !isEmpty(post);
@@ -751,6 +757,10 @@ class PostCreator extends React.PureComponent {
 
     const renderHeader = propHeaderRender || this.renderHeader;
     const KeyboardView = avoidKeyboard ? KeyboardAvoidingView : View;
+
+    const urls = extractUrls(content);
+    const hasChosenEmbed = !isNull(currentEmbedUrl);
+
 
     return (
       <KeyboardView

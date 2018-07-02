@@ -4,7 +4,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Feed/constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { gifImageStyles as styles } from './styles';
+import { styles } from './styles';
 
 export const GIFImage = ({ gif, onClear, disabled }) => (
   <View style={styles.container}>
