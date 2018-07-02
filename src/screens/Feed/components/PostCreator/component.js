@@ -22,6 +22,7 @@ import { giphy, photo, tag } from 'kitsu/assets/img/post-creation';
 import { prettyBytes } from 'kitsu/utils/prettyBytes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { extractUrls } from 'kitsu/common/utils/url';
+import { Sentry } from 'react-native-sentry';
 import { GIFImage } from './components/GIFImage';
 import { MediaItem } from './components/MediaItem';
 import { EmbedItem } from './components/EmbedItem';
@@ -329,6 +330,16 @@ class PostCreator extends React.PureComponent {
           busy: false,
           error: `Failed to upload images ${errorText}`,
           uploading: false,
+        });
+
+        Sentry.captureMessage('Failed to upload images', {
+          tags: {
+            type: 'image_upload',
+          },
+          extra: {
+            error: JSON.stringify(e),
+            text: JSON.stringify(e && e.error),
+          },
         });
         return;
       }
