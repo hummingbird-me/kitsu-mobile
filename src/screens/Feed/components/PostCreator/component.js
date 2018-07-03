@@ -628,6 +628,16 @@ class PostCreator extends React.PureComponent {
     const embed = isNull(currentEmbedUrl) ? urls[0] : currentEmbedUrl;
     const validEmbed = !isEmpty(embed);
 
+    /*
+      Show change embed button IF:
+        - We have more than 1 url to show
+        OR
+        - Current Embed url is different from the first url
+          * For the case where user chooses an embed and then clears out the url, we need to still allow them to choose another embed.
+    */
+    const isCurrentEmbedDifferent = !isNull(currentEmbedUrl) && urls.length > 0 && currentEmbedUrl !== urls[0];
+    const showChangeEmbed = urls.length > 1 || isCurrentEmbedDifferent;
+
     return (
       <View style={styles.embed}>
         {validEmbed ?
@@ -638,13 +648,15 @@ class PostCreator extends React.PureComponent {
           </View>
         }
         <View style={styles.embedOptions}>
-          <TouchableOpacity
-            style={[styles.embedText, validEmbed && { marginRight: 4 }]}
-            onPress={() => this.handleEmbedModal(true)}
-            disabled={busy}
-          >
-            <Text>Change Embed</Text>
-          </TouchableOpacity>
+          {showChangeEmbed &&
+            <TouchableOpacity
+              style={[styles.embedText, validEmbed && { marginRight: 4 }]}
+              onPress={() => this.handleEmbedModal(true)}
+              disabled={busy}
+            >
+              <Text>Change Embed</Text>
+            </TouchableOpacity>
+          }
           {validEmbed &&
             <TouchableOpacity
               style={[styles.embedText, styles.clearEmbed]}
