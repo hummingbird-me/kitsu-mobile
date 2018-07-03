@@ -142,6 +142,10 @@ export class MediaDetails extends Component {
       return null;
     }
 
+    // Validate that we actually have objects.
+    const type = (media.type && STATUS_MAP[media.type]);
+    const status = (type && media.status && type[media.status]) || 'Unknown';
+
     return (
       <View style={styles.container}>
         <SectionHeader contentDark title="Details" />
@@ -149,12 +153,12 @@ export class MediaDetails extends Component {
         {this.isAnime && <DetailComponent label="Studios" content={this.getStudios()} />}
         {/* Episodes/Chapters */}
         <DetailComponent
-          label={this.isAnime ? "Episodes" : "Chapters"}
+          label={this.isAnime ? 'Episodes' : 'Chapters'}
           content={this.getUnitCount() || 'TBD'}
           details={this.getUnitLength()}
         />
         {/* Status */}
-        <DetailComponent label="Status" content={STATUS_MAP[media.type][media.status]} />
+        <DetailComponent label="Status" content={status} />
         {/* Premiered */}
         {!isNull(media.startDate) && <DetailComponent label="Premiered" content={this.getStartDate()} />}
         {/* Age Rating */}

@@ -200,6 +200,15 @@ class EmbeddedContent extends PureComponent {
     const height = (videoHeight && videoWidth) ? (videoHeight / videoWidth) * maxWidth : 300;
     const style = { width: maxWidth, height: Math.max(200, height) };
 
+    /* The youtube video url for Android
+       We need to check if there are already options appended to the url
+        E.g https://www.youtube.com/embed/c9FIvUcjhFg?start=80
+       If so then we use '&' to join the other options otherwise we apply our own.
+    */
+    const videoOptions = 'rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1';
+    const joinOperator = (video && video.url && video.url.includes('?')) ? '&' : '?';
+    const videoUrl = `${video.url}${joinOperator}${videoOptions}`;
+
     return (
       Platform.OS === 'ios' ?
         <YouTube
@@ -211,7 +220,7 @@ class EmbeddedContent extends PureComponent {
         :
         <WebComponent
           style={style}
-          source={{ uri: `${video.url}?rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1` }}
+          source={{ uri: videoUrl }}
         />
     );
   }
