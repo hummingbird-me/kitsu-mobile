@@ -5298,7 +5298,7 @@ react-native-hyperlink@^0.0.14:
 
 react-native-image-crop-picker@hummingbird-me/react-native-image-crop-picker:
   version "0.20.3"
-  resolved "https://codeload.github.com/hummingbird-me/react-native-image-crop-picker/tar.gz/0156828ed65558c59fa9638b74e3082f029a9794"
+  resolved "https://codeload.github.com/hummingbird-me/react-native-image-crop-picker/tar.gz/24ad9a4d6d3ed08b462958c04fb3dc5f3d552a4d"
 
 react-native-image-pan-zoom@^2.1.2:
   version "2.1.3"
