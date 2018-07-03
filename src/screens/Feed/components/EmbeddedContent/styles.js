@@ -6,6 +6,10 @@ export const styles = StyleSheet.create({
     width: 80,
     height: 120,
   },
+  linkImage: {
+    width: 70,
+    height: 70,
+  },
   kitsuContent: {
     marginHorizontal: 8,
     padding: 4,

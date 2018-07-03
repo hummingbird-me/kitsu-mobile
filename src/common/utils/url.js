@@ -62,6 +62,18 @@ export function isImageUrl(url) {
 }
 
 /**
+ * Extract urls from a given string.
+ *
+ * @param {String} text The string to extract urls from
+ * @returns An array of urls.
+ */
+export function extractUrls(text) {
+  if (!text) return [];
+  const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+  return text.match(regex) || [];
+}
+
+/**
  * Open the given url in `Linking`.
  * Checks to see if the url is supported by an app before opening it.
  *

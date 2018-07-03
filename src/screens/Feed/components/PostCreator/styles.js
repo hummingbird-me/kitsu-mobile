@@ -3,7 +3,7 @@ import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
 
-export const createPostStyles = StyleSheet.create({
+export const styles = StyleSheet.create({
   main: {
     flex: 1,
     backgroundColor: '#FFFFFF',
@@ -133,71 +133,41 @@ export const createPostStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
-
-export const mediaItemStyles = StyleSheet.create({
-  container: {
-    // padding: 8,
-    alignItems: 'center',
+  embed: {
+    marginVertical: 4,
+  },
+  embedOptions: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-around',
+    marginHorizontal: 8,
+    marginTop: 4,
+  },
+  embedText: {
+    borderWidth: 1,
+    borderColor: colors.lightestGrey,
+    padding: 8,
     justifyContent: 'center',
-    margin: 4,
-    paddingRight: 4,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.lightGrey,
-    borderRadius: 4,
-  },
-  iconContainer: {
-    width: 28,
-    height: 28,
     alignItems: 'center',
+    flex: 1,
+  },
+  changeEmbed: {
+    marginRight: 4,
+  },
+  clearEmbed: {
+    backgroundColor: colors.red,
+  },
+  emptyEmbed: {
+    borderWidth: 1,
+    borderColor: colors.lightestGrey,
+    height: 70,
+    marginHorizontal: 8,
+    marginTop: 4,
     justifyContent: 'center',
-    marginLeft: 8,
-  },
-  icon: {
-    color: colors.lightGrey,
-    fontSize: 18,
-  },
-  image: {
-    width: 60,
-    height: 90,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-    overflow: 'hidden',
-  },
-  image_episode: {
-    borderBottomLeftRadius: 0,
-  },
-  episodeTag: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.lightGrey,
-    padding: 4,
-    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: colors.lightestGrey,
   },
-});
-
-export const gifImageStyles = StyleSheet.create({
-  container: {
-    alignSelf: 'stretch',
-    minHeight: 100,
-  },
-  iconContainer: {
-    position: 'absolute',
-    right: 8,
-    top: 8,
-    width: 28,
-    height: 28,
-    borderColor: colors.white,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    overflow: 'hidden',
-  },
-  icon: {
-    color: colors.white,
-    fontSize: 14,
+  emptyEmbedText: {
+    color: colors.darkGrey,
   },
 });

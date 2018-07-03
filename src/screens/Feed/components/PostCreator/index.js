@@ -1,9 +1,5 @@
-import { GIFImage } from './GIFImage';
-import { MediaItem } from './MediaItem';
-import PostCreator from './PostCreator';
+import PostCreator from './component';
 
 export {
-  GIFImage,
-  MediaItem,
   PostCreator,
 };

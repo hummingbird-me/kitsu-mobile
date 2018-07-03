@@ -6,7 +6,7 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { StyledText } from 'kitsu/components/StyledText';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { isEmpty } from 'lodash';
-import { mediaItemStyles as styles } from './styles';
+import { styles } from './styles';
 
 export const MediaItem = ({ media, episode, onClear, disabled }) => {
   const episodePrefix = media.type === 'manga' ? 'CH' : 'EP';

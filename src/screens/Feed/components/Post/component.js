@@ -11,6 +11,7 @@ import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessF
 import { isEmpty, uniqBy } from 'lodash';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
+import { extractUrls } from 'kitsu/common/utils/url';
 
 // Post
 export class Post extends PureComponent {
@@ -38,6 +39,7 @@ export class Post extends PureComponent {
     overlayRemoved: false,
     isPostingComment: false,
     isDeleted: false,
+    embedUrl: null,
   };
 
   mounted = false
@@ -82,7 +84,7 @@ export class Post extends PureComponent {
     const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
     const comment = this.state.comment.trim();
     const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
-    this.setState({ comment: newComment }, () => {
+    this.setState({ comment: newComment, embedUrl: gifUrl }, () => {
       // Submit gif if comment was empty
       if (isEmpty(comment)) this.onSubmitComment();
     });
@@ -92,9 +94,19 @@ export class Post extends PureComponent {
     if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
     this.setState({ isPostingComment: true });
 
+    // Update the embed
+    let embedUrl = this.state.embedUrl;
+
+    // If we don't have an embed set then use the first link
+    const links = extractUrls(this.state.comment.trim());
+    if (isEmpty(embedUrl) && links.length > 0) {
+      embedUrl = links[0];
+    }
+
     try {
       const comment = await Kitsu.create('comments', {
         content: this.state.comment.trim(),
+        embedUrl,
         post: {
           id: this.state.post.id,
           type: 'posts',
@@ -110,6 +122,7 @@ export class Post extends PureComponent {
       const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
 
       this.setState({
+        embedUrl: null,
         comment: '',
         comments: uniqueComments,
         latestComments: [...this.state.latestComments, processed],

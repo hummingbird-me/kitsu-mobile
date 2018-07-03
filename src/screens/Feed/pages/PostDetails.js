@@ -23,6 +23,7 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
+import { extractUrls } from 'kitsu/common/utils/url';
 import { isEmpty, uniqBy } from 'lodash';
 
 export default class PostDetails extends PureComponent {
@@ -62,6 +63,7 @@ export default class PostDetails extends PureComponent {
       isLoadingNextPage: false,
       isReplying: false,
       isPostingComment: false,
+      embedUrl: null,
     };
   }
 
@@ -78,7 +80,7 @@ export default class PostDetails extends PureComponent {
     const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
     const comment = this.state.comment.trim();
     const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
-    this.setState({ comment: newComment }, () => {
+    this.setState({ comment: newComment, embedUrl: gifUrl }, () => {
       // Submit gif if comment was empty
       if (isEmpty(comment)) this.onSubmitComment();
     });
@@ -91,6 +93,15 @@ export default class PostDetails extends PureComponent {
 
     try {
       const { currentUser, post, syncComments } = this.props.navigation.state.params;
+
+      // Update the embed
+      let embedUrl = this.state.embedUrl;
+
+      // If we don't have an embed set then use the first link
+      const links = extractUrls(this.state.comment.trim());
+      if (isEmpty(embedUrl) && links.length > 0) {
+        embedUrl = links[0];
+      }
 
       // Check if this is a reply rather than a top-level comment
       let replyOptions = {};
@@ -106,6 +117,7 @@ export default class PostDetails extends PureComponent {
 
       const comment = await Kitsu.create('comments', {
         content: this.state.comment.trim(),
+        embedUrl,
         post: {
           id: post.id,
           type: 'posts',
@@ -120,6 +132,7 @@ export default class PostDetails extends PureComponent {
 
       const processed = preprocessFeedPost(comment);
       this.setState({
+        embedUrl: null,
         comment: '',
         isReplying: false,
         commentsCount: this.state.commentsCount + 1,
