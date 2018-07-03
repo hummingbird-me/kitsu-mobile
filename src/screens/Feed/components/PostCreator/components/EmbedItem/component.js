@@ -25,6 +25,7 @@ export class EmbedItem extends PureComponent {
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.fetchEmbed(this.props.url);
   }
 
@@ -34,7 +35,15 @@ export class EmbedItem extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  mounted = false;
+
   async fetchEmbed(url, force = false) {
+    if (!this.mounted) return;
+
     const { loading } = this.state;
     if (isEmpty(url)) {
       this.setState({

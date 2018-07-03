@@ -108,7 +108,7 @@ export function parseURL(url) {
   */
   if (typeof url !== 'string' || isEmpty(url)) return null;
 
-  const regex = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/;
+  const regex = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/i;
   const match = url.match(regex);
   return match && {
     url,

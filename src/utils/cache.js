@@ -65,12 +65,12 @@ class _EmbedUrlCache {
 
   get(url) {
     if (!url) return null;
-    return this.CACHE[url.toLowerCase()];
+    return this.CACHE[url];
   }
 
   set(url, embed) {
     if (url) {
-      this.CACHE[url.toLowerCase()] = embed;
+      this.CACHE[url] = embed;
     }
   }
 
@@ -80,7 +80,7 @@ class _EmbedUrlCache {
 
   contains(url) {
     if (!url) return false;
-    return Object.keys(this.CACHE).includes(url.toLowerCase());
+    return Object.keys(this.CACHE).includes(url);
   }
 }
 
