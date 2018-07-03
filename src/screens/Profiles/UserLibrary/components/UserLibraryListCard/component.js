@@ -1,5 +1,5 @@
 import * as React from 'react';
-import debounce from 'lodash/debounce';
+import { debounce } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -79,8 +79,16 @@ export class UserLibraryListCard extends React.PureComponent {
   }
 
   onProgressValueChanged = (newProgress) => {
+    // Check if user has completed the media
+    const maxProgress = this.getMaxProgress();
+    const hasCompletedMedia = maxProgress && newProgress >= maxProgress;
+    const newStatus = (hasCompletedMedia && this.state.libraryStatus !== 'completed' && {
+      libraryStatus: 'completed',
+    }) || {};
+
     this.setState({
       progress: newProgress,
+      ...newStatus,
     }, this.debounceSave);
   }
 
