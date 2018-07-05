@@ -182,7 +182,7 @@ export class Comment extends PureComponent {
 
     const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
 
-    const { content, createdAt, user, embed, uploads } = comment;
+    const { id, content, createdAt, user, embed, uploads, updatedAt } = comment;
 
     // Get the user avatar and name
     const avatar = (user && user.avatar);
@@ -210,6 +210,7 @@ export class Comment extends PureComponent {
             {!isEmpty(content) &&
               <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
                 <ViewMoreStyledText
+                  cacheKey={`${id}-${updatedAt}`}
                   size="xsmall"
                   color="dark"
                   textStyle={{ lineHeight: null }}

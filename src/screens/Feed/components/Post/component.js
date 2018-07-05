@@ -272,6 +272,8 @@ export class Post extends PureComponent {
       isDeleted,
     } = this.state;
     const {
+      id,
+      updatedAt,
       createdAt,
       content,
       embed,
@@ -303,6 +305,7 @@ export class Post extends PureComponent {
       :
       (
         <PostMain
+          cacheKey={`${id}-${updatedAt}`}
           content={content}
           embed={embed}
           uploads={uploads}

@@ -304,7 +304,7 @@ export default class PostDetails extends PureComponent {
     const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
         isPostingComment } = this.state;
 
-    const { content, embed, media, spoiledUnit, uploads } = post;
+    const { id, updatedAt, content, embed, media, spoiledUnit, uploads } = post;
 
     return (
       <KeyboardAvoidingView
@@ -328,6 +328,7 @@ export default class PostDetails extends PureComponent {
         <View style={{ flex: 1 }}>
           <ScrollView>
             <PostMain
+              cacheKey={`${id}-${updatedAt}`}
               content={content}
               embed={embed}
               uploads={uploads}
