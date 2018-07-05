@@ -16,11 +16,19 @@ import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 import { handleURL } from 'kitsu/common/utils/url';
+import { BasicCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
+
+const CACHE_WIDTH_KEYS = {
+  comment: 'commentWidth',
+  reply: 'commentReplyWidth',
+};
 
 export class Comment extends PureComponent {
   constructor(props) {
     super(props);
+    const key = props.isCommentReply ? CACHE_WIDTH_KEYS.reply : CACHE_WIDTH_KEYS.comment;
+
     this.state = {
       likesCount: props.comment.likesCount,
       isLiked: false,
@@ -28,7 +36,7 @@ export class Comment extends PureComponent {
       replies: [],
       repliesCount: props.comment.repliesCount,
       isLoadingNextPage: false,
-      commentWidth: null,
+      commentWidth: BasicCache.get(key) || null,
     };
   }
 
@@ -70,9 +78,17 @@ export class Comment extends PureComponent {
   onCommentLayout = (event) => {
     // Only calculate this once, else we'll have lots of updates
     if (this.state.commentWidth) return;
+
+    // Set the width, we should clear this if we detect dimension change
     const { width } = event.nativeEvent.layout;
+
     // The width - left padding
-    this.setState({ commentWidth: width - scenePadding });
+    const newWidth = width - scenePadding;
+    this.setState({ commentWidth: newWidth });
+
+    // Cache the value
+    const key = this.props.isCommentReply ? CACHE_WIDTH_KEYS.reply : CACHE_WIDTH_KEYS.comment;
+    BasicCache.set(key, newWidth);
   }
 
   fetchLikes = async () => {
@@ -168,6 +184,7 @@ export class Comment extends PureComponent {
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
       navigation={this.props.navigation}
+      isCommentReply
     />
   )
 
@@ -305,6 +322,7 @@ Comment.propTypes = {
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
   hideEmbeds: PropTypes.bool,
+  isCommentReply: PropTypes.bool,
 };
 
 Comment.defaultProps = {
@@ -312,6 +330,7 @@ Comment.defaultProps = {
   onAvatarPress: null,
   onReplyPress: null,
   hideEmbeds: false,
+  isCommentReply: false,
 };
 
 export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (
