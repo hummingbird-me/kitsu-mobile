@@ -1,40 +1,36 @@
-import { BasicCache } from './basicCache';
+import { _BasicCache } from './basicCache';
 
 // Cache for storing feed related items
 // These include visible comments etc..
-class _FeedCache {
+class _FeedCache extends _BasicCache {
   getComments(parentId) {
     if (!parentId) return null;
-    return BasicCache.get(`feedComments-${parentId}`);
+    return this.get(`comment-${parentId}`);
   }
 
   setComments(parentId, comments) {
     if (!parentId) return;
-    BasicCache.set(`feedComments-${parentId}`, comments);
-  }
-
-  getLike(parentId) {
-    if (!parentId) return null;
-    return BasicCache.get(`feedLike-${parentId}`);
-  }
-
-  setLike(parentId, like) {
-    if (!parentId) return;
-    BasicCache.set(`feedLike-${parentId}`, like);
-  }
-
-  deleteLike(parentId) {
-    if (!parentId) return;
-    BasicCache.delete(`feedLike-${parentId}`);
-  }
-
-  clear() {
-    BasicCache.clear(key => key.includes('feedComments') || key.includes('feedLike'));
+    this.set(`comment-${parentId}`, comments);
   }
 
   hasComments(parentId) {
     if (!parentId) return false;
-    return BasicCache.has(`feedComments-${parentId}`);
+    return this.has(`comment-${parentId}`);
+  }
+
+  getLike(parentId) {
+    if (!parentId) return null;
+    return this.get(`like-${parentId}`);
+  }
+
+  setLike(parentId, like) {
+    if (!parentId) return;
+    this.set(`like-${parentId}`, like);
+  }
+
+  deleteLike(parentId) {
+    if (!parentId) return;
+    this.delete(`like-${parentId}`);
   }
 }
 

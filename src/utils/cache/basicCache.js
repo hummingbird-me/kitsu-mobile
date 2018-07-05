@@ -1,5 +1,5 @@
 // Cache for storing embed objects belonging to a url
-class _BasicCache {
+export class _BasicCache {
   CACHE = {};
 
   /**

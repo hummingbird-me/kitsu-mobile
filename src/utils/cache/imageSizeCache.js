@@ -1,26 +1,9 @@
-import { BasicCache } from './basicCache';
+import { _BasicCache } from './basicCache';
 
 // A Cache for storing image sizes
-class _ImageSizeCache {
-  get(url) {
-    if (!url) return null;
-    return BasicCache.get(`imageSize-${url}`);
-  }
-
+class _ImageSizeCache extends _BasicCache {
   set(url, width, height) {
-    if (!url) return;
-    const key = `imageSize-${url}`;
-    BasicCache.set(key, { width, height });
-  }
-
-  clear() {
-    BasicCache.clear(key => key.includes('imageSize'));
-  }
-
-  has(url) {
-    if (!url) return false;
-    const key = `imageSize-${url}`;
-    return BasicCache.has(key);
+    super.set(url, { width, height });
   }
 }
 
