@@ -46,9 +46,7 @@ export default class PostDetails extends PureComponent {
 
     this.state = {
       comment: '',
-      comments: props.navigation.state.params.comments && [
-        ...props.navigation.state.params.comments,
-      ],
+      comments: props.navigation.state.params.comments || [],
       topLevelCommentsCount: props.navigation.state.params.topLevelCommentsCount,
       commentsCount: props.navigation.state.params.commentsCount,
       like: props.navigation.state.params.like,
