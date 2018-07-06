@@ -150,6 +150,8 @@ export class UserLibraryList extends PureComponent {
 
     const refreshControl = (
       <RefreshControl
+        colors={['white']}
+        tintColor={'white'}
         refreshing={this.props.refreshing}
         onRefresh={this.props.onRefresh}
       />

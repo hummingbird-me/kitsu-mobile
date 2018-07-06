@@ -46,4 +46,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  list: {
+    backgroundColor: colors.listBackPurple,
+  },
 });

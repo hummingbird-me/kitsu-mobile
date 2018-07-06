@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet} from 'react-native';
+import { StyleSheet, RefreshControl, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { search } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import { getMaxVisibleRows, getCurrentVisibleRows } from 'kitsu/screens/Search/Lists/ResultsList/spacing';
 import { ResultsList } from './Lists';
+
 
 const styles = StyleSheet.create({
   list: {
@@ -47,7 +48,7 @@ class SearchResults extends Component {
   });
 
   state = {
-    loading: false,
+    refreshing: false,
     index: 0,
   };
 
@@ -57,7 +58,7 @@ class SearchResults extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.results !== this.props.results) {
-      this.setState({ loading: false });
+      this.setState({ refreshing: false });
     }
     if (this.props.navigation.state.params !== nextProps.navigation.state.params) {
       this.getData(0, nextProps.navigation.state);
@@ -65,38 +66,67 @@ class SearchResults extends Component {
   }
 
   getData = (index = 0, newParams) => {
+    if (index === 0) {
+      this.setState({ refreshing: true });
+    }
+
     const { params } = newParams || this.props.navigation.state;
-    this.props.search(params.filter, params.sort, index, params.default, params.active);
+    this.props.search(params.filter, params.sort, index, params.default, params.active, () => {
+      this.setState({ refreshing: false });
+      if (this.shouldLoadMore) {
+        this.loadMore();
+      }
+    });
   };
 
+  shouldLoadMore = false;
+
   refresh = () => {
-    this.setState({ loading: true, index: 0 });
+    this.setState({ refreshing: true, index: 0 });
     this.getData();
   };
 
   loadMore = () => {
     if (!this.props.loading) {
+      this.shouldLoadMore = false;
       const index = this.state.index + 1;
       this.getData(index);
       this.setState({ index });
+    } else {
+      this.shouldLoadMore = true;
     }
   };
 
+  renderFooter = () => {
+    const { loading } = this.props;
+    const { refreshing } = this.state;
+
+    if (!loading || refreshing) return null;
+
+    return (
+      <ActivityIndicator color="white" style={{ paddingVertical: 16 }} />
+    );
+  }
+
   render() {
-    // const { params } = this.props.navigation.state;
     const { results, loading, currentUser } = this.props;
-    const data =
-      !loading || results.length > 0
-        ? this.props.results
-        : Array(20)
-          .fill(1)
-          .map((item, index) => ({ key: index }));
+    const emptyArray = Array(20).fill(1).map((item, index) => ({ key: index }));
+    const data = (!loading || results.length > 0) ? this.props.results : emptyArray;
+
+    // Check if we have to load more entries
+    // There's a bug with `onEndReached` where it will only get called once and if content does not fill all of the screen
+    // then `onEndReached` will not be called again
+    const maxRows = getMaxVisibleRows();
+    const currentRows = getCurrentVisibleRows(data.length);
+
+    // We load more if we still have rows that we can fill
+    if (!loading && results.length > 0 && currentRows < maxRows) {
+      this.loadMore();
+    }
+
     return (
       <ResultsList
         hits={data}
-        onEndReached={this.loadMore}
-        onRefresh={this.refresh}
-        refreshing={this.state.loading}
         onPress={(media) => {
           if (media) {
             this.props.navigation.navigate('MediaPages', {
@@ -107,6 +137,16 @@ class SearchResults extends Component {
         }}
         style={styles.list}
         currentUser={currentUser}
+        onEndReached={this.loadMore}
+        refreshControl={
+          <RefreshControl
+            colors={['white']}
+            tintColor={'white'}
+            refreshing={this.state.refreshing}
+            onRefresh={this.refresh}
+          />
+        }
+        renderFooter={this.renderFooter}
       />
     );
   }

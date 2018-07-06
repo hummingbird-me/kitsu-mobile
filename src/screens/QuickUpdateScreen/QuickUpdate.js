@@ -569,6 +569,8 @@ class QuickUpdate extends Component {
         <ScrollView
           refreshControl={
             <RefreshControl
+              colors={['white']}
+              tintColor={'white'}
               refreshing={loading}
               onRefresh={this.fetchLibrary}
             />
@@ -707,7 +709,12 @@ class QuickUpdate extends Component {
                     />
                   )}
                   refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
+                    <RefreshControl
+                      colors={['white']}
+                      tintColor={'white'}
+                      refreshing={refreshing}
+                      onRefresh={this.onRefresh}
+                    />
                   }
                 />
               ) : (

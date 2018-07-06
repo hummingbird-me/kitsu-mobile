@@ -1,4 +1,4 @@
-import ResultsList from './ResultsList';
+import { ResultsList } from './ResultsList';
 import TopsList from './TopsList';
 import UsersList from './UsersList';
 
