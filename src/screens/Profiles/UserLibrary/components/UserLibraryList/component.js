@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
-import { View, ActivityIndicator, Dimensions, RefreshControl } from 'react-native';
+import { View, ActivityIndicator, Dimensions, RefreshControl, ScrollView } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { intersectionWith, isEqual } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { UserLibraryListCard, LibraryEmptyState } from 'kitsu/screens/Profiles/UserLibrary';
+import { styles } from './styles';
 
 const LAYOUT_PROVIDER_TYPE = 'UserLibraryListCard';
 const LAYOUT_WIDTH = Dimensions.get('window').width;
@@ -106,6 +107,11 @@ export class UserLibraryList extends PureComponent {
     }
   }
 
+
+  onSwipingItem = (isSwiping) => {
+    this.setState({ isSwiping });
+  };
+
   navigateToSearch = () => {
     const { libraryType, libraryStatus, navigation } = this.props;
     const { title, type } = SEARCH_MAP[libraryType][libraryStatus];
@@ -114,10 +120,6 @@ export class UserLibraryList extends PureComponent {
       default: type,
       active: libraryType,
     });
-  };
-
-  onSwipingItem = (isSwiping) => {
-    this.setState({ isSwiping });
   };
 
   renderFooter = () => {
@@ -145,23 +147,39 @@ export class UserLibraryList extends PureComponent {
   render() {
     const { libraryType, libraryStatus, loading } = this.props;
     const { dataProvider, isSwiping } = this.state;
-    if (dataProvider.getSize() === 0 && !loading) {
+
+    const refreshControl = (
+      <RefreshControl
+        refreshing={this.props.refreshing}
+        onRefresh={this.props.onRefresh}
+      />
+    );
+
+    // Don't mount RecyclerListView when data is empty
+    // Otherwise it will throw an error which might make the app crash
+    if (dataProvider.getSize() === 0) {
+      if (loading) {
+        return (
+          <View style={styles.indicatorContainer}>
+            <ActivityIndicator color="white" size="large" />
+          </View>
+        );
+      }
+
       return (
-        <LibraryEmptyState
-          type={libraryType}
-          status={libraryStatus}
-          onPress={this.navigateToSearch}
-        />
+        <ScrollView style={styles.flex} refreshControl={refreshControl}>
+          <LibraryEmptyState
+            type={libraryType}
+            status={libraryStatus}
+            onPress={this.navigateToSearch}
+          />
+        </ScrollView>
       );
     }
+
     return (
       <RecyclerListView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.props.refreshing}
-            onRefresh={this.props.onRefresh}
-          />
-        }
+        refreshControl={refreshControl}
         renderAheadOffset={LAYOUT_HEIGHT * 4}
         layoutProvider={this.layoutProvider}
         dataProvider={dataProvider}
