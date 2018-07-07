@@ -1,17 +1,22 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, WebView, Platform, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, Platform, TouchableOpacity, Linking } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { startCase } from 'lodash';
+import dataBunny from 'kitsu/assets/img/data-bunny.png';
+import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
+import { startCase, isNil, isEmpty } from 'lodash';
+import { WebComponent } from 'kitsu/common/utils/components';
+import { Lightbox } from 'kitsu/utils/lightbox';
 import { styles } from './styles';
 
-export class EmbeddedContent extends PureComponent {
+
+class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
   // sometimes the embeds return width/height as strings
   // othertimes as numbers ...
@@ -32,7 +37,7 @@ export class EmbeddedContent extends PureComponent {
 
   static propTypes = {
     embed: PropTypes.shape({
-      kind: PropTypes.string.isRequired,
+      kind: PropTypes.string,
       site: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
@@ -42,18 +47,119 @@ export class EmbeddedContent extends PureComponent {
         width: this.typeStringNumber,
         height: this.typeStringNumber,
       }),
-    }).isRequired,
+      url: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
+    }),
+    uploads: PropTypes.arrayOf(
+      PropTypes.shape({
+        uploadOrder: PropTypes.number.isRequired,
+        content: PropTypes.shape({
+          original: PropTypes.string,
+        }),
+      }),
+    ),
     style: ViewPropTypes.style,
     maxWidth: PropTypes.number.isRequired,
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
-    navigation: PropTypes.object.isRequired,
+    navigation: PropTypes.object,
+    compact: PropTypes.bool,
+    dataSaver: PropTypes.bool,
+
+    // Manual override for data saver
+    ignoreDataSaver: PropTypes.bool,
+    disabled: PropTypes.bool,
   }
 
   static defaultProps = {
+    embed: null,
+    uploads: null,
     style: null,
     minWidth: null,
     borderRadius: 0,
+    compact: false,
+    dataSaver: false,
+    navigation: null,
+    ignoreDataSaver: false,
+    disabled: false,
+  }
+
+  state = {
+    visible: false,
+  };
+
+  getImageUrl(embed) {
+    if (!embed || !embed.image) return null;
+    return typeof embed.image === 'string' ? embed.image : embed.image.url;
+  }
+
+  toggleVisibility = () => {
+    this.setState({ visible: !this.state.visible });
+  }
+
+  renderTapToLoad(width) {
+    const { borderRadius } = this.props;
+    const showDataBunny = !isNil(width) && width > 300;
+
+    const textContainerStyle = (!showDataBunny && { alignItems: 'center' }) || {};
+
+    return (
+      <TouchableOpacity
+        style={[styles.dataSaver, { borderRadius }]}
+        onPress={this.toggleVisibility}
+      >
+        {showDataBunny &&
+          <FastImage
+            source={dataBunny}
+            style={styles.dataBunny}
+            resizeMode="contain"
+          />
+        }
+        <View style={[styles.dataSaverTextContainer, textContainerStyle]}>
+          <StyledText color="light" size="default" bold numberOfLines={1} textStyle={{ marginBottom: 4 }}>
+            Tap to load image
+          </StyledText>
+          <StyledText color="light" size="xxsmall">
+            Data-saving mode is currently enabled.
+          </StyledText>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  /**
+   * Render a image grid.
+   * This also takes into consideration `dataSaver` prop.
+   *
+   * @param {[string]} images An array of image uris
+   * @param {number} width The width of the grid.
+   * @returns `Tap to load` component if `dataSaver` and `!visible` otherwise returns `ImageGrid`.
+   */
+  renderImageGrid(images, width) {
+    // Make sure that the image url strings are not empty
+    const filtered = (images || []).filter(i => !isEmpty(i));
+    if (isEmpty(filtered)) return null;
+
+    const { maxWidth, borderRadius, compact, dataSaver, ignoreDataSaver, disabled } = this.props;
+    const { visible } = this.state;
+
+    if (!ignoreDataSaver && dataSaver && !visible) {
+      return this.renderTapToLoad(maxWidth);
+    }
+
+    return (
+      <ImageGrid
+        images={filtered}
+        width={width}
+        borderRadius={borderRadius}
+        compact={compact}
+        onImageTapped={(index) => {
+          Lightbox.show(filtered, (index || 0));
+        }}
+        disabled={disabled}
+      />
+    );
   }
 
   /**
@@ -64,27 +170,23 @@ export class EmbeddedContent extends PureComponent {
    * @returns The image component
    */
   renderImage(embed) {
-    if (!embed.image) return null;
+    if (!embed || !embed.image) return null;
 
-    const { maxWidth, minWidth, borderRadius } = this.props;
+    const { maxWidth, minWidth } = this.props;
+
     const imageWidth = embed.image.width || maxWidth;
 
     let width = parseInt(imageWidth, 10);
     if (minWidth && width < minWidth) width = minWidth;
     if (width > maxWidth) width = maxWidth;
 
-    // PostImage will auto scale the image
-    return (
-      <PostImage
-        uri={embed.image.url}
-        width={width}
-        borderRadius={borderRadius}
-      />
-    );
+    // embed.image could be a string or an embed object
+    const url = this.getImageUrl(embed);
+    return this.renderImageGrid([url], width);
   }
 
   renderYoutube(embed) {
-    if (!embed.video) return null;
+    if (!embed || !embed.video) return null;
     const { maxWidth } = this.props;
     const video = embed.video;
 
@@ -98,6 +200,15 @@ export class EmbeddedContent extends PureComponent {
     const height = (videoHeight && videoWidth) ? (videoHeight / videoWidth) * maxWidth : 300;
     const style = { width: maxWidth, height: Math.max(200, height) };
 
+    /* The youtube video url for Android
+       We need to check if there are already options appended to the url
+        E.g https://www.youtube.com/embed/c9FIvUcjhFg?start=80
+       If so then we use '&' to join the other options otherwise we apply our own.
+    */
+    const videoOptions = 'rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1';
+    const joinOperator = (video && video.url && video.url.includes('?')) ? '&' : '?';
+    const videoUrl = `${video.url}${joinOperator}${videoOptions}`;
+
     return (
       Platform.OS === 'ios' ?
         <YouTube
@@ -107,9 +218,9 @@ export class EmbeddedContent extends PureComponent {
           style={style}
         />
         :
-        <WebView
+        <WebComponent
           style={style}
-          source={{ uri: `${video.url}?rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1` }}
+          source={{ uri: videoUrl }}
         />
     );
   }
@@ -120,26 +231,31 @@ export class EmbeddedContent extends PureComponent {
       if (embed.url.includes('users')) return this.renderUser(embed);
     }
 
-    return null;
+    return this.renderLink(embed);
   }
 
   renderMedia(embed) {
     const id = embed.kitsu && embed.kitsu.id;
     if (!id) return null;
 
-    const { navigation, maxWidth } = this.props;
+    const { navigation, maxWidth, disabled } = this.props;
     const type = embed.url && embed.url.includes('anime') ? 'anime' : 'manga';
+    const image = this.getImageUrl(embed);
 
     return (
       <TouchableOpacity
         style={{ width: maxWidth }}
-        onPress={() => navigation.navigate('MediaPages', { mediaId: id, mediaType: type })}
+        onPress={() => {
+          if (navigation) {
+            navigation.navigate('MediaPages', { mediaId: id, mediaType: type });
+          }
+        }}
+        disabled={disabled}
       >
         <Layout.RowWrap style={styles.kitsuContent}>
-          {/* Make sure embed image doesn't break if they change it */}
-          {typeof embed.image === 'string' &&
+          {!isNil(image) &&
             <ProgressiveImage
-              source={{ uri: embed.image || '' }}
+              source={{ uri: image }}
               style={styles.mediaPoster}
             />
           }
@@ -159,23 +275,27 @@ export class EmbeddedContent extends PureComponent {
     const id = embed.kitsu && embed.kitsu.id;
     if (!id) return null;
 
-    const { navigation, maxWidth } = this.props;
+    const { navigation, maxWidth, disabled } = this.props;
 
-    const image = (embed.image.includes('http') && { uri: embed.image }) || defaultAvatar;
+    const imageUri = this.getImageUrl(embed);
+    const image = (imageUri && imageUri.includes('http') && { uri: imageUri }) || defaultAvatar;
 
     return (
       <TouchableOpacity
         style={{ width: maxWidth }}
-        onPress={() => navigation.navigate('ProfilePages', { userId: id })}
+        onPress={() => {
+          if (navigation) {
+            navigation.navigate('ProfilePages', { userId: id });
+          }
+        }}
+        disabled={disabled}
       >
         <Layout.RowWrap style={styles.kitsuContent} alignItems="center">
-          {/* Make sure embed image doesn't break if they change it */}
-          {typeof embed.image === 'string' &&
-            <FastImage
-              source={image}
-              style={styles.userPoster}
-            />
-          }
+          <FastImage
+            source={image}
+            style={styles.userPoster}
+            cache="web"
+          />
           <Layout.RowMain>
             <StyledText color="dark" size="small" numberOfLines={2} bold>{embed.title || '-'}</StyledText>
           </Layout.RowMain>
@@ -184,30 +304,92 @@ export class EmbeddedContent extends PureComponent {
     );
   }
 
-  renderItem(embed) {
-    if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
-      return this.renderYoutube(embed);
-    }
+  renderLink(embed) {
+    if (!embed || !embed.url) return null;
 
-    if (embed.kind) {
-      if (embed.kind.includes('image') || embed.kind.includes('gif')) {
+    const { maxWidth, disabled } = this.props;
+
+    const openUrl = (url) => {
+      Linking.openURL(url).catch(err => console.log(`An error occurred while opening url ${url}:`, err));
+    };
+
+    const image = this.getImageUrl(embed);
+
+    return (
+      <TouchableOpacity
+        style={{ width: maxWidth }}
+        onPress={() => openUrl(embed.url)}
+        disabled={disabled}
+      >
+        <Layout.RowWrap style={styles.kitsuContent}>
+          {!isNil(image) &&
+            <ProgressiveImage
+              source={{ uri: image }}
+              style={styles.linkImage}
+            />
+          }
+          <Layout.RowMain>
+            <StyledText color="dark" size="small" numberOfLines={1} bold>{embed.title || '-'}</StyledText>
+            <StyledText color="dark" size="xsmall" numberOfLines={3}>{embed.description || '-'}</StyledText>
+          </Layout.RowMain>
+        </Layout.RowWrap>
+      </TouchableOpacity>
+    );
+  }
+
+  renderEmbeds() {
+    const { embed, uploads } = this.props;
+    if (isEmpty(embed)) return null;
+
+    // Only render video & image embeds if we don't have uploads
+    if (isEmpty(uploads)) {
+      // Youtube
+      if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
+        return this.renderYoutube(embed);
+      }
+
+      // Image/GIF
+      if (embed.kind && (embed.kind.includes('image') || embed.kind.includes('gif'))) {
         return this.renderImage(embed);
       }
-
-      if (embed.kind.includes('kitsu')) {
-        return this.renderKitsu(embed);
-      }
     }
 
-    return null;
+    // Always render a kitsu embed
+    if (embed.kind && embed.kind.includes('kitsu')) {
+      return this.renderKitsu(embed);
+    }
+
+    // Render it as an embed link
+    return this.renderLink(embed);
+  }
+
+  renderUploads() {
+    const { uploads } = this.props;
+    if (isEmpty(uploads)) return null;
+
+    const { maxWidth } = this.props;
+
+    const images = uploads.sort((a, b) => (a.uploadOrder - b.uploadOrder))
+      .map(u => u.content && u.content.original)
+      .filter(i => !isEmpty(i));
+
+    return this.renderImageGrid(images, maxWidth);
   }
 
   render() {
-    const { style, embed } = this.props;
+    const { style } = this.props;
     return (
       <View style={style}>
-        {this.renderItem(embed)}
+        {this.renderEmbeds()}
+        {this.renderUploads()}
       </View>
     );
   }
 }
+
+const mapper = ({ app }) => {
+  const { dataSaver } = app;
+  return { dataSaver };
+};
+
+export default connect(mapper, null)(EmbeddedContent);

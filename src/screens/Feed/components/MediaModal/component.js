@@ -178,7 +178,7 @@ class MediaModal extends PureComponent {
           <FlatList
             data={media}
             ItemSeparatorComponent={() => <View style={styles.rowPickerSeparator} />}
-            keyExtractor={item => item.id}
+            keyExtractor={item => `${item.id}`}
             renderItem={this.renderItem}
             onEndReached={this.loadMore}
             onEndReachedThreshold={0.5}

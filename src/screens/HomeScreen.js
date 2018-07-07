@@ -42,11 +42,12 @@ class HomeScreen extends Component {
             : <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row' }}>
                 {currentUser.avatar
-                    ? <FastImage
-                      style={{ width: 100, height: 100, borderRadius: 50 }}
-                      source={{ uri: currentUser.avatar.medium.split('?')[0] }}
-                    />
-                    : null}
+                  ? <FastImage
+                    style={{ width: 100, height: 100, borderRadius: 50 }}
+                    source={{ uri: currentUser.avatar.medium.split('?')[0] }}
+                    cache="web"
+                  />
+                  : null}
                 <View>
                   <Text>
                     {currentUser.name}

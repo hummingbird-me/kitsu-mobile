@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     margin: 10,
   },
-  userAvatar: { width: 40, height: 40 },
+  userAvatar: { width: 40, height: 40, borderRadius: 20 },
   activityText: { color: colors.white, fontFamily: 'OpenSans', fontSize: 12 },
   activityTextHighlight: { fontWeight: 'bold', color: colors.tabRed },
 });

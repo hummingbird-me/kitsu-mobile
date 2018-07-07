@@ -113,7 +113,7 @@ class Feed extends React.PureComponent {
 
       const result = await Kitsu.one(this.state.activeFeed, subPath).get({
         include:
-          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: { kind: 'posts' },
         page: {
           cursor: this.cursor,
@@ -154,7 +154,7 @@ class Feed extends React.PureComponent {
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
       this.props.navigation.navigate('CreatePost', {
-        onNewPostCreated: () => this.fetchFeed({ reset: true }),
+        onPostCreated: () => this.fetchFeed({ reset: true }),
       });
     }
   };

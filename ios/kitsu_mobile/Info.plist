@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>6.6</string>
+	<string>6.7</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -70,7 +70,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Kitsu needs to access your camera to let you upload photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Kitsu needs to access your photo library to let you upload photos.</string>
 	<key>UIAppFonts</key>
@@ -128,6 +128,7 @@
 		<string>Asap-Medium.otf</string>
 		<string>Asap-MediumItalic.otf</string>
 		<string>Asap-Regular.otf</string>
+		<string>Feather.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

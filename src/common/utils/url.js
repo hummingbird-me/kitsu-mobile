@@ -1,10 +1,83 @@
 import { Linking } from 'react-native';
+import { Lightbox } from 'kitsu/utils/lightbox';
+import { isEmpty } from 'lodash';
+
+/**
+ * Check whether a url is a kitsu url.
+ * Kitsu url being that it has the `kitsu` in the host name.
+ *
+ * @param {string} url The url to check.
+ * @returns Whether a url is a kitsu url.
+ */
+export function isKitsuUrl(url) {
+  // Parse it
+  const parsed = parseURL((url || ''));
+  if (!parsed) return false;
+
+  // Check if we have a kitsu image
+  const { hostname } = parsed;
+  return (hostname || '').toLowerCase().includes('kitsu');
+}
+
+/**
+ * Checks whether a url is a data url.
+ * E.g data:image/png;base64, data:text/plain, etc ...
+ *
+ * @param {string} url The url to check.
+ * @returns If the url is a data url.
+ */
+export function isDataUrl(url) {
+  const regex = /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z0-9-.!#$%*+.{}|~`]+=[a-z0-9-.!#$%*+.{}|~`]+)*)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)$/i;
+  return regex.test((url || '').trim());
+}
+
+
+/**
+ * Checks whether a url is a gif url.
+ *
+ * @param {string} url The url to check.
+ * @returns If the url is a gif url.
+ */
+export function isGIFUrl(url) {
+  const info = parseURL((url || '').toLowerCase());
+  if (!info) return false;
+
+  const regex = /\.(gif)$/;
+  return regex.test((info.pathname || '').trim());
+}
+
+/**
+ * Checks whether a url is an image url.
+ * This is a very basic check and it supports gif, jpg, jpeg, png and bmp detection.
+ *
+ * @param {string} url The url to check
+ * @returns If the url is an image url.
+ */
+export function isImageUrl(url) {
+  const info = parseURL((url || '').toLowerCase());
+  if (!info) return false;
+
+  const regex = /\.(gif|jpg|jpeg|png|bmp)$/;
+  return regex.test((info.pathname || '').trim());
+}
+
+/**
+ * Extract urls from a given string.
+ *
+ * @param {String} text The string to extract urls from
+ * @returns An array of urls.
+ */
+export function extractUrls(text) {
+  if (!text) return [];
+  const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+  return text.match(regex) || [];
+}
 
 /**
  * Open the given url in `Linking`.
  * Checks to see if the url is supported by an app before opening it.
  *
- * @param {any} url The url to open
+ * @param {string} url The url to open
  */
 async function openUrl(url) {
   try {
@@ -33,9 +106,9 @@ export function parseURL(url) {
     '(\\?[^#]*|)', search params
     '(#.*|)$' hash
   */
-  if (typeof url !== 'string') return null;
+  if (typeof url !== 'string' || isEmpty(url)) return null;
 
-  const regex = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/;
+  const regex = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/i;
   const match = url.match(regex);
   return match && {
     url,
@@ -58,11 +131,16 @@ export function parseURL(url) {
  * @param {object} navigation The navigation object.
  */
 export async function handleURL(url, navigation) {
-
   // Get url information
   const info = parseURL(url);
   if (!info) {
     openUrl(url);
+    return;
+  }
+
+  // Check if it's an image url
+  if (isImageUrl(url)) {
+    Lightbox.show([url]);
     return;
   }
 

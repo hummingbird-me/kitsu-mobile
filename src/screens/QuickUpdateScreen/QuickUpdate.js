@@ -24,7 +24,7 @@ import { Kitsu } from 'kitsu/config/api';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { isEmpty, capitalize } from 'lodash';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { ImageStatus } from 'kitsu/components/ImageStatus';
 import QuickUpdateEditor from './QuickUpdateEditor';
@@ -81,7 +81,6 @@ class QuickUpdate extends Component {
     nextUpBackgroundImageUri: undefined,
     faderOpacity: new Animated.Value(1),
     headerOpacity: new Animated.Value(1),
-    editorText: '',
     editing: false,
     refreshing: false,
     ratingSimpleSelected: 0,
@@ -150,9 +149,6 @@ class QuickUpdate extends Component {
     });
   };
 
-  onEditorChanged = (editorText) => {
-    this.setState({ editorText });
-  };
 
   onMediaTapped = (media) => {
     const { navigation } = this.props;
@@ -254,7 +250,7 @@ class QuickUpdate extends Component {
       const [unit] = entry.unit;
       const posts = await Kitsu.find('episodeFeed', unit.id, {
         include:
-          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: { kind: 'posts' },
         page: {
           limit: 10,
@@ -476,54 +472,20 @@ class QuickUpdate extends Component {
     }
   };
 
-  updateTextAndToggle = async (gif, nsfw, spoiler) => {
-    // Restore any previous text, and then toggle the editor.
-    const { library, editorText } = this.state;
-
-    // Add gifs
-    let updatedText = (editorText && editorText.trim()) || '';
-    if (gif && gif.id) {
-      const gifURL = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
-      updatedText += `\n${gifURL}`;
-    }
-
-    this.setState({ isLoadingFeed: !isEmpty(updatedText.trim()) }, this.toggleEditor);
-
-    // Make sure we have something written in the text
-    if (isEmpty(updatedText.trim())) return;
-
-    const { currentUser } = this.props;
-    const current = library[this.carousel.currentIndex];
-    try {
-      const post = await Kitsu.create('posts', {
-        spoiler,
-        nsfw,
-        content: updatedText.trim(),
-        media: {
-          id: getMedia(current).id, type: current.anime ? 'anime' : 'manga',
-        },
-        spoiledUnit: { id: current.unit[0].id },
-        user: { id: currentUser.id },
-      }, { include: 'media,spoiledUnit,user' }); // @TODO: Just assign these locally to reduce payload?
-
-      // Unshift new post into discussions list
-      const processed = preprocessFeedPost(post);
-      const discussions = [processed, ...this.state.discussions];
-      this.setState({ editorText: '', isLoadingFeed: false, discussions });
-    } catch (e) {
-      console.error('Can not submit discussion post: ', e);
-      this.setState({ isLoadingFeed: false });
-    }
+  onPostCreated = (post) => {
+    // Unshift new post into discussions list
+    const processed = preprocessFeedPost(post);
+    const discussions = [processed, ...this.state.discussions];
+    this.setState({ isLoadingFeed: false, discussions });
+    this.toggleEditor();
   };
 
   toggleEditor = () => {
-    const { editing, updateText } = this.state;
+    const { editing } = this.state;
 
     if (!editing) {
       this.setState({
         editing: true,
-        // Need to copy the current updateText over so the dialog shows with the correct text in it.
-        editorText: updateText,
       });
       this.hideHeader();
       // this.props.onBeginEditing();
@@ -644,7 +606,6 @@ class QuickUpdate extends Component {
       discussions,
       isLoadingFeed,
       isLoadingNextFeedPage,
-      editorText,
       editing,
       refreshing,
     } = this.state;
@@ -666,7 +627,7 @@ class QuickUpdate extends Component {
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} />
+        <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} cache="web" />
         <Animated.Image
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
@@ -727,7 +688,7 @@ class QuickUpdate extends Component {
               {(!isLoadingFeed || isLoadingNextFeedPage) ? (
                 <KeyboardAwareFlatList
                   data={discussions || []}
-                  keyExtractor={item => item.id}
+                  keyExtractor={item => `${item.id}`}
                   renderItem={this.renderPostItem}
                   onEndReached={() => discussions && discussions.length && this.fetchNextFeedPage()}
                   onEndReachedThreshold={0.6}
@@ -771,10 +732,8 @@ class QuickUpdate extends Component {
               media={getMedia(entry)}
               currentEpisode={entry.unit[0]}
               progress={progress}
-              onChange={this.onEditorChanged}
               onCancel={this.toggleEditor}
-              onDone={this.updateTextAndToggle}
-              value={editorText}
+              onPostCreated={this.onPostCreated}
             />
           </Modal>
         )}

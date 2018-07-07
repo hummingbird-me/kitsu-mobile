@@ -49,6 +49,6 @@ export default class AutoSizedImage extends React.Component {
       source = Object.assign(source, this.props.source, finalSize);
     }
 
-    return <FastImage style={style} source={source} />;
+    return <FastImage style={style} source={source} cache="web" />;
   }
 }

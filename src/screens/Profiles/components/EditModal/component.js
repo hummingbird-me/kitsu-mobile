@@ -12,8 +12,8 @@ import * as colors from 'kitsu/constants/colors';
 import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
 import ImagePicker from 'react-native-image-crop-picker';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { styles } from './styles';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
 
 export class EditModal extends Component {
   static defaultProps = {
@@ -110,6 +110,7 @@ export class EditModal extends Component {
           <FastImage
             style={styles.profileCover}
             source={cover}
+            cache="web"
           />
         </TouchableOpacity>
       </View>
@@ -128,7 +129,7 @@ export class EditModal extends Component {
           <FastImage
             style={styles.profileImage}
             source={avatar}
-            borderRadius={40}
+            cache="web"
           />
         </TouchableOpacity>
       </View>

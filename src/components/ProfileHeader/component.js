@@ -6,7 +6,7 @@ import * as PropTypes from 'prop-types';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { styles } from './styles';
 
 export const ProfileHeader = ({
@@ -53,7 +53,7 @@ export const ProfileHeader = ({
           <TouchableOpacity style={styles.backButton} transparent onPress={goBack}>
             <Icon name="chevron-left" style={[commonStyles.colorWhite, commonStyles.transparent, styles.chevronStyle]} />
             {showProfileImage &&
-              <FastImage style={styles.profileImage} source={{ uri: profileImageUri }} borderRadius={15} />
+              <FastImage style={styles.profileImage} source={{ uri: profileImageUri }} cache="web" />
             }
             {showFollowButton &&
               <Text style={[

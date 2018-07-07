@@ -122,7 +122,10 @@ platform :ios do
     build()
 
     # Auto submit for alpha testers
-    pilot()
+    pilot(
+      skip_submission: true,
+      skip_waiting_for_build_processing: true,
+    )
   end
 
   desc "Deploy a new version to the App Store"

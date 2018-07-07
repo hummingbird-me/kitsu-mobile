@@ -42,7 +42,7 @@ class FeedComponent extends PureComponent {
 
     try {
       const result = await Kitsu.one('userFeed', userId).get({
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: {
           kind: 'posts',
         },
@@ -68,7 +68,7 @@ class FeedComponent extends PureComponent {
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
       this.props.navigation.navigate('CreatePost', {
-        onNewPostCreated: this.fetchFeed,
+        onPostCreated: this.fetchFeed,
         targetUser: this.props.profile,
       });
     }
@@ -100,7 +100,7 @@ class FeedComponent extends PureComponent {
           <FlatList
             listKey="feed"
             data={feed || []}
-            keyExtractor={item => item.id}
+            keyExtractor={item => `${item.id}`}
             renderItem={this.renderItem}
           />
         }

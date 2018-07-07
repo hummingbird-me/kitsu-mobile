@@ -24,14 +24,14 @@ const AccountView = ({ style, data, selected, onSelectAccount }) => {
       onPress={() => onSelectAccount(data.accountType)}
       style={[commonStyles.rowWrapper, selectedRowStyle, style]}
     >
-      <FastImage style={styles.profileImage} source={{ uri: profileImageURL || defaultAvatar }} />
+      <FastImage style={styles.profileImage} source={{ uri: profileImageURL || defaultAvatar }} cache="web" />
       <View style={styles.textWrapper}>
         <Text style={[commonStyles.text, selectedTextStyle]}>{username}</Text>
         <Text style={[styles.libraryCount, selectedTextStyle]}>
           {libraryCount ? `${libraryCount} library entries` : 'Empty Library'}
         </Text>
       </View>
-      <FastImage style={styles.brandImage} source={accountType === 'kitsu' ? kitsuLogo : aozoraLogo} />
+      <FastImage style={styles.brandImage} source={accountType === 'kitsu' ? kitsuLogo : aozoraLogo} cache="web" />
     </TouchableOpacity>
   );
 };

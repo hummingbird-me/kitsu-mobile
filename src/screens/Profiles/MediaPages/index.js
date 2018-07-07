@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, View } from 'react-native';
+import { StatusBar, Share, TouchableOpacity } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -16,11 +16,12 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import { capitalize, upperFirst } from 'lodash';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
-import { StyledText } from 'kitsu/components/StyledText';
+import { capitalize, upperFirst, isNull, isEmpty } from 'lodash';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
+import { Lightbox } from 'kitsu/utils/lightbox';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
@@ -111,6 +112,7 @@ class MediaPages extends PureComponent {
 
   onMoreButtonOptionsSelected = async (option) => {
     const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { media } = this.state;
     switch (option) {
       case 'add': {
         const record = await Kitsu.create('favorites', {
@@ -130,6 +132,26 @@ class MediaPages extends PureComponent {
         await Kitsu.destroy('favorites', this.state.favorite.id);
         this.setState({ favorite: null });
         break;
+      case 'share': {
+        const id = (media && media.slug) || mediaId;
+        if (isNull(id) || isNull(mediaType)) return;
+        const url = `${kitsuConfig.kitsuUrl}/${mediaType}/${id}`;
+        const key = Platform.select({ ios: 'url', android: 'message' });
+        Share.share({ [key]: url });
+        break;
+      }
+      case 'cover': {
+        if (!media || !media.coverImage) return;
+        const coverURL = media.coverImage.original ||
+          media.coverImage.large ||
+          media.coverImage.medium ||
+          media.coverImage.small ||
+          null;
+
+        if (isEmpty(coverURL)) return;
+        Lightbox.show([coverURL]);
+        break;
+      }
       default:
         console.log('unhandled option selected:', option);
         break;
@@ -513,11 +535,9 @@ class MediaPages extends PureComponent {
       { text: 'Want to Read', value: 'planned', if: (type) => type === 'manga' },
       { text: 'Completed', value: 'completed' },
       { text: 'On Hold', value: 'on_hold' },
-      { text: 'Dropped', value: 'dropped' }
+      { text: 'Dropped', value: 'dropped' },
     ];
-    MAIN_BUTTON_OPTIONS = MAIN_BUTTON_OPTIONS.filter((item) => {
-      return item.if ? item.if(media.type) : true;
-    });
+    MAIN_BUTTON_OPTIONS = MAIN_BUTTON_OPTIONS.filter(item => (item.if ? item.if(media.type) : true));
 
     let mainButtonTitle = 'Add to Library';
     if (libraryEntry) {
@@ -528,7 +548,13 @@ class MediaPages extends PureComponent {
     }
     MAIN_BUTTON_OPTIONS.push('Nevermind');
 
-    const MORE_BUTTON_OPTIONS = ['Nevermind'];
+    const MORE_BUTTON_OPTIONS = [
+      { text: 'Share Media Link', value: 'share' },
+      // Only display if media has a valid cover image
+      { text: 'View Cover Image', value: 'cover', if: i => !!(i && i.coverImage) },
+      'Nevermind',
+    ].filter(item => (item.if ? item.if(media) : true));
+
     if (favorite) {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Remove from Favorites', value: 'remove' });
     } else {

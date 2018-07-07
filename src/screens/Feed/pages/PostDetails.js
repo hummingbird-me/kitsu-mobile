@@ -23,7 +23,8 @@ import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Commen
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
-import { isEmpty } from 'lodash';
+import { extractUrls } from 'kitsu/common/utils/url';
+import { isEmpty, uniqBy } from 'lodash';
 
 export default class PostDetails extends PureComponent {
   static navigationOptions = {
@@ -62,6 +63,7 @@ export default class PostDetails extends PureComponent {
       isLoadingNextPage: false,
       isReplying: false,
       isPostingComment: false,
+      embedUrl: null,
     };
   }
 
@@ -78,7 +80,7 @@ export default class PostDetails extends PureComponent {
     const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
     const comment = this.state.comment.trim();
     const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
-    this.setState({ comment: newComment }, () => {
+    this.setState({ comment: newComment, embedUrl: gifUrl }, () => {
       // Submit gif if comment was empty
       if (isEmpty(comment)) this.onSubmitComment();
     });
@@ -91,6 +93,15 @@ export default class PostDetails extends PureComponent {
 
     try {
       const { currentUser, post, syncComments } = this.props.navigation.state.params;
+
+      // Update the embed
+      let embedUrl = this.state.embedUrl;
+
+      // If we don't have an embed set then use the first link
+      const links = extractUrls(this.state.comment.trim());
+      if (isEmpty(embedUrl) && links.length > 0) {
+        embedUrl = links[0];
+      }
 
       // Check if this is a reply rather than a top-level comment
       let replyOptions = {};
@@ -106,6 +117,7 @@ export default class PostDetails extends PureComponent {
 
       const comment = await Kitsu.create('comments', {
         content: this.state.comment.trim(),
+        embedUrl,
         post: {
           id: post.id,
           type: 'posts',
@@ -120,18 +132,20 @@ export default class PostDetails extends PureComponent {
 
       const processed = preprocessFeedPost(comment);
       this.setState({
+        embedUrl: null,
         comment: '',
         isReplying: false,
-        commentsCount: this.state.commentsCount + 1
+        commentsCount: this.state.commentsCount + 1,
       });
 
       if (this.replyRef) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
+        const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
         this.setState({
-          comments: [...this.state.comments, processed],
-          topLevelCommentsCount: this.state.topLevelCommentsCount + 1
+          comments: uniqueComments,
+          topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
         });
 
         // This is a top-level comment, we want to let the upstream
@@ -217,14 +231,15 @@ export default class PostDetails extends PureComponent {
         fields: {
           users: 'slug,avatar,name',
         },
-        include: 'user',
+        include: 'user,uploads',
         sort: '-createdAt',
         ...requestOptions,
       });
 
       const processed = preprocessFeedPosts(comments);
+      const uniqueComments = uniqBy([...processed.reverse(), ...this.state.comments], 'id');
 
-      this.setState({ comments: [...processed.reverse(), ...this.state.comments] });
+      this.setState({ comments: uniqueComments });
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
@@ -260,7 +275,7 @@ export default class PostDetails extends PureComponent {
     this.props.navigation.goBack();
   };
 
-  keyExtractor = item => item.id;
+  keyExtractor = item => `${item.id}`;
 
   navigateToUserProfile = (userId) => {
     if (userId) this.props.navigation.navigate('ProfilePages', { userId });
@@ -289,7 +304,7 @@ export default class PostDetails extends PureComponent {
     const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
         isPostingComment } = this.state;
 
-    const { content, embed, media, spoiledUnit } = post;
+    const { content, embed, media, spoiledUnit, uploads } = post;
 
     return (
       <KeyboardAvoidingView
@@ -315,6 +330,7 @@ export default class PostDetails extends PureComponent {
             <PostMain
               content={content}
               embed={embed}
+              uploads={uploads}
               likesCount={postLikesCount}
               commentsCount={commentsCount}
               taggedMedia={media}
@@ -339,6 +355,7 @@ export default class PostDetails extends PureComponent {
               )}
               {comments.length > 0 && (
                 <FlatList
+                  listKey={`${post.id}`}
                   data={comments}
                   keyExtractor={this.keyExtractor}
                   renderItem={this.renderItem}

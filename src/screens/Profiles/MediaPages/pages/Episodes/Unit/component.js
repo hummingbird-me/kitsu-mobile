@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Platform, Text, WebView, ActivityIndicator, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
+import { ScrollView, View, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
-import WKWebView from 'react-native-wkwebview-reborn';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
@@ -19,10 +17,10 @@ import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import moment from 'moment';
-import URL from 'url-parse';
+import { WebComponent } from 'kitsu/common/utils/components';
 import { styles } from './styles';
 
-const WebComponent = Platform.OS === 'ios' ? WKWebView : WebView;
+
 const LANGUAGE_LOOKUP = {
   en: 'English',
   ja: 'Japanese',
@@ -61,7 +59,7 @@ class Unit extends PureComponent {
     this.setState({ isFeedLoading: true });
     try {
       const posts = await Kitsu.find('episodeFeed', selectedUnit.id, {
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: { kind: 'posts' },
         page: { limit: 10, },
       });
@@ -97,11 +95,11 @@ class Unit extends PureComponent {
 
   navigateToCreatePost = () => {
     this.props.navigation.navigate('CreatePost', {
-      onNewPostCreated: this.fetchFeed,
+      onPostCreated: this.fetchFeed,
       spoiler: true,
       spoiledUnit: this.state.selectedUnit,
       media: this.props.navigation.state.params.media,
-      isMediaDisabled: true,
+      disableMedia: true,
     });
   };
 
@@ -177,7 +175,8 @@ class Unit extends PureComponent {
     if (languageOptions) { languageOptions.push('Nevermind'); }
 
     // Select only units that have videos
-    const units = hasVideo && media.episodes.filter(item => item.videos.length >= 1).sort((a, b) => a.number - b.number);
+    const episodes = (media && media.episodes) || [];
+    const units = hasVideo && episodes.filter(item => item.videos.length >= 1).sort((a, b) => a.number - b.number);
     const unitsIndex = hasVideo && units.findIndex(item => (
       item.videos.filter(video => video === selectedVideo).length === 1
     ));
@@ -215,7 +214,7 @@ class Unit extends PureComponent {
               <FlatList
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={item => item.id}
+                keyExtractor={item => `${item.id}`}
                 data={units}
                 getItemLayout={this.getItemLayout}
                 initialScrollIndex={unitsIndex}
@@ -255,7 +254,7 @@ class Unit extends PureComponent {
             ) : (
               <KeyboardAwareFlatList
                 data={discussions}
-                keyExtractor={item => item.id}
+                keyExtractor={item => `${item.id}`}
                 renderItem={this.renderPost}
                 ListEmptyComponent={this.renderEmptyFeed}
               />

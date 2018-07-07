@@ -13,6 +13,7 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, capitalize, isNull, isArray } from 'lodash';
 import { styles } from './styles';
+import { Lightbox } from 'kitsu/utils/lightbox';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
@@ -145,14 +146,18 @@ export class SceneHeader extends PureComponent {
         <View style={[styles.profileHeaderView, styles[`profileHeaderView__${variant}`]]}>
           {/* Profile Poster Image */}
           <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
-            <View style={[styles.profileImageView, styles[`profileImageView__${variant}`]]}>
+            <TouchableOpacity
+              style={[styles.profileImageView, styles[`profileImageView__${variant}`]]}
+              onPress={() => Lightbox.show([posterImage])}
+              disabled={isEmpty(posterImage)}
+            >
               <StyledProgressiveImage
                 variant={variant}
                 resize="cover"
                 source={{ uri: posterImage || defaultAvatar }}
                 borderRadius={variant === 'profile' ? cardSize.square.width : 6}
               />
-            </View>
+            </TouchableOpacity>
           </View>
 
           <View style={[styles.titleView, styles[`titleView__${variant}`]]}>

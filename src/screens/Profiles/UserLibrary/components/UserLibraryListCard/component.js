@@ -1,5 +1,5 @@
 import * as React from 'react';
-import debounce from 'lodash/debounce';
+import { debounce } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -79,8 +79,16 @@ export class UserLibraryListCard extends React.PureComponent {
   }
 
   onProgressValueChanged = (newProgress) => {
+    // Check if user has completed the media
+    const maxProgress = this.getMaxProgress();
+    const hasCompletedMedia = maxProgress && newProgress >= maxProgress;
+    const newStatus = (hasCompletedMedia && this.state.libraryStatus !== 'completed' && {
+      libraryStatus: 'completed',
+    }) || {};
+
     this.setState({
       progress: newProgress,
+      ...newStatus,
     }, this.debounceSave);
   }
 
@@ -112,6 +120,7 @@ export class UserLibraryListCard extends React.PureComponent {
   getMaxProgress() {
     const { libraryEntry, libraryType } = this.props;
     const mediaData = libraryEntry[libraryType];
+    if (!mediaData) return null;
 
     if (mediaData.type === 'anime') {
       return mediaData.episodeCount;
@@ -192,7 +201,10 @@ export class UserLibraryListCard extends React.PureComponent {
     const mediaData = libraryEntry[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
     const maxProgress = this.getMaxProgress();
-    const progressPercentage = Math.floor((libraryEntry.progress / maxProgress) * 100);
+
+    // Calculate the percentages
+    const fractionProgress = maxProgress ? (libraryEntry.progress / maxProgress) : 0;
+    const progressPercentage = Math.floor(fractionProgress * 100);
 
     return (
       <Swipeable
@@ -246,7 +258,7 @@ export class UserLibraryListCard extends React.PureComponent {
                   numberOfLines={1}
                   style={styles.titleText}
                 >
-                  {mediaData.canonicalTitle}
+                  {(mediaData && mediaData.canonicalTitle) || '-'}
                 </Text>
                 {canEdit && (
                   <SelectMenu

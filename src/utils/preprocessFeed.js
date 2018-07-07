@@ -1,5 +1,6 @@
 
-import { trimStart, trimEnd } from 'lodash';
+import { isEmpty } from 'lodash';
+import { extractUrls } from 'kitsu/common/utils/url';
 
 const getHttpUrls = (url) => {
   // A quick hack to return both the http and https url
@@ -16,8 +17,18 @@ const getHttpUrls = (url) => {
  * @returns The processed post without embed links in their content
  */
 export const preprocessFeedPost = (post) => {
-  // Remove embed image & video url from the content
-  if (post.embed) {
+
+  // Save original content before we make any edits to it
+  // eslint-disable-next-line no-param-reassign
+  post.originalContent = post.content;
+
+  /* Remove embed image & video url from the content
+    We only want to do this if:
+      - We don't have uploads
+      - Only 1 url is present
+  */
+  const urls = extractUrls(post.content);
+  if (post.embed && isEmpty(post.uploads) && urls.length <= 1) {
     const image = post.embed.image;
     const video = post.embed.video;
 
@@ -36,9 +47,9 @@ export const preprocessFeedPost = (post) => {
     }
   }
 
-  // finally trim the content
+  // Finally trim the content
   // eslint-disable-next-line no-param-reassign
-  post.content = trimEnd(trimStart(post.content));
+  post.content = (post.content || '').trim();
 
   return post;
 };

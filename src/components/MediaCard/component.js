@@ -19,7 +19,7 @@ export const MediaCard = ({
   loading,
 }) => {
   const onPress = () => {
-    if (mediaData.id && mediaData.type) {
+    if (mediaData && mediaData.id && mediaData.type) {
       navigate('MediaPages', {
         mediaId: mediaData.id,
         mediaType: mediaData.type,
@@ -30,7 +30,7 @@ export const MediaCard = ({
   return (
     <TouchableOpacity onPress={onPress} disabled={loading}>
       <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
-        {mediaData.posterImage ? (
+        {mediaData && mediaData.posterImage ? (
           <ProgressiveImage
             duration={500}
             source={{ uri: mediaData.posterImage.small }}

@@ -1,5 +1,6 @@
 const isProduction = true;
 const kitsuUrl = isProduction ? 'https://kitsu.io' : 'https://staging.kitsu.io';
+const apiUrl = `${kitsuUrl}/api`;
 
 export const kitsuConfig = {
   isProduction,
@@ -9,8 +10,9 @@ export const kitsuConfig = {
   },
   kitsuUrl,
   assetsUrl: `${kitsuUrl}/images`,
-  baseUrl: `${kitsuUrl}/api`,
-  version: '0.0.0',
+  baseUrl: apiUrl,
+  uploadUrl: `${apiUrl}/edge/uploads/_bulk`,
+  version: '6.7',
   stream: {
     API_KEY: 'eb6dvmba4ct3',
     API_SECRET:

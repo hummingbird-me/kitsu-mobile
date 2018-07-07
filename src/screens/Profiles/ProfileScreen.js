@@ -32,7 +32,7 @@ import {
   fetchUserFeed,
 } from 'kitsu/store/profile/actions';
 import { getUserFeed } from 'kitsu/store/feed/actions';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
 const Loader = <ActivityIndicator size="small" color="grey" />;
 
@@ -525,7 +525,7 @@ class ProfileScreen extends Component {
               style={{ backgroundColor: colors.listBackPurple }}
               data={userFeed}
               ListHeaderComponent={this.renderHeader}
-              keyExtractor={item => item.id}
+              keyExtractor={item => `${item.id}`}
               renderItem={({ item }) => <CardActivity {...item} />}
               onEndReached={() => this.loadMore(profile.id)}
               onEndReachedThreshold={0.5}

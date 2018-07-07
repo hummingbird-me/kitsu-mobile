@@ -129,8 +129,8 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       }
     } catch (e) {
       console.warn(e);
-
-      Sentry.captureException(e, {
+      const string = JSON.stringify(e);
+      Sentry.captureException(string, {
         tags: {
           type: 'auth',
         },

@@ -10,7 +10,7 @@ import * as colors from 'kitsu/constants/colors';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Feed/constants';
 import { kitsuConfig } from 'kitsu/config/env';
-import { cachedFetch } from 'kitsu/utils/fetch-cache';
+import { FetchCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
 
 const IMAGE_SIZE = { width: 150, height: 100 };
@@ -45,7 +45,7 @@ export class GiphyModal extends PureComponent {
 
   static defaultProps = {
     visible: false,
-    onCancelPress: null,
+    onCancelPress: () => {},
     onGifSelect: null,
   }
 
@@ -101,7 +101,7 @@ export class GiphyModal extends PureComponent {
 
     // Fetch the GIFS!
     try {
-      const giphy = await cachedFetch(url);
+      const giphy = await FetchCache.get(url);
       const gifs = giphy.data;
 
       if (this.mounted) this.setState({ gifs });
@@ -157,9 +157,6 @@ export class GiphyModal extends PureComponent {
           </TouchableOpacity>
         </View>
         <View style={styles.imageContainer}>
-          <View style={styles.loading}>
-            <ActivityIndicator color={colors.white} />
-          </View>
           <PostImage uri={images.downsized.url || images.original.url || ''} width={scene.width} />
         </View>
       </View>
@@ -189,32 +186,29 @@ export class GiphyModal extends PureComponent {
           leftButtonAction={this.handleCancelPress}
           rightButtonTitle=""
         />
-        <ScrollView style={{ flex: 1 }}>
-          <View style={styles.searchBoxContainer}>
-            <SearchBox
-              placeholder="Search for a GIF"
-              style={styles.searchBox}
-              value={query}
-              onChangeText={this.handleSearchStateChange}
-              onSubmitEditing={Keyboard.dismiss}
-            />
-          </View>
-          {/* TODO: Fetch more gifs on scroll */}
-          <FlatList
-            listKey="giphy"
-            style={padding}
-            data={gifs}
-            getItemLayout={(data, index) => ({
-              length: bestSpacing.height,
-              offset: bestSpacing.height * index,
-              index,
-            })}
-            numColumns={bestSpacing.columnCount}
-            ItemSeparatorComponent={() => <View />}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => this.renderItem(item, bestSpacing)}
+        <View style={styles.searchBoxContainer}>
+          <SearchBox
+            placeholder="Search for a GIF"
+            style={styles.searchBox}
+            value={query}
+            onChangeText={this.handleSearchStateChange}
+            onSubmitEditing={Keyboard.dismiss}
           />
-        </ScrollView>
+        </View>
+        <FlatList
+          listKey="giphy"
+          style={padding}
+          data={gifs}
+          getItemLayout={(data, index) => ({
+            length: bestSpacing.height,
+            offset: bestSpacing.height * index,
+            index,
+          })}
+          numColumns={bestSpacing.columnCount}
+          ItemSeparatorComponent={() => <View />}
+          keyExtractor={item => `${item.id}`}
+          renderItem={({ item }) => this.renderItem(item, bestSpacing)}
+        />
       </Modal>
     );
   }

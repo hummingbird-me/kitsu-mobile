@@ -60,7 +60,7 @@ class SummaryComponent extends PureComponent {
 
     try {
       const result = await Kitsu.one('mediaFeed', `${endpoint}-${id}`).get({
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga',
+        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: {
           kind: 'posts',
         },
@@ -152,7 +152,7 @@ class SummaryComponent extends PureComponent {
     return (
       <FlatList
         data={filtered}
-        keyExtractor={i => i.id}
+        keyExtractor={i => `${i.id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.streamingLinksContent}
@@ -272,7 +272,7 @@ class SummaryComponent extends PureComponent {
         { !loading &&
           <FlatList
             data={feed || []}
-            keyExtractor={item => item.id}
+            keyExtractor={item => `${item.id}`}
             renderItem={this.renderItem}
           />
         }

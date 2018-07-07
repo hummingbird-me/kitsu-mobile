@@ -14,8 +14,7 @@ import IconAwe from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
-import uniqBy from 'lodash/uniqBy';
-import capitalize from 'lodash/capitalize';
+import { uniqBy, capitalize } from 'lodash';
 import CustomHeader from 'kitsu/components/CustomHeader';
 import DoubleProgress from 'kitsu/components/DoubleProgress';
 import CardStatus from 'kitsu/components/Card/CardStatus';
@@ -28,7 +27,7 @@ import { getMediaFeed } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
 // import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
 const { width } = Dimensions.get('window');
 
@@ -630,7 +629,7 @@ class MediaScreen extends Component {
             <FlatList
               data={mediaFeed}
               ListHeaderComponent={() => this.renderHeader()}
-              keyExtractor={item => item.id}
+              keyExtractor={item => `${item.id}`}
               renderItem={({ item }) => <CardActivity {...item} />}
 
               onEndReached={() => this.loadMore(media.id, media.type)}

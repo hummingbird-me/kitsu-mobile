@@ -15,7 +15,7 @@ export const Kitsu = new JsonApi({
   pluralize: false,
 });
 
-Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version} (askar)`;
+Kitsu.headers['User-Agent'] = `KitsuMobile/${kitsuConfig.version}`;
 Kitsu.replaceMiddleware('errors', errorMiddleware);
 Kitsu.replaceMiddleware('axios-request', kitsuRequestMiddleware);
 Kitsu.insertMiddlewareAfter('response', titleMiddleware);
@@ -577,7 +577,7 @@ Kitsu.define(
     slug: '',
     animeProductions: {
       jsonApi: 'hasMany',
-      type: 'animeProductions'
+      type: 'animeProductions',
     },
   },
 );
@@ -650,14 +650,14 @@ Kitsu.define(
   {
     mediaReaction: {
       jsonApi: 'hasOne',
-      type: 'mediaReactions'
+      type: 'mediaReactions',
     },
     user: {
       jsonApi: 'hasOne',
-      type: 'users'
-    }
+      type: 'users',
+    },
   },
-  { collectionPath: 'media-reaction-votes' }
+  { collectionPath: 'media-reaction-votes' },
 );
 
 Kitsu.define(
@@ -761,6 +761,24 @@ Kitsu.define(
     },
   },
   { collectionPath: 'feeds/notifications' },
+);
+
+Kitsu.define(
+  'uploads',
+  {
+    content: {},
+    createdAt: '',
+    updatedAt: '',
+    uploadOrder: '',
+    owner: {
+      jsonApi: 'hasOne',
+    },
+    user: {
+      type: 'users',
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'uploads' },
 );
 
 Kitsu.define(
@@ -966,6 +984,9 @@ Kitsu.define(
     user: {
       type: 'users',
       jsonApi: 'hasOne',
+    },
+    uploads: {
+      jsonApi: 'hasMany',
     },
   },
   { collectionPath: 'posts' },

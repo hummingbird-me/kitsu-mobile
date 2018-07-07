@@ -7,7 +7,7 @@ import { defaultCover as defaultCoverUri } from 'kitsu/constants/app/';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import PropTypes from 'prop-types';
-import { getImgixCoverImage } from 'kitsu/utils/coverImage';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
 const SidebarHeader = ({ navigation, headerTitle, coverImage, onBackPress }) => {
   const goBack = onBackPress || navigation.goBack;

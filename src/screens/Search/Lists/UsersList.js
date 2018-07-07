@@ -76,7 +76,7 @@ const User = ({ navigation, user, onFollow }) => {
   return (
     <TouchableOpacity onPress={() => onUserPress(navigation, user.id)} activeOpacity={0.6} style={styles.userContainer}>
       <View style={styles.userLeftSection}>
-        <FastImage source={userAvatar} style={styles.userAvatar} borderRadius={30.5} />
+        <FastImage source={userAvatar} style={styles.userAvatar} cache="web" />
         <View style={styles.userMetaContainer}>
           <Text style={styles.userNameText}>{user.name}</Text>
           <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>

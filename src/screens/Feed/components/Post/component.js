@@ -8,9 +8,10 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
+import { isEmpty, uniqBy } from 'lodash';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
-import { isEmpty } from 'lodash';
+import { extractUrls } from 'kitsu/common/utils/url';
 
 // Post
 export class Post extends PureComponent {
@@ -38,6 +39,7 @@ export class Post extends PureComponent {
     overlayRemoved: false,
     isPostingComment: false,
     isDeleted: false,
+    embedUrl: null,
   };
 
   mounted = false
@@ -64,13 +66,14 @@ export class Post extends PureComponent {
       postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
       syncComments: (comments) => {
+        const uniqueComments = uniqBy([...this.state.comments, ...comments], 'id');
         this.setState({
-          comments: [...this.state.comments, ...comments],
+          comments: uniqueComments,
           latestComments: [...this.state.latestComments, ...comments],
           commentsCount: this.state.commentsCount + comments.length,
-          topLevelCommentsCount: this.state.commentsCount + comments.length
-        })
-      }
+          topLevelCommentsCount: this.state.commentsCount + comments.length,
+        });
+      },
     });
   }
 
@@ -81,7 +84,7 @@ export class Post extends PureComponent {
     const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
     const comment = this.state.comment.trim();
     const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
-    this.setState({ comment: newComment }, () => {
+    this.setState({ comment: newComment, embedUrl: gifUrl }, () => {
       // Submit gif if comment was empty
       if (isEmpty(comment)) this.onSubmitComment();
     });
@@ -91,9 +94,19 @@ export class Post extends PureComponent {
     if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
     this.setState({ isPostingComment: true });
 
+    // Update the embed
+    let embedUrl = this.state.embedUrl;
+
+    // If we don't have an embed set then use the first link
+    const links = extractUrls(this.state.comment.trim());
+    if (isEmpty(embedUrl) && links.length > 0) {
+      embedUrl = links[0];
+    }
+
     try {
       const comment = await Kitsu.create('comments', {
         content: this.state.comment.trim(),
+        embedUrl,
         post: {
           id: this.state.post.id,
           type: 'posts',
@@ -106,12 +119,15 @@ export class Post extends PureComponent {
       comment.user = this.props.currentUser;
 
       const processed = preprocessFeedPost(comment);
+      const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
+
       this.setState({
+        embedUrl: null,
         comment: '',
-        comments: [...this.state.comments, processed],
+        comments: uniqueComments,
         latestComments: [...this.state.latestComments, processed],
         topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
-        commentsCount: this.state.commentsCount + 1
+        commentsCount: this.state.commentsCount + 1,
       });
     } catch (error) {
       console.log('Error submitting comment:', error);
@@ -132,16 +148,17 @@ export class Post extends PureComponent {
         fields: {
           users: 'slug,avatar,name',
         },
-        include: 'user',
+        include: 'user,uploads',
         sort: '-createdAt',
       });
 
       const processed = preprocessFeedPosts(comments);
+      const uniqueComments = uniqBy(processed, 'id');
 
       if (this.mounted) {
         this.setState({
-          latestComments: processed.slice(0, 2).reverse(),
-          comments: processed.reverse(),
+          latestComments: uniqueComments.slice(0, 2).reverse(),
+          comments: uniqueComments.reverse(),
         });
       }
     } catch (err) {
@@ -224,17 +241,9 @@ export class Post extends PureComponent {
       this.props.navigation.navigate('CreatePost', {
         isEditing: true,
         post: this.state.post,
-        onNewPostCreated: (post) => {
-          const { user, targetUser, spoiledUnit, media, targetGroup } = this.state.post;
-          // Keep the relationships in order since the update call will strip them
-          // and we don't need the additional include payload
-          const postWithRelationships = post;
-          postWithRelationships.user = user;
-          postWithRelationships.targetUser = targetUser;
-          postWithRelationships.spoiledUnit = spoiledUnit;
-          postWithRelationships.media = media;
-          postWithRelationships.targetGroup = targetGroup;
-          this.setState({ post: postWithRelationships });
+        onPostCreated: (post) => {
+          const processed = preprocessFeedPost(post);
+          this.setState({ post: processed });
         },
       });
     }
@@ -265,13 +274,13 @@ export class Post extends PureComponent {
     const {
       createdAt,
       content,
-      images,
       embed,
       media,
       nsfw,
       spoiler,
       spoiledUnit,
       user,
+      uploads,
     } = post;
     if (isDeleted) { return null; }
 
@@ -295,8 +304,8 @@ export class Post extends PureComponent {
       (
         <PostMain
           content={content}
-          images={images}
           embed={embed}
+          uploads={uploads}
           likesCount={postLikesCount}
           commentsCount={commentsCount}
           taggedMedia={media}
