@@ -150,6 +150,7 @@ class SearchScreen extends PureComponent {
           />
         ) : (
           <ResultsList
+            style={styles.list}
             hits={hits}
             onPress={this.navigateToMedia}
             currentUser={this.props.currentUser}

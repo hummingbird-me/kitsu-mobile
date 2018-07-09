@@ -214,7 +214,7 @@ class TopsList extends PureComponent {
     };
 
     // Loading data is just an array of empty objects
-    const loadingData = Array(5).fill({});
+    const loadingData = Array(20).fill({});
 
     const topData = {
       title: (type === 'Anime') ? `Top Airing ${type}` : `Top Publishing ${type}`,
