@@ -46,9 +46,7 @@ export default class PostDetails extends PureComponent {
 
     this.state = {
       comment: '',
-      comments: props.navigation.state.params.comments && [
-        ...props.navigation.state.params.comments,
-      ],
+      comments: props.navigation.state.params.comments || [],
       topLevelCommentsCount: props.navigation.state.params.topLevelCommentsCount,
       commentsCount: props.navigation.state.params.commentsCount,
       like: props.navigation.state.params.like,
@@ -304,7 +302,7 @@ export default class PostDetails extends PureComponent {
     const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
         isPostingComment } = this.state;
 
-    const { content, embed, media, spoiledUnit, uploads } = post;
+    const { id, updatedAt, content, embed, media, spoiledUnit, uploads } = post;
 
     return (
       <KeyboardAvoidingView
@@ -328,6 +326,7 @@ export default class PostDetails extends PureComponent {
         <View style={{ flex: 1 }}>
           <ScrollView>
             <PostMain
+              cacheKey={`${id}-${updatedAt}`}
               content={content}
               embed={embed}
               uploads={uploads}

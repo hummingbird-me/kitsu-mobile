@@ -5,8 +5,8 @@ import FastImage from 'react-native-fast-image';
 import { ImageSizeCache } from 'kitsu/utils/cache';
 import { getImgixImage } from 'kitsu/utils/imgix';
 import { isKitsuUrl, isGIFUrl } from 'kitsu/common/utils/url';
-import { styles } from './styles';
 import { isNil } from 'lodash';
+import { styles } from './styles';
 
 // The maximum width to classify as a phone
 const MAX_PHONE_WIDTH = 480;
@@ -71,7 +71,7 @@ export class PostImage extends PureComponent {
     const uri = this.props.uri;
 
     // Get the cached size first, if not then load it in
-    if (ImageSizeCache.contains(uri)) {
+    if (ImageSizeCache.has(uri)) {
       const size = ImageSizeCache.get(uri) || {};
       const imageSize = this.calculateSize(size.width, size.height, false);
       this.setState({
