@@ -187,6 +187,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-iap')
     compile project(':react-native-sentry')
     compile project(':react-native-android-fullscreen-webview')
     compile project(':react-native-fast-image')

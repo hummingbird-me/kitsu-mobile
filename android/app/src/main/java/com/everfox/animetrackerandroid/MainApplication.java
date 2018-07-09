@@ -5,6 +5,7 @@ import android.support.multidex.MultiDex;
 import android.content.Context;
 
 import com.sbugert.rnadmob.RNAdMobPackage;
+import com.dooboolab.RNIap.RNIapPackage;
 import io.sentry.RNSentryPackage;
 import com.airship.customwebview.CustomWebViewPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -85,6 +86,7 @@ public class MainApplication extends NavigationApplication  {
     // Add additional packages you require here
     // No need to add RnnPackage and MainReactPackage
     return Arrays.<ReactPackage>asList(
+          new RNIapPackage(),
           new RNAdMobPackage(),
           new RNSentryPackage(MainApplication.this),
           new CustomWebViewPackage(),

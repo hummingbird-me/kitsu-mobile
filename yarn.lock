@@ -1579,7 +1579,7 @@ chalk@^2.0.0, chalk@^2.1.0:
     escape-string-regexp "^1.0.5"
     supports-color "^5.2.0"
 
-chalk@^2.3.1:
+chalk@^2.3.0, chalk@^2.3.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.1.tgz#18c49ab16a037b6eb0152cc83e3471338215b66e"
   integrity sha512-ObN6h1v2fTJSmUXoS3nMQ92LbDK9be4TV+6G+omQlGJFdcUX5heKi1LZ1YnRMIgwTLEj3E24bT6tYni50rlCfQ==
@@ -2186,6 +2186,12 @@ dom-walk@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
   integrity sha1-ZyIm3HTI95mtNTB9+TaroRrNYBg=
+
+dooboolab-welcome@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.0.5.tgz#7b9a5e8db3cace4cc98764258830180c009d7e70"
+  dependencies:
+    chalk "^2.3.0"
 
 duplexer2@0.0.2:
   version "0.0.2"
@@ -5889,6 +5895,12 @@ react-native-hyperlink@^0.0.14:
   dependencies:
     linkify-it "^1.2.0"
     mdurl "^1.0.0"
+
+react-native-iap@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-1.2.3.tgz#086e2ef68d2e40d1f34489b274752a4a2e51cb38"
+  dependencies:
+    dooboolab-welcome "^1.0.5"
 
 react-native-image-crop-picker@hummingbird-me/react-native-image-crop-picker:
   version "0.20.3"
