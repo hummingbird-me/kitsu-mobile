@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -28,6 +29,7 @@
 		1E6B3818FE594CE5BFCD8724 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 31FC4458B30648D49B57D619 /* OFL.txt */; };
 		2418BFC1202E73360015D195 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		245ADF0920E0E13E00BA9D04 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 241330E6205E091F002B6579 /* libFastImage.a */; };
+		24940E1320F2E312006A21B7 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24940E1220F2E312006A21B7 /* StoreKit.framework */; };
 		288C7B16940D4F52A8F13835 /* Asap-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = FD61A198D0A948A68EDEFB8F /* Asap-Medium.otf */; };
 		2923FACE130440C38EEA44BE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B8CC94332114017AA1BD9BC /* EvilIcons.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -524,6 +526,7 @@
 		15E8EFC0652B40E28898F62C /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		1C7979762FDBB54E8A743029 /* Pods-kitsu_mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kitsu_mobile.release.xcconfig"; path = "Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile.release.xcconfig"; sourceTree = "<group>"; };
 		22D26144262F4F7690ABB7B3 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		24940E1220F2E312006A21B7 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		24EE088E743447C4A67C2CB7 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		268CB22608FD87F20FCBC864 /* libPods-kitsu_mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kitsu_mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA52D4C8B0D4B529A71B14A /* RCTWKWebView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTWKWebView.xcodeproj; path = "../node_modules/react-native-wkwebview-reborn/ios/RCTWKWebView.xcodeproj"; sourceTree = "<group>"; };
@@ -655,6 +658,7 @@
 				771B7507592545E092384234 /* libRCTOneSignal.a in Frameworks */,
 				5B8F3A180D4E492986BEDC27 /* libimageCropPicker.a in Frameworks */,
 				E721A9CEA3C24CCF962B344B /* libRCTWKWebView.a in Frameworks */,
+				24940E1320F2E312006A21B7 /* StoreKit.framework in Frameworks */,
 				AA46644B76F32772A1C0CC7A /* libPods-kitsu_mobile.a in Frameworks */,
 				CEDAE1A565284505B1D1BD1F /* libRNSentry.a in Frameworks */,
 			);
@@ -863,6 +867,7 @@
 		6D33A6C67DF148E09CE537CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				24940E1220F2E312006A21B7 /* StoreKit.framework */,
 				C6A917631F45973800722EA9 /* FBSDKCoreKit.framework */,
 				C6A917641F45973800722EA9 /* FBSDKLoginKit.framework */,
 				C6A917651F45973800722EA9 /* FBSDKShareKit.framework */,
@@ -1109,14 +1114,6 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		16BD0B3085EC4D10A87623BB /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			path = Application;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1217,7 +1214,7 @@
 								enabled = 1;
 							};
 							com.apple.InAppPurchase = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.Push = {
 								enabled = 1;
@@ -1840,6 +1837,20 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/packager/react-native-xcode.sh";
 		};
+		3A3B9C773AB0441DB9FA12FC /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
+		};
 		446EAB4C23F4B34DB9D1597B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1890,20 +1901,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./Fabric.framework/run b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00 010015018557534a1a97465380fd280881f586eec24f45bcc511520a031d50d4";
-		};
-		3A3B9C773AB0441DB9FA12FC /* Upload Debug Symbols to Sentry */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			name = "Upload Debug Symbols to Sentry";
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
 /* End PBXShellScriptBuildPhase section */
 
