@@ -314,6 +314,7 @@ class EmbeddedContent extends PureComponent {
     };
 
     const image = this.getImageUrl(embed);
+    const isDescriptionEmpty = isEmpty(embed.description);
 
     return (
       <TouchableOpacity
@@ -321,7 +322,7 @@ class EmbeddedContent extends PureComponent {
         onPress={() => openUrl(embed.url)}
         disabled={disabled}
       >
-        <Layout.RowWrap style={styles.kitsuContent}>
+        <Layout.RowWrap style={[styles.kitsuContent, isDescriptionEmpty && styles.center]}>
           {!isNil(image) &&
             <ProgressiveImage
               source={{ uri: image }}
@@ -329,8 +330,10 @@ class EmbeddedContent extends PureComponent {
             />
           }
           <Layout.RowMain>
-            <StyledText color="dark" size="small" numberOfLines={1} bold>{embed.title || '-'}</StyledText>
-            <StyledText color="dark" size="xsmall" numberOfLines={3}>{embed.description || '-'}</StyledText>
+            <StyledText color="dark" size="small" numberOfLines={isDescriptionEmpty ? 4 : 1} bold>{embed.title || '-'}</StyledText>
+            {!isDescriptionEmpty &&
+              <StyledText color="dark" size="xsmall" numberOfLines={3}>{embed.description || '-'}</StyledText>
+            }
           </Layout.RowMain>
         </Layout.RowWrap>
       </TouchableOpacity>

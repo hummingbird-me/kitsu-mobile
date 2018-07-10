@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.lightestGrey,
     backgroundColor: colors.white,
+    minHeight: 60,
   },
   userPoster: {
     width: 64,
@@ -40,5 +41,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 8,
     paddingLeft: 8,
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
