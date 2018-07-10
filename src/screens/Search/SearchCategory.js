@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { Button, Container, Content, Icon, Item, Left, Right, Footer, Body } from 'native-base';
+import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
 import values from 'lodash/values';
@@ -57,7 +57,7 @@ class SearchCategory extends Component {
         data={data}
         removeClippedSubviews={false}
         renderItem={({ item }) => (
-          <Item
+          <TouchableOpacity
             button
             key={item.key}
             style={{
@@ -66,15 +66,13 @@ class SearchCategory extends Component {
             }}
             onPress={() => navigation.navigate('SearchResults', { ...item, active })}
           >
-            <Left>
+            <View style={styles.itemContainer}>
               <Text style={styles.outerText}>
                 {item.label}
               </Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
-            </Right>
-          </Item>
+              <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+            </View>
+          </TouchableOpacity>
         )}
       />
     );
@@ -118,7 +116,7 @@ class SearchCategory extends Component {
                 }}
                 style={{ ...itemStyle, paddingLeft: padding }}
               >
-                <Body style={{ flexDirection: 'row' }}>
+                <View style={styles.itemContainer}>
                   {level !== 0 &&
                     <CheckBox
                       checked={selected[item.key] === item.label}
@@ -141,16 +139,13 @@ class SearchCategory extends Component {
                   {level === 0 &&
                     <Text style={styles.outerText}>
                       {item.label}
-                    </Text>}
-
-                </Body>
-                <Right>
-
+                    </Text>
+                  }
                   {show
                     ? <IconAwe name="minus-square-o" style={{ fontSize: 17, color: '#FFFFFF' }} />
                     : hasChild &&
                     <IconAwe name="plus-square-o" style={{ fontSize: 17, color: '#8E818C' }} />}
-                </Right>
+                </View>
               </TouchableOpacity>
               {show && this.renderGenreList(item.key, level + 1)}
             </View>
@@ -186,63 +181,45 @@ class SearchCategory extends Component {
       : 'Select at least one';
 
     return (
-      <Footer
+      <View
         style={{
+          flexDirection: 'row',
           justifyContent: 'space-around',
           alignItems: 'baseline',
           backgroundColor: colors.darkPurple,
-          height: 60,
           borderTopWidth: 0,
-          paddingLeft: 27,
-          paddingRight: 27,
-          paddingTop: 8,
+          paddingHorizontal: 27,
+          paddingVertical: 8,
         }}
       >
-        <Button
-          light
-          bordered
-          style={{
-            height: 37,
-            flex: 1,
-            borderColor: 'rgba(255,255,255,0.2)',
-            marginRight: 5,
-            borderRadius: 3,
-            justifyContent: 'center',
-          }}
-          onPress={() => navigation.goBack()}
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.goBack(null)}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
-            Back
+            Cancel
           </Text>
-        </Button>
-        <Button
-          style={{
-            height: 37,
-            flex: 3,
-            borderColor: 'rgba(255,255,255,0.2)',
-            marginLeft: 5,
-            borderRadius: 3,
-            justifyContent: 'center',
-            backgroundColor: genres.length > 0 ? '#16A085' : '#7A7A7A',
-          }}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.footerButton, { flex: 3, backgroundColor: '#16A085', marginRight: 0 }]}
           onPress={() => this.onSubmit(genresArr)}
         >
           <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{btnText}</Text>
-        </Button>
-      </Footer>
+        </TouchableOpacity>
+      </View>
     );
   }
 
   render() {
     const { key } = this.props.navigation.state.params;
     return (
-      <Container>
-        <Content style={{ backgroundColor: colors.listBackPurple }}>
+      <View style={{ flex: 1, backgroundColor: colors.listBackPurple }}>
+        <View style={{ flex: 1 }}>
           {key === 'release' && this.renderYears()}
           {key === 'categories' && this.renderGenreList('level0', 0)}
-        </Content>
+        </View>
         {key === 'categories' && this.renderFooter()}
-      </Container>
+      </View>
     );
   }
 }
@@ -279,6 +256,23 @@ const styles = {
     backgroundColor: '#352834',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#2D1D29',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  footerButton: {
+    height: 37,
+    flex: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+    marginRight: 5,
+    borderRadius: 3,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
   },
 };
 

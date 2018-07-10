@@ -10,7 +10,6 @@ import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
 import { isIdForCurrentUser } from 'kitsu/utils/id';
 import { isEmpty } from 'lodash';
-import { Spinner } from 'native-base';
 import { StyledText } from 'kitsu/components/StyledText';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
@@ -130,7 +129,7 @@ class Library extends PureComponent {
     if (loading && data.length) {
       return (
         <View style={styles.listLoadingSpinnerContainer}>
-          <Spinner color="white" />
+          <ActivityIndicator color="white" />
         </View>
       );
     }
