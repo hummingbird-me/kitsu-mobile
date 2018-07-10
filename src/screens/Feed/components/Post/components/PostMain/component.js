@@ -7,7 +7,7 @@ import { scene } from 'kitsu/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
 import { isEmpty } from 'lodash';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
-import { handleURL } from 'kitsu/common/utils/url';
+import { handleURL } from 'kitsu/utils/url';
 import { styles } from './styles';
 import { PostStatus } from '../PostStatus';
 

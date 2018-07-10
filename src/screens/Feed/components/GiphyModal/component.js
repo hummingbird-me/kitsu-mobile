@@ -4,7 +4,7 @@ import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, Ac
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { isEmpty, range, debounce } from 'lodash';
-import { getBestGridItemSpacing } from 'kitsu/common/utils';
+import { getBestGridItemSpacing } from 'kitsu/utils/spacing';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import * as colors from 'kitsu/constants/colors';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';

@@ -9,7 +9,7 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { isEmpty, uniqBy } from 'lodash';
-import { extractUrls } from 'kitsu/common/utils/url';
+import { extractUrls } from 'kitsu/utils/url';
 import { FeedCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';

@@ -1,4 +1,4 @@
-import { parseURL, isKitsuUrl } from 'kitsu/common/utils/url';
+import { parseURL, isKitsuUrl } from 'kitsu/utils/url';
 import { kitsuConfig } from 'kitsu/config/env';
 import { coverImageDimensions } from 'kitsu/constants/app';
 import { isEmpty } from 'lodash';
