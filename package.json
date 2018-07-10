@@ -18,7 +18,6 @@
     "devour-client": "^1.4.3",
     "entities": "^1.1.1",
     "getstream": "^3.12.3",
-    "htmlparser2-without-node-native": "^3.9.2",
     "lodash": "^4.17.10",
     "moment": "^2.21.0",
     "native-base": "2.3.9",
