@@ -163,6 +163,8 @@ class TabsNav extends PureComponent {
 
   componentWillMount() {
     this.fetchCurrentUser();
+
+    // We also fetch keys here because tokens might have been null during app start
     this.props.fetchAlgoliaKeys();
   }
 

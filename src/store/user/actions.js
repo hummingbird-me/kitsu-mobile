@@ -3,6 +3,7 @@ import * as types from 'kitsu/store/types';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';
 import { kitsuConfig } from 'kitsu/config/env';
+import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
@@ -164,6 +165,7 @@ export const updateGeneralSettings = data => async (dispatch, getState) => {
     await Kitsu.update('users', { id, ...payload });
     delete payload.password; // Don't keep password.
     dispatch({ type: types.UPDATE_GENERAL_SETTINGS_SUCCESS, payload });
+    fetchAlgoliaKeys()(dispatch, getState);
     return null;
   } catch (e) {
     dispatch({ type: types.UPDATE_GENERAL_SETTINGS_FAIL, payload: e && e[0] });

@@ -108,17 +108,10 @@ class TabsNav extends PureComponent {
 
   componentWillMount() {
     this.fetchCurrentUser();
+
+    // We also fetch keys here because tokens might have been null during app start
     this.props.fetchAlgoliaKeys();
   }
-
-  fetchCurrentUser = async () => {
-    try {
-      await this.props.fetchCurrentUser();
-      this.props.fetchNotifications();
-    } catch (e) {
-      console.warn(e);
-    }
-  };
 
   onNavigationStateChange = (prevState, currentState) => {
     const current = this._getRouteName(currentState);
@@ -131,6 +124,16 @@ class TabsNav extends PureComponent {
       } else {
         this.setState({ drawerLockMode: 'locked-closed' });
       }
+    }
+  };
+
+
+  fetchCurrentUser = async () => {
+    try {
+      await this.props.fetchCurrentUser();
+      this.props.fetchNotifications();
+    } catch (e) {
+      console.warn(e);
     }
   };
 
