@@ -84,7 +84,7 @@ class Feed extends React.PureComponent {
     this.isFetchingFeed = true;
 
     if (reset) {
-      FeedCache.clearAll();
+      FeedCache.clear();
       this.cursor = undefined;
       this.canFetchNext = true;
     }
