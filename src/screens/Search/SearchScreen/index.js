@@ -73,7 +73,7 @@ class SearchScreen extends PureComponent {
 
   executeSearch = (query, scene) => {
     const currentScene = this.scenes[scene];
-    if (isNull(currentScene.apiKey)) { return; }
+    if (isEmpty(currentScene.apiKey)) { return; }
 
     const client = algolia(kitsuConfig.algoliaAppId, currentScene.apiKey);
     const index = client.initIndex(currentScene.indexName);

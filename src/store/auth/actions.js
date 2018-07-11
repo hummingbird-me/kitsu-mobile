@@ -132,12 +132,12 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
     } catch (e) {
       console.warn(e);
       const string = JSON.stringify(e);
-      Sentry.captureException(string, {
+      Sentry.captureMessage('Failed to fetch current user', {
         tags: {
           type: 'auth',
         },
         extra: {
-          detail: 'Failed to fetch user while loggin in',
+          detail: string,
           error: getState().user.error,
         },
       });
