@@ -68,7 +68,12 @@ export class _BasicCache {
    *
    * @param {function} condition A function which takes in key passes back wether the key should be cleared.
    */
-  clear(condition) {
+  clear(condition = null) {
+    if (!condition) {
+      this.clearAll();
+      return;
+    }
+
     const keys = Object.keys(this.CACHE);
     const filtered = keys.filter(k => condition(k));
     filtered.forEach(k => this.delete(k));
