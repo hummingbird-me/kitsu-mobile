@@ -102,11 +102,13 @@ export class UserLibraryEditScreenComponent extends React.Component {
     const { libraryEntry, libraryType } = this.props.navigation.state.params;
     const { startedAt, finishedAt } = this.state;
 
-    // Cap the minimum to the media start date and max to the finish date
     const mediaData = libraryEntry[libraryType];
     const startDate = mediaData && mediaData.startDate;
+
+    // Cap the minimum to the media start date
+    // Cap the max to entry finish date or the current date
     const min = startDate && moment(startDate, 'YYYY-MM-DD').toDate();
-    const max = finishedAt;
+    const max = finishedAt || new Date();
 
     this.datePicker.show(startedAt, min, max, (newDate) => {
       this.setState({ startedAt: newDate });
@@ -121,10 +123,12 @@ export class UserLibraryEditScreenComponent extends React.Component {
     const mediaData = libraryEntry[libraryType];
 
     // If the start date is set then we should only be able to pick dates after that
+    // If the end date is not set then set the current date as maximum
     const startDate = mediaData && mediaData.startDate;
     const min = startedAt || (startDate && moment(startDate, 'YYYY-MM-DD').toDate());
+    const max = new Date();
 
-    this.datePicker.show(finishedAt, min, null, (newDate) => {
+    this.datePicker.show(finishedAt, min, max, (newDate) => {
       this.setState({ finishedAt: newDate });
     });
   }

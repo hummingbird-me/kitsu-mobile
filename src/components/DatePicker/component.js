@@ -38,10 +38,14 @@ export class DatePicker extends PureComponent {
     onDateChange: null,
   };
 
-  async show(initial, minDate = null, maxDate = null, onDateChange = null) {
+  async show(initial, min = null, max = null, onDateChange = null) {
     if (this.props.disabled) return;
 
     Keyboard.dismiss();
+
+    // Default the date values to null
+    const minDate = (min instanceof Date) ? min : null;
+    const maxDate = (max instanceof Date) ? max : null;
 
     // reset state
     this.setState({
@@ -204,8 +208,8 @@ export class DatePicker extends PureComponent {
                 style={styles.datePicker}
                 mode="date"
                 date={date || new Date()}
-                minimumDate={minDate || new Date(0)}
-                maximumDate={maxDate || new Date()}
+                minimumDate={minDate}
+                maximumDate={maxDate}
                 onDateChange={this._setDate}
               />
             </View>
