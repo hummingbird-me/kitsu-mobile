@@ -181,8 +181,8 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
   try {
     const libraryEntries = await Kitsu.findAll('libraryEntries', {
       fields: {
-        anime: 'titles,canonicalTitle,posterImage,episodeCount',
-        manga: 'titles,canonicalTitle,posterImage,chapterCount',
+        anime: 'titles,canonicalTitle,posterImage,episodeCount,startDate,endDate',
+        manga: 'titles,canonicalTitle,posterImage,chapterCount,startDate,endDate',
         libraryEntries: 'anime,finishedAt,manga,notes,private,progress,ratingTwenty,reconsumeCount,startedAt,status',
       },
       filter,
