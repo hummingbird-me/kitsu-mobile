@@ -38,6 +38,14 @@ export class DatePicker extends PureComponent {
     onDateChange: null,
   };
 
+  /**
+   * Show the date picker.
+   *
+   * @param {Date} initial The initial date.
+   * @param {Date} [min=null] The minimum date.
+   * @param {Date} [max=null] The maximum date.
+   * @param {function} [onDateChange=null] The callback function when date change is confirmed.
+   */
   async show(initial, min = null, max = null, onDateChange = null) {
     if (this.props.disabled) return;
 
@@ -71,10 +79,11 @@ export class DatePicker extends PureComponent {
     }
   }
 
+  // Get the `date` bounded by `minDate` and `maxDate`
   _getDate(date, minDate = this.state.minDate, maxDate = this.state.maxDate) {
     // If no date is provided then use current date
     // Make sure we constrain it to the min and max
-    const current = date || new Date();
+    const current = (date instanceof Date) ? date : new Date();
 
     if (minDate && current < minDate) {
       return minDate;
@@ -87,6 +96,7 @@ export class DatePicker extends PureComponent {
     return current;
   }
 
+  // Confirm the date
   _datePicked() {
     const { onDateChange, date } = this.state;
     if (onDateChange) {
@@ -114,7 +124,7 @@ export class DatePicker extends PureComponent {
     this._resetState();
   }
 
-  // iOS callback
+  // iOS: callback
   _setDate = (date) => {
     this.setState({
       allowPointerEvents: false,
@@ -129,6 +139,7 @@ export class DatePicker extends PureComponent {
   }
 
 
+  // Android: Callback
   _onDatePicked({ action, year, month, day }) {
     if (action !== DatePickerAndroid.dismissedAction) {
       this.setState({
@@ -142,6 +153,7 @@ export class DatePicker extends PureComponent {
     }
   }
 
+  // iOS: Show the modal
   _setModalVisible(visible) {
     const { duration } = this.props;
 
