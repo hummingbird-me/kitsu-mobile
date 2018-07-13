@@ -17,7 +17,7 @@ import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import moment from 'moment';
-import { WebComponent } from 'kitsu/common/utils/components';
+import { WebComponent } from 'kitsu/utils/components';
 import { styles } from './styles';
 
 

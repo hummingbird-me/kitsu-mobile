@@ -11,7 +11,7 @@ import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import dataBunny from 'kitsu/assets/img/data-bunny.png';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { startCase, isNil, isEmpty } from 'lodash';
-import { WebComponent } from 'kitsu/common/utils/components';
+import { WebComponent } from 'kitsu/utils/components';
 import { Lightbox } from 'kitsu/utils/lightbox';
 import { styles } from './styles';
 

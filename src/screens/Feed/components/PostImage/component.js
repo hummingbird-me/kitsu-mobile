@@ -4,7 +4,7 @@ import { View, Image, Dimensions, ActivityIndicator, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageSizeCache } from 'kitsu/utils/cache';
 import { getImgixImage } from 'kitsu/utils/imgix';
-import { isKitsuUrl, isGIFUrl } from 'kitsu/common/utils/url';
+import { isKitsuUrl, isGIFUrl } from 'kitsu/utils/url';
 import { isNil } from 'lodash';
 import { styles } from './styles';
 

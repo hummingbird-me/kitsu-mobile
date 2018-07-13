@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, SectionList, Dimensions } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, SectionList, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { Button, Container, Content, Icon, Left, Right, Footer } from 'native-base';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-
 import { getCategories } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
@@ -56,11 +54,9 @@ class FilterSub extends Component {
       button
       style={styles.parentItem}
     >
-      <Left>
-        <Text style={styles.outerText}>
-          {item.title}
-        </Text>
-      </Left>
+      <Text style={styles.outerText}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 
@@ -68,17 +64,13 @@ class FilterSub extends Component {
     const { start, end, startV, endV } = this.state;
     return (
       <View style={{ padding: 20, paddingTop: 40, flexDirection: 'column' }}>
-        <View style={{ flexDirection: 'row' }}>
-          <Left>
-            <Text style={{...styles.outerText, paddingLeft: 20}}>
-              Start: {startV}
-            </Text>
-          </Left>
-          <Right>
-            <Text style={{ ...styles.outerText, paddingRight: 20 }}>
-              End: {endV === 100 ? '∞' : endV}
-            </Text>
-          </Right>
+        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
+          <Text style={{ ...styles.outerText, paddingLeft: 20 }}>
+            Start: {startV}
+          </Text>
+          <Text style={{ ...styles.outerText, paddingRight: 20 }}>
+            End: {endV === 100 ? '∞' : endV}
+          </Text>
         </View>
         <MultiSlider
           values={[start, end]}
@@ -212,62 +204,44 @@ class FilterSub extends Component {
     }
 
     return (
-      <Footer
+      <View
         style={{
+          flexDirection: 'row',
           justifyContent: 'space-around',
           alignItems: 'baseline',
           backgroundColor: colors.darkPurple,
-          height: 60,
           borderTopWidth: 0,
-          paddingLeft: 27,
-          paddingRight: 27,
-          paddingTop: 8,
+          paddingHorizontal: 27,
+          paddingVertical: 8,
         }}
       >
-        <Button
-          light
-          bordered
-          style={{
-            height: 37,
-            flex: 1,
-            borderColor: 'rgba(255,255,255,0.2)',
-            marginRight: 5,
-            borderRadius: 3,
-            justifyContent: 'center',
-          }}
+        <TouchableOpacity
+          style={styles.footerButton}
           onPress={() => navigation.goBack(null)}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
             Cancel
           </Text>
-        </Button>
-        <Button
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.footerButton, { flex: 3, backgroundColor: '#16A085', marginRight: 0 }]}
           onPress={() => this.onSubmit({ label: title, start, end })}
-          style={{
-            height: 37,
-            flex: 3,
-            borderColor: 'rgba(255,255,255,0.2)',
-            marginLeft: 5,
-            borderRadius: 3,
-            justifyContent: 'center',
-            backgroundColor: '#16A085',
-          }}
         >
           <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{btnText}</Text>
-        </Button>
-      </Footer>
+        </TouchableOpacity>
+      </View>
     );
   }
 
   render() {
     const { key } = this.props.navigation.state.params;
     return (
-      <Container>
-        <Content style={{ backgroundColor: colors.darkPurple }}>
+      <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
+        <View style={{ flex: 1 }}>
           {key === 'length' ? this.renderLength() : this.renderSort()}
-        </Content>
+        </View>
         {key === 'length' && this.renderFooter()}
-      </Container>
+      </ScrollView>
     );
   }
 }
@@ -295,6 +269,7 @@ const styles = {
     backgroundColor: colors.darkPurple,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#382534',
+    alignItems: 'center',
   },
   childItem: {
     height: 41,
@@ -304,6 +279,23 @@ const styles = {
     backgroundColor: '#352834',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#2D1D29',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  footerButton: {
+    height: 37,
+    flex: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+    marginRight: 5,
+    borderRadius: 3,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
   },
 };
 

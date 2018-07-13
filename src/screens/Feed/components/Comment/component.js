@@ -15,7 +15,7 @@ import { isEmpty, uniqBy } from 'lodash';
 import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
-import { handleURL } from 'kitsu/common/utils/url';
+import { handleURL } from 'kitsu/utils/url';
 import { BasicCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
 

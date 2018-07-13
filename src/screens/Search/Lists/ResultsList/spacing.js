@@ -1,5 +1,5 @@
 import { Dimensions } from 'react-native';
-import { getBestGridItemSpacing } from 'kitsu/common/utils';
+import { getBestGridItemSpacing } from 'kitsu/utils/spacing';
 
 export const IMAGE_SIZE = { width: 100, height: 150 };
 

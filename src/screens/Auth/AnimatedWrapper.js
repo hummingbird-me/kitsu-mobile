@@ -75,9 +75,9 @@ export default class AnimatedWrapped extends PureComponent {
 /* eslint-disable global-require */
 const animDuration = 3000;
 const images = [
-  require('../assets/img/posters/fullmetal.jpg'),
-  require('../assets/img/posters/fullmetal2.png'),
-  require('../assets/img/posters/naruto2.jpg'),
-  require('../assets/img/posters/deatnote.jpg'),
+  require('kitsu/assets/img/posters/fullmetal.jpg'),
+  require('kitsu/assets/img/posters/fullmetal2.png'),
+  require('kitsu/assets/img/posters/naruto2.jpg'),
+  require('kitsu/assets/img/posters/deatnote.jpg'),
 ];
 /* eslint-enable global-require */

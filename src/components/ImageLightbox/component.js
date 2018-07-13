@@ -4,7 +4,7 @@ import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, Share, Link
 import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { parseURL } from 'kitsu/common/utils/url';
+import { parseURL } from 'kitsu/utils/url';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
