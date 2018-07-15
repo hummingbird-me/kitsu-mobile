@@ -1,14 +1,15 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import moment from 'moment';
-import { Text, TextInput, View, ActivityIndicator } from 'react-native';
+import { Text, TextInput, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { STATUS_SELECT_OPTIONS } from 'kitsu/screens/Profiles/UserLibrary';
 import { Counter } from 'kitsu/components/Counter';
 import { Rating } from 'kitsu/components/Rating';
 import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { isNull } from 'lodash';
+import { isNull, isEmpty } from 'lodash';
+import { DatePicker } from 'kitsu/components/DatePicker';
 import { styles } from './styles';
 
 const visibilityOptions = [
@@ -16,6 +17,13 @@ const visibilityOptions = [
   { text: 'Public', value: false },
   { text: 'Nevermind', value: 'cancel' },
 ];
+
+const parseISO8601Date = (date) => {
+  if (typeof date !== 'string') return date;
+  if (isEmpty(date)) return null;
+  return moment(date, moment.ISO_8601).toDate();
+};
+
 
 export class UserLibraryEditScreenComponent extends React.Component {
   static propTypes = {
@@ -32,20 +40,16 @@ export class UserLibraryEditScreenComponent extends React.Component {
   });
 
   state = {
-    finishedAt: this.getLibraryEntry().finishedAt,
     notes: this.getLibraryEntry().notes,
     private: this.getLibraryEntry().private,
     progress: this.getLibraryEntry().progress,
     ratingTwenty: this.getLibraryEntry().ratingTwenty,
     reconsumeCount: this.getLibraryEntry().reconsumeCount,
-    startedAt: this.getLibraryEntry().startedAt,
+    startedAt: parseISO8601Date(this.getLibraryEntry().startedAt),
+    finishedAt: parseISO8601Date(this.getLibraryEntry().finishedAt),
     status: this.getLibraryEntry().status,
     loading: false,
     error: null,
-  }
-
-  onFinishedAtChanged = (finishedAt) => {
-    this.setState({ finishedAt });
   }
 
   onNotesChanged = (notes) => {
@@ -60,11 +64,16 @@ export class UserLibraryEditScreenComponent extends React.Component {
     // Check if user has completed the media
     const maxProgress = this.getMaxProgress();
     const hasCompletedMedia = maxProgress && progress >= maxProgress;
-    const newStatus = (hasCompletedMedia && this.state.status !== 'completed' && {
-      status: 'completed',
-    }) || {};
+    const other = {};
 
-    this.setState({ progress, ...newStatus });
+    if (hasCompletedMedia && this.state.status !== 'completed') {
+      other.status = 'completed';
+
+      // If we haven't set the finishedAt date then set it now
+      if (!this.state.finishedAt) other.finishedAt = new Date();
+    }
+
+    this.setState({ progress, ...other });
   }
 
   onRatingChanged = (ratingTwenty) => {
@@ -75,12 +84,53 @@ export class UserLibraryEditScreenComponent extends React.Component {
     this.setState({ reconsumeCount: timesRewatched });
   }
 
-  onStartedAtChanged = (startedAt) => {
-    this.setState({ startedAt });
+  onStatusChanged = (libraryStatus) => {
+    const { startedAt, finishedAt } = this.state;
+
+    // Check if we need to set the start and finish dates
+    const dates = {};
+    if (libraryStatus === 'current' && !startedAt) {
+      dates.startedAt = new Date();
+    } else if (libraryStatus === 'completed' && !finishedAt) {
+      dates.finishedAt = new Date();
+    }
+
+    this.setState({ status: libraryStatus, ...dates });
   }
 
-  onStatusChanged = (libraryStatus) => {
-    this.setState({ status: libraryStatus });
+  onDateStartedPress = () => {
+    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { startedAt, finishedAt } = this.state;
+
+    const mediaData = libraryEntry[libraryType];
+    const startDate = mediaData && mediaData.startDate;
+
+    // Cap the minimum to the media start date
+    // Cap the max to entry finish date or the current date
+    const min = startDate && moment(startDate, 'YYYY-MM-DD').toDate();
+    const max = finishedAt || new Date();
+
+    this.datePicker.show(startedAt, min, max, (newDate) => {
+      this.setState({ startedAt: newDate });
+    });
+  }
+
+  onDateFinishedPress = () => {
+    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { startedAt, finishedAt } = this.state;
+
+    // Cap the minimum to the start date and max to the finish date
+    const mediaData = libraryEntry[libraryType];
+
+    // If the start date is set then we should only be able to pick dates after that
+    // If the end date is not set then set the current date as maximum
+    const startDate = mediaData && mediaData.startDate;
+    const min = startedAt || (startDate && moment(startDate, 'YYYY-MM-DD').toDate());
+    const max = new Date();
+
+    this.datePicker.show(finishedAt, min, max, (newDate) => {
+      this.setState({ finishedAt: newDate });
+    });
   }
 
   onDeleteEntry = async () => {
@@ -159,15 +209,20 @@ export class UserLibraryEditScreenComponent extends React.Component {
 
     this.setState({ loading: true, error: null });
 
+    // Convert dates to UTC strings
+    const startDate = startedAt && moment.utc(startedAt).format();
+    const finishDate = finishedAt && moment.utc(finishedAt).format();
+
     try {
       await updateUserLibraryEntry(libraryType, libraryStatus, {
         id: libraryEntry.id,
-        finishedAt,
+
         notes: (notes && notes.trim()),
         progress,
         ratingTwenty,
         reconsumeCount,
-        startedAt,
+        startedAt: startDate,
+        finishedAt: finishDate,
         status,
         private: isPrivate,
       });
@@ -302,9 +357,12 @@ export class UserLibraryEditScreenComponent extends React.Component {
               </SelectMenu>
             </View>
             {/* Dates */}
-            {/* @TODO: Needs to be editable */}
             <View style={styles.splitRow}>
-              <View style={[styles.editRow, styles.dateStarted]}>
+              <TouchableOpacity
+                style={[styles.editRow, styles.dateStarted]}
+                disbaled={!canEdit}
+                onPress={this.onDateStartedPress}
+              >
                 <View>
                   <Text style={[
                     styles.editRowLabel,
@@ -319,8 +377,12 @@ export class UserLibraryEditScreenComponent extends React.Component {
                     </Text>
                   }
                 </View>
-              </View>
-              <View style={[styles.editRow, styles.dateFinished]}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.editRow, styles.dateFinished]}
+                disbaled={!canEdit}
+                onPress={this.onDateFinishedPress}
+              >
                 <View>
                   <Text style={[
                     styles.editRowLabel,
@@ -335,7 +397,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
                     </Text>
                   }
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
             {/* Notes */}
             <View style={[styles.editRow, { maxHeight: 'auto' }]}>
@@ -361,6 +423,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
                 </SelectMenu>
               </View>
             }
+            <DatePicker ref={(d) => { this.datePicker = d; }} />
           </KeyboardAwareScrollView>
         </View>
       </View>

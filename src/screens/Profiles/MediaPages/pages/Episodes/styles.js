@@ -62,4 +62,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 0,
   },
+  arrowIcon: {
+    fontSize: 16,
+    color: colors.darkGrey,
+    paddingLeft: 8,
+    paddingVertical: 0,
+  },
 });
