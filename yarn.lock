@@ -5070,8 +5070,8 @@ react-native-actionsheet@^2.3.0:
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.3.0.tgz#a9552a356dc5939829062353804d5e5609e8f969"
 
 react-native-android-fullscreen-webview@hummingbird-me/react-native-android-fullscreen-webview:
-  version "1.0.4"
-  resolved "https://codeload.github.com/hummingbird-me/react-native-android-fullscreen-webview/tar.gz/fc5ac6867d3e761c5df6ba92f33ac7963f038ad2"
+  version "1.0.5"
+  resolved "https://codeload.github.com/hummingbird-me/react-native-android-fullscreen-webview/tar.gz/fce96d5eadc5d43522930148b18703aeea9e497b"
 
 react-native-animatable@^1.2.4:
   version "1.2.4"

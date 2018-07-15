@@ -55,20 +55,21 @@ export class _BasicCache {
     return Object.keys(this.CACHE).includes(key);
   }
 
-
   /**
    * Clear all values in the cache.
-   */
-  clearAll() {
-    this.CACHE = {};
-  }
-
-  /**
-   * Clear selected values from the cache
    *
-   * @param {function} condition A function which takes in key passes back wether the key should be cleared.
+   * If a `condition` function is provided then it will only clear a value if that function returns `true`.
+   *
+   * @param {function} [condition] A function which takes in key passes back wether the key should be cleared.
    */
-  clear(condition) {
+  clear(condition = null) {
+    if (typeof condition !== 'function') {
+      // Clear everything!!
+      this.CACHE = {};
+      return;
+    }
+
+    // Clear only selected values
     const keys = Object.keys(this.CACHE);
     const filtered = keys.filter(k => condition(k));
     filtered.forEach(k => this.delete(k));

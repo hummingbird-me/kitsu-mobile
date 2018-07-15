@@ -8,6 +8,7 @@ import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboardi
 import * as types from 'kitsu/store/types';
 import { Sentry } from 'react-native-sentry';
 import { isEmpty } from 'lodash';
+import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 
 export const refreshTokens = () => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
@@ -93,6 +94,7 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
   if (tokens) {
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     try {
+      fetchAlgoliaKeys()(dispatch, getState);
       const user = await fetchCurrentUser()(dispatch, getState);
 
       /**
@@ -130,12 +132,12 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
     } catch (e) {
       console.warn(e);
       const string = JSON.stringify(e);
-      Sentry.captureException(string, {
+      Sentry.captureMessage('Failed to fetch current user', {
         tags: {
           type: 'auth',
         },
         extra: {
-          detail: 'Failed to fetch user while loggin in',
+          detail: string,
           error: getState().user.error,
         },
       });

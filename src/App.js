@@ -10,7 +10,7 @@ import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 import PropTypes from 'prop-types';
-import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
@@ -50,6 +50,7 @@ class App extends PureComponent {
 
   componentDidMount() {
     OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
+    store.dispatch(fetchAlgoliaKeys());
   }
 
   componentWillUnmount() {

@@ -1,4 +1,4 @@
-import { capitalize, map, lowerCase } from 'lodash';
+import { capitalize, map, lowerCase, isEmpty, camelCase } from 'lodash';
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 import { KitsuLibrary, KitsuLibraryEventSource, KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
@@ -216,7 +216,31 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
         fetchUserLibraryByType(newOptions)(dispatch, getState);
       },
       fetchMore: (limit = 10) => {
-        if (data.length < libraryEntries.meta.count) {
+        const state = getState().profile;
+        if (!state || !options.userId || !options.library || !options.status) return;
+
+        /*
+        We need to fetch the meta count dynamically here incase they were changed manually.
+        This can happen when user added/moved/deleted library entries.
+
+        Doing this dynamically vs statically avoids this issue:
+          - User has 26 entries in completed and only loaded 25 entries.
+            - data.length = 25 and count = 26
+          - User moves a media to completed
+            - data.length is now 26 and count = 26 (static), but count should be 27 instead.
+
+        We check the count dynamically as we know that when a user moves media between statuses, the status counts will be updated.
+        */
+        const userLibrary = state.userLibrary[options.userId];
+        const meta = userLibrary && userLibrary.meta;
+        const statusCounts = meta && meta[options.library] && meta[options.library].statusCounts;
+        if (isEmpty(meta) || isEmpty(statusCounts)) return;
+
+        const metaEntryCount = statusCounts[camelCase(options.status)] || 0;
+        const entries = userLibrary[options.library] && userLibrary[options.library][options.status];
+        const data = (entries && entries.data) || [];
+
+        if (data.length < metaEntryCount) {
           const newOptions = {
             ...options,
             limit,
@@ -397,6 +421,15 @@ export function onLibraryEntryCreate(
     } else {
       const updateEntry = { ...newLibraryEntry };
 
+      // Update meta counts
+      const counts = {};
+      const meta = userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
+      if (!isEmpty(meta)) {
+        // We need to convert status to camelCase because that's what we recieve in the library meta
+        const camelStatus = camelCase(libraryStatus);
+        counts[camelStatus] = (meta.statusCounts[camelStatus] || 0) + 1;
+      }
+
       // Add the new entry
       dispatch({
         type: types.CREATE_USER_LIBRARY_ENTRY,
@@ -404,6 +437,7 @@ export function onLibraryEntryCreate(
         libraryStatus,
         libraryType,
         newLibraryEntry: updateEntry,
+        statusCounts: counts,
       });
     }
   };
@@ -432,6 +466,18 @@ export function onLibraryEntryUpdate(
 
     const updateEntry = { ...combined };
 
+    // Update meta counts
+    const counts = {};
+    const meta = userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
+    const newStatus = newLibraryEntry.status;
+    if (!isEmpty(meta) && newStatus && libraryStatus !== newStatus) {
+      // We need to convert statuses to camelCase because that's what we recieve in the library meta
+      const camelLibraryStatus = camelCase(libraryStatus);
+      const camelNewStatus = camelCase(newStatus);
+      counts[camelLibraryStatus] = (meta.statusCounts[camelLibraryStatus] || 0) - 1;
+      counts[camelNewStatus] = (meta.statusCounts[camelNewStatus] || 0) + 1;
+    }
+
     // update the state
     dispatch({
       type: types.UPDATE_USER_LIBRARY_ENTRY,
@@ -444,6 +490,8 @@ export function onLibraryEntryUpdate(
 
       previousLibraryEntry,
       newLibraryEntry: updateEntry,
+
+      statusCounts: counts,
     });
   };
 }
@@ -459,12 +507,23 @@ export function onLibraryEntryDelete(
 
     // Delete if we have the state set
     if (userLibrary && userId in userLibrary) {
+
+      // Update meta counts
+      const counts = {};
+      const meta = userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
+      if (!isEmpty(meta)) {
+        // We need to convert status to camelCase because that's what we recieve in the library meta
+        const camelStatus = camelCase(libraryStatus);
+        counts[camelStatus] = (meta.statusCounts[camelStatus] || 0) - 1;
+      }
+
       dispatch({
         type: types.DELETE_USER_LIBRARY_ENTRY,
         userId,
         libraryStatus,
         libraryType,
         id,
+        statusCounts: counts,
       });
     }
   };

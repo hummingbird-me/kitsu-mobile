@@ -1,15 +1,30 @@
 import { kitsuConfig } from 'kitsu/config/env';
 import * as types from 'kitsu/store/types';
+import { isEmpty } from 'lodash';
 
-export const fetchAlgoliaKeys = () => (dispatch) => {
+export const fetchAlgoliaKeys = () => async (dispatch, getState) => {
   dispatch({ type: types.ALGOLIA_KEY_REQUEST, payload: {} });
 
-  fetch(`${kitsuConfig.baseUrl}/edge/algolia-keys`)
-    .then(r => r.json())
-    .then((response) => {
-      dispatch({ type: types.ALGOLIA_KEY_SUCCESS, payload: response });
-    })
-    .catch(error => dispatch({ type: types.ALGOLIA_KEY_FAIL, payload: error }));
+  // Set the auth headers if we can
+  const authHeader = {};
+  const tokens = getState().auth.tokens;
+  if (!isEmpty(tokens) && !isEmpty(tokens.access_token)) {
+    authHeader.Authorization = `Bearer ${tokens.access_token}`;
+  }
+
+  try {
+    const response = await fetch(`${kitsuConfig.baseUrl}/edge/algolia-keys`, {
+      headers: {
+        Accept: 'application/vnd.api+json',
+        'Content-Type': 'application/json',
+        ...authHeader,
+      },
+    });
+    const json = await response.json();
+    dispatch({ type: types.ALGOLIA_KEY_SUCCESS, payload: json });
+  } catch (error) {
+    dispatch({ type: types.ALGOLIA_KEY_FAIL, payload: error });
+  }
 };
 
 export const setDataSaver = value => (dispatch) => {
