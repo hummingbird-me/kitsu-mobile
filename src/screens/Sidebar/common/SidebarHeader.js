@@ -9,13 +9,14 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import PropTypes from 'prop-types';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
-const SidebarHeader = ({ headerTitle, coverImage, onBackPress }) => {
+const SidebarHeader = ({ headerTitle, coverImage, onBackPress, hideCover }) => {
   const goBack = onBackPress;
+  const BackView = hideCover ? View : ProgressiveImage;
   return (
-    <View style={styles.container}>
-      <ProgressiveImage
+    <View style={styles.absolute}>
+      <BackView
         hasOverlay
-        style={styles.headerContainer}
+        style={[styles.header, hideCover && styles.solidColor]}
         source={{ uri: getImgixCoverImage(coverImage) || defaultCoverUri }}
       >
         <View style={styles.header}>
@@ -32,7 +33,7 @@ const SidebarHeader = ({ headerTitle, coverImage, onBackPress }) => {
             <View />
           </View>
         </View>
-      </ProgressiveImage>
+      </BackView>
     </View>
   );
 };
@@ -41,12 +42,14 @@ SidebarHeader.propTypes = {
   headerTitle: PropTypes.string.isRequired,
   coverImage: PropTypes.object,
   onBackPress: PropTypes.func,
+  hideCover: PropTypes.bool,
 };
 
 SidebarHeader.defaultProps = {
   headerTitle: 'Settings',
   coverImage: null,
   onBackPress: null,
+  hideCover: false,
 };
 
 const styles = {
@@ -62,6 +65,11 @@ const styles = {
     zIndex: 2,
   },
   headerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    height: navigationBarHeight,
+    alignItems: 'center',
+    justifyContent: 'space-between',
     height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
   },
   header: {
@@ -69,11 +77,17 @@ const styles = {
     bottom: 0,
     left: 0,
     right: 0,
-    flex: 1,
-    flexDirection: 'row',
-    height: navigationBarHeight,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    height: Platform.select({ ios: 77, android: 72 }),
+  },
+  solidColor: {
+    backgroundColor: colors.listBackPurple,
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.5,
+    elevation: 3,
   },
   backButton: {
     marginTop: 3,

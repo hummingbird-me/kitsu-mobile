@@ -7,6 +7,7 @@ import { SettingsScreen } from './SettingsScreen';
 import SidebarScreen from './SidebarScreen';
 import { CannyBoard } from './CannyBoard';
 import AppSettings from './AppSettings';
+import { ProScreen } from './ProScreen';
 
 export {
   Blocking,
@@ -21,4 +22,5 @@ export {
   SidebarScreen,
   CannyBoard,
   AppSettings,
+  ProScreen,
 };

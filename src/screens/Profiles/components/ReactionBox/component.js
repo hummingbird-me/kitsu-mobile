@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { AvatarHeader } from 'kitsu/screens/Profiles/components/AvatarHeader';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Kitsu } from 'kitsu/config/api';
-import { isIdForCurrentUser } from 'kitsu/utils/id';
+import { isIdForCurrentUser } from 'kitsu/utils/user';
 import { styles } from './styles';
 
 export class ReactionBoxComponent extends PureComponent {

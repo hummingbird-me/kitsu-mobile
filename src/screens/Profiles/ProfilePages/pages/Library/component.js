@@ -8,7 +8,7 @@ import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
-import { isIdForCurrentUser } from 'kitsu/utils/id';
+import { isIdForCurrentUser } from 'kitsu/utils/user';
 import { isEmpty } from 'lodash';
 import { StyledText } from 'kitsu/components/StyledText';
 import Icon from 'react-native-vector-icons/FontAwesome';

@@ -11,6 +11,7 @@ import {
   ExportLibrary,
   CannyBoard,
   AppSettings,
+  ProScreen
 } from 'kitsu/screens/Sidebar';
 
 import * as Screens from 'kitsu/navigation/types';
@@ -28,4 +29,5 @@ export default sidebarRoutes = {
   [Screens.SIDEBAR_IMPORT_LIBRARY]: ImportLibrary,
   [Screens.SIDEBAR_IMPORT_DETAIL]: ImportDetail,
   [Screens.SIDEBAR_CANNY_BOARD]: CannyBoard,
+  [Screens.SIDEBAR_KITSU_PRO]: ProScreen,
 };

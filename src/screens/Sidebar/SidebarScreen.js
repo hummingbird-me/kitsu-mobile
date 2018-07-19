@@ -14,8 +14,7 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
-import { darkPurple, listBackPurple } from 'kitsu/constants/colors';
-
+import { listBackPurple } from 'kitsu/constants/colors';
 
 class SidebarScreen extends PureComponent {
   static propTypes = {
@@ -40,6 +39,9 @@ class SidebarScreen extends PureComponent {
     switch (item.target) {
       case 'Settings':
         this.navigateTo(Screens.SIDEBAR_SETTINGS);
+        break;
+      case 'KitsuPro':
+        this.navigateTo(Screens.SIDEBAR_KITSU_PRO);
         break;
       case 'ReportBugs':
         this.navigateTo(Screens.SIDEBAR_CANNY_BOARD, {
@@ -83,6 +85,15 @@ class SidebarScreen extends PureComponent {
         { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
         { title: 'Database Requests', image: suggest, target: 'DatabaseRequests' },
         { title: 'Contact Us', image: contact, target: 'mailto' },
+      ],
+    };
+  }
+
+  get kitsuSection() {
+    return {
+      title: 'Kitsu',
+      data: [
+        { title: 'PRO', image: settings, target: 'KitsuPro' },
       ],
     };
   }
@@ -163,6 +174,12 @@ class SidebarScreen extends PureComponent {
           {/* Account Settings */}
           {this.renderSectionHeader(this.accountSections)}
           {this.accountSections.data.map(item => (
+            this.renderSectionItem(item)
+          ))}
+
+          {/* Kitsu */}
+          {this.renderSectionHeader(this.kitsuSection)}
+          {this.kitsuSection.data.map(item => (
             this.renderSectionItem(item)
           ))}
 

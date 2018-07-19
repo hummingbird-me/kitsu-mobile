@@ -55,5 +55,6 @@ export const SIDEBAR_EXPORT_LIBRARY = 'navigation.sidebar.exportlibrary';
 export const SIDEBAR_IMPORT_LIBRARY = 'navigation.sidebar.import.library';
 export const SIDEBAR_IMPORT_DETAIL = 'navigation.sidebar.import.detail';
 export const SIDEBAR_CANNY_BOARD = 'navigation.sidebar.cannyboard';
+export const SIDEBAR_KITSU_PRO = 'navigation.sidebar.pro';
 
 export const LIGHTBOX = 'navigation.lightbox';

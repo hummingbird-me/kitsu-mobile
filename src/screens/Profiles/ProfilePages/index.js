@@ -15,7 +15,7 @@ import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { EditModal } from 'kitsu/screens/Profiles/components/EditModal';
 import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import { isIdForCurrentUser } from 'kitsu/utils/id';
+import { isIdForCurrentUser } from 'kitsu/utils/user';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { parseURL } from 'kitsu/utils/url';
