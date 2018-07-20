@@ -12,6 +12,7 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* kitsu_mobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* kitsu_mobileTests.m */; };
+		023CCD781F944B95878FCE85 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C148572929D14E8888E6E5C2 /* libRNDeviceInfo.a */; };
 		0A4FBAF16D644C4EBE2768F8 /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F5C99850F22455FAE4EDCEE /* OpenSans-ExtraBold.ttf */; };
 		0A678290235C47FAA7BE869A /* libRNAdMobManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F2BF4753CD42FE8F639F34 /* libRNAdMobManager.a */; };
 		0A6D63601F3DCC8C00181D81 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A6D63431F3DCC5B00181D81 /* libRCTCameraRoll.a */; };
@@ -72,6 +73,7 @@
 		92D3FA54139F48CF85196F15 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C5F1951352C4F5987739551 /* EvilIcons.ttf */; };
 		94E30BF7C7234CC38B7CED7F /* OpenSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65044F9025D84791BCFD431C /* OpenSans-BoldItalic.ttf */; };
 		96210DDE81CC4DD6A05F214A /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA6869EC232B47169CCD5CEE /* Octicons.ttf */; };
+		99A155B0E1AB4566B3A20C92 /* libRNIap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC1099B367DD44D58FB9A90C /* libRNIap.a */; };
 		A072B7D560AD42ACA2A8CE55 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A6EE75A88EE4884B4FF4B45 /* Foundation.ttf */; };
 		AA46644B76F32772A1C0CC7A /* libPods-kitsu_mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 268CB22608FD87F20FCBC864 /* libPods-kitsu_mobile.a */; };
 		B201F36597374764A5F8E797 /* OpenSans-SemiboldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F1E6202368D46B7962A69D5 /* OpenSans-SemiboldItalic.ttf */; };
@@ -212,6 +214,27 @@
 			proxyType = 2;
 			remoteGlobalIDString = 7B49FEBB1E95090800DEB3EA;
 			remoteInfo = ReactNativeNavigationTests;
+		};
+		24BBDA73210180CF00996A74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD0B7D4F355E4A7A84C94CC9 /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
+			remoteInfo = RNDeviceInfo;
+		};
+		24BBDA75210180CF00996A74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD0B7D4F355E4A7A84C94CC9 /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
+			remoteInfo = "RNDeviceInfo-tvOS";
+		};
+		24BBDA78210180CF00996A74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0FCB328F46642D0BC4D1697 /* RNIap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNIap;
 		};
 		24FCE07220E59E71006E6B7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -552,6 +575,7 @@
 		3673A87E0860B73BC7C5F353 /* Pods-kitsu_mobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kitsu_mobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile.debug.xcconfig"; sourceTree = "<group>"; };
 		3F5C99850F22455FAE4EDCEE /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBold.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		40C1013E41074CFBA8034B60 /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
+		412AC72F405F42B9B07C7317 /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; };
 		4138ED52D35F41FA8AB2D1DF /* Asap-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Asap-Bold.otf"; path = "../src/assets/fonts/open-sans/Asap-Bold.otf"; sourceTree = "<group>"; };
 		4B8CEF8DEDF944FD91A270E0 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		53F2BF4753CD42FE8F639F34 /* libRNAdMobManager.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAdMobManager.a; sourceTree = "<group>"; };
@@ -588,6 +612,7 @@
 		989E5E4013234F90B41CF380 /* YTPlayerView-iframe-player.html */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "YTPlayerView-iframe-player.html"; path = "../node_modules/react-native-youtube/assets/YTPlayerView-iframe-player.html"; sourceTree = "<group>"; };
 		9A01976E63A64A90B5397B05 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		9F1E6202368D46B7962A69D5 /* OpenSans-SemiboldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiboldItalic.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-SemiboldItalic.ttf"; sourceTree = "<group>"; };
+		A0FCB328F46642D0BC4D1697 /* RNIap.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNIap.xcodeproj; path = "../node_modules/react-native-iap/ios/RNIap.xcodeproj"; sourceTree = "<group>"; };
 		A77EB56DB0704D2182FD21F5 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		A82502C2E8A8471AA6303833 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		AA6869EC232B47169CCD5CEE /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -598,6 +623,7 @@
 		BA356B4F7C7040CCA1CAFC3A /* Apache License.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Apache License.txt"; path = "../src/assets/fonts/open-sans/Apache License.txt"; sourceTree = "<group>"; };
 		BA6574B9F4FD46769DFF8618 /* RNAdMobManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAdMobManager.xcodeproj; path = "../node_modules/react-native-admob/ios/RNAdMobManager.xcodeproj"; sourceTree = "<group>"; };
 		BC5EE0241FEE84310004423C /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		C148572929D14E8888E6E5C2 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		C6A9134C1F3DE0F400722EA9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		C6A9134D1F3DE0F400722EA9 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		C6A917611F45972700722EA9 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Frameworks/Bolts.framework; sourceTree = "<group>"; };
@@ -605,9 +631,11 @@
 		C6A917641F45973800722EA9 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = Frameworks/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		C6A917651F45973800722EA9 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = Frameworks/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		CC04F02695AF447F94657E4D /* fontello.woff */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = fontello.woff; path = ../src/assets/fonts/icons/font/fontello.woff; sourceTree = "<group>"; };
+		CD0B7D4F355E4A7A84C94CC9 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		D09185B7DA82492DB020FF6E /* Asap-MediumItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Asap-MediumItalic.otf"; path = "../src/assets/fonts/open-sans/Asap-MediumItalic.otf"; sourceTree = "<group>"; };
 		D623A1ED603D4D93A018DD32 /* RCTYouTube.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTYouTube.xcodeproj; path = "../node_modules/react-native-youtube/RCTYouTube.xcodeproj"; sourceTree = "<group>"; };
 		D81B2118496E498F84C1FFBD /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		DC1099B367DD44D58FB9A90C /* libRNIap.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNIap.a; sourceTree = "<group>"; };
 		DDA0D65E0D5748EFB8A14463 /* libRCTYouTube.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTYouTube.a; sourceTree = "<group>"; };
 		E2221571BBEC4788A0E756DA /* libRCTOneSignal.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTOneSignal.a; sourceTree = "<group>"; };
 		E855F79CA4E944A2B78090DB /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -676,6 +704,7 @@
 				CEDAE1A565284505B1D1BD1F /* libRNSentry.a in Frameworks */,
 				0A678290235C47FAA7BE869A /* libRNAdMobManager.a in Frameworks */,
 				99A155B0E1AB4566B3A20C92 /* libRNIap.a in Frameworks */,
+				023CCD781F944B95878FCE85 /* libRNDeviceInfo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1006,6 +1035,7 @@
 				83B1A0C828034CA594169087 /* RNSentry.xcodeproj */,
 				BA6574B9F4FD46769DFF8618 /* RNAdMobManager.xcodeproj */,
 				A0FCB328F46642D0BC4D1697 /* RNIap.xcodeproj */,
+				CD0B7D4F355E4A7A84C94CC9 /* RNDeviceInfo.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -2039,12 +2069,15 @@
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-iap/ios",
+					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = kitsu_mobileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -2081,12 +2114,15 @@
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-iap/ios",
+					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = kitsu_mobileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -2133,6 +2169,7 @@
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-iap/ios",
+					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = kitsu_mobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2184,6 +2221,7 @@
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-iap/ios",
+					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = kitsu_mobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2233,11 +2271,14 @@
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-iap/ios",
+					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = "kitsu_mobile-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -2284,11 +2325,14 @@
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-iap/ios",
+					"$(SRCROOT)/../node_modules/react-native-device-info/ios/RNDeviceInfo",
 				);
 				INFOPLIST_FILE = "kitsu_mobile-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -2321,6 +2365,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.kitsu_mobile-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2345,6 +2391,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
