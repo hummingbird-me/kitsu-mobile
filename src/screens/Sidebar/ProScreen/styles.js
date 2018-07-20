@@ -176,4 +176,12 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     paddingLeft: 70,
   },
+  errorContainer: {
+    padding: 16,
+    marginBottom: 4,
+    backgroundColor: colors.red,
+  },
+  errorText: {
+    color: colors.white,
+  },
 });

@@ -1,16 +1,20 @@
 import React, { PureComponent } from 'react';
-import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
 import { logo, art } from 'kitsu/assets/img/pro';
 import { isPro } from 'kitsu/utils/user';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common';
-import { styles } from './styles';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import { defaultAvatar } from 'kitsu/constants/app';
-import { ProgressiveImage } from '../../../components/ProgressiveImage/component';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage/component';
+import * as RNIap from 'react-native-iap';
+import { isEmulator } from 'react-native-device-info';
+import { styles } from './styles';
+
+// The SKUs for the iAP
+const ITEM_SKUS = ['io.kitsu.pro.yearly'];
 
 class ProScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -34,13 +38,52 @@ class ProScreen extends PureComponent {
     currentUser: PropTypes.object.isRequired,
   }
 
+  state = {
+    subscriptions: [],
+    purchases: [],
+    loading: false,
+    error: null,
+  };
+
   componentDidMount() {
     this.updateNavigationParams();
+    this.prepareIAP();
   }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.currentUser, nextProps.currentUser)) {
       this.updateNavigationParams();
+    }
+  }
+
+  componentWillUnmount() {
+    RNIap.endConnection();
+  }
+
+  async prepareIAP() {
+    try {
+      await RNIap.prepare();
+      this.fetchProducts();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async fetchProducts() {
+    this.setState({ loading: true, error: null });
+    try {
+      const subscriptions = await RNIap.getSubscriptions(ITEM_SKUS);
+
+      let purchases = [];
+      // `getPurchaseHistory` only work on actual devices
+      if (!isEmulator()) {
+        purchases = await RNIap.getPurchaseHistory();
+      }
+
+      this.setState({ subscriptions, purchases, loading: false });
+    } catch (err) {
+      this.setState({ loading: false, error: err });
+      console.log(err); // standardized err.code and err.message available
     }
   }
 
@@ -50,9 +93,54 @@ class ProScreen extends PureComponent {
     });
   }
 
+  purchasePro = async () => {
+    // Only allow purchase on a device
+    if (isEmulator()) return;
+
+    const { subscriptions } = this.state;
+    if (isEmpty(subscriptions)) return;
+
+    const item = subscriptions[0];
+    const sku = item.productId;
+    if (isEmpty(sku)) return;
+
+    this.setState({ error: null });
+    try {
+      const receipt = await RNIap.buySubscription(sku);
+      console.log(receipt);
+
+      //TODO: Send receipt to server
+      this.fetchProducts();
+    } catch (err) {
+      this.setState({ error: err });
+      console.log(err);
+    }
+  }
+
+  renderError() {
+    const { error } = this.state;
+    if (!error) return null;
+
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
   renderProCard() {
     const { currentUser } = this.props;
+    const { loading } = this.state;
     const pro = isPro(currentUser);
+
+    if (loading) {
+      return (
+        <View style={styles.proCard}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
+
     return (
       <View style={styles.proCard}>
         <View style={styles.priceContainer}>
@@ -62,7 +150,7 @@ class ProScreen extends PureComponent {
             <Text style={styles.billText}>BILLED ANNUALLY</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.proButton}>
+        <TouchableOpacity style={styles.proButton} onPress={this.purchasePro}>
           <Text style={styles.proButtonText}>Upgrade to PRO</Text>
         </TouchableOpacity>
       </View>
@@ -192,6 +280,8 @@ class ProScreen extends PureComponent {
     return (
       <View style={styles.containerStyle}>
         <ScrollView>
+          {/* Errors */}
+          {this.renderError()}
           {/* Top info */}
           {this.renderGradientInfo()}
           {/* Perks */}
