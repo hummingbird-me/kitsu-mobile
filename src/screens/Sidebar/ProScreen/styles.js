@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
   },
   perksContainer: {
     backgroundColor: colors.white,
-    paddingHorizontal: 16,
+    padding: 16,
     zIndex: 2,
   },
   perksInfo: {
@@ -93,10 +93,10 @@ export const styles = StyleSheet.create({
   perksInfoHeading: {
     color: colors.offBlack,
     fontSize: 16,
-    top: -13,
     fontWeight: 'bold',
     backgroundColor: 'white',
     padding: 4,
+    marginVertical: 8,
   },
   perksList: {
     paddingHorizontal: 16,
@@ -128,8 +128,6 @@ export const styles = StyleSheet.create({
   artContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    top: 20,
-    marginTop: -10,
   },
   art: {
     width: 200,
@@ -144,10 +142,8 @@ export const styles = StyleSheet.create({
   avatarContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    top: -25,
     flexDirection: 'row',
     flex: 1,
-    marginBottom: -10,
   },
   avatar: {
     width: 80,
@@ -156,7 +152,7 @@ export const styles = StyleSheet.create({
   avatarMask: {
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colors.lightestGrey,
     overflow: 'hidden',
   },
   avatarTag: {
