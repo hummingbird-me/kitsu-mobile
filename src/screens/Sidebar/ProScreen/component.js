@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEqual, isEmpty } from 'lodash';
@@ -95,7 +96,10 @@ class ProScreen extends PureComponent {
 
   purchasePro = async () => {
     // Only allow purchase on a device
-    if (isEmulator()) return;
+    if (isEmulator()) {
+      Alert.alert('Unavailable', 'Can\'t purchase items on a simulator or emulator!');
+      return;
+    }
 
     const { subscriptions } = this.state;
     if (isEmpty(subscriptions)) return;
@@ -132,6 +136,27 @@ class ProScreen extends PureComponent {
     const { currentUser } = this.props;
     const { loading } = this.state;
     const pro = isPro(currentUser);
+
+    if (pro) {
+      const current = moment();
+      const expires = currentUser && currentUser.proExpiresAt;
+      const expiresDate = expires && moment(expires);
+      const diff = expiresDate && expiresDate.diff(current, 'days');
+
+      const prefix = (diff && diff === 1) ? 'day' : 'days';
+      const diffText = expiresDate ? diff : '-';
+
+      return (
+        <View style={styles.proCard}>
+          <View style={styles.priceContainer}>
+            <Text style={styles.priceTag}>PRO Active</Text>
+          </View>
+          <View style={styles.proButton}>
+            <Text style={styles.proButtonText}>{diffText} {prefix} remaining</Text>
+          </View>
+        </View>
+      );
+    }
 
     if (loading) {
       return (

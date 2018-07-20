@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
   gradientContainer: {
     padding: 16,
     paddingVertical: 30,
-    paddingBottom: 40,
   },
   kitsuLogoContainer: {
     marginBottom: 24,
@@ -135,8 +134,7 @@ export const styles = StyleSheet.create({
   },
   footer: {
     padding: 16,
-    paddingTop: 34,
-    paddingBottom: 24,
+    paddingVertical: 24,
     backgroundColor: colors.lightestGrey,
   },
   avatarContainer: {
