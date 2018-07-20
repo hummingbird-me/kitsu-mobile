@@ -79,4 +79,48 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: 16,
   },
+  perksInfo: {
+    marginVertical: 16,
+    paddingBottom: 24,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.lightGrey,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  perksInfoHeading: {
+    color: colors.offBlack,
+    fontSize: 16,
+    top: -13,
+    fontWeight: 'bold',
+    backgroundColor: 'white',
+    padding: 4,
+  },
+  perksList: {
+    paddingHorizontal: 16,
+  },
+  perksInfoSection: {
+    paddingVertical: 16,
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightGrey,
+  },
+  perksInfoSection_first: {
+    paddingTop: 0,
+  },
+  perksInfoSection_last: {
+    borderBottomWidth: 0,
+    paddingVertical: 0,
+    paddingTop: 16,
+  },
+  perkTitle: {
+    color: colors.offBlack,
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  perkDescription: {
+    color: colors.offBlack,
+    fontSize: 13,
+  },
 });

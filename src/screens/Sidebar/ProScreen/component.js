@@ -67,8 +67,46 @@ class ProScreen extends PureComponent {
   }
 
   renderProPerks() {
+    const perks = [
+      {
+        title: 'Fancy-pants \'PRO\' badge',
+        description: 'See how nice that badge above looks on you? You should wear it home. It was made for you.',
+      },
+      {
+        title: 'No advertising',
+        description: 'Hide all ads from your Kitsu experience, doesn\'t apply to Hulu videos (we don\'t control those!)',
+      },
+      {
+        title: 'Early-access to new features',
+        description: 'You\'re helping us keep the lights on, you deserve a little VIP treatment. You\'ll get to test new stuff before everyone else!',
+      }
+    ];
+
     return (
       <View style={styles.perksContainer}>
+        {/* TODO: Add user image */}
+        <View style={styles.perksInfo}>
+          <Text style={styles.perksInfoHeading}>THE PERKS OF PRO</Text>
+          <View style={styles.perksList}>
+            {perks.map((p, index) => {
+              const isFirst = index === 0;
+              const isLast = index === perks.length - 1;
+              return (
+                <View
+                  key={p.title}
+                  style={[
+                    styles.perksInfoSection,
+                    isLast && styles.perksInfoSection_last,
+                    isFirst && styles.perksInfoSection_first,
+                  ]}
+                >
+                  <Text style={styles.perkTitle}>{p.title}</Text>
+                  <Text style={styles.perkDescription}>{p.description}</Text>
+                </View>
+              );
+            })}
+          </View>
+        </View>
       </View>
     );
   }
@@ -112,6 +150,8 @@ class ProScreen extends PureComponent {
         <ScrollView>
           {/* Top info */}
           {this.renderGradientInfo()}
+          {/* Perks */}
+          {this.renderProPerks()}
         </ScrollView>
       </View>
     );
