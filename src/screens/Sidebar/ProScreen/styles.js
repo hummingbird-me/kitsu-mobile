@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
   gradientContainer: {
     padding: 16,
     paddingVertical: 30,
+    paddingBottom: 40,
   },
   kitsuLogoContainer: {
     marginBottom: 24,
@@ -48,19 +49,19 @@ export const styles = StyleSheet.create({
   },
   priceTag: {
     color: '#444444',
-    fontSize: 44,
+    fontSize: 34,
     fontWeight: '800',
     marginRight: 6,
   },
   durationText: {
     color: colors.green,
     fontWeight: '800',
-    fontSize: 15,
+    fontSize: 14,
   },
   billText: {
     color: colors.grey,
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: 11,
   },
   proButton: {
     width: '100%',
@@ -78,6 +79,7 @@ export const styles = StyleSheet.create({
   perksContainer: {
     backgroundColor: colors.white,
     paddingHorizontal: 16,
+    zIndex: 2,
   },
   perksInfo: {
     marginVertical: 16,
@@ -122,5 +124,56 @@ export const styles = StyleSheet.create({
   perkDescription: {
     color: colors.offBlack,
     fontSize: 13,
+  },
+  artContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 20,
+    marginTop: -10,
+  },
+  art: {
+    width: 200,
+    height: 120,
+  },
+  footer: {
+    padding: 16,
+    paddingTop: 34,
+    paddingBottom: 24,
+    backgroundColor: colors.lightestGrey,
+  },
+  avatarContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: -25,
+    flexDirection: 'row',
+    flex: 1,
+    marginBottom: -10,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+  },
+  avatarMask: {
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: colors.white,
+    overflow: 'hidden',
+  },
+  avatarTag: {
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  avatarTagText: {
+    color: colors.white,
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  avatarTagContainer: {
+    height: '100%',
+    justifyContent: 'flex-end',
+    paddingVertical: 12,
+    position: 'absolute',
+    paddingLeft: 70,
   },
 });

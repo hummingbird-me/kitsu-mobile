@@ -4,10 +4,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
-import { logo } from 'kitsu/assets/img/pro';
+import { logo, art } from 'kitsu/assets/img/pro';
 import { isPro } from 'kitsu/utils/user';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common';
 import { styles } from './styles';
+import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import { defaultAvatar } from 'kitsu/constants/app';
+import { ProgressiveImage } from '../../../components/ProgressiveImage/component';
 
 class ProScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -53,7 +56,7 @@ class ProScreen extends PureComponent {
     return (
       <View style={styles.proCard}>
         <View style={styles.priceContainer}>
-          <Text style={styles.priceTag}>$4</Text>
+          <Text style={styles.priceTag}>$4 USD</Text>
           <View>
             <Text style={styles.durationText}>Per Month</Text>
             <Text style={styles.billText}>BILLED ANNUALLY</Text>
@@ -62,6 +65,40 @@ class ProScreen extends PureComponent {
         <TouchableOpacity style={styles.proButton}>
           <Text style={styles.proButtonText}>Upgrade to PRO</Text>
         </TouchableOpacity>
+      </View>
+    );
+  }
+
+  renderAvatar() {
+    const { currentUser } = this.props;
+    const avatar = currentUser && currentUser.avatar && currentUser.avatar.medium;
+    return (
+      <View style={styles.avatarContainer}>
+        <View style={styles.avatarMask}>
+          <ProgressiveImage
+            resize="cover"
+            source={{ uri: avatar || defaultAvatar }}
+            style={styles.avatar}
+          />
+        </View>
+        <View style={styles.avatarTagContainer}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1.0, y: 1.0 }}
+            colors={['#E8784A', '#EA4C89']}
+            style={styles.avatarTag}
+          >
+            <Text style={styles.avatarTagText}>PRO</Text>
+          </LinearGradient>
+        </View>
+      </View>
+    );
+  }
+
+  renderFooter() {
+    return (
+      <View style={styles.footer}>
+        {this.renderProCard()}
       </View>
     );
   }
@@ -79,12 +116,12 @@ class ProScreen extends PureComponent {
       {
         title: 'Early-access to new features',
         description: 'You\'re helping us keep the lights on, you deserve a little VIP treatment. You\'ll get to test new stuff before everyone else!',
-      }
+      },
     ];
 
     return (
       <View style={styles.perksContainer}>
-        {/* TODO: Add user image */}
+        {this.renderAvatar()}
         <View style={styles.perksInfo}>
           <Text style={styles.perksInfoHeading}>THE PERKS OF PRO</Text>
           <View style={styles.perksList}>
@@ -106,6 +143,13 @@ class ProScreen extends PureComponent {
               );
             })}
           </View>
+        </View>
+        <View style={styles.artContainer}>
+          <Image
+            source={art}
+            resizeMode="contain"
+            style={styles.art}
+          />
         </View>
       </View>
     );
@@ -152,6 +196,8 @@ class ProScreen extends PureComponent {
           {this.renderGradientInfo()}
           {/* Perks */}
           {this.renderProPerks()}
+          {/* Footer */}
+          {this.renderFooter()}
         </ScrollView>
       </View>
     );
