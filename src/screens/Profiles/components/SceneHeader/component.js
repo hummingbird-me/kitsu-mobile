@@ -28,6 +28,7 @@ export class SceneHeader extends PureComponent {
       followersCount,
       followingCount,
       averageRating,
+      onFollowTabPress,
     } = this.props;
 
     // Truncate the rating
@@ -82,7 +83,9 @@ export class SceneHeader extends PureComponent {
           <StyledText size="small" color="dark">{description}</StyledText>
         </View>
         <View style={styles.statusView}>
-          <FollowStatus followStatusType="following" count={followingCount} />
+          <TouchableOpacity onPress={() => onFollowTabPress('Following')}>
+            <FollowStatus followStatusType="following" count={followingCount} />
+          </TouchableOpacity>
           <FollowStatus followStatusType="followers" count={followersCount} />
         </View>
       </View>
@@ -245,6 +248,7 @@ SceneHeader.propTypes = {
   moreButtonOptions: PropTypes.array,
   showMoreButton: PropTypes.bool,
   onFollowButtonPress: PropTypes.func,
+  onFollowTabPress: PropTypes.func,
   onMainButtonOptionsSelected: PropTypes.func,
   onMoreButtonOptionsSelected: PropTypes.func,
   posterImage: PropTypes.string,
@@ -267,6 +271,7 @@ SceneHeader.defaultProps = {
   moreButtonOptions: [],
   showMoreButton: true,
   onFollowButtonPress: null,
+  onFollowTabPress: null,
   onHeaderLeftButtonPress: null,
   onMainButtonOptionsSelected: null,
   onMoreButtonOptionsSelected: null,

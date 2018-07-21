@@ -48,6 +48,7 @@ const TabRoutes = TabRouter({
   About: { getScreen: () => require('./pages/About').About },
   Library: { getScreen: () => require('./pages/Library').Library },
   Groups: { getScreen: () => require('./pages/Groups').Groups },
+  Following: { getScreen: () => require('./pages/Following').Following },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
 }, {
   initialRouteName: 'Summary',
@@ -390,6 +391,7 @@ class ProfilePage extends PureComponent {
             mainButtonTitle={mainButtonTitle}
             mainButtonLoading={isLoadingFollow}
             onFollowButtonPress={this.handleFollowing}
+            onFollowTabPress={this.setActiveTab}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           <SectionList
