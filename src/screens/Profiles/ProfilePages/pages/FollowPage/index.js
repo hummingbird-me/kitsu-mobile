@@ -1,25 +1,25 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import FastImage from 'react-native-fast-image';
 import URL from 'url-parse';
-import { View, FlatList, Text, TouchableOpacity } from 'react-native';
+import { FlatList } from 'react-native';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
-import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
+import { FollowBox } from 'kitsu/screens/Profiles/components/FollowBox';
+import { defaultAvatar } from 'kitsu/constants/app';
+import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { offWhite } from 'kitsu/constants/colors';
 import { isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
 import { styles } from './styles';
 
-class Following extends PureComponent {
+class FollowPage extends PureComponent {
   static propTypes = {
-    userId: PropTypes.string.isRequired,
     navigation: PropTypes.object.isRequired,
   }
 
   state = {
+    userId: null,
+    currentUser: null,
     loading: true,
     isLoadingNextPage: false,
     refreshing: false,
@@ -63,12 +63,13 @@ class Following extends PureComponent {
     }
 
     try {
+      const userId = this.props.navigation.getParam('userId', undefined);
       const result = await Kitsu.findAll('follows', {
         fields: {
-          users: 'avatar,coverImage,name,slug',
+          users: 'avatar,name,slug,followersCount',
         },
         filter: {
-          follower: this.props.userId,
+          follower: userId,
         },
         include: 'followed',
         sort: '-created_at',
@@ -77,7 +78,7 @@ class Following extends PureComponent {
           limit: PAGE_SIZE,
         },
       });
-      console.log(result);
+      console.log(userId, result);
 
       this.canFetchNext = !isEmpty(result && result.links && result.links.next);
       const nextPage = new URL(result.links.next, true);
@@ -105,30 +106,16 @@ class Following extends PureComponent {
 
   renderFollowingItem = ({ item }) => {
     if (!item || !item.followed) return null;
-    const { avatar, coverImage, name, id } = item.followed;
+    const { avatar, name, id, followersCount } = item.followed;
     return (
-      <View style={styles.userContainer}>
-        <ProgressiveImage
-          hasOverlay
-          style={styles.headerCoverImage}
-          source={{ uri: (coverImage && getImgixCoverImage(coverImage)) || defaultCover }}
-        />
-        <View style={styles.userProfileContainer}>
-          <TouchableOpacity onPress={() => {
-            this.props.navigation.navigate('ProfilePages', { userId: id });
-          }}
-          >
-            <FastImage
-              style={styles.userProfileImage}
-              source={{ uri: (avatar && avatar.medium) || defaultAvatar }}
-              cache="web"
-            />
-          </TouchableOpacity>
-          <View style={styles.userProfileTextWrapper}>
-            <Text style={styles.userProfileName}>{name}</Text>
-          </View>
-        </View>
-      </View>
+      <FollowBox
+        avatar={(avatar && avatar.medium) || defaultAvatar}
+        onAvatarPress={() => {
+          this.props.navigation.navigate('ProfilePages', { userId: id });
+        }}
+        name={name}
+        followersCount={followersCount}
+      />
     );
   }
 
@@ -147,25 +134,16 @@ class Following extends PureComponent {
           refreshing={this.state.refreshing}
           onRefresh={this.onRefresh}
           renderItem={this.renderFollowingItem}
-          onMomentumScrollBegin={() => {
-            this.onEndReachedCalledDuringMomentum = false;
-          }}
-          onEndReached={() => {
-            if (!this.onEndReachedCalledDuringMomentum) {
-              this.fetchNextPage();
-              this.onEndReachedCalledDuringMomentum = true;
-            }
-          }}
+          onEndReached={this.fetchNextPage}
           onEndReachedThreshold={0.6}
           ListFooterComponent={() => isLoadingNextPage && (
             <SceneLoader color={offWhite} />
           )}
-
-          removeClippedSubviews
+          ItemSeparatorComponent={() => <RowSeparator />}
         />
       </TabContainer>
     );
   }
 }
 
-export const component = Following;
+export default FollowPage;

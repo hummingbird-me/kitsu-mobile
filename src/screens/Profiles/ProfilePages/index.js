@@ -48,7 +48,7 @@ const TabRoutes = TabRouter({
   About: { getScreen: () => require('./pages/About').About },
   Library: { getScreen: () => require('./pages/Library').Library },
   Groups: { getScreen: () => require('./pages/Groups').Groups },
-  Following: { getScreen: () => require('./pages/Following').Following },
+  // Following: { getScreen: () => require('./pages/Following').Following },
   Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
 }, {
   initialRouteName: 'Summary',
@@ -161,6 +161,15 @@ class ProfilePage extends PureComponent {
       this.setState({ loading: false });
     }
   }
+
+  onFollowTabPress = () => {
+    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+
+    this.props.navigation.navigate('FollowPage', {
+      userId,
+      currentUser: this.props.currentUser,
+    });
+  };
 
   setActiveTab = (tab) => {
     this.setState({ active: tab });
@@ -391,7 +400,7 @@ class ProfilePage extends PureComponent {
             mainButtonTitle={mainButtonTitle}
             mainButtonLoading={isLoadingFollow}
             onFollowButtonPress={this.handleFollowing}
-            onFollowTabPress={this.setActiveTab}
+            onFollowTabPress={this.onFollowTabPress}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           <SectionList
