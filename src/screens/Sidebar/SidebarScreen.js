@@ -15,6 +15,9 @@ import { Screens } from 'kitsu/navigation';
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
 import { listBackPurple } from 'kitsu/constants/colors';
+import { TitleTag } from 'kitsu/components/TitleTag';
+import { getUserTitle } from 'kitsu/utils/user';
+import { isEmpty } from 'lodash';
 
 class SidebarScreen extends PureComponent {
   static propTypes = {
@@ -136,6 +139,7 @@ class SidebarScreen extends PureComponent {
   render() {
     const { avatar, coverImage, name } = this.props.currentUser;
     const iOSWidth = { width: 280 };
+    const title = getUserTitle(this.props.currentUser);
     return (
       // NOTE: 280px is the width of the sideMenu when expanded
       // We can set a custom width for it if we want however there is an issue on iOS
@@ -156,8 +160,13 @@ class SidebarScreen extends PureComponent {
               source={{ uri: (avatar && avatar.medium) || defaultAvatar }}
               cache="web"
             />
-            <View style={styles.userProfileTextWrapper}>
-              <Text style={styles.userProfileName}>{name}</Text>
+            <View style={styles.userProfileInfoWrapper}>
+              <View style={styles.userProfileTextWrapper}>
+                <Text style={styles.userProfileName} numberOfLines={1}>{name}</Text>
+              </View>
+              <View style={styles.titleTagWrapper}>
+                {!isEmpty(title) && <TitleTag title={title} />}
+              </View>
             </View>
           </View>
         </ProgressiveImage>

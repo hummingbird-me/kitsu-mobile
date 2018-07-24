@@ -9,7 +9,10 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { kitsuConfig } from 'kitsu/config/env';
+import { TitleTag } from 'kitsu/components/TitleTag';
+import { isEmpty } from 'lodash';
 import { styles } from './styles';
+
 
 const formatTime = (time) => (
   moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMMM')} at ${moment(time).format('H:MMA')}`
@@ -20,6 +23,7 @@ export const PostHeader = ({
   avatar,
   onAvatarPress,
   name,
+  title,
   time,
   onBackButtonPress,
   onEditPress,
@@ -85,7 +89,18 @@ export const PostHeader = ({
         <TouchableOpacity onPress={onAvatarPress} style={styles.userDetailsLink}>
           <Avatar avatar={avatar} />
           <Layout.RowMain>
-            <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
+            <View style={styles.userInfo}>
+              <StyledText
+                numberOfLines={1}
+                color="dark"
+                size="xsmall"
+                bold
+                textStyle={{ flexShrink: 1 }}
+              >
+                {name}
+              </StyledText>
+              {!isEmpty(title) && <TitleTag title={title} style={{ marginLeft: 4 }} />}
+            </View>
             <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>
               {postDateTime}
               {post.editedAt && " · "}
@@ -112,6 +127,7 @@ PostHeader.propTypes = {
   post: PropTypes.object.isRequired,
   avatar: PropTypes.string,
   name: PropTypes.string,
+  title: PropTypes.string,
   time: PropTypes.string,
   onBackButtonPress: PropTypes.func,
   onAvatarPress: PropTypes.func,
@@ -121,6 +137,7 @@ PostHeader.propTypes = {
 PostHeader.defaultProps = {
   avatar: null,
   name: null,
+  title: null,
   time: null,
   onBackButtonPress: null,
   onAvatarPress: null,

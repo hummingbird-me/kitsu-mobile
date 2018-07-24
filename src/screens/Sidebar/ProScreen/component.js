@@ -12,7 +12,9 @@ import { defaultAvatar } from 'kitsu/constants/app';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage/component';
 import * as RNIap from 'react-native-iap';
 import { isEmulator } from 'react-native-device-info';
+import { TitleTag } from 'kitsu/components/TitleTag';
 import { styles } from './styles';
+
 
 // The SKUs for the iAP
 const ITEM_SKUS = ['io.kitsu.pro.yearly'];
@@ -195,14 +197,7 @@ class ProScreen extends PureComponent {
           />
         </View>
         <View style={styles.avatarTagContainer}>
-          <LinearGradient
-            start={{ x: 0.0, y: 0.0 }}
-            end={{ x: 1.0, y: 1.0 }}
-            colors={['#E8784A', '#EA4C89']}
-            style={styles.avatarTag}
-          >
-            <Text style={styles.avatarTagText}>PRO</Text>
-          </LinearGradient>
+          <TitleTag title="PRO" />
         </View>
       </View>
     );

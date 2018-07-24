@@ -2,10 +2,12 @@ import * as React from 'react';
 import { View, TouchableOpacity, Text, FlatList, StyleSheet, TouchableHighlight } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import * as PropTypes from 'prop-types';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+import { TitleTag } from 'kitsu/components/TitleTag';
+import { getUserTitle } from 'kitsu/utils/user';
+import { isEmpty } from 'lodash';
 
 const styles = StyleSheet.create({
   container: {
@@ -43,10 +45,16 @@ const styles = StyleSheet.create({
   userMetaContainer: {
     justifyContent: 'center',
     marginLeft: 10,
+    flex: 1,
+  },
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   userNameText: {
     color: '#333333',
     fontWeight: '500',
+    flexShrink: 1,
   },
   userFollowText: {
     color: '#616161',
@@ -84,12 +92,18 @@ const onUserPress = (componentId, userId) => {
 const User = ({ componentId, user, onFollow }) => {
   const userAvatar = user.avatar ? { uri: user.avatar.small } : DEFAULT_AVATAR;
   const followerTxt = user.followersCount > 1 ? 'followers' : 'follower';
+
+  const title = getUserTitle(user);
+
   return (
     <TouchableOpacity onPress={() => onUserPress(componentId, user.id)} activeOpacity={0.6} style={styles.userContainer}>
       <View style={styles.userLeftSection}>
         <FastImage source={userAvatar} style={styles.userAvatar} cache="web" />
         <View style={styles.userMetaContainer}>
-          <Text style={styles.userNameText}>{user.name}</Text>
+          <View style={styles.userInfoContainer}>
+            <Text style={styles.userNameText} numberOfLines={1}>{user.name}</Text>
+            {!isEmpty(title) && <TitleTag title={title || 'TEST'} style={{ marginLeft: 4 }} />}
+          </View>
           <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>
         </View>
       </View>

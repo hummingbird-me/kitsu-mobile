@@ -130,16 +130,25 @@ export const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
   },
+  userProfileInfoWrapper: {
+    flexDirection: 'row',
+    flex: 1,
+    height: 50,
+    alignItems: 'center',
+  },
   userProfileTextWrapper: {
     marginLeft: 12,
-    marginBottom: 12,
     backgroundColor: 'transparent',
+    flexShrink: 1,
   },
   userProfileName: {
     fontFamily: 'OpenSans',
     color: colors.white,
     fontSize: 16,
     fontWeight: '600',
+  },
+  titleTagWrapper: {
+    marginLeft: 8,
   },
 });
 

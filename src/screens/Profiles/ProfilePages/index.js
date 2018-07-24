@@ -15,7 +15,7 @@ import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { EditModal } from 'kitsu/screens/Profiles/components/EditModal';
 import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import { isIdForCurrentUser } from 'kitsu/utils/user';
+import { isIdForCurrentUser, getUserTitle } from 'kitsu/utils/user';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { parseURL } from 'kitsu/utils/url';
@@ -285,7 +285,7 @@ class ProfilePage extends PureComponent {
           id: userId,
         },
         fields: {
-          users: 'slug,waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
+          users: 'slug,waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu,title,proExpiresAt',
           characters: 'name,image,description',
         },
         include: 'waifu',
@@ -494,6 +494,7 @@ class ProfilePage extends PureComponent {
           <SceneHeader
             variant="profile"
             title={profile.name}
+            tag={getUserTitle(profile)}
             description={profile.about}
             posterImage={profile.avatar && profile.avatar.large}
             followersCount={profile.followersCount}

@@ -18,6 +18,7 @@ import { scenePadding } from 'kitsu/screens/Feed/constants';
 import { handleURL } from 'kitsu/utils/url';
 import { BasicCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
+import { getUserTitle } from 'kitsu/utils/user';
 
 const CACHE_WIDTH_KEYS = {
   comment: 'commentWidth',
@@ -156,7 +157,7 @@ export class Comment extends PureComponent {
           parentId: this.props.comment.id,
         },
         fields: {
-          users: 'slug,avatar,name',
+          users: 'slug,avatar,name,title,proExpiresAt',
         },
         include: 'user,uploads',
         sort: '-createdAt',
@@ -204,6 +205,12 @@ export class Comment extends PureComponent {
     // Get the user avatar and name
     const avatar = (user && user.avatar);
     const name = (user && user.name) || '-';
+    const title = getUserTitle(user);
+
+    let commentName = name;
+    if (!isEmpty(title)) {
+      commentName = `${name} ∙ ${title}`;
+    }
 
     const AvatarContainer = props => (
       user && onAvatarPress ?
@@ -223,7 +230,7 @@ export class Comment extends PureComponent {
         </AvatarContainer>
         <Layout.RowMain onLayout={this.onCommentLayout}>
           <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
-            <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
+            <StyledText size="xxsmall" color="dark" bold>{commentName}</StyledText>
             {!isEmpty(content) &&
               <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url)}>
                 <ViewMoreStyledText

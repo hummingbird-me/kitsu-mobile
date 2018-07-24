@@ -132,6 +132,11 @@ export const styles = StyleSheet.create({
     height: '50%',
   },
 
+  titleInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
   mainButtonView: {
     flex: 3,
   },

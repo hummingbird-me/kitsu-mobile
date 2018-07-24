@@ -24,13 +24,11 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
-import * as colors from 'kitsu/constants/colors';
 import { extractUrls } from 'kitsu/utils/url';
-import { isEmpty, uniqBy, isNull } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
-import { StyledText } from 'kitsu/components/StyledText';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { getUserTitle } from 'kitsu/utils/user';
 
 export default class PostDetails extends PureComponent {
   static propTypes = {
@@ -169,7 +167,7 @@ export default class PostDetails extends PureComponent {
           ...replyOptions,
         };
       }
-      
+
       // If we have a comment as the `post` then we need to use its original post id
       const postId = isComment ? post.post && post.post.id : post.id;
       if (!postId) return;
@@ -337,7 +335,7 @@ export default class PostDetails extends PureComponent {
       const comments = await Kitsu.findAll('comments', {
         filter,
         fields: {
-          users: 'slug,avatar,name',
+          users: 'slug,avatar,name,title,proExpiresAt',
         },
         include: 'user,uploads,parent,post',
         sort: '-createdAt',
@@ -444,6 +442,7 @@ export default class PostDetails extends PureComponent {
             if (post.user) this.navigateToUserProfile(post.user.id);
           }}
           name={(post.user && post.user.name) || '-'}
+          title={getUserTitle(post.user)}
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />
@@ -483,7 +482,7 @@ export default class PostDetails extends PureComponent {
                   <Text>View All Comments</Text>
                 </TouchableOpacity>
               }
-              {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) && 
+              {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) &&
                 <SceneLoader />
               }
               {comments.length > 0 && topLevelCommentsCount > comments.length && !showLoadMoreComments && (

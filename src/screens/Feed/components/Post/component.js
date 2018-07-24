@@ -1,10 +1,8 @@
 import React, { PureComponent } from 'react';
-import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
+import { View, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
-import * as colors from 'kitsu/constants/colors';
-import { StyledText } from 'kitsu/components/StyledText';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
@@ -13,6 +11,7 @@ import { extractUrls } from 'kitsu/utils/url';
 import { FeedCache } from 'kitsu/utils/cache';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
+import { getUserTitle } from 'kitsu/utils/user';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
 
@@ -169,7 +168,7 @@ export class Post extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'slug,avatar,name',
+          users: 'slug,avatar,name,title,proExpiresAt',
         },
         include: 'user,uploads',
         sort: '-createdAt',
@@ -370,6 +369,7 @@ export class Post extends PureComponent {
             onEditPress={this.toggleEditor}
             onDelete={this.deletePost}
             name={user.name}
+            title={getUserTitle(user)}
             time={createdAt}
           />
         </TouchableWithoutFeedback>

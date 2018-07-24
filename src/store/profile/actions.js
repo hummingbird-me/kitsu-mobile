@@ -13,7 +13,7 @@ export const fetchProfile = userId => async (dispatch) => {
       },
       fields: {
         users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount' +
-          ',coverImage,avatar,about,name,waifu',
+          ',coverImage,avatar,about,name,waifu,title,proExpiresAt',
       },
       include: 'waifu',
     });
@@ -334,7 +334,7 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
       },
       sort: '-created_at',
       fields: {
-        users: 'avatar,name,followersCount',
+        users: 'avatar,name,followersCount,title,proExpiresAt',
       },
       page: {
         limit,

@@ -1,19 +1,19 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { FlatList, TouchableOpacity, View, Text } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
+import { FlatList, TouchableOpacity, View } from 'react-native';
+import { defaultAvatar } from 'kitsu/constants/app';
 import { Button } from 'kitsu/components/Button';
 import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
-import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, capitalize, isNull, isArray } from 'lodash';
 import { styles } from './styles';
 import { NavigationActions } from 'kitsu/navigation';
+import { styles } from './styles';
+import { TitleTag } from 'kitsu/components/TitleTag';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
@@ -133,6 +133,7 @@ export class SceneHeader extends PureComponent {
       onMoreButtonOptionsSelected,
       showMoreButton,
       subtitle,
+      tag,
     } = this.props;
 
     // Setup the media subtitles
@@ -170,7 +171,22 @@ export class SceneHeader extends PureComponent {
                   {mediaSubTitle}
                 </StyledText>
               }
-              <StyledText size="large" color="light" bold numberOfLines={4}>{title}</StyledText>
+              <View style={styles.titleInfo}>
+                <StyledText
+                  size="large"
+                  color="light"
+                  bold
+                  numberOfLines={variant === 'profile' ? 1 : 4}
+                  textStyle={variant === 'profile' && { flexShrink: 1 }}
+                >
+                  {title}
+                </StyledText>
+                { !isEmpty(tag) &&
+                  <View style={{ marginLeft: 8 }}>
+                    <TitleTag title={tag} />
+                  </View>
+                }
+              </View>
             </View>
 
             {/* Add to library button & more button */}
@@ -255,6 +271,7 @@ SceneHeader.propTypes = {
   popularityRank: PropTypes.number,
   averageRating: PropTypes.number,
   title: PropTypes.string,
+  tag: PropTypes.string,
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   variant: PropTypes.oneOf(['profile', 'media', 'group']),
 };
@@ -279,6 +296,7 @@ SceneHeader.defaultProps = {
   ratingRank: null,
   averageRating: null,
   title: '',
+  tag: null,
   subtitle: null,
   variant: 'profile',
 };
