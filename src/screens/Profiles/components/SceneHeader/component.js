@@ -83,10 +83,12 @@ export class SceneHeader extends PureComponent {
           <StyledText size="small" color="dark">{description}</StyledText>
         </View>
         <View style={styles.statusView}>
-          <TouchableOpacity onPress={onFollowTabPress}>
+          <TouchableOpacity onPress={() => { onFollowTabPress('Following'); }}>
             <FollowStatus followStatusType="following" count={followingCount} />
           </TouchableOpacity>
-          <FollowStatus followStatusType="followers" count={followersCount} />
+          <TouchableOpacity onPress={() => { onFollowTabPress('Followers'); }}>
+            <FollowStatus followStatusType="followers" count={followersCount} />
+          </TouchableOpacity>
         </View>
       </View>
     );

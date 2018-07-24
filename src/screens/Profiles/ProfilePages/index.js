@@ -162,12 +162,15 @@ class ProfilePage extends PureComponent {
     }
   }
 
-  onFollowTabPress = () => {
+  onFollowTabPress = (label) => {
     const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
 
     this.props.navigation.navigate('FollowPage', {
       userId,
+      label,
       currentUser: this.props.currentUser,
+      followingCount: this.state.profile.followingCount,
+      followersCount: this.state.profile.followersCount,
     });
   };
 

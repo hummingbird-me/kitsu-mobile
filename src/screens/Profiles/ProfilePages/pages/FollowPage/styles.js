@@ -1,45 +1,29 @@
 import { StyleSheet } from 'react-native';
-import { isX, paddingX } from 'kitsu/utils/isX';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
-  headerCoverImage: {
-    height: isX ? 150 + paddingX : 150,
-    justifyContent: 'center',
-  },
-  userContainer: {
-    height: isX ? 225 + paddingX : 225,
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    marginTop: 12,
-  },
-  userProfileContainer: {
+  container: {
     flex: 1,
-    marginHorizontal: 12,
-    marginVertical: -40,
+    backgroundColor: colors.darkPurple,
+  },
+  searchBox: {
+    height: 35,
+    margin: 10,
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderRadius: 3,
   },
-  userProfileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 1,
-    borderColor: 'white',
-  },
-  userProfileTextWrapper: {
-    marginLeft: 12,
-    marginTop: 10,
-    backgroundColor: 'transparent',
-  },
-  userProfileName: {
+  searchText: {
     fontFamily: 'OpenSans',
-    color: colors.white,
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '600',
+    color: colors.lightGrey,
+    textAlign: 'center',
+  },
+  searchIcon: {
+    paddingHorizontal: 4,
+    color: colors.lightGrey,
   },
 });
-
-export const flatten = (...additionalStyles) => {
-  const includedStyles = additionalStyles.map(style => styles[style]);
-  return StyleSheet.flatten(includedStyles);
-};
