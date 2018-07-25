@@ -40,10 +40,12 @@ class FollowPage extends PureComponent {
     refreshing: false,
     following: [],
     followers: [],
+    currentUserFollowings: [],
   }
 
   componentWillMount() {
     this.activeTab = this.props.navigation.getParam('label', undefined);
+    this.fetchCurrentUserFollow();
   }
 
   componentDidUpdate() {
@@ -54,6 +56,26 @@ class FollowPage extends PureComponent {
     this.setState({ refreshing: true });
     await this.fetchPage({ reset: true });
     this.setState({ refreshing: false });
+  }
+
+  fetchCurrentUserFollow = async () => {
+    try {
+      const currentUser = this.props.navigation.getParam('currentUser', undefined);
+      const results = await Kitsu.findAll('follows', {
+        filter: {
+          follower: currentUser.id,
+        },
+        fields: {
+          users: 'id',
+        },
+        include: 'followed',
+      });
+      const currentUserFollowings = Array.from(results, x => x.followed);
+
+      this.setState({ currentUserFollowings });
+    } catch (err) {
+      console.log('Error fetching current user following: ', err);
+    }
   }
 
   fetchNextPage = async () => {
@@ -182,6 +204,7 @@ class FollowPage extends PureComponent {
     }
 
     const { avatar, name, id, followersCount } = this.activeTab === 'Following' ? item.followed : item.follower;
+    const currentUser = this.props.navigation.getParam('currentUser', undefined);
     return (
       <FollowBox
         avatar={(avatar && avatar.medium) || defaultAvatar}
@@ -190,6 +213,10 @@ class FollowPage extends PureComponent {
         }}
         name={name}
         followersCount={followersCount}
+        userId={id}
+        followId={item.id}
+        currentUserId={currentUser.id}
+        currentUserFollowings={this.state.currentUserFollowings}
       />
     );
   }
@@ -258,7 +285,7 @@ class FollowPage extends PureComponent {
             tabLabel={`Following${followingCount === undefined ? '' : ` · ${followingCount}`}`}
             id="following"
           >
-            {/* {this.renderSearchBox()} */}
+            {this.renderSearchBox()}
             {this.renderLists()}
           </View>
           <View

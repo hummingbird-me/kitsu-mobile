@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
+import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
   followBox: {
@@ -20,6 +21,24 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+  },
+  followButton: {
+    alignItems: 'center',
+    backgroundColor: colors.green,
+    borderRadius: 3,
+    height: 30,
+    justifyContent: 'center',
+    marginRight: 10,
+    width: 95,
+  },
+  unFollowButton: {
+    alignItems: 'center',
+    backgroundColor: colors.grey,
+    borderRadius: 3,
+    height: 30,
+    justifyContent: 'center',
+    marginRight: 10,
+    width: 95,
   },
 });
 
