@@ -61,22 +61,22 @@ export class DatePicker extends PureComponent {
       minDate,
       maxDate,
       onDateChange,
-    });
-
-    if (Platform.OS === 'ios') {
-      this._setModalVisible(true);
-    } else {
-      try {
-        const selection = await DatePickerAndroid.open({
-          date: this.state.date,
-          minDate,
-          maxDate,
-        });
-        this._onDatePicked(selection);
-      } catch (e) {
-        console.log(e);
+    }, async () => {
+      if (Platform.OS === 'ios') {
+        this._setModalVisible(true);
+      } else {
+        try {
+          const selection = await DatePickerAndroid.open({
+            date: this.state.date,
+            minDate,
+            maxDate,
+          });
+          this._onDatePicked(selection);
+        } catch (e) {
+          console.log(e);
+        }
       }
-    }
+    });
   }
 
   // Get the `date` bounded by `minDate` and `maxDate`
