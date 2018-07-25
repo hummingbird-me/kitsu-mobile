@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView } from 'react-native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -14,7 +14,6 @@ import * as RNIap from 'react-native-iap';
 import { isEmulator } from 'react-native-device-info';
 import { TitleTag } from 'kitsu/components/TitleTag';
 import { styles } from './styles';
-
 
 // The SKUs for the iAP
 const ITEM_SKUS = ['io.kitsu.pro.yearly'];
@@ -130,6 +129,26 @@ class ProScreen extends PureComponent {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  renderPurchaseRestore() {
+    // This will show a view where user can choose to apply their purchase to their account.
+    // This is a fallback case where user purchases pro, but the request errors out mid way and it doesn't get applied to their account.
+    const { purchases } = this.state;
+    const { currentUser } = this.props;
+
+    // We should only show it if we have a purchase and user isn't pro
+    if (purchases.length === 0 || isPro(currentUser)) return null;
+
+    return (
+      <View style={styles.restorePurchase}>
+        <Text style={styles.restorePurchaseText}>We have detected that you have bought Kitsu Pro but haven't applied it to the current account.</Text>
+        {/* TODO: Hook this up to validate function */}
+        <TouchableOpacity style={styles.proButton}>
+          <Text style={styles.proButtonText}>Apply Kitsu Pro</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -302,6 +321,8 @@ class ProScreen extends PureComponent {
         <ScrollView>
           {/* Errors */}
           {this.renderError()}
+          {/* Restore purchase */}
+          {this.renderPurchaseRestore()}
           {/* Top info */}
           {this.renderGradientInfo()}
           {/* Perks */}
