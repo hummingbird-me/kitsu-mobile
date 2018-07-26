@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView } from 'react-native';
+import { View, Image, Dimensions, ScrollView, Text, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,6 +13,9 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage/component';
 import * as RNIap from 'react-native-iap';
 import { isEmulator } from 'react-native-device-info';
 import { TitleTag } from 'kitsu/components/TitleTag';
+import { kitsuConfig } from 'kitsu/config/env';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { Sentry } from 'react-native-sentry';
 import { styles } from './styles';
 
 // The SKUs for the iAP
@@ -59,7 +62,46 @@ class ProScreen extends PureComponent {
   }
 
   componentWillUnmount() {
-    RNIap.endConnection();
+    // Just incase RNIap is undefined
+    if (RNIap) {
+      RNIap.endConnection();
+    }
+  }
+
+  // Error messages for the validation
+  getErrorMessages(status) {
+    const defaultMessage = {
+      detail: 'Unknown error occurred',
+      message: 'Failed to validate receipt.',
+    };
+
+    const errorMessages = {
+      // Auth errors
+      401: {
+        detail: 'Failed to authenticate user',
+        message: 'Failed to authenticate user. Please restart the app and try again.',
+      },
+
+      // Validation errors (4XX = Client, 5XX = server)
+      400: {
+        detail: 'Malformed receipt',
+        message: 'Something went wrong with the receipt. Please try again later.',
+      },
+      402: {
+        detail: 'Error',
+        message: 'Something went wrong. Please try again later.',
+      },
+      500: {
+        detail: 'Invalid JSON or Invalid Secret',
+        message: 'Failed to validate purchase. Please try again later.',
+      },
+      502: {
+        detail: 'Validation server unavailable',
+        message: 'Failed to validate purchase, The validation server is unavailable. Please try again later.',
+      },
+    };
+
+    return errorMessages[status] || defaultMessage;
   }
 
   async prepareIAP() {
@@ -83,9 +125,20 @@ class ProScreen extends PureComponent {
       }
 
       this.setState({ subscriptions, purchases, loading: false });
-    } catch (err) {
-      this.setState({ loading: false, error: err });
-      console.log(err); // standardized err.code and err.message available
+    } catch (e) {
+      // Errors from `getSubscriptions` and `getPurchaseHistory`
+
+      // Send the log to sentry
+      Sentry.captureMessage('Failed to fetch products', {
+        tags: {
+          type: 'iap',
+        },
+        extra: {
+          error: (e instanceof Error) ? e.message : e,
+        },
+      });
+      this.setState({ loading: false, error: expect });
+      console.error('Failed to fetch products: ', e); // standardized err.code and err.message available
     }
   }
 
@@ -95,6 +148,9 @@ class ProScreen extends PureComponent {
     });
   }
 
+  /**
+   * Take the user through purchasing PRO via iAP
+   */
   purchasePro = async () => {
     // Only allow purchase on a device
     if (isEmulator()) {
@@ -110,15 +166,108 @@ class ProScreen extends PureComponent {
     if (isEmpty(sku)) return;
 
     this.setState({ error: null });
+    let receipt = null;
     try {
-      const receipt = await RNIap.buySubscription(sku);
+      receipt = await RNIap.buySubscription(sku);
       console.log(receipt);
+      await this.fetchProducts();
+    } catch (e) {
+      // Errors from `buySubscription`
 
-      //TODO: Send receipt to server
-      this.fetchProducts();
-    } catch (err) {
-      this.setState({ error: err });
-      console.log(err);
+      // Send the log to sentry
+      Sentry.captureMessage('Failed to purchase pro', {
+        tags: {
+          type: 'iap',
+        },
+        extra: {
+          error: (e instanceof Error) ? e.message : e,
+        },
+      });
+
+      this.setState({ error: e });
+      console.error('Failed to purchase pro: ', e);
+    }
+
+    // We either errored out or didn't get a receipt
+    if (!receipt) return;
+
+    // Validate the receipt
+    this.validatePurchase(receipt);
+  }
+
+  /**
+   * Validate a purchase made by the user.
+   */
+  validatePurchase = async (receipt) => {
+    // only iOS and Android supported
+    const platform = Platform.OS.toLowerCase();
+    if (platform !== 'ios' || platform !== 'android') return;
+
+    try {
+      const { tokens, fetchCurrentUser } = this.props;
+
+      // Make sure user is authenticated
+      if (isEmpty(tokens) || isEmpty(tokens.access_token)) {
+        throw new Error('No authentication tokens found');
+      }
+
+      // Make sure we have a valid receipt
+      if (isEmpty(receipt)) {
+        throw new Error('Empty Receipt');
+      }
+
+      const url = `${kitsuConfig.baseUrl}/pro-subscription/${platform.toLowerCase()}`;
+
+      this.setState({ loading: true });
+
+      const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ receipt }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokens.access_token}`,
+        },
+      });
+
+      // Error handling
+      if (!res.ok) {
+        const status = parseInt(res.status, 10);
+        const messages = this.getErrorMessages(status);
+
+        // eslint-disable-next-line no-throw-literal
+        throw { status, ...messages };
+      }
+
+      // Fetch the new user
+      await fetchCurrentUser();
+      this.setState({ loading: false });
+    } catch (e) {
+      // Errors from validation
+      let error = new Error('Failed to validate purchase.');
+
+      // We can get different types of error objects
+      // Need to handle them
+      if (e instanceof Error) {
+        error = e;
+      } else if (e && e.message) {
+        error = new Error(e.message);
+      } else if (typeof e === 'string') {
+        error = new Error(e);
+      }
+
+      // Send the log to sentry
+      Sentry.captureMessage('Failed to validate purchase', {
+        tags: {
+          type: 'iap',
+        },
+        extra: {
+          receipt,
+          error: (e instanceof Error) ? e.message : e,
+        },
+      });
+
+      this.setState({ error, loading: false });
+      console.error('Validation failed: ', error);
     }
   }
 
@@ -136,17 +285,37 @@ class ProScreen extends PureComponent {
   renderPurchaseRestore() {
     // This will show a view where user can choose to apply their purchase to their account.
     // This is a fallback case where user purchases pro, but the request errors out mid way and it doesn't get applied to their account.
-    const { purchases } = this.state;
+    const { purchases, loading } = this.state;
     const { currentUser } = this.props;
 
-    // We should only show it if we have a purchase and user isn't pro
+    // We should only show it if we have a purchase and user isn't pro.
+    // NOTE: Not sure if `purchases` show old or expires subscriptions. If they do then we'll have to check that subscription is not old.
     if (purchases.length === 0 || isPro(currentUser)) return null;
+
+    // Show loading indicator is stuff is happening
+    if (loading) {
+      return (
+        <View style={styles.restorePurchase}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
 
     return (
       <View style={styles.restorePurchase}>
         <Text style={styles.restorePurchaseText}>We have detected that you have bought Kitsu Pro but haven't applied it to the current account.</Text>
-        {/* TODO: Hook this up to validate function */}
-        <TouchableOpacity style={styles.proButton}>
+        <TouchableOpacity
+          style={styles.proButton}
+          onPress={() => {
+            if (purchases.length === 0) return;
+
+            const purchase = purchases[0];
+            const receipt = purchase && purchase.transactionReceipt;
+            if (isEmpty(receipt)) return;
+
+            this.validatePurchase(receipt);
+          }}
+        >
           <Text style={styles.proButtonText}>Apply Kitsu Pro</Text>
         </TouchableOpacity>
       </View>
@@ -335,9 +504,10 @@ class ProScreen extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
   const { currentUser } = user;
-  return { currentUser };
+  const { tokens } = auth;
+  return { currentUser, tokens };
 };
 
-export default connect(mapStateToProps)(ProScreen);
+export default connect(mapStateToProps, { fetchCurrentUser })(ProScreen);
