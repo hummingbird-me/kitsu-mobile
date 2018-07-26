@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { FlatList } from 'react-native';
+import { FlatList, View, ActivityIndicator } from 'react-native';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { FollowBox } from 'kitsu/screens/Profiles/components/FollowBox';
-import { defaultAvatar } from 'kitsu/constants/app';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { offWhite } from 'kitsu/constants/colors';
 import { isEmpty } from 'lodash';
@@ -22,6 +21,7 @@ export class FollowList extends PureComponent {
     refreshing: false,
     currentUserFollowings: [],
     followList: [],
+    loadingCurrentFollowings: false,
   }
 
   componentWillMount = () => {
@@ -36,6 +36,7 @@ export class FollowList extends PureComponent {
     if (this.state.refreshing) return;
 
     this.setState({ refreshing: true });
+    await this.fetchCurrentUserFollow();
     await this.fetchPage({ reset: true });
     this.setState({ refreshing: false });
   }
@@ -49,9 +50,12 @@ export class FollowList extends PureComponent {
   }
 
   fetchCurrentUserFollow = async () => {
+    if (this.state.loadingCurrentFollowings) return;
+    this.setState({ loadingCurrentFollowings: true });
+
     try {
       const { currentUser } = this.props;
-      const results = await Kitsu.findAll('follows', {
+      const currentUserFollowings = await Kitsu.findAll('follows', {
         filter: {
           follower: currentUser.id,
         },
@@ -60,11 +64,12 @@ export class FollowList extends PureComponent {
         },
         include: 'followed',
       });
-      const currentUserFollowings = Array.from(results, x => x.followed);
 
       this.setState({ currentUserFollowings });
     } catch (err) {
       console.log('Error fetching current user following: ', err);
+    } finally {
+      this.setState({ loadingCurrentFollowings: false });
     }
   }
 
@@ -106,20 +111,19 @@ export class FollowList extends PureComponent {
         include,
         sort: '-created_at',
         page: {
-          offset: this.state.followList.length,
+          offset: reset ? 0 : this.state.followList.length,
           limit: PAGE_SIZE,
         },
       });
 
       this.canFetchNext = !isEmpty(result && result.links && result.links.next);
       this.setState(prevState => ({
-        followList: [...prevState.followList, ...result],
+        followList: reset ? result : [...prevState.followList, ...result],
       }));
     } catch (err) {
       console.log('Unhandled error while retrieving following: ', err);
 
       this.setState({
-        followList: [],
         error,
         refreshing: false,
       });
@@ -136,19 +140,16 @@ export class FollowList extends PureComponent {
       return null;
     }
 
-    const { avatar, name, id, followersCount } = item.followed ? item.followed : item.follower;
     const { currentUser } = this.props;
+    const user = item.followed ? item.followed : item.follower;
 
     return (
       <FollowBox
-        avatar={(avatar && avatar.medium) || defaultAvatar}
         onAvatarPress={() => {
-          this.props.navigation.navigate('ProfilePages', { userId: id });
+          this.props.navigation.navigate('ProfilePages', { userId: user.id });
         }}
-        name={name}
-        followersCount={followersCount}
-        userId={id}
-        followId={item.id}
+        user={user}
+        onRefresh={this.onRefresh}
         currentUserId={currentUser.id}
         currentUserFollowings={this.state.currentUserFollowings}
       />
@@ -156,8 +157,16 @@ export class FollowList extends PureComponent {
   }
 
   render() {
-    const { isLoadingNextPage, followList, refreshing } = this.state;
+    const { isLoadingNextPage, followList, refreshing, loadingCurrentFollowings } = this.state;
     if (isEmpty(followList)) this.fetchPage();
+
+    if (loadingCurrentFollowings) {
+      return (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color="white" size="large" />
+        </View>
+      );
+    }
 
     return (
       <FlatList
