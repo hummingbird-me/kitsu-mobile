@@ -60,7 +60,7 @@ export class FollowBox extends PureComponent {
         },
         include: 'followed',
       });
-      this.props.onRefresh();
+      this.props.onRefresh({ follow: true });
     } catch (err) {
       console.log('Error creating follow: ', err);
     } finally {
@@ -77,7 +77,7 @@ export class FollowBox extends PureComponent {
         x => x.followed.id === this.props.user.id,
       );
       await Kitsu.destroy('follows', follow.id);
-      this.props.onRefresh();
+      this.props.onRefresh({ follow: false });
     } catch (err) {
       console.log('Error removing follow: ', err);
     } finally {

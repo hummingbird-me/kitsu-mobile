@@ -10,10 +10,13 @@ import { Kitsu } from 'kitsu/config/api';
 
 export class FollowList extends PureComponent {
   static propTypes = {
+    userId: PropTypes.string.isRequired,
     navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     listType: PropTypes.string.isRequired,
     goToInitialTab: PropTypes.func.isRequired,
+    onReloadingUserData: PropTypes.func.isRequired,
+    onUpdateFollow: PropTypes.func.isRequired,
   }
 
   state = {
@@ -32,12 +35,16 @@ export class FollowList extends PureComponent {
     this.props.goToInitialTab();
   }
 
-  onRefresh = async () => {
+  onRefresh = async ({ follow = undefined } = {}) => {
     if (this.state.refreshing) return;
 
     this.setState({ refreshing: true });
     await this.fetchCurrentUserFollow();
     await this.fetchPage({ reset: true });
+    if (this.props.userId === this.props.currentUser.id) {
+      this.props.onUpdateFollow(follow);
+      await this.props.onReloadingUserData(this.props.userId);
+    }
     this.setState({ refreshing: false });
   }
 
@@ -93,7 +100,7 @@ export class FollowList extends PureComponent {
     try {
       let filter = {};
       let include = null;
-      const userId = this.props.currentUser.id;
+      const userId = this.props.userId;
 
       if (this.props.listType === 'Following') {
         filter = { follower: userId };

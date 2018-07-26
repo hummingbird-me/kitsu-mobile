@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { FollowList } from 'kitsu/screens/Profiles/components/FollowList';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -27,8 +27,26 @@ class FollowPage extends PureComponent {
     />,
   });
 
+  state = {
+    profile: this.props.navigation.getParam('profile', undefined),
+    loadingText: false,
+  }
+
   componentWillMount() {
     this.activeTab = this.props.navigation.getParam('label', undefined);
+  }
+
+  onUpdateFollow(follow) {
+    if (follow === undefined) return;
+    this.setState({ loadingText: true });
+
+    const profile = this.state.profile;
+    if (follow) {
+      profile.followingCount += 1;
+    } else {
+      profile.followingCount -= 1;
+    }
+    this.setState({ profile, loadingText: false });
   }
 
   goToInitialTab() {
@@ -48,10 +66,18 @@ class FollowPage extends PureComponent {
   }
 
   render() {
-    const followingCount = this.props.navigation.getParam('followingCount', undefined);
-    const followersCount = this.props.navigation.getParam('followersCount', undefined);
+    const { id, followersCount, followingCount } = this.state.profile;
     const label = this.props.navigation.getParam('label', undefined);
     const currentUser = this.props.navigation.getParam('currentUser', undefined);
+    const onReloadingUserData = this.props.navigation.getParam('onReloadingUserData', undefined);
+
+    if (this.state.loadingText) {
+      return (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color="white" size="large" />
+        </View>
+      );
+    }
 
     return (
       <View style={styles.container}>
@@ -70,10 +96,13 @@ class FollowPage extends PureComponent {
           >
             {this.renderSearchBox()}
             <FollowList
+              userId={id}
               navigation={this.props.navigation}
               currentUser={currentUser}
               listType="Following"
               goToInitialTab={() => { this.goToInitialTab(); }}
+              onReloadingUserData={onReloadingUserData}
+              onUpdateFollow={this.onUpdateFollow.bind(this)}
             />
           </View>
           <View
@@ -83,10 +112,13 @@ class FollowPage extends PureComponent {
           >
             {this.renderSearchBox()}
             <FollowList
+              userId={id}
               navigation={this.props.navigation}
               currentUser={currentUser}
               listType="Followers"
               goToInitialTab={() => { this.goToInitialTab(); }}
+              onReloadingUserData={onReloadingUserData}
+              onUpdateFollow={this.onUpdateFollow.bind(this)}
             />
           </View>
         </ScrollableTabView>
