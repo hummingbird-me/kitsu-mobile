@@ -454,7 +454,7 @@ class ProScreen extends PureComponent {
   renderGradientInfo() {
     // We need the exact width and height so that we can add an underline to the logo
     const screenWidth = Dimensions.get('screen').width;
-    const logoWidth = Math.min(screenWidth * 0.3, 404);
+    const logoWidth = Math.min(screenWidth * 0.3, 250);
     const logoHeight = logoWidth * (76 / 404);
 
     return (

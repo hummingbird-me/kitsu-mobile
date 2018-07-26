@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isTablet } from 'react-native-device-info';
 
 export const styles = StyleSheet.create({
   tag: {
@@ -9,7 +10,7 @@ export const styles = StyleSheet.create({
   },
   tagText: {
     color: colors.white,
-    fontSize: 11,
+    fontSize: isTablet ? 13 : 11,
     fontWeight: 'bold',
   },
 });
