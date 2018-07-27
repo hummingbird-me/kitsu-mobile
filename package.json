@@ -26,6 +26,7 @@
     "react-instantsearch": "^4.5.1",
     "react-native": "0.53.0",
     "react-native-actionsheet": "^2.3.0",
+    "react-native-admob": "^2.0.0-beta.5",
     "react-native-android-fullscreen-webview": "hummingbird-me/react-native-android-fullscreen-webview",
     "react-native-animatable": "^1.2.4",
     "react-native-animated-progress-bar": "^1.1.0",

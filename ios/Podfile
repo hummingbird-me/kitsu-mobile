@@ -8,6 +8,7 @@ target 'kitsu_mobile' do
   # Pods for kitsu_mobile
   pod 'RSKImageCropper'
   pod 'QBImagePickerController'
+  pod 'Google-Mobile-Ads-SDK'
 end
 
 # Remove any React Dependencies so that we don't get clashes
