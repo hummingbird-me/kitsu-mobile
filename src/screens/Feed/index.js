@@ -227,9 +227,6 @@ class Feed extends React.PureComponent {
             componentId={this.props.componentId}
           />
         );
-      case 'comments':
-        // We explicitly don't render these at the moment.
-        return null;
       default:
         console.log(`WARNING: Ignored post type: ${item.type}`);
         return null;

@@ -72,16 +72,18 @@ export const preprocessFeed = (result) => {
   const data = [];
 
   result.forEach((group) => {
-    group.activities.forEach((activity) => {
-      if (!activity.subject) { return; }
-      data.push(activity.subject);
+    // We only care about the top-most activity
+    const activity = group.activities[0];
+    if (!activity) { return; }
 
-      // Since we don't support comment posts properly yet,
-      // if it's a comment post, just include the actual post as well.
-      if (activity.target && activity.target.length > 0) {
-        data.push(...activity.target);
-      }
-    });
+    // Push in the `target` if the first activity is a comment. This is a side-effect of
+    // comment bumping posts. `target` = the post instance.
+    if (activity.target && activity.foreignId.includes('Comment')) {
+      const post = activity.target[0];
+      data.push(post);
+    } else if (activity.subject) {
+      data.push(activity.subject);
+    }
   });
 
   return preprocessFeedPosts(data);
