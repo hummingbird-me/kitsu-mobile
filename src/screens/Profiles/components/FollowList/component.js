@@ -24,22 +24,36 @@ export class FollowList extends PureComponent {
     refreshing: false,
     currentUserFollowings: [],
     followList: [],
-    loadingCurrentFollowings: false,
-  }
-
-  componentWillMount = () => {
-    this.fetchCurrentUserFollow();
+    loadingFirstBatch: false,
   }
 
   componentDidUpdate = () => {
     this.props.goToInitialTab();
   }
 
+  onHandleFollow = async ({ followItem = undefined, isFollowing = undefined } = {}) => {
+    if (isFollowing) {
+      this.setState(prevState => ({
+        currentUserFollowings: [...prevState.currentUserFollowings, followItem],
+      }));
+    } else {
+      this.setState(prevState => ({
+        currentUserFollowings: prevState.currentUserFollowings.filter(
+          x => x !== followItem,
+        ),
+      }));
+    }
+
+    if (this.props.userId === this.props.currentUser.id) {
+      this.props.onUpdateFollow(isFollowing);
+      await this.props.onReloadingUserData(this.props.userId);
+    }
+  }
+
   onRefresh = async ({ follow = undefined } = {}) => {
     if (this.state.refreshing) return;
 
-    this.setState({ refreshing: true });
-    await this.fetchCurrentUserFollow();
+    this.setState({ refreshing: true, loadingFirstBatch: true });
     await this.fetchPage({ reset: true });
     if (this.props.userId === this.props.currentUser.id) {
       this.props.onUpdateFollow(follow);
@@ -56,15 +70,22 @@ export class FollowList extends PureComponent {
     this.setState({ isLoadingNextPage: false });
   }
 
-  fetchCurrentUserFollow = async () => {
-    if (this.state.loadingCurrentFollowings) return;
-    this.setState({ loadingCurrentFollowings: true });
+  fetchCurrentUserFollow = async ({ followList = [], reset = false } = {}) => {
 
     try {
       const { currentUser } = this.props;
-      const currentUserFollowings = await Kitsu.findAll('follows', {
+      const followIds = followList.filter(
+        x => x.followed || x.follower,
+      ).map((x) => {
+        if (x.followed) return x.followed.id;
+
+        return x.follower.id;
+      });
+
+      const result = await Kitsu.findAll('follows', {
         filter: {
           follower: currentUser.id,
+          followed: followIds,
         },
         fields: {
           users: 'id',
@@ -72,11 +93,13 @@ export class FollowList extends PureComponent {
         include: 'followed',
       });
 
-      this.setState({ currentUserFollowings });
+      this.setState(prevState => ({
+        currentUserFollowings: reset ? result : [...prevState.currentUserFollowings, ...result],
+      }));
     } catch (err) {
       console.log('Error fetching current user following: ', err);
     } finally {
-      this.setState({ loadingCurrentFollowings: false });
+      this.setState({ loadingFirstBatch: false });
     }
   }
 
@@ -97,6 +120,7 @@ export class FollowList extends PureComponent {
       return;
     }
 
+    let result = [];
     try {
       let filter = {};
       let include = null;
@@ -110,7 +134,7 @@ export class FollowList extends PureComponent {
         include = 'follower';
       }
 
-      const result = await Kitsu.findAll('follows', {
+      result = await Kitsu.findAll('follows', {
         fields: {
           users: 'avatar,name,slug,followersCount',
         },
@@ -135,6 +159,7 @@ export class FollowList extends PureComponent {
         refreshing: false,
       });
     } finally {
+      await this.fetchCurrentUserFollow({ followList: result, reset });
       this.isFetchingPage = false;
     }
   }
@@ -156,18 +181,21 @@ export class FollowList extends PureComponent {
           this.props.navigation.navigate('ProfilePages', { userId: user.id });
         }}
         user={user}
-        onRefresh={this.onRefresh}
         currentUserId={currentUser.id}
         currentUserFollowings={this.state.currentUserFollowings}
+        onHandleFollow={this.onHandleFollow}
       />
     );
   }
 
   render() {
-    const { isLoadingNextPage, followList, refreshing, loadingCurrentFollowings } = this.state;
-    if (isEmpty(followList)) this.fetchPage();
+    const { isLoadingNextPage, followList, refreshing, loadingFirstBatch } = this.state;
+    if (isEmpty(followList)) {
+      this.setState({ loadingFirstBatch: true });
+      this.fetchPage();
+    }
 
-    if (loadingCurrentFollowings) {
+    if (loadingFirstBatch) {
       return (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color="white" size="large" />

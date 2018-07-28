@@ -19,7 +19,7 @@ export class FollowBox extends PureComponent {
     user: PropTypes.object.isRequired,
     currentUserId: PropTypes.string,
     currentUserFollowings: PropTypes.array.isRequired,
-    onRefresh: PropTypes.func.isRequired,
+    onHandleFollow: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -49,7 +49,7 @@ export class FollowBox extends PureComponent {
     this.setState({ loading: true });
 
     try {
-      await Kitsu.create('follows', {
+      const followItem = await Kitsu.create('follows', {
         follower: {
           id: this.props.currentUserId,
           type: 'users',
@@ -58,9 +58,13 @@ export class FollowBox extends PureComponent {
           id: this.props.user.id,
           type: 'users',
         },
+        fields: {
+          users: 'id',
+        },
+      }, {
         include: 'followed',
       });
-      this.props.onRefresh({ follow: true });
+      this.props.onHandleFollow({ followItem, isFollowing: true });
     } catch (err) {
       console.log('Error creating follow: ', err);
     } finally {
@@ -73,11 +77,11 @@ export class FollowBox extends PureComponent {
     this.setState({ loading: true });
 
     try {
-      const follow = this.props.currentUserFollowings.find(
+      const followItem = this.props.currentUserFollowings.find(
         x => x.followed.id === this.props.user.id,
       );
-      await Kitsu.destroy('follows', follow.id);
-      this.props.onRefresh({ follow: false });
+      await Kitsu.destroy('follows', followItem.id);
+      this.props.onHandleFollow({ followItem, isFollowing: false });
     } catch (err) {
       console.log('Error removing follow: ', err);
     } finally {
