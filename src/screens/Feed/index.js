@@ -2,11 +2,13 @@ import React from 'react';
 import { StatusBar, View, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { AdMobBanner } from 'react-native-admob';
 import PropTypes from 'prop-types';
 import URL from 'url-parse';
 import { Kitsu } from 'kitsu/config/api';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { listBackPurple, offWhite } from 'kitsu/constants/colors';
+import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
@@ -214,18 +216,32 @@ class Feed extends React.PureComponent {
     return `${item.id}-${item.updatedAt}`;
   }
 
-  renderPost = ({ item }) => {
+  renderPost = ({ item, index }) => {
     // This dispatches based on the type of an entity to the correct
     // component. If it's not in here it'll just ignore the feed item.
     switch (item.type) {
       case 'posts':
         return (
-          <Post
-            post={item}
-            onPostPress={this.navigateToPost}
-            currentUser={this.props.currentUser}
-            componentId={this.props.componentId}
-          />
+          <React.Fragment>
+            <Post
+              post={item}
+              onPostPress={this.navigateToPost}
+              currentUser={this.props.currentUser}
+              componentId={this.props.componentId}
+            />
+            {/* Render a AdMobBanner every 5 posts */}
+            {((index + 1) % 5 === 0) && (
+              <React.Fragment>
+                <View style={{ marginTop: 10 }} />
+                <AdMobBanner
+                  adUnitID={ADMOB_AD_UNITS[Platform.OS]}
+                  adSize="smartBannerPortrait"
+                  testDevices={[AdMobBanner.simulatorId]}
+                  onAdFailedToLoad={error => console.log(error)}
+                />
+              </React.Fragment>
+            )}
+          </React.Fragment>
         );
       default:
         console.log(`WARNING: Ignored post type: ${item.type}`);
