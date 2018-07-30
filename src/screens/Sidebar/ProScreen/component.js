@@ -177,18 +177,21 @@ class ProScreen extends PureComponent {
     } catch (e) {
       // Errors from `buySubscription`
 
-      // Send the log to sentry
-      Sentry.captureMessage('Failed to purchase pro', {
-        tags: {
-          type: 'iap',
-        },
-        extra: {
-          error: (e instanceof Error) ? e.message : e,
-        },
-      });
+      // Make sure it's not the cancel error
+      if (!e.code || e.code !== 'E_USER_CANCELLED') {
+        // Send the log to sentry
+        Sentry.captureMessage('Failed to purchase pro', {
+          tags: {
+            type: 'iap',
+          },
+          extra: {
+            error: (e instanceof Error) ? e.message : e,
+          },
+        });
 
-      this.setState({ error: e });
-      console.warn('Failed to purchase pro: ', e);
+        this.setState({ error: e });
+        console.warn('Failed to purchase pro: ', e);
+      }
     }
 
     // We either errored out or didn't get a receipt
