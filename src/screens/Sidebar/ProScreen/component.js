@@ -286,26 +286,10 @@ class ProScreen extends PureComponent {
   }
 
   renderPurchaseRestore() {
-    // This will show a view where user can choose to apply their purchase to their account.
-    // This is a fallback case where user purchases pro, but the request errors out mid way and it doesn't get applied to their account.
-    const { purchases, loading } = this.state;
-    const { currentUser } = this.props;
-
-    // We should only show it if we have a purchase and user isn't pro.
-    // NOTE: Not sure if `purchases` show old or expires subscriptions. If they do then we'll have to check that subscription is not old.
-    if (purchases.length === 0 || isPro(currentUser)) return null;
-
-    // Show loading indicator is stuff is happening
-    if (loading) {
-      return (
-        <View style={styles.restorePurchase}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }
+    const { purchases } = this.state;
 
     return (
-      <View style={styles.restorePurchase}>
+      <View style={styles.proCard}>
         <Text style={styles.restorePurchaseText}>We have detected that you have bought Kitsu Pro but haven't applied it to the current account.</Text>
         <TouchableOpacity
           style={styles.proButton}
@@ -314,42 +298,58 @@ class ProScreen extends PureComponent {
 
             const purchase = purchases[0];
             const receipt = purchase && purchase.transactionReceipt;
+
             if (isEmpty(receipt)) return;
 
             this.validatePurchase(receipt);
           }}
         >
-          <Text style={styles.proButtonText}>Apply Kitsu Pro</Text>
+          <Text style={styles.proButtonText}>Apply Kitsu PRO</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
-  renderProCard() {
+  renderProTimeRemaining() {
     const { currentUser } = this.props;
-    const { loading } = this.state;
-    const pro = isPro(currentUser);
 
-    if (pro) {
-      const current = moment();
-      const expires = currentUser && currentUser.proExpiresAt;
-      const expiresDate = expires && moment(expires);
-      const diff = expiresDate && expiresDate.diff(current, 'days');
+    const current = moment();
+    const expires = currentUser && currentUser.proExpiresAt;
+    const expiresDate = expires && moment(expires);
+    const diff = expiresDate && expiresDate.diff(current, 'days');
 
-      const prefix = (diff && diff === 1) ? 'day' : 'days';
-      const diffText = expiresDate ? diff : '-';
+    const prefix = (diff && diff === 1) ? 'day' : 'days';
+    const diffText = expiresDate ? diff : '-';
 
-      return (
-        <View style={styles.proCard}>
-          <View style={styles.priceContainer}>
-            <Text style={styles.priceTag}>PRO Active</Text>
-          </View>
-          <View style={styles.proButton}>
-            <Text style={styles.proButtonText}>{diffText} {prefix} remaining</Text>
-          </View>
+    return (
+      <View style={styles.proCard}>
+        <View style={styles.priceContainer}>
+          <Text style={styles.priceTag}>PRO Active</Text>
         </View>
-      );
-    }
+        <View style={styles.proButton}>
+          <Text style={styles.proButtonText}>{diffText} {prefix} remaining</Text>
+        </View>
+      </View>
+    );
+  }
+
+  renderProCard() {
+    /*
+      TODO: Not sure how we're going to handle this case:
+        - User buys pro
+        - Cancels subscription
+        - Wants to re-subscribe to PRO
+
+      When user cancels subscription on Android, the purchase array is still populated.
+      The attribute `autoRenewal` is set to `false` however and this can tell us if user has decided not to continue subscription.
+
+      We might need to add a way for the user to re-subscribe if they accidentally unsubscribed.
+      This can be done easily by allowing them access to the `Upgrade to PRO` button.
+    */
+
+    const { currentUser } = this.props;
+    const { purchases, loading } = this.state;
+    const pro = isPro(currentUser);
 
     if (loading) {
       return (
@@ -359,6 +359,13 @@ class ProScreen extends PureComponent {
       );
     }
 
+    // Only show pro time remaining if user is PRO
+    if (pro) return this.renderProTimeRemaining();
+
+    // Only show the restoration card if we have a purchase and user isn't pro
+    if (purchases.length > 0 && !pro) return this.renderPurchaseRestore();
+
+    // Show option to purchase PRO
     return (
       <View style={styles.proCard}>
         <View style={styles.priceContainer}>
@@ -493,8 +500,6 @@ class ProScreen extends PureComponent {
         <ScrollView>
           {/* Errors */}
           {this.renderError()}
-          {/* Restore purchase */}
-          {this.renderPurchaseRestore()}
           {/* Top info */}
           {this.renderGradientInfo()}
           {/* Perks */}

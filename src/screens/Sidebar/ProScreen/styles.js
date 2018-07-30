@@ -181,20 +181,6 @@ export const styles = StyleSheet.create({
   errorText: {
     color: colors.white,
   },
-  restorePurchase: {
-    margin: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    padding: 24,
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 1,
-  },
   restorePurchaseText: {
     marginBottom: 4,
     fontSize: 15,
