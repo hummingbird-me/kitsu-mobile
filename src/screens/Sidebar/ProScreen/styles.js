@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   },
   proDescription: {
     marginVertical: 16,
-    fontSize: isTablet ? 18 : 15,
+    fontSize: isTablet() ? 18 : 15,
     color: colors.offWhite,
   },
   proCard: {
@@ -50,19 +50,19 @@ export const styles = StyleSheet.create({
   },
   priceTag: {
     color: '#444444',
-    fontSize: isTablet ? 48 : 34,
+    fontSize: isTablet() ? 48 : 34,
     fontWeight: '800',
     marginRight: 6,
   },
   durationText: {
     color: colors.green,
     fontWeight: '800',
-    fontSize: isTablet ? 17 : 14,
+    fontSize: isTablet() ? 17 : 14,
   },
   billText: {
     color: colors.grey,
     fontWeight: 'bold',
-    fontSize: isTablet ? 15 : 11,
+    fontSize: isTablet() ? 15 : 11,
   },
   proButton: {
     width: '100%',
@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
   proButtonText: {
     color: colors.white,
     fontWeight: 'bold',
-    fontSize: isTablet ? 20 : 16,
+    fontSize: isTablet() ? 20 : 16,
   },
   perksContainer: {
     backgroundColor: colors.white,
@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
   },
   perksInfoHeading: {
     color: colors.offBlack,
-    fontSize: isTablet ? 20 : 16,
+    fontSize: isTablet() ? 20 : 16,
     fontWeight: 'bold',
     backgroundColor: 'white',
     padding: 4,
@@ -119,21 +119,21 @@ export const styles = StyleSheet.create({
   },
   perkTitle: {
     color: colors.offBlack,
-    fontSize: isTablet ? 18 : 14,
+    fontSize: isTablet() ? 18 : 14,
     fontWeight: '600',
     marginBottom: 8,
   },
   perkDescription: {
     color: colors.offBlack,
-    fontSize: isTablet ? 17 : 13,
+    fontSize: isTablet() ? 17 : 13,
   },
   artContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   art: {
-    width: isTablet ? 300 : 200,
-    height: isTablet ? 180 : 120,
+    width: isTablet() ? 300 : 200,
+    height: isTablet() ? 180 : 120,
   },
   footer: {
     padding: 16,

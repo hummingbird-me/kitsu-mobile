@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   },
   tagText: {
     color: colors.white,
-    fontSize: isTablet ? 13 : 11,
+    fontSize: isTablet() ? 13 : 11,
     fontWeight: 'bold',
   },
 });

@@ -119,9 +119,12 @@ class ProScreen extends PureComponent {
       const subscriptions = await RNIap.getSubscriptions(ITEM_SKUS);
 
       let purchases = [];
-      // `getPurchaseHistory` only work on actual devices
+      // `getAvailablePurchases` only work on actual devices
       if (!isEmulator()) {
-        purchases = await RNIap.getPurchaseHistory();
+        // we use `getAvailablePurchases` instead of `getPurchaseHistory` because
+        // the former function returns an empty array if a subscription has ended
+        // the latter functions returns any previous subscriptions regardless of if they expired
+        purchases = await RNIap.getAvailablePurchases();
       }
 
       this.setState({ subscriptions, purchases, loading: false });
@@ -138,7 +141,7 @@ class ProScreen extends PureComponent {
         },
       });
       this.setState({ loading: false, error: expect });
-      console.error('Failed to fetch products: ', e); // standardized err.code and err.message available
+      console.warn('Failed to fetch products: ', e); // standardized err.code and err.message available
     }
   }
 
@@ -185,7 +188,7 @@ class ProScreen extends PureComponent {
       });
 
       this.setState({ error: e });
-      console.error('Failed to purchase pro: ', e);
+      console.warn('Failed to purchase pro: ', e);
     }
 
     // We either errored out or didn't get a receipt
@@ -201,7 +204,7 @@ class ProScreen extends PureComponent {
   validatePurchase = async (receipt) => {
     // only iOS and Android supported
     const platform = Platform.OS.toLowerCase();
-    if (platform !== 'ios' || platform !== 'android') return;
+    if (platform !== 'ios' && platform !== 'android') return;
 
     try {
       const { tokens, fetchCurrentUser } = this.props;
@@ -218,7 +221,7 @@ class ProScreen extends PureComponent {
 
       const url = `${kitsuConfig.baseUrl}/pro-subscription/${platform.toLowerCase()}`;
 
-      this.setState({ loading: true });
+      this.setState({ loading: true, error: null });
 
       const res = await fetch(url, {
         method: 'POST',
@@ -267,7 +270,7 @@ class ProScreen extends PureComponent {
       });
 
       this.setState({ error, loading: false });
-      console.error('Validation failed: ', error);
+      console.warn('Validation failed: ', error);
     }
   }
 
