@@ -168,7 +168,7 @@ export class Post extends PureComponent {
           parentId: '_none',
         },
         fields: {
-          users: 'slug,avatar,name,title,proExpiresAt',
+          users: 'slug,avatar,name,title,proExpiresAt,aoPro',
         },
         include: 'user,uploads',
         sort: '-createdAt',

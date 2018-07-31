@@ -157,7 +157,7 @@ export class Comment extends PureComponent {
           parentId: this.props.comment.id,
         },
         fields: {
-          users: 'slug,avatar,name,title,proExpiresAt',
+          users: 'slug,avatar,name,title,proExpiresAt,aoPro',
         },
         include: 'user,uploads',
         sort: '-createdAt',

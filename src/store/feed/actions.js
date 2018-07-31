@@ -43,7 +43,7 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
     // console.log(posts);
     const postLikes = await Kitsu.findAll('postLikes', {
       fields: {
-        users: 'avatar,name,title,proExpiresAt',
+        users: 'avatar,name,title,proExpiresAt,aoPro',
         posts: 'id',
       },
       filter: {

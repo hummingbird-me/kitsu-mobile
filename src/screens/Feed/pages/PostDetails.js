@@ -335,7 +335,7 @@ export default class PostDetails extends PureComponent {
       const comments = await Kitsu.findAll('comments', {
         filter,
         fields: {
-          users: 'slug,avatar,name,title,proExpiresAt',
+          users: 'slug,avatar,name,title,proExpiresAt,aoPro',
         },
         include: 'user,uploads,parent,post',
         sort: '-createdAt',

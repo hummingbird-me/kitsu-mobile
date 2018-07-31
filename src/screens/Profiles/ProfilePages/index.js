@@ -285,7 +285,7 @@ class ProfilePage extends PureComponent {
           id: userId,
         },
         fields: {
-          users: 'slug,waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu,title,proExpiresAt',
+          users: 'slug,waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu,title,proExpiresAt,aoPro',
           characters: 'name,image,description',
         },
         include: 'waifu',
@@ -306,6 +306,7 @@ class ProfilePage extends PureComponent {
         loading: false,
         profile: users[0],
       });
+      console.log(users[0], this.props.currentUser);
     } catch (error) {
       console.log('Error loading user: ', error);
 
