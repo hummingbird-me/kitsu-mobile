@@ -82,7 +82,8 @@ class Unit extends PureComponent {
       this.setState({ selectedUnit: item, selectedVideoIndex: 0 }, this.fetchFeed);
       video = item.videos[0];
     }
-    const message = { message: 'initialize', id: video.embedData.eid };
+    const { eid, network } = video.embedData;
+    const message = { message: 'initialize', id: eid, network };
     this.webview.postMessage(JSON.stringify(message));
   };
 
