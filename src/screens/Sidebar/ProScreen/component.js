@@ -222,7 +222,7 @@ class ProScreen extends PureComponent {
         throw new Error('Empty Receipt');
       }
 
-      const url = `${kitsuConfig.baseUrl}/pro-subscription/${platform.toLowerCase()}`;
+      const url = `${kitsuConfig.baseUrl}/pro-subscription/${platform}`;
 
       this.setState({ loading: true, error: null });
 
