@@ -218,17 +218,22 @@ class ProScreen extends PureComponent {
       }
 
       // Make sure we have a valid receipt
-      if (isEmpty(receipt)) {
+      if (isEmpty(receipt) || isEmpty(receipt.transactionReceipt)) {
         throw new Error('Empty Receipt');
       }
 
-      const url = `${kitsuConfig.baseUrl}/pro-subscription/${platform}`;
-
       this.setState({ loading: true, error: null });
+
+      // Set the kitsu endpoint
+      const endpoint = Platform.select({ ios: 'ios', android: 'google-play' });
+      const url = `${kitsuConfig.baseUrl}/pro-subscription/${endpoint}`;
+      const tokenField = Platform.select({ ios: 'receipt', android: 'token' });
 
       const res = await fetch(url, {
         method: 'POST',
-        body: JSON.stringify({ receipt }),
+        body: JSON.stringify({
+          [tokenField]: receipt.transactionReceipt,
+        }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${tokens.access_token}`,
@@ -300,11 +305,10 @@ class ProScreen extends PureComponent {
             if (purchases.length === 0) return;
 
             const purchase = purchases[0];
-            const receipt = purchase && purchase.transactionReceipt;
 
-            if (isEmpty(receipt)) return;
+            if (isEmpty(purchase)) return;
 
-            this.validatePurchase(receipt);
+            this.validatePurchase(purchase);
           }}
         >
           <Text style={styles.proButtonText}>Apply Kitsu PRO</Text>

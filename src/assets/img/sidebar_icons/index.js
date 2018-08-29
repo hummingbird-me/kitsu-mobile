@@ -13,6 +13,7 @@ import success from './success.png';
 import suggest from './suggest.png';
 import queued from './queued.png';
 import app from './app.png';
+import pro from './pro.png';
 
 export {
   blocking,
@@ -30,4 +31,5 @@ export {
   suggest,
   queued,
   app,
+  pro,
 };
