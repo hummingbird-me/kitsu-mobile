@@ -77,8 +77,8 @@ class QuickUpdate extends Component {
     isLoadingFeed: false,
     isLoadingNextFeedPage: false,
     filterMode: 'all',
-    backgroundImageUri: undefined,
-    nextUpBackgroundImageUri: undefined,
+    backgroundImageUri: null,
+    nextUpBackgroundImageUri: null,
     faderOpacity: new Animated.Value(1),
     headerOpacity: new Animated.Value(1),
     editing: false,
@@ -626,7 +626,9 @@ class QuickUpdate extends Component {
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} cache="web" />
+        {!isEmpty(nextUpBackgroundImageUri) &&
+          <FastImage source={{ uri: nextUpBackgroundImageUri }} style={styles.backgroundImage} cache="web" />
+        }
         <Animated.Image
           source={{ uri: backgroundImageUri }}
           style={[styles.backgroundImage, { opacity: faderOpacity }]}
