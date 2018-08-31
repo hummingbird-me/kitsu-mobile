@@ -17,7 +17,7 @@ import { styles } from './styles';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { TitleTag } from 'kitsu/components/TitleTag';
 import { getUserTitle } from 'kitsu/utils/user';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 
 class SidebarScreen extends PureComponent {
   static propTypes = {
@@ -93,6 +93,11 @@ class SidebarScreen extends PureComponent {
   }
 
   get kitsuSection() {
+    const { flags } = this.props;
+
+    // Check if we have the flag for pro subscription enabled
+    if (!flags.pro_subscriptions && !__DEV__) return null;
+
     return {
       title: 'Kitsu',
       data: [
@@ -140,6 +145,8 @@ class SidebarScreen extends PureComponent {
     const { avatar, coverImage, name } = this.props.currentUser;
     const iOSWidth = { width: 280 };
     const title = getUserTitle(this.props.currentUser);
+    const kitsuSection = this.kitsuSection;
+
     return (
       // NOTE: 280px is the width of the sideMenu when expanded
       // We can set a custom width for it if we want however there is an issue on iOS
@@ -187,8 +194,8 @@ class SidebarScreen extends PureComponent {
           ))}
 
           {/* Kitsu */}
-          {this.renderSectionHeader(this.kitsuSection)}
-          {this.kitsuSection.data.map(item => (
+          {!isNull(kitsuSection) && this.renderSectionHeader(kitsuSection)}
+          {!isNull(kitsuSection) && kitsuSection.data.map(item => (
             this.renderSectionItem(item)
           ))}
 
@@ -205,9 +212,10 @@ class SidebarScreen extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ auth, user }) => ({
+const mapStateToProps = ({ auth, user, app }) => ({
   accessToken: auth.tokens.access_token,
   currentUser: user.currentUser,
+  flags: app.flags,
 });
 
 export default connect(mapStateToProps, { logoutUser })(SidebarScreen);

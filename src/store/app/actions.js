@@ -27,6 +27,29 @@ export const fetchAlgoliaKeys = () => async (dispatch, getState) => {
   }
 };
 
+export const fetchKitsuFlags = () => async (dispatch, getState) => {
+  // Set the auth headers if we can
+  const authHeader = {};
+  const tokens = getState().auth.tokens;
+  if (!isEmpty(tokens) && !isEmpty(tokens.access_token)) {
+    authHeader.Authorization = `Bearer ${tokens.access_token}`;
+  }
+
+  try {
+    const response = await fetch(`${kitsuConfig.baseUrl}/edge/_flags`, {
+      headers: {
+        Accept: 'application/vnd.api+json',
+        'Content-Type': 'application/json',
+        ...authHeader,
+      },
+    });
+    const json = await response.json();
+    dispatch({ type: types.KITSU_FLAGS, payload: json });
+  } catch (error) {
+    console.warn('Failed to fetch flags. ', error);
+  }
+};
+
 export const setDataSaver = value => (dispatch) => {
   dispatch({ type: types.SETTING_DATA_SAVER, payload: !!value });
 };

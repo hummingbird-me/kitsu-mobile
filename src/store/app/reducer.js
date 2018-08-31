@@ -6,6 +6,9 @@ const initialState = {
     media: {},
     users: {},
   },
+  flags: {
+    pro_subscriptions: false,
+  },
   dataSaver: false,
   pushNotificationEnabled: false,
   initialPage: 'Feed',
@@ -24,6 +27,14 @@ export const appReducer = (state = initialState, action) => {
       return {
         ...state,
         pushNotificationEnabled: true,
+      };
+    case types.KITSU_FLAGS:
+      return {
+        ...state,
+        flags: {
+          ...state.flags,
+          ...action.payload,
+        },
       };
     case types.SETTING_DATA_SAVER:
       return {

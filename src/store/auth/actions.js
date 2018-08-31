@@ -1,5 +1,4 @@
 import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
-import { NetInfo } from 'react-native';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
@@ -7,7 +6,7 @@ import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboardi
 import * as types from 'kitsu/store/types';
 import { Sentry } from 'react-native-sentry';
 import { isEmpty } from 'lodash';
-import { fetchAlgoliaKeys, toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
+import { fetchAlgoliaKeys, toggleActivityIndicatorHOC, fetchKitsuFlags } from 'kitsu/store/app/actions';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 
@@ -94,6 +93,7 @@ export const loginUser = (data, componentId, screen) => async (dispatch, getStat
     dispatch({ type: types.LOGIN_USER_SUCCESS, payload: tokens });
     try {
       fetchAlgoliaKeys()(dispatch, getState);
+      fetchKitsuFlags()(dispatch, getState);
       const user = await fetchCurrentUser()(dispatch, getState);
 
       /**
@@ -190,8 +190,9 @@ const loginUserFb = async (dispatch) => {
   }
 };
 
-export const logoutUser = () => (dispatch) => {
+export const logoutUser = () => (dispatch, getState) => {
   LoginManager.logOut();
   dispatch({ type: types.LOGOUT_USER });
+  fetchKitsuFlags()(dispatch, getState);
   dispatch(toggleActivityIndicatorHOC(false));
 };
