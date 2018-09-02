@@ -185,7 +185,7 @@ class Unit extends PureComponent {
 
     // Injected javascript
     const selectedVideoData = selectedVideo && selectedVideo.embedData;
-    const injectedJavaScript = `window.initializeHulu(${selectedVideoData.eid}, ${selectedVideoData.network});`;
+    const injectedJavaScript = `window.initializeHulu('${selectedVideoData.eid}', '${selectedVideoData.network}');`;
 
     return (
       <ScrollView style={styles.container}>
