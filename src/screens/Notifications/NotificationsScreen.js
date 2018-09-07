@@ -435,7 +435,11 @@ export const parseNotificationData = (activities, currentUserId) => {
       notificationData.actorName = type;
       notificationData.actorAvatar = actor && actor.posterImage && actor.posterImage.tiny ||
         notificationData.actorAvatar; // Fallback to default avatar
-      notificationData.text = `${subject.number} of ${actor.canonicalTitle} ${state}!`
+      if (subject && subject.number > 0) {
+        notificationData.text = `${subject.number} of ${actor.canonicalTitle} ${state}`;
+      } else { // No `Episode` or `Chapter` relationship exists...
+        notificationData.text = `${actor.canonicalTitle} ${state} a new ${type}`;
+      }
       break;
     case 'comment':
       if (replyToUser && currentUserId === replyToUser.split(':')[1]) {
