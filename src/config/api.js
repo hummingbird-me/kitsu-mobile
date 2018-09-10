@@ -890,7 +890,7 @@ Kitsu.define(
     },
   },
   { collectionPath: 'feeds/chapter_aggr' },
-};
+);
 
 Kitsu.define(
   'globalFeed',
