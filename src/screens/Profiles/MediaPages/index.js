@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, Share, TouchableOpacity } from 'react-native';
-import { TabRouter } from 'react-navigation';
+import { StatusBar, Share } from 'react-native';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
-import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
+import { defaultCover } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
@@ -22,8 +21,10 @@ import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu
 import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { Lightbox } from 'kitsu/utils/lightbox';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
+import { TabRouter } from 'react-navigation';
 
-const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: 'Summary' },
   { key: 'episodes', label: 'Episodes', screen: 'Episodes', if: (state) => state.media.type === 'anime'},
@@ -36,6 +37,7 @@ const TAB_ITEMS = [
 
 /* eslint-disable global-require */
 
+// TODO: Replace this with our own custom component
 const TabRoutes = TabRouter({
   Summary: { screen: Summary },
   Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
@@ -51,7 +53,8 @@ const TabRoutes = TabRouter({
 
 class MediaPages extends PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    mediaId: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+    mediaType: PropTypes.string.isRequired,
   }
 
   static navigationOptions = {
@@ -71,7 +74,7 @@ class MediaPages extends PureComponent {
   }
 
   componentDidMount = () => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType } = this.props;
     this.fetchMedia(mediaType, mediaId);
     this.fetchFavorite(mediaType, mediaId);
     this.fetchLibraryEntry(mediaType, mediaId);
@@ -87,7 +90,7 @@ class MediaPages extends PureComponent {
 
   onMainButtonOptionsSelected = async (option) => {
     const { libraryEntry } = this.state;
-    const { mediaType } = this.props.navigation.state.params;
+    const { mediaType } = this.props;
     switch (option) {
       case 'current':
       case 'planned':
@@ -111,7 +114,7 @@ class MediaPages extends PureComponent {
   }
 
   onMoreButtonOptionsSelected = async (option) => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType, currentUser } = this.props;
     const { media } = this.state;
     switch (option) {
       case 'add': {
@@ -121,7 +124,7 @@ class MediaPages extends PureComponent {
             type: mediaType,
           },
           user: {
-            id: this.props.currentUser.id,
+            id: currentUser.id,
             type: 'users',
           },
         });
@@ -159,7 +162,7 @@ class MediaPages extends PureComponent {
   }
 
   onLibraryEntryCreated = (data) => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType } = this.props;
     const { type, entry } = data;
     const { libraryEntry } = this.state;
 
@@ -281,7 +284,7 @@ class MediaPages extends PureComponent {
   }
 
   createLibraryEntry = async (options) => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType } = this.props;
     try {
       this.setState({ loadingLibrary: true });
       const record = await Kitsu.create('libraryEntries', {
@@ -307,7 +310,7 @@ class MediaPages extends PureComponent {
 
   updateLibraryEntry = async (changes) => {
     const { libraryEntry } = this.state;
-    const { mediaType } = this.props.navigation.state.params;
+    const { mediaType } = this.props;
     try {
       this.setState({ loadingLibrary: true });
       const updates = {
@@ -323,11 +326,11 @@ class MediaPages extends PureComponent {
     }
   }
 
-  goBack = () => this.props.navigation.goBack();
+  goBack = () => Navigation.pop(this.props.componentId);
 
   navigateToEditEntry = () => {
     const { libraryEntry, media } = this.state;
-    const { currentUser, navigation } = this.props;
+    const { currentUser } = this.props;
     if (!libraryEntry || !currentUser || !media) return;
 
     // We need to combine the media with the entry
@@ -336,14 +339,19 @@ class MediaPages extends PureComponent {
       [media.type]: media,
     };
 
-    navigation.navigate('UserLibraryEdit', {
-      libraryEntry: entryWithMedia,
-      libraryStatus: entryWithMedia.status,
-      libraryType: media.type,
-      canEdit: true,
-      ratingSystem: currentUser.ratingSystem,
-      updateUserLibraryEntry: async (type, status, updates) => {
-        await this.updateLibraryEntry(updates);
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.LIBRARY_ENTRY_EDIT,
+        passProps: {
+          libraryEntry: entryWithMedia,
+          libraryStatus: entryWithMedia.status,
+          libraryType: media.type,
+          canEdit: true,
+          ratingSystem: currentUser.ratingSystem,
+          updateUserLibraryEntry: async (type, status, updates) => {
+            await this.updateLibraryEntry(updates);
+          },
+        },
       },
     });
   }
@@ -565,12 +573,15 @@ class MediaPages extends PureComponent {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Add to Favorites', value: 'add' });
     }
 
+    const navConstants = Navigation.constants();
+    const headerHeight = navConstants.topBarHeight + navConstants.statusBarHeight + (isX ? paddingX : 0);
+
     return (
       <SceneContainer>
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
           style={{ flex: 1 }}
-          headerHeight={HEADER_HEIGHT}
+          headerHeight={headerHeight}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
           renderParallaxBackground={() => (
@@ -620,7 +631,6 @@ class MediaPages extends PureComponent {
             libraryEntry={libraryEntry}
             mediaReactions={mediaReactions}
             castings={castings}
-            navigation={this.props.navigation}
             loadingAdditional={loadingAdditional}
             loadingLibrary={loadingLibrary}
             onEpisodeProgress={this.onEpisodeProgress}

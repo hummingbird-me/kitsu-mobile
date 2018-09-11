@@ -34,9 +34,13 @@ class Feed extends React.PureComponent {
     currentUser: PropTypes.object.isRequired,
   };
 
-  static navigationOptions = {
-    header: null,
-  };
+  static options() {
+    return {
+      topBar: {
+        visible: false,
+      },
+    };
+  }
 
   state = {
     activeFeed: 'followingFeed',

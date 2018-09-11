@@ -48,8 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   header: {
-    marginTop: Platform.select({ ios: 0, android: 20 }),
-    paddingTop: Platform.select({ ios: 10, android: 0 }) + isX ? 20 : 0,
+    paddingTop: isX ? 20 : 0,
     height: 70,
     flexDirection: 'row',
     backgroundColor: 'transparent',
@@ -68,7 +67,6 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     position: 'absolute',
-    top: Platform.select({ ios: '60%', android: '30%' }),
     marginTop: isX ? 10 : 0,
     right: 10,
   },

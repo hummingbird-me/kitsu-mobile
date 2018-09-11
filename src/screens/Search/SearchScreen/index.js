@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Navigation } from 'react-native-navigation';
 import { View, ScrollView, Keyboard, TouchableOpacity, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -12,12 +13,17 @@ import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { StyledText } from 'kitsu/components/StyledText';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
 class SearchScreen extends PureComponent {
-  static navigationOptions = {
-    header: null,
-  };
+  static options() {
+    return {
+      topBar: {
+        visible: false,
+      },
+    };
+  }
 
   state = {
     query: {
@@ -92,10 +98,19 @@ class SearchScreen extends PureComponent {
   debouncedSearch = debounce(this.executeSearch, 150);
 
   navigateToMedia = (media) => {
-    this.props.navigation.navigate('MediaPages', {
-      mediaId: media.id,
-      mediaType: media.kind,
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA,
+        passProps: {
+          mediaId: media.id,
+          mediaType: media.kind,
+        },
+      },
     });
+    // this.props.navigation.navigate('MediaPages', {
+    //   mediaId: media.id,
+    //   mediaType: media.kind,
+    // });
   };
 
   renderTabBar = ({ tabs, activeTab, goToPage }) => (
@@ -181,11 +196,11 @@ class SearchScreen extends PureComponent {
   };
 
   render() {
-    const { params } = this.props.navigation.state;
+    const { initialPage } = this.props;
     return (
       <ScrollableTabView
         style={styles.container}
-        initialPage={(params && params.initialPage) || 0}
+        initialPage={initialPage || 0}
         renderTabBar={this.renderTabBar}
         locked={Platform.OS === 'android'}
       >
@@ -205,10 +220,12 @@ SearchScreen.propTypes = {
     media: PropTypes.shape(AlgoliaPropType),
     users: PropTypes.shape(AlgoliaPropType),
   }),
+  initialPage: PropTypes.number,
 };
 
 SearchScreen.defaultProps = {
   algoliaKeys: null,
+  initialPage: 0,
 };
 
 const mapper = (state) => {

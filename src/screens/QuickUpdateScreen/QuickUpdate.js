@@ -63,9 +63,13 @@ const CAROUSEL_ITEM_WIDTH = Dimensions.get('window').width * 0.85;
 const DOUBLE_PRESS_DELAY = 500;
 
 class QuickUpdate extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
-  });
+  static options() {
+    return {
+      topBar: {
+        visible: false,
+      },
+    };
+  }
 
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
@@ -109,20 +113,6 @@ class QuickUpdate extends Component {
   componentDidMount() {
     this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
     this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
-    this.props.navigation.setParams({
-      tabListener: async ({ previousScene, scene, jumpToIndex }) => {
-        // capture tap events and detect double press to fetch notifications
-        const now = new Date().getTime();
-        const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
-        if (previousScene.key !== 'QuickUpdate' || doublePressed) {
-          this.lastTap = null;
-          jumpToIndex(scene.index);
-          this.scrollView.scrollTo({ x: 0, y: 0, animated: true });
-        } else {
-          this.lastTap = now;
-        }
-      },
-    });
   }
 
   componentWillUnmount() {

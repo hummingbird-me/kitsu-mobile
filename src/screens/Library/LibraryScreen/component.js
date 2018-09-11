@@ -19,9 +19,13 @@ const TAB_TEXT_MAPPING = {
 const LIBRARY_PAGINATION_LIMIT = 60;
 
 export class LibraryScreenComponent extends PureComponent {
-  static navigationOptions = () => ({
-    header: null,
-  });
+  static options() {
+    return {
+      topBar: {
+        visible: false,
+      },
+    };
+  }
 
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
@@ -219,7 +223,7 @@ export class LibraryScreenComponent extends PureComponent {
           tabLabel={this.getTabLabel(type, status)}
           currentUser={currentUser}
           profile={currentUser}
-          navigation={navigation}
+          // navigation={navigation}
           libraryEntries={currentLibrary.data}
           libraryStatus={status}
           libraryType={type}

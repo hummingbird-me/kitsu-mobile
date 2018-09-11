@@ -1,6 +1,6 @@
-import { AppRegistry } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import { Sentry } from 'react-native-sentry';
-import App from './src/App';
+import { registerScreens, Layouts, defaultOptions } from 'kitsu/navigation';
 
 Sentry.config('https://068b9ab849bf4485beb4884adcc5be83:8c57373b9bb4410f99ebfd17878c739a@sentry.io/200469');
 
@@ -9,4 +9,11 @@ if (!__DEV__) {
   Sentry.install();
 }
 
-AppRegistry.registerComponent('kitsu_mobile', () => App);
+registerScreens();
+
+Navigation.events().registerAppLaunchedListener(() => {
+  Navigation.setDefaultOptions(defaultOptions);
+
+  Navigation.setRoot(Layouts.MAIN);
+});
+

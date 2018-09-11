@@ -49,11 +49,19 @@ CustomHeader.propTypes = {
 const isMentioned = (arr, id) => arr.includes(id);
 
 class NotificationsScreen extends PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Notifications',
-    header: null,
-    tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
-  });
+  // static navigationOptions = ({ navigation }) => ({
+  //   title: 'Notifications',
+  //   header: null,
+  //   tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
+  // });
+
+  static options() {
+    return {
+      topBar: {
+        visible: false,
+      },
+    };
+  }
 
   state = {
     notificationsUnread: false,
@@ -64,22 +72,22 @@ class NotificationsScreen extends PureComponent {
     this.fetchNotifications();
     // set a listener for notification tab press.
     // this is required for updating seen of notifications.
-    this.props.navigation.setParams({
-      tabListener: async ({ previousScene, scene, jumpToIndex }) => {
-        // capture tap events and detect double press to fetch notifications
-        const now = new Date().getTime();
-        const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
+    // this.props.navigation.setParams({
+    //   tabListener: async ({ previousScene, scene, jumpToIndex }) => {
+    //     // capture tap events and detect double press to fetch notifications
+    //     const now = new Date().getTime();
+    //     const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
 
-        if (previousScene.key !== 'Notifications' || doublePressed) {
-          this.lastTap = null;
-          jumpToIndex(scene.index);
-          this.resetScrollPosition();
-          this.fetchNotifications();
-        } else {
-          this.lastTap = now;
-        }
-      },
-    });
+    //     if (previousScene.key !== 'Notifications' || doublePressed) {
+    //       this.lastTap = null;
+    //       jumpToIndex(scene.index);
+    //       this.resetScrollPosition();
+    //       this.fetchNotifications();
+    //     } else {
+    //       this.lastTap = now;
+    //     }
+    //   },
+    // });
   };
 
   /**
