@@ -8,6 +8,6 @@ import * as Screens from 'kitsu/navigation/types';
 export default pageRoutes = {
   [Screens.PROFILE]: ProfilePages,
   [Screens.PROFILE_LIBRARY_LIST]: UserLibraryListScreen,
-  [Screens.MEDIA]: MediaPages,
-  [Screens.MEDIA_UNIT_DETAIL]: UnitPage,
+  [Screens.MEDIA_PAGE]: MediaPages,
+  [Screens.MEDIA_PAGE_UNIT_DETAIL]: UnitPage,
 };

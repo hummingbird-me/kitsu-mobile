@@ -17,10 +17,10 @@ export const LIBRARY = 'navigation.library';
 export const LIBRARY_SEARCH = 'navigation.library.search';
 export const LIBRARY_ENTRY_EDIT = 'navigation.library.entryedit';
 
-export const PROFILE = 'navigation.profile';
+export const PROFILE_PAGE = 'navigation.profile';
 export const PROFILE_LIBRARY_LIST = 'navigation.profile.librarylist';
 
-export const MEDIA = 'navigation.media';
+export const MEDIA_PAGE = 'navigation.media';
 export const MEDIA_UNIT_DETAIL = 'navigation.media.episode.unitdetail';
 
 export const SIDEBAR = 'navigation.sidebar';

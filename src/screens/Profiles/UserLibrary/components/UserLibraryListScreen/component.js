@@ -7,6 +7,8 @@ import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/U
 import { StyledText } from 'kitsu/components/StyledText';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 const HEADER_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },
@@ -17,22 +19,23 @@ const HEADER_TEXT_MAPPING = {
 };
 
 export class UserLibraryListScreenComponent extends PureComponent {
-  static navigationOptions = (props) => {
-    const { libraryStatus, libraryType, profile } = props.navigation.state.params;
-    return {
-      headerStyle: {
-        shadowColor: 'transparent',
-        elevation: 0,
-      },
-      header: () => (
-        <ProfileHeader
-          profile={profile}
-          title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
-          onClickBack={() => props.navigation.goBack(null)}
-        />
-      ),
-    };
-  };
+  // TODO: Replace this with RNN navigation
+  // static navigationOptions = (props) => {
+  //   const { libraryStatus, libraryType, profile } = props.navigation.state.params;
+  //   return {
+  //     headerStyle: {
+  //       shadowColor: 'transparent',
+  //       elevation: 0,
+  //     },
+  //     header: () => (
+  //       <ProfileHeader
+  //         profile={profile}
+  //         title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
+  //         onClickBack={() => props.navigation.goBack(null)}
+  //       />
+  //     ),
+  //   };
+  // };
 
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
@@ -84,11 +87,17 @@ export class UserLibraryListScreenComponent extends PureComponent {
   }
 
   navigateToSearch = () => {
-    const { profile } = this.props.navigation.state.params;
-    const { navigation } = this.props;
+    const { profile, componentId } = this.props;
 
-    if (profile && navigation) {
-      navigation.navigate('LibrarySearch', { profile });
+    if (profile) {
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.LIBRARY_SEARCH,
+          passProps: {
+            profile,
+          },
+        },
+      });
     }
   };
 
@@ -106,7 +115,7 @@ export class UserLibraryListScreenComponent extends PureComponent {
     const {
       currentUser,
       profile,
-      navigation,
+      componentId,
       libraryEntries,
       libraryStatus,
       libraryType,
@@ -118,9 +127,9 @@ export class UserLibraryListScreenComponent extends PureComponent {
       <View style={styles.container}>
         {this.renderSearchBar()}
         <UserLibraryList
+          componentId={componentId}
           currentUser={currentUser}
           profile={profile}
-          navigation={navigation}
           libraryEntries={(libraryEntries && libraryEntries.data) || []}
           libraryStatus={libraryStatus}
           libraryType={libraryType}

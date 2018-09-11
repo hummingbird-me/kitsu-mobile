@@ -11,6 +11,7 @@ import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { isNull, isEmpty } from 'lodash';
 import { DatePicker } from 'kitsu/components/DatePicker';
 import { styles } from './styles';
+import { Navigation } from 'react-native-navigation';
 
 const visibilityOptions = [
   { text: 'Private', value: true },
@@ -27,8 +28,17 @@ const parseISO8601Date = (date) => {
 
 export class UserLibraryEditScreenComponent extends React.Component {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
+    libraryEntry: PropTypes.object.isRequired,
+    libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
+    libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
+    ratingSystem: PropTypes.string.isRequired,
+    canEdit: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    canEdit: false,
   }
 
   static navigationOptions = () => ({
@@ -99,7 +109,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDateStartedPress = () => {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { libraryEntry, libraryType } = this.props;
     const { startedAt, finishedAt } = this.state;
 
     const mediaData = libraryEntry[libraryType];
@@ -116,7 +126,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDateFinishedPress = () => {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { libraryEntry, libraryType } = this.props;
     const { startedAt, finishedAt } = this.state;
 
     // Cap the minimum to the start date and max to the finish date
@@ -134,12 +144,12 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDeleteEntry = async () => {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { libraryEntry, libraryType } = this.props;
     this.setState({ loading: true, error: null });
     try {
       await this.props.deleteUserLibraryEntry(libraryEntry.id, libraryType, libraryEntry.status);
       this.setState({ loading: false });
-      this.props.navigation.goBack();
+      Navigation.pop(this.props.componentId);
     } catch (e) {
       this.setState({ loading: false, error: e });
       console.log(e);
@@ -147,7 +157,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   getMaxProgress() {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { libraryEntry, libraryType } = this.props;
     const mediaData = libraryEntry[libraryType];
     if (!mediaData) return null;
 
@@ -159,13 +169,13 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   getLibraryEntry() {
-    return this.props.navigation.state.params.libraryEntry;
+    return this.props.libraryEntry;
   }
 
   selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
     value: option.value,
-    text: option[this.props.navigation.state.params.libraryType],
-  })).filter(option => option.value !== this.props.navigation.state.params.libraryStatus);
+    text: option[this.props.libraryType],
+  })).filter(option => option.value !== this.props.libraryStatus);
 
   saveEntry = async () => {
     // send the status from props because that is the list we're looking
@@ -176,7 +186,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
       libraryStatus,
       libraryType,
       updateUserLibraryEntry,
-    } = this.props.navigation.state.params;
+    } = this.props;
 
     const {
       finishedAt,
@@ -227,7 +237,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
         private: isPrivate,
       });
       this.setState({ loading: false });
-      this.props.navigation.goBack();
+      Navigation.pop(this.props.componentId);
     } catch (e) {
       this.setState({ loading: false, error: e });
       console.log(e);
@@ -235,7 +245,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   render() {
-    const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props.navigation.state.params;
+    const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props;
     const {
       loading,
       error,
@@ -256,10 +266,13 @@ export class UserLibraryEditScreenComponent extends React.Component {
     // { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
     const status = STATUS_SELECT_OPTIONS.filter(item => item.value === stateStatus)[0][libraryType];
 
+    const goBack = () => Navigation.pop(this.props.componentId);
+
     return (
       <View style={styles.container}>
+        {/* TODO: Replace this with RNN Navigation header */}
         <SimpleHeader
-          leftAction={!loading && this.props.navigation.goBack}
+          leftAction={!loading && goBack}
           leftContent={canEdit ? leftTitle : 'Done'}
           titleContent={canEdit ? 'Edit Entry' : 'Details'}
           rightContent={canEdit ? rightTitle : null}

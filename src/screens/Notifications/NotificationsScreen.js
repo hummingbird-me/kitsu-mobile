@@ -49,20 +49,6 @@ CustomHeader.propTypes = {
 const isMentioned = (arr, id) => arr.includes(id);
 
 class NotificationsScreen extends PureComponent {
-  // static navigationOptions = ({ navigation }) => ({
-  //   title: 'Notifications',
-  //   header: null,
-  //   tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
-  // });
-
-  static options() {
-    return {
-      topBar: {
-        visible: false,
-      },
-    };
-  }
-
   state = {
     notificationsUnread: false,
   };

@@ -9,8 +9,8 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import PropTypes from 'prop-types';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
-const SidebarHeader = ({ navigation, headerTitle, coverImage, onBackPress }) => {
-  const goBack = onBackPress || navigation.goBack;
+const SidebarHeader = ({ headerTitle, coverImage, onBackPress }) => {
+  const goBack = onBackPress;
   return (
     <View style={styles.absolute}>
       <ProgressiveImage
@@ -39,7 +39,6 @@ const SidebarHeader = ({ navigation, headerTitle, coverImage, onBackPress }) => 
 
 SidebarHeader.propTypes = {
   headerTitle: PropTypes.string.isRequired,
-  navigation: PropTypes.object.isRequired,
   coverImage: PropTypes.object,
   onBackPress: PropTypes.func,
 };

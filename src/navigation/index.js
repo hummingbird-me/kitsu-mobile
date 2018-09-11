@@ -6,9 +6,22 @@ import { registerScreens } from './screens';
 // Default styling options
 // https://wix.github.io/react-native-navigation/v2/#/docs/styling
 export const defaultOptions = {
+  layout: {
+    backgroundColor: listBackPurple,
+  },
   topBar: {
+    // By Default we set the bar to not visible
+    // This is because there are many components where we use a custom navigation bar
+    visible: false,
     background: {
       color: listBackPurple,
+    },
+    backButton: { // android
+      color: 'white',
+    },
+    buttonColor: 'white', // iOS
+    title: {
+      color: 'white',
     },
   },
   bottomTabs: {

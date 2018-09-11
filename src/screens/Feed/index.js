@@ -30,17 +30,8 @@ const styles = StyleSheet.create({
 
 class Feed extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
   };
-
-  static options() {
-    return {
-      topBar: {
-        visible: false,
-      },
-    };
-  }
 
   state = {
     activeFeed: 'followingFeed',

@@ -4,7 +4,8 @@ import { StatusBar, Share } from 'react-native';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
-import { defaultCover } from 'kitsu/constants/app';
+// TODO: Maybe replace this with const { statusBarHeight, topBarHeight } = await Navigation.constants()
+import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
@@ -55,10 +56,6 @@ class MediaPages extends PureComponent {
   static propTypes = {
     mediaId: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
     mediaType: PropTypes.string.isRequired,
-  }
-
-  static navigationOptions = {
-    header: null,
   }
 
   state = {
@@ -573,8 +570,8 @@ class MediaPages extends PureComponent {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Add to Favorites', value: 'add' });
     }
 
-    const navConstants = Navigation.constants();
-    const headerHeight = navConstants.topBarHeight + navConstants.statusBarHeight + (isX ? paddingX : 0);
+    // TODO: Maybe replace this with const { statusBarHeight, topBarHeight } = await Navigation.constants()
+    const headerHeight = statusBarHeight + navigationBarHeight + (isX ? paddingX : 0);
 
     return (
       <SceneContainer>

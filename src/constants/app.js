@@ -5,6 +5,10 @@ import { Platform, StatusBar } from 'react-native';
 export const navigationBarHeight = 44;
 export const statusBarHeight = Platform.select({ ios: 20, android: StatusBar.currentHeight });
 
+// TODO: Probably don't need this if RNN fixes their constants
+// Ref: https://github.com/wix/react-native-navigation/issues/3893
+export const bottomTabsHeight = Platform.select({ ios: 64, android: 56 });
+
 export const defaultAvatar = `${kitsuConfig.assetsUrl}/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png`;
 
 export const defaultCover = `${kitsuConfig.assetsUrl}/default_cover-7bda2081d0823731a96bbb20b70f4fcf.png`;

@@ -6,13 +6,10 @@ import { LibrarySettingsComponent } from './component';
 const mapStateToProps = ({ user, profile }, ownProps) => {
   const { currentUser } = user;
   const { librarySort: sort } = profile;
-  const navigateBackOnSave = (ownProps.navigation.state.params &&
-    ownProps.navigation.state.params.navigateBackOnSave);
 
   return {
     currentUser,
     sort,
-    navigateBackOnSave,
   };
 };
 

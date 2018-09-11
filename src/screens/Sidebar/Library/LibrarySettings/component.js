@@ -11,6 +11,8 @@ import { navigationOptions, SidebarListItem, SidebarTitle, SidebarButton } from 
 import { styles } from './styles';
 import { SORT_OPTIONS } from './sortOptions';
 import SidebarHeader from '../../common/SidebarHeader';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 const mediaPreferenceKeyToTitle = (key) => {
   const mapper = {
@@ -38,7 +40,6 @@ export class LibrarySettingsComponent extends PureComponent {
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     sort: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired,
     fetchUserLibrary: PropTypes.func.isRequired,
     setLibrarySort: PropTypes.func.isRequired,
     navigateBackOnSave: PropTypes.bool,
@@ -65,7 +66,6 @@ export class LibrarySettingsComponent extends PureComponent {
   save = async () => {
     const {
       fetchUserLibrary,
-      navigation,
       currentUser,
       setLibrarySort,
       fetchCurrentUser,
@@ -110,7 +110,7 @@ export class LibrarySettingsComponent extends PureComponent {
 
     this.setState({ saving: false });
 
-    if (navigation && navigateBackOnSave) navigation.goBack();
+    if (navigateBackOnSave) Navigation.pop(this.props.componentId);
   };
 
   librarySorting() {
@@ -186,13 +186,13 @@ export class LibrarySettingsComponent extends PureComponent {
           renderRow: this.renderSideBarRow,
           title: 'Import Library',
           image: libraryImport,
-          target: 'ImportLibrary',
+          target: Screens.SIDEBAR_IMPORT_LIBRARY,
         },
         {
           renderRow: this.renderSideBarRow,
           title: 'Export Library',
           image: libraryExport,
-          target: 'ExportLibrary',
+          target: Screens.SIDEBAR_EXPORT_LIBRARY,
         },
       ],
     };
@@ -200,18 +200,21 @@ export class LibrarySettingsComponent extends PureComponent {
 
   goBack = () => {
     if (!this.state.saving) {
-      this.props.navigation.goBack();
+      Navigation.pop(this.props.componentId);
     }
   }
 
   renderSideBarRow = (row) => {
-    const { navigation } = this.props;
     return (
       <SidebarListItem
         key={row.title}
         title={row.title}
         image={row.image}
-        onPress={() => navigation.navigate(row.target)}
+        onPress={() => Navigation.push(this.props.componentId, {
+          component: {
+            name: row.target,
+          },
+        })}
         style={styles.customRow}
       />
     );
@@ -251,7 +254,6 @@ export class LibrarySettingsComponent extends PureComponent {
   }
 
   render() {
-    const { navigation } = this.props;
     const { saving } = this.state;
 
     const settings = [this.librarySorting(), this.mediaPreferences(), this.manageLibrary()];
@@ -260,7 +262,6 @@ export class LibrarySettingsComponent extends PureComponent {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <SidebarHeader
-            navigation={navigation}
             headerTitle={'Library Settings'}
             onBackPress={this.goBack}
           />

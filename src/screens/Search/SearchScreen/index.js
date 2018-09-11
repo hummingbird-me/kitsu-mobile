@@ -17,14 +17,6 @@ import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
 class SearchScreen extends PureComponent {
-  static options() {
-    return {
-      topBar: {
-        visible: false,
-      },
-    };
-  }
-
   state = {
     query: {
       anime: undefined,
@@ -100,17 +92,13 @@ class SearchScreen extends PureComponent {
   navigateToMedia = (media) => {
     Navigation.push(this.props.componentId, {
       component: {
-        name: Screens.MEDIA,
+        name: Screens.MEDIA_PAGE,
         passProps: {
           mediaId: media.id,
           mediaType: media.kind,
         },
       },
     });
-    // this.props.navigation.navigate('MediaPages', {
-    //   mediaId: media.id,
-    //   mediaType: media.kind,
-    // });
   };
 
   renderTabBar = ({ tabs, activeTab, goToPage }) => (
@@ -157,7 +145,7 @@ class SearchScreen extends PureComponent {
 
   renderSubScene = (scene) => {
     const { query } = this.state;
-    const { navigation, followUser, captureUsersData } = this.props;
+    const { navigation, followUser, captureUsersData, componentId } = this.props;
     const hits = this.state.searchResults[scene] || [];
 
     switch (scene) {
@@ -167,7 +155,7 @@ class SearchScreen extends PureComponent {
             hits={hits}
             onFollow={followUser}
             onData={captureUsersData}
-            navigation={navigation}
+            componentId={componentId}
           />
         );
       }
@@ -177,7 +165,7 @@ class SearchScreen extends PureComponent {
           <TopsList
             mounted
             active={scene}
-            navigation={navigation}
+            componentId={componentId}
           />
         ) : (
           <ResultsList

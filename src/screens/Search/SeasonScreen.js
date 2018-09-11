@@ -17,14 +17,25 @@ const styles = StyleSheet.create({
 });
 
 class SeasonScreen extends PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <NavigationHeader
-        navigation={navigation}
-        title={navigation.state.params.label}
-      />
-    ),
-  });
+  // static navigationOptions = ({ navigation }) => ({
+  //   header: (
+  //     <NavigationHeader
+  //       navigation={navigation}
+  //       title={navigation.state.params.label}
+  //     />
+  //   ),
+  // });
+
+  static options(passProps) {
+    return {
+      topBar: {
+        visible: true,
+        title: {
+          text: passProps.label,
+        },
+      },
+    };
+  }
 
   getSeasonData(year) {
     const seasons = [
@@ -50,7 +61,7 @@ class SeasonScreen extends PureComponent {
     seasons.forEach((season) => {
       data.push({
         ...season,
-        onPress: () => { showSeasonResults(this.props.navigation, season.title, year); },
+        onPress: () => { showSeasonResults(this.props.componentId, season.title, year); },
       });
     });
 
@@ -58,7 +69,7 @@ class SeasonScreen extends PureComponent {
   }
 
   render() {
-    const { maxYear, minYear, navigation: { navigate } } = this.props;
+    const { maxYear, minYear, componentId } = this.props;
 
     const listData = [];
     for (let i = maxYear; i >= minYear; i -= 1) {
@@ -77,6 +88,7 @@ class SeasonScreen extends PureComponent {
           <ContentList
             {...listItem}
             key={listItem.title}
+            componentId={componentId}
             navigate={navigate}
             onPress={() => console.log('Pressed')}
           />
@@ -89,10 +101,12 @@ class SeasonScreen extends PureComponent {
 SeasonScreen.propTypes = {
   minYear: PropTypes.number,
   maxYear: PropTypes.number,
+  label: PropTypes.string,
   navigation: PropTypes.object.isRequired,
 };
 
 SeasonScreen.defaultProps = {
+  label: 'Seasons',
   minYear: 1980,
   maxYear: new Date().getFullYear() + 1,
 };

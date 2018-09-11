@@ -63,14 +63,6 @@ const CAROUSEL_ITEM_WIDTH = Dimensions.get('window').width * 0.85;
 const DOUBLE_PRESS_DELAY = 500;
 
 class QuickUpdate extends Component {
-  static options() {
-    return {
-      topBar: {
-        visible: false,
-      },
-    };
-  }
-
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
   };

@@ -9,6 +9,15 @@ if (!__DEV__) {
   Sentry.install();
 }
 
+console.disableYellowBox = true;
+
+// If you're using the debugging tools for React Native, the network tab is normally useless
+// because it shows network activity to load the JS bundle only. This line causes it to
+// use the dev tools XMLHttpRequest object if dev tools is running, making the network
+// tab useful again. If dev tools isn't running, this will have no effect.
+// NOTE: Disable this if you intend to upload files
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+
 registerScreens();
 
 Navigation.events().registerAppLaunchedListener(() => {

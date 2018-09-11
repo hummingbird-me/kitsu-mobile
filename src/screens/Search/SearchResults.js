@@ -1,52 +1,18 @@
 import React, { Component } from 'react';
-import { StyleSheet, RefreshControl, ActivityIndicator } from 'react-native';
+import { StyleSheet, RefreshControl, ActivityIndicator, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { search } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 import { getMaxVisibleRows, getCurrentVisibleRows } from 'kitsu/screens/Search/Lists/ResultsList/spacing';
+import { isEqual } from 'lodash';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { ResultsList } from './Lists';
-
-
-const styles = StyleSheet.create({
-  list: {
-    backgroundColor: colors.darkPurple,
-  },
-});
+import { bottomTabsHeight } from 'kitsu/constants/app';
 
 class SearchResults extends Component {
-  static navigationOptions = ({ navigation, screenProps }) => ({
-    header: () => (
-      <NavigationHeader
-        navigation={navigation}
-        title={navigation.state.params.label}
-        leftAction={() => {
-          navigation.goBack(navigation.state.params.previousRoute || null);
-        }}
-        rightIcon="sliders"
-        rightAction={() => (
-          screenProps.rootNavigation.navigate('SearchFilter', {
-            ...navigation.state.params,
-            onApply: (data, state) => {
-              screenProps.rootNavigation.goBack(null);
-              setTimeout(() =>
-                navigation.setParams({
-                  filter: data.filter,
-                  sort: data.sort,
-                  default: null,
-                  label: 'Search',
-                  data: state,
-                  fade: data.fade,
-                }),
-              );
-            },
-          })
-        )}
-      />
-    ),
-  });
-
   state = {
     refreshing: false,
     index: 0,
@@ -60,9 +26,10 @@ class SearchResults extends Component {
     if (nextProps.results !== this.props.results) {
       this.setState({ refreshing: false });
     }
-    if (this.props.navigation.state.params !== nextProps.navigation.state.params) {
-      this.getData(0, nextProps.navigation.state);
-    }
+
+    // if (!isEqual(this.props, nextProps)) {
+    //   this.getData(0, nextProps);
+    // }
   }
 
   getData = (index = 0, newParams) => {
@@ -70,7 +37,7 @@ class SearchResults extends Component {
       this.setState({ refreshing: true });
     }
 
-    const { params } = newParams || this.props.navigation.state;
+    const params = newParams || this.props;
     this.props.search(params.filter, params.sort, index, params.default, params.active, () => {
       this.setState({ refreshing: false });
       if (this.shouldLoadMore) {
@@ -108,6 +75,36 @@ class SearchResults extends Component {
     );
   }
 
+  renderNavigationHeader = () => {
+    // TODO: Fix this up
+    const { componentId, label } = this.props;
+    return (
+      <NavigationHeader
+        componentId={componentId}
+        title={label}
+        rightIcon="sliders"
+        // rightAction={() => (
+        //   screenProps.rootNavigation.navigate('SearchFilter', {
+        //     ...navigation.state.params,
+        //     onApply: (data, state) => {
+        //       screenProps.rootNavigation.goBack(null);
+        //       setTimeout(() =>
+        //         navigation.setParams({
+        //           filter: data.filter,
+        //           sort: data.sort,
+        //           default: null,
+        //           label: 'Search',
+        //           data: state,
+        //           fade: data.fade,
+        //         }),
+        //       );
+        //     },
+        //   })
+        // )}
+      />
+    );
+  }
+
   render() {
     const { results, loading, currentUser } = this.props;
     const emptyArray = Array(20).fill(1).map((item, index) => ({ key: index }));
@@ -125,49 +122,65 @@ class SearchResults extends Component {
     }
 
     return (
-      <ResultsList
-        hits={data}
-        onPress={(media) => {
-          if (media) {
-            this.props.navigation.navigate('MediaPages', {
-              mediaId: media.id,
-              mediaType: media.type,
-            });
+      <View stlye={{ flex: 1 }}>
+        {this.renderNavigationHeader()}
+        <ResultsList
+          hits={data}
+          onPress={(media) => {
+            if (media) {
+              Navigation.push(this.props.componentId, {
+                component: {
+                  name: Screens.MEDIA_PAGE,
+                  passProps: {
+                    mediaId: media.id,
+                    mediaType: media.type,
+                  },
+                },
+              });
+            }
+          }}
+          style={{ backgroundColor: colors.darkPurple, marginBottom: bottomTabsHeight }}
+          currentUser={currentUser}
+          onEndReached={this.loadMore}
+          refreshControl={
+            <RefreshControl
+              colors={['white']}
+              tintColor={'white'}
+              refreshing={this.state.refreshing}
+              onRefresh={this.refresh}
+            />
           }
-        }}
-        style={styles.list}
-        currentUser={currentUser}
-        onEndReached={this.loadMore}
-        refreshControl={
-          <RefreshControl
-            colors={['white']}
-            tintColor={'white'}
-            refreshing={this.state.refreshing}
-            onRefresh={this.refresh}
-          />
-        }
-        renderFooter={this.renderFooter}
-      />
+          renderFooter={this.renderFooter}
+        />
+      </View>
     );
   }
 }
 
 SearchResults.propTypes = {
   results: PropTypes.array.isRequired,
-  navigation: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   search: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
+  label: PropTypes.string,
+  default: PropTypes.any,
+  active: PropTypes.oneOf(['anime', 'manga']).isRequired,
+  filter: PropTypes.any,
+  sort: PropTypes.string,
 };
 
 SearchResults.defaultProps = {
+  label: 'Results',
+  default: '',
+  filter: {},
+  sort: '',
   currentUser: null,
 };
 
 const mapStateToProps = ({ anime, user }, ownProps) => {
   const { resultsLoading } = anime;
   const { currentUser } = user;
-  const { navigation: { state: { params: { active } } } } = ownProps;
+  const { active } = ownProps;
   const data = anime[`results${active}`].map(item => ({
     image: item.posterImage ? item.posterImage.small : 'none',
     titles: item.titles ? item.titles : {},
