@@ -204,8 +204,12 @@ class MediaPages extends PureComponent {
     // The media count
     const mediaCount = media.episodeCount || media.chapterCount;
 
-    // Check progress is within the bounds
+    // If library progress is at 1 and `number` is also 1 then we need to set progress back to 0.
+    // This is there incase a user accidentally marks episode 1 as watched and can't go back to progress 0 without going back to their library and editing it there.
     let progress = number;
+    if (libraryEntry && libraryEntry.progress === 1 && number === 1) progress = 0;
+
+    // Check progress is within the bounds
     if (progress < 0) progress = 0;
     if (mediaCount && progress > mediaCount) {
       progress = mediaCount;

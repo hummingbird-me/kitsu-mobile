@@ -1,6 +1,6 @@
 {
   "name": "kitsu_mobile",
-  "version": "6.7",
+  "version": "6.8",
   "private": true,
   "scripts": {
     "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" yarn start",
@@ -18,10 +18,8 @@
     "devour-client": "^1.4.3",
     "entities": "^1.1.1",
     "getstream": "^3.12.3",
-    "htmlparser2-without-node-native": "^3.9.2",
     "lodash": "^4.17.10",
     "moment": "^2.21.0",
-    "native-base": "2.3.9",
     "prop-types": "^15.6.1",
     "querystring": "^0.2.0",
     "react": "16.2.0",
@@ -46,7 +44,7 @@
     "react-native-sentry": "^0.37.1",
     "react-native-snap-carousel": "^3.7.2",
     "react-native-swipeable": "^0.6.0",
-    "react-native-vector-icons": "^4.5.0",
+    "react-native-vector-icons": "^4.6.0",
     "react-native-wkwebview-reborn": "^1.21.0",
     "react-native-youtube": "^1.1.0",
     "react-navigation": "^1.4.0",

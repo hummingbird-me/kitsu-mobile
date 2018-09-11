@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { kitsuConfig } from 'kitsu/config/env/';
 import { commonStyles } from 'kitsu/common/styles';
 import { navigationOptions } from 'kitsu/screens/Sidebar/common';
-import { WebComponent } from 'kitsu/common/utils/components';
+import { WebComponent } from 'kitsu/utils/components';
 import { styles } from './styles';
 
 class Board extends React.Component {

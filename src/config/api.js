@@ -883,6 +883,16 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'chapterFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/chapter_aggr' },
+);
+
+Kitsu.define(
   'globalFeed',
   {
     activityGroups: {

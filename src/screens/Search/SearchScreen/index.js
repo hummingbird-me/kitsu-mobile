@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
-import { capitalize, isEmpty, isNull, debounce } from 'lodash';
+import { capitalize, isEmpty, isNull, debounce, isEqual } from 'lodash';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 import { followUser } from 'kitsu/store/user/actions';
@@ -30,34 +30,50 @@ class SearchScreen extends PureComponent {
       manga: [],
       users: [],
     },
-    scenes: {
+  };
+
+  componentWillMount() {
+    this.updateScenes();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.algoliaKeys, nextProps.algoliaKeys)) {
+      this.updateScenes(nextProps.algoliaKeys);
+    }
+  }
+
+  updateScenes(keys = this.props.algoliaKeys) {
+    const media = keys && keys.media;
+    const users = keys && keys.users;
+
+    this.scenes = {
       anime: {
-        apiKey: this.props.algoliaKeys.media && this.props.algoliaKeys.media.key,
-        indexName: this.props.algoliaKeys.media && this.props.algoliaKeys.media.index,
+        apiKey: media && media.key,
+        indexName: media && media.index,
         kind: 'anime',
       },
       manga: {
-        apiKey: this.props.algoliaKeys.media && this.props.algoliaKeys.media.key,
-        indexName: this.props.algoliaKeys.media && this.props.algoliaKeys.media.index,
+        apiKey: media && media.key,
+        indexName: media && media.index,
         kind: 'manga',
       },
       users: {
-        apiKey: this.props.algoliaKeys.users && this.props.algoliaKeys.users.key,
-        indexName: this.props.algoliaKeys.users && this.props.algoliaKeys.users.index,
+        apiKey: users && users.key,
+        indexName: users && users.index,
       },
-    },
-  };
+    };
+  }
 
   handleQuery = (scene, query) => {
-   const nextState = { ...this.state.query, [scene]: isEmpty(query) ? undefined : query };
-   this.setState({ query: nextState }, () => {
-     this.debouncedSearch(query, scene);
-   });
+    const nextState = { ...this.state.query, [scene]: isEmpty(query) ? undefined : query };
+    this.setState({ query: nextState }, () => {
+      this.debouncedSearch(query, scene);
+    });
   };
 
   executeSearch = (query, scene) => {
-    const currentScene = this.state.scenes[scene];
-    if (isNull(currentScene.apiKey)) { return; }
+    const currentScene = this.scenes[scene];
+    if (isEmpty(currentScene.apiKey)) { return; }
 
     const client = algolia(kitsuConfig.algoliaAppId, currentScene.apiKey);
     const index = client.initIndex(currentScene.indexName);
@@ -100,7 +116,7 @@ class SearchScreen extends PureComponent {
   );
 
   renderScenes = () => {
-    const scenes = Object.keys(this.state.scenes);
+    const scenes = Object.keys(this.scenes);
     return scenes.map((scene) => {
       const label = capitalize(scene);
       return (
@@ -150,6 +166,7 @@ class SearchScreen extends PureComponent {
           />
         ) : (
           <ResultsList
+            style={styles.list}
             hits={hits}
             onPress={this.navigateToMedia}
             currentUser={this.props.currentUser}
@@ -184,7 +201,14 @@ const AlgoliaPropType = {
 };
 
 SearchScreen.propTypes = {
-  algoliaKeys: PropTypes.shape(AlgoliaPropType).isRequired,
+  algoliaKeys: PropTypes.shape({
+    media: PropTypes.shape(AlgoliaPropType),
+    users: PropTypes.shape(AlgoliaPropType),
+  }),
+};
+
+SearchScreen.defaultProps = {
+  algoliaKeys: null,
 };
 
 const mapper = (state) => {

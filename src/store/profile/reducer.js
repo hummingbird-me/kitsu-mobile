@@ -214,6 +214,17 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
             [action.userId]: {
               ...userLibraryInitial,
               ...state.userLibrary[action.userId],
+              // Update the meta count
+              meta: {
+                ...state.userLibrary[action.userId].meta,
+                [action.libraryType]: {
+                  ...state.userLibrary[action.userId].meta[action.libraryType],
+                  statusCounts: {
+                    ...state.userLibrary[action.userId].meta[action.libraryType].statusCounts,
+                    ...action.statusCounts,
+                  },
+                },
+              },
               [action.libraryType]: {
                 ...state.userLibrary[action.userId][action.libraryType],
 
@@ -268,6 +279,17 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           [action.userId]: {
             ...userLibraryInitial,
             ...state.userLibrary[action.userId],
+            // Update the meta count
+            meta: {
+              ...state.userLibrary[action.userId].meta,
+              [action.libraryType]: {
+                ...state.userLibrary[action.userId].meta[action.libraryType],
+                statusCounts: {
+                  ...state.userLibrary[action.userId].meta[action.libraryType].statusCounts,
+                  ...action.statusCounts,
+                },
+              },
+            },
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
               [action.libraryStatus]: {
@@ -290,6 +312,17 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
           [action.userId]: {
             ...userLibraryInitial,
             ...(state.userLibrary[action.userId] || {}),
+            // Update the meta count
+            meta: {
+              ...state.userLibrary[action.userId].meta,
+              [action.libraryType]: {
+                ...state.userLibrary[action.userId].meta[action.libraryType],
+                statusCounts: {
+                  ...state.userLibrary[action.userId].meta[action.libraryType].statusCounts,
+                  ...action.statusCounts,
+                },
+              },
+            },
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
               [action.libraryStatus]: {

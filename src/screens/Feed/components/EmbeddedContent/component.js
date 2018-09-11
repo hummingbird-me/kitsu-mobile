@@ -11,7 +11,7 @@ import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import dataBunny from 'kitsu/assets/img/data-bunny.png';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { startCase, isNil, isEmpty } from 'lodash';
-import { WebComponent } from 'kitsu/common/utils/components';
+import { WebComponent } from 'kitsu/utils/components';
 import { Lightbox } from 'kitsu/utils/lightbox';
 import { styles } from './styles';
 
@@ -314,6 +314,7 @@ class EmbeddedContent extends PureComponent {
     };
 
     const image = this.getImageUrl(embed);
+    const isDescriptionEmpty = isEmpty(embed.description);
 
     return (
       <TouchableOpacity
@@ -321,7 +322,7 @@ class EmbeddedContent extends PureComponent {
         onPress={() => openUrl(embed.url)}
         disabled={disabled}
       >
-        <Layout.RowWrap style={styles.kitsuContent}>
+        <Layout.RowWrap style={[styles.kitsuContent, isDescriptionEmpty && styles.center]}>
           {!isNil(image) &&
             <ProgressiveImage
               source={{ uri: image }}
@@ -329,8 +330,10 @@ class EmbeddedContent extends PureComponent {
             />
           }
           <Layout.RowMain>
-            <StyledText color="dark" size="small" numberOfLines={1} bold>{embed.title || '-'}</StyledText>
-            <StyledText color="dark" size="xsmall" numberOfLines={3}>{embed.description || '-'}</StyledText>
+            <StyledText color="dark" size="small" numberOfLines={isDescriptionEmpty ? 4 : 1} bold>{embed.title || '-'}</StyledText>
+            {!isDescriptionEmpty &&
+              <StyledText color="dark" size="xsmall" numberOfLines={3}>{embed.description || '-'}</StyledText>
+            }
           </Layout.RowMain>
         </Layout.RowWrap>
       </TouchableOpacity>

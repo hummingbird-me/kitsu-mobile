@@ -27,7 +27,6 @@ class GeneralSettings extends React.Component {
       confirmPassword: '',
       shouldShowValidationInput: false,
       selectMenuText: sfwFilter ? this.filterOptions[0].text : this.filterOptions[1].text,
-      modified: false,
     };
   }
 
@@ -50,10 +49,10 @@ class GeneralSettings extends React.Component {
   onSelectFilterOption = (value, option) => {
     switch (value) {
       case 'on':
-        this.setState({ modified: true, sfwFilter: true, selectMenuText: option.text });
+        this.setState({ sfwFilter: true, selectMenuText: option.text });
         break;
       case 'off':
-        this.setState({ modified: true, sfwFilter: false, selectMenuText: option.text });
+        this.setState({ sfwFilter: false, selectMenuText: option.text });
         break;
       default:
         // cancel button pressed.
@@ -82,9 +81,42 @@ class GeneralSettings extends React.Component {
     }
   };
 
+  passwordState() {
+    const { password, confirmPassword } = this.state;
+    const passwordSet = !isEmpty(password) || !isEmpty(confirmPassword);
+    const passwordsMatch = (password || '').trim() === (confirmPassword || '').trim();
+
+    return {
+      passwordSet,
+      passwordsMatch,
+    };
+  }
+
+  isModified() {
+    const { currentUser } = this.props;
+    const { name, email, sfwFilter } = this.state;
+
+    if (!currentUser) return false;
+
+    const isNameDifferent = name !== currentUser.name;
+    const isEmailDifferent = email !== currentUser.email;
+    const sfwDifferent = sfwFilter !== currentUser.sfwFilter;
+
+    const { passwordSet, passwordsMatch } = this.passwordState();
+
+    // If passwords have changed then we have modified if the passwords match
+    if (passwordSet) return passwordsMatch;
+
+    return isNameDifferent || isEmailDifferent || sfwDifferent;
+  }
+
   render() {
     const { loading } = this.props;
-    const { modified } = this.state;
+    const modified = this.isModified();
+
+    const { passwordSet, passwordsMatch } = this.passwordState();
+    const buttonTitle = passwordSet && !passwordsMatch ? 'Password Do Not Match' : 'Save General Settings';
+
     return (
       <View style={styles.containerStyle}>
         <ScrollView scrollEnabled={false}>
@@ -96,7 +128,7 @@ class GeneralSettings extends React.Component {
             <TextInput
               style={styles.input}
               value={this.state.name}
-              onChangeText={t => this.setState({ modified: true, name: t })}
+              onChangeText={t => this.setState({ name: t })}
               autoCapitalize={'words'}
               autoCorrect={false}
               underlineColorAndroid={'transparent'}
@@ -111,7 +143,7 @@ class GeneralSettings extends React.Component {
             <TextInput
               style={styles.input}
               value={this.state.email}
-              onChangeText={t => this.setState({ modified: true, email: t })}
+              onChangeText={t => this.setState({ email: t })}
               autoCapitalize={'none'}
               autoCorrect={false}
               underlineColorAndroid={'transparent'}
@@ -128,7 +160,7 @@ class GeneralSettings extends React.Component {
               value={this.state.password}
               onChangeText={(t) => {
                 this.toggle(t);
-                this.setState({ modified: true, password: t });
+                this.setState({ password: t });
               }}
               secureTextEntry
               placeholder={'Start typing to set a new password.'}
@@ -173,7 +205,7 @@ class GeneralSettings extends React.Component {
             loading={loading}
             disabled={!modified}
             onPress={this.onSavePersonalSettings}
-            title={'Save General Settings'}
+            title={buttonTitle}
           />
         </ScrollView>
       </View>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, SectionList, Switch } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { Button, Container, Content, Icon, Left, Right, Footer } from 'native-base';
+import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import ModalSelector from 'react-native-modal-selector';
 import forOwn from 'lodash/forOwn';
@@ -86,9 +86,6 @@ class SearchFilter extends Component {
           case 'sort':
             query.sort = value.type;
             break;
-          case 'fade':
-            query.fade = value;
-            break;
           default:
             break;
         }
@@ -102,50 +99,32 @@ class SearchFilter extends Component {
     const btnText = 'Apply Filters';
 
     return (
-      <Footer
+      <View
         style={{
+          flexDirection: 'row',
           justifyContent: 'space-around',
           alignItems: 'baseline',
           backgroundColor: colors.darkPurple,
-          height: 60,
           borderTopWidth: 0,
-          paddingLeft: 27,
-          paddingRight: 27,
-          paddingTop: 8,
+          paddingHorizontal: 27,
+          paddingVertical: 8,
         }}
       >
-        <Button
-          light
-          bordered
-          style={{
-            height: 37,
-            flex: 1,
-            borderColor: 'rgba(255,255,255,0.2)',
-            marginRight: 5,
-            borderRadius: 3,
-            justifyContent: 'center',
-          }}
+        <TouchableOpacity
+          style={styles.footerButton}
           onPress={() => navigation.goBack(null)}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
             Cancel
           </Text>
-        </Button>
-        <Button
-          style={{
-            height: 37,
-            flex: 3,
-            borderColor: 'rgba(255,255,255,0.2)',
-            marginLeft: 5,
-            borderRadius: 3,
-            justifyContent: 'center',
-            backgroundColor: '#16A085',
-          }}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.footerButton, { flex: 3, backgroundColor: '#16A085', marginRight: 0 }]}
           onPress={this.onApply}
         >
           <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{btnText}</Text>
-        </Button>
-      </Footer>
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -157,24 +136,6 @@ class SearchFilter extends Component {
       return this.renderCustomItem('Length', 'length');
     }
 
-    if (key === 'fade') {
-      return (
-        <View button style={styles.parentItem}>
-          <Left>
-            <Text style={styles.outerText}>
-              {item.title}
-            </Text>
-          </Left>
-          <Right>
-            <Switch
-              value={this.state[key]}
-              onValueChange={value => this.setState({ [key]: value })}
-            />
-          </Right>
-        </View>
-      );
-    }
-
     if (['avail', 'release', 'released', 'watched', 'plan'].includes(key)) {
       return (
         <ModalSelector
@@ -184,18 +145,16 @@ class SearchFilter extends Component {
             this.setState({ [key]: option });
           }}
         >
-          <View style={{ ...styles.parentItem, flexDirection: 'row', flex: 1 }}>
-            <Left>
-              <Text style={styles.outerText}>
-                {item.title}
-              </Text>
-            </Left>
-            <Right style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <View style={{ ...styles.parentItem, ...styles.itemContainer }}>
+            <Text style={styles.outerText}>
+              {item.title}
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
                 {this.state[key].label}
               </Text>
-              <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
-            </Right>
+              <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+            </View>
           </View>
         </ModalSelector>
       );
@@ -220,17 +179,17 @@ class SearchFilter extends Component {
             },
           })}
       >
-        <Left>
+        <View style={styles.itemContainer}>
           <Text style={styles.outerText}>
             {item.title}
           </Text>
-        </Left>
-        <Right style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
-            {categories.length === 1 ? first : all}
-          </Text>
-          <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
-        </Right>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
+              {categories.length === 1 ? first : all}
+            </Text>
+            <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+          </View>
+        </View>
       </TouchableOpacity>
     );
   }
@@ -254,76 +213,59 @@ class SearchFilter extends Component {
             },
           })}
       >
-        <Left>
+        <View style={styles.itemContainer}>
           <Text style={styles.outerText}>
             {header}
           </Text>
-        </Left>
-        <Right style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
-            {this.state[param].label}
-          </Text>
-          <Icon name="arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
-        </Right>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
+              {this.state[param].label}
+            </Text>
+            <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+          </View>
+        </View>
       </TouchableOpacity>
     );
   }
 
-  renderSectionHeader = ({ section }) => {
-    return (
-      <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 32 }}>
-        {section.title.toUpperCase()}
-      </Text>
-    );
-  }
+  renderSectionHeader = () => (
+    <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 20 }}>
+      Browse By
+    </Text>
+  );
 
   render() {
+    const data = [
+      { key: 'release', title: 'Year' },
+      { key: 'categories', title: 'Category' },
+      { key: 'released', title: 'Released' },
+      { key: 'length', title: 'Length' },
+      { key: 'avail', title: 'Availability' },
+    ];
     return (
-      <Container style={{ backgroundColor: colors.darkPurple }}>
-        <Content>
-          <View style={{ padding: 20, paddingTop: 0 }}>
-            {this.renderCustomItem('Sort By', 'sort')}
-            <SectionList
-              renderSectionHeader={this.renderSectionHeader}
-              renderItem={this.renderItem}
-              sections={[
-                {
-                  data: [
-                    { key: 'release', title: 'Year' },
-                    { key: 'categories', title: 'Category' },
-                    { key: 'released', title: 'Released' },
-                    { key: 'length', title: 'Length' },
-                    { key: 'avail', title: 'Availability' },
-                  ],
-                  title: 'Browse by',
-                  key: 'a1',
-                },
-                // {
-                //   data: [
-                //     { key: 'watched', title: 'Watched' },
-                //     { key: 'plan', title: 'Plan to Watch' },
-                //     { key: 'fade', title: 'Fade Watched' },
-                //   ],
-                //   title: 'Your library',
-                //   key: 'a2',
-                // },
-              ]}
-            />
-            <TouchableOpacity
-              button
-              style={styles.parentItem}
-              onPress={() => this.setState(defaultState)}
-            >
-              <Left>
-                <Text style={{ ...styles.outerText, color: 'rgba(255,183,88,0.7)' }}>
-                  Reset Filters
-                </Text>
-              </Left>
-            </TouchableOpacity>
-          </View>
-        </Content>
+      <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
+        <View style={{ flex: 1, padding: 20, paddingTop: 0 }}>
+          {this.renderCustomItem('Sort By', 'sort')}
+          <FlatList
+            contentContainerStyle={{ flexGrow: 1 }}
+            scrollEnabled={false}
+            data={data}
+            ListHeaderComponent={this.renderSectionHeader}
+            renderItem={this.renderItem}
+            keyExtractor={d => d.key}
+          />
+          <TouchableOpacity
+            button
+            style={styles.parentItem}
+            onPress={() => this.setState(defaultState)}
+          >
+            <Text style={{ ...styles.outerText, color: 'rgba(255,183,88,0.7)' }}>
+              Reset Filters
+            </Text>
+          </TouchableOpacity>
+        </View>
         {this.renderFooter()}
-      </Container>
+      </ScrollView>
     );
   }
 }
@@ -401,6 +343,7 @@ const styles = {
     backgroundColor: colors.darkPurple,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#382534',
+    alignItems: 'center',
   },
   sliderItem: {
     borderTopWidth: StyleSheet.hairlineWidth,
@@ -419,6 +362,23 @@ const styles = {
     backgroundColor: '#352834',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#2D1D29',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  footerButton: {
+    height: 37,
+    flex: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+    marginRight: 5,
+    borderRadius: 3,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
   },
 };
 

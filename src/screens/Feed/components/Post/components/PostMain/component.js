@@ -7,11 +7,12 @@ import { scene } from 'kitsu/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
 import { isEmpty } from 'lodash';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
-import { handleURL } from 'kitsu/common/utils/url';
+import { handleURL } from 'kitsu/utils/url';
 import { styles } from './styles';
 import { PostStatus } from '../PostStatus';
 
 export const PostMain = ({
+  cacheKey,
   content,
   embed,
   uploads,
@@ -29,7 +30,16 @@ export const PostMain = ({
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
             <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
-              <ViewMoreStyledText color="dark" textStyle={{ lineHeight: null }} size="small" selectable numberOfLines={8}>{content}</ViewMoreStyledText>
+              <ViewMoreStyledText
+                cacheKey={cacheKey}
+                color="dark"
+                textStyle={{ lineHeight: null }}
+                size="small"
+                selectable
+                numberOfLines={8}
+              >
+                {content}
+              </ViewMoreStyledText>
             </Hyperlink>
           </View>
         </TouchableWithoutFeedback>
@@ -58,6 +68,7 @@ export const PostMain = ({
 };
 
 PostMain.propTypes = {
+  cacheKey: PropTypes.string,
   content: PropTypes.string,
   embed: PropTypes.object,
   uploads: PropTypes.arrayOf(PropTypes.object),
@@ -69,6 +80,7 @@ PostMain.propTypes = {
   onPress: PropTypes.func,
 };
 PostMain.defaultProps = {
+  cacheKey: null,
   content: null,
   embed: null,
   uploads: null,

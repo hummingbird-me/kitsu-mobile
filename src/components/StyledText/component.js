@@ -65,6 +65,7 @@ StyledText.defaultProps = {
 };
 
 export const ViewMoreStyledText = ({
+  cacheKey,
   size,
   color,
   bold,
@@ -84,6 +85,7 @@ export const ViewMoreStyledText = ({
       },
       textStyle,
     ]}
+    cacheKey={cacheKey}
     {...props}
   />
 );
@@ -94,6 +96,7 @@ ViewMoreStyledText.propTypes = {
   size: PropTypes.oneOf(['default', 'xxsmall', 'xsmall', 'small', 'large', 'xlarge']),
   textStyle: PropTypes.object,
   disabled: PropTypes.bool,
+  cacheKey: PropTypes.string,
 };
 
 ViewMoreStyledText.defaultProps = {
@@ -102,4 +105,5 @@ ViewMoreStyledText.defaultProps = {
   size: 'default',
   textStyle: null,
   disabled: false,
+  cacheKey: null,
 };

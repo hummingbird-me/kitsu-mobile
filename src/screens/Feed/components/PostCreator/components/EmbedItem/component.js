@@ -54,7 +54,7 @@ export class EmbedItem extends PureComponent {
     }
 
     // Check if we have a chached embed
-    if (EmbedUrlCache.contains(url)) {
+    if (EmbedUrlCache.has(url)) {
       const embed = EmbedUrlCache.get(url);
       this.setState({
         embed,

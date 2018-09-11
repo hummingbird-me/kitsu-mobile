@@ -8,9 +8,8 @@ import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
 import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
 import { MediaCard } from 'kitsu/components/MediaCard';
 import { commonStyles } from 'kitsu/common/styles';
-import { idExtractor, isIdForCurrentUser } from 'kitsu/common/utils';
+import { isIdForCurrentUser } from 'kitsu/utils/id';
 import { isEmpty } from 'lodash';
-import { Spinner } from 'native-base';
 import { StyledText } from 'kitsu/components/StyledText';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
@@ -130,7 +129,7 @@ class Library extends PureComponent {
     if (loading && data.length) {
       return (
         <View style={styles.listLoadingSpinnerContainer}>
-          <Spinner color="white" />
+          <ActivityIndicator color="white" />
         </View>
       );
     }
@@ -195,7 +194,7 @@ class Library extends PureComponent {
               initialNumToRender={countForMaxWidth}
               initialScrollIndex={0}
               getItemLayout={getItemLayout}
-              keyExtractor={idExtractor}
+              keyExtractor={item => `${item.id}`}
               onEndReached={fetchMore}
               onEndReachedThreshold={0.5}
               removeClippedSubviews={false}

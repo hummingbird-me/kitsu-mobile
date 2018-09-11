@@ -82,6 +82,7 @@ class Episodes extends PureComponent {
             {!loadingLibrary && completed && <Icon name="ios-checkmark" color="#FFFFFF" style={styles.progressIcon} />}
           </View>
         </TouchableOpacity>
+        <Icon name="ios-arrow-forward" style={styles.arrowIcon} />
       </View>
     );
   }

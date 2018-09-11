@@ -9,9 +9,10 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { isEmpty, uniqBy } from 'lodash';
+import { extractUrls } from 'kitsu/utils/url';
+import { FeedCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
-import { extractUrls } from 'kitsu/common/utils/url';
 
 // Post
 export class Post extends PureComponent {
@@ -47,6 +48,7 @@ export class Post extends PureComponent {
   componentDidMount() {
     this.mounted = true;
 
+    this.restoreCache();
     this.fetchComments();
     this.fetchLikes();
   }
@@ -67,6 +69,7 @@ export class Post extends PureComponent {
       currentUser: this.props.currentUser,
       syncComments: (comments) => {
         const uniqueComments = uniqBy([...this.state.comments, ...comments], 'id');
+        FeedCache.setComments(this.state.post.id, uniqueComments);
         this.setState({
           comments: uniqueComments,
           latestComments: [...this.state.latestComments, ...comments],
@@ -121,6 +124,8 @@ export class Post extends PureComponent {
       const processed = preprocessFeedPost(comment);
       const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
 
+      FeedCache.setComments(this.state.post.id, uniqueComments);
+
       this.setState({
         embedUrl: null,
         comment: '',
@@ -136,10 +141,26 @@ export class Post extends PureComponent {
     }
   }
 
+  restoreCache() {
+    const id = this.state.post.id;
+
+    // Get the comments and flip them so that they're newest to oldest.
+    const comments = (FeedCache.getComments(id) || []).reverse();
+    const like = FeedCache.getLike(id) || null;
+
+    this.setState({
+      latestComments: comments.slice(0, 2).reverse(),
+      comments: comments.reverse(),
+      like,
+      isLiked: !!like,
+    });
+  }
+
   fetchComments = async () => {
     try {
       // We go ahead and fetch the comments so if the user wants to view detail
       // they can do so without a refetch.
+      // This will order the comments by newest first.
       const comments = await Kitsu.findAll('comments', {
         filter: {
           postId: this.state.post.id,
@@ -154,6 +175,9 @@ export class Post extends PureComponent {
 
       const processed = preprocessFeedPosts(comments);
       const uniqueComments = uniqBy(processed, 'id');
+
+      // Store the comments in the right order (oldest - newest)
+      FeedCache.setComments(this.state.post.id, [...uniqueComments].reverse());
 
       if (this.mounted) {
         this.setState({
@@ -177,6 +201,10 @@ export class Post extends PureComponent {
       });
 
       const like = likes.length && likes[0];
+      if (like) {
+        FeedCache.setLike(this.state.post.id, like);
+      }
+
       if (this.mounted) {
         this.setState({ like, isLiked: !!like });
       }
@@ -190,6 +218,7 @@ export class Post extends PureComponent {
       const { currentUser } = this.props;
       let { like, isLiked, post, postLikesCount } = this.state;
 
+      // Optimistically update our UI
       this.setState({
         isLiked: !isLiked,
         postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
@@ -197,6 +226,7 @@ export class Post extends PureComponent {
 
       if (like) {
         await Kitsu.destroy('postLikes', like.id);
+        FeedCache.deleteLike(post.id);
         this.setState({ like: null });
       } else {
         like = await Kitsu.create('postLikes', {
@@ -209,7 +239,7 @@ export class Post extends PureComponent {
             type: 'users',
           },
         });
-
+        FeedCache.setLike(post.id, like);
         this.setState({ like });
       }
     } catch (err) {
@@ -272,6 +302,8 @@ export class Post extends PureComponent {
       isDeleted,
     } = this.state;
     const {
+      id,
+      updatedAt,
       createdAt,
       content,
       embed,
@@ -303,6 +335,7 @@ export class Post extends PureComponent {
       :
       (
         <PostMain
+          cacheKey={`${id}-${updatedAt}`}
           content={content}
           embed={embed}
           uploads={uploads}

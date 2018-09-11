@@ -17,7 +17,7 @@ import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { Kitsu } from 'kitsu/config/api';
 import * as colors from 'kitsu/constants/colors';
 import moment from 'moment';
-import { WebComponent } from 'kitsu/common/utils/components';
+import { WebComponent } from 'kitsu/utils/components';
 import { styles } from './styles';
 
 
@@ -58,7 +58,8 @@ class Unit extends PureComponent {
     const { selectedUnit } = this.state;
     this.setState({ isFeedLoading: true });
     try {
-      const posts = await Kitsu.find('episodeFeed', selectedUnit.id, {
+      const feedType = selectedUnit.type === 'episodes' ? 'episodeFeed' : 'chapterFeed';
+      const posts = await Kitsu.find(feedType, selectedUnit.id, {
         include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: { kind: 'posts' },
         page: { limit: 10, },
@@ -81,7 +82,8 @@ class Unit extends PureComponent {
       this.setState({ selectedUnit: item, selectedVideoIndex: 0 }, this.fetchFeed);
       video = item.videos[0];
     }
-    const message = { message: 'initialize', id: video.embedData.eid };
+    const { eid, network } = video.embedData;
+    const message = { message: 'initialize', id: eid, network };
     this.webview.postMessage(JSON.stringify(message));
   };
 
@@ -182,8 +184,8 @@ class Unit extends PureComponent {
     ));
 
     // Injected javascript
-    const selectedVideoId = selectedVideo && selectedVideo.embedData.eid;
-    const injectedJavaScript = `window.initializeHulu('${selectedVideoId}');`;
+    const selectedVideoData = selectedVideo && selectedVideo.embedData;
+    const injectedJavaScript = `window.initializeHulu('${selectedVideoData.eid}', '${selectedVideoData.network}');`;
 
     return (
       <ScrollView style={styles.container}>

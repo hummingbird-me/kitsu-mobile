@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { isNull } from 'lodash';
+import { ViewMoreTextCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
 
 export class ViewMoreText extends PureComponent {
@@ -12,10 +13,28 @@ export class ViewMoreText extends PureComponent {
     shouldShowMore: false,
   }
 
+  componentWillMount() {
+    const { cacheKey } = this.props;
+
+    // Load height from cache if possible
+    const cachedHeight = ViewMoreTextCache.get(cacheKey);
+    if (cachedHeight) {
+      this.setState({
+        fullHeight: cachedHeight,
+        measured: true,
+      });
+    }
+  }
+
+
   onLayout = (event) => {
     const { fullHeight } = this.state;
+    const { cacheKey } = this.props;
+
     const height = event.nativeEvent.layout.height;
     if (isNull(fullHeight)) {
+      // Cache the height
+      ViewMoreTextCache.set(cacheKey, height);
       this.setState({ fullHeight: height, measured: true });
       return;
     }
@@ -80,6 +99,7 @@ export class ViewMoreText extends PureComponent {
 }
 
 ViewMoreText.propTypes = {
+  cacheKey: PropTypes.string,
   textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   numberOfLines: PropTypes.number,
   renderViewMore: PropTypes.func,
@@ -87,6 +107,7 @@ ViewMoreText.propTypes = {
 };
 
 ViewMoreText.defaultProps = {
+  cacheKey: null,
   textStyle: null,
   numberOfLines: 0,
   renderViewMore: null,

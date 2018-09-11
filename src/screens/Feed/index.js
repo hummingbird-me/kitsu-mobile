@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshControl, StatusBar, View, StyleSheet } from 'react-native';
+import { StatusBar, View, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
@@ -13,6 +13,7 @@ import { Post } from 'kitsu/screens/Feed/components/Post';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { isEmpty } from 'lodash';
+import { FeedCache } from 'kitsu/utils/cache';
 import { feedStreams } from './feedStreams';
 
 const styles = StyleSheet.create({
@@ -83,6 +84,7 @@ class Feed extends React.PureComponent {
     this.isFetchingFeed = true;
 
     if (reset) {
+      FeedCache.clear();
       this.cursor = undefined;
       this.canFetchNext = true;
     }
@@ -234,6 +236,12 @@ class Feed extends React.PureComponent {
             ListFooterComponent={() => this.state.isLoadingNextPage && (
               <SceneLoader color={offWhite} />
             )}
+
+            /*
+              Disable this on iOS if we start to get missing content
+              We could also improve performance by setting `windowSize` prop (default is 21, 10 views above and 10 views below)
+            */
+            removeClippedSubviews
           />
         </View>
       </View>

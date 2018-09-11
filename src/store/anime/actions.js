@@ -18,7 +18,7 @@ const defaults = {
   },
 };
 
-export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime') => async (
+export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime', onComplete = () => null) => async (
   dispatch,
   getState,
 ) => {
@@ -50,8 +50,10 @@ export const search = (filter = {}, sort = {}, pageIndex, field, type = 'anime')
     data = [...data, ...results];
 
     dispatch({ type: types.SEARCH_SUCCESS, field: 'results', payload: data, selected: type });
+    onComplete();
   } catch (e) {
     console.log('search failed', e);
+    onComplete();
   }
 };
 export const getDefaults = (field, type = 'anime') => async (dispatch) => {

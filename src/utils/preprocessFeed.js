@@ -1,6 +1,6 @@
 
 import { isEmpty } from 'lodash';
-import { extractUrls } from 'kitsu/common/utils/url';
+import { extractUrls } from 'kitsu/utils/url';
 
 const getHttpUrls = (url) => {
   // A quick hack to return both the http and https url
