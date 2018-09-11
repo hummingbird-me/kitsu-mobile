@@ -241,7 +241,7 @@ class Feed extends React.PureComponent {
               Disable this on iOS if we start to get missing content
               We could also improve performance by setting `windowSize` prop (default is 21, 10 views above and 10 views below)
             */
-            removeClippedSubviews
+            removeClippedSubviews={Platform.OS === 'android'}
           />
         </View>
       </View>
