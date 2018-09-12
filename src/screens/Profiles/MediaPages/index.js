@@ -21,9 +21,8 @@ import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
-import { Lightbox } from 'kitsu/utils/lightbox';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import { TabRouter } from 'react-navigation';
 
 const TAB_ITEMS = [
@@ -149,7 +148,7 @@ class MediaPages extends PureComponent {
           null;
 
         if (isEmpty(coverURL)) return;
-        Lightbox.show([coverURL]);
+        NavigationActions.showLightBox([coverURL]);
         break;
       }
       default:

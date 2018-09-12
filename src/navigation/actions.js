@@ -19,3 +19,12 @@ export function showCreatePostModal(props) {
     },
   });
 }
+
+export function showLightBox(images, initialImageIndex = 0) {
+  Navigation.showOverlay({
+    component: {
+      name: Screens.LIGHTBOX,
+      passProps: { images, initialImageIndex },
+    },
+  });
+}

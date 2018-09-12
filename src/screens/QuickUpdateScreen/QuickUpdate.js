@@ -96,12 +96,6 @@ class QuickUpdate extends Component {
   isLoadingNextPage = false;
   hasNextPage = true;
 
-  get _requestIncludeFields() {
-    const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
-    const includes = filterMode || 'anime,manga';
-    return `${includes},unit,nextUnit`;
-  }
-
   componentWillMount() {
     this.fetchLibrary();
   }
@@ -109,11 +103,6 @@ class QuickUpdate extends Component {
   componentDidMount() {
     this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
     this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeUpdate();
-    this.unsubscribeDelete();
   }
 
   shouldComponentUpdate(_nextProps, nextState) {
@@ -127,15 +116,26 @@ class QuickUpdate extends Component {
     return true;
   }
 
+  componentWillUnmount() {
+    this.unsubscribeUpdate();
+    this.unsubscribeDelete();
+  }
+
   onNavigateToSearch = async (index) => {
     Navigation.popToRoot(Screens.SEARCH);
-    Navigation.mergeOptions(this.props.componentId, {
+    Navigation.mergeOptions(Screens.BOTTOM_TABS, {
       bottomTabs: {
         currentTabIndex: 1,
       },
     });
     EventBus.publish(Screens.SEARCH, index);
   };
+
+  get _requestIncludeFields() {
+    const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
+    const includes = filterMode || 'anime,manga';
+    return `${includes},unit,nextUnit`;
+  }
 
 
   onMediaTapped = (media) => {

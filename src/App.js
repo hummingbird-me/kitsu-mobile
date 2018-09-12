@@ -14,8 +14,6 @@ import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NotificationPopover } from 'kitsu/components/NotificationPopover';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-import { ImageLightbox } from 'kitsu/components/ImageLightbox';
-import { Lightbox } from 'kitsu/utils/lightbox';
 import store, { persistor } from './store/config';
 import Root from './Router';
 import * as types from './store/types';
@@ -221,7 +219,7 @@ const Loading = () => (
   </View>
 );
 
-const RootContainer = ({ inAppNotification, lightBox }) => (
+const RootContainer = ({ inAppNotification }) => (
   <View style={{ flex: 1 }}>
     <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
     <Root
@@ -236,24 +234,14 @@ const RootContainer = ({ inAppNotification, lightBox }) => (
         onRequestClose={() => store.dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION })}
       />
     }
-    { !isEmpty(lightBox) &&
-      <ImageLightbox
-        visible={lightBox.visible}
-        images={lightBox.images || []}
-        initialImageIndex={lightBox.initialIndex}
-        onClose={() => Lightbox.hide()}
-      />
-    }
   </View>
 );
 
 RootContainer.propTypes = {
   inAppNotification: PropTypes.object.isRequired,
-  lightBox: PropTypes.object,
 };
 
 RootContainer.defaultProps = {
-  lightBox: {},
 };
 
 const styles = StyleSheet.create({
@@ -266,9 +254,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const ConnectedRoot = connect(({ feed, app }) => ({
+const ConnectedRoot = connect(({ feed }) => ({
   inAppNotification: feed.inAppNotification,
-  lightBox: app.imageLightbox,
 }))(RootContainer);
 
 // Check for Codepush only in production mode (Saves compile time & network calls in development).

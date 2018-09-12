@@ -4,6 +4,7 @@ import * as Screens from './types';
 export const MAIN = {
   root: {
     bottomTabs: {
+      id: Screens.BOTTOM_TABS,
       children: [
         {
           stack: {

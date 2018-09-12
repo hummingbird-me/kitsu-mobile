@@ -13,7 +13,7 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, capitalize, isNull, isArray } from 'lodash';
 import { styles } from './styles';
-import { Lightbox } from 'kitsu/utils/lightbox';
+import { NavigationActions } from 'kitsu/navigation';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
@@ -148,7 +148,7 @@ export class SceneHeader extends PureComponent {
           <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
             <TouchableOpacity
               style={[styles.profileImageView, styles[`profileImageView__${variant}`]]}
-              onPress={() => Lightbox.show([posterImage])}
+              onPress={() => NavigationActions.showLightBox([posterImage])}
               disabled={isEmpty(posterImage)}
             >
               <StyledProgressiveImage

@@ -1,3 +1,6 @@
+// Not exactly a screen but it lets us get access to the tabbar controller
+export const BOTTOM_TABS = 'navigation.bottomtabs';
+
 export const FEED = 'navigation.feed';
 export const FEED_POST_DETAILS = 'navigation.feed.postdetails';
 export const FEED_CREATE_POST = 'navigation.feed.createpost';
@@ -35,3 +38,5 @@ export const SIDEBAR_EXPORT_LIBRARY = 'navigation.sidebar.exportlibrary';
 export const SIDEBAR_IMPORT_LIBRARY = 'navigation.sidebar.import.library';
 export const SIDEBAR_IMPORT_DETAIL = 'navigation.sidebar.import.detail';
 export const SIDEBAR_CANNY_BOARD = 'navigation.sidebar.cannyboard';
+
+export const LIGHTBOX = 'navigation.lightbox';

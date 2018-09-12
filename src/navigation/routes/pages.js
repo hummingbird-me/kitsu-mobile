@@ -6,7 +6,7 @@ import { UserLibraryListScreen } from 'kitsu/screens/Profiles';
 import * as Screens from 'kitsu/navigation/types';
 
 export default pageRoutes = {
-  [Screens.PROFILE]: ProfilePages,
+  [Screens.PROFILE_PAGE]: ProfilePages,
   [Screens.PROFILE_LIBRARY_LIST]: UserLibraryListScreen,
   [Screens.MEDIA_PAGE]: MediaPages,
   [Screens.MEDIA_PAGE_UNIT_DETAIL]: UnitPage,

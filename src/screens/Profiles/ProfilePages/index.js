@@ -23,7 +23,7 @@ import { parseURL } from 'kitsu/utils/url';
 import { isEmpty, isNull } from 'lodash';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { kitsuConfig } from 'kitsu/config/env';
-import { Lightbox } from 'kitsu/utils/lightbox';
+import { NavigationActions } from 'kitsu/navigation';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
 
@@ -128,7 +128,7 @@ class ProfilePage extends PureComponent {
           null;
 
         if (isEmpty(coverURL)) return;
-        Lightbox.show([coverURL]);
+        NavigationActions.showLightBox([coverURL]);
         break;
       }
       default:

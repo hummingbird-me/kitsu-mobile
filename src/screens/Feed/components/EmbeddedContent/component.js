@@ -12,9 +12,8 @@ import dataBunny from 'kitsu/assets/img/data-bunny.png';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { startCase, isNil, isEmpty } from 'lodash';
 import { WebComponent } from 'kitsu/utils/components';
-import { Lightbox } from 'kitsu/utils/lightbox';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import { styles } from './styles';
 
 class EmbeddedContent extends PureComponent {
@@ -156,7 +155,7 @@ class EmbeddedContent extends PureComponent {
         borderRadius={borderRadius}
         compact={compact}
         onImageTapped={(index) => {
-          Lightbox.show(filtered, (index || 0));
+          NavigationActions.showLightBox(filtered, (index || 0));
         }}
         disabled={disabled}
       />

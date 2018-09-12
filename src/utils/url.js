@@ -1,7 +1,6 @@
 import { Linking } from 'react-native';
-import { Lightbox } from 'kitsu/utils/lightbox';
 import { isEmpty } from 'lodash';
-import { Screens } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import { Navigation } from 'react-native-navigation';
 
 /**
@@ -142,7 +141,7 @@ export async function handleURL(url, componentId) {
 
   // Check if it's an image url
   if (isImageUrl(url)) {
-    Lightbox.show([url]);
+    NavigationActions.showLightBox([url]);
     return;
   }
 
