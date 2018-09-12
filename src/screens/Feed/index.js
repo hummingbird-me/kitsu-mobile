@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, View, StyleSheet, Platform } from 'react-native';
+import { StatusBar, View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
@@ -14,6 +14,8 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { isEmpty } from 'lodash';
 import { FeedCache } from 'kitsu/utils/cache';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import { feedStreams } from './feedStreams';
 
 const styles = StyleSheet.create({
@@ -30,6 +32,7 @@ const styles = StyleSheet.create({
 
 class Feed extends React.PureComponent {
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
   };
 
@@ -145,23 +148,38 @@ class Feed extends React.PureComponent {
   };
 
   navigateToPost = (props) => {
-    this.props.navigation.navigate('PostDetails', props);
-  };
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: props,
+      },
+    });
+  }
 
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
-      this.props.navigation.navigate('CreatePost', {
+      NavigationActions.showCreatePostModal({
         onPostCreated: () => this.fetchFeed({ reset: true }),
       });
     }
   };
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.PROFILE_PAGE,
+        passProps: { userId },
+      },
+    });
   };
 
   navigateToMedia = ({ mediaId, mediaType }) => {
-    this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA_PAGE,
+        passProps: { mediaId, mediaType },
+      },
+    });
   };
 
   keyExtractor = (item, index) => {
@@ -178,7 +196,7 @@ class Feed extends React.PureComponent {
             post={item}
             onPostPress={this.navigateToPost}
             currentUser={this.props.currentUser}
-            navigation={this.props.navigation}
+            componentId={this.props.componentId}
           />
         );
       case 'comments':
@@ -191,7 +209,8 @@ class Feed extends React.PureComponent {
   };
 
   onDrawer = () => {
-    this.props.navigation.navigate('DrawerToggle');
+    // https://wix.github.io/react-native-navigation/v2/#/docs/styling
+    // this.props.navigation.navigate('DrawerToggle');
   }
 
   render() {

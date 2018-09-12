@@ -2,13 +2,15 @@ import React, { PureComponent } from 'react';
 import { FlatList, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 export class CommentFlatList extends PureComponent {
   static propTypes = {
     post: PropTypes.object.isRequired,
     hideEmbeds: PropTypes.bool,
     latestComments: PropTypes.array.isRequired,
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
     isTruncated: PropTypes.bool,
   }
 
@@ -21,7 +23,7 @@ export class CommentFlatList extends PureComponent {
     const {
       post,
       hideEmbeds,
-      navigation,
+      componentId,
       latestComments,
       isTruncated,
     } = this.props;
@@ -33,10 +35,15 @@ export class CommentFlatList extends PureComponent {
           <Comment
             post={post}
             comment={item}
-            onAvatarPress={id => navigation.navigate('ProfilePages', { userId: id })}
+            onAvatarPress={id => Navigation.push(componentId, {
+              component: {
+                name: Screens.PROFILE_PAGE,
+                passProps: { userId: id },
+              },
+            })}
             isTruncated={isTruncated}
             hideEmbeds={hideEmbeds}
-            navigation={navigation}
+            componentId={componentId}
           />
         )}
         ItemSeparatorComponent={() => <View style={{ height: 17 }} />}

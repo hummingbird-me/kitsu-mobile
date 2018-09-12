@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
-import { capitalize, isEmpty, isNull, debounce, isEqual } from 'lodash';
+import { capitalize, isEmpty, debounce, isEqual, isNil } from 'lodash';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 import { followUser } from 'kitsu/store/user/actions';
@@ -14,6 +14,7 @@ import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Screens } from 'kitsu/navigation';
+import { EventBus } from 'kitsu/utils/eventBus';
 import { styles } from './styles';
 
 class SearchScreen extends PureComponent {
@@ -32,12 +33,19 @@ class SearchScreen extends PureComponent {
 
   componentWillMount() {
     this.updateScenes();
+    this.unsubscribe = EventBus.subscribe(Screens.SEARCH, (page) => {
+      if (this.tabView) this.tabView.goToPage(page);
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.algoliaKeys, nextProps.algoliaKeys)) {
       this.updateScenes(nextProps.algoliaKeys);
     }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   updateScenes(keys = this.props.algoliaKeys) {
@@ -145,7 +153,7 @@ class SearchScreen extends PureComponent {
 
   renderSubScene = (scene) => {
     const { query } = this.state;
-    const { navigation, followUser, captureUsersData, componentId } = this.props;
+    const { followUser, captureUsersData, componentId } = this.props;
     const hits = this.state.searchResults[scene] || [];
 
     switch (scene) {
@@ -187,6 +195,9 @@ class SearchScreen extends PureComponent {
     const { initialPage } = this.props;
     return (
       <ScrollableTabView
+        ref={(r) => {
+          this.tabView = r;
+        }}
         style={styles.container}
         initialPage={initialPage || 0}
         renderTabBar={this.renderTabBar}

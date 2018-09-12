@@ -11,17 +11,17 @@ import { getCategories } from 'kitsu/store/anime/actions';
 import { genres } from 'kitsu/utils/genres';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 class SearchCategory extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <NavigationHeader
-        navigation={navigation}
-        title={navigation.state.params.title || navigation.state.params.label || 'Category'}
-      />
-    ),
-    tabBarVisible: false,
-  });
+  static options() {
+    return {
+      bottomTabs: {
+        visible: false,
+      },
+    };
+  }
 
   state = {
     show: false,
@@ -30,28 +30,31 @@ class SearchCategory extends Component {
 
   componentWillMount() {
     this.props.getCategories();
-    const { categories } = this.props.navigation.state.params;
+    const { categories } = this.props;
     if (categories) this.setState({ selected: categories });
   }
 
   onSubmit = (genresArr) => {
-    const { navigation } = this.props;
-    const { active } = navigation.state.params;
+    const { active, onPressFilterButton, componentId } = this.props;
     const selected = { ...this.state.selected };
     const query = {
       filter: { categories: genresArr.join(',') },
       sort: '-userCount',
     };
-    if (navigation.state.params.onPressFilterButton) {
-      navigation.state.params.onPressFilterButton(selected);
+    if (onPressFilterButton) {
+      onPressFilterButton(selected);
     } else {
-      navigation.navigate('SearchResults', { ...query, active });
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.SEARCH_RESULTS,
+          passProps: { ...query, active },
+        },
+      });
     }
   }
 
   renderFlatList = (data) => {
-    const { navigation } = this.props;
-    const { active } = navigation.state.params;
+    const { active, componentId } = this.props;
     return (
       <FlatList
         data={data}
@@ -64,7 +67,12 @@ class SearchCategory extends Component {
               ...styles.parentItem,
               paddingLeft: 10,
             }}
-            onPress={() => navigation.navigate('SearchResults', { ...item, active })}
+            onPress={() => Navigation.push(componentId, {
+              component: {
+                name: Screens.SEARCH_RESULTS,
+                passProps: { ...item, active },
+              },
+            })}
           >
             <View style={styles.itemContainer}>
               <Text style={styles.outerText}>
@@ -174,7 +182,7 @@ class SearchCategory extends Component {
   }
 
   renderFooter = () => {
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     const genresArr = values(this.state.selected).filter(a => a);
     const btnText = genresArr.length > 0
       ? `Filter by (${genresArr.length}) ${genresArr.length > 1 ? 'categories' : 'category'}`
@@ -194,7 +202,7 @@ class SearchCategory extends Component {
       >
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => navigation.goBack(null)}
+          onPress={() => Navigation.pop(componentId)}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
             Cancel
@@ -211,14 +219,20 @@ class SearchCategory extends Component {
   }
 
   render() {
-    const { key } = this.props.navigation.state.params;
+    const { key, componentId, title, label } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: colors.listBackPurple }}>
-        <View style={{ flex: 1 }}>
-          {key === 'release' && this.renderYears()}
-          {key === 'categories' && this.renderGenreList('level0', 0)}
-        </View>
-        {key === 'categories' && this.renderFooter()}
+      <View>
+        <NavigationHeader
+          componentId={componentId}
+          title={title || label || 'Category'}
+        />
+        <ScrollView style={{ flex: 1, backgroundColor: colors.listBackPurple }}>
+          <View style={{ flex: 1 }}>
+            {key === 'release' && this.renderYears()}
+            {key === 'categories' && this.renderGenreList('level0', 0)}
+          </View>
+          {key === 'categories' && this.renderFooter()}
+        </ScrollView>
       </View>
     );
   }
@@ -282,7 +296,6 @@ const mapStateToProps = ({ anime }) => {
 };
 
 SearchCategory.propTypes = {
-  navigation: PropTypes.object.isRequired,
   getCategories: PropTypes.func.isRequired,
   categories: PropTypes.object.isRequired,
 };

@@ -54,7 +54,7 @@ const TabRoutes = TabRouter({
 
 class MediaPages extends PureComponent {
   static propTypes = {
-    mediaId: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+    mediaId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     mediaType: PropTypes.string.isRequired,
   }
 

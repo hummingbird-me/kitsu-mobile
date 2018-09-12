@@ -1,19 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
+import { Navigation } from 'react-native-navigation';
 
 export default class CreatePost extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
+    targetUser: PropTypes.object,
+    spoiledUnit: PropTypes.object,
+    nsfw: PropTypes.bool,
+    spoiler: PropTypes.bool,
+    media: PropTypes.object,
+    post: PropTypes.object,
+    onPostCreated: PropTypes.func,
+    disableMedia: PropTypes.bool,
   }
 
-  static navigationOptions = {
-    header: null,
-  };
+  static defaultProps = {
+    targetUser: null,
+    spoiledUnit: null,
+    nsfw: false,
+    spoiler: false,
+    media: null,
+    post: null,
+    disableMedia: false,
+    onPostCreated: null,
+  }
 
   render() {
-    const { navigation } = this.props;
     const {
+      componentId,
       targetUser,
       spoiledUnit,
       nsfw,
@@ -22,15 +38,15 @@ export default class CreatePost extends React.PureComponent {
       post,
       onPostCreated,
       disableMedia,
-    } = navigation.state.params;
+    } = this.props;
 
     return (
       <PostCreator
         onPostCreated={(newPost) => {
-          onPostCreated(newPost);
-          navigation.goBack(null);
+          if (onPostCreated) onPostCreated(newPost);
+          Navigation.dismissModal(componentId);
         }}
-        onCancel={() => navigation.goBack(null)}
+        onCancel={() => Navigation.dismissModal(componentId)}
         post={post}
         media={media}
         spoiledUnit={spoiledUnit}

@@ -16,7 +16,7 @@ export const PostOverlay = ({
   taggedEpisode,
   likesCount,
   commentsCount,
-  navigation,
+  componentId,
 }) => {
   let postOverlay = <View />;
 
@@ -35,7 +35,7 @@ export const PostOverlay = ({
         <MediaTag
           media={taggedMedia}
           episode={taggedEpisode}
-          navigation={navigation}
+          componentId={componentId}
         />
       )}
       <PostStatus likesCount={likesCount} commentsCount={commentsCount} />
@@ -46,7 +46,7 @@ export const PostOverlay = ({
 PostOverlay.propTypes = {
   nsfw: PropTypes.bool,
   spoiler: PropTypes.bool,
-  navigation: PropTypes.object.isRequired,
+  componentId: PropTypes.any.isRequired,
   likesCount: PropTypes.number,
   commentsCount: PropTypes.number,
   taggedMedia: PropTypes.object,

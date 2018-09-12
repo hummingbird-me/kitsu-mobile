@@ -117,12 +117,13 @@ class SearchResults extends Component {
     const currentRows = getCurrentVisibleRows(data.length);
 
     // We load more if we still have rows that we can fill
+    // TODO: Fix load more not working properly
     if (!loading && results.length > 0 && currentRows < maxRows) {
       this.loadMore();
     }
 
     return (
-      <View stlye={{ flex: 1 }}>
+      <View stlye={{ flex: 1, backgroundColor: colors.darkPurple }}>
         {this.renderNavigationHeader()}
         <ResultsList
           hits={data}

@@ -2,6 +2,7 @@ import { listBackPurple, tabRed, tabInactive } from 'kitsu/constants/colors';
 import * as Screens from './types';
 import * as Layouts from './layouts';
 import { registerScreens } from './screens';
+import * as NavigationActions from './actions';
 
 // Default styling options
 // https://wix.github.io/react-native-navigation/v2/#/docs/styling
@@ -42,4 +43,4 @@ export const defaultOptions = {
   },
 };
 
-export { Screens, registerScreens, Layouts };
+export { Screens, registerScreens, Layouts, NavigationActions };

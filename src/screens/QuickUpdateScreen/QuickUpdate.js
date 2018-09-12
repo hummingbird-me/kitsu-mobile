@@ -30,7 +30,10 @@ import { ImageStatus } from 'kitsu/components/ImageStatus';
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import styles from './styles';
+import { EventBus } from 'kitsu/utils/eventBus';
 
 // API request fields
 const LIBRARY_ENTRIES_FIELDS = [
@@ -64,6 +67,7 @@ const DOUBLE_PRESS_DELAY = 500;
 
 class QuickUpdate extends Component {
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
   };
 
@@ -123,19 +127,26 @@ class QuickUpdate extends Component {
     return true;
   }
 
-  onNavigateToSearch = (index) => {
-    this.props.navigation.navigate('Search', {}, {
-      type: 'Navigation/NAVIGATE',
-      routeName: 'SearchAll',
-      params: { initialPage: index },
+  onNavigateToSearch = async (index) => {
+    Navigation.popToRoot(Screens.SEARCH);
+    Navigation.mergeOptions(this.props.componentId, {
+      bottomTabs: {
+        currentTabIndex: 1,
+      },
     });
+    EventBus.publish(Screens.SEARCH, index);
   };
 
 
   onMediaTapped = (media) => {
-    const { navigation } = this.props;
-    if (media && navigation) {
-      navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type });
+    const { componentId } = this.props;
+    if (media && componentId) {
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.MEDIA_PAGE,
+          passProps: { mediaId: media.id, mediaType: media.type },
+        },
+      });
     }
   }
 
@@ -479,13 +490,19 @@ class QuickUpdate extends Component {
   };
 
   renderPostItem = ({ item }) => {
+    const { componentId, currentUser } = this.props;
     if (item.type !== 'posts') { return null; }
     return (
       <Post
         post={item}
-        onPostPress={(props) => this.props.navigation.navigate('PostDetails', props)}
-        currentUser={this.props.currentUser}
-        navigation={this.props.navigation}
+        onPostPress={props => Navigation.push(componentId, {
+          component: {
+            name: Screens.FEED_POST_DETAILS,
+            passProps: props,
+          },
+        })}
+        currentUser={currentUser}
+        componentId={componentId}
       />
     );
   };
