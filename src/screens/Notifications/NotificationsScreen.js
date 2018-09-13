@@ -21,6 +21,8 @@ import {
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
 import * as colors from 'kitsu/constants/colors';
+import store from 'kitsu/store/config';
+import * as types from 'kitsu/store/types';
 import { styles } from './styles';
 
 const DOUBLE_PRESS_DELAY = 500;
@@ -53,8 +55,18 @@ class NotificationsScreen extends PureComponent {
     notificationsUnread: false,
   };
 
+  componentWillMount() {
+    // Register all global app events here
+    OneSignal.inFocusDisplaying(2);
+    OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.addEventListener('registered', this.onPNRegistered);
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+  }
+
   componentDidMount = () => {
     // for once, and listener will invoke afterwards.
+    OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
     this.fetchNotifications();
     // set a listener for notification tab press.
     // this is required for updating seen of notifications.
@@ -75,6 +87,44 @@ class NotificationsScreen extends PureComponent {
     //   },
     // });
   };
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('ids', this.onIds);
+    OneSignal.removeEventListener('registered', this.onPNRegistered);
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
+  }
+
+  onIds = (device) => {
+    console.log(device.userId);
+    store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: device.userId });
+  }
+
+  onPNRegistered = (notificationData) => {
+    console.log('device registered', notificationData);
+  };
+
+  onReceived = (notification) => {
+    console.log('Notification received: ', notification);
+  }
+
+  onOpened = (openResult) => {
+    console.group('Opened Notification');
+    console.log('Notification', openResult.notification);
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+    console.groupEnd();
+
+    // Show notification tab
+    // TODO: Need a way to make sure that users who are not logged in don't get notifications
+    Navigation.mergeOptions(Screens.BOTTOM_TABS, {
+      bottomTabs: {
+        currentTabId: Screens.NOTIFICATION,
+      },
+    });
+  }
 
   /**
    * Marks all notifications as read, currently triggered from CustomHeader.

@@ -22,7 +22,6 @@ registerScreens();
 
 Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setDefaultOptions(defaultOptions);
-
-  Navigation.setRoot(Layouts.MAIN);
+  Navigation.setRoot(Layouts.INITIAL);
 });
 

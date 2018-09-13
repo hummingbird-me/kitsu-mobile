@@ -1,3 +1,5 @@
+export const INITIAL = 'navigation.initial';
+
 // Not exactly a screen but it lets us get access to the tabbar controller
 export const BOTTOM_TABS = 'navigation.bottomtabs';
 

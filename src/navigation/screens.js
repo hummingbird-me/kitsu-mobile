@@ -2,6 +2,7 @@ import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
 import store from 'kitsu/store/config';
 
+import App from 'kitsu/App';
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
 import { LightBox } from 'kitsu/screens/LightBox';
@@ -17,6 +18,7 @@ const routes = {
   [Screens.QUICK_UPDATE]: QuickUpdateScreen,
   [Screens.NOTIFICATION]: NotificationsScreen,
   [Screens.LIGHTBOX]: LightBox,
+  [Screens.INITIAL]: App,
 };
 
 export function registerScreens() {
