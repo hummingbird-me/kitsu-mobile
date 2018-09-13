@@ -4,9 +4,16 @@ import * as Layouts from './layouts';
 import { registerScreens } from './screens';
 import * as NavigationActions from './actions';
 
+
 // Default styling options
 // https://wix.github.io/react-native-navigation/v2/#/docs/styling
 export const defaultOptions = {
+  sideMenu: {
+    left: {
+      // Disable side drawer for everything except feed
+      enabled: false,
+    },
+  },
   layout: {
     backgroundColor: listBackPurple,
   },

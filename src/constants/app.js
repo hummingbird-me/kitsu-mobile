@@ -1,5 +1,5 @@
 import { kitsuConfig } from 'kitsu/config/env';
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar, Dimensions } from 'react-native';
 
 // The height of the navigation bar itself
 export const navigationBarHeight = 44;

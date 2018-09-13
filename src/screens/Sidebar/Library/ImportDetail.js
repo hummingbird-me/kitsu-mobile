@@ -1,17 +1,19 @@
 import React from 'react';
-import { View, TextInput, Text, Modal } from 'react-native';
+import { View, TextInput, Text, Modal, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
 import PropTypes from 'prop-types';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { navigationOptions, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common/';
+import { Navigation } from 'react-native-navigation';
+import { SidebarHeader, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common';
 import { styles } from './styles';
 
 class ImportDetail extends React.Component {
-  static navigationOptions = ({ navigation }) => (
-    navigationOptions(navigation, navigation.state.params.item.title)
-  );
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+    item: PropTypes.object.isRequired,
+  };
 
   state = {
     showModal: false,
@@ -21,8 +23,7 @@ class ImportDetail extends React.Component {
   };
 
   onImportButtonPressed = async () => {
-    const { accessToken, currentUser, navigation } = this.props;
-    const item = navigation.state.params.item;
+    const { accessToken, currentUser, item } = this.props;
     setToken(accessToken);
     const kind = item.title === 'MyAnimeList' ? 'my-anime-list' : 'anilist';
     this.setState({ loading: true });
@@ -49,23 +50,28 @@ class ImportDetail extends React.Component {
     }
   };
 
-  onFinish = (navigation) => {
+  onFinish = () => {
     // TODO: fetch import list when went back.
     this.setState(
       {
         showModal: false,
       },
-      !this.state.errMessage ? navigation.goBack : null,
+      !this.state.errMessage ? Navigation.pop(this.props.componentId) : null,
     );
   };
 
   render() {
-    const { navigation } = this.props;
+    const { componentId, item } = this.props;
     const { loading, username, errMessage } = this.state;
-    const item = navigation.state.params.item;
     return (
       <View style={styles.containerStyle}>
-        <View>
+        <View style={styles.headerContainer}>
+          <SidebarHeader
+            headerTitle={item.title}
+            onBackPress={() => Navigation.pop(componentId)}
+          />
+        </View>
+        <ScrollView style={{ flex: 1 }}>
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
@@ -95,7 +101,7 @@ class ImportDetail extends React.Component {
             title={`Start ${item.title} Import`}
             loading={loading}
           />
-        </View>
+        </ScrollView>
         <Modal animationType={'fade'} visible={this.state.showModal} transparent>
           <View
             style={{
@@ -131,7 +137,7 @@ class ImportDetail extends React.Component {
               )}
               <SidebarButton
                 style={{ marginTop: 0 }}
-                onPress={() => this.onFinish(navigation)}
+                onPress={() => this.onFinish()}
                 title={'Finish'}
                 loading={loading}
               />
@@ -147,7 +153,5 @@ const mapStateToProps = ({ auth, user }) => ({
   currentUser: user.currentUser,
   accessToken: auth.tokens.access_token,
 });
-
-ImportDetail.propTypes = {};
 
 export default connect(mapStateToProps, {})(ImportDetail);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
@@ -9,7 +9,8 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { navigationOptions, SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { Navigation } from 'react-native-navigation';
+import { SidebarHeader, SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { styles } from './styles';
 
 const keyExtractor = (item, index) => index.toString();
@@ -64,8 +65,6 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
 };
 
 class ExportLibrary extends React.Component {
-  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'MyAnimeList Sync');
-
   state = {
     loading: true,
     authenticating: false,
@@ -234,56 +233,64 @@ class ExportLibrary extends React.Component {
     const { username, password, authenticating } = this.state;
     return (
       <View style={styles.containerStyle}>
-        <View
-          style={styles.card}
-        >
-          <View style={{ padding: 8 }}>
-            <View style={{ alignItems: 'center' }}>
-              <FastImage
-                source={myanimelist}
-                style={styles.cardLogo}
-                cache="web"
+        <View style={styles.headerContainer}>
+          <SidebarHeader
+            headerTitle={'MyAnimeList Sync'}
+            onBackPress={() => Navigation.pop(this.props.componentId)}
+          />
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          <View
+            style={styles.card}
+          >
+            <View style={{ padding: 8 }}>
+              <View style={{ alignItems: 'center' }}>
+                <FastImage
+                  source={myanimelist}
+                  style={styles.cardLogo}
+                  cache="web"
+                />
+              </View>
+              <Text
+                style={styles.cardText}
+              >
+                Enter your username below to connect your MAL account to your Kitsu account. All future updates will be synced.
+              </Text>
+            </View>
+            <ItemSeparator />
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                value={username}
+                onChangeText={t => this.setState({ username: t })}
+                placeholder={'Your MyAnimeList Username'}
+                underlineColorAndroid={'transparent'}
+                autoCapitalize={'none'}
+                keyboardAppearance={'dark'}
               />
             </View>
-            <Text
-              style={styles.cardText}
-            >
-              Enter your username below to connect your MAL account to your Kitsu account. All future updates will be synced.
-            </Text>
+            <ItemSeparator />
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={t => this.setState({ password: t })}
+                placeholder={'Your MyAnimeList Password'}
+                secureTextEntry
+                underlineColorAndroid={'transparent'}
+                autoCapitalize={'none'}
+                keyboardAppearance={'dark'}
+              />
+            </View>
           </View>
-          <ItemSeparator />
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.input}
-              value={username}
-              onChangeText={t => this.setState({ username: t })}
-              placeholder={'Your MyAnimeList Username'}
-              underlineColorAndroid={'transparent'}
-              autoCapitalize={'none'}
-              keyboardAppearance={'dark'}
-            />
-          </View>
-          <ItemSeparator />
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={t => this.setState({ password: t })}
-              placeholder={'Your MyAnimeList Password'}
-              secureTextEntry
-              underlineColorAndroid={'transparent'}
-              autoCapitalize={'none'}
-              keyboardAppearance={'dark'}
-            />
-          </View>
-        </View>
-        <SidebarButton
-          style={{ marginTop: 0, paddingHorizontal: 12 }}
-          disabled={username.length === 0}
-          onPress={this.onSyncButtonPressed}
-          title={`Connect MAL Account`}
-          loading={authenticating}
-        />
+          <SidebarButton
+            style={{ marginTop: 0, paddingHorizontal: 12 }}
+            disabled={username.length === 0}
+            onPress={this.onSyncButtonPressed}
+            title={'Connect MAL Account'}
+            loading={authenticating}
+          />
+        </ScrollView>
       </View>
     );
   }
@@ -307,6 +314,12 @@ class ExportLibrary extends React.Component {
 
     return (
       <View style={styles.containerStyle}>
+        <View style={styles.headerContainer}>
+          <SidebarHeader
+            headerTitle={'MyAnimeList Sync'}
+            onBackPress={() => Navigation.pop(this.props.componentId)}
+          />
+        </View>
         <View style={[styles.card, { flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'space-between' }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }} >
             <FastImage source={pending} style={{ width: 30, height: 30 }} cache="web" />

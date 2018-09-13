@@ -6,7 +6,19 @@ export const styles = StyleSheet.create({
   containerStyle: {
     flex: 1,
     backgroundColor: colors.listBackPurple,
-    paddingTop: Platform.select({ ios: 77, android: 72 }),
+    // paddingTop: Platform.select({ ios: 77, android: 72 }),
+  },
+  headerContainer: {
+    height: Platform.select({ ios: 77, android: 72 }),
+    backgroundColor: colors.listBackPurple,
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.5,
+    elevation: 3,
+    zIndex: 2,
   },
   headerCoverImage: {
     height: isX ? 150 + paddingX : 150,

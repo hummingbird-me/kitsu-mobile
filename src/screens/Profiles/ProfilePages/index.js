@@ -23,6 +23,7 @@ import { parseURL } from 'kitsu/utils/url';
 import { isEmpty, isNull } from 'lodash';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { kitsuConfig } from 'kitsu/config/env';
+import { Navigation } from 'react-native-navigation';
 import { NavigationActions } from 'kitsu/navigation';
 import Summary from './pages/Summary';
 import { Feed } from './pages/Feed';
@@ -54,18 +55,10 @@ const TabRoutes = TabRouter({
 });
 
 class ProfilePage extends PureComponent {
-  static navigationOptions = {
-    header: null,
-  }
-
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
-    userId: PropTypes.number,
+    componentId: PropTypes.any.isRequired,
+    userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     currentUser: PropTypes.object.isRequired,
-  }
-
-  static defaultProps = {
-    userId: null,
   }
 
   state = {
@@ -80,7 +73,7 @@ class ProfilePage extends PureComponent {
   }
 
   componentWillMount() {
-    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+    const { userId } = this.props;
 
     if (!userId) {
       this.setState({
@@ -99,9 +92,8 @@ class ProfilePage extends PureComponent {
   }
 
   onMoreButtonOptionsSelected = async (button) => {
-    const { currentUser } = this.props;
+    const { currentUser, userId } = this.props;
     const { profile } = this.state;
-    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
 
     switch (button) {
       case 'Block': {
@@ -140,7 +132,7 @@ class ProfilePage extends PureComponent {
   onEditProfile = async (changes) => {
     try {
       this.setState({ editModalVisible: false, loading: true });
-      const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+      const { userId } = this.props;
       const data = await Kitsu.update('users', {
         id: userId,
         ...changes,
@@ -194,7 +186,7 @@ class ProfilePage extends PureComponent {
 
 
   goBack = () => {
-    this.props.navigation.goBack();
+    Navigation.pop(this.props.componentId);
   }
 
   loadUserData = async (userId) => {
@@ -241,10 +233,10 @@ class ProfilePage extends PureComponent {
       if (isCurrentUser) { return; }
       this.setState({ isLoadingFollow: true });
       const response = await Kitsu.findAll('follows', {
-        filter :{
+        filter: {
           follower: this.props.currentUser.id,
-          followed: userId
-        }
+          followed: userId,
+        },
       });
       const record = response && response[0];
       this.setState({ follow: record, isLoadingFollow: false });
@@ -273,7 +265,7 @@ class ProfilePage extends PureComponent {
   }
 
   handleFollowing = async () => {
-    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+    const { userId } = this.props;
     const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
     if (isCurrentUser) { // Edit
       this.setState({ editModalVisible: true });
@@ -301,14 +293,13 @@ class ProfilePage extends PureComponent {
 
   renderTabScene = () => {
     const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
-    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
-    const { navigation } = this.props;
+    const { userId, componentId } = this.props;
     return (
       <TabScene
         key="tabScene"
         setActiveTab={tab => this.setActiveTab(tab)}
         userId={userId}
-        navigation={navigation}
+        componentId={componentId}
         currentUser={this.props.currentUser}
         profile={this.state.profile}
       />
@@ -334,7 +325,7 @@ class ProfilePage extends PureComponent {
       return <ErrorPage onBackPress={this.goBack} />;
     }
 
-    const userId = this.props.userId || (this.props.navigation.state.params || {}).userId;
+    const { userId } = this.props;
     const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
     const mainButtonTitle = isCurrentUser ? 'Edit' : follow ? 'Unfollow' : 'Follow';
 

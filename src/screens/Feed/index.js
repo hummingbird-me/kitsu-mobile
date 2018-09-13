@@ -36,6 +36,17 @@ class Feed extends React.PureComponent {
     currentUser: PropTypes.object.isRequired,
   };
 
+  static options() {
+    return {
+      sideMenu: {
+        left: {
+          // Enable side drawer only for Feed
+          enabled: true,
+        },
+      },
+    };
+  }
+
   state = {
     activeFeed: 'followingFeed',
     refreshing: false,
@@ -52,6 +63,16 @@ class Feed extends React.PureComponent {
     await this.fetchFeed({ reset: true });
     this.setState({ refreshing: false });
   };
+
+  onDrawer = () => {
+    Navigation.mergeOptions(Screens.SIDEBAR, {
+      sideMenu: {
+        left: {
+          visible: true,
+        },
+      },
+    });
+  }
 
   setActiveFeed = (activeFeed) => {
     this.setState(
@@ -207,11 +228,6 @@ class Feed extends React.PureComponent {
         return null;
     }
   };
-
-  onDrawer = () => {
-    // https://wix.github.io/react-native-navigation/v2/#/docs/styling
-    // this.props.navigation.navigate('DrawerToggle');
-  }
 
   render() {
     return (

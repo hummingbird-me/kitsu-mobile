@@ -7,11 +7,20 @@ import * as colors from 'kitsu/constants/colors';
 import fblogo from 'kitsu/assets/img/fblogo.png';
 import { Sentry } from 'react-native-sentry';
 import { connectFBUser, disconnectFBUser } from 'kitsu/store/user/actions';
-import { navigationOptions, SidebarTitle, ItemSeparator } from './common/';
+import { Navigation } from 'react-native-navigation';
+import { PropTypes } from 'prop-types';
+import { SidebarHeader, SidebarTitle, ItemSeparator } from './common';
 import { styles } from './styles';
 
 class LinkedAccounts extends React.Component {
-  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Linked Accounts');
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+    currentUser: PropTypes.object,
+  };
+
+  static defaultProps = {
+    currentUser: {},
+  };
 
   handleFacebookLinking = async (isLinked) => {
     if (isLinked) { // if linked, unlink the account
@@ -76,11 +85,16 @@ class LinkedAccounts extends React.Component {
   }
 
   render() {
-    const { navigation } = this.props;
     return (
       <View style={styles.containerStyle}>
-        <SidebarTitle title={'Social Accounts'} />
-        <ScrollView>
+        <View style={styles.headerContainer}>
+          <SidebarHeader
+            headerTitle={'Linked Accounts'}
+            onBackPress={() => Navigation.pop(this.props.componentId)}
+          />
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          <SidebarTitle title={'Social Accounts'} />
           {this.renderFacebookAccount()}
         </ScrollView>
       </View>

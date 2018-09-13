@@ -1,13 +1,23 @@
 import React from 'react';
-import { View, Switch, Text } from 'react-native';
+import { View, Switch, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { Navigation } from 'react-native-navigation';
+import { PropTypes } from 'prop-types';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { navigationOptions, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common';
 import { styles } from './styles';
 
 class PrivacySettings extends React.Component {
-  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Privacy');
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+    accessToken: PropTypes.string,
+    currentUser: PropTypes.object,
+  };
+
+  static defaultProps = {
+    accessToken: null,
+    currentUser: {},
+  };
 
   state = {
     modified: false,
@@ -63,28 +73,36 @@ class PrivacySettings extends React.Component {
     const { shareToGlobal, modified } = this.state;
     return (
       <View style={styles.containerStyle}>
-        <SidebarTitle title={'Discoverability'} />
-        <View
-          style={styles.privacySettingsWrapper}
-        >
-          <Text style={styles.privacySettingsText}>Share posts to Global Feed</Text>
-          <Switch
-            value={shareToGlobal}
-            onValueChange={v => this.setState({ modified: true, shareToGlobal: v })}
+        <View style={styles.headerContainer}>
+          <SidebarHeader
+            headerTitle={'Privacy'}
+            onBackPress={() => Navigation.pop(this.props.componentId)}
           />
         </View>
-        <ItemSeparator />
-        <View style={styles.privacyTipsWrapper}>
-          <Text style={styles.privacyTipsText}>
-            If disabled, your posts will only be shared to your followers and guests to your profile.
-          </Text>
-        </View>
-        <SidebarButton
-          title={'Save Privacy Settings'}
-          onPress={this.onSavePrivacySettings}
-          loading={loading}
-          disabled={!modified}
-        />
+        <ScrollView style={{ flex: 1 }}>
+          <SidebarTitle title={'Discoverability'} />
+          <View
+            style={styles.privacySettingsWrapper}
+          >
+            <Text style={styles.privacySettingsText}>Share posts to Global Feed</Text>
+            <Switch
+              value={shareToGlobal}
+              onValueChange={v => this.setState({ modified: true, shareToGlobal: v })}
+            />
+          </View>
+          <ItemSeparator />
+          <View style={styles.privacyTipsWrapper}>
+            <Text style={styles.privacyTipsText}>
+              If disabled, your posts will only be shared to your followers and guests to your profile.
+            </Text>
+          </View>
+          <SidebarButton
+            title={'Save Privacy Settings'}
+            onPress={this.onSavePrivacySettings}
+            loading={loading}
+            disabled={!modified}
+          />
+        </ScrollView>
       </View>
     );
   }
@@ -94,15 +112,5 @@ const mapStateToProps = ({ auth, user }) => ({
   accessToken: auth.tokens.access_token,
   currentUser: user.currentUser,
 });
-
-PrivacySettings.propTypes = {
-  accessToken: PropTypes.string,
-  currentUser: PropTypes.object,
-};
-
-PrivacySettings.defaultProps = {
-  accessToken: null,
-  currentUser: {},
-};
 
 export default connect(mapStateToProps, {})(PrivacySettings);

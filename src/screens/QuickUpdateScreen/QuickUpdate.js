@@ -125,7 +125,7 @@ class QuickUpdate extends Component {
     Navigation.popToRoot(Screens.SEARCH);
     Navigation.mergeOptions(Screens.BOTTOM_TABS, {
       bottomTabs: {
-        currentTabIndex: 1,
+        currentTabId: Screens.SEARCH,
       },
     });
     EventBus.publish(Screens.SEARCH, index);

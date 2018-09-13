@@ -7,12 +7,11 @@ import * as colors from 'kitsu/constants/colors';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { capitalize, lowerCase, isEmpty } from 'lodash';
 import { Kitsu } from 'kitsu/config/api';
-import { navigationOptions, SidebarListItem, SidebarTitle, SidebarButton } from 'kitsu/screens/Sidebar/common/';
-import { styles } from './styles';
-import { SORT_OPTIONS } from './sortOptions';
-import SidebarHeader from '../../common/SidebarHeader';
+import { SidebarHeader, SidebarListItem, SidebarTitle, SidebarButton } from 'kitsu/screens/Sidebar/common';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+import { styles } from './styles';
+import { SORT_OPTIONS } from './sortOptions';
 
 const mediaPreferenceKeyToTitle = (key) => {
   const mapper = {
@@ -33,10 +32,6 @@ const mediaPreferenceTitleToKey = (title) => {
 };
 
 export class LibrarySettingsComponent extends PureComponent {
-  static navigationOptions = () => ({
-    header: null,
-  });
-
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     sort: PropTypes.object.isRequired,

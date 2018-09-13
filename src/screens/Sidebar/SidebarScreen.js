@@ -1,47 +1,61 @@
 import React, { PureComponent } from 'react';
 import FastImage from 'react-native-fast-image';
-import { View, Text, SectionList, Linking } from 'react-native';
+import { View, Text, Linking, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 
 import { logoutUser } from 'kitsu/store/auth/actions';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { library, settings, bugs, suggest, contact } from 'kitsu/assets/img/sidebar_icons';
-import { extraDarkPurple } from 'kitsu/constants/colors';
 import { Button } from 'kitsu/components/Button';
 import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
+import { PropTypes } from 'prop-types';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
 
 
 class SidebarScreen extends PureComponent {
+  static propTypes = {
+    currentUser: PropTypes.object,
+    accessToken: PropTypes.string,
+  };
+
+  static defaultProps = {
+    currentUser: null,
+    accessToken: '',
+  };
+
   onViewProfile = () => {
-    const { currentUser, navigation } = this.props;
-    navigation.navigate('ProfilePages', { userId: currentUser.id });
+    const { currentUser } = this.props;
+    if (currentUser) {
+      this.navigateTo(Screens.PROFILE_PAGE, { userId: currentUser.id });
+    }
   };
 
   onActionPress = (item) => {
-    const { navigation, accessToken } = this.props;
+    const { accessToken } = this.props;
     switch (item.target) {
       case 'Settings':
-        navigation.navigate(item.target);
+        this.navigateTo(Screens.SIDEBAR_SETTINGS);
         break;
       case 'ReportBugs':
-        navigation.navigate(item.target, {
+        this.navigateTo(Screens.SIDEBAR_CANNY_BOARD, {
           title: item.title,
           type: 'bugReport',
           token: accessToken,
         });
         break;
       case 'SuggestFeatures':
-        navigation.navigate(item.target, {
+        this.navigateTo(Screens.SIDEBAR_CANNY_BOARD, {
           title: item.title,
           type: 'featureRequest',
           token: accessToken,
         });
         break;
       case 'DatabaseRequests':
-        navigation.navigate(item.target, {
+        this.navigateTo(Screens.SIDEBAR_CANNY_BOARD, {
           title: item.title,
           type: 'databaseRequest',
           token: accessToken,
@@ -72,26 +86,47 @@ class SidebarScreen extends PureComponent {
     };
   }
 
+  navigateTo = (screen, props = {}) => {
+    Navigation.mergeOptions(Screens.BOTTOM_TABS, {
+      sideMenu: {
+        left: {
+          visible: false,
+        },
+      },
+      bottomTabs: {
+        currentTabId: Screens.FEED,
+      },
+    });
+    Navigation.push(Screens.FEED, {
+      component: {
+        name: screen,
+        passProps: props,
+      },
+    });
+  };
+
   renderSectionHeader = section => (
     <SidebarTitle title={section.title} />
   );
 
-  renderSectionItem = (item) => {
-    return (
-      <SidebarListItem
-        key={item.title}
-        style={styles.sidebarListItem}
-        image={item.image}
-        title={item.title}
-        onPress={() => this.onActionPress(item)}
-      />
-    );
-  };
+  renderSectionItem = item => (
+    <SidebarListItem
+      key={item.title}
+      style={styles.sidebarListItem}
+      image={item.image}
+      title={item.title}
+      onPress={() => this.onActionPress(item)}
+    />
+  );
 
   render() {
     const { avatar, coverImage, name } = this.props.currentUser;
     return (
-      <View style={{ flex: 1 }}>
+      // NOTE: 280px is the width of the sideMenu when expanded
+      // We can set a custom width for it if we want however there is an issue on iOS
+      // ref: https://github.com/wix/react-native-navigation/issues/3924
+      // ref: https://github.com/wix/react-native-navigation/issues/3956
+      <View style={{ flex: 1, width: 280 }}>
         {/* Header */}
         <ProgressiveImage
           hasOverlay
@@ -110,27 +145,29 @@ class SidebarScreen extends PureComponent {
           </View>
         </ProgressiveImage>
 
-        {/* View Profile */}
-        <SidebarListItem
-          style={styles.sidebarListItem}
-          image={library}
-          title="View Profile"
-          onPress={this.onViewProfile}
-        />
+        <ScrollView style={{ flex: 1 }}>
+          {/* View Profile */}
+          <SidebarListItem
+            style={styles.sidebarListItem}
+            image={library}
+            title="View Profile"
+            onPress={this.onViewProfile}
+          />
 
-        {/* Account Settings */}
-        {this.renderSectionHeader(this.accountSections)}
-        {this.accountSections.data.map(item => (
-          this.renderSectionItem(item)
-        ))}
+          {/* Account Settings */}
+          {this.renderSectionHeader(this.accountSections)}
+          {this.accountSections.data.map(item => (
+            this.renderSectionItem(item)
+          ))}
 
-        {/* Logout */}
-        <Button
-          style={styles.logoutButton}
-          title="Logout"
-          icon="sign-out"
-          onPress={this.onLogout}
-        />
+          {/* Logout */}
+          <Button
+            style={styles.logoutButton}
+            title="Logout"
+            icon="sign-out"
+            onPress={this.onLogout}
+          />
+        </ScrollView>
       </View>
     );
   }
