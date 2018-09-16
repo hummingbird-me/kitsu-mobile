@@ -4,6 +4,9 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
@@ -14,17 +17,18 @@ const MediaItem = ({ style, onPress, image }) => (
 );
 
 class ImportLibrary extends React.Component {
-  static navigationOptions = {
-    backEnabled: true,
-  };
-
   state = {};
 
   onMediaItemPressed = (title, image) => {
-    this.props.navigation.navigate('ImportDetail', {
-      item: {
-        image,
-        title,
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.ONBOARDING_IMPORT_DETAIL,
+        passProps: {
+          item: {
+            image,
+            title,
+          },
+        },
       },
     });
   };
@@ -33,20 +37,26 @@ class ImportLibrary extends React.Component {
     // TODO: tidy up this mess. onmediaitempressed etc.
     return (
       <View style={commonStyles.container}>
-        <Text style={[commonStyles.tutorialText, { marginHorizontal: 16 }]}>
-          Select a source below to import your previous anime and manga tracking data.
-        </Text>
-        <MediaItem
-          style={{ marginTop: 24 }}
-          onPress={() => this.onMediaItemPressed('MyAnimeList', myanimelist)}
-          image={myanimelist}
-          title={'MyAnimeList'}
+        <OnboardingHeader
+          componentId={this.props.componentId}
+          backEnabled
         />
-        <MediaItem
-          onPress={() => this.onMediaItemPressed('Anilist', anilist)}
-          image={anilist}
-          title={'Anilist'}
-        />
+        <View style={{ flex: 1 }}>
+          <Text style={[commonStyles.tutorialText, { marginHorizontal: 16 }]}>
+            Select a source below to import your previous anime and manga tracking data.
+          </Text>
+          <MediaItem
+            style={{ marginTop: 24 }}
+            onPress={() => this.onMediaItemPressed('MyAnimeList', myanimelist)}
+            image={myanimelist}
+            title={'MyAnimeList'}
+          />
+          <MediaItem
+            onPress={() => this.onMediaItemPressed('Anilist', anilist)}
+            image={anilist}
+            title={'Anilist'}
+          />
+        </View>
       </View>
     );
   }

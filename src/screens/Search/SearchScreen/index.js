@@ -176,12 +176,14 @@ class SearchScreen extends PureComponent {
             componentId={componentId}
           />
         ) : (
-          <ResultsList
-            style={styles.list}
-            hits={hits}
-            onPress={this.navigateToMedia}
-            currentUser={this.props.currentUser}
-          />
+          <View style={{ flex: 1 }}>
+            <ResultsList
+              style={styles.list}
+              hits={hits}
+              onPress={this.navigateToMedia}
+              currentUser={this.props.currentUser}
+            />
+          </View>
         );
       }
       default: {

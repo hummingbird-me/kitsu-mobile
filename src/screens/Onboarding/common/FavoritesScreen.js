@@ -6,7 +6,10 @@ import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { setScreenName, updateFavorites } from 'kitsu/store/onboarding/actions';
 import * as colors from 'kitsu/constants/colors';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
 class FavoritesScreen extends React.Component {
@@ -21,7 +24,11 @@ class FavoritesScreen extends React.Component {
 
   onConfirm = () => {
     this.props.setScreenName('RatingSystemScreen');
-    this.props.navigation.navigate('RatingSystemScreen');
+    Navigation.setStackRoot(this.props.componentId, {
+      component: {
+        name: Screens.ONBOARDING_RATING_SYSTEM,
+      },
+    });
   };
 
   onPressPill = async (category, index, isSubCategory) => {
@@ -225,6 +232,7 @@ class FavoritesScreen extends React.Component {
     const buttonTitle = buttonDisabled ? 'Pick at least 5' : 'Looks good!';
     return (
       <View style={styles.container}>
+        <OnboardingHeader />
         <View style={styles.contentWrapper}>
           <Text style={styles.tutorialText}>
             Tap categories you like, we’ll use these to help you find new anime and manga.

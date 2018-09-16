@@ -6,9 +6,11 @@ import PropTypes from 'prop-types';
 import kitsuLogo from 'kitsu/assets/img/kitsu-logo.png';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
+import { Navigation } from 'react-native-navigation';
+import { isEmpty } from 'lodash';
 
 export const OnboardingHeader = ({
-  navigation,
+  componentId,
   backEnabled,
   style,
   buttonRightEnabled,
@@ -19,7 +21,10 @@ export const OnboardingHeader = ({
     <View style={styles.headerContainer}>
       <View style={{ width: 70 }}>
         {backEnabled ? (
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => !isEmpty(componentId) && Navigation.pop(componentId)}
+          >
             <Icon name="ios-arrow-back" color={colors.white} size={26} />
           </TouchableOpacity>
         ) : (
@@ -43,9 +48,11 @@ export const OnboardingHeader = ({
 OnboardingHeader.propTypes = {
   style: ViewPropTypes.style,
   backEnabled: PropTypes.bool,
+  componentId: PropTypes.any,
 };
 
 OnboardingHeader.defaultProps = {
   style: null,
   backEnabled: false,
+  componentId: null,
 };

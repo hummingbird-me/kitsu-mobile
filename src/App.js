@@ -8,8 +8,7 @@ import codePush from 'react-native-code-push';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-import { Navigation } from 'react-native-navigation';
-import { Layouts } from 'kitsu/navigation';
+import { NavigationActions } from 'kitsu/navigation';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { fetchNotifications } from 'kitsu/store/feed/actions';
 import store, { persistStore } from './store/config';
@@ -45,15 +44,13 @@ class App extends PureComponent {
       this.fetchCurrentUser();
 
       // Show the main screen of the app
-      Navigation.setRoot(Layouts.MAIN(initialTab));
+      NavigationActions.showMainApp(initialTab);
     } else if (authenticated) {
       // Show onboarding
-      // TODO: Change this once we have moved onboarding to RNN
-      Navigation.setRoot(Layouts.MAIN);
+      NavigationActions.showOnboarding();
     } else {
       // Show intro screen
-      // TODO: Change this once we have moved intro to RNN
-      Navigation.setRoot(Layouts.MAIN);
+      NavigationActions.showIntro();
     }
   }
 
@@ -121,8 +118,7 @@ function onStoreUpdate() {
     isAuthenticated !== authenticated && !authenticated
   ) {
     // Take user back to intro
-    // TODO: Change this once we have moved intro to RNN
-    Navigation.setRoot(Layouts.MAIN);
+    NavigationActions.showIntro();
   }
 
   // Set the new authentication value

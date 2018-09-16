@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import { Text, FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Text, FlatList, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
 import values from 'lodash/values';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
-import { CheckBox } from 'react-native-elements';
+import { CheckBox } from 'kitsu/components/Checkbox';
 import { getCategories } from 'kitsu/store/anime/actions';
 import { genres } from 'kitsu/utils/genres';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+import { isEqual } from 'lodash';
 
 class SearchCategory extends Component {
   static options() {
@@ -23,15 +24,17 @@ class SearchCategory extends Component {
     };
   }
 
-  state = {
-    show: false,
-    selected: {},
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      show: false,
+      selected: props.categoriesRaw || {},
+    };
+  }
 
   componentWillMount() {
     this.props.getCategories();
-    const { categories } = this.props;
-    if (categories) this.setState({ selected: categories });
   }
 
   onSubmit = (genresArr) => {
@@ -219,20 +222,18 @@ class SearchCategory extends Component {
   }
 
   render() {
-    const { key, componentId, title, label } = this.props;
+    const { itemKey, componentId, title, label } = this.props;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <NavigationHeader
           componentId={componentId}
           title={title || label || 'Category'}
         />
-        <ScrollView style={{ flex: 1, backgroundColor: colors.listBackPurple }}>
-          <View style={{ flex: 1 }}>
-            {key === 'release' && this.renderYears()}
-            {key === 'categories' && this.renderGenreList('level0', 0)}
-          </View>
-          {key === 'categories' && this.renderFooter()}
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+          {itemKey === 'release' && this.renderYears()}
+          {itemKey === 'categories' && this.renderGenreList('level0', 0)}
+        </View>
+        {itemKey === 'categories' && this.renderFooter()}
       </View>
     );
   }

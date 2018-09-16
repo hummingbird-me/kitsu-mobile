@@ -23,7 +23,7 @@ import { preprocessFeed, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
-import { isEmpty, capitalize } from 'lodash';
+import { isEmpty, capitalize, uniqBy } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { ImageStatus } from 'kitsu/components/ImageStatus';
@@ -125,7 +125,9 @@ class QuickUpdate extends Component {
     Navigation.popToRoot(Screens.SEARCH);
     Navigation.mergeOptions(Screens.BOTTOM_TABS, {
       bottomTabs: {
-        currentTabId: Screens.SEARCH,
+        currentTabIndex: 1,
+        // This doesn't seem to work for some reason
+        // currentTabId: Screens.SEARCH,
       },
     });
     EventBus.publish(Screens.SEARCH, index);
@@ -256,7 +258,7 @@ class QuickUpdate extends Component {
       this.cursor = url.query['page[cursor]'];
 
       const processed = preprocessFeed(posts);
-      const discussions = [...(this.state.discussions || []), ...processed];
+      const discussions = uniqBy([...(this.state.discussions || []), ...processed], 'id');
       this.setState({ discussions, isLoadingFeed: false });
     } catch (error) {
       console.log('Error loading episode feed:', error);

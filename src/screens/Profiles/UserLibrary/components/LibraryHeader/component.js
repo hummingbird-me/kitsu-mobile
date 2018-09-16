@@ -3,13 +3,20 @@ import { PropTypes } from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
-export const LibraryHeader = ({ libraryStatus, libraryType, listTitle, navigation, profile }) => {
+export const LibraryHeader = ({ libraryStatus, libraryType, listTitle, componentId, profile }) => {
   const viewAll = () => {
-    navigation.navigate('UserLibraryList', {
-      libraryStatus,
-      libraryType,
-      profile,
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.PROFILE_LIBRARY_LIST,
+        passProps: {
+          libraryStatus,
+          libraryType,
+          profile,
+        },
+      },
     });
   };
 
@@ -33,6 +40,6 @@ LibraryHeader.propTypes = {
   libraryStatus: PropTypes.string.isRequired,
   libraryType: PropTypes.string.isRequired,
   listTitle: PropTypes.string.isRequired,
-  navigation: PropTypes.object.isRequired,
+  componentId: PropTypes.any.isRequired,
   profile: PropTypes.object.isRequired,
 };

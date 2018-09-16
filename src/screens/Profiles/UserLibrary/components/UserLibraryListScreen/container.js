@@ -4,7 +4,7 @@ import { UserLibraryListScreenComponent } from './component';
 
 const mapStateToProps = ({ user, profile }, ownProps) => {
   const { userLibrary } = profile;
-  const { libraryStatus, libraryType, profile: userProfile } = ownProps.navigation.state.params;
+  const { libraryStatus, libraryType, profile: userProfile } = ownProps;
 
   const library = userLibrary && userLibrary[userProfile.id];
   const libraryEntries = library && library[libraryType] && library[libraryType][libraryStatus];
@@ -12,9 +12,6 @@ const mapStateToProps = ({ user, profile }, ownProps) => {
   return {
     currentUser: user.currentUser,
     libraryEntries,
-    libraryStatus,
-    libraryType,
-    profile: userProfile,
     loading: (library && library.loading) || (libraryEntries && libraryEntries.loading),
     refreshing: libraryEntries && libraryEntries.refreshing,
   };

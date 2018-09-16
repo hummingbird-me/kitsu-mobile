@@ -3,6 +3,21 @@ export const INITIAL = 'navigation.initial';
 // Not exactly a screen but it lets us get access to the tabbar controller
 export const BOTTOM_TABS = 'navigation.bottomtabs';
 
+export const AUTH_INTRO = 'navigation.auth.intro';
+export const AUTH_REGISTRATION = 'navigation.auth.registration';
+export const AUTH_LOGIN = 'navigation.auth.login';
+export const AUTH_RECOVERY = 'navigation.auth.recovery';
+
+export const ONBOARDING_WELCOME = 'navigation.onboarding.welcome';
+export const ONBOARDING_CREATE_ACCOUNT = 'navigation.onboarding.createaccount';
+export const ONBOARDING_SELECT_ACCOUNT = 'navigation.onboarding.selectaccount';
+export const ONBOARDING_RATE_SCREEN = 'navigation.onboarding.ratescreen';
+export const ONBOARDING_RATING_SYSTEM = 'navigation.onboarding.ratingsystem';
+export const ONBOARDING_FAVORITES_SCREEN = 'navigation.onboarding.favoritesscreen';
+export const ONBOARDING_MANAGE_LIBRARY = 'navigation.onboarding.managelibrary';
+export const ONBOARDING_IMPORT_LIBRARY = 'navigation.onboarding.importlibrary';
+export const ONBOARDING_IMPORT_DETAIL = 'navigation.onboarding.importdetail';
+
 export const FEED = 'navigation.feed';
 export const FEED_POST_DETAILS = 'navigation.feed.postdetails';
 export const FEED_CREATE_POST = 'navigation.feed.createpost';

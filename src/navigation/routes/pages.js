@@ -9,5 +9,5 @@ export default pageRoutes = {
   [Screens.PROFILE_PAGE]: ProfilePages,
   [Screens.PROFILE_LIBRARY_LIST]: UserLibraryListScreen,
   [Screens.MEDIA_PAGE]: MediaPages,
-  [Screens.MEDIA_PAGE_UNIT_DETAIL]: UnitPage,
+  [Screens.MEDIA_UNIT_DETAIL]: UnitPage,
 };

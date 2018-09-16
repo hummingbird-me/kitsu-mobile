@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity } from 'react-native';
-
-import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
-import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { upperFirst } from 'lodash';
 import moment from 'moment';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 const ROLE_LOOKUP_TABLE = {
   sequel: 'Sequel',
@@ -26,7 +25,7 @@ const ROLE_LOOKUP_TABLE = {
   other: 'Other',
 };
 
-const renderItem = (item, navigation) => {
+const renderItem = (item, componentId) => {
   if (!item || !item.destination) return null;
 
   const type = upperFirst(item.destination.subtype);
@@ -38,9 +37,14 @@ const renderItem = (item, navigation) => {
 
   const onPress = () => {
     if (!item || !item.destination) return;
-    navigation.navigate('MediaPages', {
-      mediaId: item.destination.id,
-      mediaType: item.destination.type,
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.MEDIA_PAGE,
+        passProps: {
+          mediaId: item.destination.id,
+          mediaType: item.destination.type,
+        },
+      },
     });
   };
 
@@ -57,7 +61,7 @@ const renderItem = (item, navigation) => {
   );
 };
 
-export const component = ({ media: { mediaRelationships }, navigation }) => {
+export const component = ({ media: { mediaRelationships }, componentId }) => {
   const relationships = mediaRelationships || [];
   const sorted = relationships.sort((a, b) => {
     const aStart = a.destination && a.destination.startDate;
@@ -73,13 +77,14 @@ export const component = ({ media: { mediaRelationships }, navigation }) => {
     <TabContainer light>
       <FlatList
         data={sorted}
-        renderItem={({ item }) => renderItem(item, navigation)}
+        renderItem={({ item }) => renderItem(item, componentId)}
       />
     </TabContainer>
   );
 };
 
 component.propTypes = {
+  componentId: PropTypes.any.isRequired,
   media: PropTypes.shape({
     mediaRelationships: PropTypes.shape({
       role: PropTypes.string.isRequired,
@@ -87,11 +92,11 @@ component.propTypes = {
         canonicalTitle: PropTypes.string.isRequired,
         synopsis: PropTypes.string.isRequired,
         posterImage: PropTypes.shape({
-          large: PropTypes.string.isRequired
+          large: PropTypes.string.isRequired,
         }).isRequired,
         subtype: PropTypes.string.isRequired,
-        startDate: PropTypes.string
-      }).isRequired
-    }).isRequired
-  })
+        startDate: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
 };

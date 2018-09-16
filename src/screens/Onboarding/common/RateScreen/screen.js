@@ -13,20 +13,18 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
-import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
 import { SimpleRating } from 'kitsu/components/SimpleRating';
 import { StarRating } from 'kitsu/components/StarRating';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 import { styles as commonStyles } from '../styles';
 import { styles } from './styles';
 
 class RateScreen extends React.Component {
-  static navigationOptions = {
-    backEnabled: true,
-  };
-
   state = {
     topMedia: [],
     currentIndex: 0,
@@ -40,10 +38,15 @@ class RateScreen extends React.Component {
     loadingMore: false,
     wantToWatch: false,
     loadingWtW: false, // want to watch button loading state.
+
+    buttonRightText: '',
+    buttonRightEnabled: false,
+    buttonRightOnPress: () => {},
   };
 
   componentDidMount() {
     this.loadInitialMedia();
+    this.updateHeaderButton();
   }
 
   onSwipe = (index) => {
@@ -88,20 +91,18 @@ class RateScreen extends React.Component {
   };
 
   onDone = () => {
-    const { selectedAccount, completeOnboarding } = this.props;
-    const { hasRatedAnimes } = this.props.navigation.state.params;
+    const { selectedAccount, completeOnboarding, hasRatedAnimes, componentId } = this.props;
     // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
     // hasRatedAnimes flag set true to indicate the text should be for the next media: Manga.
     if ((selectedAccount === 'kitsu' && hasRatedAnimes) || selectedAccount === 'aozora') {
       this.props.completeOnboarding();
-      const navigateTabs = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-        key: null,
-      });
-      this.props.navigation.dispatch(navigateTabs);
     } else {
-      this.props.navigation.navigate('ManageLibrary', { hasRatedAnimes: true });
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.ONBOARDING_MANAGE_LIBRARY,
+          passProps: { hasRatedAnimes: true },
+        },
+      });
     }
   };
 
@@ -116,8 +117,7 @@ class RateScreen extends React.Component {
 
   rate = async (ratingTwenty) => {
     const { currentIndex, topMedia } = this.state;
-    const { accessToken, userId } = this.props;
-    const { type } = this.props.navigation.state.params;
+    const { accessToken, userId, type } = this.props;
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     setToken(accessToken);
@@ -186,8 +186,7 @@ class RateScreen extends React.Component {
 
   removeRating = async () => {
     const { currentIndex, topMedia } = this.state;
-    const { accessToken, userId } = this.props;
-    const { type } = this.props.navigation.state.params;
+    const { accessToken, userId, type } = this.props;
     const id = topMedia[currentIndex].id;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     setToken(accessToken);
@@ -236,8 +235,7 @@ class RateScreen extends React.Component {
 
   addToWatchlist = async () => {
     const { currentIndex, topMedia } = this.state;
-    const { accessToken, userId } = this.props;
-    const { type } = this.props.navigation.state.params;
+    const { accessToken, userId, type } = this.props;
     const libraryEntryId = topMedia[currentIndex].libraryEntryId;
     const id = topMedia[currentIndex].id;
     setToken(accessToken);
@@ -331,7 +329,7 @@ class RateScreen extends React.Component {
 
   updateHeaderButton = (ratedCount = 0) => {
     const target = 5 - ratedCount;
-    this.props.navigation.setParams({
+    this.setState({
       buttonRightText: target > 0 ? `Rate ${target}` : "I'm done",
       buttonRightEnabled: !(target > 0),
       buttonRightOnPress: target > 0 ? () => { } : this.onDone,
@@ -373,8 +371,7 @@ class RateScreen extends React.Component {
   };
 
   fetchMedia = async () => {
-    const { type } = this.props.navigation.state.params;
-    const { userId } = this.props;
+    const { userId, type } = this.props;
     const { pageLimit, pageIndex } = this.state;
     let ratedCount = this.state.ratedCount;
     let mediaTotalDuration = this.state.mediaTotalDuration;
@@ -509,9 +506,22 @@ class RateScreen extends React.Component {
     );
   };
 
+  renderHeader() {
+    const { componentId } = this.props;
+    const { buttonRightText, buttonRightEnabled, buttonRightOnPress } = this.state;
+    return (
+      <OnboardingHeader
+        componentId={componentId}
+        backEnabled
+        buttonRightText={buttonRightText}
+        buttonRightEnabled={buttonRightEnabled}
+        buttonRightOnPress={buttonRightOnPress}
+      />
+    );
+  }
+
   render() {
-    const { ratingSystem } = this.props;
-    const { type } = this.props.navigation.state.params;
+    const { ratingSystem, type } = this.props;
     const {
       wantToWatch,
       topMedia,
@@ -525,49 +535,55 @@ class RateScreen extends React.Component {
 
     if (fetching) {
       return (
-        <View style={[commonStyles.container, { alignItems: 'center' }]}>
-          <ActivityIndicator style={{ marginTop: 80 }} color="white" size="large" />
+        <View style={commonStyles.container}>
+          {this.renderHeader()}
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <ActivityIndicator style={{ marginTop: 80 }} color="white" size="large" />
+          </View>
         </View>
       );
     }
     return (
       <View style={commonStyles.container}>
-        <Text style={styles.title}>
-          {ratedCount > 0 && type === 'anime' ? (
-            `${formatTime(mediaTotalDuration)} spent watching anime`
-          ) : (
-            `Rate the ${type} you've ${type === 'anime' ? 'seen' : 'read'}`
-          )}
-        </Text>
-        <View style={styles.line} />
-        <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
-          <View style={styles.carouselWrapper}>
-            <Carousel
-              ref={(c) => {
-                this.carousel = c;
-              }}
-              data={topMedia}
-              renderItem={this.renderItem}
-              sliderWidth={Dimensions.get('window').width}
-              itemWidth={Dimensions.get('window').width * 0.70}
-              onSnapToItem={this.onSwipe}
-            />
-          </View>
-          <View style={[styles.ratingWrapper, { marginVertical: ratingSystem === 'simple' ? 20 : 8 }]}>
-            {this.renderRatingComponents()}
-          </View>
-          <View style={styles.buttonWatchlistWrapper}>
-            <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
-              {loadingWtW ? (
-                <ActivityIndicator />
-              ) : (
-                <Text style={styles.buttonWatchlistTitle}>
-                  {wantToWatch ? `Saved in Want to ${watchOrRead}` : `Want to ${watchOrRead}`}
-                </Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+        {this.renderHeader()}
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>
+            {ratedCount > 0 && type === 'anime' ? (
+              `${formatTime(mediaTotalDuration)} spent watching anime`
+            ) : (
+              `Rate the ${type} you've ${type === 'anime' ? 'seen' : 'read'}`
+            )}
+          </Text>
+          <View style={styles.line} />
+          <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+            <View style={styles.carouselWrapper}>
+              <Carousel
+                ref={(c) => {
+                  this.carousel = c;
+                }}
+                data={topMedia}
+                renderItem={this.renderItem}
+                sliderWidth={Dimensions.get('window').width}
+                itemWidth={Dimensions.get('window').width * 0.70}
+                onSnapToItem={this.onSwipe}
+              />
+            </View>
+            <View style={[styles.ratingWrapper, { marginVertical: ratingSystem === 'simple' ? 20 : 8 }]}>
+              {this.renderRatingComponents()}
+            </View>
+            <View style={styles.buttonWatchlistWrapper}>
+              <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
+                {loadingWtW ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text style={styles.buttonWatchlistTitle}>
+                    {wantToWatch ? `Saved in Want to ${watchOrRead}` : `Want to ${watchOrRead}`}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
       </View>
     );
   }

@@ -29,10 +29,6 @@ const HEADER_MAPPING = {
 };
 
 export class LibrarySearchComponent extends PureComponent {
-  static navigationOptions = () => ({
-    header: null,
-  });
-
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,

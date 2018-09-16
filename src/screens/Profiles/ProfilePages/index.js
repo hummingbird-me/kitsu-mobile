@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, SectionList, Share } from 'react-native';
-import { TabRouter } from 'react-navigation';
+import { StatusBar, Share, View } from 'react-native';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
@@ -25,34 +24,21 @@ import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { kitsuConfig } from 'kitsu/config/env';
 import { Navigation } from 'react-native-navigation';
 import { NavigationActions } from 'kitsu/navigation';
-import Summary from './pages/Summary';
-import { Feed } from './pages/Feed';
+import { Summary, Feed, About, Library, Groups, Reactions } from './pages';
+import { fetchUserLibrary } from 'kitsu/store/profile/actions';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
-const tabPage = name => ({ key: name.toLowerCase(), label: name, screen: name });
+const tabPage = (name, Component) => ({ key: name.toLowerCase(), label: name, screen: Component });
 
 const TAB_ITEMS = [
-  tabPage('Summary'),
-  tabPage('Feed'),
-  tabPage('About'),
-  tabPage('Library'),
-  tabPage('Groups'),
-  tabPage('Reactions'),
+  tabPage('Summary', Summary),
+  tabPage('Feed', Feed),
+  tabPage('About', About),
+  tabPage('Library', Library),
+  tabPage('Groups', Groups),
+  tabPage('Reactions', Reactions),
 ];
-
-/* eslint-disable global-require */
-
-const TabRoutes = TabRouter({
-  Summary: { screen: Summary },
-  Feed: { screen: Feed },
-  About: { getScreen: () => require('./pages/About').About },
-  Library: { getScreen: () => require('./pages/Library').Library },
-  Groups: { getScreen: () => require('./pages/Groups').Groups },
-  Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
-}, {
-  initialRouteName: 'Summary',
-});
 
 class ProfilePage extends PureComponent {
   static propTypes = {
@@ -70,6 +56,12 @@ class ProfilePage extends PureComponent {
     follow: null,
     isLoadingFollow: false,
     editModalVisible: false,
+    libraryActivity: [],
+    loadingLibraryActivity: false,
+    reactions: [],
+    loadingReactions: false,
+    groups: [],
+    loadingGroups: false,
   }
 
   componentWillMount() {
@@ -85,6 +77,10 @@ class ProfilePage extends PureComponent {
 
     this.loadUserData(userId);
     this.fetchFollow(userId);
+    this.props.fetchUserLibrary({ userId });
+    this.fetchLibraryActivity();
+    this.fetchReactions();
+    this.fetchGroups();
   }
 
   componentWillUnmount() {
@@ -155,6 +151,80 @@ class ProfilePage extends PureComponent {
 
   setActiveTab = (tab) => {
     this.setState({ active: tab });
+  }
+
+  fetchLibraryActivity = async () => {
+    const { userId } = this.props;
+
+    this.setState({ loadingLibraryActivity: true });
+
+    try {
+      const libraryActivity = await Kitsu.findAll('libraryEvents', {
+        page: { limit: 20 },
+        filter: { userId },
+        sort: '-createdAt',
+        include: 'libraryEntry.media',
+      });
+
+      this.setState({
+        loadingLibraryActivity: false,
+        libraryActivity,
+      });
+    } catch (error) {
+      console.log('Error while fetching library entries: ', error);
+
+      this.setState({
+        loadingLibraryActivity: false,
+      });
+    }
+  }
+
+  fetchReactions = async () => {
+    const { userId } = this.props;
+
+    this.setState({ loadingReactions: true });
+
+    try {
+      const reactions = await Kitsu.findAll('mediaReactions', {
+        filter: { userId },
+        include: 'anime,user,manga',
+        sort: 'upVotesCount',
+      });
+
+      this.setState({
+        reactions,
+        loadingReactions: false,
+      });
+    } catch (err) {
+      console.log('Unhandled error while retrieving reactions: ', err);
+      this.setState({
+        loadingReactions: false,
+      });
+    }
+  }
+
+  fetchGroups = async () => {
+    this.setState({ loadingGroups: true });
+    try {
+      const groups = await Kitsu.findAll('group-members', {
+        fields: {
+          group: 'slug,name,avatar,tagline',
+        },
+        filter: {
+          query_user: this.props.userId,
+        },
+        include: 'group.category',
+        sort: '-created_at',
+      });
+
+      this.setState({
+        groups,
+        loadingGroups: false,
+      });
+    } catch (err) {
+      console.log('Unhandled error while retrieving groups: ', err);
+      this.setState({ loadingGroups: false });
+    }
   }
 
   /**
@@ -284,24 +354,55 @@ class ProfilePage extends PureComponent {
         <TabBarLink
           key={tabItem.key}
           label={tabItem.label}
-          isActive={this.state.active === tabItem.screen}
-          onPress={() => this.setActiveTab(tabItem.screen)}
+          isActive={this.state.active === tabItem.label}
+          onPress={() => this.setActiveTab(tabItem.label)}
         />
       ))}
     </TabBar>
   );
 
-  renderTabScene = () => {
-    const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
-    const { userId, componentId } = this.props;
+  renderTabs = () => (
+    <View style={{ flex: 1 }}>
+      {this.renderTabNav()}
+      {TAB_ITEMS.map((tabItem) => {
+        return this.renderTab(tabItem.screen, tabItem.label);
+      })}
+    </View>
+  );
+
+  renderTab = (Component, name) => {
+    const { userId, componentId, currentUser } = this.props;
+    const {
+      loadingLibraryActivity,
+      libraryActivity,
+      loadingReactions,
+      reactions,
+      loadingGroups,
+      groups,
+      active,
+    } = this.state;
+
+    // Don't render tabs that are not visible
+    if (name !== active) return null;
+
+    const otherProps = {
+      userId,
+      componentId,
+      currentUser,
+      loadingLibraryActivity,
+      libraryActivity,
+      loadingReactions,
+      reactions,
+      loadingGroups,
+      groups,
+    };
+
     return (
-      <TabScene
-        key="tabScene"
+      <Component
+        key={name}
         setActiveTab={tab => this.setActiveTab(tab)}
-        userId={userId}
-        componentId={componentId}
-        currentUser={this.props.currentUser}
         profile={this.state.profile}
+        {...otherProps}
       />
     );
   }
@@ -383,15 +484,7 @@ class ProfilePage extends PureComponent {
             onFollowButtonPress={this.handleFollowing}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
-          <SectionList
-            style={{ flex: 1 }}
-            stickySectionHeadersEnabled
-            renderSectionHeader={({ section }) => section.title}
-            renderItem={({ item }) => item}
-            sections={[
-              { data: [this.renderTabScene()], title: this.renderTabNav() },
-            ]}
-          />
+          {this.renderTabs()}
         </ParallaxScroll>
 
         <EditModal
@@ -410,4 +503,4 @@ const mapStateToProps = ({ user }) => {
   return { currentUser };
 };
 
-export default connect(mapStateToProps, { fetchCurrentUser })(ProfilePage);
+export default connect(mapStateToProps, { fetchCurrentUser, fetchUserLibrary })(ProfilePage);

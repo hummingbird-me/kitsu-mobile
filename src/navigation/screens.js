@@ -7,7 +7,7 @@ import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
 import { LightBox } from 'kitsu/screens/LightBox';
 import * as Screens from './types';
-import { feedRoutes, sidebarRoutes, searchRoutes, libraryRoutes, pageRoutes } from './routes';
+import { feedRoutes, sidebarRoutes, searchRoutes, libraryRoutes, pageRoutes, authRoutes, onboardingRoutes } from './routes';
 
 const routes = {
   ...feedRoutes,
@@ -15,6 +15,8 @@ const routes = {
   ...sidebarRoutes,
   ...searchRoutes,
   ...pageRoutes,
+  ...authRoutes,
+  ...onboardingRoutes,
   [Screens.QUICK_UPDATE]: QuickUpdateScreen,
   [Screens.NOTIFICATION]: NotificationsScreen,
   [Screens.LIGHTBOX]: LightBox,

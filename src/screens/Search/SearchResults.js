@@ -10,13 +10,22 @@ import { isEqual } from 'lodash';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { ResultsList } from './Lists';
-import { bottomTabsHeight } from 'kitsu/constants/app';
 
 class SearchResults extends Component {
-  state = {
-    refreshing: false,
-    index: 0,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      refreshing: false,
+      index: 0,
+      label: props.label,
+      filter: props.filter,
+      sort: props.sort,
+      defaultSearch: props.default,
+      fade: false,
+      filterData: {},
+    };
+  }
 
   componentDidMount() {
     this.getData();
@@ -26,19 +35,16 @@ class SearchResults extends Component {
     if (nextProps.results !== this.props.results) {
       this.setState({ refreshing: false });
     }
-
-    // if (!isEqual(this.props, nextProps)) {
-    //   this.getData(0, nextProps);
-    // }
   }
 
-  getData = (index = 0, newParams) => {
+  getData = (index = 0) => {
     if (index === 0) {
       this.setState({ refreshing: true });
     }
 
-    const params = newParams || this.props;
-    this.props.search(params.filter, params.sort, index, params.default, params.active, () => {
+    const { active } = this.props;
+    const { filter, sort, defaultSearch } = this.state;
+    this.props.search(filter, sort, index, defaultSearch, active, () => {
       this.setState({ refreshing: false });
       if (this.shouldLoadMore) {
         this.loadMore();
@@ -76,31 +82,36 @@ class SearchResults extends Component {
   }
 
   renderNavigationHeader = () => {
-    // TODO: Fix this up
-    const { componentId, label } = this.props;
+    const { componentId } = this.props;
+    const { label, filterData } = this.state;
     return (
       <NavigationHeader
         componentId={componentId}
         title={label}
         rightIcon="sliders"
-        // rightAction={() => (
-        //   screenProps.rootNavigation.navigate('SearchFilter', {
-        //     ...navigation.state.params,
-        //     onApply: (data, state) => {
-        //       screenProps.rootNavigation.goBack(null);
-        //       setTimeout(() =>
-        //         navigation.setParams({
-        //           filter: data.filter,
-        //           sort: data.sort,
-        //           default: null,
-        //           label: 'Search',
-        //           data: state,
-        //           fade: data.fade,
-        //         }),
-        //       );
-        //     },
-        //   })
-        // )}
+        rightAction={() => (
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.SEARCH_FILTER,
+              passProps: {
+                data: filterData,
+                onApply: (data, state) => {
+                  Navigation.popTo(componentId);
+                  this.setState({
+                    filter: data.filter,
+                    sort: data.sort,
+                    defaultSearch: null,
+                    label: 'Search',
+                    filterData: state,
+                    fade: data.fade,
+                  }, () => {
+                    this.getData();
+                  });
+                },
+              },
+            },
+          })
+        )}
       />
     );
   }
@@ -117,48 +128,50 @@ class SearchResults extends Component {
     const currentRows = getCurrentVisibleRows(data.length);
 
     // We load more if we still have rows that we can fill
-    // TODO: Fix load more not working properly
     if (!loading && results.length > 0 && currentRows < maxRows) {
       this.loadMore();
     }
 
     return (
-      <View stlye={{ flex: 1, backgroundColor: colors.darkPurple }}>
+      <View style={{ flex: 1, backgroundColor: colors.darkPurple }}>
         {this.renderNavigationHeader()}
-        <ResultsList
-          hits={data}
-          onPress={(media) => {
-            if (media) {
-              Navigation.push(this.props.componentId, {
-                component: {
-                  name: Screens.MEDIA_PAGE,
-                  passProps: {
-                    mediaId: media.id,
-                    mediaType: media.type,
+        <View style={{ flex: 1 }}>
+          <ResultsList
+            hits={data}
+            onPress={(media) => {
+              if (media) {
+                Navigation.push(this.props.componentId, {
+                  component: {
+                    name: Screens.MEDIA_PAGE,
+                    passProps: {
+                      mediaId: media.id,
+                      mediaType: media.type,
+                    },
                   },
-                },
-              });
+                });
+              }
+            }}
+            style={{ backgroundColor: colors.darkPurple }}
+            currentUser={currentUser}
+            onEndReached={this.loadMore}
+            refreshControl={
+              <RefreshControl
+                colors={['white']}
+                tintColor={'white'}
+                refreshing={this.state.refreshing}
+                onRefresh={this.refresh}
+              />
             }
-          }}
-          style={{ backgroundColor: colors.darkPurple, marginBottom: bottomTabsHeight }}
-          currentUser={currentUser}
-          onEndReached={this.loadMore}
-          refreshControl={
-            <RefreshControl
-              colors={['white']}
-              tintColor={'white'}
-              refreshing={this.state.refreshing}
-              onRefresh={this.refresh}
-            />
-          }
-          renderFooter={this.renderFooter}
-        />
+            renderFooter={this.renderFooter}
+          />
+        </View>
       </View>
     );
   }
 }
 
 SearchResults.propTypes = {
+  componentId: PropTypes.any.isRequired,
   results: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
   search: PropTypes.func.isRequired,

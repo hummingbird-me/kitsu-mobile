@@ -171,12 +171,11 @@ class SearchFilter extends Component {
               name: Screens.SEARCH_CATEGORY,
               passProps: {
                 active: 'anime',
-                key,
-                categories: this.state.categoriesRaw,
+                itemKey: key,
+                categoriesRaw: this.state.categoriesRaw,
                 onPressFilterButton: (data) => {
                   Navigation.popTo(componentId);
-                  this.setState({ categoriesRaw: data });
-                  this.setState({ categories: values(data).filter(a => a) });
+                  this.setState({ categoriesRaw: data, categories: values(data).filter(a => a) });
                 },
               },
             },

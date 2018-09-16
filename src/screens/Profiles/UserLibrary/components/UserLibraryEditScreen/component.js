@@ -41,14 +41,6 @@ export class UserLibraryEditScreenComponent extends React.Component {
     canEdit: false,
   }
 
-  static navigationOptions = () => ({
-    headerStyle: {
-      shadowColor: 'transparent',
-      elevation: 0,
-    },
-    header: null,
-  });
-
   state = {
     notes: this.getLibraryEntry().notes,
     private: this.getLibraryEntry().private,

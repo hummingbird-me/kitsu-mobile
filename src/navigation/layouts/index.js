@@ -9,4 +9,5 @@ export const INITIAL = {
 };
 
 export * from './main';
-
+export * from './intro';
+export * from './onboarding';

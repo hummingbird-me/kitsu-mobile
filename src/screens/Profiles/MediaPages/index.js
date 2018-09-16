@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, Share } from 'react-native';
+import { StatusBar, Share, View } from 'react-native';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
@@ -8,7 +8,7 @@ import { Kitsu } from 'kitsu/config/api';
 import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
+import { Summary, Episodes, Reactions, Franchise } from 'kitsu/screens/Profiles/MediaPages/pages';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
@@ -23,33 +23,16 @@ import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
-import { TabRouter } from 'react-navigation';
 
 const TAB_ITEMS = [
-  { key: 'summary', label: 'Summary', screen: 'Summary' },
-  { key: 'episodes', label: 'Episodes', screen: 'Episodes', if: (state) => state.media.type === 'anime'},
-  { key: 'chapters', label: 'Chapters', screen: 'Episodes', if: (state) => state.media.type === 'manga'},
+  { key: 'summary', label: 'Summary', screen: Summary },
+  { key: 'episodes', label: 'Episodes', screen: Episodes, if: (state) => state.media.type === 'anime'},
+  { key: 'chapters', label: 'Chapters', screen: Episodes, if: (state) => state.media.type === 'manga'},
   // NOTE: Disabled until we improve char db
   // { key: 'characters', label: 'Characters', screen: 'Characters' },
-  { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
-  { key: 'franchise', label: 'Franchise', screen: 'Franchise' },
+  { key: 'reactions', label: 'Reactions', screen: Reactions },
+  { key: 'franchise', label: 'Franchise', screen: Franchise },
 ];
-
-/* eslint-disable global-require */
-
-// TODO: Replace this with our own custom component
-const TabRoutes = TabRouter({
-  Summary: { screen: Summary },
-  Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
-  Chapters: { getScreen: () => require('./pages/Episodes').Episodes },
-  Characters: { getScreen: () => require('./pages/Characters').Characters },
-  Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
-  Franchise: { getScreen: () => require('./pages/Franchise').Franchise },
-}, {
-  initialRouteName: 'Summary',
-});
-
-/* eslint-enable global-require */
 
 class MediaPages extends PureComponent {
   static propTypes = {
@@ -498,27 +481,75 @@ class MediaPages extends PureComponent {
           <TabBarLink
             key={tabItem.key}
             label={tabItem.label}
-            isActive={this.state.active === tabItem.screen}
-            onPress={() => this.setActiveTab(tabItem.screen)}
+            isActive={this.state.active === tabItem.label}
+            onPress={() => this.setActiveTab(tabItem.label)}
           />
         );
       })}
     </TabBar>
   );
 
-  render() {
+  renderTabs = () => (
+    <View style={{ flex: 1 }}>
+      {this.renderTabNav()}
+      {TAB_ITEMS.map((tabItem) => {
+        // If this tab item is conditional, run the check
+        if (tabItem.if && !tabItem.if(this.state)) {
+          return null;
+        }
+        return this.renderTab(tabItem.screen, tabItem.label);
+      })}
+    </View>
+  );
+
+  renderTab = (Component, name) => {
     const {
       castings,
-      error,
-      loading,
       media,
       mediaReactions,
-      favorite,
       libraryEntry,
       loadingLibrary,
       loadingAdditional,
+      active,
     } = this.state;
-    const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
+
+    const { componentId } = this.props;
+
+    // Don't render tabs that are not visible
+    if (name !== active) return null;
+
+    const otherProps = {
+      libraryEntry,
+      mediaReactions,
+      castings,
+      loadingAdditional,
+      loadingLibrary,
+      componentId,
+    };
+
+    return (
+      <Component
+        key={name}
+        setActiveTab={tab => this.setActiveTab(tab)}
+        media={media}
+        mediaId={media.id}
+        onEpisodeProgress={this.onEpisodeProgress}
+        onLibraryEditPress={this.navigateToEditEntry}
+        {...otherProps}
+      />
+    );
+  }
+
+  render() {
+    const {
+      error,
+      loading,
+      media,
+      favorite,
+      libraryEntry,
+      loadingLibrary,
+    } = this.state;
+
     if (loading) {
       return (
         <SceneContainer>
@@ -619,19 +650,7 @@ class MediaPages extends PureComponent {
             onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
-          {this.renderTabNav()}
-          <TabScene
-            setActiveTab={tab => this.setActiveTab(tab)}
-            media={media}
-            mediaId={media.id}
-            libraryEntry={libraryEntry}
-            mediaReactions={mediaReactions}
-            castings={castings}
-            loadingAdditional={loadingAdditional}
-            loadingLibrary={loadingLibrary}
-            onEpisodeProgress={this.onEpisodeProgress}
-            onLibraryEditPress={this.navigateToEditEntry}
-          />
+          {this.renderTabs()}
         </ParallaxScroll>
       </SceneContainer>
     );
