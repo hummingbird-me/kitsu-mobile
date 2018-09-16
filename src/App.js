@@ -5,14 +5,14 @@ import * as colors from 'kitsu/constants/colors';
 import { identity, isNil, isEmpty } from 'lodash';
 import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
-import OneSignal from 'react-native-onesignal';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { Navigation } from 'react-native-navigation';
-import { Layouts, Screens } from 'kitsu/navigation';
+import { Layouts } from 'kitsu/navigation';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { fetchNotifications } from 'kitsu/store/feed/actions';
 import store, { persistStore } from './store/config';
-import * as types from './store/types';
 import * as profile from './store/profile/actions';
 
 class App extends PureComponent {
@@ -36,14 +36,16 @@ class App extends PureComponent {
     store.dispatch(fetchAlgoliaKeys());
 
     // Navigate to initial page
-    const { auth, onboarding } = store.getState();
-    this.navigate(!!auth.isAuthenticated, !!onboarding.completed);
+    const { auth, onboarding, app } = store.getState();
+    this.navigate(!!auth.isAuthenticated, !!onboarding.completed, app.initialPage);
   }
 
-  navigate(authenticated, onBoardingCompleted) {
+  navigate(authenticated, onBoardingCompleted, initialTab = 'Feed') {
     if (authenticated && onBoardingCompleted) {
+      this.fetchCurrentUser();
+
       // Show the main screen of the app
-      Navigation.setRoot(Layouts.MAIN);
+      Navigation.setRoot(Layouts.MAIN(initialTab));
     } else if (authenticated) {
       // Show onboarding
       // TODO: Change this once we have moved onboarding to RNN
@@ -54,6 +56,15 @@ class App extends PureComponent {
       Navigation.setRoot(Layouts.MAIN);
     }
   }
+
+  fetchCurrentUser = async () => {
+    try {
+      await store.dispatch(fetchCurrentUser());
+      store.dispatch(fetchNotifications());
+    } catch (e) {
+      console.warn(e);
+    }
+  };
 
   render() {
     // Just render a loading screen here
