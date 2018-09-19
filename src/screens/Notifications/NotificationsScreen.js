@@ -20,6 +20,8 @@ import {
   markNotifications,
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import * as colors from 'kitsu/constants/colors';
 import store from 'kitsu/store/config';
 import * as types from 'kitsu/store/types';
@@ -143,20 +145,30 @@ class NotificationsScreen extends PureComponent {
    */
   onNotificationPressed = async ({ activity, notification }) => {
     const { target, verb, actor } = activity;
-    const { currentUser, navigation } = this.props;
+    const { currentUser, componentId } = this.props;
     this.props.markNotifications([notification], 'read');
     switch (verb) {
       case 'follow':
-        navigation.navigate('ProfilePages', { userId: actor.id || currentUser.id });
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.PROFILE_PAGE,
+            passProps: { userId: actor.id || currentUser.id },
+          },
+        });
         break;
       case 'invited':
         break;
       case 'vote':
         try {
           const response = await this.fetchMediaReactions(target[0].id);
-          navigation.navigate('MediaPages', {
-            mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
-            mediaType: response.anime ? 'anime' : 'manga',
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.MEDIA_PAGE,
+              passProps: {
+                mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
+                mediaType: response.anime ? 'anime' : 'manga',
+              },
+            },
           });
         } catch (e) {
           console.log(e);
@@ -164,20 +176,30 @@ class NotificationsScreen extends PureComponent {
         break;
       case 'post':
         if (target.length !== 0) {
-          navigation.navigate('PostDetails', {
-            post: target[0],
-            comments: [],
-            like: null,
-            currentUser,
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.FEED_POST_DETAILS,
+              passProps: {
+                post: target[0],
+                comments: [],
+                like: null,
+                currentUser,
+              },
+            },
           });
         } else { // should be a "mention"
           const post = await this.fetchPost(activity);
           if (post) {
-            navigation.navigate('PostDetails', {
-              post,
-              comments: [],
-              like: null,
-              currentUser,
+            Navigation.push(componentId, {
+              component: {
+                name: Screens.FEED_POST_DETAILS,
+                passProps: {
+                  post,
+                  comments: [],
+                  like: null,
+                  currentUser,
+                },
+              },
             });
           }
         }
@@ -186,11 +208,16 @@ class NotificationsScreen extends PureComponent {
       case 'comment_like':
       case 'comment':
         if (target.length !== 0) {
-          navigation.navigate('PostDetails', {
-            post: target[0],
-            comments: [],
-            like: null,
-            currentUser,
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.FEED_POST_DETAILS,
+              passProps: {
+                post: target[0],
+                comments: [],
+                like: null,
+                currentUser,
+              },
+            },
           });
         }
         break;
