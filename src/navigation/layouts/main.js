@@ -91,44 +91,28 @@ const library = {
   },
 };
 
-export const MAIN = (initialTab = 'Feed') => {
-  // Tabs that user can select to start app on
-  const tabs = {
-    Feed: 0,
-    Search: 1,
-    QuickUpdate: 2,
-    Library: 4,
-  };
-  const currentTabIndex = tabs[initialTab] || 0;
-
-  return {
-    root: {
-      sideMenu: {
-        id: Screens.SIDEBAR,
-        left: {
-          component: {
-            name: Screens.SIDEBAR,
-          },
-          enabled: false,
+export const MAIN = {
+  root: {
+    sideMenu: {
+      id: Screens.SIDEBAR,
+      left: {
+        component: {
+          name: Screens.SIDEBAR,
         },
-        center: {
-          bottomTabs: {
-            id: Screens.BOTTOM_TABS,
-            children: [
-              feed,
-              search,
-              quickUpdate,
-              notification,
-              library,
-            ],
-            options: {
-              bottomTabs: {
-                currentTabIndex,
-              },
-            },
-          },
+        enabled: false,
+      },
+      center: {
+        bottomTabs: {
+          id: Screens.BOTTOM_TABS,
+          children: [
+            feed,
+            search,
+            quickUpdate,
+            notification,
+            library,
+          ],
         },
       },
     },
-  };
+  },
 };

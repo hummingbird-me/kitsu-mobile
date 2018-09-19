@@ -7,6 +7,7 @@ import * as NavigationActions from './actions';
 
 // Default styling options
 // https://wix.github.io/react-native-navigation/v2/#/docs/styling
+// https://github.com/wix/react-native-navigation/issues/3694
 export const defaultOptions = {
   sideMenu: {
     left: {

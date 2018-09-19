@@ -17,8 +17,22 @@ export function showIntro() {
  *
  * @param {string} [initialTab='Feed'] The initial tab to show.
  */
-export function showMainApp(initialTab = 'Feed') {
-  Navigation.setRoot(Layouts.MAIN(initialTab));
+export async function showMainApp(initialTab = 'Feed') {
+  // Tabs that user can select to start app on
+  const tabs = {
+    Feed: 0,
+    Search: 1,
+    QuickUpdate: 2,
+    Library: 4,
+  };
+  const currentTabIndex = tabs[initialTab] || 0;
+
+  Navigation.setRoot(Layouts.MAIN);
+  Navigation.mergeOptions(Screens.BOTTOM_TABS, {
+    bottomTabs: {
+      currentTabIndex,
+    },
+  });
 }
 
 

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import FastImage from 'react-native-fast-image';
-import { View, Text, Linking, ScrollView } from 'react-native';
+import { View, Text, Linking, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
 
 import { logoutUser } from 'kitsu/store/auth/actions';
@@ -14,6 +14,7 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
+import { darkPurple, listBackPurple } from 'kitsu/constants/colors';
 
 
 class SidebarScreen extends PureComponent {
@@ -121,12 +122,15 @@ class SidebarScreen extends PureComponent {
 
   render() {
     const { avatar, coverImage, name } = this.props.currentUser;
+    const iOSWidth = { width: 280 };
     return (
       // NOTE: 280px is the width of the sideMenu when expanded
       // We can set a custom width for it if we want however there is an issue on iOS
       // ref: https://github.com/wix/react-native-navigation/issues/3924
       // ref: https://github.com/wix/react-native-navigation/issues/3956
-      <View style={{ flex: 1, width: 280 }}>
+      <View
+        style={[{ flex: 1, backgroundColor: listBackPurple }, Platform.OS === 'ios' && iOSWidth]}
+      >
         {/* Header */}
         <ProgressiveImage
           hasOverlay
