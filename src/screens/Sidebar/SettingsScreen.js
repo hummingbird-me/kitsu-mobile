@@ -15,12 +15,10 @@ export class SettingsScreen extends PureComponent {
   render() {
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'Settings'}
-            onBackPress={() => Navigation.pop(this.props.componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'Settings'}
+          onBackPress={() => Navigation.pop(this.props.componentId)}
+        />
         <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'Account Settings'} />
           <FlatList

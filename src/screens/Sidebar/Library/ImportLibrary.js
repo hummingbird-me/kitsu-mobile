@@ -176,12 +176,10 @@ class ImportLibrary extends React.Component {
     const { imports } = this.state;
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'Import Library'}
-            onBackPress={() => Navigation.pop(this.props.componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'Import Library'}
+          onBackPress={() => Navigation.pop(this.props.componentId)}
+        />
         <View>
           <SidebarTitle title={'Import Media'} />
           <FlatList

@@ -59,12 +59,10 @@ class AppSettings extends PureComponent {
 
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'App'}
-            onBackPress={() => Navigation.pop(componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'App'}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
         <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'General'} />
           <SelectMenu

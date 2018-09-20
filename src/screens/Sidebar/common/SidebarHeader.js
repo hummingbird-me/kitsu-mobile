@@ -3,7 +3,7 @@ import { View, Text, Platform, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { defaultCover as defaultCoverUri } from 'kitsu/constants/app/';
+import { defaultCover as defaultCoverUri, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import PropTypes from 'prop-types';
@@ -12,13 +12,13 @@ import { getImgixCoverImage } from 'kitsu/utils/imgix';
 const SidebarHeader = ({ headerTitle, coverImage, onBackPress }) => {
   const goBack = onBackPress;
   return (
-    <View style={styles.absolute}>
+    <View style={styles.container}>
       <ProgressiveImage
         hasOverlay
-        style={styles.header}
+        style={styles.headerContainer}
         source={{ uri: getImgixCoverImage(coverImage) || defaultCoverUri }}
       >
-        <View style={styles.headerContainer}>
+        <View style={styles.header}>
           <View style={{ width: 30 }}>
             <TouchableOpacity
               style={styles.backButton}
@@ -50,20 +50,28 @@ SidebarHeader.defaultProps = {
 };
 
 const styles = {
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-  header: {
-    height: Platform.select({ ios: 77, android: 72 }),
+  container: {
+    backgroundColor: colors.listBackPurple,
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.5,
+    elevation: 3,
+    zIndex: 2,
   },
   headerContainer: {
+    height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
+  },
+  header: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flex: 1,
     flexDirection: 'row',
-    paddingVertical: isX ? paddingX / 2 : 0,
-    marginTop: 30,
+    height: navigationBarHeight,
     alignItems: 'center',
     justifyContent: 'space-between',
   },

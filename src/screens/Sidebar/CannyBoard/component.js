@@ -88,12 +88,10 @@ export class CannyBoard extends React.Component {
 
     return (
       <View style={styles.wrapper}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={title}
-            onBackPress={() => Navigation.pop(componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={title}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
         {loading
           ? <View style={[commonStyles.centerCenter, { flex: 1 }]}>
             <ActivityIndicator />

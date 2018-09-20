@@ -73,12 +73,10 @@ class PrivacySettings extends React.Component {
     const { shareToGlobal, modified } = this.state;
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'Privacy'}
-            onBackPress={() => Navigation.pop(this.props.componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'Privacy'}
+          onBackPress={() => Navigation.pop(this.props.componentId)}
+        />
         <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'Discoverability'} />
           <View

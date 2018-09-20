@@ -87,12 +87,10 @@ class LinkedAccounts extends React.Component {
   render() {
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'Linked Accounts'}
-            onBackPress={() => Navigation.pop(this.props.componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'Linked Accounts'}
+          onBackPress={() => Navigation.pop(this.props.componentId)}
+        />
         <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'Social Accounts'} />
           {this.renderFacebookAccount()}

@@ -1,5 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { statusBarHeight } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -8,20 +9,8 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.listBackPurple,
     // paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
-  headerContainer: {
-    height: Platform.select({ ios: 77, android: 72 }),
-    backgroundColor: colors.listBackPurple,
-    shadowColor: 'rgba(0,0,0,0.2)',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.5,
-    elevation: 3,
-    zIndex: 2,
-  },
   headerCoverImage: {
-    height: isX ? 150 + paddingX : 150,
+    height: Platform.select({ ios: 77, android: 72 }) + statusBarHeight + (isX ? paddingX : 0),
     justifyContent: 'center',
   },
 

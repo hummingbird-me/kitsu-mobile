@@ -233,12 +233,10 @@ class ExportLibrary extends React.Component {
     const { username, password, authenticating } = this.state;
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'MyAnimeList Sync'}
-            onBackPress={() => Navigation.pop(this.props.componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'MyAnimeList Sync'}
+          onBackPress={() => Navigation.pop(this.props.componentId)}
+        />
         <ScrollView style={{ flex: 1 }}>
           <View
             style={styles.card}
@@ -314,12 +312,10 @@ class ExportLibrary extends React.Component {
 
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'MyAnimeList Sync'}
-            onBackPress={() => Navigation.pop(this.props.componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'MyAnimeList Sync'}
+          onBackPress={() => Navigation.pop(this.props.componentId)}
+        />
         <View style={[styles.card, { flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'space-between' }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }} >
             <FastImage source={pending} style={{ width: 30, height: 30 }} cache="web" />

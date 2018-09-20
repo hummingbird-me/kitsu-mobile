@@ -255,12 +255,10 @@ export class LibrarySettingsComponent extends PureComponent {
 
     return (
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'Library Settings'}
-            onBackPress={this.goBack}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'Library Settings'}
+          onBackPress={this.goBack}
+        />
         <ScrollView style={{ flex: 1 }}>
           {this.renderSettings(settings)}
           <SidebarButton

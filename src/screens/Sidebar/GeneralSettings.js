@@ -131,12 +131,10 @@ class GeneralSettings extends React.Component {
 
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'General'}
-            onBackPress={() => Navigation.pop(componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'General'}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
         <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'Personal Settings'} />
           <View style={styles.inputWrapper}>

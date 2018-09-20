@@ -65,12 +65,10 @@ class ImportDetail extends React.Component {
     const { loading, username, errMessage } = this.state;
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={item.title}
-            onBackPress={() => Navigation.pop(componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={item.title}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
         <ScrollView style={{ flex: 1 }}>
           <View style={styles.card}>
             <View style={{ padding: 8 }}>

@@ -4,7 +4,6 @@ import { flatten } from '../styles';
 
 export const styles = StyleSheet.create({
   containerStyle: flatten('containerStyle'),
-  headerContainer: flatten('headerContainer'),
   hintText: flatten('hintText'),
   valueText: flatten('valueText'),
   selectMenu: flatten('selectMenu'),

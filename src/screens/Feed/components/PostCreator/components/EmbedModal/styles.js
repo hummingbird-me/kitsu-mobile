@@ -1,7 +1,12 @@
 import { StyleSheet, Platform } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
+import { isX, safeAreaInsetX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
+  container: {
+    marginBottom: isX ? safeAreaInsetX.bottom : 0,
+    flex: 1,
+  },
   seperator: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.lightestGrey,

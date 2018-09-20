@@ -253,12 +253,10 @@ class Blocking extends React.Component {
     const listTitle = blocks.length > 0 ? 'Blocked Users' : 'You aren\'t currently blocking any users.';
     return (
       <View style={styles.containerStyle}>
-        <View style={styles.headerContainer}>
-          <SidebarHeader
-            headerTitle={'Blocking'}
-            onBackPress={() => Navigation.pop(componentId)}
-          />
-        </View>
+        <SidebarHeader
+          headerTitle={'Blocking'}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
         <Feedback
           ref={(r) => this.feedback = r}
           title={error}
