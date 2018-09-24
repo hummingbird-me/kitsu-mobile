@@ -82,8 +82,8 @@ class Unit extends PureComponent {
       this.setState({ selectedUnit: item, selectedVideoIndex: 0 }, this.fetchFeed);
       video = item.videos[0];
     }
-    const { eid, network } = video.embedData;
-    const message = { message: 'initialize', id: eid, network };
+    const embedData = (video && video.embedData) || {};
+    const message = { message: 'initialize', id: embedData.eid, network: embedData.network };
     this.webview.postMessage(JSON.stringify(message));
   };
 
@@ -184,7 +184,7 @@ class Unit extends PureComponent {
     ));
 
     // Injected javascript
-    const selectedVideoData = selectedVideo && selectedVideo.embedData;
+    const selectedVideoData = (selectedVideo && selectedVideo.embedData) || {};
     const injectedJavaScript = `window.initializeHulu('${selectedVideoData.eid}', '${selectedVideoData.network}');`;
 
     return (
