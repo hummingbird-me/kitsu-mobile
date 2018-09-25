@@ -37,11 +37,11 @@ const progressFromLibraryEntry = (libraryEntry) => {
   // Make sure we have a media set for the entry
   if (!mediaData) return 0;
 
-  if (mediaData.type === 'anime') {
-    return Math.floor((libraryEntry.progress / mediaData.episodeCount) * 100);
-  }
+  // Make sure we have an episode or chapter count
+  const count = mediaData.type === 'anime' ? mediaData.episodeCount : mediaData.chapterCount;
+  if (!count) return 0;
 
-  return Math.floor((libraryEntry.progress / mediaData.chapterCount) * 100);
+  return Math.floor((libraryEntry.progress / count) * 100);
 };
 
 class Library extends PureComponent {
