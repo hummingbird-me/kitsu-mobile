@@ -88,12 +88,14 @@ class SidebarScreen extends PureComponent {
   }
 
   navigateTo = (screen, props = {}) => {
-    Navigation.mergeOptions(Screens.BOTTOM_TABS, {
+    Navigation.mergeOptions(Screens.SIDEBAR, {
       sideMenu: {
         left: {
           visible: false,
         },
       },
+    });
+    Navigation.mergeOptions(Screens.BOTTOM_TABS, {
       bottomTabs: {
         currentTabId: Screens.FEED,
       },
