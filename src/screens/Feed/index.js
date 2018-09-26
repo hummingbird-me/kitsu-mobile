@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, View, StyleSheet } from 'react-native';
+import { StatusBar, View, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
@@ -271,7 +271,7 @@ class Feed extends React.PureComponent {
               Disable this on iOS if we start to get missing content
               We could also improve performance by setting `windowSize` prop (default is 21, 10 views above and 10 views below)
             */
-            removeClippedSubviews
+            removeClippedSubviews={Platform.OS === 'android'}
           />
         </View>
       </View>
