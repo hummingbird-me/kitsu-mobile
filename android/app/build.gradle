@@ -180,8 +180,8 @@ android {
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
-        if (requested.group == 'com.android.support' && requested.name != 'multidex') {
-            details.useVersion "26.1.0"
+        if (requested.group == 'com.android.support' && requested.name != 'multidex' && requested.name != 'multidex-instrumentation') {
+            details.useVersion "27.1.0"
         }
     }
 }
@@ -199,7 +199,7 @@ dependencies {
     compile project(':react-native-code-push')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:27+"
+    implementation "com.android.support:appcompat-v7:27.1.0"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-navigation')
 
