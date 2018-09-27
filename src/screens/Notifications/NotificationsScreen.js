@@ -26,13 +26,14 @@ import * as colors from 'kitsu/constants/colors';
 import store from 'kitsu/store/config';
 import * as types from 'kitsu/store/types';
 import { styles } from './styles';
+import { isEqual } from 'lodash';
 
 const DOUBLE_PRESS_DELAY = 500;
 
-const CustomHeader = ({ notificationsUnread, markingRead, onMarkAll }) => (
+const CustomHeader = ({ unreadCount, markingRead, onMarkAll }) => (
   <View style={styles.customHeaderWrapper}>
     <Text style={styles.customHeaderText}>Notifications</Text>
-    {notificationsUnread > 0 && (
+    {unreadCount > 0 && (
       <TouchableOpacity activeOpacity={0.8} onPress={onMarkAll} style={styles.customHeaderButton}>
         {markingRead ? (
           <ActivityIndicator color={colors.offBlack} />
@@ -45,7 +46,7 @@ const CustomHeader = ({ notificationsUnread, markingRead, onMarkAll }) => (
 );
 
 CustomHeader.propTypes = {
-  notificationsUnread: PropTypes.number.isRequired,
+  unreadCount: PropTypes.number.isRequired,
   markingRead: PropTypes.bool.isRequired,
   onMarkAll: PropTypes.func.isRequired,
 };
@@ -54,7 +55,7 @@ const isMentioned = (arr, id) => arr.includes(id);
 
 class NotificationsScreen extends PureComponent {
   state = {
-    notificationsUnread: false,
+    unreadCount: 0,
   };
 
   componentWillMount() {
@@ -70,25 +71,13 @@ class NotificationsScreen extends PureComponent {
     // for once, and listener will invoke afterwards.
     OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
     this.fetchNotifications();
-    // set a listener for notification tab press.
-    // this is required for updating seen of notifications.
-    // this.props.navigation.setParams({
-    //   tabListener: async ({ previousScene, scene, jumpToIndex }) => {
-    //     // capture tap events and detect double press to fetch notifications
-    //     const now = new Date().getTime();
-    //     const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
-
-    //     if (previousScene.key !== 'Notifications' || doublePressed) {
-    //       this.lastTap = null;
-    //       jumpToIndex(scene.index);
-    //       this.resetScrollPosition();
-    //       this.fetchNotifications();
-    //     } else {
-    //       this.lastTap = now;
-    //     }
-    //   },
-    // });
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.notifications, nextProps.notifications)) {
+      this.updateNotificationCount(nextProps);
+    }
+  }
 
   componentWillUnmount() {
     OneSignal.removeEventListener('ids', this.onIds);
@@ -108,6 +97,7 @@ class NotificationsScreen extends PureComponent {
 
   onReceived = (notification) => {
     console.log('Notification received: ', notification);
+    this.updateNotificationCount();
   }
 
   onOpened = (openResult) => {
@@ -133,8 +123,9 @@ class NotificationsScreen extends PureComponent {
    *
    * @memberof NotificationsScreen
    */
-  onMarkAll = () => {
-    this.props.markAllNotificationsAsRead();
+  onMarkAll = async () => {
+    await this.props.markAllNotificationsAsRead();
+    this.updateNotificationCount();
   };
 
   /**
@@ -146,7 +137,7 @@ class NotificationsScreen extends PureComponent {
   onNotificationPressed = async ({ activity, notification }) => {
     const { target, verb, actor } = activity;
     const { currentUser, componentId } = this.props;
-    this.props.markNotifications([notification], 'read');
+    this.markNotifications([notification], 'read');
     switch (verb) {
       case 'follow':
         Navigation.push(componentId, {
@@ -273,8 +264,9 @@ class NotificationsScreen extends PureComponent {
 
     if (!loadingNotifications) {
       await this.props.fetchNotifications();
-      await this.props.markNotifications(this.props.notifications, 'seen');
+      await this.markNotifications(this.props.notifications, 'seen');
       PushNotificationIOS.setApplicationIconBadgeNumber(0);
+      
     }
   };
 
@@ -287,9 +279,28 @@ class NotificationsScreen extends PureComponent {
     const { loadingMoreNotifications, notifications } = this.props;
     if (!loadingMoreNotifications) {
       await this.props.fetchNotifications(notifications.slice(-1)[0].id);
-      this.props.markNotifications(this.props.notifications, 'seen');
+      this.markNotifications(this.props.notifications, 'seen');
     }
   };
+
+  markNotifications = async (notifications, type) => {
+    await this.props.markNotifications(notificatios, type);
+    this.updateNotificationCount();
+  }
+
+  updateNotificationCount = (props = this.props) => {
+    const { notifications } = props;
+    const unreadCount = notifications.reduce((count, notification) => count + ((notification && notification.isRead) ? 0 : 1), 0);
+    const badge = unreadCount > 0 ? `${unreadCount}` : '';
+
+    // Set the state and the badges
+    this.setState({ unreadCount });
+    Navigation.mergeOptions(Screens.NOTIFICATION, {
+      bottomTab: {
+        badge,
+      },
+    });
+  }
 
   resetScrollPosition = () => {
     this.list.scrollToOffset({ x: 0, y: 0, animated: true });
@@ -374,12 +385,13 @@ class NotificationsScreen extends PureComponent {
   };
 
   render() {
-    const { notifications, notificationsUnread, loadingNotifications, markingRead } = this.props;
+    const { notifications, loadingNotifications, markingRead } = this.props;
+    const { unreadCount } = this.state;
     return (
       <View style={styles.container}>
         <CustomHeader
           markingRead={markingRead}
-          notificationsUnread={notificationsUnread}
+          unreadCount={unreadCount}
           onMarkAll={this.onMarkAll}
         />
         <FlatList
@@ -417,18 +429,16 @@ NotificationsScreen.propTypes = {
   loadingNotifications: PropTypes.bool.isRequired,
   markNotifications: PropTypes.func.isRequired,
   markAllNotificationsAsRead: PropTypes.func.isRequired,
-  notificationsUnread: PropTypes.number.isRequired,
   markingRead: PropTypes.bool.isRequired,
   pushNotificationEnabled: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ feed, user, app }) => {
-  const { notifications, notificationsUnread, loadingNotifications, markingRead } = feed;
+  const { notifications, loadingNotifications, markingRead } = feed;
   const { currentUser } = user;
   const { pushNotificationEnabled } = app;
   return {
     notifications,
-    notificationsUnread,
     loadingNotifications,
     currentUser,
     pushNotificationEnabled,

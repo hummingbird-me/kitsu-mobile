@@ -165,7 +165,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       results.meta.feed.token,
     );
     notificationsStream.subscribe(async (data) => {
-      console.warn('Notifications stream callback triggered! Fetching more notifications.');
+      console.log('Notifications stream callback triggered! Fetching more notifications.');
       const not = await Kitsu.one('activityGroups', id).get({
         page: { limit: 1 },
         include: 'target.user,target.post,actor,target.manga,target.anime',
