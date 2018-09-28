@@ -5,6 +5,7 @@ import libraryRoutes from './library';
 import pageRoutes from './pages';
 import authRoutes from './auth';
 import onboardingRoutes from './onboarding';
+import notificationRoutes from './notification';
 
 export {
   sidebarRoutes,
@@ -14,4 +15,5 @@ export {
   pageRoutes,
   authRoutes,
   onboardingRoutes,
+  notificationRoutes,
 };

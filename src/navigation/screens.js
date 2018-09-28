@@ -17,8 +17,8 @@ const routes = {
   ...pageRoutes,
   ...authRoutes,
   ...onboardingRoutes,
+  ...notificationRoutes,
   [Screens.QUICK_UPDATE]: QuickUpdateScreen,
-  [Screens.NOTIFICATION]: NotificationsScreen,
   [Screens.LIGHTBOX]: LightBox,
   [Screens.INITIAL]: App,
 };

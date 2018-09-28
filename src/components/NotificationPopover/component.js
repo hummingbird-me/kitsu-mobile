@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ViewPropTypes, Text, StatusBar, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { PropTypes } from 'prop-types';
-import { parseNotificationData } from 'kitsu/screens/Notifications/NotificationsScreen';
+import { parseNotificationData } from 'kitsu/utils/notifications';
 import { styles } from './styles';
 
 export const NotificationPopover = ({ style, onRequestClose, data }) => {

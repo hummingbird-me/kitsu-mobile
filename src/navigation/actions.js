@@ -71,3 +71,12 @@ export function showLightBox(images, initialImageIndex = 0) {
     },
   });
 }
+
+export function showNotification(notification) {
+  Navigation.showOverlay({
+    component: {
+      name: Screens.NOTIFICATION_OVERLAY,
+      passProps: { notification },
+    },
+  });
+}

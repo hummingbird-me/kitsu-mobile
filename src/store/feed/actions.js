@@ -2,6 +2,7 @@ import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 import { getStream } from 'kitsu/config/stream';
 import { kitsuConfig } from 'kitsu/config/env';
+import { NavigationActions } from 'kitsu/navigation';
 
 let inAppNotificationTimer = 0;
 const feedInclude =
@@ -139,7 +140,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },
-      include: 'actor,subject,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
+      include: 'actor,subject,target,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
       fields: {
         activities: 'time,verb,id',
       },
@@ -168,10 +169,11 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       console.log('Notifications stream callback triggered! Fetching more notifications.');
       const not = await Kitsu.one('activityGroups', id).get({
         page: { limit: 1 },
-        include: 'target.user,target.post,actor,target.manga,target.anime',
+        include: 'actor,subject,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
       });
       if (data.new.length > 0) {
         dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
+        NavigationActions.showNotification(not[0]);
         clearTimeout(inAppNotificationTimer);
         inAppNotificationTimer = setTimeout(() => dismissInAppNotification(dispatch), 5000);
       }

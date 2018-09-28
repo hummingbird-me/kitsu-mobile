@@ -24,13 +24,24 @@ import { Screens } from 'kitsu/navigation';
 import store from 'kitsu/store/config';
 import * as types from 'kitsu/store/types';
 import { isEqual } from 'lodash';
-import { parseNotificationData } from 'kitsu/utils/notifications';
+import { parseNotificationData, handleNotificationPress } from 'kitsu/utils/notifications';
 import { styles } from './styles';
 import { NotificationHeader } from './NotificationHeader';
 
 // TODO: Add fetching notifications every X minutes
 
 class NotificationsScreen extends PureComponent {
+  static propTypes = {
+    fetchNotifications: PropTypes.func.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    notifications: PropTypes.array.isRequired,
+    loadingNotifications: PropTypes.bool.isRequired,
+    markNotifications: PropTypes.func.isRequired,
+    markAllNotificationsAsRead: PropTypes.func.isRequired,
+    markingRead: PropTypes.bool.isRequired,
+    pushNotificationEnabled: PropTypes.bool.isRequired,
+  };
+
   state = {
     unreadCount: 0,
   };
@@ -254,7 +265,7 @@ class NotificationsScreen extends PureComponent {
   };
 
   markNotifications = async (notifications, type) => {
-    await this.props.markNotifications(notificatios, type);
+    await this.props.markNotifications(notifications, type);
     this.updateNotificationCount();
   }
 
@@ -307,7 +318,7 @@ class NotificationsScreen extends PureComponent {
 
     return (
       <TouchableOpacity
-        onPress={() => this.onNotificationPressed({ notification: item, activity })}
+        onPress={() => handleNotificationPress(this.props.componentId, item, this.markNotifications)}
       >
         <View style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
           <View style={styles.iconContainer}>
@@ -391,17 +402,6 @@ class NotificationsScreen extends PureComponent {
     );
   }
 }
-
-NotificationsScreen.propTypes = {
-  fetchNotifications: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired,
-  notifications: PropTypes.array.isRequired,
-  loadingNotifications: PropTypes.bool.isRequired,
-  markNotifications: PropTypes.func.isRequired,
-  markAllNotificationsAsRead: PropTypes.func.isRequired,
-  markingRead: PropTypes.bool.isRequired,
-  pushNotificationEnabled: PropTypes.bool.isRequired,
-};
 
 const mapStateToProps = ({ feed, user, app }) => {
   const { notifications, loadingNotifications, markingRead } = feed;

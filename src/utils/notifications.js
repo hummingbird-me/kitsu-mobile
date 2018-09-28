@@ -1,3 +1,7 @@
+import store from 'kitsu/store/config';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
+import { markNotifications } from 'kitsu/store/feed/actions';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -99,4 +103,101 @@ export const parseNotificationData = (activities, currentUserId) => {
   }
 
   return notificationData;
+};
+
+
+/**
+ * Handle notification press event.
+ * Calling this function will trigger the relevant navigation actions.
+ *
+ * @param {*} componentId The component id to push a view onto.
+ * @param {*} notification The notification
+ */
+export const handleNotificationPress = async (componentId, notification) => {
+  const activity = notification && notification.activities && notification.activities[0];
+  if (!activity) return;
+
+  const { target, verb, actor } = activity;
+  const currentUser = store.getState().user.currentUser;
+
+  switch (verb) {
+    case 'follow':
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.PROFILE_PAGE,
+          passProps: { userId: actor.id || currentUser.id },
+        },
+      });
+      break;
+    case 'invited':
+      break;
+    case 'vote':
+      try {
+        const response = await this.fetchMediaReactions(target[0].id);
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.MEDIA_PAGE,
+            passProps: {
+              mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
+              mediaType: response.anime ? 'anime' : 'manga',
+            },
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      break;
+    case 'post':
+      if (target.length !== 0) {
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.FEED_POST_DETAILS,
+            passProps: {
+              post: target[0],
+              comments: [],
+              like: null,
+              currentUser,
+            },
+          },
+        });
+      } else { // should be a "mention"
+        const post = await this.fetchPost(activity);
+        if (post) {
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.FEED_POST_DETAILS,
+              passProps: {
+                post,
+                comments: [],
+                like: null,
+                currentUser,
+              },
+            },
+          });
+        }
+      }
+      break;
+    case 'post_like':
+    case 'comment_like':
+    case 'comment':
+      if (target.length !== 0) {
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.FEED_POST_DETAILS,
+            passProps: {
+              post: target[0],
+              comments: [],
+              like: null,
+              currentUser,
+            },
+          },
+        });
+      }
+      break;
+    default:
+      break;
+  }
+
+  // Mark notification as read
+  store.dispatch(markNotifications([notification], 'read'));
 };
