@@ -23,7 +23,7 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import store from 'kitsu/store/config';
 import * as types from 'kitsu/store/types';
-import { isEqual } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import { parseNotificationData, handleNotificationPress } from 'kitsu/utils/notifications';
 import { EventBus } from 'kitsu/utils/eventBus';
 import { NotificationHeader } from 'kitsu/screens/Notifications/NotificationHeader';
@@ -237,22 +237,10 @@ class NotificationsScreen extends PureComponent {
   };
 
   renderItem = ({ item }) => {
+    const { currentUser: { id } } = this.props;
+    const data = parseNotificationData(item.activities, id);
     const activity = item.activities[0];
-    let others = null;
-    if (item.activities.length > 1) {
-      others =
-        item.activities.length === 2 ? (
-          <Text style={{ color: '#333', fontWeight: '500' }}>
-            {item.activities[1].actor ? item.activities[1].actor.name : 'Unknown'}{' '}
-          </Text>
-        ) : (
-          <Text>{item.activities.length - 1} others </Text>
-        );
-    }
-    const ava =
-      activity.actor && activity.actor.avatar
-        ? activity.actor.avatar.tiny
-        : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
+    const time = (activity && activity.time && moment(activity.time).fromNow()) || '-';
 
     return (
       <TouchableOpacity
@@ -264,20 +252,20 @@ class NotificationsScreen extends PureComponent {
           </View>
           <View style={styles.detailsContainer}>
             <View style={{ paddingRight: 10 }}>
-              <FastImage style={styles.userAvatar} source={{ uri: ava }} cache="web" />
+              <FastImage style={styles.userAvatar} source={{ uri: data.actorAvatar }} cache="web" />
             </View>
             <View style={styles.activityContainer}>
               <View style={styles.activityTextContainer}>
-                <Text style={[styles.activityText, styles.activityTextHighlight]}>
-                  {activity.actor && activity.actor.name}{' '}
-                </Text>
-                <Text style={styles.activityText}>
-                  {others && <Text>and {others}</Text>}
-                  {this.renderText(item.activities)}
+                <Text style={[styles.activityText, { flex: 1 }]}>
+                  <Text style={[styles.activityText, styles.activityTextHighlight]}>
+                    {data.actorName}{' '}
+                  </Text>
+                  {!isEmpty(data.others) && <Text>and {data.others} </Text>}
+                  <Text>{data.text}</Text>
                 </Text>
               </View>
               <View style={styles.activityMetaContainer}>
-                <Text style={styles.activityMetaText}>{moment(activity.time).fromNow()}</Text>
+                <Text style={styles.activityMetaText}>{time}</Text>
               </View>
             </View>
           </View>

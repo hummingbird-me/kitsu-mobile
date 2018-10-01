@@ -71,6 +71,7 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    flex: 1,
   },
   activityText: { color: '#333', fontFamily: 'OpenSans', fontSize: 12 },
   activityTextHighlight: { fontWeight: 'bold' },

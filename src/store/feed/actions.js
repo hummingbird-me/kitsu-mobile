@@ -169,7 +169,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       console.log('Notifications stream callback triggered! Fetching more notifications.');
       const not = await Kitsu.one('activityGroups', id).get({
         page: { limit: 1 },
-        include: 'actor,subject,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
+        include: 'actor,subject,target,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
       });
       if (data.new.length > 0) {
         dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });

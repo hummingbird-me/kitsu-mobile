@@ -4,6 +4,7 @@ import FastImage from 'react-native-fast-image';
 import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/utils/notifications';
 import { styles } from './styles';
+import { isEmpty } from 'lodash';
 
 export const NotificationPopover = ({ style, onPress, data }) => {
   if (!data) return null;
@@ -21,7 +22,7 @@ export const NotificationPopover = ({ style, onPress, data }) => {
             {actorName || 'Unknown'}
           </Text>
           <Text style={styles.activityText}>
-            {others && <Text>and {others}</Text>}
+            {!isEmpty(others) && <Text>and {others} </Text>}
             <Text style={styles.text}>{text}</Text>
           </Text>
         </TouchableOpacity>

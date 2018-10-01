@@ -29,7 +29,7 @@ export const parseNotificationData = (activities, currentUserId) => {
   const { replyToType, replyToUser, mentionedUsers, target, subject, actor } = activity;
 
   // actor
-  notificationData.actorName = (actor && actor.name && `${actor.name} `) || '-';
+  notificationData.actorName = (actor && actor.name) || '-';
 
   notificationData.actorAvatar = actor && actor.avatar && actor.avatar.tiny
     ? actor.avatar.tiny
@@ -63,19 +63,24 @@ export const parseNotificationData = (activities, currentUserId) => {
     case 'vote':
       notificationData.text = 'liked your reaction.';
       break;
-    case 'aired':
+    case 'aired': {
       const isAnime = actor && actor.type === 'anime';
       const type = isAnime ? 'Episode' : 'Chapter';
       const state = isAnime ? 'aired' : 'released';
       notificationData.actorName = type;
-      notificationData.actorAvatar = actor && actor.posterImage && actor.posterImage.tiny ||
+      notificationData.actorAvatar = (actor && actor.posterImage && actor.posterImage.tiny) ||
         notificationData.actorAvatar; // Fallback to default avatar
+
       if (subject && subject.number > 0) {
-        notificationData.text = `${subject.number} of ${actor.canonicalTitle} ${state}`;
+        notificationData.text = `${subject.number} of ${actor.canonicalTitle} ${state}.`;
       } else { // No `Episode` or `Chapter` relationship exists...
-        notificationData.text = `${actor.canonicalTitle} ${state} a new ${type}`;
+        notificationData.text = `${actor.canonicalTitle} ${state} a new ${type}.`;
       }
+
+      // Don't bother showing other airing
+      notificationData.others = null;
       break;
+    }
     case 'comment':
       if (replyToUser && currentUserId === replyToUser.split(':')[1]) {
         notificationData.text = `replied to your ${replyToType}.`;
