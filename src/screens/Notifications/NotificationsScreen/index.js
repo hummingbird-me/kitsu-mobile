@@ -56,6 +56,8 @@ class NotificationsScreen extends PureComponent {
     OneSignal.addEventListener('registered', this.onPNRegistered);
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
+
+    // Event for handling notification press from `NotificationOverlay`
     this.unsubscribeNotificationPress = EventBus.subscribe(NOTIFICATION_PRESSED_EVENT, (notification) => {
       // Navigate to notification tab
       Navigation.mergeOptions(Screens.BOTTOM_TABS, {
@@ -66,7 +68,7 @@ class NotificationsScreen extends PureComponent {
         },
       });
 
-      handleNotificationPress(this.props.componentId, notification, this.markNotifications);
+      this.onNotificationPressed(notification);
     });
   }
 
@@ -133,90 +135,11 @@ class NotificationsScreen extends PureComponent {
   /**
    * Navigates to related screen on user row item press
    *
-   * @param {Object} activity Activity of notification row data
-   * @memberof NotificationsScreen
+   * @param {Object} notification The notification row data
    */
-  onNotificationPressed = async ({ activity, notification }) => {
-    const { target, verb, actor } = activity;
-    const { currentUser, componentId } = this.props;
-    this.markNotifications([notification], 'read');
-    switch (verb) {
-      case 'follow':
-        Navigation.push(componentId, {
-          component: {
-            name: Screens.PROFILE_PAGE,
-            passProps: { userId: actor.id || currentUser.id },
-          },
-        });
-        break;
-      case 'invited':
-        break;
-      case 'vote':
-        try {
-          const response = await this.fetchMediaReactions(target[0].id);
-          Navigation.push(componentId, {
-            component: {
-              name: Screens.MEDIA_PAGE,
-              passProps: {
-                mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
-                mediaType: response.anime ? 'anime' : 'manga',
-              },
-            },
-          });
-        } catch (e) {
-          console.log(e);
-        }
-        break;
-      case 'post':
-        if (target.length !== 0) {
-          Navigation.push(componentId, {
-            component: {
-              name: Screens.FEED_POST_DETAILS,
-              passProps: {
-                post: target[0],
-                comments: [],
-                like: null,
-                currentUser,
-              },
-            },
-          });
-        } else { // should be a "mention"
-          const post = await this.fetchPost(activity);
-          if (post) {
-            Navigation.push(componentId, {
-              component: {
-                name: Screens.FEED_POST_DETAILS,
-                passProps: {
-                  post,
-                  comments: [],
-                  like: null,
-                  currentUser,
-                },
-              },
-            });
-          }
-        }
-        break;
-      case 'post_like':
-      case 'comment_like':
-      case 'comment':
-        if (target.length !== 0) {
-          Navigation.push(componentId, {
-            component: {
-              name: Screens.FEED_POST_DETAILS,
-              passProps: {
-                post: target[0],
-                comments: [],
-                like: null,
-                currentUser,
-              },
-            },
-          });
-        }
-        break;
-      default:
-        break;
-    }
+  onNotificationPressed = async (notification) => {
+    await handleNotificationPress(this.props.componentId, notification);
+    this.updateNotificationCount();
   };
 
   /**
@@ -263,7 +186,6 @@ class NotificationsScreen extends PureComponent {
       await this.props.fetchNotifications();
       await this.markNotifications(this.props.notifications, 'seen');
       PushNotificationIOS.setApplicationIconBadgeNumber(0);
-      
     }
   };
 
@@ -287,7 +209,7 @@ class NotificationsScreen extends PureComponent {
 
   updateNotificationCount = (props = this.props) => {
     const { notifications } = props;
-    const unreadCount = notifications.reduce((count, notification) => count + ((notification && notification.isRead) ? 0 : 1), 0);
+    const unreadCount = notifications.reduce((count, notification) => count + ((notification && !notification.isRead) ? 1 : 0), 0);
     const badge = unreadCount > 0 ? `${unreadCount}` : '';
 
     // Set the state and the badges
@@ -334,7 +256,7 @@ class NotificationsScreen extends PureComponent {
 
     return (
       <TouchableOpacity
-        onPress={() => handleNotificationPress(this.props.componentId, item, this.markNotifications)}
+        onPress={() => this.onNotificationPressed(item)}
       >
         <View style={[styles.parentItem, { opacity: item.isRead ? 0.7 : 1 }]}>
           <View style={styles.iconContainer}>

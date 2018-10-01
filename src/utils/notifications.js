@@ -199,5 +199,7 @@ export const handleNotificationPress = async (componentId, notification) => {
   }
 
   // Mark notification as read
-  store.dispatch(markNotifications([notification], 'read'));
+  if (notification && !notification.isRead) {
+    await store.dispatch(markNotifications([notification], 'read'));
+  }
 };
