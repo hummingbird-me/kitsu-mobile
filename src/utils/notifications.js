@@ -122,7 +122,7 @@ export const handleNotificationPress = async (componentId, notification) => {
   const activity = notification && notification.activities && notification.activities[0];
   if (!activity) return;
 
-  const { target, verb, actor } = activity;
+  const { target, verb, actor, subject } = activity;
   const currentUser = store.getState().user.currentUser;
 
   switch (verb) {
@@ -194,6 +194,34 @@ export const handleNotificationPress = async (componentId, notification) => {
               comments: [],
               like: null,
               currentUser,
+            },
+          },
+        });
+      }
+      break;
+    case 'aired':
+      // Make sure we have a media item
+      if (!actor) break;
+
+      // Try to take user to the episode/chapter discussion page
+      if (subject) {
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.MEDIA_UNIT_DETAIL,
+            passProps: {
+              unit: subject,
+              media: actor,
+            },
+          },
+        });
+      // If that fails then take them to the media page instead
+      } else if (actor.id && actor.type) {
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.MEDIA_PAGE,
+            passProps: {
+              mediaId: actor.id,
+              mediaType: actor.type,
             },
           },
         });

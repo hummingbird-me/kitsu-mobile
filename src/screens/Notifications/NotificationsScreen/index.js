@@ -231,11 +231,6 @@ class NotificationsScreen extends PureComponent {
     }
   };
 
-  renderText = (activities) => {
-    const { currentUser: { id } } = this.props;
-    return <Text>{parseNotificationData(activities, id).text}</Text>;
-  };
-
   renderItem = ({ item }) => {
     const { currentUser: { id } } = this.props;
     const data = parseNotificationData(item.activities, id);

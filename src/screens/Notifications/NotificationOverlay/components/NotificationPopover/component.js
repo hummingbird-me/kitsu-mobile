@@ -3,8 +3,8 @@ import { View, ViewPropTypes, Text, StatusBar, TouchableOpacity } from 'react-na
 import FastImage from 'react-native-fast-image';
 import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/utils/notifications';
-import { styles } from './styles';
 import { isEmpty } from 'lodash';
+import { styles } from './styles';
 
 export const NotificationPopover = ({ style, onPress, data }) => {
   if (!data) return null;
@@ -19,7 +19,7 @@ export const NotificationPopover = ({ style, onPress, data }) => {
             <FastImage style={styles.userAvatar} source={{ uri: actorAvatar }} cache="web" />
           </View>
           <Text style={[styles.activityText, styles.activityTextHighlight]}>
-            {actorName || 'Unknown'}
+            {actorName || 'Unknown'}{' '}
           </Text>
           <Text style={styles.activityText}>
             {!isEmpty(others) && <Text>and {others} </Text>}
