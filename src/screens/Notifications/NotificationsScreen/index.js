@@ -25,8 +25,11 @@ import store from 'kitsu/store/config';
 import * as types from 'kitsu/store/types';
 import { isEqual } from 'lodash';
 import { parseNotificationData, handleNotificationPress } from 'kitsu/utils/notifications';
+import { EventBus } from 'kitsu/utils/eventBus';
+import { NotificationHeader } from 'kitsu/screens/Notifications/NotificationHeader';
 import { styles } from './styles';
-import { NotificationHeader } from './NotificationHeader';
+
+export const NOTIFICATION_PRESSED_EVENT = 'notification_pressed_event';
 
 // TODO: Add fetching notifications every X minutes
 
@@ -53,6 +56,18 @@ class NotificationsScreen extends PureComponent {
     OneSignal.addEventListener('registered', this.onPNRegistered);
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
+    this.unsubscribeNotificationPress = EventBus.subscribe(NOTIFICATION_PRESSED_EVENT, (notification) => {
+      // Navigate to notification tab
+      Navigation.mergeOptions(Screens.BOTTOM_TABS, {
+        bottomTabs: {
+          // TODO: Change this once RNN fixes currentTabId
+          currentTabIndex: 3,
+          // currentTabId: Screens.NOTIFICATION,
+        },
+      });
+
+      handleNotificationPress(this.props.componentId, notification, this.markNotifications);
+    });
   }
 
   componentDidMount = () => {
@@ -72,6 +87,7 @@ class NotificationsScreen extends PureComponent {
     OneSignal.removeEventListener('registered', this.onPNRegistered);
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
+    this.unsubscribeNotificationPress();
   }
 
   onIds = (device) => {
