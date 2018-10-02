@@ -31,7 +31,8 @@ import { styles } from './styles';
 
 export const NOTIFICATION_PRESSED_EVENT = 'notification_pressed_event';
 
-// TODO: Add fetching notifications every X minutes
+// Fetch notifications every 3 minutes
+export const NOTIFICATION_FETCH_INTERVAL = 3000;
 
 class NotificationsScreen extends PureComponent {
   static propTypes = {
@@ -75,7 +76,10 @@ class NotificationsScreen extends PureComponent {
   componentDidMount = () => {
     // for once, and listener will invoke afterwards.
     OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
+
+    // Setup notification intervals
     this.fetchNotifications();
+    this.notificationInterval = setInterval(this.fetchNotifications, NOTIFICATION_FETCH_INTERVAL);
   };
 
   componentWillReceiveProps(nextProps) {
@@ -90,6 +94,7 @@ class NotificationsScreen extends PureComponent {
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
     this.unsubscribeNotificationPress();
+    clearInterval(this.notificationInterval);
   }
 
   onIds = (device) => {
