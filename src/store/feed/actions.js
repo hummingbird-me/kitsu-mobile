@@ -7,7 +7,7 @@ import { BasicCache } from 'kitsu/utils/cache';
 
 let inAppNotificationTimer = 0;
 const feedInclude =
-  'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads';
+  'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads,subject.videos,target.videos';
 
 export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getState) => {
   dispatch({ type: types.GET_USER_FEED, payload: Boolean(cursor) });
@@ -141,7 +141,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },
-      include: 'actor,subject,subject.videos,target,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
+      include: feedInclude,
       fields: {
         activities: 'time,verb,id',
       },
@@ -178,7 +178,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
         console.log('Notifications stream callback triggered! Fetching more notifications.');
         const not = await Kitsu.one('activityGroups', id).get({
           page: { limit: 1 },
-          include: 'actor,subject,subject.videos,target,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
+          include: feedInclude,
         });
         if (data.new.length > 0) {
           dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });

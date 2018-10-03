@@ -157,12 +157,12 @@ export const handleNotificationPress = async (componentId, notification) => {
       }
       break;
     case 'post':
-      if (target.length !== 0) {
+      if (subject) {
         Navigation.push(componentId, {
           component: {
             name: Screens.FEED_POST_DETAILS,
             passProps: {
-              post: target[0],
+              post: subject,
               comments: [],
               like: null,
               currentUser,
