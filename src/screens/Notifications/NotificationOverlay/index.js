@@ -4,16 +4,18 @@ import { PropTypes } from 'prop-types';
 import { Navigation } from 'react-native-navigation';
 import { EventBus } from 'kitsu/utils/eventBus';
 import { NOTIFICATION_PRESSED_EVENT } from 'kitsu/screens/Notifications/NotificationsScreen';
+import { dismissInAppNotification } from 'kitsu/store/feed/actions';
+import { connect } from 'react-redux';
 import { NotificationPopover } from './components/NotificationPopover';
 import { styles } from './styles';
 
 const ANIM_DURATION = 200;
 const NOTIFICATION_VISIBLE_TIME = 5000;
 
-export class NotificationOverlay extends PureComponent {
+class NotificationOverlayComponent extends PureComponent {
   static propTypes = {
-    componentId: PropTypes.any.isRequired,
     notification: PropTypes.object.isRequired,
+    dismissInAppNotification: PropTypes.func.isRequired,
   }
 
   static options() {
@@ -63,8 +65,7 @@ export class NotificationOverlay extends PureComponent {
       duration: ANIM_DURATION,
       useNativeDriver: true,
     }).start(() => {
-      // TODO: This doesn't seem to dismiss overlay the first time
-      Navigation.dismissOverlay(this.props.componentId);
+      this.props.dismissInAppNotification();
     });
   };
 
@@ -85,3 +86,5 @@ export class NotificationOverlay extends PureComponent {
     );
   }
 }
+
+export const NotificationOverlay = connect(null, { dismissInAppNotification })(NotificationOverlayComponent);

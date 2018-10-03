@@ -32,7 +32,6 @@ export const SEARCH_FILTER_SUB = 'navigation.search.filter.sub';
 export const QUICK_UPDATE = 'navigation.quickupdate';
 
 export const NOTIFICATION = 'navigation.notification';
-export const NOTIFICATION_OVERLAY = 'navigation.notification.overlay';
 
 export const LIBRARY = 'navigation.library';
 export const LIBRARY_SEARCH = 'navigation.library.search';

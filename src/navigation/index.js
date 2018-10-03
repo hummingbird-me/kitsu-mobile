@@ -9,9 +9,6 @@ import * as NavigationActions from './actions';
 // https://wix.github.io/react-native-navigation/v2/#/docs/styling
 // https://github.com/wix/react-native-navigation/issues/3694
 export const defaultOptions = {
-  overlay: {
-    interceptTouchOutside: false,
-  },
   sideMenu: {
     left: {
       // Disable side drawer for everything except feed

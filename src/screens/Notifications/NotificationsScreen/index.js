@@ -64,8 +64,8 @@ class NotificationsScreen extends PureComponent {
       Navigation.mergeOptions(Screens.BOTTOM_TABS, {
         bottomTabs: {
           // TODO: Change this once RNN fixes currentTabId
-          currentTabIndex: 3,
-          // currentTabId: Screens.NOTIFICATION,
+          // currentTabIndex: 3,
+          currentTabId: Screens.NOTIFICATION,
         },
       });
 

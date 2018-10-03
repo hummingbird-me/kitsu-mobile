@@ -1,7 +1,11 @@
+import * as React from 'react';
+import { View } from 'react-native';
 import store from 'kitsu/store/config';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { markNotifications } from 'kitsu/store/feed/actions';
+import { connect } from 'react-redux';
+import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -235,4 +239,40 @@ export const handleNotificationPress = async (componentId, notification) => {
   if (notification && !notification.isRead) {
     await store.dispatch(markNotifications([notification], 'read'));
   }
+};
+
+export const withNotifications = (Component) => {
+  class NotificationHOC extends React.PureComponent {
+    constructor(props) {
+      super(props);
+      this.isVisible = false;
+      Navigation.events().bindComponent(this);
+    }
+
+    componentDidAppear() {
+      this.isVisible = true;
+    }
+
+    componentDidDisappear() {
+      this.isVisible = false;
+    }
+
+    render() {
+      const { inAppNotification, ...props } = this.props;
+      const showNotification = this.isVisible && inAppNotification && inAppNotification.visible;
+      return (
+        <View style={{ flex: 1 }}>
+          <Component {...props} />
+          {showNotification && <NotificationOverlay notification={inAppNotification.data} />}
+        </View>
+      );
+    }
+  }
+
+  const mapStateToProps = ({ feed }) => {
+    const { inAppNotification } = feed;
+    return { inAppNotification };
+  };
+
+  return connect(mapStateToProps)(NotificationHOC);
 };

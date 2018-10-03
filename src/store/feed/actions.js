@@ -182,9 +182,9 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
         });
         if (data.new.length > 0) {
           dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
-          NavigationActions.showNotification(not[0]);
+          // NavigationActions.showNotification(not[0]);
           clearTimeout(inAppNotificationTimer);
-          inAppNotificationTimer = setTimeout(() => dismissInAppNotification(dispatch), 5000);
+          inAppNotificationTimer = setTimeout(() => dispatch(dismissInAppNotification()), 5000);
         }
         if (data.deleted.length > 0) {
           dispatch({
@@ -203,7 +203,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
   }
 };
 
-export const dismissInAppNotification = (dispatch) => {
+export const dismissInAppNotification = () => (dispatch) => {
   dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION });
 };
 
