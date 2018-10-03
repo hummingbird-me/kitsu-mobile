@@ -32,7 +32,7 @@ import { styles } from './styles';
 export const NOTIFICATION_PRESSED_EVENT = 'notification_pressed_event';
 
 // Fetch notifications every 3 minutes
-export const NOTIFICATION_FETCH_INTERVAL = 3000;
+export const NOTIFICATION_FETCH_INTERVAL = 3 * 60 * 1000;
 
 class NotificationsScreen extends PureComponent {
   static propTypes = {
@@ -64,8 +64,8 @@ class NotificationsScreen extends PureComponent {
       Navigation.mergeOptions(Screens.BOTTOM_TABS, {
         bottomTabs: {
           // TODO: Change this once RNN fixes currentTabId
-          // currentTabIndex: 3,
-          currentTabId: Screens.NOTIFICATION,
+          currentTabIndex: 3,
+          // currentTabId: Screens.NOTIFICATION,
         },
       });
 
