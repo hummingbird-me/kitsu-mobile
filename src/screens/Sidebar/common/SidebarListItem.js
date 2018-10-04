@@ -28,7 +28,7 @@ ItemSeparator.defaultProps = {
 };
 
 export const SidebarListItem = ({ image, imageURL, title, onPress, style }) => (
-  <TouchableOpacity activeOpacity={1} onPress={onPress} style={[styles.item, style]}>
+  <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={[styles.item, style]}>
     <View style={styles.leftContentWrapper}>
       {(image &&
         <FastImage source={image} style={styles.image} resizeMode="contain" cache="web" />

@@ -9,6 +9,7 @@ import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import { styles } from './styles';
+import { Navigation } from 'react-native-navigation';
 
 const HEADER_MAPPING = {
   anime: {
@@ -28,14 +29,9 @@ const HEADER_MAPPING = {
 };
 
 export class LibrarySearchComponent extends PureComponent {
-  static navigationOptions = () => ({
-    header: null,
-  });
-
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
   };
@@ -164,7 +160,7 @@ export class LibrarySearchComponent extends PureComponent {
     }
   }
 
-  goBack = () => this.props.navigation.goBack();
+  goBack = () => Navigation.pop(this.props.componentId);
 
   renderSearchBox() {
     return (
@@ -185,7 +181,7 @@ export class LibrarySearchComponent extends PureComponent {
   );
 
   renderItem = ({ item }) => {
-    const { currentUser, navigation, profile } = this.props;
+    const { currentUser, profile, componentId } = this.props;
     const media = item && (item.anime || item.manga);
     if (!media) return null;
 
@@ -195,7 +191,7 @@ export class LibrarySearchComponent extends PureComponent {
         libraryEntry={item}
         libraryStatus={item.status}
         libraryType={media.type}
-        navigate={navigation.navigate}
+        componentId={componentId}
         profile={profile}
         updateUserLibraryEntry={this.onEntryUpdate}
         deleteUserLibraryEntry={this.onEntryDelete}

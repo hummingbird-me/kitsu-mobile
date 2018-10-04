@@ -12,8 +12,11 @@ import {
   setScreenName,
   completeOnboarding,
 } from 'kitsu/store/onboarding/actions';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 
 const AccountView = ({ style, data, selected, onSelectAccount }) => {
   const { libraryCount, username, profileImageURL, accountType } = data;
@@ -55,13 +58,15 @@ class SelectAccountScreen extends React.Component {
         this.completeOnboarding();
       } else {
         this.props.setScreenName('CreateAccountScreen');
-        this.props.navigation.navigate('CreateAccountScreen');
+        Navigation.push(this.props.componentId, {
+          component: { name: Screens.ONBOARDING_CREATE_ACCOUNT },
+        });
       }
     }
   };
 
   completeOnboarding = () => {
-    this.props.completeOnboarding(this.props.navigation);
+    this.props.completeOnboarding();
   };
 
   render() {
@@ -69,6 +74,7 @@ class SelectAccountScreen extends React.Component {
     const { accounts, loading } = this.props;
     return (
       <View style={commonStyles.container}>
+        <OnboardingHeader />
         <View style={commonStyles.contentWrapper}>
           <Text style={commonStyles.tutorialText}>
             Oh, you already have a Kitsu account!{'\n'}

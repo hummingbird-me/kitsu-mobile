@@ -25,20 +25,45 @@ import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessF
 import * as colors from 'kitsu/constants/colors';
 import { extractUrls } from 'kitsu/utils/url';
 import { isEmpty, uniqBy } from 'lodash';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 export default class PostDetails extends PureComponent {
-  static navigationOptions = {
-    header: null,
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    post: PropTypes.object.isRequired,
+    postLikesCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    comments: PropTypes.arrayOf(PropTypes.object),
+    topLevelCommentsCount: PropTypes.number,
+    commentsCount: PropTypes.number,
+    like: PropTypes.object,
+    isLiked: PropTypes.bool,
+    syncComments: PropTypes.func,
   };
 
-  static propTypes = {
-    navigation: PropTypes.object.isRequired,
+  static defaultProps = {
+    postLikesCount: 0,
+    comments: [],
+    topLevelCommentsCount: 0,
+    commentsCount: 0,
+    like: null,
+    isLiked: false,
+    syncComments: null,
   };
+
+  static options() {
+    return {
+      layout: {
+        backgroundColor: 'white',
+      },
+    };
+  }
 
   constructor(props) {
     super(props);
 
-    const { post, postLikesCount } = props.navigation.state.params;
+    const { post, postLikesCount, comments, topLevelCommentsCount, commentsCount, like, isLiked } = props;
     const postLikes =
       parseInt(postLikesCount, 10) ||
       parseInt(post.postLikesCount, 10) ||
@@ -46,11 +71,11 @@ export default class PostDetails extends PureComponent {
 
     this.state = {
       comment: '',
-      comments: props.navigation.state.params.comments || [],
-      topLevelCommentsCount: props.navigation.state.params.topLevelCommentsCount,
-      commentsCount: props.navigation.state.params.commentsCount,
-      like: props.navigation.state.params.like,
-      isLiked: props.navigation.state.params.isLiked,
+      comments,
+      topLevelCommentsCount,
+      commentsCount,
+      like,
+      isLiked,
       postLikesCount: postLikes,
       taggedMedia: {
         media: {
@@ -66,7 +91,7 @@ export default class PostDetails extends PureComponent {
   }
 
   componentDidMount() {
-    const { comments, like } = this.props.navigation.state.params;
+    const { comments, like } = this.props;
     if (!comments || comments.length === 0) { this.fetchComments(); }
     if (!like) { this.fetchLikes(); }
   }
@@ -90,7 +115,7 @@ export default class PostDetails extends PureComponent {
     this.setState({ isPostingComment: true });
 
     try {
-      const { currentUser, post, syncComments } = this.props.navigation.state.params;
+      const { currentUser, post, syncComments } = this.props;
 
       // Update the embed
       let embedUrl = this.state.embedUrl;
@@ -183,7 +208,7 @@ export default class PostDetails extends PureComponent {
 
   toggleLike = async () => {
     try {
-      const { currentUser, post } = this.props.navigation.state.params;
+      const { currentUser, post } = this.props;
       let { like, isLiked, postLikesCount } = this.state;
 
       this.setState({
@@ -219,7 +244,7 @@ export default class PostDetails extends PureComponent {
 
   fetchComments = async (requestOptions = {}) => {
     try {
-      const { post } = this.props.navigation.state.params;
+      const { post } = this.props;
 
       const comments = await Kitsu.findAll('comments', {
         filter: {
@@ -244,7 +269,7 @@ export default class PostDetails extends PureComponent {
   };
 
   fetchLikes = async () => {
-    const { currentUser, post } = this.props.navigation.state.params;
+    const { currentUser, post } = this.props;
     try {
       const likes = await Kitsu.findAll('postLikes', {
         filter: {
@@ -270,23 +295,28 @@ export default class PostDetails extends PureComponent {
   };
 
   goBack = () => {
-    this.props.navigation.goBack();
+    Navigation.pop(this.props.componentId);
   };
 
   keyExtractor = item => `${item.id}`;
 
   navigateToUserProfile = (userId) => {
-    if (userId) this.props.navigation.navigate('ProfilePages', { userId });
+    if (userId) Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.PROFILE_PAGE,
+        passProps: { userId },
+      },
+    });
   };
 
   renderItem = ({ item }) => {
-    const { currentUser, post } = this.props.navigation.state.params;
+    const { currentUser, post, componentId } = this.props;
     return (
       <Comment
         post={post}
         comment={item}
         currentUser={currentUser}
-        navigation={this.props.navigation}
+        componentId={componentId}
         onAvatarPress={id => this.navigateToUserProfile(id)}
         onReplyPress={(user, callback) => this.onReplyPress(item, user, callback)}
       />
@@ -296,9 +326,7 @@ export default class PostDetails extends PureComponent {
   renderItemSeperatorComponent = () => <View style={{ height: 17 }} />;
 
   render() {
-    // We expect to have navigated here using react-navigation, and it takes all our props
-    // and jams them over into this crazy thing.
-    const { currentUser, post } = this.props.navigation.state.params;
+    const { currentUser, post, componentId } = this.props;
     const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
         isPostingComment } = this.state;
 
@@ -334,7 +362,7 @@ export default class PostDetails extends PureComponent {
               commentsCount={commentsCount}
               taggedMedia={media}
               taggedEpisode={spoiledUnit}
-              navigation={this.props.navigation}
+              componentId={componentId}
             />
 
             <PostActions

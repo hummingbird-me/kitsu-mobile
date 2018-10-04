@@ -1,277 +1,169 @@
 /* global __DEV__ */
 import React, { PureComponent } from 'react';
-import { Platform, View, StatusBar, ActivityIndicator, StyleSheet } from 'react-native';
-import { NavigationActions } from 'react-navigation';
-import { Provider, connect } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
+import { Platform, View, ActivityIndicator } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { identity, isNil, isEmpty } from 'lodash';
 import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
-import OneSignal from 'react-native-onesignal';
-import PropTypes from 'prop-types';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { kitsuConfig } from 'kitsu/config/env';
-import { NotificationPopover } from 'kitsu/components/NotificationPopover';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-import { ImageLightbox } from 'kitsu/components/ImageLightbox';
-import { Lightbox } from 'kitsu/utils/lightbox';
-import store, { persistor } from './store/config';
-import Root from './Router';
-import * as types from './store/types';
-import { markNotifications } from './store/feed/actions';
+import { NavigationActions } from 'kitsu/navigation';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { fetchNotifications } from 'kitsu/store/feed/actions';
+import store, { persistStore } from './store/config';
 import * as profile from './store/profile/actions';
-
-// eslint-disable-next-line
-console.disableYellowBox = true;
-
-// If you're using the debugging tools for React Native, the network tab is normally useless
-// because it shows network activity to load the JS bundle only. This line causes it to
-// use the dev tools XMLHttpRequest object if dev tools is running, making the network
-// tab useful again. If dev tools isn't running, this will have no effect.
-// NOTE: Disable this if you intend to upload files
-GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
-
-// A reset action for navigation
-let resetAction = null;
 
 class App extends PureComponent {
   componentWillMount() {
-    OneSignal.inFocusDisplaying(2);
-    OneSignal.addEventListener('ids', this.onIds);
-    OneSignal.addEventListener('registered', this.onPNRegistered);
-    OneSignal.addEventListener('received', this.onReceived);
-    OneSignal.addEventListener('opened', this.onOpened);
-    this.unsubscribe = store.subscribe(this.onStoreUpdate);
-    this.unsubscribeCreate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, this.onLibraryEntryCreated);
-    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
-    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
+    // Register all global app events here
+    store.subscribe(onStoreUpdate);
+    KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, onLibraryEntryCreated);
+    KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, onLibraryEntryUpdated);
+    KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, onLibraryEntryDeleted);
   }
 
   componentDidMount() {
-    OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
+    this.initialize();
+  }
+
+  async initialize() {
+    // Make sure store has been persisted
+    await persistStore;
+
+    // Fetch keys
     store.dispatch(fetchAlgoliaKeys());
+
+    // Navigate to initial page
+    const { auth, onboarding, app } = store.getState();
+    this.navigate(!!auth.isAuthenticated, !!onboarding.completed, app.initialPage);
   }
 
-  componentWillUnmount() {
-    OneSignal.removeEventListener('ids', this.onIds);
-    OneSignal.removeEventListener('registered', this.onPNRegistered);
-    OneSignal.removeEventListener('received', this.onReceived);
-    OneSignal.removeEventListener('opened', this.onOpened);
-    this.unsubscribe();
-    this.unsubscribeCreate();
-    this.unsubscribeUpdate();
-    this.unsubscribeDelete();
-  }
+  navigate(authenticated, onBoardingCompleted, initialTab = 'Feed') {
+    if (authenticated && onBoardingCompleted) {
+      this.fetchCurrentUser();
 
-  onStoreUpdate() {
-    // Check if authentication state changed
-    const authenticated = store.getState().auth.isAuthenticated;
-    // If the authentication state changed from true to false then take user to intro screen
-    if (
-      !isNil(this.authenticated) &&
-      !isNil(authenticated) &&
-      this.authenticated !== authenticated && !authenticated
-    ) {
-      // Take user back to intro
-      resetAction = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Intro' })],
-        key: null,
-      });
-    }
-
-    // Update sentry
-    const user = store.getState().user.currentUser;
-    if (authenticated) {
-      if (!isEmpty(user)) {
-        Sentry.setUserContext({
-          id: user.id,
-          email: user.email,
-          username: user.name,
-        });
-      }
+      // Show the main screen of the app
+      NavigationActions.showMainApp(initialTab);
+    } else if (authenticated) {
+      // Show onboarding
+      NavigationActions.showOnboarding();
     } else {
-      Sentry.clearContext();
-    }
-
-    Sentry.setTagsContext({
-      environment: kitsuConfig.isProduction ? 'production' : 'staging',
-      react: true,
-      version: kitsuConfig.version,
-    });
-
-    // Set the new authentication value
-    this.authenticated = authenticated;
-
-    // Check if we have a reset action that we need to perform
-    if (this.navigation && resetAction) {
-      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
-      // blocking children from rendering until state has been rehydrated.
-      this.navigation.dispatch(resetAction);
-      resetAction = null;
+      // Show intro screen
+      NavigationActions.showIntro();
     }
   }
 
-  onIds(device) {
-    console.log(device.userId);
-    store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: device.userId });
-  }
-
-  onPNRegistered = (notificationData) => {
-    console.log('device registered', notificationData);
+  fetchCurrentUser = async () => {
+    try {
+      await store.dispatch(fetchCurrentUser());
+      store.dispatch(fetchNotifications());
+    } catch (e) {
+      console.warn(e);
+    }
   };
 
-  onReceived(notification) {
-    console.log('Notification received: ', notification);
-  }
-
-  onOpened = (openResult) => {
-    console.group('Opened Notification');
-    console.log('Notification', openResult.notification);
-    console.log('Message: ', openResult.notification.payload.body);
-    console.log('Data: ', openResult.notification.payload.additionalData);
-    console.log('isActive: ', openResult.notification.isAppInFocus);
-    console.log('openResult: ', openResult);
-    console.groupEnd();
-
-    /**
-     * Looks like navigating from root router to a nested screen inside the tab
-     * stack is not possible. Created a hacky TabNavigator with initial screen
-     * of Notifications. This way user can navigate to related
-     * notification.
-     *
-     * Related issues: react-community/react-navigation
-     *  #1127, #1715,
-     */
-    resetAction = NavigationActions.reset({
-      index: 0,
-      key: null,
-      actions: [NavigationActions.navigate({ routeName: 'TabsNotification' })],
-    });
-
-    if (this.navigation && resetAction) {
-      // @Note: `navigation` may not exist as a reference yet due to `PersistGate`
-      // blocking children from rendering until state has been rehydrated.
-      this.navigation.dispatch(resetAction);
-      resetAction = null;
-    }
-  }
-
-  onLibraryEntryCreated = (data) => {
-    const { currentUser } = store.getState().user;
-
-    if (!data || !currentUser || !currentUser.id) return;
-
-    // Check to see if we got this event from something other than 'store'
-    const { status, type, entry, source } = data;
-    if (!entry || source === KitsuLibraryEventSource.STORE) return;
-
-    // Add  the store entry
-    store.dispatch(profile.onLibraryEntryCreate(entry, currentUser.id, type, status));
-  }
-
-  onLibraryEntryUpdated = (data) => {
-    const { currentUser } = store.getState().user;
-
-    if (!data || !currentUser || !currentUser.id) return;
-
-    // Check to see if we got this event from something other than 'store'
-    const { type, oldEntry, newEntry, source } = data;
-    if (!oldEntry || !newEntry || source === KitsuLibraryEventSource.STORE) return;
-
-    // Update the store entry
-    store.dispatch(profile.onLibraryEntryUpdate(currentUser.id, type, oldEntry.status, newEntry));
-  }
-
-  onLibraryEntryDeleted = (data) => {
-    const { currentUser } = store.getState().user;
-
-    if (!data || !currentUser || !currentUser.id) return;
-
-    // Check to see if we got this event from something other than 'store'
-    const { id, type, status, source } = data;
-    if (!id || source === KitsuLibraryEventSource.STORE) return;
-
-    // Delete the store entry
-    store.dispatch(profile.onLibraryEntryDelete(id, currentUser.id, type, status));
-  }
-
   render() {
+    // Just render a loading screen here
+    // Once store is persisted, the initialize function will automatically set the root properley
     return (
-      <Provider store={store}>
-        <PersistGate loading={<Loading />} persistor={persistor}>
-          <ConnectedRoot />
-        </PersistGate>
-      </Provider>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.darkPurple,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <ActivityIndicator color="white" size="large" />
+      </View>
     );
   }
 }
 
-const Loading = () => (
-  <View
-    style={{
-      flex: 1,
-      backgroundColor: colors.darkPurple,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    <ActivityIndicator color="white" size="large" />
-  </View>
-);
+/*
+ * Events for handling kitsu library and store
+ */
 
-const RootContainer = ({ inAppNotification, lightBox }) => (
-  <View style={{ flex: 1 }}>
-    <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.3)'} barStyle={'light-content'} />
-    <Root
-      ref={(nav) => {
-        this.navigation = nav;
-      }}
-    />
-    {inAppNotification && inAppNotification.visible &&
-      <NotificationPopover
-        style={styles.notification}
-        data={inAppNotification.data}
-        onRequestClose={() => store.dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION })}
-      />
+let isAuthenticated = false;
+
+function onStoreUpdate() {
+  // Check if authentication state changed
+  const authenticated = store.getState().auth.isAuthenticated;
+  const user = store.getState().user.currentUser;
+
+  // Update sentry
+  if (authenticated) {
+    if (!isEmpty(user)) {
+      Sentry.setUserContext({
+        id: user.id,
+        email: user.email,
+        username: user.name,
+      });
     }
-    { !isEmpty(lightBox) &&
-      <ImageLightbox
-        visible={lightBox.visible}
-        images={lightBox.images || []}
-        initialImageIndex={lightBox.initialIndex}
-        onClose={() => Lightbox.hide()}
-      />
-    }
-  </View>
-);
+  } else {
+    Sentry.clearContext();
+  }
 
-RootContainer.propTypes = {
-  inAppNotification: PropTypes.object.isRequired,
-  lightBox: PropTypes.object,
-};
+  Sentry.setTagsContext({
+    environment: kitsuConfig.isProduction ? 'production' : 'staging',
+    react: true,
+    version: kitsuConfig.version,
+  });
 
-RootContainer.defaultProps = {
-  lightBox: {},
-};
+  // If the authentication state changed from `true` to `false` then take user to intro screen
+  if (
+    !isNil(isAuthenticated) &&
+    !isNil(authenticated) &&
+    isAuthenticated !== authenticated && !authenticated
+  ) {
+    // Take user back to intro
+    NavigationActions.showIntro();
+  }
 
-const styles = StyleSheet.create({
-  notification: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    zIndex: 666,
-  },
-});
+  // Set the new authentication value
+  isAuthenticated = authenticated;
+}
 
-const ConnectedRoot = connect(({ feed, app }) => ({
-  inAppNotification: feed.inAppNotification,
-  lightBox: app.imageLightbox,
-}))(RootContainer);
+function onLibraryEntryCreated(data) {
+  const { currentUser } = store.getState().user;
 
-// Check for Codepush only in production mode (Saves compile time & network calls in development).
+  if (!data || !currentUser || !currentUser.id) return;
+
+  // Check to see if we got this event from something other than 'store'
+  const { status, type, entry, source } = data;
+  if (!entry || source === KitsuLibraryEventSource.STORE) return;
+
+  // Add  the store entry
+  store.dispatch(profile.onLibraryEntryCreate(entry, currentUser.id, type, status));
+}
+
+function onLibraryEntryUpdated(data) {
+  const { currentUser } = store.getState().user;
+
+  if (!data || !currentUser || !currentUser.id) return;
+
+  // Check to see if we got this event from something other than 'store'
+  const { type, oldEntry, newEntry, source } = data;
+  if (!oldEntry || !newEntry || source === KitsuLibraryEventSource.STORE) return;
+
+  // Update the store entry
+  store.dispatch(profile.onLibraryEntryUpdate(currentUser.id, type, oldEntry.status, newEntry));
+}
+
+function onLibraryEntryDeleted(data) {
+  const { currentUser } = store.getState().user;
+
+  if (!data || !currentUser || !currentUser.id) return;
+
+  // Check to see if we got this event from something other than 'store'
+  const { id, type, status, source } = data;
+  if (!id || source === KitsuLibraryEventSource.STORE) return;
+
+  // Delete the store entry
+  store.dispatch(profile.onLibraryEntryDelete(id, currentUser.id, type, status));
+}
+
 // FIXME: Codepush is making android crash
 const wrapper = __DEV__ || Platform.OS === 'android' ? identity : codePush;
 

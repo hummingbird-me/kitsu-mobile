@@ -1,6 +1,7 @@
 import { Linking } from 'react-native';
-import { Lightbox } from 'kitsu/utils/lightbox';
 import { isEmpty } from 'lodash';
+import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Navigation } from 'react-native-navigation';
 
 /**
  * Check whether a url is a kitsu url.
@@ -128,9 +129,9 @@ export function parseURL(url) {
  * Otherwise it will pass it to `Linking`
  *
  * @param {string} url The url to handle.
- * @param {object} navigation The navigation object.
+ * @param {any} componentId The navigation component Id.
  */
-export async function handleURL(url, navigation) {
+export async function handleURL(url, componentId) {
   // Get url information
   const info = parseURL(url);
   if (!info) {
@@ -140,7 +141,7 @@ export async function handleURL(url, navigation) {
 
   // Check if it's an image url
   if (isImageUrl(url)) {
-    Lightbox.show([url]);
+    NavigationActions.showLightBox([url]);
     return;
   }
 
@@ -158,20 +159,29 @@ export async function handleURL(url, navigation) {
   switch (paths[0]) {
     case 'users':
       if (/^\d+$/.test(paths[1])) {
-        params = ['ProfilePages', { userId: parseInt(paths[1], 10) }];
+        params = {
+          screen: Screens.PROFILE_PAGE,
+          passProps: { userId: parseInt(paths[1], 10) },
+        };
       }
       break;
     case 'anime': {
       // If we have an id (i.e a number)
       if (/^\d+$/.test(paths[1])) {
-        params = ['MediaPages', { mediaId: parseInt(paths[1], 10), mediaType: 'anime' }];
+        params = {
+          screen: Screens.MEDIA_PAGE,
+          passProps: { mediaId: parseInt(paths[1], 10), mediaType: 'anime' },
+        };
       }
       break;
     }
     case 'manga': {
       // If we have an id (i.e a number)
       if (/^\d+$/.test(paths[1])) {
-        params = ['MediaPages', { mediaId: parseInt(paths[1], 10), mediaType: 'manga' }];
+        params = {
+          screen: Screens.MEDIA_PAGE,
+          passProps: { mediaId: parseInt(paths[1], 10), mediaType: 'manga' },
+        };
       }
       break;
     }
@@ -181,7 +191,9 @@ export async function handleURL(url, navigation) {
       break;
   }
 
-  if (params) {
-    navigation.navigate(...params);
+  if (params && componentId) {
+    Navigation.push(componentId, {
+      component: { ...params },
+    });
   }
 }

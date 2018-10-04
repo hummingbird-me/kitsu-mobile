@@ -1,5 +1,4 @@
 import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
-import { NavigationActions } from 'react-navigation';
 import { NetInfo } from 'react-native';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
@@ -9,6 +8,8 @@ import * as types from 'kitsu/store/types';
 import { Sentry } from 'react-native-sentry';
 import { isEmpty } from 'lodash';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 
 export const refreshTokens = () => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
@@ -27,7 +28,7 @@ export const refreshTokens = () => async (dispatch, getState) => {
   }
 };
 
-export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
+export const loginUser = (data, componentId, screen) => async (dispatch, getState) => {
   dispatch({ type: types.LOGIN_USER });
   let tokens = null;
 
@@ -65,14 +66,12 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       // We only navigate to the signup screen
       // IF `createAccount` wasn't the one that called this function
       } else if (screen !== 'signup') {
-        nav.dispatch(NavigationActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({
-            routeName: 'AuthScreen',
-            params: { authType: 'signup' },
-          })],
-          key: null,
-        }));
+        Navigation.setStackRoot(componentId, {
+          component: {
+            name: Screens.AUTH_LOGIN,
+            passProps: { authType: 'signup' },
+          },
+        });
       }
     } catch (e) {
       console.log(e);
@@ -106,28 +105,13 @@ export const loginUser = (data, nav, screen) => async (dispatch, getState) => {
       */
       if (user && user.status === 'aozora') {
         await getAccountConflicts()(dispatch, getState);
-        const onboardingAction = NavigationActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
-          key: null,
-        });
-        nav.dispatch(onboardingAction);
+        NavigationActions.showOnboarding();
       } else if ((user && user.status !== 'registered') || screen === 'signup') {
         await getAccountConflicts()(dispatch, getState);
-        const onboardingAction = NavigationActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'Onboarding' })],
-          key: null,
-        });
-        nav.dispatch(onboardingAction);
+        NavigationActions.showOnboarding();
       } else {
         setOnboardingComplete()(dispatch, getState);
-        const loginAction = NavigationActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-          key: null,
-        });
-        nav.dispatch(loginAction);
+        NavigationActions.showMainApp();
       }
     } catch (e) {
       console.warn(e);

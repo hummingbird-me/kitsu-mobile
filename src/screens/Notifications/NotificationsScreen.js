@@ -20,7 +20,11 @@ import {
   markNotifications,
   markAllNotificationsAsRead,
 } from 'kitsu/store/feed/actions';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import * as colors from 'kitsu/constants/colors';
+import store from 'kitsu/store/config';
+import * as types from 'kitsu/store/types';
 import { styles } from './styles';
 
 const DOUBLE_PRESS_DELAY = 500;
@@ -49,38 +53,80 @@ CustomHeader.propTypes = {
 const isMentioned = (arr, id) => arr.includes(id);
 
 class NotificationsScreen extends PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Notifications',
-    header: null,
-    tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
-  });
-
   state = {
     notificationsUnread: false,
   };
 
+  componentWillMount() {
+    // Register all global app events here
+    OneSignal.inFocusDisplaying(2);
+    OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.addEventListener('registered', this.onPNRegistered);
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+  }
+
   componentDidMount = () => {
     // for once, and listener will invoke afterwards.
+    OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
     this.fetchNotifications();
     // set a listener for notification tab press.
     // this is required for updating seen of notifications.
-    this.props.navigation.setParams({
-      tabListener: async ({ previousScene, scene, jumpToIndex }) => {
-        // capture tap events and detect double press to fetch notifications
-        const now = new Date().getTime();
-        const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
+    // this.props.navigation.setParams({
+    //   tabListener: async ({ previousScene, scene, jumpToIndex }) => {
+    //     // capture tap events and detect double press to fetch notifications
+    //     const now = new Date().getTime();
+    //     const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
 
-        if (previousScene.key !== 'Notifications' || doublePressed) {
-          this.lastTap = null;
-          jumpToIndex(scene.index);
-          this.resetScrollPosition();
-          this.fetchNotifications();
-        } else {
-          this.lastTap = now;
-        }
+    //     if (previousScene.key !== 'Notifications' || doublePressed) {
+    //       this.lastTap = null;
+    //       jumpToIndex(scene.index);
+    //       this.resetScrollPosition();
+    //       this.fetchNotifications();
+    //     } else {
+    //       this.lastTap = now;
+    //     }
+    //   },
+    // });
+  };
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('ids', this.onIds);
+    OneSignal.removeEventListener('registered', this.onPNRegistered);
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
+  }
+
+  onIds = (device) => {
+    console.log(device.userId);
+    store.dispatch({ type: types.ONESIGNAL_ID_RECEIVED, payload: device.userId });
+  }
+
+  onPNRegistered = (notificationData) => {
+    console.log('device registered', notificationData);
+  };
+
+  onReceived = (notification) => {
+    console.log('Notification received: ', notification);
+  }
+
+  onOpened = (openResult) => {
+    console.group('Opened Notification');
+    console.log('Notification', openResult.notification);
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+    console.groupEnd();
+
+    // Show notification tab
+    // TODO: Need a way to make sure that users who are not logged in don't get notifications
+    Navigation.mergeOptions(Screens.BOTTOM_TABS, {
+      bottomTabs: {
+        currentTabId: Screens.NOTIFICATION,
       },
     });
-  };
+  }
 
   /**
    * Marks all notifications as read, currently triggered from CustomHeader.
@@ -99,20 +145,30 @@ class NotificationsScreen extends PureComponent {
    */
   onNotificationPressed = async ({ activity, notification }) => {
     const { target, verb, actor } = activity;
-    const { currentUser, navigation } = this.props;
+    const { currentUser, componentId } = this.props;
     this.props.markNotifications([notification], 'read');
     switch (verb) {
       case 'follow':
-        navigation.navigate('ProfilePages', { userId: actor.id || currentUser.id });
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.PROFILE_PAGE,
+            passProps: { userId: actor.id || currentUser.id },
+          },
+        });
         break;
       case 'invited':
         break;
       case 'vote':
         try {
           const response = await this.fetchMediaReactions(target[0].id);
-          navigation.navigate('MediaPages', {
-            mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
-            mediaType: response.anime ? 'anime' : 'manga',
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.MEDIA_PAGE,
+              passProps: {
+                mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
+                mediaType: response.anime ? 'anime' : 'manga',
+              },
+            },
           });
         } catch (e) {
           console.log(e);
@@ -120,20 +176,30 @@ class NotificationsScreen extends PureComponent {
         break;
       case 'post':
         if (target.length !== 0) {
-          navigation.navigate('PostDetails', {
-            post: target[0],
-            comments: [],
-            like: null,
-            currentUser,
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.FEED_POST_DETAILS,
+              passProps: {
+                post: target[0],
+                comments: [],
+                like: null,
+                currentUser,
+              },
+            },
           });
         } else { // should be a "mention"
           const post = await this.fetchPost(activity);
           if (post) {
-            navigation.navigate('PostDetails', {
-              post,
-              comments: [],
-              like: null,
-              currentUser,
+            Navigation.push(componentId, {
+              component: {
+                name: Screens.FEED_POST_DETAILS,
+                passProps: {
+                  post,
+                  comments: [],
+                  like: null,
+                  currentUser,
+                },
+              },
             });
           }
         }
@@ -142,11 +208,16 @@ class NotificationsScreen extends PureComponent {
       case 'comment_like':
       case 'comment':
         if (target.length !== 0) {
-          navigation.navigate('PostDetails', {
-            post: target[0],
-            comments: [],
-            like: null,
-            currentUser,
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.FEED_POST_DETAILS,
+              passProps: {
+                post: target[0],
+                comments: [],
+                like: null,
+                currentUser,
+              },
+            },
           });
         }
         break;

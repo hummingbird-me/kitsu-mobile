@@ -9,7 +9,9 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
 import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import anilist from 'kitsu/assets/img/anilist.png';
-import { navigationOptions, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
+import { SidebarHeader, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common';
 import { styles } from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
@@ -83,7 +85,9 @@ const ImportItem = ({ kind, status, date, total }) => {
 };
 
 class ImportLibrary extends React.Component {
-  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Import Library');
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+  };
 
   state = {
     imports: [],
@@ -99,8 +103,12 @@ class ImportLibrary extends React.Component {
   }
 
   onMediaItemPressed = (item) => {
-    const { navigation } = this.props;
-    navigation.navigate('ImportDetail', { item });
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.SIDEBAR_IMPORT_DETAIL,
+        passProps: { item },
+      }
+    });
   };
 
   fetchLibraryImports = async () => {
@@ -168,6 +176,10 @@ class ImportLibrary extends React.Component {
     const { imports } = this.state;
     return (
       <View style={styles.containerStyle}>
+        <SidebarHeader
+          headerTitle={'Import Library'}
+          onBackPress={() => Navigation.pop(this.props.componentId)}
+        />
         <View>
           <SidebarTitle title={'Import Media'} />
           <FlatList
@@ -225,7 +237,5 @@ const mapStateToProps = ({ auth, user }) => ({
   accessToken: auth.tokens.access_token,
   currentUser: user.currentUser,
 });
-
-ImportLibrary.propTypes = {};
 
 export default connect(mapStateToProps, {})(ImportLibrary);

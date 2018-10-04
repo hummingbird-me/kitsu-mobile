@@ -1,5 +1,5 @@
 import * as types from 'kitsu/store/types';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions } from 'kitsu/navigation';
 import { kitsuConfig } from 'kitsu/config/env';
 import { Kitsu, setToken } from 'kitsu/config/api';
 
@@ -7,7 +7,7 @@ export const setOnboardingComplete = () => async (dispatch) => {
   dispatch({ type: types.SET_ONBOARDING_COMPLETE });
 };
 
-export const completeOnboarding = navigation => async (dispatch, getState) => {
+export const completeOnboarding = () => async (dispatch, getState) => {
   dispatch({ type: types.COMPLETE_ONBOARDING });
   const { user, auth } = getState();
   const { id } = user.currentUser;
@@ -15,13 +15,8 @@ export const completeOnboarding = navigation => async (dispatch, getState) => {
   setToken(token);
   try {
     await Kitsu.update('users', { id, status: 'registered' });
-    const navigateTabs = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
-      key: null,
-    });
-    navigation.dispatch(navigateTabs);
     dispatch({ type: types.COMPLETE_ONBOARDING_SUCCESS });
+    NavigationActions.showMainApp();
   } catch (e) {
     dispatch({ type: types.COMPLETE_ONBOARDING_FAIL, payload: e });
   }

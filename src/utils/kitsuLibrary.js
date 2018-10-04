@@ -1,4 +1,5 @@
 
+import { _EventBus } from './eventBus';
 /**
  * Library sort options
  */
@@ -85,45 +86,7 @@ export class KitsuLibraryEventSource {
 /**
  * A helper class for keeping redux library state in sync
  */
-class _KitsuLibrary {
-  constructor() {
-    this.handlers = [];
-  }
-
-  /**
-   * Subscribe to a library event.
-   *
-   * @param {any} event The event to subscribe to. Can find them in `KitsuLibraryEvents` class.
-   * @param {any} handler The handler function which takes in 1 argument.
-   * @returns The unsubscribe function.
-   */
-  subscribe(event, handler) {
-    const eventHandler = { event, handler };
-    this.handlers.push(eventHandler);
-
-    // Return the unsubscribe function
-    return () => {
-      const index = this.handlers.indexOf(eventHandler);
-      if (index > -1) {
-        this.handlers.splice(index, 1);
-      }
-    };
-  }
-
-  /**
-   * Publish an event.
-   *
-   * @param {any} event The event to publish
-   * @param {any} args An argument.
-   */
-  publish(event, args) {
-    this.handlers.forEach((eventHandler) => {
-      if (eventHandler.event === event) {
-        eventHandler.handler(args);
-      }
-    });
-  }
-
+class _KitsuLibrary extends _EventBus {
   /**
    * Publish Library entry create event.
    *

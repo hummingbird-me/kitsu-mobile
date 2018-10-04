@@ -12,9 +12,9 @@ import dataBunny from 'kitsu/assets/img/data-bunny.png';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { startCase, isNil, isEmpty } from 'lodash';
 import { WebComponent } from 'kitsu/utils/components';
-import { Lightbox } from 'kitsu/utils/lightbox';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import { styles } from './styles';
-
 
 class EmbeddedContent extends PureComponent {
   // The reason for the combination of string or number is that
@@ -63,7 +63,7 @@ class EmbeddedContent extends PureComponent {
     maxWidth: PropTypes.number.isRequired,
     minWidth: PropTypes.number,
     borderRadius: PropTypes.number,
-    navigation: PropTypes.object,
+    componentId: PropTypes.any,
     compact: PropTypes.bool,
     dataSaver: PropTypes.bool,
 
@@ -80,7 +80,7 @@ class EmbeddedContent extends PureComponent {
     borderRadius: 0,
     compact: false,
     dataSaver: false,
-    navigation: null,
+    componentId: null,
     ignoreDataSaver: false,
     disabled: false,
   }
@@ -155,7 +155,7 @@ class EmbeddedContent extends PureComponent {
         borderRadius={borderRadius}
         compact={compact}
         onImageTapped={(index) => {
-          Lightbox.show(filtered, (index || 0));
+          NavigationActions.showLightBox(filtered, (index || 0));
         }}
         disabled={disabled}
       />
@@ -238,7 +238,7 @@ class EmbeddedContent extends PureComponent {
     const id = embed.kitsu && embed.kitsu.id;
     if (!id) return null;
 
-    const { navigation, maxWidth, disabled } = this.props;
+    const { componentId, maxWidth, disabled } = this.props;
     const type = embed.url && embed.url.includes('anime') ? 'anime' : 'manga';
     const image = this.getImageUrl(embed);
 
@@ -246,8 +246,13 @@ class EmbeddedContent extends PureComponent {
       <TouchableOpacity
         style={{ width: maxWidth }}
         onPress={() => {
-          if (navigation) {
-            navigation.navigate('MediaPages', { mediaId: id, mediaType: type });
+          if (componentId) {
+            Navigation.push(componentId, {
+              component: {
+                name: Screens.MEDIA_PAGE,
+                passProps: { mediaId: id, mediaType: type },
+              },
+            });
           }
         }}
         disabled={disabled}
@@ -275,7 +280,7 @@ class EmbeddedContent extends PureComponent {
     const id = embed.kitsu && embed.kitsu.id;
     if (!id) return null;
 
-    const { navigation, maxWidth, disabled } = this.props;
+    const { componentId, maxWidth, disabled } = this.props;
 
     const imageUri = this.getImageUrl(embed);
     const image = (imageUri && imageUri.includes('http') && { uri: imageUri }) || defaultAvatar;
@@ -284,8 +289,13 @@ class EmbeddedContent extends PureComponent {
       <TouchableOpacity
         style={{ width: maxWidth }}
         onPress={() => {
-          if (navigation) {
-            navigation.navigate('ProfilePages', { userId: id });
+          if (componentId) {
+            Navigation.push(componentId, {
+              component: {
+                name: Screens.PROFILE_PAGE,
+                passProps: { userId: id },
+              },
+            });
           }
         }}
         disabled={disabled}

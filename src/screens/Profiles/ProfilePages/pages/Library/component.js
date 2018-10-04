@@ -12,6 +12,8 @@ import { isIdForCurrentUser } from 'kitsu/utils/id';
 import { isEmpty } from 'lodash';
 import { StyledText } from 'kitsu/components/StyledText';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 import * as constants from './constants';
 
@@ -49,13 +51,21 @@ class Library extends PureComponent {
     userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
   }
 
-  componentDidMount() {
-    const { userId } = this.props;
-    this.props.fetchUserLibrary({ userId });
-  }
+  navigateToSearch = () => {
+    const { profile, componentId } = this.props;
+    if (profile) {
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.LIBRARY_SEARCH,
+          passProps: { profile },
+        },
+      });
+    }
+  };
+
 
   renderEmptyItem() {
     return <View style={styles.emptyPosterImageCard} />;
@@ -81,7 +91,7 @@ class Library extends PureComponent {
         ratingTwenty={item.ratingTwenty}
         ratingSystem={currentUser.ratingSystem}
         style={index === 0 ? styles.posterImageCardFirstChild : null}
-        navigate={this.props.navigation.navigate}
+        componentId={this.props.componentId}
       />
     );
   }
@@ -141,7 +151,7 @@ class Library extends PureComponent {
   }
 
   renderLists = (userId, type) => {
-    const { navigation, userLibrary, profile } = this.props;
+    const { componentId, userLibrary, profile } = this.props;
     const listOrder = [
       { status: 'current', anime: 'Watching', manga: 'Reading' },
       { status: 'planned', anime: 'Want To Watch', manga: 'Want To Read' },
@@ -178,7 +188,7 @@ class Library extends PureComponent {
             libraryStatus={status}
             libraryType={type}
             listTitle={currentList[type]}
-            navigation={navigation}
+            componentId={componentId}
             profile={profile}
           />
 
@@ -211,13 +221,6 @@ class Library extends PureComponent {
     });
   }
 
-  navigateToSearch = () => {
-    const { profile, navigation } = this.props;
-    if (profile && navigation) {
-      navigation.navigate('LibrarySearch', { profile });
-    }
-  };
-
   renderSearchBox() {
     return (
       <TouchableOpacity style={styles.searchBox} onPress={this.navigateToSearch}>
@@ -231,7 +234,7 @@ class Library extends PureComponent {
   }
 
   render() {
-    const { profile, navigation, userId } = this.props;
+    const { profile, userId } = this.props;
 
     return (
       <View style={styles.container}>

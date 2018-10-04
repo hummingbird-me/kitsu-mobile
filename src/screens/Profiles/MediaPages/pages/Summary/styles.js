@@ -57,4 +57,7 @@ export const styles = StyleSheet.create({
   streamingLinksContent: {
     paddingLeft: scenePadding,
   },
+  loading: {
+    padding: 24,
+  },
 });

@@ -1,20 +1,19 @@
 import React, { PureComponent } from 'react';
-import { View, Text, TextInput, ScrollView, LayoutAnimation, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import isEmpty from 'lodash/isEmpty';
 import * as colors from 'kitsu/constants/colors';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { setDataSaver, setInitialPage } from 'kitsu/store/app/actions';
-import { navigationOptions, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import { Navigation } from 'react-native-navigation';
+import { SidebarHeader, SidebarTitle } from './common/';
 import { styles } from './styles';
 
 
 class AppSettings extends PureComponent {
-  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'App');
-
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     dataSaver: PropTypes.bool,
     setDataSaver: PropTypes.func,
     setInitialPage: PropTypes.func,
@@ -41,7 +40,7 @@ class AppSettings extends PureComponent {
   }
 
   render() {
-    const { dataSaver, initialPage } = this.props;
+    const { dataSaver, initialPage, componentId } = this.props;
 
     // The pages
     const pages = [
@@ -60,7 +59,11 @@ class AppSettings extends PureComponent {
 
     return (
       <View style={styles.containerStyle}>
-        <ScrollView scrollEnabled={false}>
+        <SidebarHeader
+          headerTitle={'App'}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
+        <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'General'} />
           <SelectMenu
             style={styles.selectMenu}

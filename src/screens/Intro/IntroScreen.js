@@ -2,6 +2,9 @@ import React from 'react';
 import { View, ScrollView, Dimensions } from 'react-native';
 import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/intro/';
 import { Button } from 'kitsu/components/Button';
+import { PropTypes } from 'prop-types';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { IntroHeader } from './common/';
 import styles from './styles';
 import Step from './Step';
@@ -37,20 +40,21 @@ const INTROS = [
 ];
 
 export default class OnboardingScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+  }
 
   state = {
     step: 0,
   };
+
   navigating = false;
 
   handleScroll = ({ nativeEvent: { contentOffset: { x } } }) => {
     const SCREEN_WIDTH = Dimensions.get('window').width;
     const position = x / SCREEN_WIDTH;
     if (!this.navigating && position > INTROS.length - 2 + 0.05) {
-      this.props.navigation.navigate('Registration');
+      this.navigateToRegistration();
       this.navigating = true; // prevent triggering navigate twice.
     } else {
       // abs for -x direction values: prevent -1 value for step
@@ -58,14 +62,18 @@ export default class OnboardingScreen extends React.Component {
     }
   };
 
+  navigateToRegistration = () => {
+    Navigation.setStackRoot(this.props.componentId, {
+      component: { name: Screens.AUTH_REGISTRATION },
+    });
+  }
+
   renderStep = () => INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
 
   renderDots = () =>
     INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
 
   render() {
-    const { navigate } = this.props.navigation;
-
     return (
       <View style={styles.container}>
         <IntroHeader style={styles.header} />
@@ -88,7 +96,7 @@ export default class OnboardingScreen extends React.Component {
               style={styles.getStartedButton}
               title={'Get Started'}
               titleStyle={styles.getStartedText}
-              onPress={() => navigate('Registration')}
+              onPress={this.navigateToRegistration}
             />
           </View>
         </View>

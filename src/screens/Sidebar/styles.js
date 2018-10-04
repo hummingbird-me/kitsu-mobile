@@ -1,15 +1,16 @@
 import { StyleSheet, Platform } from 'react-native';
 import { isX, paddingX } from 'kitsu/utils/isX';
+import { statusBarHeight } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
   containerStyle: {
     flex: 1,
     backgroundColor: colors.listBackPurple,
-    paddingTop: Platform.select({ ios: 77, android: 72 }),
+    // paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
   headerCoverImage: {
-    height: isX ? 150 + paddingX : 150,
+    height: Platform.select({ ios: 77, android: 72 }) + statusBarHeight + (isX ? paddingX : 0),
     justifyContent: 'center',
   },
 

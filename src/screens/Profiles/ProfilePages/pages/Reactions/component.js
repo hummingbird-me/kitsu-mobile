@@ -9,37 +9,19 @@ import { Kitsu } from 'kitsu/config/api';
 
 class Reactions extends PureComponent {
   static propTypes = {
-    userId: PropTypes.number.isRequired,
+    loadingReactions: PropTypes.bool,
+    reactions: PropTypes.array,
   }
 
-  state = {
-    loading: true,
-    data: null,
-  }
-
-  componentDidMount = async () => {
-    const { userId } = this.props;
-
-    try {
-      const data = await Kitsu.findAll('mediaReactions', {
-        filter: { userId },
-        include: 'anime,user,manga',
-        sort: 'upVotesCount',
-      });
-
-      this.setState({
-        data,
-        loading: false,
-      });
-    } catch (err) {
-      console.log('Unhandled error while retrieving reactions: ', err);
-    }
+  static defaultProps = {
+    loadingReactions: false,
+    reactions: [],
   }
 
   render() {
-    const { loading, data } = this.state;
+    const { loadingReactions, reactions } = this.props;
 
-    if (loading) {
+    if (loadingReactions) {
       return <SceneLoader />;
     }
 
@@ -47,7 +29,7 @@ class Reactions extends PureComponent {
       <TabContainer>
         <FlatList
           listKey="reactions"
-          data={data}
+          data={reactions}
           renderItem={({ item }) => {
             const title =
               (item.anime && item.anime.canonicalTitle) ||

@@ -2,32 +2,53 @@ import React from 'react';
 import { View, Text, ImageBackground, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Button } from 'kitsu/components/Button';
-import { NavigationActions } from 'react-navigation';
 import { iceBackground, iceCube } from 'kitsu/assets/img/onboarding/';
 import { connect } from 'react-redux';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 
 class WelcomeScreen extends React.Component {
   onPress = () => {
-    const { screenName, navigation, accounts } = this.props;
+    const { screenName, componentId, accounts } = this.props;
     if (screenName === null) {
       if (!accounts) {
         // probably user signup
-        navigation.navigate('FavoritesScreen');
+        Navigation.setStackRoot(componentId, {
+          component: { name: Screens.ONBOARDING_FAVORITES_SCREEN },
+        });
       } else if (accounts.kitsu && accounts.aozora) {
         // if there is aozora, we have conflict.
-        navigation.navigate('SelectAccountScreen');
+        Navigation.setStackRoot(componentId, {
+          component: { name: Screens.ONBOARDING_SELECT_ACCOUNT },
+        });
       } else {
-        navigation.navigate('CreateAccountScreen');
+        Navigation.setStackRoot(componentId, {
+          component: { name: Screens.ONBOARDING_CREATE_ACCOUNT },
+        });
       }
     } else {
-      resetAction = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: screenName })],
-        key: null,
-      });
-      navigation.dispatch(resetAction);
+      // TODO: Re-enable this after testing
+      switch (screenName) {
+        case 'FavoritesScreen':
+          Navigation.setStackRoot(componentId, {
+            component: { name: Screens.ONBOARDING_FAVORITES_SCREEN },
+          });
+          break;
+        case 'RatingSystemScreen':
+          Navigation.setStackRoot(componentId, {
+            component: { name: Screens.ONBOARDING_RATING_SYSTEM },
+          });
+          break;
+        case 'CreateAccountScreen':
+        default:
+          Navigation.setStackRoot(componentId, {
+            component: { name: Screens.ONBOARDING_CREATE_ACCOUNT },
+          });
+          break;
+      }
     }
   };
   render() {
@@ -43,6 +64,7 @@ class WelcomeScreen extends React.Component {
 
     return (
       <View style={commonStyles.container}>
+        <OnboardingHeader />
         <ScrollView
           style={styles.contentWrapper}
           contentContainerStyle={{ flexGrow: 1 }}

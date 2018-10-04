@@ -3,14 +3,23 @@ import { View, Text, ActivityIndicator, Keyboard, Platform } from 'react-native'
 import { connect } from 'react-redux';
 import { kitsuConfig } from 'kitsu/config/env/';
 import { commonStyles } from 'kitsu/common/styles';
-import { navigationOptions } from 'kitsu/screens/Sidebar/common';
+import { SidebarHeader } from 'kitsu/screens/Sidebar/common';
 import { WebComponent } from 'kitsu/utils/components';
+import { Navigation } from 'react-native-navigation';
+import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 
-class Board extends React.Component {
-  static navigationOptions = ({ navigation }) => (
-    navigationOptions(navigation, navigation.state.params.title)
-  );
+export class CannyBoard extends React.Component {
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+    token: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    title: PropTypes.string,
+  };
+
+  static defaultProps = {
+    title: 'Canny',
+  }
 
   state = {
     token: null,
@@ -30,13 +39,13 @@ class Board extends React.Component {
   }
 
   getCannySsoToken = async () => {
-    const accessToken = this.props.navigation.state.params.token;
+    const { token } = this.props;
     try {
       const response = await fetch('https://kitsu.io/api/edge/sso/canny', {
         method: 'GET',
         headers: {
           Accept: 'application/vnd.api+json',
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const json = await response.json();
@@ -72,13 +81,17 @@ class Board extends React.Component {
 
   render() {
     const { ssoToken, loading, keyboardHeight } = this.state;
-    const { navigation } = this.props;
-    const boardToken = kitsuConfig.cannyBoardTokens[navigation.state.params.type];
+    const { componentId, title, type } = this.props;
+    const boardToken = kitsuConfig.cannyBoardTokens[type];
     const uri = `https://webview.canny.io?boardToken=${boardToken}&ssoToken=${ssoToken}`;
     const adjustProperty = Platform.OS === 'ios' ? 'paddingBottom' : 'marginBottom';
 
     return (
       <View style={styles.wrapper}>
+        <SidebarHeader
+          headerTitle={title}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
         {loading
           ? <View style={[commonStyles.centerCenter, { flex: 1 }]}>
             <ActivityIndicator />
@@ -96,9 +109,3 @@ class Board extends React.Component {
     );
   }
 }
-
-const mapStateToProps = ({ auth }) => ({
-  accessToken: auth.tokens.access_token,
-});
-
-export const CannyBoard = connect(mapStateToProps, {})(Board);

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FlatList, Linking } from 'react-native';
+import { FlatList, Linking, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
@@ -14,9 +14,10 @@ import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { upperFirst, isNull, isEmpty } from 'lodash';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { STREAMING_SERVICES } from 'kitsu/constants/app';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { SummaryProgress } from './progress';
 import { styles } from './styles';
-
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -24,7 +25,7 @@ class SummaryComponent extends PureComponent {
     currentUser: PropTypes.object.isRequired,
     media: PropTypes.object.isRequired,
     mediaReactions: PropTypes.array,
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
     setActiveTab: PropTypes.func.isRequired,
     loadingAdditional: PropTypes.bool,
     libraryEntry: PropTypes.object,
@@ -80,17 +81,34 @@ class SummaryComponent extends PureComponent {
   }
 
   navigateTo = scene => this.props.setActiveTab(scene);
-  navigateToPost = props => this.props.navigation.navigate('PostDetails', props);
-  navigateToUserProfile = userId => this.props.navigation.navigate('ProfilePages', { userId });
-  navigateToMedia = (mediaType, mediaId) => (
-    this.props.navigation.navigate('MediaPages', { mediaId, mediaType, })
-  );
-  navigateToUnitPage = (unit, media) => {
-    this.props.navigation.navigate('UnitDetails', {
-      unit,
-      media,
-    });
-  }
+
+  navigateToPost = props => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.FEED_POST_DETAILS,
+      passProps: props,
+    },
+  });
+
+  navigateToUserProfile = userId => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.PROFILE_PAGE,
+      passProps: { userId },
+    },
+  });
+
+  navigateToMedia = (mediaType, mediaId) => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.MEDIA_PAGE,
+      passProps: { mediaId, mediaType },
+    },
+  });
+
+  navigateToUnitPage = (unit, media) => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.MEDIA_UNIT_DETAIL,
+      passProps: { unit, media },
+    },
+  });
 
   renderItem = ({ item }) => (
     <Post
@@ -98,7 +116,7 @@ class SummaryComponent extends PureComponent {
       onPostPress={this.navigateToPost}
       currentUser={this.props.currentUser}
       navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
-      navigation={this.props.navigation}
+      componentId={this.props.componentId}
     />
   );
 
@@ -269,7 +287,9 @@ class SummaryComponent extends PureComponent {
         /> */}
 
         {/* Feed */}
-        { !loading &&
+        { loading ?
+          <ActivityIndicator color="white" style={styles.loading} />
+          :
           <FlatList
             data={feed || []}
             keyExtractor={item => `${item.id}`}

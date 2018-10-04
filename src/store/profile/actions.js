@@ -19,7 +19,7 @@ export const fetchProfile = userId => async (dispatch) => {
     });
     dispatch({ type: types.FETCH_USER_SUCCESS, payload: user[0] });
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     dispatch({
       type: types.FETCH_USER_FAIL,
       payload: 'Failed to load user',
@@ -46,7 +46,7 @@ export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     dispatch({
       type: types.FETCH_USER_FEED_FAIL,
       payload: {
@@ -95,7 +95,7 @@ export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIn
       },
     });
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     dispatch({
       type: types.FETCH_USER_FAVORITES_FAIL,
       payload: {
@@ -254,7 +254,7 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
       userId: options.userId,
     });
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     dispatch({
       error,
       type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
@@ -304,7 +304,7 @@ export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
       userId: options.userId,
     });
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     dispatch({
       error,
       type: types.FETCH_USER_LIBRARY_FAIL,
@@ -358,7 +358,7 @@ export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 
       if (aaaa.length === 1) dispatch({ type: types.FETCH_NETWORK_FOLLOW, payload: item[type].id });
     });
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     dispatch({
       type: types.FETCH_USER_NETWORK_FAIL,
       payload: 'Failed to load user',

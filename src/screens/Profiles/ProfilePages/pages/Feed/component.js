@@ -8,11 +8,14 @@ import { Post } from 'kitsu/screens/Feed/components/Post';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { View, FlatList } from 'react-native';
+import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Navigation } from 'react-native-navigation';
+
 
 class FeedComponent extends PureComponent {
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     userId: PropTypes.string.isRequired,
-    navigation: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object,
   }
@@ -32,7 +35,12 @@ class FeedComponent extends PureComponent {
   }
 
   navigateToPost = (props) => {
-    this.props.navigation.navigate('PostDetails', props);
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: props,
+      },
+    });
   }
 
   fetchFeed = async () => {
@@ -67,7 +75,7 @@ class FeedComponent extends PureComponent {
 
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
-      this.props.navigation.navigate('CreatePost', {
+      NavigationActions.showCreatePostModal({
         onPostCreated: this.fetchFeed,
         targetUser: this.props.profile,
       });
@@ -79,7 +87,7 @@ class FeedComponent extends PureComponent {
       post={item}
       onPostPress={this.navigateToPost}
       currentUser={this.props.currentUser}
-      navigation={this.props.navigation}
+      componentId={this.props.componentId}
     />
   );
 
