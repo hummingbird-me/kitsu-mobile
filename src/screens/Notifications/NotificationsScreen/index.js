@@ -46,6 +46,11 @@ class NotificationsScreen extends PureComponent {
     pushNotificationEnabled: PropTypes.bool.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
+  }
+
   state = {
     unreadCount: 0,
     loadingOneSignalNotification: false,
@@ -73,14 +78,20 @@ class NotificationsScreen extends PureComponent {
     });
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     // for once, and listener will invoke afterwards.
     OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
 
     // Setup notification intervals
     this.fetchNotifications();
     this.notificationInterval = setInterval(this.fetchNotifications, NOTIFICATION_FETCH_INTERVAL);
-  };
+  }
+
+  // eslint-disable-next-line
+  componentDidAppear() {
+    // Everytime user shows notifications tab, clear them
+    OneSignal.clearOneSignalNotifications();
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.notifications, nextProps.notifications)) {
@@ -108,6 +119,12 @@ class NotificationsScreen extends PureComponent {
 
   onReceived = (notification) => {
     console.log('Notification received: ', notification);
+
+    // If we got a notification while user is in the app then dismiss it
+    if (notification && notification.isAppInFocus && notification.androidNotificationId) {
+      OneSignal.cancelNotification(notification.androidNotificationId);
+    }
+
     this.updateNotificationCount();
   }
 
