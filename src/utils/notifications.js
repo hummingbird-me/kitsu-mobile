@@ -237,31 +237,11 @@ export const handleNotificationPress = async (componentId, notification) => {
       break;
     case 'post':
       if (subject) {
-        Navigation.push(componentId, {
-          component: {
-            name: Screens.FEED_POST_DETAILS,
-            passProps: {
-              post: subject,
-              comments: [],
-              like: null,
-              currentUser,
-            },
-          },
-        });
+        navigateToPostDetails(componentId, subject);
       } else { // should be a "mention"
         const post = await fetchPostFromActivity(activity);
         if (post) {
-          Navigation.push(componentId, {
-            component: {
-              name: Screens.FEED_POST_DETAILS,
-              passProps: {
-                post,
-                comments: [],
-                like: null,
-                currentUser,
-              },
-            },
-          });
+          navigateToPostDetails(componentId, post);
         }
       }
       break;
@@ -269,17 +249,7 @@ export const handleNotificationPress = async (componentId, notification) => {
     case 'comment_like':
     case 'comment':
       if (target.length !== 0) {
-        Navigation.push(componentId, {
-          component: {
-            name: Screens.FEED_POST_DETAILS,
-            passProps: {
-              post: target[0],
-              comments: [],
-              like: null,
-              currentUser,
-            },
-          },
-        });
+        navigateToPostDetails(componentId, target[0]);
       }
       break;
     case 'aired':
