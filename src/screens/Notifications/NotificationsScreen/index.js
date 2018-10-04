@@ -24,7 +24,7 @@ import { Screens } from 'kitsu/navigation';
 import store from 'kitsu/store/config';
 import * as types from 'kitsu/store/types';
 import { isEqual, isEmpty } from 'lodash';
-import { parseNotificationData, handleNotificationPress } from 'kitsu/utils/notifications';
+import { parseNotificationData, handleNotificationPress, handleOneSignalNotificationData } from 'kitsu/utils/notifications';
 import { EventBus } from 'kitsu/utils/eventBus';
 import { NotificationHeader } from 'kitsu/screens/Notifications/NotificationHeader';
 import { styles } from './styles';
@@ -48,6 +48,7 @@ class NotificationsScreen extends PureComponent {
 
   state = {
     unreadCount: 0,
+    loadingOneSignalNotification: false,
   };
 
   componentWillMount() {
@@ -111,7 +112,7 @@ class NotificationsScreen extends PureComponent {
     this.updateNotificationCount();
   }
 
-  onOpened = (openResult) => {
+  onOpened = async (openResult) => {
     console.group('Opened Notification');
     console.log('Notification', openResult.notification);
     console.log('Message: ', openResult.notification.payload.body);
@@ -120,6 +121,9 @@ class NotificationsScreen extends PureComponent {
     console.log('openResult: ', openResult);
     console.groupEnd();
 
+    const data = openResult.notification.payload.additionalData;
+    if (!data) return;
+
     // Show notification tab
     // TODO: Need a way to make sure that users who are not logged in don't get notifications
     Navigation.mergeOptions(Screens.BOTTOM_TABS, {
@@ -127,6 +131,10 @@ class NotificationsScreen extends PureComponent {
         currentTabId: Screens.NOTIFICATION,
       },
     });
+
+    this.setState({ loadingOneSignalNotification: true });
+    await handleOneSignalNotificationData(this.props.componentId, data);
+    this.setState({ loadingOneSignalNotification: false });
   }
 
   /**
@@ -147,38 +155,6 @@ class NotificationsScreen extends PureComponent {
     this.updateNotificationCount();
   };
 
-  /**
-   * Fetches media reaction.
-   * @param {number} mediaId Media ID of notification target ID.
-   * @memberof NotificationsScreen
-   */
-  // TODO: temporary request to fetch mediareactions & to navigate corresponding
-  // media screen. (since we don't have mediareactions screen right now)
-  fetchMediaReactions = async mediaId =>
-    Kitsu.find('mediaReactions', mediaId, {
-      include: 'user,anime,manga',
-    });
-
-  /**
-   * Fetches post by extracting postId from activity foreignId.
-   * Created for fetching mentions in a hacky way.
-   * @param {object} activity Activity object from notifications
-   * @returns {object} post
-   * @memberof NotificationsScreen
-   */
-  fetchPost = async (activity) => {
-    if (!activity.foreignId) return null;
-    const postId = activity.foreignId.split(':')[1];
-    let post;
-    try {
-      post = await Kitsu.find('posts', postId, {
-        include: 'user,targetUser,targetGroup,media,uploads',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return post;
-  };
 
   /**
    * Fetches notifications and immediately marks them as read.
@@ -293,7 +269,7 @@ class NotificationsScreen extends PureComponent {
 
   render() {
     const { notifications, loadingNotifications, markingRead } = this.props;
-    const { unreadCount } = this.state;
+    const { unreadCount, loadingOneSignalNotification } = this.state;
     return (
       <View style={styles.container}>
         <NotificationHeader
@@ -309,7 +285,7 @@ class NotificationsScreen extends PureComponent {
           keyExtractor={item => `${item.id}`}
           ItemSeparatorComponent={this.renderItemSeperator}
           initialNumToRender={10}
-          refreshing={loadingNotifications}
+          refreshing={loadingNotifications || loadingOneSignalNotification}
           onRefresh={this.fetchNotifications}
           onMomentumScrollBegin={() => {
             // Prevent iOS calling onendreached when list is loaded.

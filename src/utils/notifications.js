@@ -6,6 +6,7 @@ import { Screens } from 'kitsu/navigation';
 import { markNotifications } from 'kitsu/store/feed/actions';
 import { connect } from 'react-redux';
 import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
+import { Kitsu } from 'kitsu/config/api';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -114,6 +115,53 @@ export const parseNotificationData = (activities, currentUserId) => {
   return notificationData;
 };
 
+/**
+ * Handle notifications opened via OneSignal.
+ *
+ * @param {*} componentId The component id.
+ * @param {*} data The notification data.
+ */
+export const handleOneSignalNotificationData = async (componentId, data) => {
+  if (!data) return;
+
+  const { type, id } = data;
+  const currentUser = store.getState().user.currentUser;
+
+  switch (type) {
+    case 'post-likes': {
+      const postLike = await fetchPostLike(id);
+      if (postLike && postLike.post) {
+        navigateToPostDetails(componentId, postLike.post);
+      }
+      break;
+    }
+    case 'posts': {
+      const post = await fetchPost(id);
+      if (post) {
+        navigateToPostDetails(componentId, post);
+      }
+      break;
+    }
+    case 'comment-likes': {
+      const commentLike = await fetchCommentLike(id);
+      if (commentLike && commentLike.comment) {
+        navigateToPostDetails(componentId, commentLike.comment);
+      }
+      break;
+    }
+    case 'comments': {
+      const comment = await fetchComment(id);
+      if (comment) {
+        navigateToPostDetails(componentId, comment);
+      }
+      break;
+    }
+    default:
+      console.log('Unhandled notification: ', data);
+      break;
+  }
+};
+
 
 /**
  * Handle notification press event.
@@ -142,7 +190,7 @@ export const handleNotificationPress = async (componentId, notification) => {
       break;
     case 'vote':
       try {
-        const response = await this.fetchMediaReactions(target[0].id);
+        const response = await fetchMediaReactions(target[0].id);
         Navigation.push(componentId, {
           component: {
             name: Screens.MEDIA_PAGE,
@@ -170,7 +218,7 @@ export const handleNotificationPress = async (componentId, notification) => {
           },
         });
       } else { // should be a "mention"
-        const post = await this.fetchPost(activity);
+        const post = await fetchPostFromActivity(activity);
         if (post) {
           Navigation.push(componentId, {
             component: {
@@ -241,6 +289,13 @@ export const handleNotificationPress = async (componentId, notification) => {
   }
 };
 
+
+/**
+ * Add a NotificationHOC wrapper around a component
+ *
+ * @param {*} Component The component to add the wrapper around.
+ * @returns Wrapped Component.
+ */
 export const withNotifications = (Component) => {
   class NotificationHOC extends React.PureComponent {
     constructor(props) {
@@ -275,4 +330,128 @@ export const withNotifications = (Component) => {
   };
 
   return connect(mapStateToProps)(NotificationHOC);
+};
+
+const navigateToPostDetails = (componentId, post) => {
+  const currentUser = store.getState().user.currentUser;
+
+  if (post) {
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: {
+          post,
+          comments: [],
+          like: null,
+          currentUser,
+        },
+      },
+    });
+  }
+};
+
+
+/**
+ * Fetches media reaction.
+ * @param {number} mediaId Media ID of notification target ID.
+ */
+// TODO: temporary request to fetch mediareactions & to navigate corresponding
+// media screen. (since we don't have mediareactions screen right now)
+const fetchMediaReactions = async mediaId =>
+  Kitsu.find('mediaReactions', mediaId, {
+    include: 'user,anime,manga',
+  });
+
+/**
+* Fetches post by extracting postId from activity foreignId.
+* Created for fetching mentions in a hacky way.
+* @param {object} activity Activity object from notifications
+* @returns {object} post
+*/
+const fetchPostFromActivity = async (activity) => {
+  if (!activity.foreignId) return null;
+  const postId = activity.foreignId.split(':')[1];
+  return fetchPost(postId);
+};
+
+/**
+ * Fetches post by the given id.
+ * @param {any} postId The id of the post
+ * @returns {object} post
+ */
+const fetchPost = async (postId) => {
+  if (!postId) return null;
+
+  try {
+    const post = await Kitsu.find('posts', postId, {
+      include: 'user,targetUser,targetGroup,media,uploads,spoiledUnit',
+    });
+    return post;
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
+};
+
+
+/**
+ * Fetches the post like by the given id
+ *
+ * @param {*} postLikeId The id of the post like
+ * @returns {object} postLike
+ */
+const fetchPostLike = async (postLikeId) => {
+  if (!postLikeId) return null;
+
+  try {
+    const postLike = await Kitsu.find('postLikes', postLikeId, {
+      include: 'post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
+    });
+    return postLike;
+  } catch (e) {
+    console.log(e);
+  }
+
+  return null;
+};
+
+/**
+ * Fetches comment by the given id.
+ * @param {any} commentId The id of the comment
+ * @returns {object} comment
+ */
+const fetchComment = async (commentId) => {
+  if (!commentId) return null;
+
+  try {
+    const comment = await Kitsu.find('comments', commentId, {
+      include: 'user,uploads',
+    });
+    return comment;
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
+};
+
+
+/**
+ * Fetches the comment like by the given id
+ *
+ * @param {*} commentLikeId The id of the comment like
+ * @returns {object} commentLike
+ */
+const fetchCommentLike = async (commentLikeId) => {
+  if (!commentLikeId) return null;
+
+  try {
+    const commentLike = await Kitsu.find('commentLikes', commentLikeId, {
+      include: 'comment,comment.user,comment.uploads',
+    });
+    return commentLike;
+  } catch (e) {
+    console.log(e);
+  }
+
+  return null;
 };
