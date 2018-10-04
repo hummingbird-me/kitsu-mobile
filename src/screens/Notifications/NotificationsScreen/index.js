@@ -53,7 +53,6 @@ class NotificationsScreen extends PureComponent {
 
   componentWillMount() {
     // Register all global app events here
-    OneSignal.inFocusDisplaying(2);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.addEventListener('registered', this.onPNRegistered);
     OneSignal.addEventListener('received', this.onReceived);
@@ -132,15 +131,20 @@ class NotificationsScreen extends PureComponent {
       },
     });
 
+    // Handle the one signal notification
     this.setState({ loadingOneSignalNotification: true });
     await handleOneSignalNotificationData(this.props.componentId, data);
     this.setState({ loadingOneSignalNotification: false });
+
+    // Fetch the actual notification
+    this.fetchNotifications();
   }
 
   /**
    * Marks all notifications as read, currently triggered from NotificationHeader.
    */
   onMarkAll = async () => {
+    OneSignal.clearOneSignalNotifications();
     await this.props.markAllNotificationsAsRead();
     this.updateNotificationCount();
   };

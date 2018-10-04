@@ -7,6 +7,7 @@ import { markNotifications } from 'kitsu/store/feed/actions';
 import { connect } from 'react-redux';
 import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
 import { Kitsu } from 'kitsu/config/api';
+import { isEmpty } from 'lodash';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -125,9 +126,20 @@ export const handleOneSignalNotificationData = async (componentId, data) => {
   if (!data) return;
 
   const { type, id } = data;
-  const currentUser = store.getState().user.currentUser;
 
   switch (type) {
+    case 'follows' : {
+      const user = await fetchFollower(id);
+      if (user) {
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.PROFILE_PAGE,
+            passProps: { userId: user.id },
+          },
+        });
+      }
+      break;
+    }
     case 'post-likes': {
       const postLike = await fetchPostLike(id);
       if (postLike && postLike.post) {
@@ -144,15 +156,34 @@ export const handleOneSignalNotificationData = async (componentId, data) => {
     }
     case 'comment-likes': {
       const commentLike = await fetchCommentLike(id);
-      if (commentLike && commentLike.comment) {
-        navigateToPostDetails(componentId, commentLike.comment);
+      const comment = commentLike && commentLike.comment;
+      if (comment) {
+        // If the comment isn't part of another comment then show the post
+        if (!comment.parent && comment.post) {
+          navigateToPostDetails(componentId, comment.post, [comment]);
+        } else if (comment.parent) {
+          // Otherwise show the main comment parent then the actual comment
+          navigateToPostDetails(componentId, comment.parent, [comment]);
+        } else {
+          // Otherwise just show the comment
+          navigateToPostDetails(componentId, comment);
+        }
       }
       break;
     }
     case 'comments': {
       const comment = await fetchComment(id);
       if (comment) {
-        navigateToPostDetails(componentId, comment);
+        // If the comment isn't part of another comment then show the post
+        if (!comment.parent && comment.post) {
+          navigateToPostDetails(componentId, comment.post, [comment]);
+        } else if (comment.parent) {
+          // Otherwise show the main comment parent then the actual comment
+          navigateToPostDetails(componentId, comment.parent, [comment]);
+        } else {
+          // Otherwise just show the comment
+          navigateToPostDetails(componentId, comment);
+        }
       }
       break;
     }
@@ -332,7 +363,7 @@ export const withNotifications = (Component) => {
   return connect(mapStateToProps)(NotificationHOC);
 };
 
-const navigateToPostDetails = (componentId, post) => {
+const navigateToPostDetails = (componentId, post, comments = []) => {
   const currentUser = store.getState().user.currentUser;
 
   if (post) {
@@ -341,7 +372,8 @@ const navigateToPostDetails = (componentId, post) => {
         name: Screens.FEED_POST_DETAILS,
         passProps: {
           post,
-          comments: [],
+          comments,
+          showLoadMoreComments: !isEmpty(comments),
           like: null,
           currentUser,
         },
@@ -425,7 +457,7 @@ const fetchComment = async (commentId) => {
 
   try {
     const comment = await Kitsu.find('comments', commentId, {
-      include: 'user,uploads',
+      include: 'user,uploads,parent,parent.user,parent.uploads,post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
     });
     return comment;
   } catch (e) {
@@ -446,12 +478,31 @@ const fetchCommentLike = async (commentLikeId) => {
 
   try {
     const commentLike = await Kitsu.find('commentLikes', commentLikeId, {
-      include: 'comment,comment.user,comment.uploads',
+      include: 'comment,comment.user,comment.uploads,comment.parent,comment.parent.user,comment.parent.uploads,comment.post,comment.post.user,comment.post.targetUser,comment.post.targetGroup,comment.post.media,comment.post.uploads,comment.post.spoiledUnit',
     });
     return commentLike;
   } catch (e) {
     console.log(e);
   }
 
+  return null;
+};
+
+/**
+ * Fetches a user from a follows id
+ *
+ * @param {*} followsId The follows id
+ * @returns {object} user
+ */
+const fetchFollower = async (followsId) => {
+  if (!followsId) return null;
+  try {
+    const follow = await Kitsu.find('follows', followsId, {
+      include: 'follower',
+    });
+    return follow && follow.follower;
+  } catch (e) {
+    console.log(e);
+  }
   return null;
 };

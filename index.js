@@ -1,6 +1,7 @@
 import { Navigation } from 'react-native-navigation';
 import { Sentry } from 'react-native-sentry';
 import { registerScreens, Layouts, defaultOptions } from 'kitsu/navigation';
+import OneSignal from 'react-native-onesignal';
 
 Sentry.config('https://068b9ab849bf4485beb4884adcc5be83:8c57373b9bb4410f99ebfd17878c739a@sentry.io/200469');
 
@@ -8,6 +9,9 @@ Sentry.config('https://068b9ab849bf4485beb4884adcc5be83:8c57373b9bb4410f99ebfd17
 if (!__DEV__) {
   Sentry.install();
 }
+
+// Set notification display
+OneSignal.inFocusDisplaying(2);
 
 console.disableYellowBox = true;
 
