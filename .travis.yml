@@ -53,6 +53,10 @@ matrix:
         - chmod +x ./android/gradlew
         - openssl aes-256-cbc -K $encrypted_70d456c9569f_key -iv $encrypted_70d456c9569f_iv -in ./android/app/releaseFiles.tar.enc -out ./android/app/releaseFiles.tar -d
         - tar xvf ./android/app/releaseFiles.tar -C ./android/app
+        
+        # Doing this because travis seemed to mess up when looking for the keystore file
+        - mkdir -p ./android/app/app
+        - tar xvf ./android/app/releaseFiles.tar -C ./android/app/app
         # - security delete-certificate -c "Apple Worldwide Developer Relations Certification Authority" # add this to resolve 'Could not install WWDR certificate'
       install:
         - yarn install
