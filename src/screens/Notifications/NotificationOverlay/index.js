@@ -18,14 +18,6 @@ class NotificationOverlayComponent extends PureComponent {
     dismissInAppNotification: PropTypes.func.isRequired,
   }
 
-  static options() {
-    return {
-      layout: {
-        backgroundColor: 'transparent',
-      },
-    };
-  }
-
   state = {
     opacity: new Animated.Value(0),
     yValue: new Animated.Value(-200),
