@@ -245,9 +245,14 @@ export const handleNotificationPress = async (componentId, notification) => {
         }
       }
       break;
+    case 'comment':
+      // Show the post & comment
+      if (target.length !== 0 && subject) {
+        navigateToPostDetails(componentId, target[0], [subject]);
+      }
+      break;
     case 'post_like':
     case 'comment_like':
-    case 'comment':
       if (target.length !== 0) {
         navigateToPostDetails(componentId, target[0]);
       }
