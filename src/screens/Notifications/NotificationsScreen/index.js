@@ -13,7 +13,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
-import { Kitsu } from 'kitsu/config/api';
 import {
   fetchNotifications,
   markNotifications,
@@ -31,8 +30,8 @@ import { styles } from './styles';
 
 export const NOTIFICATION_PRESSED_EVENT = 'notification_pressed_event';
 
-// Fetch notifications every 3 minutes
-export const NOTIFICATION_FETCH_INTERVAL = 3 * 60 * 1000;
+// Fetch notifications every 5 minutes
+export const NOTIFICATION_FETCH_INTERVAL = 5 * 60 * 1000;
 
 class NotificationsScreen extends PureComponent {
   static propTypes = {
@@ -76,6 +75,9 @@ class NotificationsScreen extends PureComponent {
 
       this.onNotificationPressed(notification);
     });
+
+    // Listen to tab changes
+    Navigation.events().registerBottomTabSelectedListener(this.onTabChange);
   }
 
   componentDidMount() {
@@ -106,6 +108,13 @@ class NotificationsScreen extends PureComponent {
     OneSignal.removeEventListener('opened', this.onOpened);
     this.unsubscribeNotificationPress();
     clearInterval(this.notificationInterval);
+  }
+
+  onTabChange = ({ unselectedTabIndex }) => {
+    // If the notification tab was unselected then reset the nav stack
+    if (unselectedTabIndex === 3) {
+      Navigation.popToRoot(this.props.componentId);
+    }
   }
 
   onIds = (device) => {
