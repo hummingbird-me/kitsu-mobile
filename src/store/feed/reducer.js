@@ -128,7 +128,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         notifications,
-        loadingNotifications: true,
+        loadingNotifications: false,
         notificationsUnseen: action.meta.unseenCount,
         notificationsUnread: action.meta.unreadCount,
         inAppNotification: {
@@ -227,9 +227,11 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         ...state,
         markingRead: false,
         notificationsUnread: 0,
+        notificationsUnseen: 0,
         notifications: state.notifications.map(v => ({
           ...v,
           isRead: true,
+          isSeen: true,
         })),
       };
     case types.MARK_ALL_AS_READ_FAIL:

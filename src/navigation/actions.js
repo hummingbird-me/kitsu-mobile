@@ -38,7 +38,6 @@ export async function showMainApp(initialTab = 'Feed') {
 
 /**
  * Show the onboarding screen
- *
  */
 export function showOnboarding() {
   Navigation.setRoot(Layouts.ONBOARDING);
@@ -63,6 +62,12 @@ export function showCreatePostModal(props) {
   });
 }
 
+/**
+ * Show the image lightbox.
+ *
+ * @param {[string]} images An array of string urls.
+ * @param {number} [initialImageIndex=0] the index of the initial image to show.
+ */
 export function showLightBox(images, initialImageIndex = 0) {
   Navigation.showOverlay({
     component: {

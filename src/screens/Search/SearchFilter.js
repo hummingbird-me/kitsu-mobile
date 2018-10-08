@@ -210,7 +210,7 @@ class SearchFilter extends Component {
               passProps: {
                 active: 'anime',
                 title: header,
-                key: param,
+                filterKey: param,
                 lengthRaw: this.state.lengthRaw,
                 onPressFilterButton: (data) => {
                   Navigation.popTo(componentId);

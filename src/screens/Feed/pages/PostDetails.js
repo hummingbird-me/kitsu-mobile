@@ -6,6 +6,8 @@ import {
   StatusBar,
   ScrollView,
   Platform,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
@@ -40,6 +42,7 @@ export default class PostDetails extends PureComponent {
     like: PropTypes.object,
     isLiked: PropTypes.bool,
     syncComments: PropTypes.func,
+    showLoadMoreComments: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -50,6 +53,7 @@ export default class PostDetails extends PureComponent {
     like: null,
     isLiked: false,
     syncComments: null,
+    showLoadMoreComments: false,
   };
 
   static options() {
@@ -87,6 +91,8 @@ export default class PostDetails extends PureComponent {
       isReplying: false,
       isPostingComment: false,
       embedUrl: null,
+      showLoadMoreComments: props.showLoadMoreComments,
+      isLoadingComments: false,
     };
   }
 
@@ -94,6 +100,14 @@ export default class PostDetails extends PureComponent {
     const { comments, like } = this.props;
     if (!comments || comments.length === 0) { this.fetchComments(); }
     if (!like) { this.fetchLikes(); }
+  }
+
+  onViewAllComment = () => {
+    if (this.state.isLoadingComments) return;
+
+    this.setState({ comments: [], showLoadMoreComments: false }, () => {
+      this.fetchComments();
+    });
   }
 
   onCommentChanged = comment => this.setState({ comment });
@@ -243,14 +257,27 @@ export default class PostDetails extends PureComponent {
   };
 
   fetchComments = async (requestOptions = {}) => {
+    this.setState({ isLoadingComments: true });
     try {
       const { post } = this.props;
 
-      const comments = await Kitsu.findAll('comments', {
-        filter: {
+      let filter = {};
+
+      // If the main post object is actually a post then we need to get the first level comments
+      if (post.type === 'posts') {
+        filter = {
           postId: post.id,
           parentId: '_none',
-        },
+        };
+      // If however they passed us a comment to be used as the main, then we need to fetch the second level comments
+      } else if (post.type === 'comments') {
+        filter = {
+          parentId: post.id,
+        };
+      }
+
+      const comments = await Kitsu.findAll('comments', {
+        filter,
         fields: {
           users: 'slug,avatar,name',
         },
@@ -262,8 +289,9 @@ export default class PostDetails extends PureComponent {
       const processed = preprocessFeedPosts(comments);
       const uniqueComments = uniqBy([...processed.reverse(), ...this.state.comments], 'id');
 
-      this.setState({ comments: uniqueComments });
+      this.setState({ comments: uniqueComments, isLoadingComments: false });
     } catch (err) {
+      this.setState({ isLoadingComments: false });
       console.log('Error fetching comments: ', err);
     }
   };
@@ -301,12 +329,14 @@ export default class PostDetails extends PureComponent {
   keyExtractor = item => `${item.id}`;
 
   navigateToUserProfile = (userId) => {
-    if (userId) Navigation.push(this.props.componentId, {
-      component: {
-        name: Screens.PROFILE_PAGE,
-        passProps: { userId },
-      },
-    });
+    if (userId) {
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: Screens.PROFILE_PAGE,
+          passProps: { userId },
+        },
+      });
+    }
   };
 
   renderItem = ({ item }) => {
@@ -328,7 +358,7 @@ export default class PostDetails extends PureComponent {
   render() {
     const { currentUser, post, componentId } = this.props;
     const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
-        isPostingComment } = this.state;
+      isPostingComment, showLoadMoreComments, isLoadingComments } = this.state;
 
     const { id, updatedAt, content, embed, media, spoiledUnit, uploads } = post;
 
@@ -373,7 +403,22 @@ export default class PostDetails extends PureComponent {
             />
 
             <PostCommentsSection>
-              {comments.length === 0 && topLevelCommentsCount > 0 && <SceneLoader />}
+              {showLoadMoreComments &&
+                <TouchableOpacity
+                  style={{
+                    paddingHorizontal: 8,
+                    paddingBottom: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={this.onViewAllComment}
+                >
+                  <Text>View All Comments</Text>
+                </TouchableOpacity>
+              }
+              {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) && 
+                <SceneLoader />
+              }
               {comments.length > 0 && topLevelCommentsCount > comments.length && (
                 <CommentPagination
                   onPress={this.onPagination}

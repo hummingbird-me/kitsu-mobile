@@ -231,7 +231,7 @@ class FilterSub extends Component {
   }
 
   render() {
-    const { key, componentId, title, label } = this.props;
+    const { filterKey, componentId, title, label } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <NavigationHeader
@@ -240,9 +240,9 @@ class FilterSub extends Component {
         />
         <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
           <View style={{ flex: 1 }}>
-            {key === 'length' ? this.renderLength() : this.renderSort()}
+            {filterKey === 'length' ? this.renderLength() : this.renderSort()}
           </View>
-          {key === 'length' && this.renderFooter()}
+          {filterKey === 'length' && this.renderFooter()}
         </ScrollView>
       </View>
     );

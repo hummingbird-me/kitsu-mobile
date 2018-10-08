@@ -195,13 +195,12 @@ class Unit extends PureComponent {
     // Injected javascript
     const selectedVideoData = (selectedVideo && selectedVideo.embedData) || {};
     const injectedJavaScript = `window.initializeHulu('${selectedVideoData.eid}', '${selectedVideoData.network}');`;
-    const type = selectedUnit.type === 'episodes' ? 'Episodes' : 'Chapters';
 
     return (
       <View style={styles.container}>
         <CustomHeader
           leftButtonAction={() => Navigation.pop(componentId)}
-          leftButtonTitle={`Back to ${type}`}
+          leftButtonTitle="Back"
           backgroundColor={colors.listBackPurple}
         />
         <ScrollView style={styles.container}>
