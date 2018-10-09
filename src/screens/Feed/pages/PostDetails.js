@@ -81,12 +81,6 @@ export default class PostDetails extends PureComponent {
       like,
       isLiked,
       postLikesCount: postLikes,
-      taggedMedia: {
-        media: {
-          canonicalTitle: 'Made in Abyss',
-        },
-        episode: 1,
-      },
       isLoadingNextPage: false,
       isReplying: false,
       isPostingComment: false,

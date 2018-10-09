@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
 import { Kitsu } from 'kitsu/config/api';
 import { isEmpty } from 'lodash';
+import { fetchPost, fetchComment } from './feed';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -381,25 +382,6 @@ const fetchPostFromActivity = async (activity) => {
   return fetchPost(postId);
 };
 
-/**
- * Fetches post by the given id.
- * @param {any} postId The id of the post
- * @returns {object} post
- */
-const fetchPost = async (postId) => {
-  if (!postId) return null;
-
-  try {
-    const post = await Kitsu.find('posts', postId, {
-      include: 'user,targetUser,targetGroup,media,uploads,spoiledUnit',
-    });
-    return post;
-  } catch (e) {
-    console.log(e);
-  }
-  return null;
-};
-
 
 /**
  * Fetches the post like by the given id
@@ -421,26 +403,6 @@ const fetchPostLike = async (postLikeId) => {
 
   return null;
 };
-
-/**
- * Fetches comment by the given id.
- * @param {any} commentId The id of the comment
- * @returns {object} comment
- */
-const fetchComment = async (commentId) => {
-  if (!commentId) return null;
-
-  try {
-    const comment = await Kitsu.find('comments', commentId, {
-      include: 'user,uploads,parent,parent.user,parent.uploads,post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
-    });
-    return comment;
-  } catch (e) {
-    console.log(e);
-  }
-  return null;
-};
-
 
 /**
  * Fetches the comment like by the given id
