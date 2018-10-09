@@ -527,8 +527,6 @@ class QuickUpdate extends Component {
       <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          {/* Dummy View, helps with layout to center text */}
-          <View style={styles.spacer} />
           <Text style={styles.headerText}>Quick Update</Text>
         </Animated.View>
         <View style={styles.loadingWrapper}>
@@ -558,8 +556,6 @@ class QuickUpdate extends Component {
       <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          {/* Dummy View, helps with layout to center text */}
-          <View style={styles.spacer} />
           <Text style={styles.headerText}>Quick Update</Text>
           <HeaderFilterButton
             mode={filterMode}
@@ -646,8 +642,6 @@ class QuickUpdate extends Component {
         >
           {/* Header */}
           <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-            {/* Dummy View, helps with layout to center text */}
-            {/* <View style={styles.spacer} /> */}
             <Text style={styles.headerText}>Quick Update</Text>
             <HeaderFilterButton
               mode={filterMode}
