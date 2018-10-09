@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
-import { defaultAvatar } from 'kitsu/constants/app';
+import { defaultAvatar, statusBarHeight } from 'kitsu/constants/app';
 import {
   PostFooter,
   PostSection,
@@ -365,7 +365,11 @@ export default class PostDetails extends PureComponent {
     return (
       <KeyboardAvoidingView
         behavior={Platform.select({ ios: 'padding', android: null })}
-        style={{ flex: 1, paddingTop: isX ? paddingX + 20 : 20, backgroundColor: '#FFFFFF' }}
+        style={{
+          flex: 1,
+          paddingTop: statusBarHeight + (isX ? paddingX : 0),
+          backgroundColor: '#FFFFFF',
+        }}
       >
         <StatusBar barStyle="dark-content" />
 

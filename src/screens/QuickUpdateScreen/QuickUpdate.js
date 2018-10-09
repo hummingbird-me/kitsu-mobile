@@ -524,18 +524,16 @@ class QuickUpdate extends Component {
   renderLoading = () => {
     const { headerOpacity } = this.state;
     return (
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          {/* Dummy View, helps with layout to center text */}
-          <View style={styles.spacer} />
           <Text style={styles.headerText}>Quick Update</Text>
         </Animated.View>
         <View style={styles.loadingWrapper}>
           <ActivityIndicator size="large" />
         </View>
       </View>
-    )
+    );
   };
 
   renderEmptyState = () => {
@@ -555,11 +553,9 @@ class QuickUpdate extends Component {
     const descriptionType = filterMode === 'all' ? 'anime or manga' : filterMode;
 
     return (
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          {/* Dummy View, helps with layout to center text */}
-          <View style={styles.spacer} />
           <Text style={styles.headerText}>Quick Update</Text>
           <HeaderFilterButton
             mode={filterMode}
@@ -594,7 +590,7 @@ class QuickUpdate extends Component {
           </View>
         </ScrollView>
       </View>
-    )
+    );
   }
 
   render() {
@@ -638,6 +634,7 @@ class QuickUpdate extends Component {
         <View style={styles.faderCover} />
 
         {/* Carousel */}
+        {/* This will automatically inset on iPhone X devices */}
         <ScrollView
           ref={(r) => { this.scrollView = r; }}
           style={styles.contentWrapper}
@@ -645,8 +642,6 @@ class QuickUpdate extends Component {
         >
           {/* Header */}
           <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-            {/* Dummy View, helps with layout to center text */}
-            <View style={styles.spacer} />
             <Text style={styles.headerText}>Quick Update</Text>
             <HeaderFilterButton
               mode={filterMode}

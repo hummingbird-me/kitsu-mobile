@@ -16,13 +16,14 @@ import { isEmpty } from 'lodash';
 import { FeedCache } from 'kitsu/utils/cache';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
+import { statusBarHeight } from 'kitsu/constants/app';
 import { feedStreams } from './feedStreams';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: listBackPurple,
-    paddingTop: isX ? paddingX : 0,
+    paddingTop: statusBarHeight + (isX ? paddingX : 0),
   },
   contentContainer: {
     flex: 1,
