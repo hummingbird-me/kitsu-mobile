@@ -7,7 +7,7 @@ import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboardi
 import * as types from 'kitsu/store/types';
 import { Sentry } from 'react-native-sentry';
 import { isEmpty } from 'lodash';
-import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
+import { fetchAlgoliaKeys, toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 
@@ -193,4 +193,5 @@ const loginUserFb = async (dispatch) => {
 export const logoutUser = () => (dispatch) => {
   LoginManager.logOut();
   dispatch({ type: types.LOGOUT_USER });
+  dispatch(toggleActivityIndicatorHOC(false));
 };

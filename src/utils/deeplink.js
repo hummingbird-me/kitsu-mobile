@@ -1,10 +1,14 @@
-import { Linking } from 'react-native';
+
+import * as React from 'react';
+import { View, Linking, ActivityIndicator } from 'react-native';
+import { connect } from 'react-redux';
 import DeepLinking from 'react-native-deep-linking';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { Kitsu } from 'kitsu/config/api';
 import store from 'kitsu/store/config';
 import { isEmpty } from 'lodash';
+import { toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
 import { fetchPost, fetchComment } from './feed';
 
 // The current visible component id
@@ -37,14 +41,13 @@ function handleUrl({ url }) {
  */
 export function registerDeepLinks() {
   // Make sure we have the id of the visible screen so that if user deep links we can push straight from that
-  Navigation.events().registerComponentDidAppearListener(({ componentId, componentName }) => {
-    // Screens that we can't deep link on
-    // This is because these don't have navigation stacks
-    const COMPONENT_BLACKLIST = [Screens.FEED_CREATE_POST, Screens.LIGHTBOX];
-
-    // If we come across them then push the deep link screens on the last visible components
-    if (!COMPONENT_BLACKLIST.includes(componentName)) {
-      visibleComponentId = componentId;
+  Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex }) => setDeepLinkTabIndex(selectedTabIndex));
+  
+  // Check to see if user is on a valid screen for deep linking
+  Navigation.events().registerComponentDidAppearListener(({ componentName }) => {
+    // If user views the auth screen then set the visible component id to null
+    if (componentName === Screens.AUTH_INTRO) {
+      visibleComponentId = null;
     }
   });
 
@@ -55,7 +58,7 @@ export function registerDeepLinks() {
 
   Linking.getInitialURL().then((url) => {
     if (url) {
-      Linking.openURL(url);
+      openURL(url);
     }
   }).catch(err => console.error('An error occurred', err));
 }
@@ -67,14 +70,28 @@ export function unregisterDeepLinks() {
   Linking.removeEventListener('url', handleUrl);
 }
 
+
+/**
+ * Set the `visibleComponentId` for deep linking.
+ * This is a hack method as we don't get a callback from `registerBottomTabSelectedListener` on initial launch.
+ * 
+ * @param {*} tabIndex The index of the tab
+ */
+export function setDeepLinkTabIndex(tabIndex) {
+  // We just listen to tab events and push accordingly
+  const tabs = [Screens.FEED, Screens.SEARCH, Screens.QUICK_UPDATE, Screens.NOTIFICATION, Screens.LIBRARY];
+  if (tabIndex < 0 || tabIndex >= tabs.length) {
+    visibleComponentId = null;
+  }
+
+  visibleComponentId = tabs[tabIndex];
+}
+
 /**
  * Register routes used for deep linking
  */
 function registerDeepLinkRoutes() {
-  // Handle both http and https
-  DeepLinking.addScheme('http://');
   DeepLinking.addScheme('https://');
-
   DeepLinking.addRoute('kitsu.io/anime/:id', response => handleMedia(response, 'anime'));
   DeepLinking.addRoute('kitsu.io/manga/:id', response => handleMedia(response, 'manga'));
   DeepLinking.addRoute('kitsu.io/users/:id', handleUser);
@@ -106,6 +123,7 @@ const handleMedia = async (response, type) => {
   // Fetch id if it's a slug
   if (!isNumeric(response.id)) {
     try {
+      store.dispatch(toggleActivityIndicatorHOC(true));
       const media = await Kitsu.findAll(type, {
         filter: {
           slug: response.id,
@@ -120,6 +138,8 @@ const handleMedia = async (response, type) => {
       console.log(`Failed to fetch ${type} with slug: ${response.id}`, e);
       mediaId = null;
       return;
+    } finally {
+      store.dispatch(toggleActivityIndicatorHOC(false));
     }
   }
 
@@ -148,6 +168,7 @@ const handleUser = async (response) => {
   // Fetch id if it's a slug
   if (!isNumeric(userId)) {
     try {
+      store.dispatch(toggleActivityIndicatorHOC(true));
       const user = await Kitsu.findAll('users', {
         filter: {
           slug: userId,
@@ -162,6 +183,8 @@ const handleUser = async (response) => {
       console.log(`Failed to fetch user with slug: ${userId}`, e);
       userId = null;
       return;
+    } finally {
+      store.dispatch(toggleActivityIndicatorHOC(false));
     }
   }
 
@@ -183,7 +206,9 @@ const handleUser = async (response) => {
 const handlePost = async (response) => {
   if (!visibleComponentId || !response.id || !isNumeric(response.id)) return;
 
+  store.dispatch(toggleActivityIndicatorHOC(true));
   const post = await fetchPost(response.id);
+  store.dispatch(toggleActivityIndicatorHOC(false));
   if (post) {
     navigateToPostDetails(post);
   }
@@ -197,7 +222,9 @@ const handlePost = async (response) => {
 const handleComment = async (response) => {
   if (!visibleComponentId || !response.id || !isNumeric(response.id)) return;
 
+  store.dispatch(toggleActivityIndicatorHOC(true));
   const comment = await fetchComment(response.id);
+  store.dispatch(toggleActivityIndicatorHOC(false));
   if (comment) {
     // If the comment isn't part of another comment then show the post
     if (!comment.parent && comment.post) {
@@ -229,4 +256,61 @@ const navigateToPostDetails = (post, comments = []) => {
       },
     });
   }
+};
+
+/**
+ * Add a ActivityIndicatorHOC wrapper around a component.
+ *
+ * @param {*} Component The component to add the wrapper around.
+ * @returns Wrapped Component.
+ */
+export const withActivityIndicatorHOC = (Component) => {
+  class ActivityIndicatorHOC extends React.PureComponent {
+    constructor(props) {
+      super(props);
+      this.isVisible = false;
+      Navigation.events().bindComponent(this);
+    }
+
+    componentDidAppear() {
+      this.isVisible = true;
+    }
+
+    componentDidDisappear() {
+      this.isVisible = false;
+    }
+
+    render() {
+      const { activityIndicatorHOCVisible, ...props } = this.props;
+      const showIndicator = this.isVisible && activityIndicatorHOCVisible;
+      return (
+        <View style={{ flex: 1 }}>
+          <Component {...props} />
+          {showIndicator &&
+            <View
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0,0,0,0.8)',
+              }}
+            >
+              <ActivityIndicator color="white" />
+            </View>
+          }
+        </View>
+      );
+    }
+  }
+
+  const mapStateToProps = ({ app }) => {
+    const { activityIndicatorHOCVisible } = app;
+    return { activityIndicatorHOCVisible };
+  };
+
+  return connect(mapStateToProps)(ActivityIndicatorHOC);
 };

@@ -9,6 +9,7 @@ const initialState = {
   dataSaver: false,
   pushNotificationEnabled: false,
   initialPage: 'Feed',
+  activityIndicatorHOCVisible: false,
 };
 
 export const appReducer = (state = initialState, action) => {
@@ -33,12 +34,18 @@ export const appReducer = (state = initialState, action) => {
         ...state,
         initialPage: action.payload || 'Feed',
       };
+    case types.ACTIVITY_INDICATOR_HOC:
+      return {
+        ...state,
+        activityIndicatorHOCVisible: !!action.payload,
+      };
     case REHYDRATE: {
       const payload = action && action.payload;
       const app = (payload && payload.app) || {};
       return {
         ...state,
         ...app,
+        activityIndicatorHOCVisible: false,
         rehydratedAt: new Date(),
       };
     }
