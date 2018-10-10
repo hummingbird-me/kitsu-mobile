@@ -14,6 +14,7 @@ import { startCase, isNil, isEmpty } from 'lodash';
 import { WebComponent } from 'kitsu/utils/components';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
+import { handleURL } from 'kitsu/utils/url';
 import { styles } from './styles';
 
 class EmbeddedContent extends PureComponent {
@@ -319,17 +320,13 @@ class EmbeddedContent extends PureComponent {
 
     const { maxWidth, disabled } = this.props;
 
-    const openUrl = (url) => {
-      Linking.openURL(url).catch(err => console.log(`An error occurred while opening url ${url}:`, err));
-    };
-
     const image = this.getImageUrl(embed);
     const isDescriptionEmpty = isEmpty(embed.description);
 
     return (
       <TouchableOpacity
         style={{ width: maxWidth }}
-        onPress={() => openUrl(embed.url)}
+        onPress={() => handleURL(embed.url)}
         disabled={disabled}
       >
         <Layout.RowWrap style={[styles.kitsuContent, isDescriptionEmpty && styles.center]}>

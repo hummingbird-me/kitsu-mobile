@@ -225,7 +225,7 @@ export class Comment extends PureComponent {
           <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
             {!isEmpty(content) &&
-              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, componentId)}>
+              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url)}>
                 <ViewMoreStyledText
                   cacheKey={`${id}-${updatedAt}`}
                   size="xsmall"

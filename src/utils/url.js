@@ -2,6 +2,8 @@ import { Linking } from 'react-native';
 import { isEmpty } from 'lodash';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 import { Navigation } from 'react-native-navigation';
+import { DeepLinking } from 'react-native-deep-linking';
+import { openUrl } from './deeplink';
 
 /**
  * Check whether a url is a kitsu url.
@@ -75,23 +77,6 @@ export function extractUrls(text) {
 }
 
 /**
- * Open the given url in `Linking`.
- * Checks to see if the url is supported by an app before opening it.
- *
- * @param {string} url The url to open
- */
-async function openUrl(url) {
-  try {
-    const supported = await Linking.canOpenURL(url);
-    if (supported) {
-      Linking.openURL(url);
-    }
-  } catch (e) {
-    console.log(`Error handling ${url}: ${e}`);
-  }
-}
-
-/**
  * Extract protocol, host, hostname, port, pathname, search and hash from a given URL.
  * Note: URL must not be relative or this function will return null.
  *
@@ -124,20 +109,13 @@ export function parseURL(url) {
 }
 
 /**
- * Checks to see if `url` belongs to Kitsu.
- * If so then it will navigate to the corresponding page in the app
- * Otherwise it will pass it to `Linking`
+ * Checks to see if a url is an image.
+ * If not then it passes it off to deep linking.
  *
  * @param {string} url The url to handle.
- * @param {any} componentId The navigation component Id.
  */
-export async function handleURL(url, componentId) {
-  // Get url information
-  const info = parseURL(url);
-  if (!info) {
-    openUrl(url);
-    return;
-  }
+export async function handleURL(url) {
+  if (!url) return;
 
   // Check if it's an image url
   if (isImageUrl(url)) {
@@ -145,55 +123,6 @@ export async function handleURL(url, componentId) {
     return;
   }
 
-  const { hostname, pathname } = info;
-  const paths = pathname.split('/').slice(1);
-
-  // If it's not a kitsu url then we open it
-  if (!hostname.toLowerCase().includes('kitsu') || paths.length < 2) {
-    openUrl(url);
-    return;
-  }
-
-  let params = null;
-
-  switch (paths[0]) {
-    case 'users':
-      if (/^\d+$/.test(paths[1])) {
-        params = {
-          screen: Screens.PROFILE_PAGE,
-          passProps: { userId: parseInt(paths[1], 10) },
-        };
-      }
-      break;
-    case 'anime': {
-      // If we have an id (i.e a number)
-      if (/^\d+$/.test(paths[1])) {
-        params = {
-          screen: Screens.MEDIA_PAGE,
-          passProps: { mediaId: parseInt(paths[1], 10), mediaType: 'anime' },
-        };
-      }
-      break;
-    }
-    case 'manga': {
-      // If we have an id (i.e a number)
-      if (/^\d+$/.test(paths[1])) {
-        params = {
-          screen: Screens.MEDIA_PAGE,
-          passProps: { mediaId: parseInt(paths[1], 10), mediaType: 'manga' },
-        };
-      }
-      break;
-    }
-    // TODO: Handle posts and comments
-    default:
-      openUrl(url);
-      break;
-  }
-
-  if (params && componentId) {
-    Navigation.push(componentId, {
-      component: { ...params },
-    });
-  }
+  // Pass the url to deep linking
+  openUrl(url);
 }

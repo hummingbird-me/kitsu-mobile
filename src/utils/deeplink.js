@@ -11,6 +11,28 @@ import { fetchPost, fetchComment } from './feed';
 let visibleComponentId = null;
 
 /**
+ * Open the url passed by `Linking`
+ * Checks to see if the url is supported by an app before opening it.
+ *
+ * @param { string } url The url to open
+ */
+export async function openUrl(url) {
+  try {
+    const supported = await Linking.canOpenURL(url);
+    // Open url with `DeepLinking` but if that fails then fall back to `Linking`
+    if (supported && !DeepLinking.evaluateUrl(url)) {
+      Linking.openURL(url);
+    }
+  } catch (e) {
+    console.log(`Error handling ${url}: ${e}`);
+  }
+}
+
+function handleUrl({ url }) {
+  openUrl(url);
+}
+
+/**
  * Register deeplinking event listeners
  */
 export function registerDeepLinks() {
@@ -36,8 +58,6 @@ export function registerDeepLinks() {
       Linking.openURL(url);
     }
   }).catch(err => console.error('An error occurred', err));
-
-  setTimeout(() => handleUrl({ url: 'https://kitsu.io/posts/8959762' }), 5000);
 }
 
 /**
@@ -61,25 +81,6 @@ function registerDeepLinkRoutes() {
   DeepLinking.addRoute('kitsu.io/posts/:id', handlePost);
   DeepLinking.addRoute('kitsu.io/comments/:id', handleComment);
 }
-
-/**
- * Handle the url passed by `Linking`
- * Checks to see if the url is supported by an app before opening it.
- *
- * @param { string } url The url to open
- */
-async function handleUrl({ url }) {
-  try {
-    const supported = await Linking.canOpenURL(url);
-    // Open url with `DeepLinking` but if that fails then fall back to `Linking`
-    if (supported && !DeepLinking.evaluateUrl(url)) {
-      Linking.openURL(url);
-    }
-  } catch (e) {
-    console.log(`Error handling ${url}: ${e}`);
-  }
-}
-
 
 /**
  * Check if a parameter is numeric
