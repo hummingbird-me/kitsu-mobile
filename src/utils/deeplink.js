@@ -75,7 +75,7 @@ export function unregisterDeepLinks() {
  * Set the `visibleComponentId` for deep linking.
  * This is a hack method as we don't get a callback from `registerBottomTabSelectedListener` on initial launch.
  * 
- * @param {*} tabIndex The index of the tab
+ * @param {number} tabIndex The index of the tab.
  */
 export function setDeepLinkTabIndex(tabIndex) {
   // We just listen to tab events and push accordingly
@@ -102,7 +102,7 @@ function registerDeepLinkRoutes() {
 /**
  * Check if a parameter is numeric
  *
- * @param {*} x A number or string to checkl
+ * @param {*} x A number or string to check
  * @returns Whether `x` is numeric
  */
 function isNumeric(x) {
@@ -243,6 +243,10 @@ const navigateToPostDetails = (post, comments = []) => {
   const currentUser = store.getState().user.currentUser;
 
   if (post && visibleComponentId) {
+    const isComment = post.type === 'comments';
+    const topLevelCommentsCount = isComment ? post.repliesCount : post.topLevelCommentsCount;
+    const commentsCount = isComment ? post.repliesCount : post.commentsCount;
+
     Navigation.push(visibleComponentId, {
       component: {
         name: Screens.FEED_POST_DETAILS,
@@ -252,6 +256,8 @@ const navigateToPostDetails = (post, comments = []) => {
           showLoadMoreComments: !isEmpty(comments),
           like: null,
           currentUser,
+          topLevelCommentsCount,
+          commentsCount,
         },
       },
     });

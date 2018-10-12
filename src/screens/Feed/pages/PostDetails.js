@@ -120,11 +120,13 @@ export default class PostDetails extends PureComponent {
   onSubmitComment = async () => {
     if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
 
+    const { currentUser, post, syncComments } = this.props;
+
+    const isComment = post.type === 'comments';
+
     this.setState({ isPostingComment: true });
 
     try {
-      const { currentUser, post, syncComments } = this.props;
-
       // Update the embed
       let embedUrl = this.state.embedUrl;
 
@@ -146,11 +148,15 @@ export default class PostDetails extends PureComponent {
         };
       }
 
+      // If we have a comment as the `post` then we need to use its original post id
+      const postId = isComment ? post.post && post.post.id : post.id;
+      if (!postId) return;
+
       const comment = await Kitsu.create('comments', {
         content: this.state.comment.trim(),
         embedUrl,
         post: {
-          id: post.id,
+          id: postId,
           type: 'posts',
         },
         user: {
@@ -169,10 +175,14 @@ export default class PostDetails extends PureComponent {
         commentsCount: this.state.commentsCount + 1,
       });
 
-      if (this.replyRef) {
+      // If we have a reply ref and the main `post` is not a comment
+      // Then trigger the callback
+      const shouldCallReplyRefCallback = this.replyRef && !isComment;
+      if (shouldCallReplyRefCallback) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
+        this.replyRef = null;
         const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
         this.setState({
           comments: uniqueComments,
@@ -210,7 +220,10 @@ export default class PostDetails extends PureComponent {
       comment: `@${mention} `,
       isReplying: true,
     });
-    this.replyRef = { comment, mention, name, callback };
+
+    // If the comment has a parent then use that as the parent comment too
+    const refComment = comment && comment.parent ? comment.parent : comment;
+    this.replyRef = { comment: refComment, mention, name, callback };
     this.focusOnCommentInput();
   };
 
@@ -219,20 +232,32 @@ export default class PostDetails extends PureComponent {
       const { currentUser, post } = this.props;
       let { like, isLiked, postLikesCount } = this.state;
 
+      const isComment = post.type === 'comments';
+      const likesEndpoint = isComment ? 'commentLikes' : 'postLikes';
+
       this.setState({
         isLiked: !isLiked,
         postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
       });
 
       if (like) {
-        await Kitsu.destroy('postLikes', like.id);
+        await Kitsu.destroy(likesEndpoint, like.id);
         this.setState({ like: null });
       } else {
-        like = await Kitsu.create('postLikes', {
+        const relationship = isComment ? {
+          comment: {
+            id: post.id,
+            type: 'comments',
+          },
+        } : {
           post: {
             id: post.id,
             type: 'posts',
           },
+        };
+
+        like = await Kitsu.create(likesEndpoint, {
+          ...relationship,
           user: {
             id: currentUser.id,
             type: 'users',
@@ -292,10 +317,15 @@ export default class PostDetails extends PureComponent {
 
   fetchLikes = async () => {
     const { currentUser, post } = this.props;
+
+    const isComment = post.type === 'comments';
+    const likesEndpoint = isComment ? 'commentLikes' : 'postLikes';
+    const idKey = isComment ? 'commentId' : 'postId';
+
     try {
-      const likes = await Kitsu.findAll('postLikes', {
+      const likes = await Kitsu.findAll(likesEndpoint, {
         filter: {
-          postId: post.id,
+          [idKey]: post.id,
           userId: currentUser.id,
         },
         include: 'user',
@@ -417,7 +447,7 @@ export default class PostDetails extends PureComponent {
               {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) && 
                 <SceneLoader />
               }
-              {comments.length > 0 && topLevelCommentsCount > comments.length && (
+              {comments.length > 0 && topLevelCommentsCount > comments.length && !showLoadMoreComments && (
                 <CommentPagination
                   onPress={this.onPagination}
                   isLoading={this.state.isLoadingNextPage}

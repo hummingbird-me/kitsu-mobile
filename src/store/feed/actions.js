@@ -7,7 +7,7 @@ import { BasicCache } from 'kitsu/utils/cache';
 
 let inAppNotificationTimer = 0;
 const feedInclude =
-  'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads,subject.videos,target.videos';
+  'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,target.parent,target.post,subject.parent,subject.post,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads,subject.videos,target.videos';
 
 export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getState) => {
   dispatch({ type: types.GET_USER_FEED, payload: Boolean(cursor) });

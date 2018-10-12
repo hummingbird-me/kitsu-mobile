@@ -248,8 +248,20 @@ export const handleNotificationPress = async (componentId, notification) => {
       break;
     case 'comment':
       // Show the post & comment
-      if (target.length !== 0 && subject) {
-        navigateToPostDetails(componentId, target[0], [subject]);
+      if (subject) {
+        const post = target.length > 0 && target[0];
+        const parent = subject.parent;
+
+        // If the comment isn't part of another comment then show the post
+        if (!parent && post) {
+          navigateToPostDetails(componentId, post, [subject]);
+        } else if (parent) {
+          // Otherwise show the main comment parent then the actual comment
+          navigateToPostDetails(componentId, parent, [subject]);
+        } else {
+          // Otherwise just show the comment
+          navigateToPostDetails(componentId, subject);
+        }
       }
       break;
     case 'post_like':
@@ -343,6 +355,10 @@ const navigateToPostDetails = (componentId, post, comments = []) => {
   const currentUser = store.getState().user.currentUser;
 
   if (post) {
+    const isComment = post.type === 'comments';
+    const topLevelCommentsCount = isComment ? post.repliesCount : post.topLevelCommentsCount;
+    const commentsCount = isComment ? post.repliesCount : post.commentsCount;
+
     Navigation.push(componentId, {
       component: {
         name: Screens.FEED_POST_DETAILS,
@@ -352,6 +368,8 @@ const navigateToPostDetails = (componentId, post, comments = []) => {
           showLoadMoreComments: !isEmpty(comments),
           like: null,
           currentUser,
+          topLevelCommentsCount,
+          commentsCount,
         },
       },
     });
