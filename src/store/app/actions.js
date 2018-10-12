@@ -34,3 +34,7 @@ export const setDataSaver = value => (dispatch) => {
 export const setInitialPage = value => (dispatch) => {
   dispatch({ type: types.SETTING_INITIAL_PAGE, payload: value });
 };
+
+export const toggleActivityIndicatorHOC = visible => (dispatch) => {
+  dispatch({ type: types.ACTIVITY_INDICATOR_HOC, payload: visible });
+};

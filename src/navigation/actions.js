@@ -1,4 +1,5 @@
 import { Navigation } from 'react-native-navigation';
+import { setDeepLinkTabIndex } from 'kitsu/utils/deeplink';
 import * as Screens from './types';
 import * as Layouts from './layouts';
 
@@ -27,6 +28,9 @@ export async function showMainApp(initialTab = 'Feed') {
   };
   const currentTabIndex = tabs[initialTab] || 0;
 
+  // Set the initial tab index for deep link
+  setDeepLinkTabIndex(currentTabIndex);
+  
   Navigation.setRoot(Layouts.MAIN);
   Navigation.mergeOptions(Screens.BOTTOM_TABS, {
     bottomTabs: {

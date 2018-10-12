@@ -54,10 +54,13 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-  return [[FBSDKApplicationDelegate sharedInstance] application:application
+
+  BOOL fbsdk = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                          openURL:url
                                                sourceApplication:sourceApplication
                                                       annotation:annotation];
+  BOOL deeplink = [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+  return fbsdk || deeplink;
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity

@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
 import { Kitsu } from 'kitsu/config/api';
 import { isEmpty } from 'lodash';
+import { fetchPost, fetchComment } from './feed';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -247,8 +248,20 @@ export const handleNotificationPress = async (componentId, notification) => {
       break;
     case 'comment':
       // Show the post & comment
-      if (target.length !== 0 && subject) {
-        navigateToPostDetails(componentId, target[0], [subject]);
+      if (subject) {
+        const post = target.length > 0 && target[0];
+        const parent = subject.parent;
+
+        // If the comment isn't part of another comment then show the post
+        if (!parent && post) {
+          navigateToPostDetails(componentId, post, [subject]);
+        } else if (parent) {
+          // Otherwise show the main comment parent then the actual comment
+          navigateToPostDetails(componentId, parent, [subject]);
+        } else {
+          // Otherwise just show the comment
+          navigateToPostDetails(componentId, subject);
+        }
       }
       break;
     case 'post_like':
@@ -342,6 +355,10 @@ const navigateToPostDetails = (componentId, post, comments = []) => {
   const currentUser = store.getState().user.currentUser;
 
   if (post) {
+    const isComment = post.type === 'comments';
+    const topLevelCommentsCount = isComment ? post.repliesCount : post.topLevelCommentsCount;
+    const commentsCount = isComment ? post.repliesCount : post.commentsCount;
+
     Navigation.push(componentId, {
       component: {
         name: Screens.FEED_POST_DETAILS,
@@ -351,6 +368,8 @@ const navigateToPostDetails = (componentId, post, comments = []) => {
           showLoadMoreComments: !isEmpty(comments),
           like: null,
           currentUser,
+          topLevelCommentsCount,
+          commentsCount,
         },
       },
     });
@@ -381,25 +400,6 @@ const fetchPostFromActivity = async (activity) => {
   return fetchPost(postId);
 };
 
-/**
- * Fetches post by the given id.
- * @param {any} postId The id of the post
- * @returns {object} post
- */
-const fetchPost = async (postId) => {
-  if (!postId) return null;
-
-  try {
-    const post = await Kitsu.find('posts', postId, {
-      include: 'user,targetUser,targetGroup,media,uploads,spoiledUnit',
-    });
-    return post;
-  } catch (e) {
-    console.log(e);
-  }
-  return null;
-};
-
 
 /**
  * Fetches the post like by the given id
@@ -421,26 +421,6 @@ const fetchPostLike = async (postLikeId) => {
 
   return null;
 };
-
-/**
- * Fetches comment by the given id.
- * @param {any} commentId The id of the comment
- * @returns {object} comment
- */
-const fetchComment = async (commentId) => {
-  if (!commentId) return null;
-
-  try {
-    const comment = await Kitsu.find('comments', commentId, {
-      include: 'user,uploads,parent,parent.user,parent.uploads,post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
-    });
-    return comment;
-  } catch (e) {
-    console.log(e);
-  }
-  return null;
-};
-
 
 /**
  * Fetches the comment like by the given id

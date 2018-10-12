@@ -4,6 +4,7 @@ import store from 'kitsu/store/config';
 
 import App from 'kitsu/App';
 import { withNotifications } from 'kitsu/utils/notifications';
+import { withActivityIndicatorHOC } from 'kitsu/utils/deeplink';
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
 import { LightBox } from 'kitsu/screens/LightBox';
 
@@ -42,6 +43,6 @@ function registerComponent(name, callback) {
  */
 export function registerScreens() {
   Object.keys(routes).forEach((key) => {
-    registerComponent(key, () => withNotifications(routes[key]));
+    registerComponent(key, () => withNotifications(withActivityIndicatorHOC(routes[key])));
   });
 }

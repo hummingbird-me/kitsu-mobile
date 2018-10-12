@@ -30,6 +30,7 @@
     "react-native-animatable": "^1.2.4",
     "react-native-animated-progress-bar": "^1.1.0",
     "react-native-code-push": "^5.2.2",
+    "react-native-deep-linking": "^2.1.0",
     "react-native-fast-image": "^4.0.14",
     "react-native-fbsdk": "^0.7.0",
     "react-native-hyperlink": "^0.0.14",

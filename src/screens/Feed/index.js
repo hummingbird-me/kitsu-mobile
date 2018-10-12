@@ -17,6 +17,7 @@ import { FeedCache } from 'kitsu/utils/cache';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 import { statusBarHeight } from 'kitsu/constants/app';
+import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
 import { feedStreams } from './feedStreams';
 
 const styles = StyleSheet.create({
@@ -55,9 +56,14 @@ class Feed extends React.PureComponent {
     data: [],
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
+    registerDeepLinks();
     this.fetchFeed();
-  };
+  }
+
+  componentWillUnmount() {
+    unregisterDeepLinks();
+  }
 
   onRefresh = async () => {
     this.setState({ refreshing: true });

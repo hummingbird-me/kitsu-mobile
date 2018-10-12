@@ -29,7 +29,7 @@ export const PostMain = ({
       {!isEmpty(content) &&
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
-            <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, componentId)}>
+            <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url)}>
               <ViewMoreStyledText
                 cacheKey={cacheKey}
                 color="dark"

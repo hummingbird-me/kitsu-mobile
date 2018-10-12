@@ -56,8 +56,8 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-      <!-- Disabled deep linking for now -->
-      <!-- <intent-filter>
+      <!-- Deep Linking -->
+      <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
@@ -66,8 +66,9 @@
         <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/users" />
         <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/posts" />
         <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/comments" />
-        <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/media-reactions" />
-      </intent-filter> -->
+        <!-- Enable once we have media reactions -->
+        <!-- <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/media-reactions" /> -->
+      </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     <meta-data
