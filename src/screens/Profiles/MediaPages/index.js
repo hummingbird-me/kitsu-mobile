@@ -24,6 +24,7 @@ import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 import { handleURL } from 'kitsu/utils/url';
+import { showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: Summary },
@@ -651,6 +652,11 @@ class MediaPages extends PureComponent {
             ratingRank={media.ratingRank}
             averageRating={parseFloat(media.averageRating) || null}
             categories={media.categories}
+            onCategoryPress={(item) => {
+              if (media) {
+                showCategoryResults(this.props.componentId, media.type, item.title);
+              }
+            }}
             mainButtonTitle={mainButtonTitle}
             mainButtonOptions={MAIN_BUTTON_OPTIONS}
             mainButtonLoading={loadingLibrary}
