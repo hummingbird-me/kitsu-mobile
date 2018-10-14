@@ -23,6 +23,7 @@ import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
+import { handleURL } from 'kitsu/utils/url';
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: Summary },
@@ -134,6 +135,10 @@ class MediaPages extends PureComponent {
         NavigationActions.showLightBox([coverURL]);
         break;
       }
+      case 'trailer':
+        if (!media || !media.youtubeVideoId) return;
+        handleURL(`https://www.youtube.com/watch?v=${media.youtubeVideoId}`);
+        break;
       default:
         console.log('unhandled option selected:', option);
         break;
@@ -355,6 +360,8 @@ class MediaPages extends PureComponent {
         loading: false,
         media,
       });
+
+      console.log(media);
 
       // Lazy load the rest
       this.fetchEpisodesAndRelated(type, id);
@@ -590,7 +597,8 @@ class MediaPages extends PureComponent {
     const MORE_BUTTON_OPTIONS = [
       { text: 'Share Media Link', value: 'share' },
       // Only display if media has a valid cover image
-      { text: 'View Cover Image', value: 'cover', if: i => !!(i && i.coverImage) },
+      { text: 'View Cover Image', value: 'cover', if: m => !!(m && m.coverImage) },
+      { text: 'View Youtube Trailer', value: 'trailer', if: m => !!(m && m.youtubeVideoId) },
       'Nevermind',
     ].filter(item => (item.if ? item.if(media) : true));
 
