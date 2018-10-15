@@ -66,6 +66,7 @@
         <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/users" />
         <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/posts" />
         <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/comments" />
+         <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/feedback" />
         <!-- Enable once we have media reactions -->
         <!-- <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/media-reactions" /> -->
       </intent-filter>
