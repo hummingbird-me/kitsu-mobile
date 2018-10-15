@@ -66,13 +66,13 @@ export function registerDeepLinks() {
 
   registerDeepLinkRoutes();
 
-  // TODO: Figure out why this doesn't get called the first time we deep link on android
-  // I.e when the app is completely killed and you try deep link
   Linking.getInitialURL().then((url) => {
     if (url) {
-      openURL(url);
+      openUrl(url);
     }
   }).catch(err => console.error('An error occurred', err));
+
+  registeredDeepLinks = true;
 }
 
 /**
