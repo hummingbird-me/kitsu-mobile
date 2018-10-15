@@ -14,6 +14,10 @@ import { fetchPost, fetchComment } from './feed';
 // The current visible component id
 let visibleComponentId = null;
 
+// Global variables
+let registeredDeepLinks = false;
+let registeredUrlHandler = false;
+
 /**
  * Open the url passed by `Linking`
  * Checks to see if the url is supported by an app before opening it.
@@ -40,9 +44,18 @@ function handleUrl({ url }) {
  * Register deeplinking event listeners
  */
 export function registerDeepLinks() {
-  // Make sure we have the id of the visible screen so that if user deep links we can push straight from that
+  // Handle urls from `Linking`
+  // Make sure we only add the listener once
+  if (!registeredUrlHandler) {
+    Linking.addEventListener('url', handleUrl);
+    registeredUrlHandler = true;
+  }
+
+  // Make sure we only register the events below once
+  if (registeredDeepLinks) return;
+
   Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex }) => setDeepLinkTabIndex(selectedTabIndex));
-  
+
   // Check to see if user is on a valid screen for deep linking
   Navigation.events().registerComponentDidAppearListener(({ componentName }) => {
     // If user views the auth screen then set the visible component id to null
@@ -53,18 +66,13 @@ export function registerDeepLinks() {
 
   registerDeepLinkRoutes();
 
-  // Handle urls from `Linking`
-  Linking.addEventListener('url', handleUrl);
-
-  // Delay `getInitialURL` a bit so that we can get deeplinking to work properly on android
-  // ref: https://github.com/facebook/react-native/issues/15961
-  setTimeout(() => {
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        openURL(url);
-      }
-    }).catch(err => console.error('An error occurred', err));
-  }, 10);
+  // TODO: Figure out why this doesn't get called the first time we deep link on android
+  // I.e when the app is completely killed and you try deep link
+  Linking.getInitialURL().then((url) => {
+    if (url) {
+      openURL(url);
+    }
+  }).catch(err => console.error('An error occurred', err));
 }
 
 /**
@@ -72,6 +80,7 @@ export function registerDeepLinks() {
  */
 export function unregisterDeepLinks() {
   Linking.removeEventListener('url', handleUrl);
+  registeredUrlHandler = false;
 }
 
 
