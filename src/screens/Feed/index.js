@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, View, StyleSheet, Platform } from 'react-native';
+import { StatusBar, View, StyleSheet, Platform, InteractionManager } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PropTypes from 'prop-types';
@@ -57,7 +57,9 @@ class Feed extends React.PureComponent {
   };
 
   componentDidMount() {
-    registerDeepLinks();
+    InteractionManager.runAfterInteractions(() => {
+      registerDeepLinks();
+    });
     this.fetchFeed();
   }
 
