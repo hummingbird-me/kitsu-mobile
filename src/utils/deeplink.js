@@ -97,6 +97,7 @@ function registerDeepLinkRoutes() {
   DeepLinking.addRoute('kitsu.io/users/:id', handleUser);
   DeepLinking.addRoute('kitsu.io/posts/:id', handlePost);
   DeepLinking.addRoute('kitsu.io/comments/:id', handleComment);
+  DeepLinking.addRoute('kitsu.io/feedback/:type', handleFeedback);
 }
 
 /**
@@ -236,6 +237,54 @@ const handleComment = async (response) => {
       // Otherwise just show the comment
       navigateToPostDetails(comment);
     }
+  }
+};
+
+const handleFeedback = (response) => {
+  const auth = store.getState().auth;
+  const accessToken = auth.tokens && auth.tokens.access_token;
+
+  if (!accessToken || !visibleComponentId) return;
+
+  switch (response.type) {
+    case 'mobile-bugs':
+      Navigation.push(visibleComponentId, {
+        component: {
+          name: Screens.SIDEBAR_CANNY_BOARD,
+          passProps: {
+            title: 'Report Bugs',
+            type: 'bugReport',
+            token: accessToken,
+          },
+        },
+      });
+      break;
+    case 'mobile-features':
+      Navigation.push(visibleComponentId, {
+        component: {
+          name: Screens.SIDEBAR_CANNY_BOARD,
+          passProps: {
+            title: 'Suggest Features',
+            type: 'featureRequest',
+            token: accessToken,
+          },
+        },
+      });
+      break;
+    case 'database-requests':
+      Navigation.push(visibleComponentId, {
+        component: {
+          name: Screens.SIDEBAR_CANNY_BOARD,
+          passProps: {
+            title: 'Database Requests',
+            type: 'databaseRequest',
+            token: accessToken,
+          },
+        },
+      });
+      break;
+    default:
+      break;
   }
 };
 
