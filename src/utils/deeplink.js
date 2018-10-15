@@ -56,11 +56,15 @@ export function registerDeepLinks() {
   // Handle urls from `Linking`
   Linking.addEventListener('url', handleUrl);
 
-  Linking.getInitialURL().then((url) => {
-    if (url) {
-      openURL(url);
-    }
-  }).catch(err => console.error('An error occurred', err));
+  // Delay `getInitialURL` a bit so that we can get deeplinking to work properly on android
+  // ref: https://github.com/facebook/react-native/issues/15961
+  setTimeout(() => {
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        openURL(url);
+      }
+    }).catch(err => console.error('An error occurred', err));
+  }, 10);
 }
 
 /**
