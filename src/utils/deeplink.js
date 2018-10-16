@@ -305,10 +305,6 @@ const navigateToPostDetails = (post, comments = []) => {
   const currentUser = store.getState().user.currentUser;
 
   if (post && visibleComponentId) {
-    const isComment = post.type === 'comments';
-    const topLevelCommentsCount = isComment ? post.repliesCount : post.topLevelCommentsCount;
-    const commentsCount = isComment ? post.repliesCount : post.commentsCount;
-
     Navigation.push(visibleComponentId, {
       component: {
         name: Screens.FEED_POST_DETAILS,
@@ -318,8 +314,6 @@ const navigateToPostDetails = (post, comments = []) => {
           showLoadMoreComments: !isEmpty(comments),
           like: null,
           currentUser,
-          topLevelCommentsCount,
-          commentsCount,
         },
       },
     });
