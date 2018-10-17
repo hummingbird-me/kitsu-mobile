@@ -107,6 +107,8 @@ function registerDeepLinkRoutes() {
   DeepLinking.addScheme('https://');
   DeepLinking.addRoute('kitsu.io/anime/:id', response => handleMedia(response, 'anime'));
   DeepLinking.addRoute('kitsu.io/manga/:id', response => handleMedia(response, 'manga'));
+  DeepLinking.addRoute('kitsu.io/anime/:id/:tab', response => handleMedia(response, 'anime'));
+  DeepLinking.addRoute('kitsu.io/manga/:id/:tab', response => handleMedia(response, 'manga'));
   DeepLinking.addRoute('kitsu.io/users/:id', handleUser);
   DeepLinking.addRoute('kitsu.io/posts/:id', handlePost);
   DeepLinking.addRoute('kitsu.io/comments/:id', handleComment);
@@ -164,6 +166,7 @@ const handleMedia = async (response, type) => {
         passProps: {
           mediaId,
           mediaType: type,
+          activeTab: response.tab,
         },
       },
     });
