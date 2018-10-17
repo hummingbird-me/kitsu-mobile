@@ -282,6 +282,7 @@ export const handleNotificationPress = async (componentId, notification) => {
             passProps: {
               unit: subject,
               media: actor,
+              shouldShowMediaCard: true,
             },
           },
         });

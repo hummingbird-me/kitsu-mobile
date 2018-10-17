@@ -159,7 +159,6 @@ const handleMedia = async (response, type) => {
         },
       });
       mediaId = (media && media.length > 0) ? media[0].id : null;
-      console.log(media);
     } catch (e) {
       console.log(`Failed to fetch ${type} with slug: ${response.id}`, e);
       mediaId = null;
@@ -188,12 +187,8 @@ const handleUnit = async (response, type) => {
   let media = null;
   let unit = null;
 
-  console.log(response);
-
   // Make sure we have valid inputs
   if (!response || !response.id || !isNumeric(response.number)) return;
-
-  console.log('wee');
 
   // Fetch the media first
   store.dispatch(toggleActivityIndicatorHOC(true));
@@ -243,7 +238,7 @@ const handleUnit = async (response, type) => {
     Navigation.push(visibleComponentId, {
       component: {
         name: Screens.MEDIA_UNIT_DETAIL,
-        passProps: { unit, media },
+        passProps: { unit, media, shouldShowMediaCard: true },
       },
     });
   }
@@ -271,7 +266,6 @@ const handleUser = async (response) => {
         },
       });
       userId = (user && user.length > 0) ? user[0].id : null;
-      console.log(user);
     } catch (e) {
       console.log(`Failed to fetch user with slug: ${userId}`, e);
       userId = null;

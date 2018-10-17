@@ -21,7 +21,8 @@ import { WebComponent } from 'kitsu/utils/components';
 import { Navigation } from 'react-native-navigation';
 import { PropTypes } from 'prop-types';
 import { Screens, NavigationActions } from 'kitsu/navigation';
-import { uniqBy } from 'lodash';
+import { uniqBy, isNil, startCase, isEmpty } from 'lodash';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { styles } from './styles';
 
 const LANGUAGE_LOOKUP = {
@@ -37,10 +38,12 @@ class Unit extends PureComponent {
     unit: PropTypes.object.isRequired,
     media: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
+    shouldShowMediaCard: PropTypes.bool,
   };
 
   static defaultProps = {
     currentUser: null,
+    shouldShowMediaCard: false,
   };
 
   constructor(props) {
@@ -118,6 +121,21 @@ class Unit extends PureComponent {
     });
   };
 
+  navigateToMedia = () => {
+    const { media, componentId } = this.props;
+    if (!media || !componentId) return;
+
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.MEDIA_PAGE,
+        passProps: {
+          mediaId: media.id,
+          mediaType: media.type,
+        },
+      },
+    });
+  }
+
   renderLoading = () => (
     <SceneLoader />
   );
@@ -134,6 +152,36 @@ class Unit extends PureComponent {
       componentId={this.props.componentId}
     />
   );
+
+  renderMedia = () => {
+    const { media } = this.props;
+    if (!media) return null;
+
+    const image = media && media.posterImage && media.posterImage.small;
+
+    return (
+      <View style={styles.mediaContainer}>
+        <TouchableOpacity
+          style={styles.mediaInnerContainer}
+          onPress={this.navigateToMedia}
+        >
+          {!isNil(image) &&
+            <ProgressiveImage
+              source={{ uri: image }}
+              style={styles.mediaPoster}
+            />
+          }
+          <View style={styles.mediaInfo}>
+            <StyledText color="dark" size="small" numberOfLines={1} bold>{media.canonicalTitle || '-'}</StyledText>
+            <StyledText color="dark" size="xxsmall" numberOfLines={1} bold textStyle={{ paddingVertical: 4 }}>
+              {startCase(media.type)}
+            </StyledText>
+            <StyledText color="dark" size="xsmall" numberOfLines={5}>{media.synopsis || '-'}</StyledText>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   renderEmptyFeed = () => (
     <ImageStatus
@@ -170,7 +218,7 @@ class Unit extends PureComponent {
 
   render() {
     const { isFeedLoading, selectedUnit, selectedVideoIndex, discussions } = this.state;
-    const { media, componentId } = this.props;
+    const { media, componentId, shouldShowMediaCard } = this.props;
 
     const hasVideo = selectedUnit.videos && selectedUnit.videos.length >= 1;
     const selectedVideo = hasVideo && selectedUnit.videos[selectedVideoIndex];
@@ -242,8 +290,8 @@ class Unit extends PureComponent {
           )}
 
           {/* Unit information */}
-          <View style={styles.metaContainer}>
-            <View style={{ marginBottom: 10 }}>
+          <View style={[styles.metaContainer, shouldShowMediaCard && styles.metaContainer__mediaVisible]}>
+            <View style={{ marginBottom: (selectedUnit && isEmpty(selectedUnit.synopsis)) ? 0 : 10 }}>
               <View style={{ flexDirection: 'row' }}>
                 <StyledText color="dark" bold>{unitPrefix} {selectedUnit.number} </StyledText>
                 <StyledText color="dark" textStyle={{ flex: 1 }}>{selectedUnit.canonicalTitle}</StyledText>
@@ -252,8 +300,13 @@ class Unit extends PureComponent {
                 <StyledText color="grey" size="xsmall">First {releaseText}: {unitDate}</StyledText>
               )}
             </View>
-            <ViewMoreStyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={4}>{selectedUnit.synopsis}</ViewMoreStyledText>
+            {selectedUnit && !isEmpty(selectedUnit.synopsis) &&
+              <ViewMoreStyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={4}>{selectedUnit.synopsis}</ViewMoreStyledText>
+            }
           </View>
+
+          {/* Media */}
+          {shouldShowMediaCard && this.renderMedia()}
 
           {/* Feed */}
           <View>
