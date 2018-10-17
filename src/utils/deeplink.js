@@ -393,6 +393,8 @@ const handleFeedback = (response) => {
       });
       break;
     default:
+      // Unhandled route, just pass it off
+      Linking.openURL(`${response.scheme}${response.path}`);
       break;
   }
 };
