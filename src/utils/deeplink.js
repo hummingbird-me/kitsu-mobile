@@ -7,7 +7,7 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { Kitsu } from 'kitsu/config/api';
 import store from 'kitsu/store/config';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 import { toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
 import { fetchPost, fetchComment } from './feed';
 
@@ -105,11 +105,20 @@ export function setDeepLinkTabIndex(tabIndex) {
  */
 function registerDeepLinkRoutes() {
   DeepLinking.addScheme('https://');
+
+  // Media pages
   DeepLinking.addRoute('kitsu.io/anime/:id', response => handleMedia(response, 'anime'));
   DeepLinking.addRoute('kitsu.io/manga/:id', response => handleMedia(response, 'manga'));
   DeepLinking.addRoute('kitsu.io/anime/:id/:tab', response => handleMedia(response, 'anime'));
   DeepLinking.addRoute('kitsu.io/manga/:id/:tab', response => handleMedia(response, 'manga'));
+  DeepLinking.addRoute('kitsu.io/anime/:id/episodes/:number', response => handleUnit(response, 'anime'));
+  DeepLinking.addRoute('kitsu.io/manga/:id/chapters/:number', response => handleUnit(response, 'manga'));
+
+  // User pages
   DeepLinking.addRoute('kitsu.io/users/:id', handleUser);
+  DeepLinking.addRoute('kitsu.io/users/:id/:tab', handleUser);
+
+  // Other
   DeepLinking.addRoute('kitsu.io/posts/:id', handlePost);
   DeepLinking.addRoute('kitsu.io/comments/:id', handleComment);
   DeepLinking.addRoute('kitsu.io/feedback/:type', handleFeedback);
@@ -146,6 +155,7 @@ const handleMedia = async (response, type) => {
         },
         fields: {
           anime: 'id',
+          manga: 'id',
         },
       });
       mediaId = (media && media.length > 0) ? media[0].id : null;
@@ -168,6 +178,72 @@ const handleMedia = async (response, type) => {
           mediaType: type,
           activeTab: response.tab,
         },
+      },
+    });
+  }
+};
+
+const handleUnit = async (response, type) => {
+  const unitType = type === 'anime' ? 'episodes' : 'chapters';
+  let media = null;
+  let unit = null;
+
+  console.log(response);
+
+  // Make sure we have valid inputs
+  if (!response || !response.id || !isNumeric(response.number)) return;
+
+  console.log('wee');
+
+  // Fetch the media first
+  store.dispatch(toggleActivityIndicatorHOC(true));
+  try {
+    // Check if we need to fetch media based on slug
+    if (!isNumeric(response.id)) {
+      const results = await Kitsu.findAll(type, {
+        filter: {
+          slug: response.id,
+        },
+      });
+      media = results && results.length > 0 && results[0];
+    } else {
+      // Just fetch media by the id
+      media = await Kitsu.find(type, response.id);
+    }
+  } catch (e) {
+    console.log(`Failed to fetch ${type} with id: ${response.id}`, e);
+    media = null;
+  }
+
+  // Make sure we have a valid media object
+  if (!media) {
+    store.dispatch(toggleActivityIndicatorHOC(false));
+    return;
+  }
+
+  // Fetch the unit
+  try {
+    const idKey = unitType === 'chapters' ? 'mangaId' : 'mediaId';
+    const includes = type === 'anime' ? 'videos' : null;
+
+    const results = await Kitsu.findAll(unitType, {
+      filter: { [idKey]: media.id },
+      includes,
+    });
+    unit = results && results.length > 0 && results[0];
+  } catch (e) {
+    console.log(`Failed to fetch ${unitType} with media: ${response.id}`, e);
+    unit = null;
+  } finally {
+    store.dispatch(toggleActivityIndicatorHOC(false));
+  }
+
+  // Navigate to it
+  if (media && unit) {
+    Navigation.push(visibleComponentId, {
+      component: {
+        name: Screens.MEDIA_UNIT_DETAIL,
+        passProps: { unit, media },
       },
     });
   }
