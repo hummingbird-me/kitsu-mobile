@@ -7,7 +7,7 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { Kitsu } from 'kitsu/config/api';
 import store from 'kitsu/store/config';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 import { toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
 import { fetchPost, fetchComment } from './feed';
 
@@ -105,9 +105,20 @@ export function setDeepLinkTabIndex(tabIndex) {
  */
 function registerDeepLinkRoutes() {
   DeepLinking.addScheme('https://');
+
+  // Media pages
   DeepLinking.addRoute('kitsu.io/anime/:id', response => handleMedia(response, 'anime'));
   DeepLinking.addRoute('kitsu.io/manga/:id', response => handleMedia(response, 'manga'));
+  DeepLinking.addRoute('kitsu.io/anime/:id/:tab', response => handleMedia(response, 'anime'));
+  DeepLinking.addRoute('kitsu.io/manga/:id/:tab', response => handleMedia(response, 'manga'));
+  DeepLinking.addRoute('kitsu.io/anime/:id/episodes/:number', response => handleUnit(response, 'anime'));
+  DeepLinking.addRoute('kitsu.io/manga/:id/chapters/:number', response => handleUnit(response, 'manga'));
+
+  // User pages
   DeepLinking.addRoute('kitsu.io/users/:id', handleUser);
+  DeepLinking.addRoute('kitsu.io/users/:id/:tab', handleUser);
+
+  // Other
   DeepLinking.addRoute('kitsu.io/posts/:id', handlePost);
   DeepLinking.addRoute('kitsu.io/comments/:id', handleComment);
   DeepLinking.addRoute('kitsu.io/feedback/:type', handleFeedback);
@@ -131,6 +142,14 @@ function isNumeric(x) {
  * @param {string} type The type of media. `anime` or `manga`
  */
 const handleMedia = async (response, type) => {
+  // Make sure that we have a valid route that we can navigate to.
+  // If we don't have a valid route then open the url in the browser
+  const validRoutes = ['episodes', 'chapters', 'reactions', 'franchise'];
+  if (response && response.tab && !validRoutes.includes(response.tab)) {
+    Linking.openURL(`${response.scheme}${response.path}`);
+    return;
+  }
+
   if (!visibleComponentId || !response.id) return;
   let mediaId = response.id;
 
@@ -144,10 +163,10 @@ const handleMedia = async (response, type) => {
         },
         fields: {
           anime: 'id',
+          manga: 'id',
         },
       });
       mediaId = (media && media.length > 0) ? media[0].id : null;
-      console.log(media);
     } catch (e) {
       console.log(`Failed to fetch ${type} with slug: ${response.id}`, e);
       mediaId = null;
@@ -164,6 +183,82 @@ const handleMedia = async (response, type) => {
         passProps: {
           mediaId,
           mediaType: type,
+          activeTab: response.tab,
+        },
+      },
+    });
+  }
+};
+
+/**
+ * Handle unit deep links
+ *
+ * @param {*} response The deep link response
+ * @param {string} type The type of media. `anime` or `manga`
+ */
+const handleUnit = async (response, type) => {
+  const unitType = type === 'anime' ? 'episodes' : 'chapters';
+  let media = null;
+  let unit = null;
+
+  // Make sure we have valid inputs
+  if (!response || !response.id || !isNumeric(response.number)) return;
+
+  // Fetch the media first
+  store.dispatch(toggleActivityIndicatorHOC(true));
+  try {
+    // Check if we need to fetch media based on slug
+    if (!isNumeric(response.id)) {
+      const results = await Kitsu.findAll(type, {
+        filter: {
+          slug: response.id,
+        },
+      });
+      media = results && results.length > 0 && results[0];
+    } else {
+      // Just fetch media by the id
+      media = await Kitsu.find(type, response.id);
+    }
+  } catch (e) {
+    console.log(`Failed to fetch ${type} with id: ${response.id}`, e);
+    media = null;
+  }
+
+  // Make sure we have a valid media object
+  if (!media) {
+    store.dispatch(toggleActivityIndicatorHOC(false));
+    return;
+  }
+
+  // Fetch the unit
+  try {
+    const idKey = unitType === 'chapters' ? 'mangaId' : 'mediaId';
+    const includes = type === 'anime' ? 'videos' : null;
+
+    const results = await Kitsu.findAll(unitType, {
+      filter: {
+        [idKey]: media.id,
+        number: response.number,
+      },
+      includes,
+    });
+    unit = results && results.length > 0 && results[0];
+  } catch (e) {
+    console.log(`Failed to fetch ${unitType} with media: ${response.id}`, e);
+    unit = null;
+  } finally {
+    store.dispatch(toggleActivityIndicatorHOC(false));
+  }
+
+  // Navigate to it
+  if (media && unit) {
+    Navigation.push(visibleComponentId, {
+      component: {
+        name: Screens.MEDIA_UNIT_DETAIL,
+        passProps: {
+          unit,
+          media,
+          shouldShowMediaCard: true,
         },
       },
     });
@@ -176,6 +271,14 @@ const handleMedia = async (response, type) => {
  * @param {*} response The deep link response
  */
 const handleUser = async (response) => {
+  // Make sure that we have a valid route that we can navigate to.
+  // If we don't have a valid route then open the url in the browser
+  const validRoutes = ['library', 'groups', 'reactions'];
+  if (response && response.tab && !validRoutes.includes(response.tab)) {
+    Linking.openURL(`${response.scheme}${response.path}`);
+    return;
+  }
+  
   if (!visibleComponentId || !response.id) return;
   let userId = response.id;
 
@@ -192,7 +295,6 @@ const handleUser = async (response) => {
         },
       });
       userId = (user && user.length > 0) ? user[0].id : null;
-      console.log(user);
     } catch (e) {
       console.log(`Failed to fetch user with slug: ${userId}`, e);
       userId = null;
@@ -206,7 +308,10 @@ const handleUser = async (response) => {
     Navigation.push(visibleComponentId, {
       component: {
         name: Screens.PROFILE_PAGE,
-        passProps: { userId },
+        passProps: {
+          userId,
+          activeTab: response.tab,
+        },
       },
     });
   }
@@ -297,6 +402,8 @@ const handleFeedback = (response) => {
       });
       break;
     default:
+      // Unhandled route, just pass it off
+      Linking.openURL(`${response.scheme}${response.path}`);
       break;
   }
 };
@@ -305,10 +412,6 @@ const navigateToPostDetails = (post, comments = []) => {
   const currentUser = store.getState().user.currentUser;
 
   if (post && visibleComponentId) {
-    const isComment = post.type === 'comments';
-    const topLevelCommentsCount = isComment ? post.repliesCount : post.topLevelCommentsCount;
-    const commentsCount = isComment ? post.repliesCount : post.commentsCount;
-
     Navigation.push(visibleComponentId, {
       component: {
         name: Screens.FEED_POST_DETAILS,
@@ -318,8 +421,6 @@ const navigateToPostDetails = (post, comments = []) => {
           showLoadMoreComments: !isEmpty(comments),
           like: null,
           currentUser,
-          topLevelCommentsCount,
-          commentsCount,
         },
       },
     });

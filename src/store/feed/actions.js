@@ -4,10 +4,28 @@ import { getStream } from 'kitsu/config/stream';
 import { kitsuConfig } from 'kitsu/config/env';
 import { NavigationActions } from 'kitsu/navigation';
 import { BasicCache } from 'kitsu/utils/cache';
+import { uniq } from 'lodash';
 
 let inAppNotificationTimer = 0;
-const feedInclude =
-  'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,target.parent,target.post,subject.parent,subject.post,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads,subject.videos,target.videos';
+
+/*
+Get all the inlcudes required for notifications
+
+*/
+const getIncludes = () => {
+  const postFields = ['user', 'targetUser', 'targetGroup', 'media', 'uploads', 'spoiledUnit'];
+  const commentFields = ['user', 'uploads', 'parent', 'post', 'parent.user', 'parent.uploads', 'parent.post'];
+
+  // The combined fields from post and comments
+  const combined = uniq([...postFields, ...commentFields]);
+  
+  const others = ['anime', 'manga', 'library_entry', 'followed'];
+  const targetFields = ['target', 'target.videos', ...combined.map(f => `target.${f}`)];
+  const subjectFields = ['subject', 'subject.videos', ...others.map(f => `subject.${f}`), ...combined.map(f => `subject.${f}`)];
+
+  const includeFields = ['media', 'actor', 'unit', ...targetFields, ...subjectFields];
+  return includeFields.join(',');
+};
 
 export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getState) => {
   dispatch({ type: types.GET_USER_FEED, payload: Boolean(cursor) });
@@ -17,7 +35,7 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
       filter: {
         // kind: 'posts',
       },
-      include: feedInclude,
+      include: getIncludes(),
     });
     const posts = results
       .sort(item => item.activities[0].verb === 'post')
@@ -66,7 +84,7 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
     userFeed.subscribe(async (data) => {
       const not = await Kitsu.one('userFeed', userId).get({
         page: { limit: 1 },
-        include: feedInclude,
+        include: getIncludes(),
         filter: {
           // kind: 'posts',
         },
@@ -93,7 +111,7 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
       filter: {
         // kind: 'posts',
       },
-      include: feedInclude,
+      include: getIncludes(),
     });
     if (cursor) {
       const { userFeed } = getState().feed;
@@ -113,7 +131,7 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
     mediaFeed.subscribe(async (data) => {
       const not = await Kitsu.one('userFeed', mediaId).get({
         page: { limit: 1 },
-        include: feedInclude,
+        include: getIncludes(),
         filter: {
           // kind: 'posts',
         },
@@ -141,7 +159,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },
-      include: feedInclude,
+      include: getIncludes(),
       fields: {
         activities: 'time,verb,id',
       },
@@ -178,7 +196,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
         console.log('Notifications stream callback triggered! Fetching more notifications.');
         const not = await Kitsu.one('activityGroups', id).get({
           page: { limit: 1 },
-          include: feedInclude,
+          include: getIncludes(),
         });
         if (data.new.length > 0) {
           dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });

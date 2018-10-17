@@ -282,6 +282,7 @@ export const handleNotificationPress = async (componentId, notification) => {
             passProps: {
               unit: subject,
               media: actor,
+              shouldShowMediaCard: true,
             },
           },
         });
@@ -355,10 +356,6 @@ const navigateToPostDetails = (componentId, post, comments = []) => {
   const currentUser = store.getState().user.currentUser;
 
   if (post) {
-    const isComment = post.type === 'comments';
-    const topLevelCommentsCount = isComment ? post.repliesCount : post.topLevelCommentsCount;
-    const commentsCount = isComment ? post.repliesCount : post.commentsCount;
-
     Navigation.push(componentId, {
       component: {
         name: Screens.FEED_POST_DETAILS,
@@ -368,8 +365,6 @@ const navigateToPostDetails = (componentId, post, comments = []) => {
           showLoadMoreComments: !isEmpty(comments),
           like: null,
           currentUser,
-          topLevelCommentsCount,
-          commentsCount,
         },
       },
     });

@@ -34,22 +34,46 @@ const TAB_ITEMS = [
   { key: 'franchise', label: 'Franchise', screen: Franchise },
 ];
 
+const tabs = TAB_ITEMS.map(t => t.key);
+
 class MediaPages extends PureComponent {
   static propTypes = {
     mediaId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     mediaType: PropTypes.string.isRequired,
+    activeTab: PropTypes.oneOf(tabs),
   }
 
-  state = {
-    active: 'Summary',
-    loading: false, // Check whether basic data is loading
-    media: null,
-    castings: null,
-    mediaReactions: null,
-    favorite: null,
-    libraryEntry: null,
-    loadingLibrary: false, // Check whether we are updating/loading library entry
-    loadingAdditional: false, // Check whether episodes & Related are loading
+  static defaultProps = {
+    activeTab: 'summary',
+  }
+
+  constructor(props) {
+    super(props);
+
+    // Validate the active tab
+    let activeTab = props.activeTab;
+
+    // Make sure that media has the right tabs
+    if (props.mediaType === 'anime' && activeTab === 'chapters') {
+      activeTab = 'episodes';
+    } else if (props.mediaType === 'manga' && activeTab === 'episodes') {
+      activeTab = 'chapters';
+    }
+
+    // If tab is invalid then show the summary
+    if (!tabs.includes(activeTab)) activeTab = 'summary';
+
+    this.state = {
+      active: activeTab,
+      loading: false, // Check whether basic data is loading
+      media: null,
+      castings: null,
+      mediaReactions: null,
+      favorite: null,
+      libraryEntry: null,
+      loadingLibrary: false, // Check whether we are updating/loading library entry
+      loadingAdditional: false, // Check whether episodes & Related are loading
+    };
   }
 
   componentDidMount = () => {
@@ -481,8 +505,8 @@ class MediaPages extends PureComponent {
           <TabBarLink
             key={tabItem.key}
             label={tabItem.label}
-            isActive={this.state.active === tabItem.label}
-            onPress={() => this.setActiveTab(tabItem.label)}
+            isActive={this.state.active === tabItem.key}
+            onPress={() => this.setActiveTab(tabItem.key)}
           />
         );
       })}
@@ -497,12 +521,12 @@ class MediaPages extends PureComponent {
         if (tabItem.if && !tabItem.if(this.state)) {
           return null;
         }
-        return this.renderTab(tabItem.screen, tabItem.label);
+        return this.renderTab(tabItem.screen, tabItem.key);
       })}
     </View>
   );
 
-  renderTab = (Component, name) => {
+  renderTab = (Component, key) => {
     const {
       castings,
       media,
@@ -516,7 +540,7 @@ class MediaPages extends PureComponent {
     const { componentId } = this.props;
 
     // Don't render tabs that are not visible
-    if (name !== active) return null;
+    if (key !== active) return null;
 
     const otherProps = {
       libraryEntry,
@@ -529,7 +553,7 @@ class MediaPages extends PureComponent {
 
     return (
       <Component
-        key={name}
+        key={key}
         setActiveTab={tab => this.setActiveTab(tab)}
         media={media}
         mediaId={media.id}

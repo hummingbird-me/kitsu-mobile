@@ -26,9 +26,11 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
 import { extractUrls } from 'kitsu/utils/url';
-import { isEmpty, uniqBy } from 'lodash';
+import { isEmpty, uniqBy, isNull } from 'lodash';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+import { StyledText } from 'kitsu/components/StyledText';
+import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 export default class PostDetails extends PureComponent {
   static propTypes = {
@@ -48,8 +50,8 @@ export default class PostDetails extends PureComponent {
   static defaultProps = {
     postLikesCount: 0,
     comments: [],
-    topLevelCommentsCount: 0,
-    commentsCount: 0,
+    topLevelCommentsCount: null,
+    commentsCount: null,
     like: null,
     isLiked: false,
     syncComments: null,
@@ -67,11 +69,21 @@ export default class PostDetails extends PureComponent {
   constructor(props) {
     super(props);
 
-    const { post, postLikesCount, comments, topLevelCommentsCount, commentsCount, like, isLiked } = props;
+    const { post, postLikesCount, comments, like, isLiked } = props;
     const postLikes =
       parseInt(postLikesCount, 10) ||
       parseInt(post.postLikesCount, 10) ||
       parseInt(post.likesCount, 10) || 0;
+
+    const topLevelCommentsCount =
+      parseInt(props.topLevelCommentsCount, 10) ||
+      parseInt(post.topLevelCommentsCount, 10) ||
+      parseInt(post.repliesCount, 10) || 0;
+
+    const commentsCount =
+      parseInt(props.commentsCount, 10) ||
+      parseInt(post.commentsCount, 10) ||
+      parseInt(post.repliesCount, 10) || 0;
 
     this.state = {
       comment: '',
@@ -226,6 +238,23 @@ export default class PostDetails extends PureComponent {
     this.replyRef = { comment: refComment, mention, name, callback };
     this.focusOnCommentInput();
   };
+
+  onViewParentPress = () => {
+    const { post, currentUser, componentId } = this.props;
+    if (!post || !post.post) return;
+
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: {
+          post: post.post,
+          comments: [],
+          like: null,
+          currentUser,
+        },
+      },
+    });
+  }
 
   toggleLike = async () => {
     try {
@@ -408,7 +437,6 @@ export default class PostDetails extends PureComponent {
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />
-
         <View style={{ flex: 1 }}>
           <ScrollView>
             <PostMain
@@ -421,8 +449,9 @@ export default class PostDetails extends PureComponent {
               taggedMedia={media}
               taggedEpisode={spoiledUnit}
               componentId={componentId}
+              showViewParent={!!(post && post.post)}
+              onStatusPress={this.onViewParentPress}
             />
-
             <PostActions
               isLiked={isLiked}
               onLikePress={this.toggleLike}

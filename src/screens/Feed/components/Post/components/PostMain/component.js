@@ -22,6 +22,8 @@ export const PostMain = ({
   taggedEpisode,
   componentId,
   onPress,
+  onStatusPress,
+  showViewParent,
 }) => {
   const hasContentAbove = !isEmpty(content) || taggedMedia;
   return (
@@ -62,7 +64,7 @@ export const PostMain = ({
           componentId={componentId}
         />
       }
-      <PostStatus onPress={onPress} likesCount={likesCount} commentsCount={commentsCount} />
+      <PostStatus onPress={onStatusPress || onPress} likesCount={likesCount} commentsCount={commentsCount} showViewParent={showViewParent}/>
     </View>
   );
 };
@@ -78,6 +80,8 @@ PostMain.propTypes = {
   taggedEpisode: PropTypes.object,
   componentId: PropTypes.any.isRequired,
   onPress: PropTypes.func,
+  onStatusPress: PropTypes.func,
+  showViewParent: PropTypes.bool,
 };
 PostMain.defaultProps = {
   cacheKey: null,
@@ -89,4 +93,6 @@ PostMain.defaultProps = {
   taggedMedia: null,
   taggedEpisode: null,
   onPress: null,
+  onStatusPress: null,
+  showViewParent: false,
 };
