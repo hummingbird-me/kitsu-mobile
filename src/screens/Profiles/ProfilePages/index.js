@@ -24,8 +24,8 @@ import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
 import { kitsuConfig } from 'kitsu/config/env';
 import { Navigation } from 'react-native-navigation';
 import { NavigationActions } from 'kitsu/navigation';
-import { Summary, Feed, About, Library, Groups, Reactions } from './pages';
 import { fetchUserLibrary } from 'kitsu/store/profile/actions';
+import { Summary, Feed, About, Library, Groups, Reactions } from './pages';
 
 const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 
@@ -40,28 +40,44 @@ const TAB_ITEMS = [
   tabPage('Reactions', Reactions),
 ];
 
+const tabs = TAB_ITEMS.map(t => t.key);
+
 class ProfilePage extends PureComponent {
   static propTypes = {
     componentId: PropTypes.any.isRequired,
     userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     currentUser: PropTypes.object.isRequired,
+    activeTab: PropTypes.oneOf(tabs),
   }
 
-  state = {
-    active: 'Summary',
-    loading: true,
-    error: null,
-    profile: null,
-    feed: null,
-    follow: null,
-    isLoadingFollow: false,
-    editModalVisible: false,
-    libraryActivity: [],
-    loadingLibraryActivity: false,
-    reactions: [],
-    loadingReactions: false,
-    groups: [],
-    loadingGroups: false,
+  static defaultProps = {
+    activeTab: 'summary',
+  }
+
+  constructor(props) {
+    super(props);
+
+    let activeTab = props.activeTab;
+
+    // If tab is invalid then show the summary
+    if (!tabs.includes(activeTab)) activeTab = 'summary';
+
+    this.state = {
+      active: activeTab,
+      loading: true,
+      error: null,
+      profile: null,
+      feed: null,
+      follow: null,
+      isLoadingFollow: false,
+      editModalVisible: false,
+      libraryActivity: [],
+      loadingLibraryActivity: false,
+      reactions: [],
+      loadingReactions: false,
+      groups: [],
+      loadingGroups: false,
+    };
   }
 
   componentWillMount() {
@@ -354,8 +370,8 @@ class ProfilePage extends PureComponent {
         <TabBarLink
           key={tabItem.key}
           label={tabItem.label}
-          isActive={this.state.active === tabItem.label}
-          onPress={() => this.setActiveTab(tabItem.label)}
+          isActive={this.state.active === tabItem.key}
+          onPress={() => this.setActiveTab(tabItem.key)}
         />
       ))}
     </TabBar>
@@ -365,12 +381,12 @@ class ProfilePage extends PureComponent {
     <View style={{ flex: 1 }}>
       {this.renderTabNav()}
       {TAB_ITEMS.map((tabItem) => {
-        return this.renderTab(tabItem.screen, tabItem.label);
+        return this.renderTab(tabItem.screen, tabItem.key);
       })}
     </View>
   );
 
-  renderTab = (Component, name) => {
+  renderTab = (Component, key) => {
     const { userId, componentId, currentUser } = this.props;
     const {
       loadingLibraryActivity,
@@ -383,7 +399,7 @@ class ProfilePage extends PureComponent {
     } = this.state;
 
     // Don't render tabs that are not visible
-    if (name !== active) return null;
+    if (key !== active) return null;
 
     const otherProps = {
       userId,
@@ -399,7 +415,7 @@ class ProfilePage extends PureComponent {
 
     return (
       <Component
-        key={name}
+        key={key}
         setActiveTab={tab => this.setActiveTab(tab)}
         profile={this.state.profile}
         {...otherProps}

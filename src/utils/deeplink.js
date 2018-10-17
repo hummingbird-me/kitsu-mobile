@@ -142,6 +142,14 @@ function isNumeric(x) {
  * @param {string} type The type of media. `anime` or `manga`
  */
 const handleMedia = async (response, type) => {
+  // Make sure that we have a valid route that we can navigate to.
+  // If we don't have a valid route then open the url in the browser
+  const validRoutes = ['episodes', 'chapters', 'reactions', 'franchise'];
+  if (response && response.tab && !validRoutes.includes(response.tab)) {
+    Linking.openURL(`${response.scheme}${response.path}`);
+    return;
+  }
+
   if (!visibleComponentId || !response.id) return;
   let mediaId = response.id;
 
@@ -238,7 +246,11 @@ const handleUnit = async (response, type) => {
     Navigation.push(visibleComponentId, {
       component: {
         name: Screens.MEDIA_UNIT_DETAIL,
-        passProps: { unit, media, shouldShowMediaCard: true },
+        passProps: {
+          unit,
+          media,
+          shouldShowMediaCard: true,
+        },
       },
     });
   }
@@ -250,6 +262,14 @@ const handleUnit = async (response, type) => {
  * @param {*} response The deep link response
  */
 const handleUser = async (response) => {
+  // Make sure that we have a valid route that we can navigate to.
+  // If we don't have a valid route then open the url in the browser
+  const validRoutes = ['library', 'groups', 'reactions'];
+  if (response && response.tab && !validRoutes.includes(response.tab)) {
+    Linking.openURL(`${response.scheme}${response.path}`);
+    return;
+  }
+  
   if (!visibleComponentId || !response.id) return;
   let userId = response.id;
 
@@ -279,7 +299,10 @@ const handleUser = async (response) => {
     Navigation.push(visibleComponentId, {
       component: {
         name: Screens.PROFILE_PAGE,
-        passProps: { userId },
+        passProps: {
+          userId,
+          activeTab: response.tab,
+        },
       },
     });
   }
