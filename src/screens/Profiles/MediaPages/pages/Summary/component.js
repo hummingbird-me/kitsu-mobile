@@ -11,7 +11,7 @@ import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { upperFirst, isEmpty } from 'lodash';
+import { upperFirst, isEmpty, uniqBy } from 'lodash';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { STREAMING_SERVICES } from 'kitsu/constants/app';
 import { Navigation } from 'react-native-navigation';
@@ -92,6 +92,7 @@ class SummaryComponent extends PureComponent {
       // Filter out non-post activities
       const feed = preprocessFeed(result).filter(i => i.type === 'posts');
       data = reset ? [...feed] : [...this.state.feed, ...feed];
+      data = uniqBy(data, 'id');
     } catch (error) {
       console.log(error);
       data = [];

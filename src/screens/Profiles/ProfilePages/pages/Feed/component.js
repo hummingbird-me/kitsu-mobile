@@ -13,7 +13,7 @@ import { Navigation } from 'react-native-navigation';
 import URL from 'url-parse';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Button } from 'kitsu/components/Button';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 
 class FeedComponent extends PureComponent {
   static propTypes = {
@@ -81,6 +81,7 @@ class FeedComponent extends PureComponent {
       // Need to change this here if we want to also display media updates, follows, etc
       const feed = preprocessFeed(result).filter(i => i.type === 'posts');
       data = reset ? [...feed] : [...this.state.feed, ...feed];
+      data = uniqBy(data, 'id');
     } catch (error) {
       console.log(error);
       data = [];
