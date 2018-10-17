@@ -190,6 +190,12 @@ const handleMedia = async (response, type) => {
   }
 };
 
+/**
+ * Handle unit deep links
+ *
+ * @param {*} response The deep link response
+ * @param {string} type The type of media. `anime` or `manga`
+ */
 const handleUnit = async (response, type) => {
   const unitType = type === 'anime' ? 'episodes' : 'chapters';
   let media = null;
@@ -230,7 +236,10 @@ const handleUnit = async (response, type) => {
     const includes = type === 'anime' ? 'videos' : null;
 
     const results = await Kitsu.findAll(unitType, {
-      filter: { [idKey]: media.id },
+      filter: {
+        [idKey]: media.id,
+        number: response.number,
+      },
       includes,
     });
     unit = results && results.length > 0 && results[0];
