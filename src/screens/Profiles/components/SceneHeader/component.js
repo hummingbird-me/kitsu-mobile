@@ -24,6 +24,7 @@ export class SceneHeader extends PureComponent {
       popularityRank,
       ratingRank,
       categories,
+      onCategoryPress,
       description,
       followersCount,
       followingCount,
@@ -65,9 +66,10 @@ export class SceneHeader extends PureComponent {
             renderItem={({ index, item }) => {
               const colorIndex = index % PILL_COLORS.length;
               const color = PILL_COLORS[colorIndex];
+              const onPress = onCategoryPress ? () => onCategoryPress(item) : null;
               return (
                 <View style={{ marginLeft: 5 }}>
-                  <Pill color={color} label={item.title} />
+                  <Pill color={color} label={item.title} onPress={onPress} />
                 </View>
               );
             }}
@@ -237,6 +239,7 @@ FollowStatus.defaultProps = {
 
 SceneHeader.propTypes = {
   categories: PropTypes.array,
+  onCategoryPress: PropTypes.func,
   description: PropTypes.string,
   followersCount: PropTypes.number,
   followingCount: PropTypes.number,
@@ -258,6 +261,7 @@ SceneHeader.propTypes = {
 
 SceneHeader.defaultProps = {
   categories: [],
+  onCategoryPress: null,
   description: '',
   followersCount: 0,
   followingCount: 0,
