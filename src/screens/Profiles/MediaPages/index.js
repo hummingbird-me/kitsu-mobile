@@ -141,7 +141,7 @@ class MediaPages extends PureComponent {
         handleURL(`https://www.youtube.com/watch?v=${media.youtubeVideoId}`);
         break;
       default:
-        console.log('unhandled option selected:', option);
+        (('unhandled option selected:', option);
         break;
     }
   }
@@ -361,8 +361,6 @@ class MediaPages extends PureComponent {
         loading: false,
         media,
       });
-
-      console.log(media);
 
       // Lazy load the rest
       this.fetchEpisodesAndRelated(type, id);
