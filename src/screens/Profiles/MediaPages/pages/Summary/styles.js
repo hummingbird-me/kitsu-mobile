@@ -60,4 +60,7 @@ export const styles = StyleSheet.create({
   loading: {
     padding: 24,
   },
+  loadFeedButton: {
+    backgroundColor: colors.listBackPurple,
+  },
 });
