@@ -141,7 +141,7 @@ class MediaPages extends PureComponent {
         handleURL(`https://www.youtube.com/watch?v=${media.youtubeVideoId}`);
         break;
       default:
-        (('unhandled option selected:', option);
+        console.log('unhandled option selected:', option);
         break;
     }
   }
