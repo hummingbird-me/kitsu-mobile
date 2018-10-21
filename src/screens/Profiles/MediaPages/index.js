@@ -347,19 +347,14 @@ class MediaPages extends PureComponent {
     const { currentUser } = this.props;
     if (!libraryEntry || !currentUser || !media) return;
 
-    // We need to combine the media with the entry
-    const entryWithMedia = {
-      ...libraryEntry,
-      [media.type]: media,
-    };
-
     Navigation.push(this.props.componentId, {
       component: {
         name: Screens.LIBRARY_ENTRY_EDIT,
         passProps: {
-          libraryEntry: entryWithMedia,
-          libraryStatus: entryWithMedia.status,
+          libraryEntry,
+          libraryStatus: libraryEntry.status,
           libraryType: media.type,
+          media,
           canEdit: true,
           ratingSystem: currentUser.ratingSystem,
           updateUserLibraryEntry: async (type, status, updates) => {
