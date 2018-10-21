@@ -26,6 +26,8 @@ import { Screens, NavigationActions } from 'kitsu/navigation';
 import { handleURL } from 'kitsu/utils/url';
 import { showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
 
+const HEADER_HEIGHT = statusBarHeight + navigationBarHeight + (isX ? paddingX : 0);
+
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: Summary },
   { key: 'episodes', label: 'Episodes', screen: Episodes, if: (state) => state.media.type === 'anime'},
@@ -289,7 +291,10 @@ class MediaPages extends PureComponent {
   }
 
   setActiveTab = (tab) => {
-    this.setState({ active: tab });
+    if (tab) {
+      this.setState({ active: tab.toLowerCase() });
+      if (this.scrollView) this.scrollView.scrollTo({ x: 0, y: coverImageHeight, animated: true });
+    }
   }
 
   createLibraryEntry = async (options) => {
@@ -560,7 +565,7 @@ class MediaPages extends PureComponent {
     return (
       <Component
         key={key}
-        setActiveTab={tab => this.setActiveTab(tab)}
+        setActiveTab={this.setActiveTab}
         media={media}
         mediaId={media.id}
         onEpisodeProgress={this.onEpisodeProgress}
@@ -631,15 +636,13 @@ class MediaPages extends PureComponent {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Add to Favorites', value: 'add' });
     }
 
-    // TODO: Maybe replace this with const { statusBarHeight, topBarHeight } = await Navigation.constants()
-    const headerHeight = statusBarHeight + navigationBarHeight + (isX ? paddingX : 0);
-
     return (
       <SceneContainer>
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
+          innerRef={(r) => { this.scrollView = r; }}
           style={{ flex: 1 }}
-          headerHeight={headerHeight}
+          headerHeight={HEADER_HEIGHT}
           isHeaderFixed
           parallaxHeight={coverImageHeight}
           renderParallaxBackground={() => (

@@ -166,7 +166,10 @@ class ProfilePage extends PureComponent {
   }
 
   setActiveTab = (tab) => {
-    this.setState({ active: tab });
+    if (tab) {
+      this.setState({ active: tab.toLowerCase() });
+      if (this.scrollView) this.scrollView.scrollTo({ x: 0, y: coverImageHeight, animated: true });
+    }
   }
 
   fetchLibraryActivity = async () => {
@@ -416,7 +419,7 @@ class ProfilePage extends PureComponent {
     return (
       <Component
         key={key}
-        setActiveTab={tab => this.setActiveTab(tab)}
+        setActiveTab={this.setActiveTab}
         profile={this.state.profile}
         {...otherProps}
       />
@@ -462,6 +465,7 @@ class ProfilePage extends PureComponent {
       <SceneContainer>
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
+          innerRef={(r) => { this.parallaxScroll = r; }}
           style={{ flex: 1 }}
           headerHeight={HEADER_HEIGHT}
           isHeaderFixed
