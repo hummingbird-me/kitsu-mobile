@@ -23,7 +23,7 @@ class SearchResults extends Component {
       sort: props.sort,
       defaultSearch: props.default,
       fade: false,
-      filterData: {},
+      filterData: this.getFilterDataFromFilter(props.filter),
     };
   }
 
@@ -35,6 +35,14 @@ class SearchResults extends Component {
     if (nextProps.results !== this.props.results) {
       this.setState({ refreshing: false });
     }
+  }
+
+  getFilterDataFromFilter(filter) {
+    const data = {};
+    if (filter && filter.categories) {
+      data.categories = filter.categories.split(',');
+    }
+    return data;
   }
 
   getData = (index = 0) => {
