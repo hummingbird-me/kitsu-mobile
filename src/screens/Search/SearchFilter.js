@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import ModalSelector from 'react-native-modal-selector';
-import forOwn from 'lodash/forOwn';
-import isObjectLike from 'lodash/isObjectLike';
-import isEmpty from 'lodash/isEmpty';
-import values from 'lodash/values';
+import { forOwn, isObjectLike, values, isEmpty, upperFirst } from 'lodash';
 import { getStreamers } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
@@ -23,15 +20,17 @@ class SearchFilter extends Component {
     };
   }
 
-  state = {
-    ...defaultState,
-  };
+  constructor(props) {
+    super(props);
+    const { data } = this.props;
+    this.state = {
+      ...defaultState,
+      ...data,
+    };
+  }
 
   componentDidMount() {
-    const { data } = this.props;
-    this.setState({ ...data }, () => {
-      this.props.getStreamers();
-    });
+    this.props.getStreamers();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -158,7 +157,7 @@ class SearchFilter extends Component {
       );
     }
     const { categories } = this.state;
-    const first = categories.length > 0 && categories[0];
+    const first = categories.length > 0 && categories[0] && upperFirst(categories[0]);
     const all = categories.length > 0 ? `${first}, +${categories.length - 1}` : 'All';
 
     return (

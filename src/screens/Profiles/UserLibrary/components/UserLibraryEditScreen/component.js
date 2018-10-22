@@ -10,8 +10,8 @@ import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { isNull, isEmpty } from 'lodash';
 import { DatePicker } from 'kitsu/components/DatePicker';
-import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
+import { styles } from './styles';
 
 const visibilityOptions = [
   { text: 'Private', value: true },
@@ -33,12 +33,14 @@ export class UserLibraryEditScreenComponent extends React.Component {
     libraryEntry: PropTypes.object.isRequired,
     libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
     libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
+    media: PropTypes.object,
     ratingSystem: PropTypes.string.isRequired,
     canEdit: PropTypes.bool,
   }
 
   static defaultProps = {
     canEdit: false,
+    media: null,
   }
 
   state = {
@@ -101,10 +103,10 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDateStartedPress = () => {
-    const { libraryEntry, libraryType } = this.props;
+    const { libraryEntry, libraryType, media } = this.props;
     const { startedAt, finishedAt } = this.state;
 
-    const mediaData = libraryEntry[libraryType];
+    const mediaData = libraryEntry[libraryType] || media;
     const startDate = mediaData && mediaData.startDate;
 
     // Cap the minimum to the media start date
@@ -118,11 +120,11 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDateFinishedPress = () => {
-    const { libraryEntry, libraryType } = this.props;
+    const { libraryEntry, libraryType, media } = this.props;
     const { startedAt, finishedAt } = this.state;
 
     // Cap the minimum to the start date and max to the finish date
-    const mediaData = libraryEntry[libraryType];
+    const mediaData = libraryEntry[libraryType] || media;
 
     // If the start date is set then we should only be able to pick dates after that
     // If the end date is not set then set the current date as maximum
@@ -149,8 +151,8 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   getMaxProgress() {
-    const { libraryEntry, libraryType } = this.props;
-    const mediaData = libraryEntry[libraryType];
+    const { libraryEntry, libraryType, media } = this.props;
+    const mediaData = libraryEntry[libraryType] || media;
     if (!mediaData) return null;
 
     if (mediaData.type === 'anime') {

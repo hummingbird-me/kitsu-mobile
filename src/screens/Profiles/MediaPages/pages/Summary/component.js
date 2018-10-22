@@ -162,7 +162,7 @@ class SummaryComponent extends PureComponent {
     return (
       <ScrollableSection
         title="Episodes"
-        onViewAllPress={() => this.navigateTo('Episodes')}
+        onViewAllPress={() => this.navigateTo('episodes')}
         data={this.formatData(episodesWithVideos)}
         loading={loadingAdditional}
         renderItem={({ item }) => (
@@ -228,7 +228,7 @@ class SummaryComponent extends PureComponent {
         <SummaryProgress
           libraryEntry={libraryEntry}
           media={media}
-          onPress={() => this.navigateTo('Episodes')}
+          onPress={() => this.navigateTo('episodes')}
           onEditPress={onLibraryEditPress}
         />
 
@@ -245,7 +245,7 @@ class SummaryComponent extends PureComponent {
         {/* @TODO: Reactions Empty State - Render nothing until we support writing */}
         <ScrollableSection
           title="Reactions"
-          onViewAllPress={() => this.navigateTo('Reactions')}
+          onViewAllPress={() => this.navigateTo('reactions')}
           data={mediaReactions}
           loading={loadingAdditional}
           renderItem={({ item }) => (
@@ -263,7 +263,7 @@ class SummaryComponent extends PureComponent {
         <ScrollableSection
           contentDark
           title="More from this series"
-          onViewAllPress={() => this.navigateTo('Franchise')}
+          onViewAllPress={() => this.navigateTo('franchise')}
           data={this.formatData(media.mediaRelationships)}
           loading={loadingAdditional}
           renderItem={({ item }) => {
@@ -293,7 +293,7 @@ class SummaryComponent extends PureComponent {
         {/* <ScrollableSection
           contentDark
           title="Characters"
-          onViewAllPress={() => this.navigateTo('Characters')}
+          onViewAllPress={() => this.navigateTo('characters')}
           data={castings}
           loading={isNull(castings)}
           renderItem={({ item }) => (

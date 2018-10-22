@@ -116,7 +116,7 @@ export default class Summary extends PureComponent {
         <ScrollableSection
           contentDark
           title="Library activity"
-          onViewAllPress={() => this.navigateTo('Library')}
+          onViewAllPress={() => this.navigateTo('library')}
           data={libraryActivity}
           renderItem={({ item }) => this.renderLibraryActivity(item)}
         />
@@ -125,7 +125,7 @@ export default class Summary extends PureComponent {
         {/* @TODO: Empty state when userReactions != null && empty */}
         <ScrollableSection
           title="Reactions"
-          onViewAllPress={() => this.navigateTo('Reactions')}
+          onViewAllPress={() => this.navigateTo('reactions')}
           data={reactions}
           loading={loadingReactions}
           renderItem={({ item }) => {

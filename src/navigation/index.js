@@ -17,6 +17,7 @@ export const defaultOptions = {
   },
   layout: {
     backgroundColor: listBackPurple,
+    orientation: ['portrait'],
   },
   topBar: {
     // By Default we set the bar to not visible
