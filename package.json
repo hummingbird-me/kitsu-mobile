@@ -32,7 +32,7 @@
     "react-native-code-push": "^5.2.2",
     "react-native-deep-linking": "^2.1.0",
     "react-native-fast-image": "^4.0.14",
-    "react-native-fbsdk": "^0.7.0",
+    "react-native-fbsdk": "^0.8.0",
     "react-native-hyperlink": "^0.0.14",
     "react-native-image-crop-picker": "hummingbird-me/react-native-image-crop-picker",
     "react-native-image-zoom-viewer": "^2.2.5",

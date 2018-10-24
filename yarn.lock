@@ -5855,10 +5855,10 @@ react-native-fast-image@^4.0.14:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-fbsdk@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.7.0.tgz#263dfe5845205de7b80efb0f18ed5c1ded025291"
-  integrity sha512-wM+S+NGaqn437H6IYebLhBy2612aIXNPPxunvN5SdJVIIQZdGhkdDZUDbZmgmFnMRY3wQpQatzp+vRjEmAcEmg==
+react-native-fbsdk@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.8.0.tgz#4ee95ebb7be4b00fa9f871ca594f068c9782c7de"
+  integrity sha512-odqSTgvXtw9f84iU0THTjK+Z9Lvy14aP5Yd0fdfHCXFpb/Q0WrpwsSyjPFXG1AsWIe+FtpzzgJsjOu6E2xqgMQ==
   dependencies:
     adm-zip "^0.4.7"
     fastfall "^1.5.1"
