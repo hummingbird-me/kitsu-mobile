@@ -21,6 +21,7 @@ import { StarRating } from 'kitsu/components/StarRating';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { uniqBy } from 'lodash';
 import { styles as commonStyles } from '../styles';
 import { styles } from './styles';
 
@@ -338,13 +339,17 @@ class RateScreen extends React.Component {
 
   loadInitialMedia = async () => {
     try {
-      const topMedia = await this.fetchMedia();
-      const ratingTwenty = topMedia[0].ratingTwenty;
+      const media = await this.fetchMedia();
+      
+      // Get the unique media objects
+      const topMedia = (media && uniqBy(media, 'id')) || [];
+      const ratingTwenty = topMedia.length > 0 && topMedia[0].ratingTwenty;
+
       this.setState({
         topMedia,
         selected: ratingTwenty && getSimpleTextForRatingTwenty(ratingTwenty),
         ratingTwenty,
-        wantToWatch: topMedia[0].status === 'planned',
+        wantToWatch: topMedia.length > 0 && topMedia[0].status === 'planned',
         pageIndex: 1,
         fetching: false,
       });
@@ -358,11 +363,14 @@ class RateScreen extends React.Component {
     if (!loadingMore) {
       this.setState({ loadingMore: true });
       try {
-        const topMedia = await this.fetchMedia();
+        const media = await this.fetchMedia();
+
+        // Get the unique media objects
+        const topMedia = uniqBy([...this.state.topMedia, ...media], 'id');
         this.setState({
           loadingMore: false,
           pageIndex: pageIndex + 1,
-          topMedia: this.state.topMedia.concat(topMedia),
+          topMedia,
         });
       } catch (e) {
         console.log(e);
