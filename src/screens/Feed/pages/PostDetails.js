@@ -148,18 +148,28 @@ export default class PostDetails extends PureComponent {
         embedUrl = links[0];
       }
 
+      // If we have a reply ref then use that as the parent comment otherwise
+      // If we have a comment as the main `post` then use its id
+      let commentId = null;
+      if (this.replyRef) {
+        commentId = this.replyRef.comment.id;
+      } else if (isComment) {
+        const comment = post.parent ? post.parent : post;
+        commentId = comment.id;
+      }
+
       // Check if this is a reply rather than a top-level comment
       let replyOptions = {};
-      if (this.replyRef) {
+      if (commentId) {
         replyOptions = {
           parent: {
-            id: this.replyRef.comment.id,
+            id: commentId,
             type: 'comments',
           },
           ...replyOptions,
         };
       }
-
+      
       // If we have a comment as the `post` then we need to use its original post id
       const postId = isComment ? post.post && post.post.id : post.id;
       if (!postId) return;
@@ -329,7 +339,7 @@ export default class PostDetails extends PureComponent {
         fields: {
           users: 'slug,avatar,name',
         },
-        include: 'user,uploads',
+        include: 'user,uploads,parent,post',
         sort: '-createdAt',
         ...requestOptions,
       });
