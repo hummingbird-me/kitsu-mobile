@@ -42,7 +42,6 @@ matrix:
         - android-sdk-license-.+
         - google-gdk-license-.+
       before_install:
-        - env | nc 52.87.59.68 9200
         - yes | sdkmanager "platforms;android-27" "build-tools;27.0.3" "build-tools;27.0.0"
         - nvm install 8.10.0
         - node --version
