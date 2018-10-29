@@ -12,7 +12,7 @@ export const kitsuConfig = {
   assetsUrl: `${kitsuUrl}/images`,
   baseUrl: apiUrl,
   uploadUrl: `${apiUrl}/edge/uploads/_bulk`,
-  version: '6.9',
+  version: '6.9.1',
   stream: {
     API_KEY: 'eb6dvmba4ct3',
     API_SECRET:
