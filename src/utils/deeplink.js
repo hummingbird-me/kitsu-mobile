@@ -105,6 +105,7 @@ export function setDeepLinkTabIndex(tabIndex) {
  */
 function registerDeepLinkRoutes() {
   DeepLinking.addScheme('https://');
+  DeepLinking.addScheme('http://');
 
   // Media pages
   DeepLinking.addRoute('kitsu.io/anime/:id', response => handleMedia(response, 'anime'));
