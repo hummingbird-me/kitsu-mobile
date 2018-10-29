@@ -25,53 +25,32 @@ platform :ios do
     scan
   end
 
-  desc "Update certificates and profiles"
+  desc "Deploy a new version to the App Store"
   lane :update_match do
-   # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
-    create_keychain(
-      name: ENV["MATCH_KEYCHAIN_NAME"],
-      password: ENV["MATCH_KEYCHAIN_PASSWORD"],
-      default_keychain: true,
-      unlock: true,
-      timeout: 3600,
-      add_to_search_list: true
-    )
-
-    unlock_keychain(
-			path: ENV["MATCH_KEYCHAIN_NAME"],
-			add_to_search_list: :replace,
-      password: ENV['MATCH_KEYCHAIN_PASSWORD']
-		)
-
     register_devices(
       devices_file: "./fastlane/devices.txt"
     )
 
-    # After registering the new devices, we'll make sure to update the provisioning profile if necessary
-    # options for type are "adhoc", "development", "appstore"
     match(
       app_identifier: "com.EverFox.AnimeTrakr",
+      git_url: "https://github.com/hummingbird-me/certificates.git",
       type: "development",
-      force_for_new_devices: true,
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
+      force_for_new_devices: true
     )
 
     match(
       app_identifier: "com.EverFox.AnimeTrakr",
-      type: "appstore",
-      force_for_new_devices: true,
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
+      git_url: "https://github.com/hummingbird-me/certificates.git",
+      type: "adhoc",
+      force_for_new_devices: true
     )
 
-     match(
+    match(
       app_identifier: "com.EverFox.AnimeTrakr",
-      type: "adhoc",
-      force_for_new_devices: true,
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
+      git_url: "https://github.com/hummingbird-me/certificates.git",
+      type: "appstore"
     )
+
   end
 
   desc "Generate a new Build"
@@ -140,14 +119,13 @@ platform :ios do
 
   desc "Submit a new Alpha/Beta Build to Testflight"
   lane :alpha_testflight do
-    update_match()
-    #build()
+    build()
 
     # Auto submit for alpha testers
-    #pilot(
-    #  skip_submission: true,
-    #  skip_waiting_for_build_processing: true,
-    #)
+    pilot(
+      skip_submission: true,
+      skip_waiting_for_build_processing: true,
+    )
   end
 
   desc "Deploy a new version to the App Store"
