@@ -27,30 +27,51 @@ platform :ios do
 
   desc "Update certificates and profiles"
   lane :update_match do
+   # Before calling match, we make sure all our devices are registered on the Apple Developer Portal
+    create_keychain(
+      name: ENV["MATCH_KEYCHAIN_NAME"],
+      password: ENV["MATCH_KEYCHAIN_PASSWORD"],
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      add_to_search_list: true
+    )
+
+    unlock_keychain(
+			path: ENV["MATCH_KEYCHAIN_NAME"],
+			add_to_search_list: :replace,
+      password: ENV['MATCH_KEYCHAIN_PASSWORD']
+		)
+
     register_devices(
       devices_file: "./fastlane/devices.txt"
     )
 
+    # After registering the new devices, we'll make sure to update the provisioning profile if necessary
+    # options for type are "adhoc", "development", "appstore"
     match(
       app_identifier: "com.EverFox.AnimeTrakr",
-      git_url: "https://github.com/hummingbird-me/certificates.git",
       type: "development",
-      force_for_new_devices: true
+      force_for_new_devices: true,
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
     )
 
     match(
       app_identifier: "com.EverFox.AnimeTrakr",
-      git_url: "https://github.com/hummingbird-me/certificates.git",
+      type: "appstore",
+      force_for_new_devices: true,
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
+    )
+
+     match(
+      app_identifier: "com.EverFox.AnimeTrakr",
       type: "adhoc",
-      force_for_new_devices: true
+      force_for_new_devices: true,
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"]
     )
-
-    match(
-      app_identifier: "com.EverFox.AnimeTrakr",
-      git_url: "https://github.com/hummingbird-me/certificates.git",
-      type: "appstore"
-    )
-
   end
 
   desc "Generate a new Build"
