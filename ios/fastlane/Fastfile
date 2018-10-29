@@ -25,7 +25,7 @@ platform :ios do
     scan
   end
 
-  desc "Deploy a new version to the App Store"
+  desc "Update certificates and profiles"
   lane :update_match do
     register_devices(
       devices_file: "./fastlane/devices.txt"
@@ -119,13 +119,14 @@ platform :ios do
 
   desc "Submit a new Alpha/Beta Build to Testflight"
   lane :alpha_testflight do
-    build()
+    update_match()
+    #build()
 
     # Auto submit for alpha testers
-    pilot(
-      skip_submission: true,
-      skip_waiting_for_build_processing: true,
-    )
+    #pilot(
+    #  skip_submission: true,
+    #  skip_waiting_for_build_processing: true,
+    #)
   end
 
   desc "Deploy a new version to the App Store"
