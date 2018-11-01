@@ -6,18 +6,6 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.listBackPurple,
     flex: 1,
   },
-  headerContainer: {
-    height: Platform.select({ ios: 77, android: 72 }),
-    backgroundColor: colors.listBackPurple,
-    shadowColor: 'rgba(0,0,0,0.2)',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.5,
-    elevation: 3,
-    zIndex: 2,
-  },
   libraryOption: {
     flexDirection: 'row',
     paddingHorizontal: 10,

@@ -18,7 +18,8 @@ import { Feedback } from 'kitsu/components/Feedback';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { navigationOptions, SidebarTitle, ItemSeparator } from './common/';
+import { Navigation } from 'react-native-navigation';
+import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
 import { styles } from './styles';
 
 const RowItem = ({ type, item, onPress }) => {
@@ -105,8 +106,6 @@ const InstantSearchBox = connectSearchBox(
   ));
 
 class Blocking extends React.Component {
-  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'Blocking');
-
   state = {
     loading: true,
     blocks: [],
@@ -250,10 +249,14 @@ class Blocking extends React.Component {
 
   render() {
     const { error, blocks, loading, searchState } = this.state;
-    const { algoliaKeys } = this.props;
+    const { algoliaKeys, componentId } = this.props;
     const listTitle = blocks.length > 0 ? 'Blocked Users' : 'You aren\'t currently blocking any users.';
     return (
       <View style={styles.containerStyle}>
+        <SidebarHeader
+          headerTitle={'Blocking'}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
         <Feedback
           ref={(r) => this.feedback = r}
           title={error}
@@ -304,6 +307,7 @@ const mapStateToProps = ({ app, auth, user }) => ({
 });
 
 Blocking.propTypes = {
+  componentId: PropTypes.any.isRequired,
   accessToken: PropTypes.string,
   currentUser: PropTypes.object,
 };

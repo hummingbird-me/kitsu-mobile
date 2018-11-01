@@ -1,15 +1,27 @@
 import React from 'react';
 import { View, Text, TextInput, ScrollView, LayoutAnimation } from 'react-native';
 import { connect } from 'react-redux';
+import { Navigation } from 'react-native-navigation';
 import PropTypes from 'prop-types';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import isEmpty from 'lodash/isEmpty';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { navigationOptions, SidebarTitle, ItemSeparator, SidebarButton } from './common/';
+import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common';
 import { styles } from './styles';
 
 class GeneralSettings extends React.Component {
-  static navigationOptions = ({ navigation }) => navigationOptions(navigation, 'General');
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+    updateGeneralSettings: PropTypes.func,
+    currentUser: PropTypes.object,
+    loading: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    updateGeneralSettings: () => { },
+    currentUser: {},
+    loading: true,
+  };
 
   constructor(props) {
     super(props);
@@ -111,7 +123,7 @@ class GeneralSettings extends React.Component {
   }
 
   render() {
-    const { loading } = this.props;
+    const { loading, componentId } = this.props;
     const modified = this.isModified();
 
     const { passwordSet, passwordsMatch } = this.passwordState();
@@ -119,7 +131,11 @@ class GeneralSettings extends React.Component {
 
     return (
       <View style={styles.containerStyle}>
-        <ScrollView scrollEnabled={false}>
+        <SidebarHeader
+          headerTitle={'General'}
+          onBackPress={() => Navigation.pop(componentId)}
+        />
+        <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'Personal Settings'} />
           <View style={styles.inputWrapper}>
             <Text style={styles.hintText}>
@@ -219,18 +235,6 @@ const mapStateToProps = ({ user }) => {
     currentUser,
     loading,
   };
-};
-
-GeneralSettings.propTypes = {
-  updateGeneralSettings: PropTypes.func,
-  currentUser: PropTypes.object,
-  loading: PropTypes.bool,
-};
-
-GeneralSettings.defaultProps = {
-  updateGeneralSettings: () => {},
-  currentUser: {},
-  loading: true,
 };
 
 export default connect(mapStateToProps, { updateGeneralSettings })(GeneralSettings);

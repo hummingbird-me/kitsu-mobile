@@ -9,11 +9,7 @@ const initialState = {
   dataSaver: false,
   pushNotificationEnabled: false,
   initialPage: 'Feed',
-  imageLightbox: {
-    visible: false,
-    images: [],
-    initialIndex: 0,
-  },
+  activityIndicatorHOCVisible: false,
 };
 
 export const appReducer = (state = initialState, action) => {
@@ -38,29 +34,10 @@ export const appReducer = (state = initialState, action) => {
         ...state,
         initialPage: action.payload || 'Feed',
       };
-    case types.LIGHTBOX_SHOW: {
-      const images = action.payload.images || [];
-
-      // Cap the index between 0 and images.length - 1
-      const initialIndex = Math.min(images.length - 1, Math.max(action.payload.initialIndex, 0));
-
+    case types.ACTIVITY_INDICATOR_HOC:
       return {
         ...state,
-        imageLightbox: {
-          visible: true,
-          images,
-          initialIndex,
-        },
-      };
-    }
-    case types.LIGHTBOX_HIDE:
-      return {
-        ...state,
-        imageLightbox: {
-          visible: false,
-          images: [],
-          initialIndex: 0,
-        },
+        activityIndicatorHOCVisible: !!action.payload,
       };
     case REHYDRATE: {
       const payload = action && action.payload;
@@ -68,11 +45,7 @@ export const appReducer = (state = initialState, action) => {
       return {
         ...state,
         ...app,
-        imageLightbox: {
-          visible: false,
-          images: [],
-          initialIndex: 0,
-        },
+        activityIndicatorHOCVisible: false,
         rehydratedAt: new Date(),
       };
     }

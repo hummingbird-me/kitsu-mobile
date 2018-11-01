@@ -2,7 +2,8 @@
 export const red = '#DA5E51';
 export const activeRed = '#F87270';
 export const lightPink = '#B7A7B6';
-export const tabRed = 'rgb(252, 117, 92)';
+export const tabRed = '#fc755c';
+export const tabInactive = '#A199A1';
 
 /* blues */
 export const blue = '#43ABF1';

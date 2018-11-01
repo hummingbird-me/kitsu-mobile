@@ -6,9 +6,16 @@ import { getDefaults, getCategories } from 'kitsu/store/anime/actions';
 import { ContentList } from 'kitsu/components/ContentList';
 import { showSeasonResults, showStreamerResults, showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
 import { STREAMING_SERVICES } from 'kitsu/constants/app';
+import { Navigation } from 'react-native-navigation';
+import { PropTypes } from 'prop-types';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
 class TopsList extends PureComponent {
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+  }
+
   componentWillMount() {
     const { active } = this.props;
     this.props.getCategories();
@@ -58,7 +65,7 @@ class TopsList extends PureComponent {
       return {
         title: `${season} ${year}`,
         image: images[season],
-        onPress: () => showSeasonResults(this.props.navigation, season, year),
+        onPress: () => showSeasonResults(this.props.componentId, season, year),
       };
     };
 
@@ -185,7 +192,7 @@ class TopsList extends PureComponent {
       .map(streamer => ({
         ...streamer,
         // Add the touch handler for the streamers
-        onPress: () => showStreamerResults(this.props.navigation, streamer.name),
+        onPress: () => showStreamerResults(this.props.componentId, streamer.name),
       }));
 
     const streamingData = {
@@ -202,7 +209,7 @@ class TopsList extends PureComponent {
     // Add the touch handler for the categories
     const mappedCategories = categories.map(category => ({
       ...category,
-      onPress: () => showCategoryResults(this.props.navigation, type, category.title),
+      onPress: () => showCategoryResults(this.props.componentId, type, category.title),
     }));
 
     const categoryData = {
@@ -262,20 +269,31 @@ class TopsList extends PureComponent {
 
   handleViewAllPress = (title, type, action) => {
     if (action === 'season') {
-      this.props.navigation.navigate('SeasonScreen', {
-        label: 'Seasons',
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: Screens.SEARCH_SEASON,
+          passProps: {
+            label: 'Seasons',
+          },
+        },
       });
       return;
     }
-    this.props.navigation.navigate('SearchResults', {
-      label: title,
-      default: type,
-      active: this.props.active,
+
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.SEARCH_RESULTS,
+        passProps: {
+          label: title,
+          default: type,
+          active: this.props.active,
+        },
+      },
     });
   };
 
   render() {
-    const { active, navigation: { navigate } } = this.props;
+    const { active, componentId } = this.props;
     const data = this.props[active] || {};
     const activeLabel = upperFirst(active);
 
@@ -287,7 +305,7 @@ class TopsList extends PureComponent {
           <ContentList
             {...listItem}
             key={listItem.name || listItem.title}
-            navigate={navigate}
+            componentId={componentId}
             onPress={() => this.handleViewAllPress(listItem.title, listItem.type, listItem.action)}
           />
         ))}

@@ -10,6 +10,7 @@ import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { isNull, isEmpty } from 'lodash';
 import { DatePicker } from 'kitsu/components/DatePicker';
+import { Navigation } from 'react-native-navigation';
 import { styles } from './styles';
 
 const visibilityOptions = [
@@ -27,17 +28,20 @@ const parseISO8601Date = (date) => {
 
 export class UserLibraryEditScreenComponent extends React.Component {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
+    libraryEntry: PropTypes.object.isRequired,
+    libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
+    libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
+    media: PropTypes.object,
+    ratingSystem: PropTypes.string.isRequired,
+    canEdit: PropTypes.bool,
   }
 
-  static navigationOptions = () => ({
-    headerStyle: {
-      shadowColor: 'transparent',
-      elevation: 0,
-    },
-    header: null,
-  });
+  static defaultProps = {
+    canEdit: false,
+    media: null,
+  }
 
   state = {
     notes: this.getLibraryEntry().notes,
@@ -99,10 +103,10 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDateStartedPress = () => {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { libraryEntry, libraryType, media } = this.props;
     const { startedAt, finishedAt } = this.state;
 
-    const mediaData = libraryEntry[libraryType];
+    const mediaData = libraryEntry[libraryType] || media;
     const startDate = mediaData && mediaData.startDate;
 
     // Cap the minimum to the media start date
@@ -116,11 +120,11 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDateFinishedPress = () => {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { libraryEntry, libraryType, media } = this.props;
     const { startedAt, finishedAt } = this.state;
 
     // Cap the minimum to the start date and max to the finish date
-    const mediaData = libraryEntry[libraryType];
+    const mediaData = libraryEntry[libraryType] || media;
 
     // If the start date is set then we should only be able to pick dates after that
     // If the end date is not set then set the current date as maximum
@@ -134,12 +138,12 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   onDeleteEntry = async () => {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
+    const { libraryEntry, libraryType } = this.props;
     this.setState({ loading: true, error: null });
     try {
       await this.props.deleteUserLibraryEntry(libraryEntry.id, libraryType, libraryEntry.status);
       this.setState({ loading: false });
-      this.props.navigation.goBack();
+      Navigation.pop(this.props.componentId);
     } catch (e) {
       this.setState({ loading: false, error: e });
       console.log(e);
@@ -147,8 +151,8 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   getMaxProgress() {
-    const { libraryEntry, libraryType } = this.props.navigation.state.params;
-    const mediaData = libraryEntry[libraryType];
+    const { libraryEntry, libraryType, media } = this.props;
+    const mediaData = libraryEntry[libraryType] || media;
     if (!mediaData) return null;
 
     if (mediaData.type === 'anime') {
@@ -159,13 +163,13 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   getLibraryEntry() {
-    return this.props.navigation.state.params.libraryEntry;
+    return this.props.libraryEntry;
   }
 
   selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
     value: option.value,
-    text: option[this.props.navigation.state.params.libraryType],
-  })).filter(option => option.value !== this.props.navigation.state.params.libraryStatus);
+    text: option[this.props.libraryType],
+  })).filter(option => option.value !== this.props.libraryStatus);
 
   saveEntry = async () => {
     // send the status from props because that is the list we're looking
@@ -176,7 +180,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
       libraryStatus,
       libraryType,
       updateUserLibraryEntry,
-    } = this.props.navigation.state.params;
+    } = this.props;
 
     const {
       finishedAt,
@@ -227,7 +231,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
         private: isPrivate,
       });
       this.setState({ loading: false });
-      this.props.navigation.goBack();
+      Navigation.pop(this.props.componentId);
     } catch (e) {
       this.setState({ loading: false, error: e });
       console.log(e);
@@ -235,7 +239,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
   }
 
   render() {
-    const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props.navigation.state.params;
+    const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props;
     const {
       loading,
       error,
@@ -256,10 +260,13 @@ export class UserLibraryEditScreenComponent extends React.Component {
     // { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
     const status = STATUS_SELECT_OPTIONS.filter(item => item.value === stateStatus)[0][libraryType];
 
+    const goBack = () => Navigation.pop(this.props.componentId);
+
     return (
       <View style={styles.container}>
+        {/* TODO: Replace this with RNN Navigation header */}
         <SimpleHeader
-          leftAction={!loading && this.props.navigation.goBack}
+          leftAction={!loading && goBack}
           leftContent={canEdit ? leftTitle : 'Done'}
           titleContent={canEdit ? 'Edit Entry' : 'Details'}
           rightContent={canEdit ? rightTitle : null}

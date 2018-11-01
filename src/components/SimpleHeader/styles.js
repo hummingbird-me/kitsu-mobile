@@ -7,9 +7,17 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 export const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'flex-end',
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.listBackPurple,
     flexDirection: 'row',
     height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.5,
+    elevation: 3,
+    zIndex: 2,
   },
   headerItemText: {
     ...flattenCommon('text'),

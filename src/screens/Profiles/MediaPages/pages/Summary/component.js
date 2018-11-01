@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FlatList, Linking } from 'react-native';
+import { FlatList, Linking, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
@@ -11,12 +11,15 @@ import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { upperFirst, isNull, isEmpty } from 'lodash';
+import { upperFirst, isEmpty, uniqBy } from 'lodash';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
 import { STREAMING_SERVICES } from 'kitsu/constants/app';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { SummaryProgress } from './progress';
 import { styles } from './styles';
-
+import { Button } from 'kitsu/components/Button';
+import URL from 'url-parse';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -24,7 +27,7 @@ class SummaryComponent extends PureComponent {
     currentUser: PropTypes.object.isRequired,
     media: PropTypes.object.isRequired,
     mediaReactions: PropTypes.array,
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
     setActiveTab: PropTypes.func.isRequired,
     loadingAdditional: PropTypes.bool,
     libraryEntry: PropTypes.object,
@@ -40,11 +43,13 @@ class SummaryComponent extends PureComponent {
   }
 
   state = {
-    loading: true,
+    feed: [],
+    loadingFeed: true,
+    loadingNextFeed: false,
   }
 
   componentDidMount() {
-    this.fetchFeed();
+    this.fetchFeed({ reset: true });
   }
 
   formatData(data, numberOfItems = 12) {
@@ -52,12 +57,21 @@ class SummaryComponent extends PureComponent {
     return data.sort((a, b) => a.number - b.number).slice(0, numberOfItems);
   }
 
-  fetchFeed = async () => {
+  canFetchNextFeed = true;
+  feedCursor = undefined;
+  fetchFeed = async ({ reset = false } = {}) => {
     const { type, id } = this.props.media;
     const endpoint = type.charAt(0).toUpperCase() + type.slice(1);
 
-    this.setState({ loading: true });
+    if (reset) {
+      this.canFetchNextFeed = true;
+      this.feedCursor = undefined;
+      this.setState({ loadingFeed: true });
+    } else if (this.canFetchNextFeed) {
+      this.setState({ loadingNextFeed: true });
+    }
 
+    let data = [];
     try {
       const result = await Kitsu.one('mediaFeed', `${endpoint}-${id}`).get({
         include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
@@ -65,32 +79,61 @@ class SummaryComponent extends PureComponent {
           kind: 'posts',
         },
         page: {
+          cursor: this.feedCursor,
           limit: 10,
         },
       });
 
+      // I need to read the cursor value out of the 'next' link in the result.
+      this.canFetchNextFeed = !isEmpty(result && result.links && result.links.next);
+      const url = new URL(result.links.next, true);
+      this.feedCursor = url.query['page[cursor]'];
+
+      // Filter out non-post activities
       const feed = preprocessFeed(result).filter(i => i.type === 'posts');
-      this.setState({
-        feed,
-        loading: false,
-      });
+      data = reset ? [...feed] : [...this.state.feed, ...feed];
+      data = uniqBy(data, 'id');
     } catch (error) {
       console.log(error);
+      data = [];
+    } finally {
+      this.setState({
+        feed: data,
+        loadingFeed: false,
+        loadingNextFeed: false,
+      });
     }
   }
 
   navigateTo = scene => this.props.setActiveTab(scene);
-  navigateToPost = props => this.props.navigation.navigate('PostDetails', props);
-  navigateToUserProfile = userId => this.props.navigation.navigate('ProfilePages', { userId });
-  navigateToMedia = (mediaType, mediaId) => (
-    this.props.navigation.navigate('MediaPages', { mediaId, mediaType, })
-  );
-  navigateToUnitPage = (unit, media) => {
-    this.props.navigation.navigate('UnitDetails', {
-      unit,
-      media,
-    });
-  }
+
+  navigateToPost = props => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.FEED_POST_DETAILS,
+      passProps: props,
+    },
+  });
+
+  navigateToUserProfile = userId => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.PROFILE_PAGE,
+      passProps: { userId },
+    },
+  });
+
+  navigateToMedia = (mediaType, mediaId) => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.MEDIA_PAGE,
+      passProps: { mediaId, mediaType },
+    },
+  });
+
+  navigateToUnitPage = (unit, media) => Navigation.push(this.props.componentId, {
+    component: {
+      name: Screens.MEDIA_UNIT_DETAIL,
+      passProps: { unit, media },
+    },
+  });
 
   renderItem = ({ item }) => (
     <Post
@@ -98,7 +141,7 @@ class SummaryComponent extends PureComponent {
       onPostPress={this.navigateToPost}
       currentUser={this.props.currentUser}
       navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
-      navigation={this.props.navigation}
+      componentId={this.props.componentId}
     />
   );
 
@@ -119,7 +162,7 @@ class SummaryComponent extends PureComponent {
     return (
       <ScrollableSection
         title="Episodes"
-        onViewAllPress={() => this.navigateTo('Episodes')}
+        onViewAllPress={() => this.navigateTo('episodes')}
         data={this.formatData(episodesWithVideos)}
         loading={loadingAdditional}
         renderItem={({ item }) => (
@@ -176,7 +219,7 @@ class SummaryComponent extends PureComponent {
 
   render() {
     const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
-    const { loading, feed } = this.state;
+    const { loadingFeed, loadingNextFeed, feed } = this.state;
 
     return (
       <SceneContainer>
@@ -185,7 +228,7 @@ class SummaryComponent extends PureComponent {
         <SummaryProgress
           libraryEntry={libraryEntry}
           media={media}
-          onPress={() => this.navigateTo('Episodes')}
+          onPress={() => this.navigateTo('episodes')}
           onEditPress={onLibraryEditPress}
         />
 
@@ -202,7 +245,7 @@ class SummaryComponent extends PureComponent {
         {/* @TODO: Reactions Empty State - Render nothing until we support writing */}
         <ScrollableSection
           title="Reactions"
-          onViewAllPress={() => this.navigateTo('Reactions')}
+          onViewAllPress={() => this.navigateTo('reactions')}
           data={mediaReactions}
           loading={loadingAdditional}
           renderItem={({ item }) => (
@@ -220,7 +263,7 @@ class SummaryComponent extends PureComponent {
         <ScrollableSection
           contentDark
           title="More from this series"
-          onViewAllPress={() => this.navigateTo('Franchise')}
+          onViewAllPress={() => this.navigateTo('franchise')}
           data={this.formatData(media.mediaRelationships)}
           loading={loadingAdditional}
           renderItem={({ item }) => {
@@ -250,7 +293,7 @@ class SummaryComponent extends PureComponent {
         {/* <ScrollableSection
           contentDark
           title="Characters"
-          onViewAllPress={() => this.navigateTo('Characters')}
+          onViewAllPress={() => this.navigateTo('characters')}
           data={castings}
           loading={isNull(castings)}
           renderItem={({ item }) => (
@@ -269,12 +312,25 @@ class SummaryComponent extends PureComponent {
         /> */}
 
         {/* Feed */}
-        { !loading &&
-          <FlatList
-            data={feed || []}
-            keyExtractor={item => `${item.id}`}
-            renderItem={this.renderItem}
-          />
+        { loadingFeed ?
+          <ActivityIndicator color="white" style={styles.loading} />
+          :
+          <React.Fragment>
+            <FlatList
+              data={feed || []}
+              keyExtractor={item => `${item.id}`}
+              renderItem={this.renderItem}
+            />
+            {/* @Temporary - Load more button */}
+            { this.canFetchNextFeed && (
+              <Button
+                style={styles.loadFeedButton}
+                title="Load More"
+                onPress={() => { this.fetchFeed(); } }
+                loading={loadingNextFeed}
+              />
+            )}
+          </React.Fragment>
         }
 
       </SceneContainer>

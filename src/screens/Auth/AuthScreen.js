@@ -23,12 +23,14 @@ import { TERMS_URL } from 'kitsu/constants/app';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { Sentry } from 'react-native-sentry';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
 class AuthScreen extends React.Component {
   state = {
-    authType: this.props.navigation.state.params.authType,
+    authType: this.props.authType,
     loading: false,
     email: '',
     username: '',
@@ -65,10 +67,10 @@ class AuthScreen extends React.Component {
   }
 
   onSubmitSignup = (isFb) => {
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     const { email, username, password, confirmPassword } = this.state;
     if (isFb) {
-      this.props.loginUser(null, navigation, 'login');
+      this.props.loginUser(null, componentId, 'login');
     } else if (
       isEmpty(email) ||
       isEmpty(username) ||
@@ -85,20 +87,20 @@ class AuthScreen extends React.Component {
         toastVisible: true,
       });
     } else {
-      this.props.createUser({ email, username, password: password.trim() }, navigation);
+      this.props.createUser({ email, username, password: password.trim() }, componentId);
     }
   };
 
   onSubmitLogin = () => {
     const { email, password } = this.state;
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     if (isEmpty(email) || isEmpty(password)) {
       this.setState({
         toastTitle: "Inputs can't be blank",
         toastVisible: true,
       });
     } else {
-      this.props.loginUser({ email, password }, navigation);
+      this.props.loginUser({ email, password }, componentId);
     }
   };
 
@@ -122,7 +124,11 @@ class AuthScreen extends React.Component {
   };
 
   onForgotPassword = () => {
-    this.props.navigation.navigate('Recovery');
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.AUTH_RECOVERY,
+      },
+    });
   };
 
   onDismiss = () => {

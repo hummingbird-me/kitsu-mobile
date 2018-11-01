@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StatusBar, Share, TouchableOpacity } from 'react-native';
-import { TabRouter } from 'react-navigation';
+import { StatusBar, Share, View } from 'react-native';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { Kitsu } from 'kitsu/config/api';
+// TODO: Maybe replace this with const { statusBarHeight, topBarHeight } = await Navigation.constants()
 import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Summary } from 'kitsu/screens/Profiles/MediaPages/pages/Summary';
+import { Summary, Episodes, Reactions, Franchise } from 'kitsu/screens/Profiles/MediaPages/pages';
 import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
 import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
@@ -21,57 +21,67 @@ import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { kitsuConfig } from 'kitsu/config/env';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
-import { Lightbox } from 'kitsu/utils/lightbox';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
+import { handleURL } from 'kitsu/utils/url';
+import { showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
 
-const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
+const HEADER_HEIGHT = statusBarHeight + navigationBarHeight + (isX ? paddingX : 0);
+
 const TAB_ITEMS = [
-  { key: 'summary', label: 'Summary', screen: 'Summary' },
-  { key: 'episodes', label: 'Episodes', screen: 'Episodes', if: (state) => state.media.type === 'anime'},
-  { key: 'chapters', label: 'Chapters', screen: 'Episodes', if: (state) => state.media.type === 'manga'},
+  { key: 'summary', label: 'Summary', screen: Summary },
+  { key: 'episodes', label: 'Episodes', screen: Episodes, if: (state) => state.media.type === 'anime'},
+  { key: 'chapters', label: 'Chapters', screen: Episodes, if: (state) => state.media.type === 'manga'},
   // NOTE: Disabled until we improve char db
   // { key: 'characters', label: 'Characters', screen: 'Characters' },
-  { key: 'reactions', label: 'Reactions', screen: 'Reactions' },
-  { key: 'franchise', label: 'Franchise', screen: 'Franchise' },
+  { key: 'reactions', label: 'Reactions', screen: Reactions },
+  { key: 'franchise', label: 'Franchise', screen: Franchise },
 ];
 
-/* eslint-disable global-require */
-
-const TabRoutes = TabRouter({
-  Summary: { screen: Summary },
-  Episodes: { getScreen: () => require('./pages/Episodes').Episodes },
-  Chapters: { getScreen: () => require('./pages/Episodes').Episodes },
-  Characters: { getScreen: () => require('./pages/Characters').Characters },
-  Reactions: { getScreen: () => require('./pages/Reactions').Reactions },
-  Franchise: { getScreen: () => require('./pages/Franchise').Franchise },
-}, {
-  initialRouteName: 'Summary',
-});
-
-/* eslint-enable global-require */
+const tabs = TAB_ITEMS.map(t => t.key);
 
 class MediaPages extends PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    mediaId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    mediaType: PropTypes.string.isRequired,
+    activeTab: PropTypes.oneOf(tabs),
   }
 
-  static navigationOptions = {
-    header: null,
+  static defaultProps = {
+    activeTab: 'summary',
   }
 
-  state = {
-    active: 'Summary',
-    loading: false, // Check whether basic data is loading
-    media: null,
-    castings: null,
-    mediaReactions: null,
-    favorite: null,
-    libraryEntry: null,
-    loadingLibrary: false, // Check whether we are updating/loading library entry
-    loadingAdditional: false, // Check whether episodes & Related are loading
+  constructor(props) {
+    super(props);
+
+    // Validate the active tab
+    let activeTab = props.activeTab;
+
+    // Make sure that media has the right tabs
+    if (props.mediaType === 'anime' && activeTab === 'chapters') {
+      activeTab = 'episodes';
+    } else if (props.mediaType === 'manga' && activeTab === 'episodes') {
+      activeTab = 'chapters';
+    }
+
+    // If tab is invalid then show the summary
+    if (!tabs.includes(activeTab)) activeTab = 'summary';
+
+    this.state = {
+      active: activeTab,
+      loading: false, // Check whether basic data is loading
+      media: null,
+      castings: null,
+      mediaReactions: null,
+      favorite: null,
+      libraryEntry: null,
+      loadingLibrary: false, // Check whether we are updating/loading library entry
+      loadingAdditional: false, // Check whether episodes & Related are loading
+    };
   }
 
   componentDidMount = () => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType } = this.props;
     this.fetchMedia(mediaType, mediaId);
     this.fetchFavorite(mediaType, mediaId);
     this.fetchLibraryEntry(mediaType, mediaId);
@@ -87,7 +97,7 @@ class MediaPages extends PureComponent {
 
   onMainButtonOptionsSelected = async (option) => {
     const { libraryEntry } = this.state;
-    const { mediaType } = this.props.navigation.state.params;
+    const { mediaType } = this.props;
     switch (option) {
       case 'current':
       case 'planned':
@@ -111,7 +121,7 @@ class MediaPages extends PureComponent {
   }
 
   onMoreButtonOptionsSelected = async (option) => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType, currentUser } = this.props;
     const { media } = this.state;
     switch (option) {
       case 'add': {
@@ -121,7 +131,7 @@ class MediaPages extends PureComponent {
             type: mediaType,
           },
           user: {
-            id: this.props.currentUser.id,
+            id: currentUser.id,
             type: 'users',
           },
         });
@@ -149,9 +159,13 @@ class MediaPages extends PureComponent {
           null;
 
         if (isEmpty(coverURL)) return;
-        Lightbox.show([coverURL]);
+        NavigationActions.showLightBox([coverURL]);
         break;
       }
+      case 'trailer':
+        if (!media || !media.youtubeVideoId) return;
+        handleURL(`https://www.youtube.com/watch?v=${media.youtubeVideoId}`);
+        break;
       default:
         console.log('unhandled option selected:', option);
         break;
@@ -159,7 +173,7 @@ class MediaPages extends PureComponent {
   }
 
   onLibraryEntryCreated = (data) => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType } = this.props;
     const { type, entry } = data;
     const { libraryEntry } = this.state;
 
@@ -277,11 +291,14 @@ class MediaPages extends PureComponent {
   }
 
   setActiveTab = (tab) => {
-    this.setState({ active: tab });
+    if (tab) {
+      this.setState({ active: tab.toLowerCase() });
+      if (this.scrollView) this.scrollView.scrollTo({ x: 0, y: coverImageHeight, animated: true });
+    }
   }
 
   createLibraryEntry = async (options) => {
-    const { mediaId, mediaType } = this.props.navigation.state.params;
+    const { mediaId, mediaType } = this.props;
     try {
       this.setState({ loadingLibrary: true });
       const record = await Kitsu.create('libraryEntries', {
@@ -307,7 +324,7 @@ class MediaPages extends PureComponent {
 
   updateLibraryEntry = async (changes) => {
     const { libraryEntry } = this.state;
-    const { mediaType } = this.props.navigation.state.params;
+    const { mediaType } = this.props;
     try {
       this.setState({ loadingLibrary: true });
       const updates = {
@@ -323,27 +340,27 @@ class MediaPages extends PureComponent {
     }
   }
 
-  goBack = () => this.props.navigation.goBack();
+  goBack = () => Navigation.pop(this.props.componentId);
 
   navigateToEditEntry = () => {
     const { libraryEntry, media } = this.state;
-    const { currentUser, navigation } = this.props;
+    const { currentUser } = this.props;
     if (!libraryEntry || !currentUser || !media) return;
 
-    // We need to combine the media with the entry
-    const entryWithMedia = {
-      ...libraryEntry,
-      [media.type]: media,
-    };
-
-    navigation.navigate('UserLibraryEdit', {
-      libraryEntry: entryWithMedia,
-      libraryStatus: entryWithMedia.status,
-      libraryType: media.type,
-      canEdit: true,
-      ratingSystem: currentUser.ratingSystem,
-      updateUserLibraryEntry: async (type, status, updates) => {
-        await this.updateLibraryEntry(updates);
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.LIBRARY_ENTRY_EDIT,
+        passProps: {
+          libraryEntry,
+          libraryStatus: libraryEntry.status,
+          libraryType: media.type,
+          media,
+          canEdit: true,
+          ratingSystem: currentUser.ratingSystem,
+          updateUserLibraryEntry: async (type, status, updates) => {
+            await this.updateLibraryEntry(updates);
+          },
+        },
       },
     });
   }
@@ -494,27 +511,75 @@ class MediaPages extends PureComponent {
           <TabBarLink
             key={tabItem.key}
             label={tabItem.label}
-            isActive={this.state.active === tabItem.screen}
-            onPress={() => this.setActiveTab(tabItem.screen)}
+            isActive={this.state.active === tabItem.key}
+            onPress={() => this.setActiveTab(tabItem.key)}
           />
         );
       })}
     </TabBar>
   );
 
-  render() {
+  renderTabs = () => (
+    <View style={{ flex: 1 }}>
+      {this.renderTabNav()}
+      {TAB_ITEMS.map((tabItem) => {
+        // If this tab item is conditional, run the check
+        if (tabItem.if && !tabItem.if(this.state)) {
+          return null;
+        }
+        return this.renderTab(tabItem.screen, tabItem.key);
+      })}
+    </View>
+  );
+
+  renderTab = (Component, key) => {
     const {
       castings,
-      error,
-      loading,
       media,
       mediaReactions,
-      favorite,
       libraryEntry,
       loadingLibrary,
       loadingAdditional,
+      active,
     } = this.state;
-    const TabScene = TabRoutes.getComponentForRouteName(this.state.active);
+
+    const { componentId } = this.props;
+
+    // Don't render tabs that are not visible
+    if (key !== active) return null;
+
+    const otherProps = {
+      libraryEntry,
+      mediaReactions,
+      castings,
+      loadingAdditional,
+      loadingLibrary,
+      componentId,
+    };
+
+    return (
+      <Component
+        key={key}
+        setActiveTab={this.setActiveTab}
+        media={media}
+        mediaId={media.id}
+        onEpisodeProgress={this.onEpisodeProgress}
+        onLibraryEditPress={this.navigateToEditEntry}
+        {...otherProps}
+      />
+    );
+  }
+
+  render() {
+    const {
+      error,
+      loading,
+      media,
+      favorite,
+      libraryEntry,
+      loadingLibrary,
+    } = this.state;
+
     if (loading) {
       return (
         <SceneContainer>
@@ -555,7 +620,8 @@ class MediaPages extends PureComponent {
     const MORE_BUTTON_OPTIONS = [
       { text: 'Share Media Link', value: 'share' },
       // Only display if media has a valid cover image
-      { text: 'View Cover Image', value: 'cover', if: i => !!(i && i.coverImage) },
+      { text: 'View Cover Image', value: 'cover', if: m => !!(m && m.coverImage) },
+      { text: 'View Youtube Trailer', value: 'trailer', if: m => !!(m && m.youtubeVideoId) },
       'Nevermind',
     ].filter(item => (item.if ? item.if(media) : true));
 
@@ -569,6 +635,7 @@ class MediaPages extends PureComponent {
       <SceneContainer>
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
+          innerRef={(r) => { this.scrollView = r; }}
           style={{ flex: 1 }}
           headerHeight={HEADER_HEIGHT}
           isHeaderFixed
@@ -605,6 +672,11 @@ class MediaPages extends PureComponent {
             ratingRank={media.ratingRank}
             averageRating={parseFloat(media.averageRating) || null}
             categories={media.categories}
+            onCategoryPress={(item) => {
+              if (media) {
+                showCategoryResults(this.props.componentId, media.type, item.title);
+              }
+            }}
             mainButtonTitle={mainButtonTitle}
             mainButtonOptions={MAIN_BUTTON_OPTIONS}
             mainButtonLoading={loadingLibrary}
@@ -612,20 +684,7 @@ class MediaPages extends PureComponent {
             onMainButtonOptionsSelected={this.onMainButtonOptionsSelected}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
-          {this.renderTabNav()}
-          <TabScene
-            setActiveTab={tab => this.setActiveTab(tab)}
-            media={media}
-            mediaId={media.id}
-            libraryEntry={libraryEntry}
-            mediaReactions={mediaReactions}
-            castings={castings}
-            navigation={this.props.navigation}
-            loadingAdditional={loadingAdditional}
-            loadingLibrary={loadingLibrary}
-            onEpisodeProgress={this.onEpisodeProgress}
-            onLibraryEditPress={this.navigateToEditEntry}
-          />
+          {this.renderTabs()}
         </ParallaxScroll>
       </SceneContainer>
     );

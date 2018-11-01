@@ -83,20 +83,22 @@ export class EmbedModal extends PureComponent {
         transparent={false}
         onRequestClose={this.handleCancelPress}
       >
-        <ModalHeader
-          title="Select an Embed"
-          leftButtonTitle="Cancel"
-          leftButtonAction={this.handleCancelPress}
-          rightButtonTitle="Done"
-          rightButtonAction={this.handleDonePress}
-        />
-        <FlatList
-          listKey="embeds"
-          data={filtered}
-          ItemSeparatorComponent={() => <View style={styles.seperator} />}
-          keyExtractor={item => item}
-          renderItem={this.renderItem}
-        />
+        <View style={styles.container}>
+          <ModalHeader
+            title="Select an Embed"
+            leftButtonTitle="Cancel"
+            leftButtonAction={this.handleCancelPress}
+            rightButtonTitle="Done"
+            rightButtonAction={this.handleDonePress}
+          />
+          <FlatList
+            listKey="embeds"
+            data={filtered}
+            ItemSeparatorComponent={() => <View style={styles.seperator} />}
+            keyExtractor={item => item}
+            renderItem={this.renderItem}
+          />
+        </View>
       </Modal>
     );
   }

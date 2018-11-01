@@ -6,20 +6,18 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { getCategories } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import { Navigation } from 'react-native-navigation';
 
 const width = Dimensions.get('screen').width - 40;
 
 class FilterSub extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <NavigationHeader
-        navigation={navigation}
-        title={navigation.state.params.title || navigation.state.params.label}
-      />
-    ),
-    gesturesEnabled: false,
-    tabBarVisible: false,
-  });
+  static options() {
+    return {
+      bottomTabs: {
+        visible: false,
+      },
+    };
+  }
 
   state = {
     show: false,
@@ -31,9 +29,8 @@ class FilterSub extends Component {
   };
 
   componentWillMount() {
-    const { navigation: { state: { params } } } = this.props;
-    if (params.lengthRaw) {
-      const { end, start } = params.lengthRaw;
+    if (this.props.lengthRaw) {
+      const { end, start } = this.props.lengthRaw;
       this.setState({
         start,
         end,
@@ -44,8 +41,8 @@ class FilterSub extends Component {
   }
 
   onSubmit = (item) => {
-    const { navigation } = this.props;
-    navigation.state.params.onPressFilterButton(item);
+    const { onPressFilterButton } = this.props;
+    if (onPressFilterButton) onPressFilterButton(item);
   }
 
   renderItem = ({ item }) => (
@@ -195,7 +192,7 @@ class FilterSub extends Component {
   );
 
   renderFooter = () => {
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     const btnText = 'Set';
     const { start, end } = this.state;
     let title = 'All';
@@ -217,7 +214,7 @@ class FilterSub extends Component {
       >
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => navigation.goBack(null)}
+          onPress={() => Navigation.pop(componentId)}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
             Cancel
@@ -234,14 +231,20 @@ class FilterSub extends Component {
   }
 
   render() {
-    const { key } = this.props.navigation.state.params;
+    const { filterKey, componentId, title, label } = this.props;
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
-        <View style={{ flex: 1 }}>
-          {key === 'length' ? this.renderLength() : this.renderSort()}
-        </View>
-        {key === 'length' && this.renderFooter()}
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <NavigationHeader
+          componentId={componentId}
+          title={title || label}
+        />
+        <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
+          <View style={{ flex: 1 }}>
+            {filterKey === 'length' ? this.renderLength() : this.renderSort()}
+          </View>
+          {filterKey === 'length' && this.renderFooter()}
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -305,7 +308,6 @@ const mapStateToProps = ({ anime }) => {
 };
 
 FilterSub.propTypes = {
-  navigation: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, { getCategories })(FilterSub);

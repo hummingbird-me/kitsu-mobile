@@ -13,7 +13,7 @@ import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, capitalize, isNull, isArray } from 'lodash';
 import { styles } from './styles';
-import { Lightbox } from 'kitsu/utils/lightbox';
+import { NavigationActions } from 'kitsu/navigation';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
@@ -24,6 +24,7 @@ export class SceneHeader extends PureComponent {
       popularityRank,
       ratingRank,
       categories,
+      onCategoryPress,
       description,
       followersCount,
       followingCount,
@@ -65,9 +66,10 @@ export class SceneHeader extends PureComponent {
             renderItem={({ index, item }) => {
               const colorIndex = index % PILL_COLORS.length;
               const color = PILL_COLORS[colorIndex];
+              const onPress = onCategoryPress ? () => onCategoryPress(item) : null;
               return (
                 <View style={{ marginLeft: 5 }}>
-                  <Pill color={color} label={item.title} />
+                  <Pill color={color} label={item.title} onPress={onPress} />
                 </View>
               );
             }}
@@ -148,7 +150,7 @@ export class SceneHeader extends PureComponent {
           <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
             <TouchableOpacity
               style={[styles.profileImageView, styles[`profileImageView__${variant}`]]}
-              onPress={() => Lightbox.show([posterImage])}
+              onPress={() => NavigationActions.showLightBox([posterImage])}
               disabled={isEmpty(posterImage)}
             >
               <StyledProgressiveImage
@@ -237,6 +239,7 @@ FollowStatus.defaultProps = {
 
 SceneHeader.propTypes = {
   categories: PropTypes.array,
+  onCategoryPress: PropTypes.func,
   description: PropTypes.string,
   followersCount: PropTypes.number,
   followingCount: PropTypes.number,
@@ -258,6 +261,7 @@ SceneHeader.propTypes = {
 
 SceneHeader.defaultProps = {
   categories: [],
+  onCategoryPress: null,
   description: '',
   followersCount: 0,
   followingCount: 0,

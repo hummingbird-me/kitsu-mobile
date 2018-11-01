@@ -165,7 +165,7 @@ class MediaModal extends PureComponent {
           rightButtonAction={this.handleDonePress}
           rightButtonDisabled={isNull(selected)}
         />
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <View style={styles.searchBoxContainer}>
             <SearchBox
               placeholder={'Search for Media'}

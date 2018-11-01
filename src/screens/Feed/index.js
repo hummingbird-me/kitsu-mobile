@@ -14,13 +14,17 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { isEmpty } from 'lodash';
 import { FeedCache } from 'kitsu/utils/cache';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
+import { statusBarHeight } from 'kitsu/constants/app';
+import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
 import { feedStreams } from './feedStreams';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: listBackPurple,
-    paddingTop: isX ? paddingX : 0,
+    paddingTop: statusBarHeight + (isX ? paddingX : 0),
   },
   contentContainer: {
     flex: 1,
@@ -30,13 +34,20 @@ const styles = StyleSheet.create({
 
 class Feed extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
   };
 
-  static navigationOptions = {
-    header: null,
-  };
+  static options() {
+    return {
+      sideMenu: {
+        left: {
+          // Enable side drawer only for Feed
+          enabled: true,
+        },
+      },
+    };
+  }
 
   state = {
     activeFeed: 'followingFeed',
@@ -45,15 +56,30 @@ class Feed extends React.PureComponent {
     data: [],
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
+    registerDeepLinks();
     this.fetchFeed();
-  };
+  }
+
+  componentWillUnmount() {
+    unregisterDeepLinks();
+  }
 
   onRefresh = async () => {
     this.setState({ refreshing: true });
     await this.fetchFeed({ reset: true });
     this.setState({ refreshing: false });
   };
+
+  onDrawer = () => {
+    Navigation.mergeOptions(Screens.SIDEBAR, {
+      sideMenu: {
+        left: {
+          visible: true,
+        },
+      },
+    });
+  }
 
   setActiveFeed = (activeFeed) => {
     this.setState(
@@ -150,23 +176,38 @@ class Feed extends React.PureComponent {
   };
 
   navigateToPost = (props) => {
-    this.props.navigation.navigate('PostDetails', props);
-  };
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: props,
+      },
+    });
+  }
 
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
-      this.props.navigation.navigate('CreatePost', {
+      NavigationActions.showCreatePostModal({
         onPostCreated: () => this.fetchFeed({ reset: true }),
       });
     }
   };
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.PROFILE_PAGE,
+        passProps: { userId },
+      },
+    });
   };
 
   navigateToMedia = ({ mediaId, mediaType }) => {
-    this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA_PAGE,
+        passProps: { mediaId, mediaType },
+      },
+    });
   };
 
   keyExtractor = (item, index) => {
@@ -183,7 +224,7 @@ class Feed extends React.PureComponent {
             post={item}
             onPostPress={this.navigateToPost}
             currentUser={this.props.currentUser}
-            navigation={this.props.navigation}
+            componentId={this.props.componentId}
           />
         );
       case 'comments':
@@ -194,10 +235,6 @@ class Feed extends React.PureComponent {
         return null;
     }
   };
-
-  onDrawer = () => {
-    this.props.navigation.navigate('DrawerToggle');
-  }
 
   render() {
     return (

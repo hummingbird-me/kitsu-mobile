@@ -12,7 +12,10 @@ import starFilled from 'kitsu/assets/img/ratings/star.png';
 import { fox } from 'kitsu/assets/img/onboarding/';
 import { updateLibrarySettings } from 'kitsu/store/user/actions/';
 import { setScreenName } from 'kitsu/store/onboarding/actions';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 
 const getRatingSystem = (type) => {
   switch (type) {
@@ -79,9 +82,13 @@ class RatingSystemScreen extends React.Component {
     const { ratingSystem } = this.state;
     const success = await this.props.updateLibrarySettings({ ratingSystem });
     if (success) {
-      // this.props.setScreenName('ManageLibrary');
-      this.props.navigation.navigate('ManageLibrary', {
-        hasRatedAnimes: this.props.selectedAccount === 'aozora',
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: Screens.ONBOARDING_MANAGE_LIBRARY,
+          passProps: {
+            hasRatedAnimes: this.props.selectedAccount === 'aozora',
+          },
+        },
       });
     }
   };
@@ -91,6 +98,7 @@ class RatingSystemScreen extends React.Component {
     const { loading } = this.props;
     return (
       <View style={styles.container}>
+        <OnboardingHeader />
         <ScrollView style={styles.contentWrapper}>
           <Text style={styles.tutorialText}>
             How would you prefer to rate the things you’ve seen and read?

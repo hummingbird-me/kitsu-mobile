@@ -4,36 +4,33 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import ModalSelector from 'react-native-modal-selector';
-import forOwn from 'lodash/forOwn';
-import isObjectLike from 'lodash/isObjectLike';
-import isEmpty from 'lodash/isEmpty';
-import values from 'lodash/values';
+import { forOwn, isObjectLike, values, isEmpty, upperFirst } from 'lodash';
 import { getStreamers } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 class SearchFilter extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <NavigationHeader
-        navigation={navigation}
-        title="Filters"
-        leftIcon={null}
-        leftAction={null}
-      />
-    ),
-    tabBarVisible: false,
-  });
+  static options() {
+    return {
+      bottomTabs: {
+        visible: false,
+      },
+    };
+  }
 
-  state = {
-    ...defaultState,
-  };
+  constructor(props) {
+    super(props);
+    const { data } = this.props;
+    this.state = {
+      ...defaultState,
+      ...data,
+    };
+  }
 
   componentDidMount() {
-    const { data } = this.props.navigation.state.params;
-    this.setState({ ...data }, () => {
-      this.props.getStreamers();
-    });
+    this.props.getStreamers();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -48,7 +45,7 @@ class SearchFilter extends Component {
   }
 
   onApply = () => {
-    const { navigation: { state: { params: { onApply } } } } = this.props;
+    const { onApply } = this.props;
     const query = {
       filter: {},
       sort: {},
@@ -95,7 +92,7 @@ class SearchFilter extends Component {
   }
 
   renderFooter = () => {
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     const btnText = 'Apply Filters';
 
     return (
@@ -112,7 +109,7 @@ class SearchFilter extends Component {
       >
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => navigation.goBack(null)}
+          onPress={() => Navigation.pop(componentId)}
         >
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
             Cancel
@@ -129,7 +126,7 @@ class SearchFilter extends Component {
   }
 
   renderItem = ({ item }) => {
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     const { key } = item;
 
     if (key === 'length') {
@@ -160,7 +157,7 @@ class SearchFilter extends Component {
       );
     }
     const { categories } = this.state;
-    const first = categories.length > 0 && categories[0];
+    const first = categories.length > 0 && categories[0] && upperFirst(categories[0]);
     const all = categories.length > 0 ? `${first}, +${categories.length - 1}` : 'All';
 
     return (
@@ -168,16 +165,21 @@ class SearchFilter extends Component {
         button
         style={styles.parentItem}
         onPress={() =>
-          navigation.navigate('FilterCategory', {
-            active: 'anime',
-            key,
-            categories: this.state.categoriesRaw,
-            onPressFilterButton: (data) => {
-              navigation.goBack(null);
-              this.setState({ categoriesRaw: data });
-              this.setState({ categories: values(data).filter(a => a) });
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.SEARCH_CATEGORY,
+              passProps: {
+                active: 'anime',
+                itemKey: key,
+                categoriesRaw: this.state.categoriesRaw,
+                onPressFilterButton: (data) => {
+                  Navigation.popTo(componentId);
+                  this.setState({ categoriesRaw: data, categories: values(data).filter(a => a) });
+                },
+              },
             },
-          })}
+          })
+        }
       >
         <View style={styles.itemContainer}>
           <Text style={styles.outerText}>
@@ -195,23 +197,29 @@ class SearchFilter extends Component {
   }
 
   renderCustomItem = (header, param) => {
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     return (
       <TouchableOpacity
         button
         style={styles.parentItem}
         onPress={() =>
-          navigation.navigate('FilterSub', {
-            active: 'anime',
-            title: header,
-            key: param,
-            lengthRaw: this.state.lengthRaw,
-            onPressFilterButton: (data) => {
-              navigation.goBack(null);
-              this.setState({ [param]: data });
-              this.setState({ [`${param}Raw`]: data });
+          Navigation.push(componentId, {
+            component: {
+              name: Screens.SEARCH_FILTER_SUB,
+              passProps: {
+                active: 'anime',
+                title: header,
+                filterKey: param,
+                lengthRaw: this.state.lengthRaw,
+                onPressFilterButton: (data) => {
+                  Navigation.popTo(componentId);
+                  this.setState({ [param]: data });
+                  this.setState({ [`${param}Raw`]: data });
+                },
+              },
             },
-          })}
+          })
+        }
       >
         <View style={styles.itemContainer}>
           <Text style={styles.outerText}>
@@ -243,29 +251,37 @@ class SearchFilter extends Component {
       { key: 'avail', title: 'Availability' },
     ];
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
-        <View style={{ flex: 1, padding: 20, paddingTop: 0 }}>
-          {this.renderCustomItem('Sort By', 'sort')}
-          <FlatList
-            contentContainerStyle={{ flexGrow: 1 }}
-            scrollEnabled={false}
-            data={data}
-            ListHeaderComponent={this.renderSectionHeader}
-            renderItem={this.renderItem}
-            keyExtractor={d => d.key}
-          />
-          <TouchableOpacity
-            button
-            style={styles.parentItem}
-            onPress={() => this.setState(defaultState)}
-          >
-            <Text style={{ ...styles.outerText, color: 'rgba(255,183,88,0.7)' }}>
-              Reset Filters
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {this.renderFooter()}
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <NavigationHeader
+          componentId={this.props.componentId}
+          title="Filters"
+          leftIcon={null}
+          leftAction={null}
+        />
+        <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
+          <View style={{ flex: 1, padding: 20, paddingTop: 0 }}>
+            {this.renderCustomItem('Sort By', 'sort')}
+            <FlatList
+              contentContainerStyle={{ flexGrow: 1 }}
+              scrollEnabled={false}
+              data={data}
+              ListHeaderComponent={this.renderSectionHeader}
+              renderItem={this.renderItem}
+              keyExtractor={d => d.key}
+            />
+            <TouchableOpacity
+              button
+              style={styles.parentItem}
+              onPress={() => this.setState(defaultState)}
+            >
+              <Text style={{ ...styles.outerText, color: 'rgba(255,183,88,0.7)' }}>
+                Reset Filters
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {this.renderFooter()}
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -388,7 +404,6 @@ const mapStateToProps = ({ anime }) => {
 };
 
 SearchFilter.propTypes = {
-  navigation: PropTypes.object.isRequired,
   getStreamers: PropTypes.func.isRequired,
 };
 

@@ -11,6 +11,8 @@ import { MediaCard } from 'kitsu/components/MediaCard';
 import Swipeable from 'react-native-swipeable';
 import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
 import { styles } from './styles';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 const USER_LIBRARY_EDIT_SCREEN = 'UserLibraryEdit';
 
@@ -38,11 +40,15 @@ export class UserLibraryListCard extends React.PureComponent {
     libraryEntry: PropTypes.object.isRequired,
     libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
     libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
-    navigate: PropTypes.func.isRequired,
     onSwipingItem: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
+    componentId: PropTypes.any,
+  }
+
+  static defaultProps = {
+    componentId: null,
   }
 
   state = {
@@ -137,17 +143,25 @@ export class UserLibraryListCard extends React.PureComponent {
         libraryEntry,
         libraryStatus,
         libraryType,
+        componentId,
       } = this.props;
 
-      this.props.navigate(USER_LIBRARY_EDIT_SCREEN, {
-        libraryEntry,
-        libraryStatus,
-        libraryType,
-        profile,
-        canEdit: profile.id === currentUser.id,
-        ratingSystem: currentUser.ratingSystem,
-        updateUserLibraryEntry: this.updateUserLibraryEntry,
-      });
+      if (componentId) {
+        Navigation.push(componentId, {
+          component: {
+            name: Screens.LIBRARY_ENTRY_EDIT,
+            passProps: {
+              libraryEntry,
+              libraryStatus,
+              libraryType,
+              profile,
+              canEdit: profile.id === currentUser.id,
+              ratingSystem: currentUser.ratingSystem,
+              updateUserLibraryEntry: this.updateUserLibraryEntry,
+            },
+          },
+        });
+      }
     }
   }
 
@@ -196,7 +210,7 @@ export class UserLibraryListCard extends React.PureComponent {
   }
 
   render() {
-    const { libraryEntry, libraryType, currentUser } = this.props;
+    const { libraryEntry, libraryType, currentUser, componentId } = this.props;
     const { isSliderActive, ratingTwenty, progress, isRating } = this.state;
     const mediaData = libraryEntry[libraryType];
     const canEdit = this.props.profile.id === this.props.currentUser.id;
@@ -249,7 +263,7 @@ export class UserLibraryListCard extends React.PureComponent {
               cardDimensions={{ height: 75, width: 65 }}
               cardStyle={styles.posterImage}
               mediaData={mediaData}
-              navigate={this.props.navigate}
+              componentId={componentId}
             />
 
             <View style={styles.content}>

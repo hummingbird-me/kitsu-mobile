@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, ActivityIndicator, Dimensions, TouchableOpacity } from 'react-native';
-import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
+import { View, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { StyledText } from 'kitsu/components/StyledText';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
 const HEADER_TEXT_MAPPING = {
@@ -17,27 +18,10 @@ const HEADER_TEXT_MAPPING = {
 };
 
 export class UserLibraryListScreenComponent extends PureComponent {
-  static navigationOptions = (props) => {
-    const { libraryStatus, libraryType, profile } = props.navigation.state.params;
-    return {
-      headerStyle: {
-        shadowColor: 'transparent',
-        elevation: 0,
-      },
-      header: () => (
-        <ProfileHeader
-          profile={profile}
-          title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
-          onClickBack={() => props.navigation.goBack(null)}
-        />
-      ),
-    };
-  };
-
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
     libraryEntries: PropTypes.object.isRequired,
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
@@ -84,11 +68,17 @@ export class UserLibraryListScreenComponent extends PureComponent {
   }
 
   navigateToSearch = () => {
-    const { profile } = this.props.navigation.state.params;
-    const { navigation } = this.props;
+    const { profile, componentId } = this.props;
 
-    if (profile && navigation) {
-      navigation.navigate('LibrarySearch', { profile });
+    if (profile) {
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.LIBRARY_SEARCH,
+          passProps: {
+            profile,
+          },
+        },
+      });
     }
   };
 
@@ -106,7 +96,7 @@ export class UserLibraryListScreenComponent extends PureComponent {
     const {
       currentUser,
       profile,
-      navigation,
+      componentId,
       libraryEntries,
       libraryStatus,
       libraryType,
@@ -116,11 +106,16 @@ export class UserLibraryListScreenComponent extends PureComponent {
 
     return (
       <View style={styles.container}>
+        <ProfileHeader
+          profile={profile}
+          title={HEADER_TEXT_MAPPING[libraryStatus][libraryType]}
+          onClickBack={() => Navigation.pop(componentId)}
+        />
         {this.renderSearchBar()}
         <UserLibraryList
+          componentId={componentId}
           currentUser={currentUser}
           profile={profile}
-          navigation={navigation}
           libraryEntries={(libraryEntries && libraryEntries.data) || []}
           libraryStatus={libraryStatus}
           libraryType={libraryType}

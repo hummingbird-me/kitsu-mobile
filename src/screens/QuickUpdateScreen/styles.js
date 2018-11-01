@@ -1,6 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
-import { isX } from 'kitsu/utils/isX';
+import { isX, paddingX } from 'kitsu/utils/isX';
 import * as colors from 'kitsu/constants/colors';
+import { statusBarHeight } from 'kitsu/constants/app';
 
 const styles = StyleSheet.create({
   loadingWrapper: {
@@ -12,6 +13,9 @@ const styles = StyleSheet.create({
   wrapper: {
     flexGrow: 1,
     backgroundColor: colors.listBackPurple,
+  },
+  xWrapper: {
+    paddingTop: statusBarHeight + (isX ? paddingX : 0),
   },
   emptyStateContainer: {
     flex: 1,
@@ -48,13 +52,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   header: {
-    marginTop: Platform.select({ ios: 0, android: 20 }),
-    paddingTop: Platform.select({ ios: 10, android: 0 }) + isX ? 20 : 0,
     height: 70,
     flexDirection: 'row',
     backgroundColor: 'transparent',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   headerText: {
     flex: 1,
@@ -64,12 +66,9 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     fontWeight: '700',
     fontSize: 16,
-    marginTop: isX ? 4 : 0,
   },
   filterButton: {
     position: 'absolute',
-    top: Platform.select({ ios: '60%', android: '30%' }),
-    marginTop: isX ? 10 : 0,
     right: 10,
   },
   contentWrapper: {

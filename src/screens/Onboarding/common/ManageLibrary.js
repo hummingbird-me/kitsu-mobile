@@ -3,7 +3,10 @@ import { View, Text } from 'react-native';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
+import { OnboardingHeader } from './OnboardingHeader/component';
 
 const getTitle = (selectedAccount, hasRatedAnimes) => {
   if (selectedAccount === 'aozora') {
@@ -27,34 +30,48 @@ const getButtonTitle = (selectedAccount, hasRatedAnimes, buttonIndex) => {
   return 'Import MyAnimelist or Anilist account';
 };
 
-const onPress = (navigation, selectedAccount, hasRatedAnimes, buttonIndex, _completeOnboarding) => {
+const onPress = (componentId, selectedAccount, hasRatedAnimes, buttonIndex, _completeOnboarding) => {
   if (buttonIndex === 0) {
     if (selectedAccount === 'aozora') {
-      navigation.navigate('RateScreen', { type: 'manga', selectedAccount, hasRatedAnimes: true });
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.ONBOARDING_RATE_SCREEN,
+          passProps: { type: 'manga', selectedAccount, hasRatedAnimes: true },
+        },
+      });
     } else if (hasRatedAnimes) {
-      navigation.navigate('RateScreen', { type: 'manga', selectedAccount, hasRatedAnimes: true });
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.ONBOARDING_RATE_SCREEN,
+          passProps: { type: 'manga', selectedAccount, hasRatedAnimes: true },
+        },
+      });
     } else {
-      navigation.navigate('RateScreen', { type: 'anime', selectedAccount, hasRatedAnimes: false });
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.ONBOARDING_RATE_SCREEN,
+          passProps: { type: 'anime', selectedAccount, hasRatedAnimes: false },
+        },
+      });
     }
   } else if (selectedAccount === 'aozora' || (selectedAccount === 'kitsu' && hasRatedAnimes)) {
     _completeOnboarding();
   } else {
-    navigation.navigate('ImportLibrary');
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.ONBOARDING_IMPORT_LIBRARY,
+      },
+    });
   }
 };
 
 class ManageLibrary extends React.Component {
-  static navigationOptions = {
-    backEnabled: true,
-  };
-
   completeOnboarding = () => {
-    this.props.completeOnboarding(this.props.navigation);
+    this.props.completeOnboarding();
   };
 
   render() {
-    const { navigation, selectedAccount, accounts } = this.props;
-    const { hasRatedAnimes } = navigation.state.params;
+    const { componentId, selectedAccount, accounts, hasRatedAnimes } = this.props;
 
     const kitsuAccountHasEntries = (
       accounts && accounts.kitsu && accounts.kitsu.library_entries >= 5
@@ -64,6 +81,10 @@ class ManageLibrary extends React.Component {
 
     return (
       <View style={styles.container}>
+        <OnboardingHeader
+          componentId={componentId}
+          backEnabled
+        />
         <View style={styles.contentWrapper}>
           <Text style={[styles.tutorialText, styles.tutorialText]}>
             {getTitle(selectedAccount, ratedAnime)}
@@ -71,14 +92,14 @@ class ManageLibrary extends React.Component {
           <Button
             style={[styles.button, { marginTop: 24 }]}
             onPress={() =>
-              onPress(navigation, selectedAccount, ratedAnime, 0, this.completeOnboarding)}
+              onPress(componentId, selectedAccount, ratedAnime, 0, this.completeOnboarding)}
             title={getButtonTitle(selectedAccount, ratedAnime, 0)}
             titleStyle={styles.buttonTitleStyle}
           />
           <Button
             style={[styles.button, styles.buttonSecondary]}
             onPress={() =>
-              onPress(navigation, selectedAccount, ratedAnime, 1, this.completeOnboarding)}
+              onPress(componentId, selectedAccount, ratedAnime, 1, this.completeOnboarding)}
             title={getButtonTitle(selectedAccount, ratedAnime, 1)}
             titleStyle={styles.buttonSecondaryTitle}
           />

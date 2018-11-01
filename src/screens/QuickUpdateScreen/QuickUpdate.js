@@ -23,14 +23,17 @@ import { preprocessFeed, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import { Kitsu } from 'kitsu/config/api';
 import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
 import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
-import { isEmpty, capitalize } from 'lodash';
+import { isEmpty, capitalize, uniqBy } from 'lodash';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
 import { ImageStatus } from 'kitsu/components/ImageStatus';
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import styles from './styles';
+import { EventBus } from 'kitsu/utils/eventBus';
 
 // API request fields
 const LIBRARY_ENTRIES_FIELDS = [
@@ -63,11 +66,8 @@ const CAROUSEL_ITEM_WIDTH = Dimensions.get('window').width * 0.85;
 const DOUBLE_PRESS_DELAY = 500;
 
 class QuickUpdate extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    tabBarOnPress: navigation.state.params && navigation.state.params.tabListener,
-  });
-
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
   };
 
@@ -96,12 +96,6 @@ class QuickUpdate extends Component {
   isLoadingNextPage = false;
   hasNextPage = true;
 
-  get _requestIncludeFields() {
-    const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
-    const includes = filterMode || 'anime,manga';
-    return `${includes},unit,nextUnit`;
-  }
-
   componentWillMount() {
     this.fetchLibrary();
   }
@@ -109,25 +103,6 @@ class QuickUpdate extends Component {
   componentDidMount() {
     this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
     this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
-    this.props.navigation.setParams({
-      tabListener: async ({ previousScene, scene, jumpToIndex }) => {
-        // capture tap events and detect double press to fetch notifications
-        const now = new Date().getTime();
-        const doublePressed = this.lastTap && now - this.lastTap < DOUBLE_PRESS_DELAY;
-        if (previousScene.key !== 'QuickUpdate' || doublePressed) {
-          this.lastTap = null;
-          jumpToIndex(scene.index);
-          this.scrollView.scrollTo({ x: 0, y: 0, animated: true });
-        } else {
-          this.lastTap = now;
-        }
-      },
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeUpdate();
-    this.unsubscribeDelete();
   }
 
   shouldComponentUpdate(_nextProps, nextState) {
@@ -141,19 +116,39 @@ class QuickUpdate extends Component {
     return true;
   }
 
-  onNavigateToSearch = (index) => {
-    this.props.navigation.navigate('Search', {}, {
-      type: 'Navigation/NAVIGATE',
-      routeName: 'SearchAll',
-      params: { initialPage: index },
+  componentWillUnmount() {
+    this.unsubscribeUpdate();
+    this.unsubscribeDelete();
+  }
+
+  onNavigateToSearch = async (index) => {
+    Navigation.popToRoot(Screens.SEARCH);
+    Navigation.mergeOptions(Screens.BOTTOM_TABS, {
+      bottomTabs: {
+        currentTabIndex: 1,
+        // This doesn't seem to work for some reason
+        // currentTabId: Screens.SEARCH,
+      },
     });
+    EventBus.publish(Screens.SEARCH, index);
   };
+
+  get _requestIncludeFields() {
+    const filterMode = this.state.filterMode === 'all' ? undefined : this.state.filterMode;
+    const includes = filterMode || 'anime,manga';
+    return `${includes},unit,nextUnit`;
+  }
 
 
   onMediaTapped = (media) => {
-    const { navigation } = this.props;
-    if (media && navigation) {
-      navigation.navigate('MediaPages', { mediaId: media.id, mediaType: media.type });
+    const { componentId } = this.props;
+    if (media && componentId) {
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.MEDIA_PAGE,
+          passProps: { mediaId: media.id, mediaType: media.type },
+        },
+      });
     }
   }
 
@@ -263,7 +258,7 @@ class QuickUpdate extends Component {
       this.cursor = url.query['page[cursor]'];
 
       const processed = preprocessFeed(posts);
-      const discussions = [...(this.state.discussions || []), ...processed];
+      const discussions = uniqBy([...(this.state.discussions || []), ...processed], 'id');
       this.setState({ discussions, isLoadingFeed: false });
     } catch (error) {
       console.log('Error loading episode feed:', error);
@@ -497,13 +492,19 @@ class QuickUpdate extends Component {
   };
 
   renderPostItem = ({ item }) => {
+    const { componentId, currentUser } = this.props;
     if (item.type !== 'posts') { return null; }
     return (
       <Post
         post={item}
-        onPostPress={(props) => this.props.navigation.navigate('PostDetails', props)}
-        currentUser={this.props.currentUser}
-        navigation={this.props.navigation}
+        onPostPress={props => Navigation.push(componentId, {
+          component: {
+            name: Screens.FEED_POST_DETAILS,
+            passProps: props,
+          },
+        })}
+        currentUser={currentUser}
+        componentId={componentId}
       />
     );
   };
@@ -523,18 +524,16 @@ class QuickUpdate extends Component {
   renderLoading = () => {
     const { headerOpacity } = this.state;
     return (
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          {/* Dummy View, helps with layout to center text */}
-          <View style={styles.spacer} />
           <Text style={styles.headerText}>Quick Update</Text>
         </Animated.View>
         <View style={styles.loadingWrapper}>
           <ActivityIndicator size="large" />
         </View>
       </View>
-    )
+    );
   };
 
   renderEmptyState = () => {
@@ -554,11 +553,9 @@ class QuickUpdate extends Component {
     const descriptionType = filterMode === 'all' ? 'anime or manga' : filterMode;
 
     return (
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          {/* Dummy View, helps with layout to center text */}
-          <View style={styles.spacer} />
           <Text style={styles.headerText}>Quick Update</Text>
           <HeaderFilterButton
             mode={filterMode}
@@ -593,7 +590,7 @@ class QuickUpdate extends Component {
           </View>
         </ScrollView>
       </View>
-    )
+    );
   }
 
   render() {
@@ -637,6 +634,7 @@ class QuickUpdate extends Component {
         <View style={styles.faderCover} />
 
         {/* Carousel */}
+        {/* This will automatically inset on iPhone X devices */}
         <ScrollView
           ref={(r) => { this.scrollView = r; }}
           style={styles.contentWrapper}
@@ -644,8 +642,6 @@ class QuickUpdate extends Component {
         >
           {/* Header */}
           <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-            {/* Dummy View, helps with layout to center text */}
-            <View style={styles.spacer} />
             <Text style={styles.headerText}>Quick Update</Text>
             <HeaderFilterButton
               mode={filterMode}
