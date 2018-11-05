@@ -16,7 +16,7 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
     const user = await Kitsu.findAll('users', {
       fields: {
         users:
-          'id,slug,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,title,titleLanguagePreference,status,hasPassword',
+          'id,slug,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,title,titleLanguagePreference,status,hasPassword,proExpiresAt,aoPro',
       },
       filter: { self: true },
     });
