@@ -28,6 +28,15 @@ export function isAoPro(user) {
   return user && !isNil(user.aoPro);
 }
 
+/**
+ * Check whether a user is PRO with Azora or Kitsu.
+ *
+ * @param {object} user The user.
+ * @returns Whether the user is PRO with Aozora or Kitsu.
+ */
+export function isAoProOrKitsuPro(user) {
+  return isPro(user) || isAoPro(user);
+}
 
 /**
  * Get the title of the user.

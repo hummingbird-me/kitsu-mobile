@@ -21,6 +21,7 @@ import { Screens, NavigationActions } from 'kitsu/navigation';
 import { statusBarHeight } from 'kitsu/constants/app';
 import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
 import { feedStreams } from './feedStreams';
+import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 
 const styles = StyleSheet.create({
   container: {
@@ -230,7 +231,8 @@ class Feed extends React.PureComponent {
               componentId={this.props.componentId}
             />
             {/* Render a AdMobBanner every 5 posts */}
-            {((index + 1) % 5 === 0) && (
+            {!isAoProOrKitsuPro(this.props.currentUser) &&
+              ((index + 1) % 5 === 0) && (
               <React.Fragment>
                 <View style={{ marginTop: 10 }} />
                 <AdMobBanner
