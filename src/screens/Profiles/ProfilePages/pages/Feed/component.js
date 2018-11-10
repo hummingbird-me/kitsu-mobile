@@ -7,13 +7,16 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Platform } from 'react-native';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 import { Navigation } from 'react-native-navigation';
 import URL from 'url-parse';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Button } from 'kitsu/components/Button';
 import { isEmpty, uniqBy } from 'lodash';
+import { AdMobBanner } from 'react-native-admob';
+import { isAoProOrKitsuPro } from 'kitsu/utils/user';
+import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
 
 class FeedComponent extends PureComponent {
   static propTypes = {
@@ -104,13 +107,28 @@ class FeedComponent extends PureComponent {
     }
   };
 
-  renderItem = ({ item }) => (
-    <Post
-      post={item}
-      onPostPress={this.navigateToPost}
-      currentUser={this.props.currentUser}
-      componentId={this.props.componentId}
-    />
+  renderItem = ({ item, index }) => (
+    <React.Fragment>
+      <Post
+        post={item}
+        onPostPress={this.navigateToPost}
+        currentUser={this.props.currentUser}
+        componentId={this.props.componentId}
+      />
+      {/* Render a AdMobBanner every 3 posts */}
+      {!isAoProOrKitsuPro(this.props.currentUser) &&
+        ((index + 1) % 3 === 0) && (
+        <React.Fragment>
+          <View style={{ marginTop: 10 }} />
+          <AdMobBanner
+            adUnitID={ADMOB_AD_UNITS[Platform.OS]}
+            adSize="smartBannerPortrait"
+            testDevices={[AdMobBanner.simulatorId]}
+            onAdFailedToLoad={error => console.log(error)}
+          />
+        </React.Fragment>
+      )}
+    </React.Fragment>
   );
 
   render() {

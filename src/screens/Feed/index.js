@@ -230,9 +230,9 @@ class Feed extends React.PureComponent {
               currentUser={this.props.currentUser}
               componentId={this.props.componentId}
             />
-            {/* Render a AdMobBanner every 5 posts */}
+            {/* Render a AdMobBanner every 3 posts */}
             {!isAoProOrKitsuPro(this.props.currentUser) &&
-              ((index + 1) % 5 === 0) && (
+              ((index + 1) % 3 === 0) && (
               <React.Fragment>
                 <View style={{ marginTop: 10 }} />
                 <AdMobBanner

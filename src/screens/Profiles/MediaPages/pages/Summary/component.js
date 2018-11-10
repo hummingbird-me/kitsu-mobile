@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { FlatList, Linking, ActivityIndicator } from 'react-native';
+import { FlatList, Linking, ActivityIndicator, View, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { AdMobBanner } from 'react-native-admob';
 import { Kitsu } from 'kitsu/config/api';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
@@ -13,13 +14,14 @@ import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { upperFirst, isEmpty, uniqBy } from 'lodash';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
-import { STREAMING_SERVICES } from 'kitsu/constants/app';
+import { STREAMING_SERVICES, ADMOB_AD_UNITS } from 'kitsu/constants/app';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { SummaryProgress } from './progress';
 import { styles } from './styles';
 import { Button } from 'kitsu/components/Button';
 import URL from 'url-parse';
+import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {
@@ -135,14 +137,18 @@ class SummaryComponent extends PureComponent {
     },
   });
 
-  renderItem = ({ item }) => (
-    <Post
-      post={item}
-      onPostPress={this.navigateToPost}
-      currentUser={this.props.currentUser}
-      navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
-      componentId={this.props.componentId}
-    />
+  renderItem = ({ item, index }) => (
+    <React.Fragment>
+      <Post
+        post={item}
+        onPostPress={this.navigateToPost}
+        currentUser={this.props.currentUser}
+        navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
+        componentId={this.props.componentId}
+      />
+      {/* Render a AdMobBanner every 3 posts */}
+      {(index + 1) % 3 === 0 && this.renderAdBanner(10)}
+    </React.Fragment>
   );
 
   renderEpisodes = (media) => {
@@ -217,12 +223,31 @@ class SummaryComponent extends PureComponent {
     );
   }
 
+  renderAdBanner = (margin) => {
+    if (isAoProOrKitsuPro(this.props.currentUser)) {
+      return null;
+    }
+    return (
+      <React.Fragment>
+        <View style={{ marginTop: margin }} />
+        <AdMobBanner
+          adUnitID={ADMOB_AD_UNITS[Platform.OS]}
+          adSize="smartBannerPortrait"
+          testDevices={[AdMobBanner.simulatorId]}
+          onAdFailedToLoad={error => console.log(error)}
+        />
+      </React.Fragment>
+    );
+  };
+
   render() {
     const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
     const { loadingFeed, loadingNextFeed, feed } = this.state;
 
     return (
       <SceneContainer>
+        {/* Banner */}
+        {this.renderAdBanner(15)}
 
         {/* Progress */}
         <SummaryProgress
@@ -240,6 +265,9 @@ class SummaryComponent extends PureComponent {
 
         {/* Details */}
         <MediaDetails media={media} />
+
+        {/* Banner */}
+        {this.renderAdBanner(15)}
 
         {/* Reactions */}
         {/* @TODO: Reactions Empty State - Render nothing until we support writing */}
