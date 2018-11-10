@@ -21,6 +21,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+@import GoogleMobileAds;
 
 
 @implementation AppDelegate
@@ -42,7 +43,7 @@
                                                         // enable this to cancel auto prompt for permission
                                                          kOSSettingsKeyAutoPrompt: @false
                                                       }];
-
+  [GADMobileAds configureWithApplicationID:@"ca-app-pub-1730996169473196~3598617596"];
   return YES;
 }
 

@@ -5805,6 +5805,13 @@ react-native-actionsheet@^2.3.0:
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.3.0.tgz#a9552a356dc5939829062353804d5e5609e8f969"
   integrity sha1-qVUqNW3Fk5gpBiNTgE1eVgno+Wk=
 
+react-native-admob@^2.0.0-beta.5:
+  version "2.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/react-native-admob/-/react-native-admob-2.0.0-beta.5.tgz#f83fd6144c5dd3e708e937793f41c0c50db86682"
+  integrity sha512-nESuBHqCgXZmR7yfwHB0nmsZUgjyWEkR4gsPx7hB2vB+pba+2MHUWD0nk4K85zsHxgJ9yNcJNGoQbqY8A1T9ow==
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-android-fullscreen-webview@hummingbird-me/react-native-android-fullscreen-webview:
   version "1.0.5"
   resolved "https://codeload.github.com/hummingbird-me/react-native-android-fullscreen-webview/tar.gz/fce96d5eadc5d43522930148b18703aeea9e497b"

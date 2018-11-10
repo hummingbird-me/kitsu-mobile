@@ -63,3 +63,8 @@ export const ACCEPTED_UPLOAD_TYPES = [
   'image/png',
   'image/gif',
 ];
+
+export const ADMOB_AD_UNITS = Object.freeze({
+  ios: 'ca-app-pub-1730996169473196/8847607677',
+  android: 'ca-app-pub-1730996169473196/9641281765',
+});
