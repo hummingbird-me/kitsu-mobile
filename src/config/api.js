@@ -27,6 +27,7 @@ Kitsu.define(
     email: '',
     avatar: '',
     about: '',
+    aoPro: '',
     createdAt: '',
     website: '',
     birthday: '',

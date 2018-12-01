@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
+import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends NavigationActivity {
 
@@ -11,6 +12,7 @@ public class MainActivity extends NavigationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        MobileAds.initialize(this, "ca-app-pub-1730996169473196~3842160171");
     }
 
     /**

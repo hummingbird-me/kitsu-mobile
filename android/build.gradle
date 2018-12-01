@@ -32,11 +32,6 @@ allprojects {
         configurations.all {
             resolutionStrategy {
                 force 'com.facebook.android:facebook-android-sdk:4.28.0' // Temp fix for broken run-android (see goo.gl/v8u59r)
-                
-                // One signal depends on these, however the new version 12.0 breaks builds
-                force 'com.google.android.gms:play-services-gcm:11.8.0'
-                force 'com.google.android.gms:play-services-analytics:11.8.0'
-                force 'com.google.android.gms:play-services-location:11.8.0'
             }
         }
     }
