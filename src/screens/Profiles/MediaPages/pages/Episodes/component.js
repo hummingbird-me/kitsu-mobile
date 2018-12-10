@@ -74,8 +74,8 @@ class Episodes extends PureComponent {
         >
           <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
           <StyledText color="black" size="small" textStyle={styles.itemTitle} numberOfLines={1}>{title}</StyledText>
-          { !isEmpty(item.videos) &&
-            <Icon name="ios-desktop-outline" style={styles.watchIcon} size={18} />
+          {!isEmpty(item.videos) &&
+            <Icon name="ios-desktop" style={styles.watchIcon} size={18} />
           }
         </TouchableOpacity>
         <TouchableOpacity

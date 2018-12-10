@@ -82,7 +82,7 @@ export class ImageLightbox extends PureComponent {
             >
               <Icon
                 style={[styles.icon, styles.openIcon]}
-                name={Platform.select({ ios: 'ios-open-outline', android: 'md-open' })}
+                name={Platform.select({ ios: 'ios-open', android: 'md-open' })}
               />
             </TouchableOpacity>
           }
@@ -94,7 +94,7 @@ export class ImageLightbox extends PureComponent {
           >
             <Icon
               style={styles.icon}
-              name={Platform.select({ ios: 'ios-share-outline', android: 'md-share' })}
+              name={Platform.select({ ios: 'ios-share-alt', android: 'md-share' })}
             />
           </TouchableOpacity>
 

@@ -264,7 +264,7 @@ export class Comment extends PureComponent {
                 <StyledText color="grey" size="xxsmall">Reply</StyledText>
               </TouchableOpacity>
               <View style={styles.commentActionItem}>
-                <Icon name={isLiked ? 'md-heart' : 'md-heart-outline'} style={[styles.likeIcon, isLiked && styles.likeIcon__active]} />
+                <Icon name={isLiked ? 'md-heart' : 'md-heart-empty'} style={[styles.likeIcon, isLiked && styles.likeIcon__active]} />
                 <StyledText color={isLiked ? 'red' : 'grey'} size="xxsmall">{likesCount}</StyledText>
               </View>
             </View>
