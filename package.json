@@ -1,6 +1,6 @@
 {
   "name": "kitsu_mobile",
-  "version": "6.10",
+  "version": "6.10.1",
   "private": true,
   "scripts": {
     "debug": "REACT_DEBUGGER=\"rndebugger-open --open --port 8081\" yarn start",

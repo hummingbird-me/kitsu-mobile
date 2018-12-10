@@ -119,7 +119,7 @@ android {
         targetSdkVersion 27
         missingDimensionStrategy "RNN.reactNativeVersion", "reactNative51"
         versionCode 1
-        versionName "6.10"
+        versionName "6.10.1"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
