@@ -10,6 +10,7 @@ const initialState = {
   pushNotificationEnabled: false,
   initialPage: 'Feed',
   activityIndicatorHOCVisible: false,
+  bannerDismissed: false,
 };
 
 export const appReducer = (state = initialState, action) => {
@@ -38,6 +39,11 @@ export const appReducer = (state = initialState, action) => {
       return {
         ...state,
         activityIndicatorHOCVisible: !!action.payload,
+      };
+    case types.DISMISS_BANNER:
+      return {
+        ...state,
+        bannerDismissed: true
       };
     case REHYDRATE: {
       const payload = action && action.payload;

@@ -38,3 +38,7 @@ export const setInitialPage = value => (dispatch) => {
 export const toggleActivityIndicatorHOC = visible => (dispatch) => {
   dispatch({ type: types.ACTIVITY_INDICATOR_HOC, payload: visible });
 };
+
+export const dismissBanner = () => (dispatch) => {
+  dispatch({ type: types.DISMISS_BANNER });
+}

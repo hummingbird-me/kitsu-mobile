@@ -65,6 +65,9 @@ class SidebarScreen extends PureComponent {
       case 'mailto':
         Linking.openURL('mailto:help@kitsu.io');
         break;
+      case 'survey':
+        Linking.openURL('https://kitsu.typeform.com/to/tqNQN4');
+        break;
       default:
         break;
     }
@@ -83,6 +86,15 @@ class SidebarScreen extends PureComponent {
         { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
         { title: 'Database Requests', image: suggest, target: 'DatabaseRequests' },
         { title: 'Contact Us', image: contact, target: 'mailto' },
+      ],
+    };
+  }
+
+  get kitsuSections() {
+    return {
+      title: 'Kitsu',
+      data: [
+        { title: 'Community Survey', image: contact, target: 'survey' },
       ],
     };
   }
@@ -163,6 +175,12 @@ class SidebarScreen extends PureComponent {
           {/* Account Settings */}
           {this.renderSectionHeader(this.accountSections)}
           {this.accountSections.data.map(item => (
+            this.renderSectionItem(item)
+          ))}
+
+          {/* Kitsu Settings */}
+          {this.renderSectionHeader(this.kitsuSections)}
+          {this.kitsuSections.data.map(item => (
             this.renderSectionItem(item)
           ))}
 
