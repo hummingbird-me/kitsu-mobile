@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   containerStyle: {
     flex: 1,
     backgroundColor: colors.listBackPurple,
-    // paddingTop: Platform.select({ ios: 77, android: 72 }),
+    paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
   headerCoverImage: {
     height: Platform.select({ ios: 77, android: 72 }) + statusBarHeight + (isX ? paddingX : 0),

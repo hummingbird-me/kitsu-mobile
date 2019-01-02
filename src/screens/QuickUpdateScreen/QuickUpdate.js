@@ -31,7 +31,7 @@ import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Screens } from 'kitsu/navigation';
 import styles from './styles';
 import { EventBus } from 'kitsu/utils/eventBus';
 

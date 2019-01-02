@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     padding: 24,
+    marginBottom: 10,
     backgroundColor: colors.white,
     borderRadius: 4,
     shadowColor: '#000',

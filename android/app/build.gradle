@@ -187,7 +187,6 @@ configurations.all {
 }
 
 dependencies {
-    compile project(':react-native-admob')
     compile project(':react-native-device-info')
     compile project(':react-native-iap')
     compile project(':react-native-sentry')

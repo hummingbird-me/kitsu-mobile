@@ -17,29 +17,14 @@ import { kitsuConfig } from 'kitsu/config/env';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { Sentry } from 'react-native-sentry';
 import { styles } from './styles';
+import { Navigation } from 'react-native-navigation';
 
 // The SKUs for the iAP
-const ITEM_SKUS = ['io.kitsu.pro.yearly'];
+const ITEM_SKUS = ['io.kitsu.pro.monthly', 'io.kitsu.pro.yearly'];
 
 class ProScreen extends PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    header: () => {
-      const user = navigation.state.params && navigation.state.params.currentUser;
-      const pro = isPro(user);
-
-      return (
-        <SidebarHeader
-          navigation={navigation}
-          headerTitle={pro ? 'PRO' : 'Upgrade to PRO'}
-          hideCover
-        />
-      );
-    },
-    tabBarVisible: false,
-  });
-
   static propTypes = {
-    navigation: PropTypes.any.isRequired,
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
   }
 
@@ -51,14 +36,7 @@ class ProScreen extends PureComponent {
   };
 
   componentDidMount() {
-    this.updateNavigationParams();
     this.prepareIAP();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.currentUser, nextProps.currentUser)) {
-      this.updateNavigationParams();
-    }
   }
 
   componentWillUnmount() {
@@ -106,7 +84,7 @@ class ProScreen extends PureComponent {
 
   async prepareIAP() {
     try {
-      await RNIap.prepare();
+      await RNIap.initConnection();
       this.fetchProducts();
     } catch (err) {
       console.log(err);
@@ -145,27 +123,17 @@ class ProScreen extends PureComponent {
     }
   }
 
-  updateNavigationParams() {
-    this.props.navigation.setParams({
-      currentUser: this.props.currentUser,
-    });
-  }
-
   /**
    * Take the user through purchasing PRO via iAP
    */
-  purchasePro = async () => {
+  purchasePro = async (subscription) => {
     // Only allow purchase on a device
     if (isEmulator()) {
       Alert.alert('Unavailable', 'Can\'t purchase items on a simulator or emulator!');
       return;
     }
 
-    const { subscriptions } = this.state;
-    if (isEmpty(subscriptions)) return;
-
-    const item = subscriptions[0];
-    const sku = item.productId;
+    const sku = subscription.productId;
     if (isEmpty(sku)) return;
 
     this.setState({ error: null });
@@ -228,11 +196,13 @@ class ProScreen extends PureComponent {
       const endpoint = Platform.select({ ios: 'ios', android: 'google-play' });
       const url = `${kitsuConfig.baseUrl}/pro-subscription/${endpoint}`;
       const tokenField = Platform.select({ ios: 'receipt', android: 'token' });
+      const planType = receipt.productId.contains('yearly') ? 'yearly' : 'monthly';
 
       const res = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
           [tokenField]: receipt.transactionReceipt,
+          plan: planType,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -304,7 +274,8 @@ class ProScreen extends PureComponent {
           onPress={() => {
             if (purchases.length === 0) return;
 
-            const purchase = purchases[0];
+            const purchase = Platform.OS.toLowerCase() === 'ios' ?
+              purchases[0] : purchases.filter(p => p.autoRenewingAndroid)[0]
 
             if (isEmpty(purchase)) return;
 
@@ -341,19 +312,6 @@ class ProScreen extends PureComponent {
   }
 
   renderProCard() {
-    /*
-      TODO: Not sure how we're going to handle this case:
-        - User buys pro
-        - Cancels subscription
-        - Wants to re-subscribe to PRO
-
-      When user cancels subscription on Android, the purchase array is still populated.
-      The attribute `autoRenewal` is set to `false` however and this can tell us if user has decided not to continue subscription.
-
-      We might need to add a way for the user to re-subscribe if they accidentally unsubscribed.
-      This can be done easily by allowing them access to the `Upgrade to PRO` button.
-    */
-
     const { currentUser } = this.props;
     const { purchases, loading } = this.state;
     const pro = isPro(currentUser);
@@ -369,24 +327,36 @@ class ProScreen extends PureComponent {
     // Only show pro time remaining if user is PRO
     if (pro) return this.renderProTimeRemaining();
 
-    // Only show the restoration card if we have a purchase and user isn't pro
-    if (purchases.length > 0 && !pro) return this.renderPurchaseRestore();
+    // Only show the restoration card if we have an active purchase and user isn't pro
+    const hasActivePurchase = Platform.OS.toLowerCase() === 'android' ?
+      purchases.filter(p => p.autoRenewingAndroid).length > 0 : true;
+    if (purchases.length > 0 && !pro && hasActivePurchase) {
+      return this.renderPurchaseRestore();
+    }
 
     // Show option to purchase PRO
-    return (
-      <View style={styles.proCard}>
+    const { subscriptions } = this.state;
+    return subscriptions.map(subscription => (
+      <View style={styles.proCard} key={subscription.productId}>
         <View style={styles.priceContainer}>
-          <Text style={styles.priceTag}>$4 USD</Text>
+          <Text style={styles.priceTag}>
+            {subscription.localizedPrice}
+          </Text>
           <View>
-            <Text style={styles.durationText}>Per Month</Text>
-            <Text style={styles.billText}>BILLED ANNUALLY</Text>
+            <Text style={styles.durationText}>
+              {subscription.productId === 'io.kitsu.pro.yearly' ?
+                'Per Year' : 'Per Month'}
+            </Text>
+            <Text style={styles.billText}>
+              {subscription.currency}
+            </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.proButton} onPress={this.purchasePro}>
+        <TouchableOpacity style={styles.proButton} onPress={() => this.purchasePro(subscription)}>
           <Text style={styles.proButtonText}>Upgrade to PRO</Text>
         </TouchableOpacity>
       </View>
-    );
+    ));
   }
 
   renderAvatar() {
@@ -502,19 +472,27 @@ class ProScreen extends PureComponent {
   }
 
   render() {
+    const pro = isPro(this.props.currentUser);
     return (
-      <View style={styles.containerStyle}>
-        <ScrollView>
-          {/* Errors */}
-          {this.renderError()}
-          {/* Top info */}
-          {this.renderGradientInfo()}
-          {/* Perks */}
-          {this.renderProPerks()}
-          {/* Footer */}
-          {this.renderFooter()}
-        </ScrollView>
-      </View>
+      <React.Fragment>
+        <View style={styles.containerStyle}>
+          <SidebarHeader
+            headerTitle={pro ? 'PRO' : 'Upgrade to PRO'}
+            onBackPress={() => Navigation.pop(this.props.componentId)}
+            hideCover
+          />
+          <ScrollView>
+            {/* Errors */}
+            {this.renderError()}
+            {/* Top info */}
+            {this.renderGradientInfo()}
+            {/* Perks */}
+            {this.renderProPerks()}
+            {/* Footer */}
+            {this.renderFooter()}
+          </ScrollView>
+        </View>
+      </React.Fragment>
     );
   }
 }

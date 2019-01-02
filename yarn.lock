@@ -5984,9 +5984,10 @@ react-native-hyperlink@^0.0.14:
     linkify-it "^1.2.0"
     mdurl "^1.0.0"
 
-react-native-iap@^1.3.6:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-1.4.0.tgz#bf5bd372fb456894816c5bde0ef742d470c69476"
+react-native-iap@^2.3.23:
+  version "2.3.26"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-2.3.26.tgz#8d70992027c7973511a81e3fa1121b1f6023f084"
+  integrity sha512-Ie8zt+n1WkmmAzk5YXCxYKLtAkvmn28JME1jzfnVETQnXjXv14lVW8NkZGQvwSURstrvQml2WQsKpRsm3r3nsg==
   dependencies:
     dooboolab-welcome "^1.0.5"
 

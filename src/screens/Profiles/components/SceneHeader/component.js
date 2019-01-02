@@ -12,7 +12,6 @@ import { cardSize } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, capitalize, isNull, isArray } from 'lodash';
 import { styles } from './styles';
 import { NavigationActions } from 'kitsu/navigation';
-import { styles } from './styles';
 import { TitleTag } from 'kitsu/components/TitleTag';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];

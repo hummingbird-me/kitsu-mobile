@@ -18,7 +18,7 @@ const getIncludes = () => {
 
   // The combined fields from post and comments
   const combined = uniq([...postFields, ...commentFields]);
-  
+
   const others = ['anime', 'manga', 'library_entry', 'followed'];
   const targetFields = ['target', 'target.videos', ...combined.map(f => `target.${f}`)];
   const subjectFields = ['subject', 'subject.videos', ...others.map(f => `subject.${f}`), ...combined.map(f => `subject.${f}`)];
@@ -250,6 +250,7 @@ export const markNotifications = (notifications, type = 'seen') => async (dispat
   const notificationsFiltered = notifications
     .filter(v => !v[type === 'seen' ? 'isSeen' : 'isRead'])
     .map(v => v.id);
+  if (notificationsFiltered.length === 0) { return; }
 
   dispatch({ type: types[`MARK_AS_${type.toUpperCase()}`] });
   try {
