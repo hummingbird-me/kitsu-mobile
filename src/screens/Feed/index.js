@@ -22,9 +22,6 @@ import { statusBarHeight } from 'kitsu/constants/app';
 import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
 import { feedStreams } from './feedStreams';
 import { isAoProOrKitsuPro } from 'kitsu/utils/user';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Button } from 'kitsu/components/Button';
-import { dismissBanner } from 'kitsu/store/app/actions';;
 
 const styles = StyleSheet.create({
   container: {
@@ -36,12 +33,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: listBackPurple,
   },
-  banner: {
-    backgroundColor: listBackPurple,
-    width: Dimensions.get('window').width,
-    padding: 10,
-    paddingBottom: 20,
-  }
 });
 
 class Feed extends React.PureComponent {
@@ -222,17 +213,6 @@ class Feed extends React.PureComponent {
     });
   };
 
-  openSurvey = () => {
-    Linking.openURL("https://kitsu.typeform.com/to/tqNQN4");
-    this.closeSurvey();
-  };
-
-  closeSurvey = () => {
-    if (this.props.dismissBanner) {
-      this.props.dismissBanner();
-    }
-  };
-
   keyExtractor = (item, index) => {
     return `${item.id}-${item.updatedAt}`;
   }
@@ -316,24 +296,14 @@ class Feed extends React.PureComponent {
             removeClippedSubviews={Platform.OS === 'android'}
           />
         </View>
-
-        {!this.props.bannerDismissed && (
-          <View style={styles.banner}>
-            <StyledText bold size="large" textStyle={{ textAlign: 'center' }}>Give us your feedback</StyledText>
-            <StyledText size="small" color="lightGrey" textStyle={{ textAlign: 'center' }}>Most users complete this survey in a few minutes.</StyledText>
-            <Button title="Okay, let's start" style={{ marginVertical: 15 }} onPress={this.openSurvey} />
-            <StyledText size="small" color="red" textStyle={{ textAlign: 'center' }} onPress={this.closeSurvey}>CLOSE</StyledText>
-          </View>
-        )}
       </View>
     );
   }
 }
 
-const mapStateToProps = ({ app, user }) => {
+const mapStateToProps = ({ user }) => {
   const { currentUser } = user;
-  const { bannerDismissed } = app;
-  return { currentUser, bannerDismissed };
+  return { currentUser };
 };
 
-export default connect(mapStateToProps, { dismissBanner })(Feed);
+export default connect(mapStateToProps)(Feed);

@@ -43,7 +43,7 @@ export const appReducer = (state = initialState, action) => {
     case types.DISMISS_BANNER:
       return {
         ...state,
-        bannerDismissed: true
+        bannerDismissed: true,
       };
     case REHYDRATE: {
       const payload = action && action.payload;
