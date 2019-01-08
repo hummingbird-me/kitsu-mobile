@@ -77,6 +77,8 @@ class ProfilePage extends PureComponent {
       loadingReactions: false,
       groups: [],
       loadingGroups: false,
+      stats: [],
+      loadingStats: false,
     };
   }
 
@@ -97,6 +99,7 @@ class ProfilePage extends PureComponent {
     this.fetchLibraryActivity();
     this.fetchReactions();
     this.fetchGroups();
+    this.fetchStats();
   }
 
   componentWillUnmount() {
@@ -243,6 +246,21 @@ class ProfilePage extends PureComponent {
     } catch (err) {
       console.log('Unhandled error while retrieving groups: ', err);
       this.setState({ loadingGroups: false });
+    }
+  }
+
+  fetchStats = async () => {
+    this.setState({ loadingStats: true });
+    try {
+      const stats = await Kitsu.findAll('stats', {
+        filter: {
+          user_id: this.props.userId,
+        }
+      });
+      this.setState({ stats, loadingStats: false });
+    } catch (err) {
+      console.log('Unhandled error while fetching stats:', err);
+      this.setState({ loadingStats: false });
     }
   }
 
@@ -398,6 +416,8 @@ class ProfilePage extends PureComponent {
       reactions,
       loadingGroups,
       groups,
+      stats,
+      loadingStats,
       active,
     } = this.state;
 
@@ -414,6 +434,8 @@ class ProfilePage extends PureComponent {
       reactions,
       loadingGroups,
       groups,
+      loadingStats,
+      stats,
     };
 
     return (
