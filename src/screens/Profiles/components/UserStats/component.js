@@ -123,7 +123,8 @@ export class UserStats extends PureComponent {
           />
           <View style={{ flexDirection: 'column', marginLeft: 60 }}>
             <StyledText bold size="xsmall" color="dark" textStyle={{ marginBottom: 5 }}>
-              {primaryUnit.count.toLocaleString('en-US', { maximumFractionDigits: 1 })}
+              {/* toLocaleString doesn't work on Android */}
+              {primaryUnit.count.toString().includes('.') ? primaryUnit.count.toFixed(1) : primaryUnit.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               {' '}
               {kind === "anime" ? `${timeUnitText} spent watching anime.` : "chapters read."}
             </StyledText>
