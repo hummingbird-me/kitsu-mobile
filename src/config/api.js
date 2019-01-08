@@ -1163,6 +1163,18 @@ Kitsu.define(
   { collectionPath: 'group-categories' },
 );
 
+Kitsu.define(
+  'stats',
+  {
+    kind: '',
+    statsData: '',
+    user: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'stats' },
+)
+
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
 };

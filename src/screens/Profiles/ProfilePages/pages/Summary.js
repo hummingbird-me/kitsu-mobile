@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
-import { isNull, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import capitalize from 'lodash/capitalize';
 
-import { Kitsu } from 'kitsu/config/api';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
@@ -15,6 +14,7 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { Rating } from 'kitsu/components/Rating';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+import { UserStats } from 'kitsu/screens/Profiles/components/UserStats';
 
 export default class Summary extends PureComponent {
   static propTypes = {
@@ -26,6 +26,8 @@ export default class Summary extends PureComponent {
     libraryActivity: PropTypes.arrayOf(PropTypes.object),
     loadingReactions: PropTypes.bool,
     reactions: PropTypes.arrayOf(PropTypes.object),
+    loadingStats: PropTypes.bool,
+    stats: PropTypes.arrayOf(PropTypes.object),
   }
 
   static defaultProps = {
@@ -34,6 +36,8 @@ export default class Summary extends PureComponent {
     libraryActivity: [],
     loadingReactions: false,
     reactions: [],
+    loadingStats: false,
+    stats: [],
   }
 
   navigateTo = (scene) => {
@@ -106,7 +110,12 @@ export default class Summary extends PureComponent {
   }
 
   render() {
-    const { loadingLibraryActivity, libraryActivity, loadingReactions, reactions } = this.props;
+    const { loadingLibraryActivity, libraryActivity, loadingReactions, reactions, loadingStats, stats } = this.props;
+
+    // Normalize stats
+    const normalizedStats = stats ? stats.reduce((acc, stat) => {
+      return { ...acc, [stat.kind]: stat };
+    }, {}) : null;
 
     if (loadingLibraryActivity) return <SceneLoader />;
 
@@ -143,6 +152,14 @@ export default class Summary extends PureComponent {
             );
           }}
         />
+
+        {/* Stats */}
+        {normalizedStats && (
+          <React.Fragment>
+            <UserStats kind="anime" data={normalizedStats} loading={loadingStats} />
+            <UserStats kind="manga" data={normalizedStats} loading={loadingStats} />
+          </React.Fragment>
+        )}
       </SceneContainer>
     );
   }
