@@ -115,14 +115,14 @@ export class UserStats extends PureComponent {
     const percentile = this.percentile(kind, data);
     const timeUnitText = kind === 'anime' ? primaryUnit.count === 1 ? primaryUnit.name.slice(0, primaryUnit.name.length - 1) : primaryUnit.name : null;
     return (
-      <View style={styles.timeSpentWrap}>
+      <View>
+        <FastImage
+          style={styles.timeImage}
+          source={imageMap[`${kind}${primaryUnit.index}`]}
+          resizeMode="contain"
+          cache="web"
+        />
         <View style={styles.timeSpent}>
-          <FastImage
-            style={styles.timeImage}
-            source={imageMap[`${kind}${primaryUnit.index}`]}
-            resizeMode="contain"
-            cache="web"
-          />
           <View style={{ flexDirection: 'column', marginLeft: 60 }}>
             <StyledText bold size="xsmall" color="dark" textStyle={{ marginBottom: 5 }}>
               {/* toLocaleString doesn't work on Android */}

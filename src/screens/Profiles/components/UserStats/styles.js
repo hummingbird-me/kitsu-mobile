@@ -45,9 +45,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: scenePadding * 2,
   },
-  timeSpentWrap: {
-    overflow: 'hidden',
-  },
   timeSpent: {
     flex: 1,
     flexDirection: 'row',
@@ -58,6 +55,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5e5e5',
     borderRadius: 5,
+    zIndex: 0,
   },
   timeImage: {
     position: 'absolute',
@@ -65,5 +63,6 @@ export const styles = StyleSheet.create({
     height: 76,
     left: -5,
     bottom: -9,
+    zIndex: 1,
   },
 });
