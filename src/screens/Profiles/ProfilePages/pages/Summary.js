@@ -15,6 +15,7 @@ import { Rating } from 'kitsu/components/Rating';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { UserStats } from 'kitsu/screens/Profiles/components/UserStats';
+import { isIdForCurrentUser } from 'kitsu/utils/id';
 
 export default class Summary extends PureComponent {
   static propTypes = {
@@ -111,13 +112,13 @@ export default class Summary extends PureComponent {
 
   render() {
     const { loadingLibraryActivity, libraryActivity, loadingReactions, reactions, loadingStats, stats } = this.props;
+    if (loadingLibraryActivity) return <SceneLoader />;
 
+    const isCurrentUser = isIdForCurrentUser(this.props.userId, this.props.currentUser);
     // Normalize stats
     const normalizedStats = stats ? stats.reduce((acc, stat) => {
       return { ...acc, [stat.kind]: stat };
     }, {}) : null;
-
-    if (loadingLibraryActivity) return <SceneLoader />;
 
     return (
       <SceneContainer>
@@ -156,8 +157,8 @@ export default class Summary extends PureComponent {
         {/* Stats */}
         {normalizedStats && (
           <React.Fragment>
-            <UserStats kind="anime" data={normalizedStats} loading={loadingStats} />
-            <UserStats kind="manga" data={normalizedStats} loading={loadingStats} />
+            <UserStats kind="anime" data={normalizedStats} loading={loadingStats} isCurrentUser={isCurrentUser} />
+            <UserStats kind="manga" data={normalizedStats} loading={loadingStats} isCurrentUser={isCurrentUser} />
           </React.Fragment>
         )}
       </SceneContainer>
