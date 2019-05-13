@@ -120,7 +120,7 @@ export default class PostDetails extends PureComponent {
 
   onGifSelected = (gif) => {
     if (!(gif && gif.id)) return;
-    const gifUrl = `https://media.giphy.com/media/${gif.id}/giphy.gif`;
+    const gifUrl = `https://giphy.com/gifs/${gif.id}`;
     const comment = this.state.comment.trim();
     const newComment = isEmpty(comment) ? gifUrl : `${comment}\n${gifUrl}`;
     this.setState({ comment: newComment, embedUrl: gifUrl }, () => {
