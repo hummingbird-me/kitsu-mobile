@@ -35,16 +35,10 @@ export const setInitialPage = value => (dispatch) => {
   dispatch({ type: types.SETTING_INITIAL_PAGE, payload: value });
 };
 
-export const showLightbox = (images, initialIndex = 0) => (dispatch) => {
-  dispatch({
-    type: types.LIGHTBOX_SHOW,
-    payload: {
-      images,
-      initialIndex,
-    },
-  });
+export const toggleActivityIndicatorHOC = visible => (dispatch) => {
+  dispatch({ type: types.ACTIVITY_INDICATOR_HOC, payload: visible });
 };
 
-export const hideLightbox = () => (dispatch) => {
-  dispatch({ type: types.LIGHTBOX_HIDE });
-};
+export const dismissBanner = () => (dispatch) => {
+  dispatch({ type: types.DISMISS_BANNER });
+}

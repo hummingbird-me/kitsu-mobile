@@ -7,14 +7,11 @@ import { Kitsu, setToken } from 'kitsu/config/api';
 import { Button } from 'kitsu/components/Button';
 import { ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 
 class ImportDetail extends React.Component {
-  static navigationOptions = {
-    backEnabled: true,
-  };
-
   state = {
     showModal: false,
     errMessage: null,
@@ -23,8 +20,7 @@ class ImportDetail extends React.Component {
   };
 
   onImportButtonPressed = async () => {
-    const { accessToken, currentUser, navigation } = this.props;
-    const item = navigation.state.params.item;
+    const { accessToken, currentUser, item } = this.props;
     setToken(accessToken);
     const kind = item.title === 'MyAnimeList' ? 'my-anime-list' : 'anilist';
     this.setState({ loading: true, errMessage: null });
@@ -58,7 +54,7 @@ class ImportDetail extends React.Component {
       },
       !this.state.errMessage // determines modal button behavior
         ? () => {
-          this.props.completeOnboarding(this.props.navigation);
+          this.props.completeOnboarding();
         }
         : null,
     );
@@ -70,39 +66,46 @@ class ImportDetail extends React.Component {
 
   render() {
     const { loading, username, errMessage, showModal } = this.state;
-    const item = this.props.navigation.state.params.item;
+    const { item } = this.props;
+
     return (
       <View style={commonStyles.container}>
-        <View style={styles.card}>
-          <View style={{ padding: 8 }}>
-            <View style={{ alignItems: 'center' }}>
-              <FastImage source={item.image} style={styles.cardLogo} cache="web" />
-            </View>
-            <Text style={styles.cardText}>
-              Enter your username below to import your existing anime and manga progress.
-            </Text>
-          </View>
-          <ItemSeparator />
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.input}
-              value={username}
-              onChangeText={t => this.setState({ username: t })}
-              placeholder={`Your ${item.title} Username`}
-              placeholderTextColor={colors.grey}
-              underlineColorAndroid={'transparent'}
-              autoCapitalize={'none'}
-              keyboardAppearance={'dark'}
-            />
-          </View>
-        </View>
-        <Button
-          style={{ marginTop: 0, paddingHorizontal: 12 }}
-          disabled={username.length === 0}
-          onPress={this.onImportButtonPressed}
-          title={`Start ${item.title} Import`}
-          loading={loading}
+        <OnboardingHeader
+          componentId={this.props.componentId}
+          backEnabled
         />
+        <View style={{ flex: 1 }}>
+          <View style={styles.card}>
+            <View style={{ padding: 8 }}>
+              <View style={{ alignItems: 'center' }}>
+                <FastImage source={item.image} style={styles.cardLogo} cache="web" />
+              </View>
+              <Text style={styles.cardText}>
+                Enter your username below to import your existing anime and manga progress.
+              </Text>
+            </View>
+            <ItemSeparator />
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                value={username}
+                onChangeText={t => this.setState({ username: t })}
+                placeholder={`Your ${item.title} Username`}
+                placeholderTextColor={colors.grey}
+                underlineColorAndroid={'transparent'}
+                autoCapitalize={'none'}
+                keyboardAppearance={'dark'}
+              />
+            </View>
+          </View>
+          <Button
+            style={{ marginTop: 0, paddingHorizontal: 12 }}
+            disabled={username.length === 0}
+            onPress={this.onImportButtonPressed}
+            title={`Start ${item.title} Import`}
+            loading={loading}
+          />
+        </View>
         <Modal
           animationType={'fade'}
           visible={showModal}

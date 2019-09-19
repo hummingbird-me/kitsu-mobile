@@ -6,10 +6,12 @@ import {
   StatusBar,
   ScrollView,
   Platform,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
-import { defaultAvatar } from 'kitsu/constants/app';
+import { defaultAvatar, statusBarHeight } from 'kitsu/constants/app';
 import {
   PostFooter,
   PostSection,
@@ -24,51 +26,94 @@ import { isX, paddingX } from 'kitsu/utils/isX';
 import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
 import { extractUrls } from 'kitsu/utils/url';
-import { isEmpty, uniqBy } from 'lodash';
+import { isEmpty, uniqBy, isNull } from 'lodash';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
+import { StyledText } from 'kitsu/components/StyledText';
+import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 export default class PostDetails extends PureComponent {
-  static navigationOptions = {
-    header: null,
+  static propTypes = {
+    componentId: PropTypes.any.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    post: PropTypes.object.isRequired,
+    postLikesCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    comments: PropTypes.arrayOf(PropTypes.object),
+    topLevelCommentsCount: PropTypes.number,
+    commentsCount: PropTypes.number,
+    like: PropTypes.object,
+    isLiked: PropTypes.bool,
+    syncComments: PropTypes.func,
+    showLoadMoreComments: PropTypes.bool,
   };
 
-  static propTypes = {
-    navigation: PropTypes.object.isRequired,
+  static defaultProps = {
+    postLikesCount: 0,
+    comments: [],
+    topLevelCommentsCount: null,
+    commentsCount: null,
+    like: null,
+    isLiked: false,
+    syncComments: null,
+    showLoadMoreComments: false,
   };
+
+  static options() {
+    return {
+      layout: {
+        backgroundColor: 'white',
+      },
+    };
+  }
 
   constructor(props) {
     super(props);
 
-    const { post, postLikesCount } = props.navigation.state.params;
+    const { post, postLikesCount, comments, like, isLiked } = props;
     const postLikes =
       parseInt(postLikesCount, 10) ||
       parseInt(post.postLikesCount, 10) ||
       parseInt(post.likesCount, 10) || 0;
 
+    const topLevelCommentsCount =
+      parseInt(props.topLevelCommentsCount, 10) ||
+      parseInt(post.topLevelCommentsCount, 10) ||
+      parseInt(post.repliesCount, 10) || 0;
+
+    const commentsCount =
+      parseInt(props.commentsCount, 10) ||
+      parseInt(post.commentsCount, 10) ||
+      parseInt(post.repliesCount, 10) || 0;
+
     this.state = {
       comment: '',
-      comments: props.navigation.state.params.comments || [],
-      topLevelCommentsCount: props.navigation.state.params.topLevelCommentsCount,
-      commentsCount: props.navigation.state.params.commentsCount,
-      like: props.navigation.state.params.like,
-      isLiked: props.navigation.state.params.isLiked,
+      comments,
+      topLevelCommentsCount,
+      commentsCount,
+      like,
+      isLiked,
       postLikesCount: postLikes,
-      taggedMedia: {
-        media: {
-          canonicalTitle: 'Made in Abyss',
-        },
-        episode: 1,
-      },
       isLoadingNextPage: false,
       isReplying: false,
       isPostingComment: false,
       embedUrl: null,
+      showLoadMoreComments: props.showLoadMoreComments,
+      isLoadingComments: false,
     };
   }
 
   componentDidMount() {
-    const { comments, like } = this.props.navigation.state.params;
+    const { comments, like } = this.props;
     if (!comments || comments.length === 0) { this.fetchComments(); }
     if (!like) { this.fetchLikes(); }
+  }
+
+  onViewAllComment = () => {
+    if (this.state.isLoadingComments) return;
+
+    this.setState({ comments: [], showLoadMoreComments: false }, () => {
+      this.fetchComments();
+    });
   }
 
   onCommentChanged = comment => this.setState({ comment });
@@ -87,11 +132,13 @@ export default class PostDetails extends PureComponent {
   onSubmitComment = async () => {
     if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
 
+    const { currentUser, post, syncComments } = this.props;
+
+    const isComment = post.type === 'comments';
+
     this.setState({ isPostingComment: true });
 
     try {
-      const { currentUser, post, syncComments } = this.props.navigation.state.params;
-
       // Update the embed
       let embedUrl = this.state.embedUrl;
 
@@ -101,23 +148,37 @@ export default class PostDetails extends PureComponent {
         embedUrl = links[0];
       }
 
+      // If we have a reply ref then use that as the parent comment otherwise
+      // If we have a comment as the main `post` then use its id
+      let commentId = null;
+      if (this.replyRef) {
+        commentId = this.replyRef.comment.id;
+      } else if (isComment) {
+        const comment = post.parent ? post.parent : post;
+        commentId = comment.id;
+      }
+
       // Check if this is a reply rather than a top-level comment
       let replyOptions = {};
-      if (this.replyRef) {
+      if (commentId) {
         replyOptions = {
           parent: {
-            id: this.replyRef.comment.id,
+            id: commentId,
             type: 'comments',
           },
           ...replyOptions,
         };
       }
+      
+      // If we have a comment as the `post` then we need to use its original post id
+      const postId = isComment ? post.post && post.post.id : post.id;
+      if (!postId) return;
 
       const comment = await Kitsu.create('comments', {
         content: this.state.comment.trim(),
         embedUrl,
         post: {
-          id: post.id,
+          id: postId,
           type: 'posts',
         },
         user: {
@@ -136,10 +197,14 @@ export default class PostDetails extends PureComponent {
         commentsCount: this.state.commentsCount + 1,
       });
 
-      if (this.replyRef) {
+      // If we have a reply ref and the main `post` is not a comment
+      // Then trigger the callback
+      const shouldCallReplyRefCallback = this.replyRef && !isComment;
+      if (shouldCallReplyRefCallback) {
         this.replyRef.callback(comment);
         this.replyRef = null;
       } else {
+        this.replyRef = null;
         const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
         this.setState({
           comments: uniqueComments,
@@ -177,14 +242,37 @@ export default class PostDetails extends PureComponent {
       comment: `@${mention} `,
       isReplying: true,
     });
-    this.replyRef = { comment, mention, name, callback };
+
+    // If the comment has a parent then use that as the parent comment too
+    const refComment = comment && comment.parent ? comment.parent : comment;
+    this.replyRef = { comment: refComment, mention, name, callback };
     this.focusOnCommentInput();
   };
 
+  onViewParentPress = () => {
+    const { post, currentUser, componentId } = this.props;
+    if (!post || !post.post) return;
+
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: {
+          post: post.post,
+          comments: [],
+          like: null,
+          currentUser,
+        },
+      },
+    });
+  }
+
   toggleLike = async () => {
     try {
-      const { currentUser, post } = this.props.navigation.state.params;
+      const { currentUser, post } = this.props;
       let { like, isLiked, postLikesCount } = this.state;
+
+      const isComment = post.type === 'comments';
+      const likesEndpoint = isComment ? 'commentLikes' : 'postLikes';
 
       this.setState({
         isLiked: !isLiked,
@@ -192,14 +280,23 @@ export default class PostDetails extends PureComponent {
       });
 
       if (like) {
-        await Kitsu.destroy('postLikes', like.id);
+        await Kitsu.destroy(likesEndpoint, like.id);
         this.setState({ like: null });
       } else {
-        like = await Kitsu.create('postLikes', {
+        const relationship = isComment ? {
+          comment: {
+            id: post.id,
+            type: 'comments',
+          },
+        } : {
           post: {
             id: post.id,
             type: 'posts',
           },
+        };
+
+        like = await Kitsu.create(likesEndpoint, {
+          ...relationship,
           user: {
             id: currentUser.id,
             type: 'users',
@@ -218,18 +315,31 @@ export default class PostDetails extends PureComponent {
   };
 
   fetchComments = async (requestOptions = {}) => {
+    this.setState({ isLoadingComments: true });
     try {
-      const { post } = this.props.navigation.state.params;
+      const { post } = this.props;
 
-      const comments = await Kitsu.findAll('comments', {
-        filter: {
+      let filter = {};
+
+      // If the main post object is actually a post then we need to get the first level comments
+      if (post.type === 'posts') {
+        filter = {
           postId: post.id,
           parentId: '_none',
-        },
+        };
+      // If however they passed us a comment to be used as the main, then we need to fetch the second level comments
+      } else if (post.type === 'comments') {
+        filter = {
+          parentId: post.id,
+        };
+      }
+
+      const comments = await Kitsu.findAll('comments', {
+        filter,
         fields: {
           users: 'slug,avatar,name',
         },
-        include: 'user,uploads',
+        include: 'user,uploads,parent,post',
         sort: '-createdAt',
         ...requestOptions,
       });
@@ -237,18 +347,24 @@ export default class PostDetails extends PureComponent {
       const processed = preprocessFeedPosts(comments);
       const uniqueComments = uniqBy([...processed.reverse(), ...this.state.comments], 'id');
 
-      this.setState({ comments: uniqueComments });
+      this.setState({ comments: uniqueComments, isLoadingComments: false });
     } catch (err) {
+      this.setState({ isLoadingComments: false });
       console.log('Error fetching comments: ', err);
     }
   };
 
   fetchLikes = async () => {
-    const { currentUser, post } = this.props.navigation.state.params;
+    const { currentUser, post } = this.props;
+
+    const isComment = post.type === 'comments';
+    const likesEndpoint = isComment ? 'commentLikes' : 'postLikes';
+    const idKey = isComment ? 'commentId' : 'postId';
+
     try {
-      const likes = await Kitsu.findAll('postLikes', {
+      const likes = await Kitsu.findAll(likesEndpoint, {
         filter: {
-          postId: post.id,
+          [idKey]: post.id,
           userId: currentUser.id,
         },
         include: 'user',
@@ -270,23 +386,30 @@ export default class PostDetails extends PureComponent {
   };
 
   goBack = () => {
-    this.props.navigation.goBack();
+    Navigation.pop(this.props.componentId);
   };
 
   keyExtractor = item => `${item.id}`;
 
   navigateToUserProfile = (userId) => {
-    if (userId) this.props.navigation.navigate('ProfilePages', { userId });
+    if (userId) {
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: Screens.PROFILE_PAGE,
+          passProps: { userId },
+        },
+      });
+    }
   };
 
   renderItem = ({ item }) => {
-    const { currentUser, post } = this.props.navigation.state.params;
+    const { currentUser, post, componentId } = this.props;
     return (
       <Comment
         post={post}
         comment={item}
         currentUser={currentUser}
-        navigation={this.props.navigation}
+        componentId={componentId}
         onAvatarPress={id => this.navigateToUserProfile(id)}
         onReplyPress={(user, callback) => this.onReplyPress(item, user, callback)}
       />
@@ -296,18 +419,20 @@ export default class PostDetails extends PureComponent {
   renderItemSeperatorComponent = () => <View style={{ height: 17 }} />;
 
   render() {
-    // We expect to have navigated here using react-navigation, and it takes all our props
-    // and jams them over into this crazy thing.
-    const { currentUser, post } = this.props.navigation.state.params;
+    const { currentUser, post, componentId } = this.props;
     const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
-        isPostingComment } = this.state;
+      isPostingComment, showLoadMoreComments, isLoadingComments } = this.state;
 
     const { id, updatedAt, content, embed, media, spoiledUnit, uploads } = post;
 
     return (
       <KeyboardAvoidingView
         behavior={Platform.select({ ios: 'padding', android: null })}
-        style={{ flex: 1, paddingTop: isX ? paddingX + 20 : 20, backgroundColor: '#FFFFFF' }}
+        style={{
+          flex: 1,
+          paddingTop: statusBarHeight + (isX ? paddingX : 0),
+          backgroundColor: '#FFFFFF',
+        }}
       >
         <StatusBar barStyle="dark-content" />
 
@@ -322,7 +447,6 @@ export default class PostDetails extends PureComponent {
           time={post.createdAt}
           onBackButtonPress={this.goBack}
         />
-
         <View style={{ flex: 1 }}>
           <ScrollView>
             <PostMain
@@ -334,9 +458,10 @@ export default class PostDetails extends PureComponent {
               commentsCount={commentsCount}
               taggedMedia={media}
               taggedEpisode={spoiledUnit}
-              navigation={this.props.navigation}
+              componentId={componentId}
+              showViewParent={!!(post && post.post)}
+              onStatusPress={this.onViewParentPress}
             />
-
             <PostActions
               isLiked={isLiked}
               onLikePress={this.toggleLike}
@@ -345,8 +470,23 @@ export default class PostDetails extends PureComponent {
             />
 
             <PostCommentsSection>
-              {comments.length === 0 && topLevelCommentsCount > 0 && <SceneLoader />}
-              {comments.length > 0 && topLevelCommentsCount > comments.length && (
+              {showLoadMoreComments &&
+                <TouchableOpacity
+                  style={{
+                    paddingHorizontal: 8,
+                    paddingBottom: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={this.onViewAllComment}
+                >
+                  <Text>View All Comments</Text>
+                </TouchableOpacity>
+              }
+              {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) && 
+                <SceneLoader />
+              }
+              {comments.length > 0 && topLevelCommentsCount > comments.length && !showLoadMoreComments && (
                 <CommentPagination
                   onPress={this.onPagination}
                   isLoading={this.state.isLoadingNextPage}

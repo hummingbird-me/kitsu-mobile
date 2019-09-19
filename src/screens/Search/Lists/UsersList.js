@@ -4,6 +4,8 @@ import FastImage from 'react-native-fast-image';
 import * as PropTypes from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -66,15 +68,24 @@ const styles = StyleSheet.create({
   },
 });
 
-const onUserPress = (navigation, userId) => {
-  navigation.navigate('ProfilePages', { userId });
+const onUserPress = (componentId, userId) => {
+  if (componentId) {
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.PROFILE_PAGE,
+        passProps: {
+          userId,
+        },
+      },
+    });
+  }
 };
 
-const User = ({ navigation, user, onFollow }) => {
+const User = ({ componentId, user, onFollow }) => {
   const userAvatar = user.avatar ? { uri: user.avatar.small } : DEFAULT_AVATAR;
   const followerTxt = user.followersCount > 1 ? 'followers' : 'follower';
   return (
-    <TouchableOpacity onPress={() => onUserPress(navigation, user.id)} activeOpacity={0.6} style={styles.userContainer}>
+    <TouchableOpacity onPress={() => onUserPress(componentId, user.id)} activeOpacity={0.6} style={styles.userContainer}>
       <View style={styles.userLeftSection}>
         <FastImage source={userAvatar} style={styles.userAvatar} cache="web" />
         <View style={styles.userMetaContainer}>
@@ -95,10 +106,10 @@ const User = ({ navigation, user, onFollow }) => {
 User.propTypes = {
   user: PropTypes.object.isRequired,
   onFollow: PropTypes.func.isRequired,
-  navigation: PropTypes.object.isRequired,
+  componentId: PropTypes.any.isRequired,
 };
 
-const UsersList = ({ hits, onFollow, onData, navigation }) => {
+const UsersList = ({ hits, onFollow, onData, componentId }) => {
   // Send users data to reducer to maintain single source of truth
   onData(hits);
 
@@ -109,7 +120,7 @@ const UsersList = ({ hits, onFollow, onData, navigation }) => {
       style={styles.container}
       scrollEnabled
       contentContainerStyle={styles.userList}
-      renderItem={({ item }) => <User key={`${item.name}`} navigation={navigation} user={item} onFollow={onFollow} />}
+      renderItem={({ item }) => <User key={`${item.name}`} componentId={componentId} user={item} onFollow={onFollow} />}
     />
   );
 };
@@ -118,7 +129,7 @@ UsersList.propTypes = {
   hits: PropTypes.array,
   onFollow: PropTypes.func.isRequired,
   onData: PropTypes.func.isRequired,
-  navigation: PropTypes.object.isRequired,
+  componentId: PropTypes.any.isRequired,
 };
 
 UsersList.defaultProps = {

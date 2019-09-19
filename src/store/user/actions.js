@@ -16,7 +16,7 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
     const user = await Kitsu.findAll('users', {
       fields: {
         users:
-          'id,slug,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,title,titleLanguagePreference,status,hasPassword',
+          'id,slug,name,createdAt,email,avatar,coverImage,about,ratingSystem,shareToGlobal,sfwFilter,ratingSystem,facebookId,title,titleLanguagePreference,status,hasPassword,proExpiresAt,aoPro',
       },
       filter: { self: true },
     });
@@ -78,7 +78,7 @@ export const resolveAccountConflicts = account => async (dispatch, getState) => 
   }
 };
 
-export const createUser = (data, nav) => async (dispatch, getState) => {
+export const createUser = (data, componentId) => async (dispatch, getState) => {
   dispatch({ type: types.CREATE_USER });
   const { username, email, password } = data;
   const { id, gender } = getState().auth.fbuser;
@@ -94,7 +94,7 @@ export const createUser = (data, nav) => async (dispatch, getState) => {
   }
   try {
     await Kitsu.create('users', userObj);
-    loginUser(data, nav, 'signup')(dispatch, getState);
+    loginUser(data, componentId, 'signup')(dispatch, getState);
 
     // TODO: Add user object to redux
     dispatch({ type: types.CREATE_USER_SUCCESS, payload: {} });

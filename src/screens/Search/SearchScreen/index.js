@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
+import { Navigation } from 'react-native-navigation';
 import { View, ScrollView, Keyboard, TouchableOpacity, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
-import { capitalize, isEmpty, isNull, debounce, isEqual } from 'lodash';
+import { capitalize, isEmpty, debounce, isEqual, isNil } from 'lodash';
 import UsersList from 'kitsu/screens/Search/Lists/UsersList';
 import { kitsuConfig } from 'kitsu/config/env';
 import { followUser } from 'kitsu/store/user/actions';
@@ -12,13 +13,11 @@ import { captureUsersData } from 'kitsu/store/users/actions';
 import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { StyledText } from 'kitsu/components/StyledText';
+import { Screens } from 'kitsu/navigation';
+import { EventBus } from 'kitsu/utils/eventBus';
 import { styles } from './styles';
 
 class SearchScreen extends PureComponent {
-  static navigationOptions = {
-    header: null,
-  };
-
   state = {
     query: {
       anime: undefined,
@@ -34,12 +33,19 @@ class SearchScreen extends PureComponent {
 
   componentWillMount() {
     this.updateScenes();
+    this.unsubscribe = EventBus.subscribe(Screens.SEARCH, (page) => {
+      if (this.tabView) this.tabView.goToPage(page);
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.algoliaKeys, nextProps.algoliaKeys)) {
       this.updateScenes(nextProps.algoliaKeys);
     }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   updateScenes(keys = this.props.algoliaKeys) {
@@ -92,9 +98,14 @@ class SearchScreen extends PureComponent {
   debouncedSearch = debounce(this.executeSearch, 150);
 
   navigateToMedia = (media) => {
-    this.props.navigation.navigate('MediaPages', {
-      mediaId: media.id,
-      mediaType: media.kind,
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA_PAGE,
+        passProps: {
+          mediaId: media.id,
+          mediaType: media.kind,
+        },
+      },
     });
   };
 
@@ -142,7 +153,7 @@ class SearchScreen extends PureComponent {
 
   renderSubScene = (scene) => {
     const { query } = this.state;
-    const { navigation, followUser, captureUsersData } = this.props;
+    const { followUser, captureUsersData, componentId } = this.props;
     const hits = this.state.searchResults[scene] || [];
 
     switch (scene) {
@@ -152,7 +163,7 @@ class SearchScreen extends PureComponent {
             hits={hits}
             onFollow={followUser}
             onData={captureUsersData}
-            navigation={navigation}
+            componentId={componentId}
           />
         );
       }
@@ -162,15 +173,17 @@ class SearchScreen extends PureComponent {
           <TopsList
             mounted
             active={scene}
-            navigation={navigation}
+            componentId={componentId}
           />
         ) : (
-          <ResultsList
-            style={styles.list}
-            hits={hits}
-            onPress={this.navigateToMedia}
-            currentUser={this.props.currentUser}
-          />
+          <View style={{ flex: 1 }}>
+            <ResultsList
+              style={styles.list}
+              hits={hits}
+              onPress={this.navigateToMedia}
+              currentUser={this.props.currentUser}
+            />
+          </View>
         );
       }
       default: {
@@ -181,11 +194,14 @@ class SearchScreen extends PureComponent {
   };
 
   render() {
-    const { params } = this.props.navigation.state;
+    const { initialPage } = this.props;
     return (
       <ScrollableTabView
+        ref={(r) => {
+          this.tabView = r;
+        }}
         style={styles.container}
-        initialPage={(params && params.initialPage) || 0}
+        initialPage={initialPage || 0}
         renderTabBar={this.renderTabBar}
         locked={Platform.OS === 'android'}
       >
@@ -205,10 +221,12 @@ SearchScreen.propTypes = {
     media: PropTypes.shape(AlgoliaPropType),
     users: PropTypes.shape(AlgoliaPropType),
   }),
+  initialPage: PropTypes.number,
 };
 
 SearchScreen.defaultProps = {
   algoliaKeys: null,
+  initialPage: 0,
 };
 
 const mapper = (state) => {

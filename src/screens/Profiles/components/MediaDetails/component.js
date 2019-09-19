@@ -27,15 +27,19 @@ const STATUS_MAP = {
 
 const TITLE_MAP = {
   en: 'English',
-  en_us: 'English',
+  en_us: 'English (US)',
   en_jp: 'Romanized',
   ja_jp: 'Japanese',
-  en_cn: 'Romanized',
+  en_cn: 'Pinyin',
   zh_cn: 'Chinese',
-  en_th: 'Romanized',
+  en_th: 'Romanized Thai',
   th_th: 'Thai',
-  en_kr: 'Romanized',
+  en_kr: 'Romanized Korean',
   ko_kr: 'Korean',
+  fr_fr: 'French',
+  ru_ru: 'Russian',
+  vi_vi: 'Vietnamese',
+  ar_ar: 'Arabic'
 };
 
 export class MediaDetails extends Component {

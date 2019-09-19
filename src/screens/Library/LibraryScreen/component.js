@@ -8,6 +8,8 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { styles } from './styles';
 import { LibraryScreenHeader } from '../LibraryScreenHeader';
 import { LibraryTabBar } from './tabbar';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 
 const TAB_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },
@@ -19,13 +21,8 @@ const TAB_TEXT_MAPPING = {
 const LIBRARY_PAGINATION_LIMIT = 60;
 
 export class LibraryScreenComponent extends PureComponent {
-  static navigationOptions = () => ({
-    header: null,
-  });
-
   static propTypes = {
     currentUser: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired,
     library: PropTypes.object,
     updateUserLibraryEntry: PropTypes.func.isRequired,
     deleteUserLibraryEntry: PropTypes.func.isRequired,
@@ -56,19 +53,26 @@ export class LibraryScreenComponent extends PureComponent {
   }
 
   onOptionPress = () => {
-    const { navigation } = this.props;
-    if (navigation) {
-      navigation.navigate('LibrarySettings', {
-        navigateBackOnSave: true,
-      });
-    }
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.SIDEBAR_SETTINGS_LIBRARY,
+        passProps: {
+          navigateBackOnSave: true,
+        },
+      },
+    });
   }
 
   onSearchPress = () => {
-    const { navigation, currentUser } = this.props;
-    if (navigation && currentUser) {
-      navigation.navigate('LibrarySearch', {
-        profile: currentUser,
+    const { componentId, currentUser } = this.props;
+    if (currentUser) {
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.LIBRARY_SEARCH,
+          passProps: {
+            profile: currentUser,
+          },
+        },
       });
     }
   }
@@ -206,7 +210,7 @@ export class LibraryScreenComponent extends PureComponent {
   }
 
   renderLibraryLists(type) {
-    const { currentUser, navigation } = this.props;
+    const { currentUser, componentId } = this.props;
     const statuses = ['current', 'planned', 'completed', 'on_hold', 'dropped'];
     if (!currentUser) return null;
 
@@ -216,10 +220,10 @@ export class LibraryScreenComponent extends PureComponent {
       return (
         <UserLibraryList
           key={`${type}-${status}`}
+          componentId={componentId}
           tabLabel={this.getTabLabel(type, status)}
           currentUser={currentUser}
           profile={currentUser}
-          navigation={navigation}
           libraryEntries={currentLibrary.data}
           libraryStatus={status}
           libraryType={type}

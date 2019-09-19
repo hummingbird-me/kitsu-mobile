@@ -183,14 +183,14 @@ export class Comment extends PureComponent {
       onAvatarPress={this.props.onAvatarPress}
       onReplyPress={() => this.onReplyPress(item)}
       hideEmbeds={this.props.hideEmbeds}
-      navigation={this.props.navigation}
+      componentId={this.props.componentId}
       isCommentReply
     />
   )
 
   render() {
     const {
-      navigation,
+      componentId,
       comment,
       isTruncated,
       onAvatarPress,
@@ -225,7 +225,7 @@ export class Comment extends PureComponent {
           <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
             <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
             {!isEmpty(content) &&
-              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
+              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url)}>
                 <ViewMoreStyledText
                   cacheKey={`${id}-${updatedAt}`}
                   size="xsmall"
@@ -249,7 +249,7 @@ export class Comment extends PureComponent {
               minWidth={minEmbedWidth}
               borderRadius={20}
               style={isEmpty(content) ? null : styles.embed}
-              navigation={navigation}
+              componentId={componentId}
               compact
             />
           }
@@ -264,7 +264,7 @@ export class Comment extends PureComponent {
                 <StyledText color="grey" size="xxsmall">Reply</StyledText>
               </TouchableOpacity>
               <View style={styles.commentActionItem}>
-                <Icon name={isLiked ? 'md-heart' : 'md-heart-outline'} style={[styles.likeIcon, isLiked && styles.likeIcon__active]} />
+                <Icon name={isLiked ? 'md-heart' : 'md-heart-empty'} style={[styles.likeIcon, isLiked && styles.likeIcon__active]} />
                 <StyledText color={isLiked ? 'red' : 'grey'} size="xxsmall">{likesCount}</StyledText>
               </View>
             </View>
@@ -317,7 +317,7 @@ Comment.propTypes = {
     repliesCount: PropTypes.number,
     createdAt: PropTypes.string,
   }).isRequired,
-  navigation: PropTypes.object,
+  componentId: PropTypes.any,
   isTruncated: PropTypes.bool,
   onAvatarPress: PropTypes.func,
   onReplyPress: PropTypes.func,
@@ -331,6 +331,7 @@ Comment.defaultProps = {
   onReplyPress: null,
   hideEmbeds: false,
   isCommentReply: false,
+  componentId: null,
 };
 
 export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (

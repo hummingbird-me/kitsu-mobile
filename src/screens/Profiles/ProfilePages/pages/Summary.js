@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
-import { isNull, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import capitalize from 'lodash/capitalize';
 
-import { Kitsu } from 'kitsu/config/api';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
@@ -13,69 +12,33 @@ import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Rating } from 'kitsu/components/Rating';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
+import { UserStats } from 'kitsu/screens/Profiles/components/UserStats';
+import { isIdForCurrentUser } from 'kitsu/utils/id';
 
 export default class Summary extends PureComponent {
   static propTypes = {
     setActiveTab: PropTypes.func,
     userId: PropTypes.number.isRequired,
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
+    loadingLibraryActivity: PropTypes.bool,
+    libraryActivity: PropTypes.arrayOf(PropTypes.object),
+    loadingReactions: PropTypes.bool,
+    reactions: PropTypes.arrayOf(PropTypes.object),
+    loadingStats: PropTypes.bool,
+    stats: PropTypes.arrayOf(PropTypes.object),
   }
 
   static defaultProps = {
     setActiveTab: null,
-  }
-
-  state = {
-    loading: true,
-    libraryActivity: null,
-    error: null,
-    userReactions: null,
-  }
-
-  componentDidMount() {
-    this.loadLibraryActivity();
-    this.loadReactions();
-  }
-
-  loadLibraryActivity = async () => {
-    const { userId } = this.props;
-
-    try {
-      const libraryActivity = await Kitsu.findAll('libraryEvents', {
-        page: { limit: 20 },
-        filter: { userId },
-        sort: '-createdAt',
-        include: 'libraryEntry.media',
-      });
-
-      this.setState({
-        loading: false,
-        libraryActivity,
-      });
-    } catch (error) {
-      console.log('Error while fetching library entries: ', error);
-
-      this.setState({
-        loading: false,
-        error,
-      });
-    }
-  }
-
-  loadReactions = async () => {
-    const { userId } = this.props;
-    try {
-      const reactions = await Kitsu.findAll('mediaReactions', {
-        filter: { userId },
-        include: 'anime,user,manga',
-        sort: 'upVotesCount',
-        page: { limit: 5 },
-      });
-      this.setState({ userReactions: reactions });
-    } catch (error) {
-      console.log('Error fetching reactions for user:', error);
-    }
+    loadingLibraryActivity: false,
+    libraryActivity: [],
+    loadingReactions: false,
+    reactions: [],
+    loadingStats: false,
+    stats: [],
   }
 
   navigateTo = (scene) => {
@@ -84,9 +47,14 @@ export default class Summary extends PureComponent {
 
   navigateToMedia = (media) => {
     if (media) {
-      this.props.navigation.navigate('MediaPages', {
-        mediaId: media.id,
-        mediaType: media.type,
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: Screens.MEDIA_PAGE,
+          passProps: {
+            mediaId: media.id,
+            mediaType: media.type,
+          },
+        },
       });
     }
   }
@@ -143,14 +111,14 @@ export default class Summary extends PureComponent {
   }
 
   render() {
-    const { loading, error, libraryActivity, userReactions } = this.state;
+    const { loadingLibraryActivity, libraryActivity, loadingReactions, reactions, loadingStats, stats } = this.props;
+    if (loadingLibraryActivity) return <SceneLoader />;
 
-    if (loading) return <SceneLoader />;
-
-    if (error) {
-      // Return error state
-      return null;
-    }
+    const isCurrentUser = isIdForCurrentUser(this.props.userId, this.props.currentUser);
+    // Normalize stats
+    const normalizedStats = stats ? stats.reduce((acc, stat) => {
+      return { ...acc, [stat.kind]: stat };
+    }, {}) : null;
 
     return (
       <SceneContainer>
@@ -158,7 +126,7 @@ export default class Summary extends PureComponent {
         <ScrollableSection
           contentDark
           title="Library activity"
-          onViewAllPress={() => this.navigateTo('Library')}
+          onViewAllPress={() => this.navigateTo('library')}
           data={libraryActivity}
           renderItem={({ item }) => this.renderLibraryActivity(item)}
         />
@@ -167,9 +135,9 @@ export default class Summary extends PureComponent {
         {/* @TODO: Empty state when userReactions != null && empty */}
         <ScrollableSection
           title="Reactions"
-          onViewAllPress={() => this.navigateTo('Reactions')}
-          data={userReactions}
-          loading={isNull(userReactions)}
+          onViewAllPress={() => this.navigateTo('reactions')}
+          data={reactions}
+          loading={loadingReactions}
           renderItem={({ item }) => {
             const title =
               (item.anime && item.anime.canonicalTitle) ||
@@ -185,6 +153,14 @@ export default class Summary extends PureComponent {
             );
           }}
         />
+
+        {/* Stats */}
+        {normalizedStats && (
+          <React.Fragment>
+            <UserStats kind="anime" data={normalizedStats} loading={loadingStats} isCurrentUser={isCurrentUser} />
+            <UserStats kind="manga" data={normalizedStats} loading={loadingStats} isCurrentUser={isCurrentUser} />
+          </React.Fragment>
+        )}
       </SceneContainer>
     );
   }

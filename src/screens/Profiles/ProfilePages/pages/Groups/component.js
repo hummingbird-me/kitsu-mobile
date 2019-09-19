@@ -11,33 +11,13 @@ import { Kitsu } from 'kitsu/config/api';
 class Groups extends PureComponent {
   static propTypes = {
     userId: PropTypes.number.isRequired,
+    loadingGroups: PropTypes.bool,
+    groups: PropTypes.array,
   }
 
-  state = {
-    loading: true,
-    data: null,
-  }
-
-  componentDidMount = async () => {
-    try {
-      const data = await Kitsu.findAll('group-members', {
-        fields: {
-          group: 'slug,name,avatar,tagline',
-        },
-        filter: {
-          query_user: this.props.userId,
-        },
-        include: 'group.category',
-        sort: '-created_at',
-      });
-
-      this.setState({
-        data,
-        loading: false,
-      });
-    } catch (err) {
-      console.log('Unhandled error while retrieving groups: ', err);
-    }
+  static defaultProps = {
+    loadingGroups: false,
+    groups: [],
   }
 
   renderGroupItem = ({ item }) => {
@@ -56,9 +36,9 @@ class Groups extends PureComponent {
   }
 
   render() {
-    const { loading, data } = this.state;
+    const { loadingGroups, groups } = this.props;
 
-    if (loading) {
+    if (loadingGroups) {
       return <SceneLoader />;
     }
 
@@ -66,7 +46,7 @@ class Groups extends PureComponent {
       <TabContainer>
         <FlatList
           listKey="groups"
-          data={data}
+          data={groups}
           renderItem={this.renderGroupItem}
           ItemSeparatorComponent={() => <RowSeparator />}
         />

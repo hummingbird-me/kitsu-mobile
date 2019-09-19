@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   },
   webContainer: {
     width: Dimensions.get('window').width,
-    height: 200
+    height: 200,
   },
   languageContainer: {
     padding: 10,
@@ -45,6 +45,33 @@ export const styles = StyleSheet.create({
   },
   metaContainer: {
     backgroundColor: colors.white,
-    padding: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  metaContainer__mediaVisible: {
+    paddingBottom: 0,
+  },
+  mediaContainer: {
+    backgroundColor: colors.white,
+    flex: 1,
+    padding: 8,
+  },
+  mediaInnerContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: colors.lightestGrey,
+    backgroundColor: colors.white,
+    minHeight: 60,
+  },
+  mediaPoster: {
+    width: 80,
+    height: 120,
+  },
+  mediaInfo: {
+    paddingLeft: 8,
+    flex: 1,
+    flexDirection: 'column',
   },
 });

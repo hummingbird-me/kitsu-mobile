@@ -20,8 +20,10 @@ export const PostMain = ({
   commentsCount,
   taggedMedia,
   taggedEpisode,
-  navigation,
+  componentId,
   onPress,
+  onStatusPress,
+  showViewParent,
 }) => {
   const hasContentAbove = !isEmpty(content) || taggedMedia;
   return (
@@ -29,7 +31,7 @@ export const PostMain = ({
       {!isEmpty(content) &&
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
-            <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url, navigation)}>
+            <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url)}>
               <ViewMoreStyledText
                 cacheKey={cacheKey}
                 color="dark"
@@ -48,7 +50,7 @@ export const PostMain = ({
         <MediaTag
           media={taggedMedia}
           episode={taggedEpisode}
-          navigation={navigation}
+          componentId={componentId}
           style={isEmpty(content) ? { marginTop: 0 } : null}
         />
       )}
@@ -59,10 +61,10 @@ export const PostMain = ({
           maxWidth={scene.width}
           minWidth={scene.width}
           style={[styles.postImagesView, !hasContentAbove && styles.postImagesView_noText]}
-          navigation={navigation}
+          componentId={componentId}
         />
       }
-      <PostStatus onPress={onPress} likesCount={likesCount} commentsCount={commentsCount} />
+      <PostStatus onPress={onStatusPress || onPress} likesCount={likesCount} commentsCount={commentsCount} showViewParent={showViewParent}/>
     </View>
   );
 };
@@ -76,8 +78,10 @@ PostMain.propTypes = {
   commentsCount: PropTypes.number,
   taggedMedia: PropTypes.object,
   taggedEpisode: PropTypes.object,
-  navigation: PropTypes.object.isRequired,
+  componentId: PropTypes.any.isRequired,
   onPress: PropTypes.func,
+  onStatusPress: PropTypes.func,
+  showViewParent: PropTypes.bool,
 };
 PostMain.defaultProps = {
   cacheKey: null,
@@ -89,4 +93,6 @@ PostMain.defaultProps = {
   taggedMedia: null,
   taggedEpisode: null,
   onPress: null,
+  onStatusPress: null,
+  showViewParent: false,
 };

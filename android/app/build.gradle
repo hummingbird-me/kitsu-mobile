@@ -115,10 +115,11 @@ android {
 
     defaultConfig {
         applicationId "com.everfox.animetrackerandroid"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 27
+        missingDimensionStrategy "RNN.reactNativeVersion", "reactNative51"
         versionCode 1
-        versionName "6.7"
+        versionName "6.10.2"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -131,6 +132,10 @@ android {
     }
     dexOptions {
         jumboMode = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     splits {
         abi {
@@ -172,6 +177,15 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support' && requested.name != 'multidex' && requested.name != 'multidex-instrumentation') {
+            details.useVersion "27.1.0"
+        }
+    }
+}
+
 dependencies {
     compile project(':react-native-sentry')
     compile project(':react-native-android-fullscreen-webview')
@@ -183,11 +197,17 @@ dependencies {
     compile project(':react-native-fbsdk')
     compile project(':react-native-vector-icons')
     compile project(':react-native-code-push')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.support:appcompat-v7:27.1.0"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation project(':react-native-navigation')
+    implementation (project(':react-native-admob')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    }
+
+    compile 'com.google.android.gms:play-services-ads:15.0.0'
     compile 'com.android.support:multidex:1.0.1'
-    compile "com.android.support:appcompat-v7:27+"
-    compile "com.facebook.react:react-native:+"  // From node_modules
     compile "com.facebook.fresco:animated-gif:1.3.0"
     compile 'com.facebook.fresco:animated-webp:1.3.0'
     compile 'com.facebook.fresco:webpsupport:1.3.0'

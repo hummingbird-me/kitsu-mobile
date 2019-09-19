@@ -11,16 +11,18 @@ import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessF
 import { isEmpty, uniqBy } from 'lodash';
 import { extractUrls } from 'kitsu/utils/url';
 import { FeedCache } from 'kitsu/utils/cache';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
 
 // Post
 export class Post extends PureComponent {
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     post: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
     onPostPress: PropTypes.func,
-    navigation: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -268,7 +270,7 @@ export class Post extends PureComponent {
 
   toggleEditor = () => {
     if (this.props.currentUser) {
-      this.props.navigation.navigate('CreatePost', {
+      NavigationActions.showCreatePostModal({
         isEditing: true,
         post: this.state.post,
         onPostCreated: (post) => {
@@ -290,7 +292,7 @@ export class Post extends PureComponent {
   }
 
   render() {
-    const { navigation, currentUser } = this.props;
+    const { currentUser, componentId } = this.props;
     const {
       post,
       comment,
@@ -328,7 +330,7 @@ export class Post extends PureComponent {
           commentsCount={commentsCount}
           taggedMedia={media}
           taggedEpisode={spoiledUnit}
-          navigation={navigation}
+          componentId={componentId}
           onPress={this.toggleOverlay}
         />
       )
@@ -343,7 +345,7 @@ export class Post extends PureComponent {
           commentsCount={commentsCount}
           taggedMedia={media}
           taggedEpisode={spoiledUnit}
-          navigation={navigation}
+          componentId={componentId}
           onPress={this.onPostPress}
         />
       );
@@ -356,7 +358,14 @@ export class Post extends PureComponent {
             currentUser={currentUser}
             avatar={(user.avatar && user.avatar.medium) || defaultAvatar}
             onAvatarPress={() => {
-              if (user) navigation.navigate('ProfilePages', { userId: user.id });
+              if (user) {
+                Navigation.push(componentId, {
+                  component: {
+                    name: Screens.PROFILE_PAGE,
+                    passProps: { userId: user.id },
+                  },
+                });
+              }
             }}
             onEditPress={this.toggleEditor}
             onDelete={this.deletePost}
@@ -389,7 +398,7 @@ export class Post extends PureComponent {
                     latestComments={latestComments}
                     hideEmbeds={nsfw && !overlayRemoved}
                     isTruncated
-                    navigation={navigation}
+                    componentId={componentId}
                   />
                 </PostSection>
               )}

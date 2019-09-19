@@ -2,10 +2,30 @@ import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
 import { getStream } from 'kitsu/config/stream';
 import { kitsuConfig } from 'kitsu/config/env';
+import { NavigationActions } from 'kitsu/navigation';
+import { BasicCache } from 'kitsu/utils/cache';
+import { uniq } from 'lodash';
 
 let inAppNotificationTimer = 0;
-const feedInclude =
-  'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads';
+
+/*
+Get all the inlcudes required for notifications
+
+*/
+const getIncludes = () => {
+  const postFields = ['user', 'targetUser', 'targetGroup', 'media', 'uploads', 'spoiledUnit'];
+  const commentFields = ['user', 'uploads', 'parent', 'post', 'parent.user', 'parent.uploads', 'parent.post'];
+
+  // The combined fields from post and comments
+  const combined = uniq([...postFields, ...commentFields]);
+  
+  const others = ['anime', 'manga', 'library_entry', 'followed'];
+  const targetFields = ['target', 'target.videos', ...combined.map(f => `target.${f}`)];
+  const subjectFields = ['subject', 'subject.videos', ...others.map(f => `subject.${f}`), ...combined.map(f => `subject.${f}`)];
+
+  const includeFields = ['media', 'actor', 'unit', ...targetFields, ...subjectFields];
+  return includeFields.join(',');
+};
 
 export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getState) => {
   dispatch({ type: types.GET_USER_FEED, payload: Boolean(cursor) });
@@ -15,7 +35,7 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
       filter: {
         // kind: 'posts',
       },
-      include: feedInclude,
+      include: getIncludes(),
     });
     const posts = results
       .sort(item => item.activities[0].verb === 'post')
@@ -64,7 +84,7 @@ export const getUserFeed = (userId, cursor, limit = 10) => async (dispatch, getS
     userFeed.subscribe(async (data) => {
       const not = await Kitsu.one('userFeed', userId).get({
         page: { limit: 1 },
-        include: feedInclude,
+        include: getIncludes(),
         filter: {
           // kind: 'posts',
         },
@@ -91,7 +111,7 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
       filter: {
         // kind: 'posts',
       },
-      include: feedInclude,
+      include: getIncludes(),
     });
     if (cursor) {
       const { userFeed } = getState().feed;
@@ -111,7 +131,7 @@ export const getMediaFeed = (mediaId, type, cursor, limit = 10) => async (dispat
     mediaFeed.subscribe(async (data) => {
       const not = await Kitsu.one('userFeed', mediaId).get({
         page: { limit: 1 },
-        include: feedInclude,
+        include: getIncludes(),
         filter: {
           // kind: 'posts',
         },
@@ -139,7 +159,7 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
   try {
     const results = await Kitsu.one('activityGroups', id).get({
       page: { limit, cursor },
-      include: 'actor,subject,target.user,target.post,target.manga,target.anime,subject.uploads,target.uploads',
+      include: getIncludes(),
       fields: {
         activities: 'time,verb,id',
       },
@@ -159,37 +179,49 @@ export const fetchNotifications = (cursor, limit = 30) => async (dispatch, getSt
       meta: results.meta,
       loadingMoreNotifications: false,
     });
-    const notificationsStream = getStream().feed(
-      results.meta.feed.group,
-      results.meta.feed.id,
-      results.meta.feed.token,
-    );
-    notificationsStream.subscribe(async (data) => {
-      console.warn('Notifications stream callback triggered! Fetching more notifications.');
-      const not = await Kitsu.one('activityGroups', id).get({
-        page: { limit: 1 },
-        include: 'target.user,target.post,actor,target.manga,target.anime',
-      });
-      if (data.new.length > 0) {
-        dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
-        clearTimeout(inAppNotificationTimer);
-        inAppNotificationTimer = setTimeout(() => dismissInAppNotification(dispatch), 5000);
-      }
-      if (data.deleted.length > 0) {
-        dispatch({
-          type: types.FETCH_NOTIFICATIONS_LESS,
-          payload: data.deleted[0],
-          meta: not.meta,
+
+    // Subscribe to the notifications
+    // Make sure we only subscribed to notifications once
+    // This is to avoid duplicate notifications
+    const key = `NOTIFICATION_${results.meta.feed.group}_${results.meta.feed.id}`;
+
+    if (!BasicCache.has(key)) {
+      const notificationsStream = getStream().feed(
+        results.meta.feed.group,
+        results.meta.feed.id,
+        results.meta.feed.token,
+      );
+
+      notificationsStream.subscribe(async (data) => {
+        console.log('Notifications stream callback triggered! Fetching more notifications.');
+        const not = await Kitsu.one('activityGroups', id).get({
+          page: { limit: 1 },
+          include: getIncludes(),
         });
-      }
-    });
+        if (data.new.length > 0) {
+          dispatch({ type: types.FETCH_NOTIFICATIONS_MORE, payload: not, meta: not.meta });
+          // NavigationActions.showNotification(not[0]);
+          clearTimeout(inAppNotificationTimer);
+          inAppNotificationTimer = setTimeout(() => dispatch(dismissInAppNotification()), 5000);
+        }
+        if (data.deleted.length > 0) {
+          dispatch({
+            type: types.FETCH_NOTIFICATIONS_LESS,
+            payload: data.deleted[0],
+            meta: not.meta,
+          });
+        }
+      });
+
+      BasicCache.set(key, true);
+    }
   } catch (e) {
     console.log(e);
     dispatch({ type: types.FETCH_NOTIFICATIONS_FAIL, payload: e });
   }
 };
 
-export const dismissInAppNotification = (dispatch) => {
+export const dismissInAppNotification = () => (dispatch) => {
   dispatch({ type: types.DISMISS_IN_APP_NOTIFICATION });
 };
 

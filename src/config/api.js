@@ -27,6 +27,7 @@ Kitsu.define(
     email: '',
     avatar: '',
     about: '',
+    aoPro: '',
     createdAt: '',
     website: '',
     birthday: '',
@@ -883,6 +884,16 @@ Kitsu.define(
 );
 
 Kitsu.define(
+  'chapterFeed',
+  {
+    activityGroups: {
+      jsonApi: 'hasMany',
+    },
+  },
+  { collectionPath: 'feeds/chapter_aggr' },
+);
+
+Kitsu.define(
   'globalFeed',
   {
     activityGroups: {
@@ -1151,6 +1162,18 @@ Kitsu.define(
   },
   { collectionPath: 'group-categories' },
 );
+
+Kitsu.define(
+  'stats',
+  {
+    kind: '',
+    statsData: '',
+    user: {
+      jsonApi: 'hasOne',
+    },
+  },
+  { collectionPath: 'stats' },
+)
 
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;

@@ -7,8 +7,11 @@ import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import { setScreenName } from 'kitsu/store/onboarding/actions';
 import { isEmpty, isNull } from 'lodash';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding';
 
 class CreateAccountScreen extends React.Component {
   state = {
@@ -27,7 +30,7 @@ class CreateAccountScreen extends React.Component {
     const { usernameConfirmed } = this.state;
     if (usernameConfirmed) {
       const { username, email, password, confirmPassword } = this.state;
-      const { currentUser, navigation } = this.props;
+      const { currentUser, componentId } = this.props;
       const isValidPass = !isEmpty(password) && password.trim() === confirmPassword.trim();
 
       const valuesToUpdate = {
@@ -50,7 +53,9 @@ class CreateAccountScreen extends React.Component {
         if (isNull(error)) {
           this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
           this.props.setScreenName('FavoritesScreen');
-          navigation.navigate('FavoritesScreen');
+          Navigation.setStackRoot(componentId, {
+            component: { name: Screens.ONBOARDING_FAVORITES_SCREEN },
+          });
         }
       }
     } else {
@@ -91,57 +96,60 @@ class CreateAccountScreen extends React.Component {
 
     return (
       <View style={commonStyles.container}>
-        <Text style={commonStyles.tutorialText}>
-          Great, almost done!{'\n'}
-          Confirm or edit your account details.
-        </Text>
-        <Input
-          containerStyle={{ marginTop: 24 }}
-          placeholder="Email"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={email}
-          keyboardType={'email-address'}
-          onChangeText={text => this.onChangeText(text, 'email')}
-        />
-        <Input
-          placeholder="Username"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={username}
-          onChangeText={text => this.onChangeText(text, 'username')}
-        />
-        {usernameConfirmed && !currentUser.hasPassword ? (
-          <View>
-            <PasswordInput
-              placeholder="Password"
-              value={password}
-              onChangeText={text => this.onChangeText(text, 'password')}
-            />
-            <PasswordInput
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChangeText={text => this.onChangeText(text, 'confirmPassword')}
-            />
-          </View>
-        ) : (
-          <View />
-        )}
-        <Button
-          disabled={!fieldsValid || (!passwordSet && usernameConfirmed)}
-          style={{ marginTop: 36 }}
-          onPress={this.onConfirm}
-          title={buttonText}
-          titleStyle={commonStyles.buttonTitleStyle}
-          loading={loading}
-        />
-        {!isEmpty(errorString) &&
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>
-              An Error Occurred: {errorString}
-            </Text>
-          </View>
-        }
+        <OnboardingHeader />
+        <View style={{ flex: 1 }}>
+          <Text style={commonStyles.tutorialText}>
+            Great, almost done!{'\n'}
+            Confirm or edit your account details.
+          </Text>
+          <Input
+            containerStyle={{ marginTop: 24 }}
+            placeholder="Email"
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={email}
+            keyboardType={'email-address'}
+            onChangeText={text => this.onChangeText(text, 'email')}
+          />
+          <Input
+            placeholder="Username"
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={username}
+            onChangeText={text => this.onChangeText(text, 'username')}
+          />
+          {usernameConfirmed && !currentUser.hasPassword ? (
+            <View>
+              <PasswordInput
+                placeholder="Password"
+                value={password}
+                onChangeText={text => this.onChangeText(text, 'password')}
+              />
+              <PasswordInput
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChangeText={text => this.onChangeText(text, 'confirmPassword')}
+              />
+            </View>
+          ) : (
+            <View />
+          )}
+          <Button
+            disabled={!fieldsValid || (!passwordSet && usernameConfirmed)}
+            style={{ marginTop: 36 }}
+            onPress={this.onConfirm}
+            title={buttonText}
+            titleStyle={commonStyles.buttonTitleStyle}
+            loading={loading}
+          />
+          {!isEmpty(errorString) &&
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>
+                An Error Occurred: {errorString}
+              </Text>
+            </View>
+          }
+        </View>
       </View>
     );
   }

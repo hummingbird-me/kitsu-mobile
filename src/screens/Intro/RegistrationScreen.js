@@ -9,14 +9,12 @@ import * as colors from 'kitsu/constants/colors';
 import { placeholderImage } from 'kitsu/assets/img/intro';
 import { kitsuConfig } from 'kitsu/config/env';
 import { Sentry } from 'react-native-sentry';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { IntroHeader } from './common/';
 import styles from './styles';
 
 class RegistrationScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
-
   state = {
     loggingUser: false,
     topAnime: Array(10).fill({}),
@@ -66,13 +64,13 @@ class RegistrationScreen extends React.Component {
   };
 
   loginFacebook = () => {
-    const { navigation } = this.props;
+    const { componentId } = this.props;
     this.setState({ loggingUser: true });
     LoginManager.logOut();
     LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
       (result) => {
         if (!result.isCancelled) {
-          this.props.loginUser(null, navigation, 'registration');
+          this.props.loginUser(null, componentId, 'registration');
         } else {
           this.setState({ loggingUser: false });
         }
@@ -96,6 +94,15 @@ class RegistrationScreen extends React.Component {
     });
   };
 
+  navigateToAuthScreen = (type) => {
+    Navigation.setStackRoot(this.props.componentId, {
+      component: {
+        name: Screens.AUTH_LOGIN,
+        passProps: { authType: type },
+      },
+    });
+  }
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
@@ -107,7 +114,6 @@ class RegistrationScreen extends React.Component {
   );
 
   render() {
-    const { navigate } = this.props.navigation;
     const { loggingUser, topAnime, topManga } = this.state;
     // TODO: make this screen responsive.
     // TODO: as of react native 0.47, flatlist has inverted prop
@@ -156,13 +162,13 @@ class RegistrationScreen extends React.Component {
             <Button
               style={styles.buttonCreateAccount}
               title={'Create an Account'}
-              onPress={() => navigate('AuthScreen', { authType: 'signup' })}
+              onPress={() => this.navigateToAuthScreen('signup')}
             />
             <Button
               style={styles.buttonAlreadyAccount}
               title={'Already have an account?'}
               titleStyle={{ fontSize: 12, color: colors.lightGrey }}
-              onPress={() => navigate('AuthScreen', { authType: 'login' })}
+              onPress={() => this.navigateToAuthScreen('login')}
             />
           </View>
         </View>

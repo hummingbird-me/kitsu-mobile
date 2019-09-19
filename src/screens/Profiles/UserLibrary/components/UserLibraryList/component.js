@@ -4,6 +4,8 @@ import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview
 import { intersectionWith, isEqual } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { UserLibraryListCard, LibraryEmptyState } from 'kitsu/screens/Profiles/UserLibrary';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
 const LAYOUT_PROVIDER_TYPE = 'UserLibraryListCard';
@@ -28,9 +30,9 @@ const SEARCH_MAP = {
 
 export class UserLibraryList extends PureComponent {
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired,
     libraryEntries: PropTypes.array.isRequired,
     libraryStatus: PropTypes.string.isRequired,
     libraryType: PropTypes.string.isRequired,
@@ -113,12 +115,17 @@ export class UserLibraryList extends PureComponent {
   };
 
   navigateToSearch = () => {
-    const { libraryType, libraryStatus, navigation } = this.props;
+    const { libraryType, libraryStatus, componentId } = this.props;
     const { title, type } = SEARCH_MAP[libraryType][libraryStatus];
-    navigation.navigate('SearchResults', {
-      label: title,
-      default: type,
-      active: libraryType,
+    Navigation.push(componentId, {
+      component: {
+        name: Screens.SEARCH_RESULTS,
+        passProps: {
+          label: title,
+          default: type,
+          active: libraryType,
+        },
+      },
     });
   };
 
@@ -136,7 +143,7 @@ export class UserLibraryList extends PureComponent {
       libraryEntry={data}
       libraryStatus={this.props.libraryStatus}
       libraryType={this.props.libraryType}
-      navigate={this.props.navigation.navigate}
+      componentId={this.props.componentId}
       profile={this.props.profile}
       updateUserLibraryEntry={this.props.onLibraryEntryUpdate}
       deleteUserLibraryEntry={this.props.onLibraryEntryDelete}

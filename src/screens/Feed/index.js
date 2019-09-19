@@ -1,12 +1,14 @@
 import React from 'react';
-import { StatusBar, View, StyleSheet, Platform } from 'react-native';
+import { StatusBar, View, StyleSheet, Platform, Dimensions, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { AdMobBanner } from 'react-native-admob';
 import PropTypes from 'prop-types';
 import URL from 'url-parse';
 import { Kitsu } from 'kitsu/config/api';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { listBackPurple, offWhite } from 'kitsu/constants/colors';
+import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
 import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
@@ -14,13 +16,18 @@ import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { isX, paddingX } from 'kitsu/utils/isX';
 import { isEmpty } from 'lodash';
 import { FeedCache } from 'kitsu/utils/cache';
+import { Navigation } from 'react-native-navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
+import { statusBarHeight } from 'kitsu/constants/app';
+import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
 import { feedStreams } from './feedStreams';
+import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: listBackPurple,
-    paddingTop: isX ? paddingX : 0,
+    paddingTop: statusBarHeight + (isX ? paddingX : 0),
   },
   contentContainer: {
     flex: 1,
@@ -30,13 +37,20 @@ const styles = StyleSheet.create({
 
 class Feed extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    componentId: PropTypes.any.isRequired,
     currentUser: PropTypes.object.isRequired,
   };
 
-  static navigationOptions = {
-    header: null,
-  };
+  static options() {
+    return {
+      sideMenu: {
+        left: {
+          // Enable side drawer only for Feed
+          enabled: true,
+        },
+      },
+    };
+  }
 
   state = {
     activeFeed: 'followingFeed',
@@ -45,15 +59,30 @@ class Feed extends React.PureComponent {
     data: [],
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
+    registerDeepLinks();
     this.fetchFeed();
-  };
+  }
+
+  componentWillUnmount() {
+    unregisterDeepLinks();
+  }
 
   onRefresh = async () => {
     this.setState({ refreshing: true });
     await this.fetchFeed({ reset: true });
     this.setState({ refreshing: false });
   };
+
+  onDrawer = () => {
+    Navigation.mergeOptions(Screens.SIDEBAR, {
+      sideMenu: {
+        left: {
+          visible: true,
+        },
+      },
+    });
+  }
 
   setActiveFeed = (activeFeed) => {
     this.setState(
@@ -150,54 +179,77 @@ class Feed extends React.PureComponent {
   };
 
   navigateToPost = (props) => {
-    this.props.navigation.navigate('PostDetails', props);
-  };
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: props,
+      },
+    });
+  }
 
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
-      this.props.navigation.navigate('CreatePost', {
+      NavigationActions.showCreatePostModal({
         onPostCreated: () => this.fetchFeed({ reset: true }),
       });
     }
   };
 
   navigateToUserProfile = (userId) => {
-    this.props.navigation.navigate('ProfilePages', { userId });
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.PROFILE_PAGE,
+        passProps: { userId },
+      },
+    });
   };
 
   navigateToMedia = ({ mediaId, mediaType }) => {
-    this.props.navigation.navigate('MediaPages', { mediaId, mediaType });
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA_PAGE,
+        passProps: { mediaId, mediaType },
+      },
+    });
   };
 
   keyExtractor = (item, index) => {
     return `${item.id}-${item.updatedAt}`;
   }
 
-  renderPost = ({ item }) => {
+  renderPost = ({ item, index }) => {
     // This dispatches based on the type of an entity to the correct
     // component. If it's not in here it'll just ignore the feed item.
     switch (item.type) {
       case 'posts':
         return (
-          <Post
-            post={item}
-            onPostPress={this.navigateToPost}
-            currentUser={this.props.currentUser}
-            navigation={this.props.navigation}
-          />
+          <React.Fragment>
+            <Post
+              post={item}
+              onPostPress={this.navigateToPost}
+              currentUser={this.props.currentUser}
+              componentId={this.props.componentId}
+            />
+            {/* Render a AdMobBanner every 3 posts */}
+            {!isAoProOrKitsuPro(this.props.currentUser) &&
+              ((index + 1) % 3 === 0) && (
+                <React.Fragment>
+                  <View style={{ marginTop: 10 }} />
+                  <AdMobBanner
+                    adUnitID={ADMOB_AD_UNITS[Platform.OS]}
+                    adSize="smartBannerPortrait"
+                    testDevices={[AdMobBanner.simulatorId]}
+                    onAdFailedToLoad={error => console.log(error)}
+                  />
+                </React.Fragment>
+              )}
+          </React.Fragment>
         );
-      case 'comments':
-        // We explicitly don't render these at the moment.
-        return null;
       default:
         console.log(`WARNING: Ignored post type: ${item.type}`);
         return null;
     }
   };
-
-  onDrawer = () => {
-    this.props.navigation.navigate('DrawerToggle');
-  }
 
   render() {
     return (
@@ -241,7 +293,7 @@ class Feed extends React.PureComponent {
               Disable this on iOS if we start to get missing content
               We could also improve performance by setting `windowSize` prop (default is 21, 10 views above and 10 views below)
             */
-            removeClippedSubviews
+            removeClippedSubviews={Platform.OS === 'android'}
           />
         </View>
       </View>

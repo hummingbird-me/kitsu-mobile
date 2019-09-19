@@ -1,9 +1,13 @@
 import { kitsuConfig } from 'kitsu/config/env';
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar, Dimensions } from 'react-native';
 
 // The height of the navigation bar itself
 export const navigationBarHeight = 44;
 export const statusBarHeight = Platform.select({ ios: 20, android: StatusBar.currentHeight });
+
+// TODO: Probably don't need this if RNN fixes their constants
+// Ref: https://github.com/wix/react-native-navigation/issues/3893
+export const bottomTabsHeight = Platform.select({ ios: 64, android: 56 });
 
 export const defaultAvatar = `${kitsuConfig.assetsUrl}/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png`;
 
@@ -59,3 +63,8 @@ export const ACCEPTED_UPLOAD_TYPES = [
   'image/png',
   'image/gif',
 ];
+
+export const ADMOB_AD_UNITS = Object.freeze({
+  ios: 'ca-app-pub-1730996169473196/8847607677',
+  android: 'ca-app-pub-1730996169473196/9641281765',
+});

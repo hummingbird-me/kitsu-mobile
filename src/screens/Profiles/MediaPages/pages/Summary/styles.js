@@ -57,4 +57,10 @@ export const styles = StyleSheet.create({
   streamingLinksContent: {
     paddingLeft: scenePadding,
   },
+  loading: {
+    padding: 24,
+  },
+  loadFeedButton: {
+    backgroundColor: colors.listBackPurple,
+  },
 });

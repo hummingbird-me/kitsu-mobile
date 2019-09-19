@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
-import { isX, paddingX } from 'kitsu/utils/isX';
+import { isX, paddingX, safeAreaInsetX } from 'kitsu/utils/isX';
 import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
 
 export const styles = StyleSheet.create({
   main: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    marginBottom: isX ? safeAreaInsetX.bottom : 0,
   },
   flex: {
     flex: 1,

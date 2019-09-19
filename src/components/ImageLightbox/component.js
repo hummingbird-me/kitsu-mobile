@@ -82,7 +82,7 @@ export class ImageLightbox extends PureComponent {
             >
               <Icon
                 style={[styles.icon, styles.openIcon]}
-                name={Platform.select({ ios: 'ios-open-outline', android: 'md-open' })}
+                name={Platform.select({ ios: 'ios-open', android: 'md-open' })}
               />
             </TouchableOpacity>
           }
@@ -94,7 +94,7 @@ export class ImageLightbox extends PureComponent {
           >
             <Icon
               style={styles.icon}
-              name={Platform.select({ ios: 'ios-share-outline', android: 'md-share' })}
+              name={Platform.select({ ios: 'ios-share-alt', android: 'md-share' })}
             />
           </TouchableOpacity>
 
@@ -143,28 +143,22 @@ export class ImageLightbox extends PureComponent {
     const shareImage = onShare || this.shareImage;
 
     return (
-      <Modal
-        visible={visible}
-        transparent
-        onRequestClose={onClose}
-      >
-        <ImageViewer
-          imageUrls={imageUrls}
-          onCancel={onClose}
-          onLongPress={i => shareImage(i && i.url)}
-          saveToLocalByLongPress={false}
-          backgroundColor={'rgba(0,0,0,0.97)'}
-          index={index}
-          loadingRender={() => (
-            <View style={styles.loading}>
-              <ActivityIndicator size="small" color="white" />
-            </View>
-          )}
-          renderImage={this.renderImage}
-          renderFooter={this.renderFooter(imageUrls)}
-          footerContainerStyle={styles.imageModalFooterContainer}
-        />
-      </Modal>
+      <ImageViewer
+        imageUrls={imageUrls}
+        onCancel={onClose}
+        onLongPress={i => shareImage(i && i.url)}
+        saveToLocalByLongPress={false}
+        backgroundColor={'rgba(0,0,0,0.97)'}
+        index={index}
+        loadingRender={() => (
+          <View style={styles.loading}>
+            <ActivityIndicator size="small" color="white" />
+          </View>
+        )}
+        renderImage={this.renderImage}
+        renderFooter={this.renderFooter(imageUrls)}
+        footerContainerStyle={styles.imageModalFooterContainer}
+      />
     );
   }
 }

@@ -7,10 +7,13 @@ import { StyledText } from 'kitsu/components/StyledText';
 import { isNull, padStart, isEmpty } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { lightGrey, listBackPurple } from 'kitsu/constants/colors';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
 class Episodes extends PureComponent {
   static propTypes = {
+    componentId: PropTypes.any.isRequired,
     media: PropTypes.shape({
       episodes: PropTypes.array.isRequired,
     }).isRequired,
@@ -40,9 +43,14 @@ class Episodes extends PureComponent {
   }
 
   navigateToUnitPage = (unit) => {
-    this.props.navigation.navigate('UnitDetails', {
-      unit,
-      media: this.props.media,
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA_UNIT_DETAIL,
+        passProps: {
+          unit,
+          media: this.props.media,
+        },
+      },
     });
   }
 
@@ -66,8 +74,8 @@ class Episodes extends PureComponent {
         >
           <StyledText color="black" size="small" bold textStyle={styles.itemNumber}>{paddedString}</StyledText>
           <StyledText color="black" size="small" textStyle={styles.itemTitle} numberOfLines={1}>{title}</StyledText>
-          { !isEmpty(item.videos) &&
-            <Icon name="ios-desktop-outline" style={styles.watchIcon} size={18} />
+          {!isEmpty(item.videos) &&
+            <Icon name="ios-desktop" style={styles.watchIcon} size={18} />
           }
         </TouchableOpacity>
         <TouchableOpacity

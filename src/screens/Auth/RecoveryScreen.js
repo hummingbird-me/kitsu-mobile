@@ -6,16 +6,12 @@ import * as colors from 'kitsu/constants/colors';
 import RecoveryForm from 'kitsu/components/Forms/RecoveryForm';
 import { Toast } from 'kitsu/components/Toast';
 import { loginUser } from 'kitsu/store/auth/actions';
-import AuthWrapper from './AuthWrapper';
+import { Navigation } from 'react-native-navigation';
 import { kitsuConfig } from 'kitsu/config/env';
+import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
 class RecoveryScreen extends Component {
-  static navigationOptions = {
-    header: null,
-    gesturesEnabled: false,
-  };
-
   state = {
     email: '',
     loading: false,
@@ -24,7 +20,7 @@ class RecoveryScreen extends Component {
   };
 
   onDismiss = () => {
-    this.props.navigation.goBack();
+    Navigation.pop(this.props.componentId);
   }
 
   onReset = async () => {
@@ -49,10 +45,6 @@ class RecoveryScreen extends Component {
 
   handleChange = (text, name) => {
     this.setState({ [name]: text });
-  }
-
-  goBack = () => {
-    this.props.navigation.goBack();
   }
 
   render() {
@@ -80,7 +72,7 @@ class RecoveryScreen extends Component {
               handleChange={this.handleChange}
               onReset={this.onReset}
               loading={this.props.signingIn || this.state.loading}
-              onCancel={this.goBack}
+              onCancel={this.onDismiss}
             />
           </View>
         </AuthWrapper>
@@ -91,7 +83,7 @@ class RecoveryScreen extends Component {
 
 RecoveryScreen.propTypes = {
   signingIn: PropTypes.bool.isRequired,
-  navigation: PropTypes.object.isRequired,
+  componentId: PropTypes.any.isRequired,
 };
 
 RecoveryScreen.defaultProps = {

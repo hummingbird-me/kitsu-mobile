@@ -2,14 +2,13 @@
 
 buildscript {
     repositories {
+        google()
+        mavenLocal()
+        mavenCentral()
         jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:3.1.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -18,6 +17,8 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
+        mavenCentral()
         mavenLocal()
         jcenter()
         maven {
@@ -27,19 +28,25 @@ allprojects {
 
         // jitpack repo is necessary to fetch ucrop dependency
         maven { url "https://jitpack.io" }
-        maven { 
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
 
         configurations.all {
             resolutionStrategy {
                 force 'com.facebook.android:facebook-android-sdk:4.28.0' // Temp fix for broken run-android (see goo.gl/v8u59r)
-                
-                // One signal depends on these, however the new version 12.0 breaks builds
-                force 'com.google.android.gms:play-services-gcm:11.8.0'
-                force 'com.google.android.gms:play-services-analytics:11.8.0'
-                force 'com.google.android.gms:play-services-location:11.8.0'
+            }
+        }
+    }
+}
+
+subprojects { subproject ->
+    afterEvaluate {
+        if ((subproject.plugins.hasPlugin('android') || subproject.plugins.hasPlugin('android-library'))) {
+            android {
+                variantFilter { variant ->
+                    def names = variant.flavors*.name
+                    if (names.contains("reactNative56") || names.contains("reactNative55")) {
+                        setIgnore(true)
+                    }
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 /* global __DEV__, window */
 import { applyMiddleware, compose, createStore } from 'redux';
-import { REHYDRATE, persistStore, persistCombineReducers } from 'redux-persist';
+import { persistStore as persistStoreRaw, persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import * as reducers from './reducers';
@@ -23,5 +23,12 @@ const store = createStore(
   composeEnhancers(applyMiddleware(thunk)),
 );
 
-export const persistor = persistStore(store);
+// promisify persistStore
+export const persistStore = new Promise((resolve) => {
+  persistStoreRaw(store, undefined, () => {
+    resolve();
+  });
+});
+
+// export const persistor = persistStore(store);
 export default store;

@@ -4,6 +4,8 @@ import { PropTypes } from 'prop-types';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Rating } from 'kitsu/components/Rating';
+import { Navigation } from 'react-native-navigation';
+import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
 export const MediaCard = ({
@@ -11,7 +13,7 @@ export const MediaCard = ({
   cardDimensions,
   cardStyle,
   mediaData,
-  navigate,
+  componentId,
   progress,
   ratingTwenty,
   ratingSystem,
@@ -19,10 +21,15 @@ export const MediaCard = ({
   loading,
 }) => {
   const onPress = () => {
-    if (mediaData && mediaData.id && mediaData.type) {
-      navigate('MediaPages', {
-        mediaId: mediaData.id,
-        mediaType: mediaData.type,
+    if (componentId && mediaData && mediaData.id && mediaData.type) {
+      Navigation.push(componentId, {
+        component: {
+          name: Screens.MEDIA_PAGE,
+          passProps: {
+            mediaId: mediaData.id,
+            mediaType: mediaData.type,
+          },
+        },
       });
     }
   };
@@ -74,7 +81,7 @@ MediaCard.propTypes = {
   cardDimensions: PropTypes.object.isRequired,
   cardStyle: ViewPropTypes.style,
   mediaData: PropTypes.object.isRequired,
-  navigate: PropTypes.func.isRequired,
+  componentId: PropTypes.any,
   progress: PropTypes.number,
   ratingTwenty: PropTypes.number,
   ratingSystem: PropTypes.string,
@@ -90,4 +97,5 @@ MediaCard.defaultProps = {
   ratingSystem: 'simple',
   style: null,
   loading: false,
+  componentId: null,
 };
