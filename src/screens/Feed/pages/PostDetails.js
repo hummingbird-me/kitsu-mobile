@@ -28,7 +28,7 @@ import * as colors from 'kitsu/constants/colors';
 import { extractUrls } from 'kitsu/utils/url';
 import { isEmpty, uniqBy, isNull } from 'lodash';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'kitsu/navigation';
 import { StyledText } from 'kitsu/components/StyledText';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
@@ -85,7 +85,15 @@ export default class PostDetails extends PureComponent {
       parseInt(post.commentsCount, 10) ||
       parseInt(post.repliesCount, 10) || 0;
 
+    /**
+     * Because we can also edit a post on this screen, we have to move the post from props to state
+     * to allow the UI to give us the updated post content when we successfully edit the post.
+     *
+     * TODO: sync post content back to main feed when hitting back button?
+     */
+
     this.state = {
+      post: post,
       comment: '',
       comments,
       topLevelCommentsCount,
@@ -132,7 +140,8 @@ export default class PostDetails extends PureComponent {
   onSubmitComment = async () => {
     if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
 
-    const { currentUser, post, syncComments } = this.props;
+    const { currentUser, syncComments } = this.props;
+    const { post } = this.state;
 
     const isComment = post.type === 'comments';
 
@@ -169,7 +178,7 @@ export default class PostDetails extends PureComponent {
           ...replyOptions,
         };
       }
-      
+
       // If we have a comment as the `post` then we need to use its original post id
       const postId = isComment ? post.post && post.post.id : post.id;
       if (!postId) return;
@@ -250,7 +259,9 @@ export default class PostDetails extends PureComponent {
   };
 
   onViewParentPress = () => {
-    const { post, currentUser, componentId } = this.props;
+    const { currentUser, componentId } = this.props;
+    const { post } = this.state;
+
     if (!post || !post.post) return;
 
     Navigation.push(componentId, {
@@ -268,8 +279,8 @@ export default class PostDetails extends PureComponent {
 
   toggleLike = async () => {
     try {
-      const { currentUser, post } = this.props;
-      let { like, isLiked, postLikesCount } = this.state;
+      const { currentUser } = this.props;
+      let { post, like, isLiked, postLikesCount } = this.state;
 
       const isComment = post.type === 'comments';
       const likesEndpoint = isComment ? 'commentLikes' : 'postLikes';
@@ -312,12 +323,39 @@ export default class PostDetails extends PureComponent {
         postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
       });
     }
+  }
+
+  deletePost = async () => {
+    try {
+      const { post } = this.state;
+      this.setState({ isDeleted: true });
+      await Kitsu.destroy('posts', post.id);
+    } catch (err) {
+      console.log('Error deleting post:', err);
+      this.setState({ isDeleted: false });
+      Alert.alert('Sorry', 'There was an issue deleting the post.', [
+        { text: 'OK', onPress: null },
+      ]);
+    }
+  };
+
+  toggleEditor = () => {
+    if (this.props.currentUser) {
+      NavigationActions.showCreatePostModal({
+        isEditing: true,
+        post: this.state.post,
+        onPostCreated: (post) => {
+          const processed = preprocessFeedPost(post);
+          this.setState({ post: processed });
+        },
+      });
+    }
   };
 
   fetchComments = async (requestOptions = {}) => {
     this.setState({ isLoadingComments: true });
     try {
-      const { post } = this.props;
+      const { post } = this.state;
 
       let filter = {};
 
@@ -355,7 +393,8 @@ export default class PostDetails extends PureComponent {
   };
 
   fetchLikes = async () => {
-    const { currentUser, post } = this.props;
+    const { currentUser } = this.props;
+    const { post } = this.state;
 
     const isComment = post.type === 'comments';
     const likesEndpoint = isComment ? 'commentLikes' : 'postLikes';
@@ -403,7 +442,9 @@ export default class PostDetails extends PureComponent {
   };
 
   renderItem = ({ item }) => {
-    const { currentUser, post, componentId } = this.props;
+    const { currentUser, componentId } = this.props;
+    const { post } = this.state;
+
     return (
       <Comment
         post={post}
@@ -419,8 +460,8 @@ export default class PostDetails extends PureComponent {
   renderItemSeperatorComponent = () => <View style={{ height: 17 }} />;
 
   render() {
-    const { currentUser, post, componentId } = this.props;
-    const { comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
+    const { currentUser, componentId } = this.props;
+    const { post, comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
       isPostingComment, showLoadMoreComments, isLoadingComments } = this.state;
 
     const { id, updatedAt, content, embed, media, spoiledUnit, uploads } = post;
@@ -446,6 +487,8 @@ export default class PostDetails extends PureComponent {
           name={(post.user && post.user.name) || '-'}
           time={post.createdAt}
           onBackButtonPress={this.goBack}
+          onEditPress={this.toggleEditor}
+          onDelete={this.deletePost}
         />
         <View style={{ flex: 1 }}>
           <ScrollView>
@@ -483,7 +526,7 @@ export default class PostDetails extends PureComponent {
                   <Text>View All Comments</Text>
                 </TouchableOpacity>
               }
-              {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) && 
+              {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) &&
                 <SceneLoader />
               }
               {comments.length > 0 && topLevelCommentsCount > comments.length && !showLoadMoreComments && (
