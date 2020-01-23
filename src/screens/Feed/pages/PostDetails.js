@@ -328,11 +328,10 @@ export default class PostDetails extends PureComponent {
   deletePost = async () => {
     try {
       const { post } = this.state;
-      this.setState({ isDeleted: true });
       await Kitsu.destroy('posts', post.id);
+      // TODO: give user feedback when post deleted (go back to Feed?)
     } catch (err) {
       console.log('Error deleting post:', err);
-      this.setState({ isDeleted: false });
       Alert.alert('Sorry', 'There was an issue deleting the post.', [
         { text: 'OK', onPress: null },
       ]);
