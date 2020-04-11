@@ -14,6 +14,12 @@ import { fetchNotifications } from 'kitsu/store/feed/actions';
 import store, { persistStore } from './store/config';
 import * as profile from './store/profile/actions';
 
+//AÑADIDO A TESTEAR
+import * as RNLocalize from "react-native-localize";
+import i18n from "i18n-js";
+import memoize from "lodash.memoize";
+import { I18nManager, SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
+
 class App extends PureComponent {
   componentWillMount() {
     // Register all global app events here
@@ -166,5 +172,34 @@ function onLibraryEntryDeleted(data) {
 
 // FIXME: Codepush is making android crash
 const wrapper = __DEV__ || Platform.OS === 'android' ? identity : codePush;
+
+
+
+//AÑADIDO A TESTEAR
+const translationGetters = {
+  en: () => require('kitsu/translations/en.json'),
+  es: () => require('kitsu/translations/es.json')
+};
+
+const translate = memoize(
+  (key, config) => i18n.t(key, config),
+  (key, config) => (config ? key + JSON.stringify(config) : key)
+);
+
+const setI18nConfig = () => {
+  const fallback = { languageTag: "en", isRTL: false };
+
+  const { languageTag, isRTL } =
+    RNLocalize.findBestAvailableLanguage(Object.keys(translationGetters)) ||
+    fallback;
+
+  translate.cache.clear();
+  I18nManager.forceRTL(isRTL);
+  i18n.translations = { [languageTag]: translationGetters[languageTag]() };
+  i18n.locale = languageTag;
+};
+
+
+
 
 export default wrapper(App);
