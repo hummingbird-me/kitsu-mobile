@@ -14,7 +14,7 @@
 
 ### Prerequsites
 - [yarn](https://yarnpkg.com/lang/en/docs/install/)
-- [watchman](https://facebook.github.io/watchman/docs/install.html)
+- [watchman](https://facebook.github.io/watchman/docs/install)
 - react-native-cli
     - `yarn global add react-native-cli`
 - [cocoapods](https://guides.cocoapods.org/using/getting-started.html)
