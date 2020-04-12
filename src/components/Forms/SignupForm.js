@@ -5,6 +5,7 @@ import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
 import styles from './styles';
+import I18n from 'kitsu/translations/I18n';
 
 const SignupForm = ({
   handleChange,
@@ -32,7 +33,7 @@ const SignupForm = ({
       onChangeText={text => handleChange(text, 'username')}
     />
     <PasswordInput
-      placeholder="Password"
+      placeholder={I18n.t("hello")}
       value={data.password}
       onChangeText={text => handleChange(text, 'password')}
     />
