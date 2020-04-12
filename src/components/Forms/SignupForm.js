@@ -5,7 +5,7 @@ import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
 import styles from './styles';
-import I18n from 'kitsu/translations/I18n';
+import I18n from 'kitsu/translations/i18n';
 
 const SignupForm = ({
   handleChange,
