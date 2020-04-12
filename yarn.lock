@@ -3479,6 +3479,11 @@ https-proxy-agent@^2.2.1:
     agent-base "^4.1.0"
     debug "^3.1.0"
 
+i18n-js@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.5.1.tgz#9787450894059bec1af791123231e59898eb97c1"
+  integrity sha512-nJgbE5Vj9qzOQfjdVd/uoMoO8ppVaB/3LB6KOmMfD8IQ1vNNh307iHyQLK8ZnLYWkAszfPvVpYmUt1Le/RuHMQ==
+
 iconv-lite@0.4.11:
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.11.tgz#2ecb42fd294744922209a2e7c404dac8793d8ade"
@@ -5930,6 +5935,11 @@ react-native-keyboard-aware-scroll-view@^0.5.0:
   dependencies:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
+
+react-native-languages@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-languages/-/react-native-languages-2.0.1.tgz#f0f06c6315f9f3d9fa9da5f173711ec0f0dd7c84"
+  integrity sha512-ZcMkiIV4SxtCoFsiTpp5l/3IEPvuVgoxkf/8igmn+/lBptoxM3gagMZWVq/p4hH/sft+qQD+53APVF7CVrUSEQ==
 
 react-native-linear-gradient@^2.4.0:
   version "2.4.0"
