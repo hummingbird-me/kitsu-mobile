@@ -5,6 +5,7 @@ import { kitsuConfig } from 'kitsu/config/env';
 import { NavigationActions } from 'kitsu/navigation';
 import { BasicCache } from 'kitsu/utils/cache';
 import { uniq } from 'lodash';
+import I18n from 'kitsu/translations/i18n';
 
 let inAppNotificationTimer = 0;
 
@@ -18,7 +19,7 @@ const getIncludes = () => {
 
   // The combined fields from post and comments
   const combined = uniq([...postFields, ...commentFields]);
-  
+
   const others = ['anime', 'manga', 'library_entry', 'followed'];
   const targetFields = ['target', 'target.videos', ...combined.map(f => `target.${f}`)];
   const subjectFields = ['subject', 'subject.videos', ...others.map(f => `subject.${f}`), ...combined.map(f => `subject.${f}`)];
@@ -232,19 +233,19 @@ export const dismissInAppNotification = () => (dispatch) => {
  */
 export const markNotifications = (notifications, type = 'seen') => async (dispatch, getState) => {
   if (type !== 'seen' && type !== 'read') {
-    throw Error('Notification Type must be "seen" or "read"');
+    throw Error((I18n.t("store.feed.notificationtype")));
   }
   const token = getState().auth.tokens.access_token;
   const { id } = getState().user.currentUser;
 
   // Make sure we have a user
   if (!id) {
-    throw Error('User ID is not valid');
+    throw Error((I18n.t("store.feed.invalidid")));
   }
 
   // Make sure we have a token
   if (!token) {
-    throw Error('User Tokens are not valid');
+    throw Error((I18n.t("store.feed.invalidtoken")));
   }
 
   const notificationsFiltered = notifications
