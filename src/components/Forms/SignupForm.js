@@ -18,7 +18,7 @@ const SignupForm = ({
 }) => (
   <View>
     <Input
-      placeholder={I18n.t("components.forms.signupform.email")}
+      placeholder={I18n.t("components.account.email")}
       autoCapitalize="none"
       autoCorrect={false}
       value={data.email}
@@ -26,39 +26,39 @@ const SignupForm = ({
       onChangeText={text => handleChange(text, 'email')}
     />
     <Input
-      placeholder={I18n.t("components.forms.signupform.username")}
+      placeholder={I18n.t("components.account.username")}
       autoCapitalize="none"
       autoCorrect={false}
       value={data.username}
       onChangeText={text => handleChange(text, 'username')}
     />
     <PasswordInput
-      placeholder={I18n.t("components.forms.signupform.password")}
+      placeholder={I18n.t("components.account.password")}
       value={data.password}
       onChangeText={text => handleChange(text, 'password')}
     />
     <PasswordInput
-      placeholder={I18n.t("components.forms.signupform.confirmpassword")}
+      placeholder={I18n.t("components.account.confirmpassword")}
       value={data.confirmPassword}
       onChangeText={text => handleChange(text, 'confirmPassword')}
     />
     <Button
       loading={loading}
-      title={I18n.t("components.forms.signupform.create")}
+      title={I18n.t("components.account.create")}
       onPress={() => onSubmit()}
       style={{ marginTop: 10 }}
     />
     <Button
       style={styles.buttonFacebook}
-      title={I18n.t("components.forms.signupform.facebook")}
+      title={I18n.t("components.account.facebook")}
       icon={'facebook-official'}
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
     <View style={styles.termsWrapper}>
-      <Text style={styles.terms}>{I18n.t("components.forms.signupform.termspart1")}</Text>
+      <Text style={styles.terms}>{I18n.t("components.account.termspart1")}</Text>
       <TouchableOpacity onPress={onPressTerms}>
-        <Text style={[styles.terms, styles.termsHightlight]}>{I18n.t("components.forms.signupform.termspart2")}</Text>
+        <Text style={[styles.terms, styles.termsHightlight]}>{I18n.t("components.account.termspart2")}</Text>
       </TouchableOpacity>
     </View>
   </View>
