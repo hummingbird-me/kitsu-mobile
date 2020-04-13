@@ -3,12 +3,13 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export const ContentListHeader = ({ title, dark, showViewAll, ...props }) => (
   <View style={styles.contentListHeaderContainer}>
     <Text style={[styles.contentListHeaderText, dark ? styles.lightText : '']}>{title}</Text>
     {showViewAll && <TouchableOpacity style={styles.contentListActionLink} {...props}>
-      <Text style={[styles.contentListActionLinkText, dark ? styles.lightText : '']}>View All</Text>
+      <Text style={[styles.contentListActionLinkText, dark ? styles.lightText : '']}>{I18n.t("components.contentlist.viewall")}</Text>
       <Icon
         name="chevron-right"
         style={[styles.linkIcon, dark ? styles.iconLight : styles.iconDark]}
