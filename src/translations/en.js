@@ -25,6 +25,32 @@ export default {
     },
     feedback: {
       error: "Something went wrong."
+    },
+    profileheader: {
+      follow: "Follow"
+    },
+    rating: {
+      awful: "AWFUL",
+      meh: "MEH",
+      good: "GOOD",
+      great: "GREAT",
+      error: "This function should only be used in simple ratings.",
+      unknown: "Unknown text while determining simple rating type:",
+      notrated: "Not Rated",
+      tap: "Tap",
+      slide: "Slide",
+      torate: " to Rate",
+      slidetorate: "Slide to rate",
+      cancel: "Cancel",
+      done: "Done",
+      norating: "No Rating"
+    },
+    searchbox: {
+      search: "Search"
+    },
+    viewmore: {
+    more: "View more",
+    less: "View less",
     }
   },
   screens: {
