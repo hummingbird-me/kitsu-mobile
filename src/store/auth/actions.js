@@ -10,6 +10,7 @@ import { isEmpty } from 'lodash';
 import { fetchAlgoliaKeys, toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
 import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
+import I18n from 'kitsu/translations/i18n';
 
 export const refreshTokens = () => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;
@@ -53,7 +54,7 @@ export const loginUser = (data, componentId, screen) => async (dispatch, getStat
 
         // Log sentry for empty tokens
         if (isEmpty(tokens)) {
-          Sentry.captureMessage('Empty tokens received', {
+          Sentry.captureMessage((I18n.t("store.auth.emptytokens")), {
             tags: {
               type: 'facebook',
             },
@@ -75,7 +76,7 @@ export const loginUser = (data, componentId, screen) => async (dispatch, getStat
       }
     } catch (e) {
       console.log(e);
-      Sentry.captureMessage('Failed to log in facebook', {
+      Sentry.captureMessage((I18n.t("store.auth.loginfacebook")), {
         tags: {
           type: 'facebook',
         },
@@ -85,7 +86,7 @@ export const loginUser = (data, componentId, screen) => async (dispatch, getStat
       });
       dispatch({
         type: types.LOGIN_USER_FAIL,
-        payload: 'Failed to login with Facebook',
+        payload: (I18n.t("store.auth.logwithfacebook")),
       });
     }
   }
@@ -116,7 +117,7 @@ export const loginUser = (data, componentId, screen) => async (dispatch, getStat
     } catch (e) {
       console.warn(e);
       const string = JSON.stringify(e);
-      Sentry.captureMessage('Failed to fetch current user', {
+      Sentry.captureMessage((I18n.t("store.auth.currentuser")), {
         tags: {
           type: 'auth',
         },
@@ -128,13 +129,13 @@ export const loginUser = (data, componentId, screen) => async (dispatch, getStat
 
       dispatch({
         type: types.LOGIN_USER_FAIL,
-        payload: 'Failed to fetch user',
+        payload: (I18n.t("store.auth.user")),
       });
     }
   } else {
     dispatch({
       type: types.LOGIN_USER_FAIL,
-      payload: 'Wrong credentials',
+      payload: (I18n.t("store.auth.credentials")),
     });
   }
 };
@@ -144,7 +145,7 @@ const loginUserFb = async (dispatch) => {
 
   // Make sure we have a token
   if (!data || !data.accessToken) {
-    throw new Error('Invalid Facebook Access Token');
+    throw new Error((I18n.t("store.auth.facebooktoken")));
   }
 
   try {
