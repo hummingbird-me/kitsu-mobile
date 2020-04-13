@@ -18,7 +18,7 @@ const SignupForm = ({
 }) => (
   <View>
     <Input
-      placeholder="Email"
+      placeholder={I18n.t("components.forms.signupform.email")}
       autoCapitalize="none"
       autoCorrect={false}
       value={data.email}
@@ -26,39 +26,39 @@ const SignupForm = ({
       onChangeText={text => handleChange(text, 'email')}
     />
     <Input
-      placeholder="Username"
+      placeholder={I18n.t("components.forms.signupform.username")}
       autoCapitalize="none"
       autoCorrect={false}
       value={data.username}
       onChangeText={text => handleChange(text, 'username')}
     />
     <PasswordInput
-      placeholder={I18n.t("hello")}
+      placeholder={I18n.t("components.forms.signupform.password")}
       value={data.password}
       onChangeText={text => handleChange(text, 'password')}
     />
     <PasswordInput
-      placeholder="Confirm Password"
+      placeholder={I18n.t("components.forms.signupform.confirmpassword")}
       value={data.confirmPassword}
       onChangeText={text => handleChange(text, 'confirmPassword')}
     />
     <Button
       loading={loading}
-      title={'Create account'}
+      title={I18n.t("components.forms.signupform.create")}
       onPress={() => onSubmit()}
       style={{ marginTop: 10 }}
     />
     <Button
       style={styles.buttonFacebook}
-      title={'Login with Facebook'}
+      title={I18n.t("components.forms.signupform.facebook")}
       icon={'facebook-official'}
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
     <View style={styles.termsWrapper}>
-      <Text style={styles.terms}>By creating an account, you agree our </Text>
+      <Text style={styles.terms}>{I18n.t("components.forms.signupform.termspart1")}</Text>
       <TouchableOpacity onPress={onPressTerms}>
-        <Text style={[styles.terms, styles.termsHightlight]}>Terms of Service</Text>
+        <Text style={[styles.terms, styles.termsHightlight]}>{I18n.t("components.forms.signupform.termspart2")}</Text>
       </TouchableOpacity>
     </View>
   </View>
