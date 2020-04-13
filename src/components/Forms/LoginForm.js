@@ -6,6 +6,7 @@ import { Input } from 'kitsu/components/Input';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 const LoginForm = ({
   handleChange,
@@ -18,7 +19,7 @@ const LoginForm = ({
 }) => (
   <View>
     <Input
-      placeholder="Email"
+      placeholder={I18n.t("components.account.email")}
       autoCapitalize="none"
       autoCorrect={false}
       value={data.email}
@@ -26,19 +27,19 @@ const LoginForm = ({
       onChangeText={text => handleChange(text, 'email')}
     />
     <PasswordInput
-      placeholder="Password"
+      placeholder={I18n.t("components.account.password")}
       value={data.password}
       onChangeText={text => handleChange(text, 'password')}
     />
     <Button
       loading={loading}
-      title={'Sign in to your account'}
+      title={I18n.t("components.account.signin")}
       onPress={() => onSubmit()}
       style={{ marginTop: 10 }}
     />
     <Button
       style={styles.buttonFacebook}
-      title={'Login with Facebook'}
+      title={I18n.t("components.account.facebook")}
       icon={'facebook-official'}
       loading={signingInFacebook}
       onPress={onSignInFacebook}
