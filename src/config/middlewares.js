@@ -3,6 +3,7 @@ import store from 'kitsu/store/config';
 import { isNull, isEmpty, isArray } from 'lodash';
 import { Sentry } from 'react-native-sentry';
 import { getComputedTitle } from 'kitsu/utils/getTitleField';
+import I18n from 'kitsu/translations/i18n';
 
 let tokenPromise = null;
 
@@ -51,7 +52,7 @@ export const kitsuRequestMiddleware = {
           tokenPromise = store.dispatch(refreshTokens());
 
           // Log to sentry
-          Sentry.captureMessage('Recieved a 401', {
+          Sentry.captureMessage((I18n.t("config.middlewares.error401")), {
             tags: {
               type: 'refresh_token',
             },
@@ -78,10 +79,10 @@ export const kitsuRequestMiddleware = {
           return await jsonApi.axios(newRequest);
         } catch (e) {
           // Token refreshing failed! Abort!
-          console.log('Failed to refresh tokens: ', e);
+          console.log((I18n.t("config.middlewares.tokens")), e);
 
           // Log to sentry
-          Sentry.captureMessage('Failed to refresh token', {
+          Sentry.captureMessage((I18n.t("config.middlewares.token")), {
             tags: {
               type: 'refresh_token',
             },
