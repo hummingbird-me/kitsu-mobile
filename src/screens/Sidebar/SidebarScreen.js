@@ -15,6 +15,7 @@ import { Screens } from 'kitsu/navigation';
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
 import { darkPurple, listBackPurple } from 'kitsu/constants/colors';
+import I18n from 'kitsu/translations/i18n';
 
 
 class SidebarScreen extends PureComponent {
@@ -76,13 +77,13 @@ class SidebarScreen extends PureComponent {
 
   get accountSections() {
     return {
-      title: 'Account Settings',
+      title: (I18n.t("screens.sidebar.sidebarscreen.account")),
       data: [
-        { title: 'Settings & Preferences', image: settings, target: 'Settings' },
-        { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
-        { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
-        { title: 'Database Requests', image: suggest, target: 'DatabaseRequests' },
-        { title: 'Contact Us', image: contact, target: 'mailto' },
+        { title: (I18n.t("screens.sidebar.sidebarscreen.settings")), image: settings, target: 'Settings' },
+        { title: (I18n.t("screens.sidebar.sidebarscreen.report")), image: bugs, target: 'ReportBugs' },
+        { title: (I18n.t("screens.sidebar.sidebarscreen.features")), image: suggest, target: 'SuggestFeatures' },
+        { title: (I18n.t("screens.sidebar.sidebarscreen.database")), image: suggest, target: 'DatabaseRequests' },
+        { title: (I18n.t("screens.sidebar.sidebarscreen.contact")), image: contact, target: 'mailto' },
       ],
     };
   }
@@ -156,7 +157,7 @@ class SidebarScreen extends PureComponent {
           <SidebarListItem
             style={styles.sidebarListItem}
             image={library}
-            title="View Profile"
+            title={I18n.t("screens.sidebar.sidebarscreen.profile")}
             onPress={this.onViewProfile}
           />
 
@@ -169,7 +170,7 @@ class SidebarScreen extends PureComponent {
           {/* Logout */}
           <Button
             style={styles.logoutButton}
-            title="Logout"
+            title={I18n.t("screens.sidebar.sidebarscreen.logout")}
             icon="sign-out"
             onPress={this.onLogout}
           />
