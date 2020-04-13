@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from 'react-native';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export class DatePicker extends PureComponent {
   static propTypes = {
@@ -203,15 +204,15 @@ export class DatePicker extends PureComponent {
             <TouchableOpacity style={styles.buttonContainer} activeOpacity={1}>
               <TouchableOpacity onPress={this._onPressCancel} style={styles.button}>
                 <Text style={styles.text}>
-                  Cancel
+                  {I18n.t("components.datepicker.cancel")}
                 </Text>
               </TouchableOpacity>
               <Text style={[styles.text, styles.title]}>
-                Select a Date
+                {I18n.t("components.datepicker.select")}
               </Text>
               <TouchableOpacity onPress={this._onPressConfirm} style={styles.button}>
                 <Text style={[styles.text, styles.confirm]}>
-                  Confirm
+                  {I18n.t("components.datepicker.confirm")}
                 </Text>
               </TouchableOpacity>
             </TouchableOpacity>
