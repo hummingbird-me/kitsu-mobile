@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import { isNull } from 'lodash';
 import { ViewMoreTextCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export class ViewMoreText extends PureComponent {
   state = {
@@ -54,13 +55,13 @@ export class ViewMoreText extends PureComponent {
 
   renderViewMore = onPress => (
     <Text style={styles.button} onPress={onPress}>
-      View more
+      {I18n.t("components.viewmore.more")}
     </Text>
   )
 
   renderViewLess = onPress => (
     <Text style={styles.button} onPress={onPress}>
-      View less
+      {I18n.t("components.viewmore.less")}
     </Text>
   )
 
