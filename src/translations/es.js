@@ -53,6 +53,13 @@ export default {
     less: "Ver menos",
     }
   },
+  config: {
+    middlewares: {
+      error401: "Se recibió un 401",
+      tokens: "Falló el refrescar los tokens",
+      token: "Falló el refrescar el token"
+    }
+  },
   screens: {
     sidebar: {
       sidebarscreen: {
@@ -65,6 +72,99 @@ export default {
         profile: "Ver perfil",
         logout: "Salir"
       }
+    }
+  },
+  utils: {
+    deeplink: {
+      error: "Ocurrió un error",
+      bugs: "Reportar Bugs",
+      features: "Sugerir funcionalidades",
+      database: "Solicitudes de base de datos"
+    },
+    genres: {
+      action: "Acción",
+      adventure: "Aventura",
+      animeinfluenced: "Influenciado por anime",
+      cars: "Automóviles",
+      comedy: "Comedia",
+      cooking: "Cocina",
+      crime: "Crimen",
+      dementia: "Demencia",
+      demons: "Demonios",
+      documentary: "Documental",
+      doujinshi: "Doujinshi",
+      drama: "Drama",
+      ecchi: "Ecchi",
+      family: "Familia",
+      fantasy: "Fantasía",
+      food: "Comida",
+      friendship: "Amistad",
+      game: "Juegos",
+      genderbender: "Gender Bender",
+      gore: "Gore",
+      harem: "Harem",
+      hentai: "Hentai",
+      historical: "Historia",
+      horror: "Horror",
+      kids: "Niños",
+      law: "Leyes",
+      magic: "Magia",
+      mahoushoujo: "Mahou Shoujo",
+      mahoushounen: "Mahou Shounen",
+      martialarts: "Artes marciales",
+      mature: "Madurez",
+      mecha: "Mecha",
+      medical: "Medicina",
+      military: "Militares",
+      music: "Música",
+      mystery: "Misterio",
+      parody: "Parodia",
+      police: "Policia",
+      political: "Política",
+      psychological: "Sicológico",
+      racing: "Carreras",
+      romance: "Romance",
+      samurai: "Samurái",
+      school: "Colegio",
+      scifi: "Sci-Fi",
+      shoujoai: "Shoujo Ai",
+      shounenai: "Shounen Ai",
+      sliceoflife: "Vida diaria",
+      space: "Espacio",
+      sports: "Deportes",
+      superpower: "Super poderes",
+      supernatural: "Supernatural",
+      thriller: "Thriller",
+      tokusatsu: "Tokusatsu",
+      tragedy: "Tragedia",
+      vampire: "Vampiros",
+      workplace: "Lugar de trabajo",
+      yaoi: "Yaoi",
+      youth: "Juventud",
+      yuri: "Yuri",
+      zombies: "Zombis"
+    },
+    imageuploader: {
+      uploading: "Ya se están subiendo las imágenes",
+      missingtokens: "Faltan los tokens de autenticación",
+      error: "Las imagenes deben contener las propiedades `uri` y `mime`."
+    },
+    notifications: {
+      followed: "te siguió.",
+      mentioned: "te mencionó en una publicación.",
+      likedpost: "le puso me gusta a tu publicación.",
+      likedcomment: "le puso me gusta a tu comentario.",
+      invited: "te invitó a un grupo.",
+      likedreaction: "le puso me gusta a tu reacción.",
+      aired: {
+        episode: "Episodio",
+        chapter: "Capítulo",
+        aired: "emitido",
+        released: "liberado"
+      },
+      mentioned: "te mencionó en un comentario.",
+      replied: "respondió a",
+      action: "realizó una acción"
     }
   }
 };
