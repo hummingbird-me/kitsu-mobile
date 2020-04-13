@@ -9,6 +9,7 @@ import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOve
 import { Kitsu } from 'kitsu/config/api';
 import { isEmpty } from 'lodash';
 import { fetchPost, fetchComment } from './feed';
+import I18n from 'kitsu/translations/i18n';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -53,27 +54,27 @@ export const parseNotificationData = (activities, currentUserId) => {
   // text
   switch (activity.verb) {
     case 'follow':
-      notificationData.text = 'followed you.';
+      notificationData.text = (I18n.t("utils.notifications.followed"));
       break;
     case 'post':
-      notificationData.text = 'mentioned you in a post.';
+      notificationData.text = (I18n.t("utils.notifications.mentioned"));
       break;
     case 'post_like':
-      notificationData.text = 'liked your post.';
+      notificationData.text = (I18n.t("utils.notifications.likedpost"));
       break;
     case 'comment_like':
-      notificationData.text = 'liked your comment.';
+      notificationData.text = (I18n.t("utils.notifications.likedcomment"));
       break;
     case 'invited':
-      notificationData.text = 'invited you to a group.';
+      notificationData.text = (I18n.t("utils.notifications.invited"));
       break;
     case 'vote':
-      notificationData.text = 'liked your reaction.';
+      notificationData.text = (I18n.t("utils.notifications.likedreaction"));
       break;
     case 'aired': {
       const isAnime = actor && actor.type === 'anime';
-      const type = isAnime ? 'Episode' : 'Chapter';
-      const state = isAnime ? 'aired' : 'released';
+      const type = isAnime ? (I18n.t("utils.notifications.aired.episode")) : (I18n.t("utils.notifications.aired.chapter"));
+      const state = isAnime ? (I18n.t("utils.notifications.aired.aired")) : (I18n.t("utils.notifications.aired.released"));
       notificationData.actorName = type;
       notificationData.actorAvatar = (actor && actor.posterImage && actor.posterImage.tiny) ||
         notificationData.actorAvatar; // Fallback to default avatar
@@ -92,9 +93,9 @@ export const parseNotificationData = (activities, currentUserId) => {
       if (replyToUser && currentUserId === replyToUser.split(':')[1]) {
         notificationData.text = `replied to your ${replyToType}.`;
       } else if (isMentioned(mentionedUsers || [], currentUserId)) {
-        notificationData.text = 'mentioned you in a comment.';
+        notificationData.text = (I18n.t("utils.notifications.mentioned"));
       } else {
-        notificationData.text = 'replied to';
+        notificationData.text = (I18n.t("utils.notifications.replied"));
         if (target && target[0] && target[0].user) {
           if (actor && target[0].user.id === actor.id) {
             notificationData.text = `${notificationData.text} their`;
@@ -110,7 +111,7 @@ export const parseNotificationData = (activities, currentUserId) => {
       }
       break;
     default:
-      notificationData.text = 'made an action.';
+      notificationData.text = (I18n.t("utils.notifications.action"));
       break;
   }
 
