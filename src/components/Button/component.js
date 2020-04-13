@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, ActivityIndicator, ViewPropTypes } from '
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 const LoadingComponent = () => (
   <View style={styles.contentWrapper}>
@@ -54,7 +55,7 @@ Button.propTypes = {
 };
 Button.defaultProps = {
   style: null,
-  title: 'Save',
+  title: {I18n.t("components.button.save")}
   titleStyle: null,
   icon: null,
   iconStyle: null,
