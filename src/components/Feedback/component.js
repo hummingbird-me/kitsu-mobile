@@ -17,7 +17,7 @@ export class Feedback extends React.Component {
   static defaultProps = {
     containerStyle: styles.defaultStyles,
     titleStyle: styles.defaultStyles,
-    title: {I18n.t("components.feedback.error")},
+    title: (I18n.t("components.feedback.error")),
     autoHide: true,
     autoHideDuration: 3000,
     fadeDuration: 300,
