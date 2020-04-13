@@ -1,5 +1,6 @@
 import store from 'kitsu/store/config';
 import { isEmpty } from 'lodash';
+import I18n from 'kitsu/translations/i18n';
 
 /**
  * A class to help with uploading images.
@@ -37,7 +38,7 @@ export class ImageUploader {
       if (this.xhr) {
         reject({
           status: -1,
-          error: 'Already uploading images',
+          error: (I18n.t("utils.imageuploader.uploading")),
         });
       }
 
@@ -46,7 +47,7 @@ export class ImageUploader {
       if (isEmpty(tokens) || isEmpty(tokens.access_token)) {
         reject({
           status: -1,
-          error: 'Missing authentication tokens',
+          error: (I18n.t("utils.imageuploader.missingtokens")),
         });
       }
 
@@ -92,7 +93,7 @@ export class ImageUploader {
         if (isEmpty(image.uri) || isEmpty(image.mime)) {
           reject({
             status: -1,
-            error: 'Images must contain `uri` and `mime` properties.',
+            error: (I18n.t("utils.imageuploader.error")),
           });
           this.xhr = null;
         }
