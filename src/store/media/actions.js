@@ -1,5 +1,6 @@
 import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
+import I18n from 'kitsu/translations/i18n';
 
 export const fetchMedia = (id, type) => async (dispatch, getState) => {
   // console.log("##### Fetching media: ", id)
@@ -79,7 +80,7 @@ export const fetchMediaReactions = (mediaId, mediaType, limit = 20, pageIndex = 
     dispatch({
       type: types.FETCH_MEDIA_REACTIONS_FAIL,
       payload: {
-        error: 'Failed to load reactions',
+        error: (I18n.t("store.media.error")),
       },
     });
   }
