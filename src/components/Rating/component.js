@@ -12,6 +12,7 @@ import noRatingImage from 'kitsu/assets/img/ratings/no-rating.png';
 import noRatingStarImage from 'kitsu/assets/img/ratings/no-rating-star.png';
 import starImage from 'kitsu/assets/img/ratings/star.png';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 const TextSize = {
   Tiny: 10,
@@ -53,16 +54,16 @@ function getRatingTwentyProperties(ratingTwenty, type) {
     case 'simple':
     default:
       if (rating < 6) {
-        ratingProperties.text = 'AWFUL';
+        ratingProperties.text = (I18n.t("components.rating.awful"));
         ratingProperties.textStyle = styles.textAwful;
       } else if (rating < 10) {
-        ratingProperties.text = 'MEH';
+        ratingProperties.text = (I18n.t("components.rating.meh"));
         ratingProperties.textStyle = styles.textMeh;
       } else if (rating < 16) {
-        ratingProperties.text = 'GOOD';
+        ratingProperties.text = (I18n.t("components.rating.good"));
         ratingProperties.textStyle = styles.textGood;
       } else {
-        ratingProperties.text = 'GREAT';
+        ratingProperties.text = (I18n.t("components.rating.great"));
         ratingProperties.textStyle = styles.textGreat;
       }
       break;
@@ -73,7 +74,7 @@ function getRatingTwentyProperties(ratingTwenty, type) {
 
 function getRatingTwentyForText(text, type) {
   if (type !== 'simple') {
-    throw new Error('This function should only be used in simple ratings.');
+    throw new Error((I18n.t("components.rating.error")));
   }
 
   switch (text) {
@@ -88,7 +89,7 @@ function getRatingTwentyForText(text, type) {
     case 'great':
       return 20;
     default:
-      throw new Error(`Unknown text while determining simple rating type: "${text}"`);
+      throw new Error( (I18n.t("components.rating.unknown"))` "${text}"`);
   }
 }
 
@@ -263,7 +264,7 @@ export class Rating extends PureComponent {
 
     if (ratingTwenty === null) {
       return this.props.showNotRated
-        ? <Text style={[styles.textNotRated, { fontSize }]}>Not Rated</Text>
+        ? <Text style={[styles.textNotRated, { fontSize }]}>{I18n.t("components.rating.notrated")}</Text>
         : null;
     }
 
@@ -332,12 +333,12 @@ export class Rating extends PureComponent {
             <View style={styles.modalHeader}>
               {/* Cancel, Slide / Tap to Rate, Done */}
               <TouchableOpacity onPress={this.cancel}>
-                <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>Cancel</Text>
+                <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>{I18n.t("components.rating.cancel")}</Text>
               </TouchableOpacity>
               <Text style={styles.modalHeaderText}>
-                {ratingSystem === 'simple' ? 'Tap' : 'Slide'} to Rate</Text>
+                {ratingSystem === 'simple' ? (I18n.t("components.rating.tap")) : (I18n.t("components.rating.slide"))}{I18n.t("components.rating.torate")}</Text>
               <TouchableOpacity onPress={this.confirm}>
-                <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>Done</Text>
+                <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>{I18n.t("components.rating.done")}</Text>
               </TouchableOpacity>
             </View>
 
@@ -364,7 +365,7 @@ export class Rating extends PureComponent {
                   :
                   <View style={styles.modalStarRow}>
                     <Text style={styles.modalNoRatingText}>
-                      No Rating
+                      {I18n.t("components.rating.norating")}
                     </Text>
                   </View>
               }
