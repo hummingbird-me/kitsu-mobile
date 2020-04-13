@@ -55,7 +55,7 @@ Button.propTypes = {
 };
 Button.defaultProps = {
   style: null,
-  title: {I18n.t("components.button.save")}
+  title: {I18n.t("components.button.save")},
   titleStyle: null,
   icon: null,
   iconStyle: null,
