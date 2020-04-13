@@ -3,6 +3,7 @@ import { View, Slider, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export const StarRating = ({
   ratingTwenty,
@@ -21,7 +22,7 @@ export const StarRating = ({
         </View>
       ) : (
         <View style={styles.modalStarRow}>
-          <Text style={styles.modalNoRatingText}>Slide to rate</Text>
+          <Text style={styles.modalNoRatingText}>{I18n.t("components.rating.slidetorate")}</Text>
         </View>
       )}
     {/* Slider */}
@@ -55,16 +56,16 @@ function getRatingTwentyProperties(ratingTwenty, type) {
     case 'simple':
     default:
       if (rating < 6) {
-        ratingProperties.text = 'AWFUL';
+        ratingProperties.text = (I18n.t("components.rating.awful"));
         ratingProperties.textStyle = styles.textAwful;
       } else if (rating < 10) {
-        ratingProperties.text = 'MEH';
+        ratingProperties.text = (I18n.t("components.rating.meh"));
         ratingProperties.textStyle = styles.textMeh;
       } else if (rating < 16) {
-        ratingProperties.text = 'GOOD';
+        ratingProperties.text = (I18n.t("components.rating.good"));
         ratingProperties.textStyle = styles.textGood;
       } else {
-        ratingProperties.text = 'GREAT';
+        ratingProperties.text = (I18n.t("components.rating.great"));
         ratingProperties.textStyle = styles.textGreat;
       }
       break;
