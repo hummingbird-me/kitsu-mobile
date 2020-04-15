@@ -61,6 +61,41 @@ export default {
     }
   },
   screens: {
+    quickupdatescreen:{
+      header: "Actualización rápida",
+      error: "Error al actualizar el progreso, por favor vuelve a intentarlo.",
+      ok: "ACEPTAR",
+      startanime: "EMPIEZA A VER ANIME",
+      startmanga: "EMPIEZA A LEER MANGA",
+      startmedia: "EMPIEZA A SEGUIR MEDIOS",
+      findanime: "Encuentra animes para ver",
+      findmanga: "Encuentra mangas para leer",
+      findmedia: "Encuentra medios a añadir",
+      yourthoughts: "¿Que piensas del",
+      discussion: "EMPIEZA LA DISCUSIÓN",
+      sharethoughts: "Se de los primeros en compartir sus pensamientos sobre el %{type} %{number}",
+      communitythoughts: "A medida que actualices tu progreso, ¡verás los pensamientos de la comunidad sobre el %{type} que has %{state}!",
+      ep: "Ep",
+      ch: "Cap",
+      episode: "episodio",
+      chapter: "capítulo",
+      watched: "como visto",
+      read: "como leído",
+      card: {
+        upnext: "SIGUIENTE",
+        outof: " de %{count}",
+        notstarted: "No iniciado",
+        markcomplete: "Marcar como completado",
+        mark: "Marcar",
+        complete: "¡Serie completa! ¡Evalúala!"
+      },
+      editor: {
+      share: "Comparte tus pensamientos sobre el episodio",
+      episode: "Episodio",
+      cancel: "Cancelar",
+      done: "Hecho"
+      }
+    },
     sidebar: {
       sidebarscreen: {
         account: "Ajustes de la cuenta",
