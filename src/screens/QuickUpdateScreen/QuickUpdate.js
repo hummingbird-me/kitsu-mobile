@@ -579,7 +579,7 @@ class QuickUpdate extends Component {
           <View style={styles.emptyStateContainer}>
             <ImageStatus
               title={emptyTitle}
-              text={`As you add ${descriptionType} to your library, they'll start to displaying here and you'll be able to update them and join community discussions.`}
+              text={I18n.t("screens.quickupdatescreen.sharethoughts", {type: descriptionType})}
               image={unstarted}
             />
             <TouchableOpacity
@@ -623,6 +623,8 @@ class QuickUpdate extends Component {
     const media = entry && getMedia(entry);
     const episodeOrChapter = media && media.type === 'manga' ? (I18n.t("screens.quickupdatescreen.chapter")) : (I18n.t("screens.quickupdatescreen.episode"));
     const watchedOrRead = media && media.type === 'manga' ? (I18n.t("screens.quickupdatescreen.read")) : (I18n.t("screens.quickupdatescreen.watched"));
+    const shortEpisodeOrChapter = media && media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.ep")) : (I18n.t("screens.quickupdatescreen.ch"));
+    const watchingOrReading = media && media.type === 'manga' ? (I18n.t("screens.quickupdatescreen.reading")) : (I18n.t("screens.quickupdatescreen.watching"));
 
     return (
       <View style={styles.wrapper}>
@@ -676,7 +678,7 @@ class QuickUpdate extends Component {
                   {progress}
                   {' '}
                 </Text>
-                Discussion
+                {I18n.t("screens.quickupdatescreen.discussionlong")}
               </Text>
             </View>
           )}
@@ -693,7 +695,7 @@ class QuickUpdate extends Component {
                   onEndReachedThreshold={0.6}
                   ListHeaderComponent={
                     <CreatePostRow
-                      title={`${I18n.t("screens.quickupdatescreen.yourthoughts")} ${media && media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.ep")) : (I18n.t("screens.quickupdatescreen.ch"))} ${progress}?`}
+                      title={I18n.t("screens.quickupdatescreen.yourthoughts", {type: shortEpisodeOrChapter, number:progress})}
                       onPress={this.toggleEditor}
                     />
                   }
@@ -721,7 +723,7 @@ class QuickUpdate extends Component {
           ) : (
             <ScrollView style={styles.unstartedWrapper}>
               <ImageStatus
-                title={`START ${media && media.type === 'manga' ? 'READING' : 'WATCHING'} TO JOIN IN`}
+                title={I18n.t("screens.quickupdatescreen.starttojoin", {state:watchingOrReading})}
                 text={I18n.t("screens.quickupdatescreen.communitythoughts", {type: episodeOrChapter, state:watchedOrRead})}
                 image={unstarted}
               />
