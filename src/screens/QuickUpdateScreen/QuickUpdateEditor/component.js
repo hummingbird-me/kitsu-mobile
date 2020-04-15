@@ -4,6 +4,7 @@ import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
 import PropTypes from 'prop-types';
 import styles from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export default class QuickUpdateEditor extends PureComponent {
   static propTypes = {
@@ -43,7 +44,7 @@ export default class QuickUpdateEditor extends PureComponent {
       <PostCreator
         media={media}
         spoiledUnit={currentEpisode}
-        placeholder={`Share your thoughts on Episode ${progress}`}
+        placeholder={`(I18n.t("screens.quickupdatescreen.editor.share")) ${progress}`}
         spoiler
         hideMeta
         disableMedia
@@ -55,14 +56,14 @@ export default class QuickUpdateEditor extends PureComponent {
           <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
             {/* Dummy View, helps with layout to center text */}
             <HeaderButton
-              title="Cancel"
+              title={I18n.t("screens.quickupdatescreen.editor.cancel")}
               onPress={onCancelPress}
               style={styles.headerButton}
               textStyle={styles.headerButtonText}
             />
-            <Text style={styles.headerText}>Episode {progress}</Text>
+            <Text style={styles.headerText}>{I18n.t("screens.quickupdatescreen.editor.episode")} {progress}</Text>
             <HeaderButton
-              title="Done"
+              title={I18n.t("screens.quickupdatescreen.editor.done")}
               onPress={onPostPress}
               disabled={busy}
               loading={busy}
