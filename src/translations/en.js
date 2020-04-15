@@ -61,6 +61,41 @@ export default {
     }
   },
   screens: {
+    quickupdatescreen:{
+      header: "Quick Update",
+      error: "Error while updating progress, please try again.",
+      ok: "OK",
+      startanime: "START WATCHING ANIME",
+      startmanga: "START READING MANGA",
+      startmedia: "START TRACKING MEDIA",
+      findanime: "Find Anime to Watch",
+      findmanga: "Find Manga to Read",
+      findmedia: "Find Media to Add",
+      yourthoughts: "What do you think of",
+      discussion: "START THE DISCUSSION",
+      sharethoughts: "Be the first to share your thoughts about %{type} %{number}",
+      communitythoughts: "As you update your progress, you'll see the thoughts from the community on the %{type} you've %{state}!",
+      ep: "EP",
+      ch: "CH",
+      episode: "episode",
+      chapter: "chapter",
+      watched: "watched",
+      read: "read",
+      card: {
+        upnext: "UP NEXT",
+        outof: " of %{count}",
+        notstarted: "Not Started",
+        markcomplete: "Mark as Complete",
+        mark: "Mark",
+        complete: "Series Complete! Rate it!"
+      },
+      editor: {
+      share: "Share your thoughts on Episode",
+      episode: "Episode",
+      cancel: "Cancel",
+      done: "Done"
+      }
+    },
     sidebar: {
       sidebarscreen: {
         account: "Account Settings",
@@ -190,3 +225,4 @@ export default {
     }
   }
 };
+
