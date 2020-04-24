@@ -168,6 +168,15 @@ class ProfilePage extends PureComponent {
     }
   }
 
+  onFollowTabPress = (label) => {
+    this.props.navigation.navigate('FollowPage', {
+      profile: this.state.profile,
+      label,
+      currentUser: this.props.currentUser,
+      onReloadingUserData: this.loadUserData,
+    });
+  };
+
   setActiveTab = (tab) => {
     if (tab) {
       this.setState({ active: tab.toLowerCase() });
@@ -524,6 +533,7 @@ class ProfilePage extends PureComponent {
             mainButtonTitle={mainButtonTitle}
             mainButtonLoading={isLoadingFollow}
             onFollowButtonPress={this.handleFollowing}
+            onFollowTabPress={this.onFollowTabPress}
             onMoreButtonOptionsSelected={this.onMoreButtonOptionsSelected}
           />
           {this.renderTabs()}
