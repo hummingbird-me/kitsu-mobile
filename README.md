@@ -11,6 +11,10 @@
 ---
 
 ## Installation
+- [Setting up the development/debug environment](https://reactnative.dev/docs/environment-setup)
+- [Debugging on your device - React Native](https://reactnative.dev/docs/running-on-device)
+
+** The instructions below may work, but are more geared towards iOS development check the two links directly above this **
 
 ### Prerequsites
 - [yarn](https://yarnpkg.com/lang/en/docs/install/)
