@@ -1,2 +1,0 @@
-json_key_file "app/gplay.json" # Path to the json secret file - Follow https://github.com/fastlane/supply#setup to get one
-package_name "com.everfox.animetrackerandroid" # e.g. com.krausefx.app

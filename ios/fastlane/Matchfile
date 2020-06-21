@@ -1,5 +1,0 @@
-git_url "git@github.com:hummingbird-me/certificates.git" # ssh key
-# git_url "https://github.com/hummingbird-me/certificates.git"
-
-app_identifier "com.EverFox.AnimeTrakr"
-username "josh@kitsu.io" # Your Apple Developer Portal username
