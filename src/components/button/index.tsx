@@ -1,6 +1,12 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-//import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  TextStyle,
+} from 'react-native';
+import { FontAwesome as Icon } from '@expo/vector-icons';
 import { styles } from './styles';
 
 const LoadingComponent = () => (
@@ -9,7 +15,7 @@ const LoadingComponent = () => (
   </View>
 );
 
-export default function Button ({
+export default function Button({
   style,
   title = 'Save',
   titleStyle,
@@ -20,31 +26,33 @@ export default function Button ({
   disabled = false,
   bold = false,
 }: {
-  style?: StyleSheet,
-  title: string,
-  titleStyle?: number | object | any[],
-  icon?: string,
-  iconStyle?: number | object,
-  onPress: Function,
-  loading: boolean,
-  disabled: boolean,
-  bold: boolean
+  style?: StyleSheet;
+  title: string;
+  titleStyle?: TextStyle;
+  icon?: string;
+  iconStyle?: TextStyle;
+  onPress: Function;
+  loading: boolean;
+  disabled: boolean;
+  bold: boolean;
 }) {
-    /*        {icon ? <Icon name={icon} style={[styles.icon, iconStyle]} /> : null} */
   const Component = onPress ? TouchableOpacity : View;
   return (
     <Component
       disabled={disabled || loading}
       onPress={onPress}
-      style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
-    >
+      style={[styles.button, disabled ? styles.buttonDisabled : null, style]}>
       {loading ? (
         <LoadingComponent />
       ) : (
         <View style={styles.contentWrapper}>
-          <Text style={[styles.title, bold ? styles.titleBold : null]}>{title}</Text>
+          {icon ? <Icon name={icon} style={[styles.icon, iconStyle]} /> : null}
+          <Text
+            style={[styles.title, titleStyle, bold ? styles.titleBold : null]}>
+            {title}
+          </Text>
         </View>
       )}
     </Component>
   );
-};
+}
