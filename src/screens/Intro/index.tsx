@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 
 import logo from 'app/assets/img/intro/slidelogo.png';
 import Button from 'app/components/button';
-import IntroCarousel from 'app/components/intro-carousel';
-import * as colors from '../constants/colors';
+import IntroCarousel from 'app/screens/Intro/Carousel';
+import * as colors from 'app/constants/colors';
 
 export default function Intro() {
   const insets = useSafeArea();
@@ -20,7 +20,7 @@ export default function Intro() {
         <Image source={logo} />
       </View>
       <View style={{ flex: 3 }}>
-        <IntroCarousel />
+        <IntroCarousel onViewFinalPage={() => console.log('LOGIN PAGE')} />
       </View>
       <View
         style={{

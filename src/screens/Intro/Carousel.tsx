@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import { white, transparentWhite } from 'app/constants/colors';
+import { white } from 'app/constants/colors';
 import slide1 from 'app/assets/img/intro/slide1.png';
 import slide2 from 'app/assets/img/intro/slide2.png';
 import slide3 from 'app/assets/img/intro/slide3.png';
@@ -81,9 +81,34 @@ function renderSlide({
   );
 }
 
-export default function IntroCarousel({ style }: { style?: ViewStyle }) {
+export default function IntroCarousel({
+  style,
+  onViewFinalPage,
+}: {
+  style?: ViewStyle;
+  onViewFinalPage?: Function;
+}) {
+  const [isFinalPage, setIsFinalPage] = useState(false);
+
   return (
     <Swiper
+      onScroll={
+        onViewFinalPage
+          ? ({ nativeEvent: { contentOffset, layoutMeasurement } }) => {
+              // Page number as a decimal, updated during scroll
+              const progress = contentOffset.x / layoutMeasurement.width + 1;
+              if (progress > SLIDES.length) {
+                if (!isFinalPage) {
+                  onViewFinalPage();
+                }
+                setIsFinalPage(true);
+              } else {
+                setIsFinalPage(false);
+              }
+            }
+          : () => {}
+      }
+      scrollEventThrottle={50}
       style={style}
       loop={false}
       dotColor={white}

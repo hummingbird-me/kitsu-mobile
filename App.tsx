@@ -10,7 +10,7 @@ import {
 } from '@expo-google-fonts/open-sans';
 import { Asap_700Bold } from '@expo-google-fonts/asap';
 
-import Intro from 'app/components/intro';
+import Intro from 'app/screens/Intro';
 import BootAnimation from 'app/components/boot-animation';
 
 export default function App() {
