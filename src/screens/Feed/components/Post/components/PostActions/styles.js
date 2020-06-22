@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
+import * as colors from 'app/constants/colors';
+import { scenePadding } from 'app/screens/Feed/constants';
 
 export const styles = StyleSheet.create({
   postActionRow: {

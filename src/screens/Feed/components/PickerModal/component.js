@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Modal, FlatList, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { StyledText } from 'kitsu/components/StyledText';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
+import { StyledText } from 'app/components/StyledText';
+import * as Layout from 'app/screens/Feed/components/Layout';
+import { ModalHeader } from 'app/screens/Feed/components/ModalHeader';
 import { styles } from './styles';
 
 

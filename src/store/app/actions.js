@@ -1,5 +1,5 @@
-import { kitsuConfig } from 'kitsu/config/env';
-import * as types from 'kitsu/store/types';
+import { kitsuConfig } from 'app/config/env';
+import * as types from 'app/store/types';
 import { isEmpty } from 'lodash';
 
 export const fetchAlgoliaKeys = () => async (dispatch, getState) => {

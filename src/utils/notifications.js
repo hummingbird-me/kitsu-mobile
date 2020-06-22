@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import store from 'kitsu/store/config';
+import store from 'app/store/config';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import { markNotifications } from 'kitsu/store/feed/actions';
+import { Screens } from 'app/navigation';
+import { markNotifications } from 'app/store/feed/actions';
 import { connect } from 'react-redux';
-import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
-import { Kitsu } from 'kitsu/config/api';
+import { NotificationOverlay } from 'app/screens/Notifications/NotificationOverlay';
+import { Kitsu } from 'app/config/api';
 import { isEmpty } from 'lodash';
 import { fetchPost, fetchComment } from './feed';
 

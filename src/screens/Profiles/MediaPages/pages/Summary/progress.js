@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import { isNull, isFunction } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { StyledText } from 'kitsu/components/StyledText';
-import { ProgressBar } from 'kitsu/components/ProgressBar';
-import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
+import { StyledText } from 'app/components/StyledText';
+import { ProgressBar } from 'app/components/ProgressBar';
+import { SectionHeader } from 'app/screens/Profiles/components/SectionHeader';
 import { styles } from './styles';
 
 const STATUS_TEXT = {

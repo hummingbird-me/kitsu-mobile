@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { commonStyles } from 'kitsu/common/styles';
+import { commonStyles } from 'app/common/styles';
 import { styles } from './styles';
 
 export const ScrollableTabBar = ({ goToPage, activeTab, tabs }) => (

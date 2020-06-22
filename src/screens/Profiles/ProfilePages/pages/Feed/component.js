@@ -1,22 +1,22 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Kitsu } from 'kitsu/config/api';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
+import { Kitsu } from 'app/config/api';
+import { SceneContainer } from 'app/screens/Profiles/components/SceneContainer';
+import { SceneLoader } from 'app/components/SceneLoader';
+import { Post } from 'app/screens/Feed/components/Post';
+import { preprocessFeed } from 'app/utils/preprocessFeed';
+import { CreatePostRow } from 'app/screens/Feed/components/CreatePostRow';
 import { View, FlatList, Platform } from 'react-native';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'app/navigation';
 import { Navigation } from 'react-native-navigation';
 import URL from 'url-parse';
-import { listBackPurple } from 'kitsu/constants/colors';
-import { Button } from 'kitsu/components/Button';
+import { listBackPurple } from 'app/constants/colors';
+import { Button } from 'app/components/Button';
 import { isEmpty, uniqBy } from 'lodash';
 import { AdMobBanner } from 'react-native-admob';
-import { isAoProOrKitsuPro } from 'kitsu/utils/user';
-import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
+import { isAoProOrKitsuPro } from 'app/utils/user';
+import { ADMOB_AD_UNITS } from 'app/constants/app';
 
 class FeedComponent extends PureComponent {
   static propTypes = {

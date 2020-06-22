@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Platform } from 'react-native';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
 
 export const StyledProgressiveImage = props => (
   <ProgressiveImage

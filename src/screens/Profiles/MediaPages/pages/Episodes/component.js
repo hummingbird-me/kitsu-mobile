@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import { FlatList, TouchableOpacity, View, ActivityIndicator, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
-import { StyledText } from 'kitsu/components/StyledText';
+import { TabContainer } from 'app/screens/Profiles/components/TabContainer';
+import { RowSeparator } from 'app/screens/Profiles/components/RowSeparator';
+import { StyledText } from 'app/components/StyledText';
 import { isNull, padStart, isEmpty } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { lightGrey, listBackPurple } from 'kitsu/constants/colors';
+import { lightGrey, listBackPurple } from 'app/constants/colors';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 
 class Episodes extends PureComponent {

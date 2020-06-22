@@ -4,11 +4,11 @@ import { View, Linking, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import DeepLinking from 'react-native-deep-linking';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import { Kitsu } from 'kitsu/config/api';
-import store from 'kitsu/store/config';
+import { Screens } from 'app/navigation';
+import { Kitsu } from 'app/config/api';
+import store from 'app/store/config';
 import { isEmpty, isNull } from 'lodash';
-import { toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
+import { toggleActivityIndicatorHOC } from 'app/store/app/actions';
 import { fetchPost, fetchComment } from './feed';
 
 // The current visible component id

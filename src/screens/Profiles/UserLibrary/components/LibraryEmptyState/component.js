@@ -2,9 +2,9 @@ import * as React from 'react';
 import { PropTypes } from 'prop-types';
 import { ScrollView, View, ImageBackground, Image } from 'react-native';
 import { upperFirst } from 'lodash';
-import { ohNo, mystery } from 'kitsu/assets/img/library';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Button } from 'kitsu/components/Button';
+import { ohNo, mystery } from 'app/assets/img/library';
+import { StyledText } from 'app/components/StyledText';
+import { Button } from 'app/components/Button';
 import { styles } from './styles';
 
 const STATUS_MAP = {

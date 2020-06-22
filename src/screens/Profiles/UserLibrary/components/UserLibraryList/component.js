@@ -3,9 +3,9 @@ import { View, ActivityIndicator, Dimensions, RefreshControl, ScrollView } from 
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { intersectionWith, isEqual } from 'lodash';
 import { PropTypes } from 'prop-types';
-import { UserLibraryListCard, LibraryEmptyState } from 'kitsu/screens/Profiles/UserLibrary';
+import { UserLibraryListCard, LibraryEmptyState } from 'app/screens/Profiles/UserLibrary';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 
 const LAYOUT_PROVIDER_TYPE = 'UserLibraryListCard';

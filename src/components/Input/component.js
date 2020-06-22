@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TextInput, ViewPropTypes, Keyboard } from 'react-native';
 import { PropTypes } from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 import { styles } from './styles';
 
 export const Input = ({ style, containerStyle, ...otherProps }) => (

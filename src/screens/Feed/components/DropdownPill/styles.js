@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { grey } from 'kitsu/constants/colors';
+import { grey } from 'app/constants/colors';
 
 export const styles = StyleSheet.create({
   pillWrap: {

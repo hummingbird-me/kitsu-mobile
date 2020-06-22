@@ -1,8 +1,8 @@
 import { capitalize, map, lowerCase, isEmpty, camelCase } from 'lodash';
-import * as types from 'kitsu/store/types';
-import { Kitsu } from 'kitsu/config/api';
-import { KitsuLibrary, KitsuLibraryEventSource, KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
-import { getTitleField } from 'kitsu/utils/getTitleField';
+import * as types from 'app/store/types';
+import { Kitsu } from 'app/config/api';
+import { KitsuLibrary, KitsuLibraryEventSource, KitsuLibrarySort } from 'app/utils/kitsuLibrary';
+import { getTitleField } from 'app/utils/getTitleField';
 
 export const fetchProfile = userId => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });

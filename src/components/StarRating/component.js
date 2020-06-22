@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Slider, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 import { styles } from './styles';
 
 export const StarRating = ({

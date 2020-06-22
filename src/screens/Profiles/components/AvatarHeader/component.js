@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { Avatar } from 'kitsu/screens/Profiles/components/Avatar';
-import { StyledText } from 'kitsu/components/StyledText';
+import { Avatar } from 'app/screens/Profiles/components/Avatar';
+import { StyledText } from 'app/components/StyledText';
 import { styles } from './styles';
 
 export const AvatarHeader = ({ avatar, title, subtitle, sideElement, boxed, numberOfLinesTitle }) => (

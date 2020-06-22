@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
+import { ModalHeader } from 'app/screens/Feed/components/ModalHeader';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FastImage from 'react-native-fast-image';
 import { isNil } from 'lodash';
-import { prettyBytes } from 'kitsu/utils/prettyBytes';
+import { prettyBytes } from 'app/utils/prettyBytes';
 import { styles } from './styles';
 
 

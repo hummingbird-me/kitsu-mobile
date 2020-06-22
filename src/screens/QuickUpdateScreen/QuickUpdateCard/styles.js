@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 
 const styles = StyleSheet.create({
   wrapper: {

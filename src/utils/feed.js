@@ -1,4 +1,4 @@
-import { Kitsu } from 'kitsu/config/api';
+import { Kitsu } from 'app/config/api';
 
 /**
  * Fetches post by the given id.

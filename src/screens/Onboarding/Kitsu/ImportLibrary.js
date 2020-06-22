@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
-import myanimelist from 'kitsu/assets/img/myanimelist.png';
-import anilist from 'kitsu/assets/img/anilist.png';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import myanimelist from 'app/assets/img/myanimelist.png';
+import anilist from 'app/assets/img/anilist.png';
+import { OnboardingHeader } from 'app/screens/Onboarding/common';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 

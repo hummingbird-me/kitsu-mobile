@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
+import { StyledProgressiveImage } from 'app/screens/Profiles/components/StyledProgressiveImage';
 import { styles } from './styles';
 
 const StyledImage = ({ ...props }) => <FastImage style={styles.imageView} {...props} cache="web" />;

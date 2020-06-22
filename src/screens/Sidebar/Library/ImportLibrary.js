@@ -4,14 +4,14 @@ import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
-import { Kitsu, setToken } from 'kitsu/config/api';
-import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
-import myanimelist from 'kitsu/assets/img/myanimelist.png';
-import anilist from 'kitsu/assets/img/anilist.png';
+import * as colors from 'app/constants/colors';
+import { Kitsu, setToken } from 'app/config/api';
+import { queued, success, failed, pending } from 'app/assets/img/sidebar_icons/';
+import myanimelist from 'app/assets/img/myanimelist.png';
+import anilist from 'app/assets/img/anilist.png';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common';
+import { Screens } from 'app/navigation';
+import { SidebarHeader, SidebarTitle, ItemSeparator } from 'app/screens/Sidebar/common';
 import { styles } from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (

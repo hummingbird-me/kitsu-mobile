@@ -3,7 +3,7 @@ import { View, Switch, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
 import { PropTypes } from 'prop-types';
-import { Kitsu, setToken } from 'kitsu/config/api';
+import { Kitsu, setToken } from 'app/config/api';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common';
 import { styles } from './styles';
 

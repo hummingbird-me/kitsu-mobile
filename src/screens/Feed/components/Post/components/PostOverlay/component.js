@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import PropTypes from 'prop-types';
-import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
+import { MediaTag } from 'app/screens/Feed/components/MediaTag';
 import { styles } from './styles';
 import { Spoiler } from './Overlays/Spoiler';
 import { NotSafeForWork } from './Overlays/NotSafeForWork';

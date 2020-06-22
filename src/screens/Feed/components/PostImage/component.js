@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Image, Dimensions, ActivityIndicator, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { ImageSizeCache } from 'kitsu/utils/cache';
-import { getImgixImage } from 'kitsu/utils/imgix';
-import { isKitsuUrl, isGIFUrl } from 'kitsu/utils/url';
+import { ImageSizeCache } from 'app/utils/cache';
+import { getImgixImage } from 'app/utils/imgix';
+import { isKitsuUrl, isGIFUrl } from 'app/utils/url';
 import { isNil } from 'lodash';
 import { styles } from './styles';
 

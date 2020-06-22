@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
-import { DropdownPill } from 'kitsu/screens/Feed/components/DropdownPill';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { StyledText } from 'app/components/StyledText';
+import { Avatar } from 'app/screens/Feed/components/Avatar';
+import { DropdownPill } from 'app/screens/Feed/components/DropdownPill';
+import * as Layout from 'app/screens/Feed/components/Layout';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 

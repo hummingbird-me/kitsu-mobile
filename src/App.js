@@ -1,16 +1,16 @@
 /* global __DEV__ */
 import React, { PureComponent } from 'react';
 import { Platform, View, ActivityIndicator } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 import { identity, isNil, isEmpty } from 'lodash';
 import { Sentry } from 'react-native-sentry';
 import codePush from 'react-native-code-push';
-import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
-import { kitsuConfig } from 'kitsu/config/env';
-import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-import { NavigationActions } from 'kitsu/navigation';
-import { fetchCurrentUser } from 'kitsu/store/user/actions';
-import { fetchNotifications } from 'kitsu/store/feed/actions';
+import { fetchAlgoliaKeys } from 'app/store/app/actions';
+import { kitsuConfig } from 'app/config/env';
+import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'app/utils/kitsuLibrary';
+import { NavigationActions } from 'app/navigation';
+import { fetchCurrentUser } from 'app/store/user/actions';
+import { fetchNotifications } from 'app/store/feed/actions';
 import store, { persistStore } from './store/config';
 import * as profile from './store/profile/actions';
 

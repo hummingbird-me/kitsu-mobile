@@ -1,6 +1,6 @@
 import { Linking } from 'react-native';
 import { isEmpty } from 'lodash';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'app/navigation';
 import { Navigation } from 'react-native-navigation';
 import { DeepLinking } from 'react-native-deep-linking';
 import { openUrl } from './deeplink';

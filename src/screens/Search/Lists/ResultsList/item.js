@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { getComputedTitle } from 'kitsu/utils/getTitleField';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import { getComputedTitle } from 'app/utils/getTitleField';
 import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 

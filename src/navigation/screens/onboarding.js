@@ -8,9 +8,9 @@ import {
   RatingSystemScreen,
   ImportLibrary,
   ImportDetail,
-} from 'kitsu/screens/Onboarding/';
+} from 'app/screens/Onboarding/';
 
-import * as Screens from 'kitsu/navigation/types';
+import * as Screens from 'app/navigation/types';
 
 export default onboardingRoutes = {
   [Screens.ONBOARDING_WELCOME]: WelcomeScreen,

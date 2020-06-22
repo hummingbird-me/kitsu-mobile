@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
-import { SearchBox } from 'kitsu/components/SearchBox';
+import { ModalHeader } from 'app/screens/Feed/components/ModalHeader';
+import { SearchBox } from 'app/components/SearchBox';
 import { isEmpty, range, debounce } from 'lodash';
-import { getBestGridItemSpacing } from 'kitsu/utils/spacing';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import * as colors from 'kitsu/constants/colors';
-import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
-import { scene } from 'kitsu/screens/Feed/constants';
-import { kitsuConfig } from 'kitsu/config/env';
-import { FetchCache } from 'kitsu/utils/cache';
+import { getBestGridItemSpacing } from 'app/utils/spacing';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import * as colors from 'app/constants/colors';
+import { PostImage } from 'app/screens/Feed/components/PostImage';
+import { scene } from 'app/screens/Feed/constants';
+import { kitsuConfig } from 'app/config/env';
+import { FetchCache } from 'app/utils/cache';
 import { styles } from './styles';
 
 const IMAGE_SIZE = { width: 150, height: 100 };

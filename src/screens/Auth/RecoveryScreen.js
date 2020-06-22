@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import * as colors from 'kitsu/constants/colors';
-import RecoveryForm from 'kitsu/components/Forms/RecoveryForm';
-import { Toast } from 'kitsu/components/Toast';
-import { loginUser } from 'kitsu/store/auth/actions';
+import * as colors from 'app/constants/colors';
+import RecoveryForm from 'app/components/Forms/RecoveryForm';
+import { Toast } from 'app/components/Toast';
+import { loginUser } from 'app/store/auth/actions';
 import { Navigation } from 'react-native-navigation';
-import { kitsuConfig } from 'kitsu/config/env';
+import { kitsuConfig } from 'app/config/env';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 

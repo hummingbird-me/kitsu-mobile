@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
-import { commonStyles } from 'kitsu/common/styles';
+import * as colors from 'app/constants/colors';
+import { commonStyles } from 'app/common/styles';
 
 const SidebarTitle = ({ title, style }) => (
   <View style={[styles.titleWrapper, style]}>

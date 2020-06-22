@@ -1,6 +1,6 @@
-import { parseURL, isKitsuUrl } from 'kitsu/utils/url';
-import { kitsuConfig } from 'kitsu/config/env';
-import { coverImageDimensions } from 'kitsu/constants/app';
+import { parseURL, isKitsuUrl } from 'app/utils/url';
+import { kitsuConfig } from 'app/config/env';
+import { coverImageDimensions } from 'app/constants/app';
 import { isEmpty } from 'lodash';
 
 export const defaultImgixOptions = {

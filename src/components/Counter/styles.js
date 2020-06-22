@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { commonStyles } from 'kitsu/common/styles';
-import * as colors from 'kitsu/constants/colors';
+import { commonStyles } from 'app/common/styles';
+import * as colors from 'app/constants/colors';
 
 export const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { listBackPurple, tabRed, tabInactive } from 'kitsu/constants/colors';
+import { listBackPurple, tabRed, tabInactive } from 'app/constants/colors';
 import * as Screens from './types';
 import * as Layouts from './layouts';
 import { registerScreens } from './screens';

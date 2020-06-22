@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { flattenCommon } from 'kitsu/common/styles';
+import * as colors from 'app/constants/colors';
+import { flattenCommon } from 'app/common/styles';
 import * as constants from './constants';
 
 const emptyBorderStyle = {

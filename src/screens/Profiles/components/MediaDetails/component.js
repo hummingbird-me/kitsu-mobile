@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
-import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
+import { SectionHeader } from 'app/screens/Profiles/components/SectionHeader';
 import { styles } from './styles';
-import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
-import { StyledText } from 'kitsu/components/StyledText';
+import { InfoRow } from 'app/screens/Profiles/components/InfoRow';
+import { StyledText } from 'app/components/StyledText';
 import { isNull, isEmpty } from 'lodash';
 import moment from 'moment';
 

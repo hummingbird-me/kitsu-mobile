@@ -17,23 +17,23 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
 import URL from 'url-parse';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { preprocessFeed, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
-import { Kitsu } from 'kitsu/config/api';
-import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
-import emptyComment from 'kitsu/assets/img/quick_update/comment_empty.png';
+import { Post } from 'app/screens/Feed/components/Post';
+import { CreatePostRow } from 'app/screens/Feed/components/CreatePostRow';
+import { preprocessFeed, preprocessFeedPost } from 'app/utils/preprocessFeed';
+import { Kitsu } from 'app/config/api';
+import unstarted from 'app/assets/img/quick_update/unstarted.png';
+import emptyComment from 'app/assets/img/quick_update/comment_empty.png';
 import { isEmpty, capitalize, uniqBy } from 'lodash';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
-import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-import { ImageStatus } from 'kitsu/components/ImageStatus';
+import { getImgixCoverImage } from 'app/utils/imgix';
+import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'app/utils/kitsuLibrary';
+import { ImageStatus } from 'app/components/ImageStatus';
 import QuickUpdateEditor from './QuickUpdateEditor';
 import QuickUpdateCard from './QuickUpdateCard';
 import HeaderFilterButton from './HeaderFilterButton';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'app/navigation';
 import styles from './styles';
-import { EventBus } from 'kitsu/utils/eventBus';
+import { EventBus } from 'app/utils/eventBus';
 
 // API request fields
 const LIBRARY_ENTRIES_FIELDS = [

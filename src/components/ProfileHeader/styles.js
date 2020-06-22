@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
-import { isX, paddingX } from 'kitsu/utils/isX';
+import * as colors from 'app/constants/colors';
+import { statusBarHeight, navigationBarHeight } from 'app/constants/app';
+import { isX, paddingX } from 'app/utils/isX';
 
 const HEADER_NAVIGATION_IMAGE_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
 

@@ -3,19 +3,19 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { upperFirst, toLower } from 'lodash';
-import { Button } from 'kitsu/components/Button';
-import awful from 'kitsu/assets/img/ratings/awful.png';
-import good from 'kitsu/assets/img/ratings/good.png';
-import great from 'kitsu/assets/img/ratings/great.png';
-import meh from 'kitsu/assets/img/ratings/meh.png';
-import starFilled from 'kitsu/assets/img/ratings/star.png';
-import { fox } from 'kitsu/assets/img/onboarding/';
-import { updateLibrarySettings } from 'kitsu/store/user/actions/';
-import { setScreenName } from 'kitsu/store/onboarding/actions';
+import { Button } from 'app/components/Button';
+import awful from 'app/assets/img/ratings/awful.png';
+import good from 'app/assets/img/ratings/good.png';
+import great from 'app/assets/img/ratings/great.png';
+import meh from 'app/assets/img/ratings/meh.png';
+import starFilled from 'app/assets/img/ratings/star.png';
+import { fox } from 'app/assets/img/onboarding/';
+import { updateLibrarySettings } from 'app/store/user/actions/';
+import { setScreenName } from 'app/store/onboarding/actions';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { OnboardingHeader } from 'app/screens/Onboarding/common';
 
 const getRatingSystem = (type) => {
   switch (type) {

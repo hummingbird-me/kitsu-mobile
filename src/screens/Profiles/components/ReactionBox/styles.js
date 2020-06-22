@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { lightGrey, grey, orange, white } from 'kitsu/constants/colors';
-import { scenePadding, cardSize, borderWidth } from 'kitsu/screens/Profiles/constants';
+import { lightGrey, grey, orange, white } from 'app/constants/colors';
+import { scenePadding, cardSize, borderWidth } from 'app/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   wrap: {

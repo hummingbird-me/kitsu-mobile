@@ -3,12 +3,12 @@ import { View, TouchableOpacity, Share, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import * as colors from 'kitsu/constants/colors';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { kitsuConfig } from 'kitsu/config/env';
+import * as colors from 'app/constants/colors';
+import { SelectMenu } from 'app/components/SelectMenu';
+import { StyledText } from 'app/components/StyledText';
+import { Avatar } from 'app/screens/Feed/components/Avatar';
+import * as Layout from 'app/screens/Feed/components/Layout';
+import { kitsuConfig } from 'app/config/env';
 import { styles } from './styles';
 
 const formatTime = (time) => (

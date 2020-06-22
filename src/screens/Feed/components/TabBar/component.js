@@ -4,9 +4,9 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import { StyledText } from 'app/components/StyledText';
+import { defaultAvatar } from 'app/constants/app';
+import { Avatar } from 'app/screens/Feed/components/Avatar';
 import { styles } from './styles';
 
 export const TabBar = ({ currentUser, onPress, children }) => (

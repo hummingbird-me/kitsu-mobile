@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
-import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
+import { TabHeader } from 'app/screens/Profiles/components/TabHeader';
+import { TabContainer } from 'app/screens/Profiles/components/TabContainer';
+import { ReactionBox } from 'app/screens/Profiles/components/ReactionBox';
+import { RowSeparator } from 'app/screens/Profiles/components/RowSeparator';
 
 class Reactions extends PureComponent {
   static propTypes = {

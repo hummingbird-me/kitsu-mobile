@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View, ViewPropTypes, ActivityIndicator } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { ProgressBar } from 'kitsu/components/ProgressBar';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { Rating } from 'kitsu/components/Rating';
+import { ProgressBar } from 'app/components/ProgressBar';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import { Rating } from 'app/components/Rating';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 
 export const MediaCard = ({

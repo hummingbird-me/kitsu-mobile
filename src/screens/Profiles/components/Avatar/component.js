@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
+import { defaultAvatar } from 'app/constants/app';
+import { StyledProgressiveImage } from 'app/screens/Profiles/components/StyledProgressiveImage';
 import { styles } from './styles';
 
 export const Avatar = ({ avatar }) => (

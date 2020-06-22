@@ -1,8 +1,8 @@
-import { logoutUser, refreshTokens } from 'kitsu/store/auth/actions';
-import store from 'kitsu/store/config';
+import { logoutUser, refreshTokens } from 'app/store/auth/actions';
+import store from 'app/store/config';
 import { isNull, isEmpty, isArray } from 'lodash';
 import { Sentry } from 'react-native-sentry';
-import { getComputedTitle } from 'kitsu/utils/getTitleField';
+import { getComputedTitle } from 'app/utils/getTitleField';
 
 let tokenPromise = null;
 

@@ -1,15 +1,15 @@
 import React, { PureComponent } from 'react';
 import { View, TouchableOpacity, Text, Animated, TouchableWithoutFeedback } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import { PropTypes } from 'prop-types';
-import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
+import { UserLibraryList } from 'app/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { capitalize, isEmpty, camelCase } from 'lodash';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { styles } from './styles';
 import { LibraryScreenHeader } from '../LibraryScreenHeader';
 import { LibraryTabBar } from './tabbar';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 
 const TAB_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },

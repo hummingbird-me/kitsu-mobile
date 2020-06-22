@@ -2,11 +2,11 @@ import React from 'react';
 import { View, TextInput, Text, Modal, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 import PropTypes from 'prop-types';
-import { Kitsu, setToken } from 'kitsu/config/api';
+import { Kitsu, setToken } from 'app/config/api';
 import { Navigation } from 'react-native-navigation';
-import { SidebarHeader, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common';
+import { SidebarHeader, ItemSeparator, SidebarButton } from 'app/screens/Sidebar/common';
 import { styles } from './styles';
 
 class ImportDetail extends React.Component {

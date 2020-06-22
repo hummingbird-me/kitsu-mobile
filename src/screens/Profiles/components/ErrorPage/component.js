@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { StyledText } from 'kitsu/components/StyledText';
-import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
+import { SceneContainer } from 'app/screens/Profiles/components/SceneContainer';
+import { StyledText } from 'app/components/StyledText';
+import { CustomHeader } from 'app/screens/Profiles/components/CustomHeader';
 import { styles } from './styles';
 
 export const ErrorPage = ({ errorText, showHeader, onBackPress }) => (

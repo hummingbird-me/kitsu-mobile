@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 import { styles } from './styles';
 
 export const NotificationHeader = ({ unreadCount, markingRead, onMarkAll }) => (

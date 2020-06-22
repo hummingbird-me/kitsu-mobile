@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import { styles } from './styles';
 
 export const CustomHeader = ({

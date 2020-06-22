@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation';
-import { setDeepLinkTabIndex } from 'kitsu/utils/deeplink';
+import { setDeepLinkTabIndex } from 'app/utils/deeplink';
 import * as Screens from './types';
 import * as Layouts from './layouts';
 

@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, Platform, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { defaultCover as defaultCoverUri, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
-import * as colors from 'kitsu/constants/colors';
-import { isX, paddingX } from 'kitsu/utils/isX';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import { defaultCover as defaultCoverUri, statusBarHeight, navigationBarHeight } from 'app/constants/app';
+import * as colors from 'app/constants/colors';
+import { isX, paddingX } from 'app/utils/isX';
 import PropTypes from 'prop-types';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
+import { getImgixCoverImage } from 'app/utils/imgix';
 
 const SidebarHeader = ({ headerTitle, coverImage, onBackPress }) => {
   const goBack = onBackPress;

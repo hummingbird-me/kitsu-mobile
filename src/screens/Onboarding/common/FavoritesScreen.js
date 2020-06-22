@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, ScrollView, Text, Platform, UIManager, LayoutAnimation, ActivityIndicator } from 'react-native';
-import { Button } from 'kitsu/components/Button';
-import { Pill } from 'kitsu/components/Pill';
+import { Button } from 'app/components/Button';
+import { Pill } from 'app/components/Pill';
 import { connect } from 'react-redux';
-import { Kitsu, setToken } from 'kitsu/config/api';
-import { setScreenName, updateFavorites } from 'kitsu/store/onboarding/actions';
-import * as colors from 'kitsu/constants/colors';
+import { Kitsu, setToken } from 'app/config/api';
+import { setScreenName, updateFavorites } from 'app/store/onboarding/actions';
+import * as colors from 'app/constants/colors';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { OnboardingHeader } from 'app/screens/Onboarding/common';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
 class FavoritesScreen extends React.Component {

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { ViewPropTypes, Platform, Dimensions, View } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
+import { TabBar } from 'app/screens/Profiles/components/TabBar';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 

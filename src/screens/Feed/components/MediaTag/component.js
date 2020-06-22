@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, TouchableOpacity, ViewPropTypes } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import PropTypes from 'prop-types';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 
 const navigateToMedia = (media, componentId) => {

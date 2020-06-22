@@ -4,18 +4,18 @@ import { TouchableOpacity, View } from 'react-native';
 import { isEmpty } from 'lodash';
 import capitalize from 'lodash/capitalize';
 
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
-import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
-import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
-import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Rating } from 'kitsu/components/Rating';
+import { SceneContainer } from 'app/screens/Profiles/components/SceneContainer';
+import { SceneLoader } from 'app/components/SceneLoader';
+import { ScrollableSection } from 'app/screens/Profiles/components/ScrollableSection';
+import { ScrollItem } from 'app/screens/Profiles/components/ScrollItem';
+import { ImageCard } from 'app/screens/Profiles/components/ImageCard';
+import { ReactionBox } from 'app/screens/Profiles/components/ReactionBox';
+import { StyledText } from 'app/components/StyledText';
+import { Rating } from 'app/components/Rating';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import { UserStats } from 'kitsu/screens/Profiles/components/UserStats';
-import { isIdForCurrentUser } from 'kitsu/utils/id';
+import { Screens } from 'app/navigation';
+import { UserStats } from 'app/screens/Profiles/components/UserStats';
+import { isIdForCurrentUser } from 'app/utils/id';
 
 export default class Summary extends PureComponent {
   static propTypes = {

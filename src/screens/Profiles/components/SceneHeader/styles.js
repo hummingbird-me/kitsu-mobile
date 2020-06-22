@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 import {
   scenePadding,
   cardSize,
   coverImageHeight,
   borderWidth,
   spacing,
-} from 'kitsu/screens/Profiles/constants';
+} from 'app/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   container: {

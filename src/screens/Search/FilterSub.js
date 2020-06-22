@@ -3,9 +3,9 @@ import { Text, StyleSheet, View, TouchableOpacity, SectionList, Dimensions, Scro
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { getCategories } from 'kitsu/store/anime/actions';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import { getCategories } from 'app/store/anime/actions';
+import * as colors from 'app/constants/colors';
+import { NavigationHeader } from 'app/components/NavigationHeader';
 import { Navigation } from 'react-native-navigation';
 
 const width = Dimensions.get('screen').width - 40;

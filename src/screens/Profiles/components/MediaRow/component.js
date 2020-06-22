@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
-import { StyledText } from 'kitsu/components/StyledText';
+import { ImageCard } from 'app/screens/Profiles/components/ImageCard';
+import { StyledText } from 'app/components/StyledText';
 import { styles } from './styles';
 
 export const MediaRow = ({

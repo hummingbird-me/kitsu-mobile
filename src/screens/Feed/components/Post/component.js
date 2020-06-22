@@ -1,18 +1,18 @@
 import React, { PureComponent } from 'react';
 import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import PropTypes from 'prop-types';
-import { Kitsu } from 'kitsu/config/api';
-import { defaultAvatar } from 'kitsu/constants/app';
-import * as colors from 'kitsu/constants/colors';
-import { StyledText } from 'kitsu/components/StyledText';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
-import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
+import { Kitsu } from 'app/config/api';
+import { defaultAvatar } from 'app/constants/app';
+import * as colors from 'app/constants/colors';
+import { StyledText } from 'app/components/StyledText';
+import { SceneLoader } from 'app/components/SceneLoader';
+import { CommentTextInput } from 'app/screens/Feed/components/CommentTextInput';
+import { preprocessFeedPosts, preprocessFeedPost } from 'app/utils/preprocessFeed';
 import { isEmpty, uniqBy } from 'lodash';
-import { extractUrls } from 'kitsu/utils/url';
-import { FeedCache } from 'kitsu/utils/cache';
+import { extractUrls } from 'app/utils/url';
+import { FeedCache } from 'app/utils/cache';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'app/navigation';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ViewPropTypes, Text, StatusBar, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { PropTypes } from 'prop-types';
-import { parseNotificationData } from 'kitsu/utils/notifications';
+import { parseNotificationData } from 'app/utils/notifications';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ImageLightbox } from 'kitsu/components/ImageLightbox';
+import { ImageLightbox } from 'app/components/ImageLightbox';
 import { Navigation } from 'react-native-navigation';
 import { PropTypes } from 'prop-types';
 

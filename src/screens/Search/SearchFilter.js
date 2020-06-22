@@ -5,11 +5,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import ModalSelector from 'react-native-modal-selector';
 import { forOwn, isObjectLike, values, isEmpty, upperFirst } from 'lodash';
-import { getStreamers } from 'kitsu/store/anime/actions';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import { getStreamers } from 'app/store/anime/actions';
+import * as colors from 'app/constants/colors';
+import { NavigationHeader } from 'app/components/NavigationHeader';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 
 class SearchFilter extends Component {
   static options() {

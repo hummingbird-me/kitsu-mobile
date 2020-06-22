@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
-import { isX, safeAreaInsetX } from 'kitsu/utils/isX';
+import * as colors from 'app/constants/colors';
+import { scenePadding } from 'app/screens/Feed/constants';
+import { isX, safeAreaInsetX } from 'app/utils/isX';
 
 export const styles = StyleSheet.create({
   container: {

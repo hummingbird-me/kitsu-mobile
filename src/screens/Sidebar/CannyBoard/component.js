@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, Keyboard, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { kitsuConfig } from 'kitsu/config/env/';
-import { commonStyles } from 'kitsu/common/styles';
-import { SidebarHeader } from 'kitsu/screens/Sidebar/common';
-import { WebComponent } from 'kitsu/utils/components';
+import { kitsuConfig } from 'app/config/env/';
+import { commonStyles } from 'app/common/styles';
+import { SidebarHeader } from 'app/screens/Sidebar/common';
+import { WebComponent } from 'app/utils/components';
 import { Navigation } from 'react-native-navigation';
 import { PropTypes } from 'prop-types';
 import { styles } from './styles';

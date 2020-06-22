@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import ActionSheet from 'react-native-actionsheet';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 
 export class SelectMenu extends React.PureComponent {
   static propTypes = {

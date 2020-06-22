@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { originalCoverImageDimensions } from 'kitsu/constants/app';
+import * as colors from 'app/constants/colors';
+import { originalCoverImageDimensions } from 'app/constants/app';
 
 export const styles = StyleSheet.create({
   profileCoverWrapper: {

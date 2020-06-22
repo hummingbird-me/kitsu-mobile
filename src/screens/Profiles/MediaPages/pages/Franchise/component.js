@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity } from 'react-native';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
+import { TabContainer } from 'app/screens/Profiles/components/TabContainer';
+import { MediaRow } from 'app/screens/Profiles/components/MediaRow';
 import { upperFirst } from 'lodash';
 import moment from 'moment';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 
 const ROLE_LOOKUP_TABLE = {
   sequel: 'Sequel',

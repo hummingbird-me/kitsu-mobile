@@ -1,14 +1,14 @@
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
-import store from 'kitsu/store/config';
+import store from 'app/store/config';
 
-import App from 'kitsu/App';
-import { withNotifications } from 'kitsu/utils/notifications';
-import { withActivityIndicatorHOC } from 'kitsu/utils/deeplink';
-import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
-import { LightBox } from 'kitsu/screens/LightBox';
+import App from 'app/App';
+import { withNotifications } from 'app/utils/notifications';
+import { withActivityIndicatorHOC } from 'app/utils/deeplink';
+import QuickUpdateScreen from 'app/screens/QuickUpdateScreen';
+import { LightBox } from 'app/screens/LightBox';
 
-import * as Screens from 'kitsu/navigation/types';
+import * as Screens from 'app/navigation/types';
 
 import sidebarRoutes from './sidebar';
 import searchRoutes from './search';

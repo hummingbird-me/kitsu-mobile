@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity, ViewPropTypes, Text } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { cardSize } from 'kitsu/screens/Profiles/constants';
+import { StyledText } from 'app/components/StyledText';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import { cardSize } from 'app/screens/Profiles/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';

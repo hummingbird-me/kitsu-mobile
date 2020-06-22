@@ -1,5 +1,5 @@
-import * as types from 'kitsu/store/types';
-import { Kitsu } from 'kitsu/config/api';
+import * as types from 'app/store/types';
+import { Kitsu } from 'app/config/api';
 
 export const fetchMedia = (id, type) => async (dispatch, getState) => {
   // console.log("##### Fetching media: ", id)

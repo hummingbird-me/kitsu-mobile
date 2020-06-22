@@ -1,5 +1,11 @@
 import React from 'react';
-import { Text, View, Image, ImageSourcePropType } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  ImageSourcePropType,
+  ViewStyle,
+} from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import { white, transparentWhite } from 'app/constants/colors';
@@ -50,7 +56,7 @@ function renderSlide({
       style={{
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100%',
+        flex: 1,
       }}>
       <Image source={image} />
       <Text
@@ -62,20 +68,29 @@ function renderSlide({
         }}>
         {title}
       </Text>
-      <Text style={{ color: white }}>{description}</Text>
+      <Text
+        style={{
+          color: white,
+          fontFamily: 'OpenSans_400Regular',
+          fontSize: 17,
+          textAlign: 'center',
+        }}>
+        {description}
+      </Text>
     </View>
   );
 }
 
-export default function IntroCarousel() {
+export default function IntroCarousel({ style }: { style?: ViewStyle }) {
   return (
-    <Swiper loop={false} dotColor={transparentWhite} activeDotColor={white}>
-      {[
-        ...SLIDES.map(renderSlide),
-        <View key="login">
-          <Text>Login page</Text>
-        </View>,
-      ]}
+    <Swiper
+      style={style}
+      loop={false}
+      dotColor={white}
+      dotStyle={{ height: 7, width: 7, margin: 2, opacity: 0.2 }}
+      activeDotColor={white}
+      activeDotStyle={{ height: 11, width: 11, margin: 0, borderRadius: 6 }}>
+      {[...SLIDES.map(renderSlide), <View key="login"></View>]}
     </Swiper>
   );
 }

@@ -2,12 +2,12 @@ import React from 'react';
 import { View, TextInput, Text, Modal } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
-import * as colors from 'kitsu/constants/colors';
-import { Kitsu, setToken } from 'kitsu/config/api';
-import { Button } from 'kitsu/components/Button';
-import { ItemSeparator } from 'kitsu/screens/Sidebar/common/';
-import { completeOnboarding } from 'kitsu/store/onboarding/actions';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import * as colors from 'app/constants/colors';
+import { Kitsu, setToken } from 'app/config/api';
+import { Button } from 'app/components/Button';
+import { ItemSeparator } from 'app/screens/Sidebar/common/';
+import { completeOnboarding } from 'app/store/onboarding/actions';
+import { OnboardingHeader } from 'app/screens/Onboarding/common';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
 

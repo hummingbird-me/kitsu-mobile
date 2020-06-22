@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react';
 import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { upperFirst, isEmpty, isNull } from 'lodash';
-import { getDefaults, getCategories } from 'kitsu/store/anime/actions';
-import { ContentList } from 'kitsu/components/ContentList';
-import { showSeasonResults, showStreamerResults, showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
-import { STREAMING_SERVICES } from 'kitsu/constants/app';
+import { getDefaults, getCategories } from 'app/store/anime/actions';
+import { ContentList } from 'app/components/ContentList';
+import { showSeasonResults, showStreamerResults, showCategoryResults } from 'app/screens/Search/SearchNavigationHelper';
+import { STREAMING_SERVICES } from 'app/constants/app';
 import { Navigation } from 'react-native-navigation';
 import { PropTypes } from 'prop-types';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 
 class TopsList extends PureComponent {

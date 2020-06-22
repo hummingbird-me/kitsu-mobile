@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { listBackPurple } from 'kitsu/constants/colors';
+import { listBackPurple } from 'app/constants/colors';
 import { styles } from './styles';
 
 export const SceneContainer = ({ backgroundColor, marginTop, ...props }) => (

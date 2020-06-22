@@ -3,16 +3,16 @@ import { debounce } from 'lodash';
 import { PropTypes } from 'prop-types';
 import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Counter } from 'kitsu/components/Counter';
-import { ProgressBar } from 'kitsu/components/ProgressBar';
-import { Rating } from 'kitsu/components/Rating';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { MediaCard } from 'kitsu/components/MediaCard';
+import { Counter } from 'app/components/Counter';
+import { ProgressBar } from 'app/components/ProgressBar';
+import { Rating } from 'app/components/Rating';
+import { SelectMenu } from 'app/components/SelectMenu';
+import { MediaCard } from 'app/components/MediaCard';
 import Swipeable from 'react-native-swipeable';
-import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
+import menuImage from 'app/assets/img/menus/three-dot-horizontal-grey.png';
 import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 
 const USER_LIBRARY_EDIT_SCREEN = 'UserLibraryEdit';
 

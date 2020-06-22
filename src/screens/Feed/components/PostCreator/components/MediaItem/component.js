@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { StyledText } from 'kitsu/components/StyledText';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import { StyledText } from 'app/components/StyledText';
+import * as Layout from 'app/screens/Feed/components/Layout';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 

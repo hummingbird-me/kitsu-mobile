@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import FastImage from 'react-native-fast-image';
 import { capitalize } from 'lodash';
 import { arc, pie } from 'd3-shape';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import { styles, PIE_SIZE } from './styles';
-import { darkPurple } from 'kitsu/constants/colors';
+import { darkPurple } from 'app/constants/colors';
 import moment from 'moment';
-import * as imageMap from 'kitsu/assets/img/stats';
+import * as imageMap from 'app/assets/img/stats';
 
 const { Surface, Group, Shape } = ART;
 const COLORS = ['#FEB700', '#FF9300', '#FF3281', '#BC6EDA', '#00BBED', '#545C97', '#EA6200'];

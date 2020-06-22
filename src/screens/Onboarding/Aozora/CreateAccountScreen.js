@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
-import { Button } from 'kitsu/components/Button';
-import { Input } from 'kitsu/components/Input';
+import { Button } from 'app/components/Button';
+import { Input } from 'app/components/Input';
 import { connect } from 'react-redux';
-import { updateGeneralSettings } from 'kitsu/store/user/actions';
-import { setScreenName } from 'kitsu/store/onboarding/actions';
+import { updateGeneralSettings } from 'app/store/user/actions';
+import { setScreenName } from 'app/store/onboarding/actions';
 import { isEmpty, isNull } from 'lodash';
-import { PasswordInput } from 'kitsu/components/PasswordInput';
+import { PasswordInput } from 'app/components/PasswordInput';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding';
+import { OnboardingHeader } from 'app/screens/Onboarding';
 
 class CreateAccountScreen extends React.Component {
   state = {

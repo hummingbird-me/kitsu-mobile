@@ -1,6 +1,6 @@
 import { REHYDRATE } from 'redux-persist';
-import * as types from 'kitsu/store/types';
-import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
+import * as types from 'app/store/types';
+import { KitsuLibrarySort } from 'app/utils/kitsuLibrary';
 
 function updateObjectInArray(array, entry) {
   return array.map((currentItem) => {

@@ -2,18 +2,18 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity, View, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
-import { Button } from 'kitsu/components/Button';
-import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { defaultAvatar, defaultCover } from 'app/constants/app';
+import { Button } from 'app/components/Button';
+import { StyledText, ViewMoreStyledText } from 'app/components/StyledText';
+import { SelectMenu } from 'app/components/SelectMenu';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Pill } from 'kitsu/screens/Profiles/components/Pill';
-import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
-import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
-import { cardSize } from 'kitsu/screens/Profiles/constants';
+import { Pill } from 'app/screens/Profiles/components/Pill';
+import { StyledProgressiveImage } from 'app/screens/Profiles/components/StyledProgressiveImage';
+import { MaskedImage } from 'app/screens/Profiles/components/MaskedImage';
+import { cardSize } from 'app/screens/Profiles/constants';
 import { isEmpty, capitalize, isNull, isArray } from 'lodash';
 import { styles } from './styles';
-import { NavigationActions } from 'kitsu/navigation';
+import { NavigationActions } from 'app/navigation';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 

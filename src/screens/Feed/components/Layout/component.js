@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { scenePadding } from 'app/screens/Feed/constants';
 
 export const RowWrap = ({ alignItems, justifyContent, style, ...props }) => (
   <View

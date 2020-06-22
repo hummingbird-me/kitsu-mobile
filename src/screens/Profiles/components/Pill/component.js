@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
-import { orange } from 'kitsu/constants/colors';
-import { StyledText } from 'kitsu/components/StyledText';
+import { orange } from 'app/constants/colors';
+import { StyledText } from 'app/components/StyledText';
 import { styles } from './styles';
 
 export const Pill = ({ color, label, onPress }) => {

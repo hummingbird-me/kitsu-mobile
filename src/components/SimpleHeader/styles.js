@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
-import { flattenCommon } from 'kitsu/common/styles';
-import * as colors from 'kitsu/constants/colors';
-import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
-import { isX, paddingX } from 'kitsu/utils/isX';
+import { flattenCommon } from 'app/common/styles';
+import * as colors from 'app/constants/colors';
+import { navigationBarHeight, statusBarHeight } from 'app/constants/app';
+import { isX, paddingX } from 'app/utils/isX';
 
 export const styles = StyleSheet.create({
   headerContainer: {

@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
-import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
-import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
-import { scene } from 'kitsu/screens/Feed/constants';
+import { StyledText, ViewMoreStyledText } from 'app/components/StyledText';
+import { MediaTag } from 'app/screens/Feed/components/MediaTag';
+import { scene } from 'app/screens/Feed/constants';
 import Hyperlink from 'react-native-hyperlink';
 import { isEmpty } from 'lodash';
-import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
-import { handleURL } from 'kitsu/utils/url';
+import { EmbeddedContent } from 'app/screens/Feed/components/EmbeddedContent';
+import { handleURL } from 'app/utils/url';
 import { styles } from './styles';
 import { PostStatus } from '../PostStatus';
 

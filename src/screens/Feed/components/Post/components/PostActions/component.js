@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import { styles } from './styles';
 
 const actionButtonLabels = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyledText } from 'kitsu/components/StyledText';
-import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
+import { StyledText } from 'app/components/StyledText';
+import { HeaderButton } from 'app/screens/Feed/components/HeaderButton';
 import { View } from 'react-native';
 import { styles } from './styles';
 

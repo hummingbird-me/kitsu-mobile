@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import * as colors from 'kitsu/constants/colors';
-import { statusBarHeight } from 'kitsu/constants/app';
+import { isX, paddingX } from 'app/utils/isX';
+import * as colors from 'app/constants/colors';
+import { statusBarHeight } from 'app/constants/app';
 
 const styles = StyleSheet.create({
   loadingWrapper: {

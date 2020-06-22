@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 
 const SidebarButton = ({ disabled = false, loading = false, onPress, title, style }) => (
   <View style={[styles.wrapper, style]}>

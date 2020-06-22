@@ -1,7 +1,7 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as PropTypes from 'prop-types';
-import { SimpleHeader } from 'kitsu/components/SimpleHeader';
+import { SimpleHeader } from 'app/components/SimpleHeader';
 import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
 

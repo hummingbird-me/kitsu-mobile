@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Animated, Text, Platform } from 'react-native';
-import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
-import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
+import { HeaderButton } from 'app/screens/Feed/components/HeaderButton';
+import { PostCreator } from 'app/screens/Feed/components/PostCreator';
 import PropTypes from 'prop-types';
 import styles from './styles';
 

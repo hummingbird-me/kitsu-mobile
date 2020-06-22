@@ -4,17 +4,17 @@ import PropTypes from 'prop-types';
 import { View, ViewPropTypes, Platform, TouchableOpacity, Linking } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import YouTube from 'react-native-youtube';
-import { StyledText } from 'kitsu/components/StyledText';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import dataBunny from 'kitsu/assets/img/data-bunny.png';
-import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
+import { StyledText } from 'app/components/StyledText';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import * as Layout from 'app/screens/Feed/components/Layout';
+import defaultAvatar from 'app/assets/img/default_avatar.png';
+import dataBunny from 'app/assets/img/data-bunny.png';
+import { ImageGrid } from 'app/screens/Feed/components/ImageGrid';
 import { startCase, isNil, isEmpty } from 'lodash';
-import { WebComponent } from 'kitsu/utils/components';
+import { WebComponent } from 'app/utils/components';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
-import { handleURL } from 'kitsu/utils/url';
+import { Screens, NavigationActions } from 'app/navigation';
+import { handleURL } from 'app/utils/url';
 import { styles } from './styles';
 
 class EmbeddedContent extends PureComponent {

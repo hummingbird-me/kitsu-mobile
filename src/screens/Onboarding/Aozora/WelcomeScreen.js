@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, ImageBackground, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Button } from 'kitsu/components/Button';
-import { iceBackground, iceCube } from 'kitsu/assets/img/onboarding/';
+import { Button } from 'app/components/Button';
+import { iceBackground, iceCube } from 'app/assets/img/onboarding/';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { OnboardingHeader } from 'app/screens/Onboarding/common';
 
 class WelcomeScreen extends React.Component {
   onPress = () => {

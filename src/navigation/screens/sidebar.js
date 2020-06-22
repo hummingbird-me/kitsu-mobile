@@ -11,9 +11,9 @@ import {
   ExportLibrary,
   CannyBoard,
   AppSettings,
-} from 'kitsu/screens/Sidebar';
+} from 'app/screens/Sidebar';
 
-import * as Screens from 'kitsu/navigation/types';
+import * as Screens from 'app/navigation/types';
 
 export default sidebarRoutes = {
   [Screens.SIDEBAR]: SidebarScreen,

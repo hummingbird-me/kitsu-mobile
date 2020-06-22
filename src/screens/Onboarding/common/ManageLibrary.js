@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { completeOnboarding } from 'kitsu/store/onboarding/actions';
+import { completeOnboarding } from 'app/store/onboarding/actions';
 import { connect } from 'react-redux';
-import { Button } from 'kitsu/components/Button';
+import { Button } from 'app/components/Button';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 import { OnboardingHeader } from './OnboardingHeader/component';
 

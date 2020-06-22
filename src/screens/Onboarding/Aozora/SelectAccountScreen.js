@@ -3,20 +3,20 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { upperFirst, toLower } from 'lodash';
 import { connect } from 'react-redux';
-import { Button } from 'kitsu/components/Button';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { kitsu as kitsuLogo, aozora as aozoraLogo } from 'kitsu/assets/img/onboarding/';
+import { Button } from 'app/components/Button';
+import { defaultAvatar } from 'app/constants/app';
+import { kitsu as kitsuLogo, aozora as aozoraLogo } from 'app/assets/img/onboarding/';
 import {
   resolveAccountConflicts,
   setSelectedAccount,
   setScreenName,
   completeOnboarding,
-} from 'kitsu/store/onboarding/actions';
+} from 'app/store/onboarding/actions';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 import { styles as commonStyles } from '../common/styles';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { OnboardingHeader } from 'app/screens/Onboarding/common';
 
 const AccountView = ({ style, data, selected, onSelectAccount }) => {
   const { libraryCount, username, profileImageURL, accountType } = data;

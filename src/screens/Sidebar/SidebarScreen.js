@@ -3,18 +3,18 @@ import FastImage from 'react-native-fast-image';
 import { View, Text, Linking, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
 
-import { logoutUser } from 'kitsu/store/auth/actions';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
-import { library, settings, bugs, suggest, contact } from 'kitsu/assets/img/sidebar_icons';
-import { Button } from 'kitsu/components/Button';
-import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
+import { logoutUser } from 'app/store/auth/actions';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import { getImgixCoverImage } from 'app/utils/imgix';
+import { library, settings, bugs, suggest, contact } from 'app/assets/img/sidebar_icons';
+import { Button } from 'app/components/Button';
+import { defaultCover, defaultAvatar } from 'app/constants/app';
 import { PropTypes } from 'prop-types';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
-import { darkPurple, listBackPurple } from 'kitsu/constants/colors';
+import { darkPurple, listBackPurple } from 'app/constants/colors';
 
 
 class SidebarScreen extends PureComponent {

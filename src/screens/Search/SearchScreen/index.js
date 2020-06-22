@@ -6,15 +6,15 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
 import { capitalize, isEmpty, debounce, isEqual, isNil } from 'lodash';
-import UsersList from 'kitsu/screens/Search/Lists/UsersList';
-import { kitsuConfig } from 'kitsu/config/env';
-import { followUser } from 'kitsu/store/user/actions';
-import { captureUsersData } from 'kitsu/store/users/actions';
-import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
-import { SearchBox } from 'kitsu/components/SearchBox';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Screens } from 'kitsu/navigation';
-import { EventBus } from 'kitsu/utils/eventBus';
+import UsersList from 'app/screens/Search/Lists/UsersList';
+import { kitsuConfig } from 'app/config/env';
+import { followUser } from 'app/store/user/actions';
+import { captureUsersData } from 'app/store/users/actions';
+import { ResultsList, TopsList } from 'app/screens/Search/Lists';
+import { SearchBox } from 'app/components/SearchBox';
+import { StyledText } from 'app/components/StyledText';
+import { Screens } from 'app/navigation';
+import { EventBus } from 'app/utils/eventBus';
 import { styles } from './styles';
 
 class SearchScreen extends PureComponent {

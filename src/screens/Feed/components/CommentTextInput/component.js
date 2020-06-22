@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, TextInput, TouchableOpacity, Text, ActivityIndicator, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import * as colors from 'kitsu/constants/colors';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
+import * as colors from 'app/constants/colors';
+import { Avatar } from 'app/screens/Feed/components/Avatar';
+import * as Layout from 'app/screens/Feed/components/Layout';
+import { GiphyModal } from 'app/screens/Feed/components/GiphyModal';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 

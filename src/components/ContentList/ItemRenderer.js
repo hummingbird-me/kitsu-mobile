@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { MediaCard } from 'kitsu/components/MediaCard';
+import { MediaCard } from 'app/components/MediaCard';
 import { styles } from './styles';
 
 const MEDIA_CARD_DIMENSIONS = { width: 100, height: 150 };

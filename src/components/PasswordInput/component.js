@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input } from 'kitsu/components/Input';
+import { Input } from 'app/components/Input';
 import { styles } from './styles';
 
 export class PasswordInput extends PureComponent {

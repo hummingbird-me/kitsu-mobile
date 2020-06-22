@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Button } from 'kitsu/components/Button/';
-import { Input } from 'kitsu/components/Input';
-import CustomIcon from 'kitsu/components/Icon';
-import * as colors from 'kitsu/constants/colors';
+import { Button } from 'app/components/Button/';
+import { Input } from 'app/components/Input';
+import CustomIcon from 'app/components/Icon';
+import * as colors from 'app/constants/colors';
 import styles from './styles';
 
 const RecoveryForm = ({ handleChange, data, onReset, loading, onCancel }) => (

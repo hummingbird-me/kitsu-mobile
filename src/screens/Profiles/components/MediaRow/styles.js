@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { scenePadding } from 'app/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   row: {

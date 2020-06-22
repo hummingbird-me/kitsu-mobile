@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { ContentList } from 'kitsu/components/ContentList';
+import { ContentList } from 'app/components/ContentList';
 import PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import * as colors from 'app/constants/colors';
+import { NavigationHeader } from 'app/components/NavigationHeader';
 import { showSeasonResults } from './SearchNavigationHelper';
 
 const styles = StyleSheet.create({

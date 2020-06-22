@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Button } from 'kitsu/components/Button/';
-import { Input } from 'kitsu/components/Input';
-import { PasswordInput } from 'kitsu/components/PasswordInput';
+import { Button } from 'app/components/Button/';
+import { Input } from 'app/components/Input';
+import { PasswordInput } from 'app/components/PasswordInput';
 import styles from './styles';
 
 const SignupForm = ({

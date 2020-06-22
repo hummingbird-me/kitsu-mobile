@@ -1,4 +1,4 @@
-import * as Screens from 'kitsu/navigation/types';
+import * as Screens from 'app/navigation/types';
 
 export const INTRO = {
   root: {

@@ -3,9 +3,9 @@ import { View, TouchableOpacity, Text, FlatList, StyleSheet, TouchableHighlight 
 import FastImage from 'react-native-fast-image';
 import * as PropTypes from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
+import DEFAULT_AVATAR from 'app/assets/img/default_avatar.png';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 
 const styles = StyleSheet.create({
   container: {

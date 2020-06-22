@@ -11,20 +11,20 @@ import {
   Linking,
 } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 import { connect } from 'react-redux';
-import { Modal } from 'kitsu/components/Modal';
-import { Toast } from 'kitsu/components/Toast';
-import SignupForm from 'kitsu/components/Forms/SignupForm';
-import LoginForm from 'kitsu/components/Forms/LoginForm';
-import { loginUser } from 'kitsu/store/auth/actions';
-import { createUser } from 'kitsu/store/user/actions';
-import { TERMS_URL } from 'kitsu/constants/app';
+import { Modal } from 'app/components/Modal';
+import { Toast } from 'app/components/Toast';
+import SignupForm from 'app/components/Forms/SignupForm';
+import LoginForm from 'app/components/Forms/LoginForm';
+import { loginUser } from 'app/store/auth/actions';
+import { createUser } from 'app/store/user/actions';
+import { TERMS_URL } from 'app/constants/app';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { Sentry } from 'react-native-sentry';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 

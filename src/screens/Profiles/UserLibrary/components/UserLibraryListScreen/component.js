@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { ProfileHeader } from 'kitsu/components/ProfileHeader';
-import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
-import { StyledText } from 'kitsu/components/StyledText';
+import { ProfileHeader } from 'app/components/ProfileHeader';
+import { UserLibraryList } from 'app/screens/Profiles/UserLibrary/components/UserLibraryList';
+import { StyledText } from 'app/components/StyledText';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { styles } from './styles';
 
 const HEADER_TEXT_MAPPING = {

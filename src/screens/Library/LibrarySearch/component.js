@@ -2,12 +2,12 @@ import React, { PureComponent } from 'react';
 import { View, FlatList, ScrollView, Keyboard, ActivityIndicator, Text, Image } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { capitalize, isEmpty } from 'lodash';
-import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
-import { SearchBox } from 'kitsu/components/SearchBox';
-import { Kitsu } from 'kitsu/config/api';
-import { ProfileHeader } from 'kitsu/components/ProfileHeader';
-import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
-import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
+import { UserLibraryListCard } from 'app/screens/Profiles/UserLibrary';
+import { SearchBox } from 'app/components/SearchBox';
+import { Kitsu } from 'app/config/api';
+import { ProfileHeader } from 'app/components/ProfileHeader';
+import { KitsuLibrary, KitsuLibraryEvents } from 'app/utils/kitsuLibrary';
+import unstarted from 'app/assets/img/quick_update/unstarted.png';
 import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
 

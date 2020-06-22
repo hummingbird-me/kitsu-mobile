@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import { styles } from './styles';
 
 export const PostStatus = ({ showViewParent, likesCount, commentsCount, onPress }) => (

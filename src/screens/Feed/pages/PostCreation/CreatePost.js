@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
+import { PostCreator } from 'app/screens/Feed/components/PostCreator';
 import { Navigation } from 'react-native-navigation';
 
 export default class CreatePost extends React.PureComponent {

@@ -1,5 +1,5 @@
-import { homeIcon, searchIcon, updateIcon, notificationIcon, libraryIcon } from 'kitsu/assets/img/tabbar_icons';
-import * as Screens from 'kitsu/navigation/types';
+import { homeIcon, searchIcon, updateIcon, notificationIcon, libraryIcon } from 'app/assets/img/tabbar_icons';
+import * as Screens from 'app/navigation/types';
 
 const feed = {
   stack: {

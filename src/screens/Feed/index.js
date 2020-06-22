@@ -5,23 +5,23 @@ import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { AdMobBanner } from 'react-native-admob';
 import PropTypes from 'prop-types';
 import URL from 'url-parse';
-import { Kitsu } from 'kitsu/config/api';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { listBackPurple, offWhite } from 'kitsu/constants/colors';
-import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
-import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
-import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { isX, paddingX } from 'kitsu/utils/isX';
+import { Kitsu } from 'app/config/api';
+import { preprocessFeed } from 'app/utils/preprocessFeed';
+import { listBackPurple, offWhite } from 'app/constants/colors';
+import { ADMOB_AD_UNITS } from 'app/constants/app';
+import { TabBar, TabBarLink } from 'app/screens/Feed/components/TabBar';
+import { CreatePostRow } from 'app/screens/Feed/components/CreatePostRow';
+import { Post } from 'app/screens/Feed/components/Post';
+import { SceneLoader } from 'app/components/SceneLoader';
+import { isX, paddingX } from 'app/utils/isX';
 import { isEmpty } from 'lodash';
-import { FeedCache } from 'kitsu/utils/cache';
+import { FeedCache } from 'app/utils/cache';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
-import { statusBarHeight } from 'kitsu/constants/app';
-import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
+import { Screens, NavigationActions } from 'app/navigation';
+import { statusBarHeight } from 'app/constants/app';
+import { registerDeepLinks, unregisterDeepLinks } from 'app/utils/deeplink';
 import { feedStreams } from './feedStreams';
-import { isAoProOrKitsuPro } from 'kitsu/utils/user';
+import { isAoProOrKitsuPro } from 'app/utils/user';
 
 const styles = StyleSheet.create({
   container: {

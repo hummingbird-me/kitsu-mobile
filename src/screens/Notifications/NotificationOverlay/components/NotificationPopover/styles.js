@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { statusBarHeight } from 'kitsu/constants/app';
+import * as colors from 'app/constants/colors';
+import { isX, paddingX } from 'app/utils/isX';
+import { statusBarHeight } from 'app/constants/app';
 
 export const styles = StyleSheet.create({
   wrapper: {

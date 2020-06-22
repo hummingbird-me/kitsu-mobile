@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, ScrollView, Dimensions } from 'react-native';
-import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/intro/';
-import { Button } from 'kitsu/components/Button';
+import { slide1, slide2, slide3, slide4 } from 'app/assets/img/intro/';
+import { Button } from 'app/components/Button';
 import { PropTypes } from 'prop-types';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { IntroHeader } from './common/';
 import styles from './styles';
 import Step from './Step';
@@ -18,17 +18,20 @@ const INTROS = [
   },
   {
     title: 'Track your progress',
-    desc: 'Log and rate what you’ve seen and read to build a library of your history.',
+    desc:
+      'Log and rate what you’ve seen and read to build a library of your history.',
     image: slide2,
   },
   {
     title: 'Join the Community',
-    desc: 'Kitsu makes finding new like-minded friends easy with the global activity feed.',
+    desc:
+      'Kitsu makes finding new like-minded friends easy with the global activity feed.',
     image: slide3,
   },
   {
     title: 'Share your Reactions',
-    desc: 'Check the media ratings and reviews from other users and leave your own!',
+    desc:
+      'Check the media ratings and reviews from other users and leave your own!',
     image: slide4,
   },
   // dummy view for smooth transition. Removing this and adding an additional dot instead looks bad when swipe bounces back.
@@ -42,7 +45,7 @@ const INTROS = [
 export default class OnboardingScreen extends React.Component {
   static propTypes = {
     componentId: PropTypes.any.isRequired,
-  }
+  };
 
   state = {
     step: 0,
@@ -50,7 +53,11 @@ export default class OnboardingScreen extends React.Component {
 
   navigating = false;
 
-  handleScroll = ({ nativeEvent: { contentOffset: { x } } }) => {
+  handleScroll = ({
+    nativeEvent: {
+      contentOffset: { x },
+    },
+  }) => {
     const SCREEN_WIDTH = Dimensions.get('window').width;
     const position = x / SCREEN_WIDTH;
     if (!this.navigating && position > INTROS.length - 2 + 0.05) {
@@ -66,12 +73,15 @@ export default class OnboardingScreen extends React.Component {
     Navigation.setStackRoot(this.props.componentId, {
       component: { name: Screens.AUTH_REGISTRATION },
     });
-  }
+  };
 
-  renderStep = () => INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
+  renderStep = () =>
+    INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
 
   renderDots = () =>
-    INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
+    INTROS.map((_, index) => (
+      <Dot key={`dot-${index}`} active={index === this.state.step} />
+    ));
 
   render() {
     return (

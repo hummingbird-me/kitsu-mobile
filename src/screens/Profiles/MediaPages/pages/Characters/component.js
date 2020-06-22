@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { PhotoGrid } from 'kitsu/screens/Profiles/components/PhotoGrid';
+import { TabHeader } from 'app/screens/Profiles/components/TabHeader';
+import { TabContainer } from 'app/screens/Profiles/components/TabContainer';
+import { PhotoGrid } from 'app/screens/Profiles/components/PhotoGrid';
 
 class Characters extends PureComponent {
   static propTypes = {

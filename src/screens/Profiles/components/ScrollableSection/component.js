@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, FlatList, ActivityIndicator } from 'react-native';
-import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
-import * as colors from 'kitsu/constants/colors';
+import { SectionHeader } from 'app/screens/Profiles/components/SectionHeader';
+import * as colors from 'app/constants/colors';
 import { styles } from './styles';
 
 const keyExtractor = (item, index) => index.toString();

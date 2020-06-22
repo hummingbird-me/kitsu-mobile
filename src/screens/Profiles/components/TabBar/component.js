@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ViewPropTypes,
 } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import { styles } from './styles';
 
 export const TabBar = props => (

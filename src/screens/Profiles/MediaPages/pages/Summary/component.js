@@ -3,25 +3,25 @@ import { FlatList, Linking, ActivityIndicator, View, Platform } from 'react-nati
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { AdMobBanner } from 'react-native-admob';
-import { Kitsu } from 'kitsu/config/api';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
-import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
-import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
-import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { Kitsu } from 'app/config/api';
+import { Post } from 'app/screens/Feed/components/Post';
+import { ScrollableSection } from 'app/screens/Profiles/components/ScrollableSection';
+import { ScrollItem } from 'app/screens/Profiles/components/ScrollItem';
+import { SceneContainer } from 'app/screens/Profiles/components/SceneContainer';
+import { ImageCard } from 'app/screens/Profiles/components/ImageCard';
+import { ReactionBox } from 'app/screens/Profiles/components/ReactionBox';
+import { MediaDetails } from 'app/screens/Profiles/components/MediaDetails';
+import { preprocessFeed } from 'app/utils/preprocessFeed';
 import { upperFirst, isEmpty, uniqBy } from 'lodash';
-import { scenePadding } from 'kitsu/screens/Profiles/constants';
-import { STREAMING_SERVICES, ADMOB_AD_UNITS } from 'kitsu/constants/app';
+import { scenePadding } from 'app/screens/Profiles/constants';
+import { STREAMING_SERVICES, ADMOB_AD_UNITS } from 'app/constants/app';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { SummaryProgress } from './progress';
 import { styles } from './styles';
-import { Button } from 'kitsu/components/Button';
+import { Button } from 'app/components/Button';
 import URL from 'url-parse';
-import { isAoProOrKitsuPro } from 'kitsu/utils/user';
+import { isAoProOrKitsuPro } from 'app/utils/user';
 
 class SummaryComponent extends PureComponent {
   static propTypes = {

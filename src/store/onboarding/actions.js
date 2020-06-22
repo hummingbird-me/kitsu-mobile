@@ -1,7 +1,7 @@
-import * as types from 'kitsu/store/types';
-import { NavigationActions } from 'kitsu/navigation';
-import { kitsuConfig } from 'kitsu/config/env';
-import { Kitsu, setToken } from 'kitsu/config/api';
+import * as types from 'app/store/types';
+import { NavigationActions } from 'app/navigation';
+import { kitsuConfig } from 'app/config/env';
+import { Kitsu, setToken } from 'app/config/api';
 
 export const setOnboardingComplete = () => async (dispatch) => {
   dispatch({ type: types.SET_ONBOARDING_COMPLETE });

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
-import * as colors from 'kitsu/constants/colors';
+import * as colors from 'app/constants/colors';
 
 export const ItemSeparator = ({ underlineImage }) => {
   if (!underlineImage) {

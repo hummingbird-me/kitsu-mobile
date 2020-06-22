@@ -2,11 +2,11 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { FlatList, View } from 'react-native';
-import { Kitsu } from 'kitsu/config/api';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
+import { Kitsu } from 'app/config/api';
+import { SceneLoader } from 'app/components/SceneLoader';
+import { InfoRow } from 'app/screens/Profiles/components/InfoRow';
+import { TabContainer } from 'app/screens/Profiles/components/TabContainer';
+import { MediaRow } from 'app/screens/Profiles/components/MediaRow';
 import capitalize from 'lodash/capitalize';
 
 class About extends PureComponent {

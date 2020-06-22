@@ -17,15 +17,15 @@ import {
   fetchNotifications,
   markNotifications,
   markAllNotificationsAsRead,
-} from 'kitsu/store/feed/actions';
+} from 'app/store/feed/actions';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import store from 'kitsu/store/config';
-import * as types from 'kitsu/store/types';
+import { Screens } from 'app/navigation';
+import store from 'app/store/config';
+import * as types from 'app/store/types';
 import { isEqual, isEmpty } from 'lodash';
-import { parseNotificationData, handleNotificationPress, handleOneSignalNotificationData } from 'kitsu/utils/notifications';
-import { EventBus } from 'kitsu/utils/eventBus';
-import { NotificationHeader } from 'kitsu/screens/Notifications/NotificationHeader';
+import { parseNotificationData, handleNotificationPress, handleOneSignalNotificationData } from 'app/utils/notifications';
+import { EventBus } from 'app/utils/eventBus';
+import { NotificationHeader } from 'app/screens/Notifications/NotificationHeader';
 import { styles } from './styles';
 
 export const NOTIFICATION_PRESSED_EVENT = 'notification_pressed_event';

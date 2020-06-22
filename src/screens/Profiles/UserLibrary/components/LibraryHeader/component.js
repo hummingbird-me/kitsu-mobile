@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 
 export const LibraryHeader = ({ libraryStatus, libraryType, listTitle, componentId, profile }) => {
   const viewAll = () => {

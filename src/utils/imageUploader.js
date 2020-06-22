@@ -1,4 +1,4 @@
-import store from 'kitsu/store/config';
+import store from 'app/store/config';
 import { isEmpty } from 'lodash';
 
 /**

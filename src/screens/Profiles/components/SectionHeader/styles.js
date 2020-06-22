@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { listBackPurple } from 'kitsu/constants/colors';
-import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { listBackPurple } from 'app/constants/colors';
+import { scenePadding } from 'app/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   wrap: {

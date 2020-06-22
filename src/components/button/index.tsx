@@ -5,6 +5,7 @@ import {
   Text,
   ActivityIndicator,
   TextStyle,
+  ViewStyle,
 } from 'react-native';
 import { FontAwesome as Icon } from '@expo/vector-icons';
 import { styles } from './styles';
@@ -26,7 +27,7 @@ export default function Button({
   disabled = false,
   bold = false,
 }: {
-  style?: StyleSheet;
+  style?: ViewStyle;
   title: string;
   titleStyle?: TextStyle;
   icon?: string;

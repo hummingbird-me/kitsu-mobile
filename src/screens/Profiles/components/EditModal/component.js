@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 import { View, Modal, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
-import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
-import { Input } from 'kitsu/components/Input';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { defaultAvatar, defaultCover, originalCoverImageDimensions } from 'kitsu/constants/app';
-import * as colors from 'kitsu/constants/colors';
+import { ModalHeader } from 'app/screens/Feed/components/ModalHeader';
+import { InfoRow } from 'app/screens/Profiles/components/InfoRow';
+import { Input } from 'app/components/Input';
+import { SelectMenu } from 'app/components/SelectMenu';
+import { defaultAvatar, defaultCover, originalCoverImageDimensions } from 'app/constants/app';
+import * as colors from 'app/constants/colors';
 import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
 import ImagePicker from 'react-native-image-crop-picker';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
+import { getImgixCoverImage } from 'app/utils/imgix';
 import { styles } from './styles';
 
 export class EditModal extends Component {

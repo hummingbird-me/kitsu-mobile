@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { ActivityIndicator, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import { ProgressBar } from 'kitsu/components/ProgressBar';
-import { Rating } from 'kitsu/components/Rating';
+import { ProgressBar } from 'app/components/ProgressBar';
+import { Rating } from 'app/components/Rating';
 import PropTypes from 'prop-types';
 import styles from './styles';
 

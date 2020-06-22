@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { scenePadding } from 'app/screens/Feed/constants';
 
 export const styles = StyleSheet.create({
   wrap: {

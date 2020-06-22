@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
-import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red, green, black } from 'kitsu/constants/colors';
-import { ViewMoreText } from 'kitsu/components/ViewMoreText';
+import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red, green, black } from 'app/constants/colors';
+import { ViewMoreText } from 'app/components/ViewMoreText';
 import { styles } from './styles';
 
 const textSizes = {

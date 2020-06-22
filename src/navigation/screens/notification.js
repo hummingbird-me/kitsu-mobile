@@ -1,6 +1,6 @@
-import * as Screens from 'kitsu/navigation/types';
+import * as Screens from 'app/navigation/types';
 
-import NotificationsScreen from 'kitsu/screens/Notifications/NotificationsScreen';
+import NotificationsScreen from 'app/screens/Notifications/NotificationsScreen';
 
 export default notificationRoutes = {
   [Screens.NOTIFICATION]: NotificationsScreen,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
+import { StyledText } from 'app/components/StyledText';
 import { capitalize } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { PropTypes } from 'prop-types';

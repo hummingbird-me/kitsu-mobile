@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { isNull } from 'lodash';
-import { ViewMoreTextCache } from 'kitsu/utils/cache';
+import { ViewMoreTextCache } from 'app/utils/cache';
 import { styles } from './styles';
 
 export class ViewMoreText extends PureComponent {

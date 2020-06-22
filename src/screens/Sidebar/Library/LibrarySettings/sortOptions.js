@@ -1,4 +1,4 @@
-import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
+import { KitsuLibrarySort } from 'app/utils/kitsuLibrary';
 
 export const SORT_OPTIONS = [
   {

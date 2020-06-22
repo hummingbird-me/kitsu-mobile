@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { lightestGrey } from 'kitsu/constants/colors';
+import { lightestGrey } from 'app/constants/colors';
 
 export const styles = StyleSheet.create({
   separator: {

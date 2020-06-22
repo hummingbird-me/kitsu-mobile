@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { StyleSheet, RefreshControl, ActivityIndicator, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { search } from 'kitsu/store/anime/actions';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
-import { getMaxVisibleRows, getCurrentVisibleRows } from 'kitsu/screens/Search/Lists/ResultsList/spacing';
+import { search } from 'app/store/anime/actions';
+import * as colors from 'app/constants/colors';
+import { NavigationHeader } from 'app/components/NavigationHeader';
+import { getMaxVisibleRows, getCurrentVisibleRows } from 'app/screens/Search/Lists/ResultsList/spacing';
 import { isEqual } from 'lodash';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { ResultsList } from './Lists';
 
 class SearchResults extends Component {

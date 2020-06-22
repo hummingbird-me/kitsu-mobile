@@ -1,9 +1,9 @@
-import * as types from 'kitsu/store/types';
-import { Kitsu } from 'kitsu/config/api';
-import { getStream } from 'kitsu/config/stream';
-import { kitsuConfig } from 'kitsu/config/env';
-import { NavigationActions } from 'kitsu/navigation';
-import { BasicCache } from 'kitsu/utils/cache';
+import * as types from 'app/store/types';
+import { Kitsu } from 'app/config/api';
+import { getStream } from 'app/config/stream';
+import { kitsuConfig } from 'app/config/env';
+import { NavigationActions } from 'app/navigation';
+import { BasicCache } from 'app/utils/cache';
 import { uniq } from 'lodash';
 
 let inAppNotificationTimer = 0;

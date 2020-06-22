@@ -3,10 +3,10 @@ import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
-import { commonStyles } from 'kitsu/common/styles';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
+import { defaultAvatar, defaultCover } from 'app/constants/app';
+import { commonStyles } from 'app/common/styles';
+import { ProgressiveImage } from 'app/components/ProgressiveImage';
+import { getImgixCoverImage } from 'app/utils/imgix';
 import { styles } from './styles';
 
 export const ProfileHeader = ({

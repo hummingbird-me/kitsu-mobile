@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
-import { scene } from 'kitsu/screens/Profiles/constants';
+import { PostImage } from 'app/screens/Feed/components/PostImage';
+import { scene } from 'app/screens/Profiles/constants';
 import { isEmpty, isNull } from 'lodash';
 import { styles } from './styles';
 

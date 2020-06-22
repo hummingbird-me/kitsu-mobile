@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import * as colors from 'app/constants/colors';
+import { scenePadding } from 'app/screens/Profiles/constants';
 
 export const PIE_SIZE = 140;
 export const styles = StyleSheet.create({

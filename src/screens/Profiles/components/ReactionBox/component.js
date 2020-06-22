@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { AvatarHeader } from 'kitsu/screens/Profiles/components/AvatarHeader';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Kitsu } from 'kitsu/config/api';
-import { isIdForCurrentUser } from 'kitsu/utils/id';
+import { AvatarHeader } from 'app/screens/Profiles/components/AvatarHeader';
+import { StyledText } from 'app/components/StyledText';
+import { Kitsu } from 'app/config/api';
+import { isIdForCurrentUser } from 'app/utils/id';
 import { styles } from './styles';
 
 export class ReactionBoxComponent extends PureComponent {

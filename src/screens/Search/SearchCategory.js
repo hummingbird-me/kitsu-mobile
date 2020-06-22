@@ -6,13 +6,13 @@ import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
 import values from 'lodash/values';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
-import { CheckBox } from 'kitsu/components/Checkbox';
-import { getCategories } from 'kitsu/store/anime/actions';
-import { genres } from 'kitsu/utils/genres';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import { CheckBox } from 'app/components/Checkbox';
+import { getCategories } from 'app/store/anime/actions';
+import { genres } from 'app/utils/genres';
+import * as colors from 'app/constants/colors';
+import { NavigationHeader } from 'app/components/NavigationHeader';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 import { isEqual } from 'lodash';
 
 class SearchCategory extends Component {

@@ -1,15 +1,15 @@
 import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
 import { NetInfo } from 'react-native';
-import { auth } from 'kitsu/config/api';
-import { kitsuConfig } from 'kitsu/config/env';
-import { fetchCurrentUser } from 'kitsu/store/user/actions';
-import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboarding/actions';
-import * as types from 'kitsu/store/types';
+import { auth } from 'app/config/api';
+import { kitsuConfig } from 'app/config/env';
+import { fetchCurrentUser } from 'app/store/user/actions';
+import { getAccountConflicts, setOnboardingComplete } from 'app/store/onboarding/actions';
+import * as types from 'app/store/types';
 import { Sentry } from 'react-native-sentry';
 import { isEmpty } from 'lodash';
-import { fetchAlgoliaKeys, toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
+import { fetchAlgoliaKeys, toggleActivityIndicatorHOC } from 'app/store/app/actions';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import { Screens, NavigationActions } from 'app/navigation';
 
 export const refreshTokens = () => async (dispatch, getState) => {
   const tokens = getState().auth.tokens;

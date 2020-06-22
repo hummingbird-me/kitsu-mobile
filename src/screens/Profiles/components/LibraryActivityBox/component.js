@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import { View } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
-import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
-import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
-import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
+import { StyledText } from 'app/components/StyledText';
+import { ScrollableSection } from 'app/screens/Profiles/components/ScrollableSection';
+import { ImageCard } from 'app/screens/Profiles/components/ImageCard';
+import { ScrollItem } from 'app/screens/Profiles/components/ScrollItem';
 
 export const LibraryActivityBox = ({
   contentDark,

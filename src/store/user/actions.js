@@ -1,9 +1,9 @@
 import { LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
-import * as types from 'kitsu/store/types';
-import { Kitsu, setToken } from 'kitsu/config/api';
-import { loginUser } from 'kitsu/store/auth/actions';
-import { kitsuConfig } from 'kitsu/config/env';
-import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
+import * as types from 'app/store/types';
+import { Kitsu, setToken } from 'app/config/api';
+import { loginUser } from 'app/store/auth/actions';
+import { kitsuConfig } from 'app/config/env';
+import { fetchAlgoliaKeys } from 'app/store/app/actions';
 
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });

@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { FlatList, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { Comment } from 'kitsu/screens/Feed/components/Comment';
+import { Comment } from 'app/screens/Feed/components/Comment';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { Screens } from 'app/navigation';
 
 export class CommentFlatList extends PureComponent {
   static propTypes = {

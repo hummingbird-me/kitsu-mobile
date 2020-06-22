@@ -10,27 +10,27 @@ import {
   Text,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Kitsu } from 'kitsu/config/api';
-import { defaultAvatar, statusBarHeight } from 'kitsu/constants/app';
+import { Kitsu } from 'app/config/api';
+import { defaultAvatar, statusBarHeight } from 'app/constants/app';
 import {
   PostFooter,
   PostSection,
   PostCommentsSection,
   PostReplyBanner,
-} from 'kitsu/screens/Feed/components/Post';
-import { PostHeader, PostMain, PostActions } from 'kitsu/screens/Feed/components/Post/components';
-import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
-import * as colors from 'kitsu/constants/colors';
-import { extractUrls } from 'kitsu/utils/url';
+} from 'app/screens/Feed/components/Post';
+import { PostHeader, PostMain, PostActions } from 'app/screens/Feed/components/Post/components';
+import { CommentTextInput } from 'app/screens/Feed/components/CommentTextInput';
+import { SceneLoader } from 'app/components/SceneLoader';
+import { Comment, CommentPagination } from 'app/screens/Feed/components/Comment';
+import { isX, paddingX } from 'app/utils/isX';
+import { preprocessFeedPosts, preprocessFeedPost } from 'app/utils/preprocessFeed';
+import * as colors from 'app/constants/colors';
+import { extractUrls } from 'app/utils/url';
 import { isEmpty, uniqBy, isNull } from 'lodash';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import { StyledText } from 'kitsu/components/StyledText';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { Screens } from 'app/navigation';
+import { StyledText } from 'app/components/StyledText';
+import { scenePadding } from 'app/screens/Feed/constants';
 
 export default class PostDetails extends PureComponent {
   static propTypes = {

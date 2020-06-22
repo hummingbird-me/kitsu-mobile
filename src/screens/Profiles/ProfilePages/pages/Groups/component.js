@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
-import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
-import { Kitsu } from 'kitsu/config/api';
+import { defaultAvatar } from 'app/constants/app';
+import { SceneLoader } from 'app/components/SceneLoader';
+import { TabContainer } from 'app/screens/Profiles/components/TabContainer';
+import { MediaRow } from 'app/screens/Profiles/components/MediaRow';
+import { RowSeparator } from 'app/screens/Profiles/components/RowSeparator';
+import { Kitsu } from 'app/config/api';
 
 class Groups extends PureComponent {
   static propTypes = {

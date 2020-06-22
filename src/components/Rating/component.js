@@ -3,14 +3,14 @@ import { Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from 'react-n
 import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import * as colors from 'kitsu/constants/colors';
-import awfulImage from 'kitsu/assets/img/ratings/awful.png';
-import goodImage from 'kitsu/assets/img/ratings/good.png';
-import greatImage from 'kitsu/assets/img/ratings/great.png';
-import mehImage from 'kitsu/assets/img/ratings/meh.png';
-import noRatingImage from 'kitsu/assets/img/ratings/no-rating.png';
-import noRatingStarImage from 'kitsu/assets/img/ratings/no-rating-star.png';
-import starImage from 'kitsu/assets/img/ratings/star.png';
+import * as colors from 'app/constants/colors';
+import awfulImage from 'app/assets/img/ratings/awful.png';
+import goodImage from 'app/assets/img/ratings/good.png';
+import greatImage from 'app/assets/img/ratings/great.png';
+import mehImage from 'app/assets/img/ratings/meh.png';
+import noRatingImage from 'app/assets/img/ratings/no-rating.png';
+import noRatingStarImage from 'app/assets/img/ratings/no-rating-star.png';
+import starImage from 'app/assets/img/ratings/star.png';
 import { styles } from './styles';
 
 const TextSize = {

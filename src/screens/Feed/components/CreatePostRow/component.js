@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { StyledText } from 'kitsu/components/StyledText';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { defaultAvatar } from 'app/constants/app';
+import { StyledText } from 'app/components/StyledText';
+import { Avatar } from 'app/screens/Feed/components/Avatar';
+import * as Layout from 'app/screens/Feed/components/Layout';
 import { styles } from './styles';
 
 const CreatePostRowComponent = ({ currentUser, targetUser, onPress, title, style }) => {

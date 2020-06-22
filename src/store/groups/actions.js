@@ -1,5 +1,5 @@
-import * as types from 'kitsu/store/types';
-import { Kitsu } from 'kitsu/config/api';
+import * as types from 'app/store/types';
+import { Kitsu } from 'app/config/api';
 
 export const fetchGroupMemberships = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS });

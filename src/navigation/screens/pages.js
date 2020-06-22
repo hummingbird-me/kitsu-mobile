@@ -1,9 +1,9 @@
-import ProfilePages from 'kitsu/screens/Profiles/ProfilePages';
-import MediaPages from 'kitsu/screens/Profiles/MediaPages';
-import UnitPage from 'kitsu/screens/Profiles/MediaPages/pages/Episodes/Unit';
-import { UserLibraryListScreen } from 'kitsu/screens/Profiles';
+import ProfilePages from 'app/screens/Profiles/ProfilePages';
+import MediaPages from 'app/screens/Profiles/MediaPages';
+import UnitPage from 'app/screens/Profiles/MediaPages/pages/Episodes/Unit';
+import { UserLibraryListScreen } from 'app/screens/Profiles';
 
-import * as Screens from 'kitsu/navigation/types';
+import * as Screens from 'app/navigation/types';
 
 export default pageRoutes = {
   [Screens.PROFILE_PAGE]: ProfilePages,
