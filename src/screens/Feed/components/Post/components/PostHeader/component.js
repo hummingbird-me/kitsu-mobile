@@ -116,6 +116,8 @@ PostHeader.propTypes = {
   onBackButtonPress: PropTypes.func,
   onAvatarPress: PropTypes.func,
   currentUser: PropTypes.object,
+  onEditPress: PropTypes.func,
+  onDelete: PropTypes.func
 };
 
 PostHeader.defaultProps = {
@@ -125,4 +127,6 @@ PostHeader.defaultProps = {
   onBackButtonPress: null,
   onAvatarPress: null,
   currentUser: null,
+  onEditPress: null,
+  onDelete: null
 };

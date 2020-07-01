@@ -7,7 +7,7 @@ import { styles } from './styles';
 export const PostStatus = ({ showViewParent, likesCount, commentsCount, onPress }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
     <View style={styles.postStatusRow}>
-      <StyledText color="grey" size="xxsmall">{likesCount} likes</StyledText>
+      <StyledText color="grey" size="xxsmall">{likesCount + (likesCount === 1 ? ' like' : ' likes')}</StyledText>
       {showViewParent && <StyledText color="grey" size="xxsmall">View Parent Post</StyledText>}
       <StyledText color="grey" size="xxsmall">{commentsCount} comments</StyledText>
     </View>
