@@ -19,7 +19,7 @@ notifications:
 matrix:
   include:
     - language: android
-      jdk: openjdk8
+      jdk: oraclejdk8
       sudo: required
       dist: xenial
       group: edge
