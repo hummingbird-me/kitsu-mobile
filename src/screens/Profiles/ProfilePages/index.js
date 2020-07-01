@@ -48,6 +48,7 @@ class ProfilePage extends PureComponent {
     userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     currentUser: PropTypes.object.isRequired,
     activeTab: PropTypes.oneOf(tabs),
+    fetchCurrentUser: PropTypes.any.isRequired,
   }
 
   static defaultProps = {
@@ -160,7 +161,7 @@ class ProfilePage extends PureComponent {
       }
 
       this.setState({ profile: data });
-      await fetchCurrentUser();
+      await this.props.fetchCurrentUser();
     } catch (err) {
       console.log('Error updating user:', err);
     } finally {
