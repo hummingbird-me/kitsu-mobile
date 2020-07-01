@@ -95,7 +95,7 @@ export default [
     id: 18,
   },
   {
-    title: 'Daily Life',
+    title: 'Slice of Life',
     selected: false,
     subCategoryLength: 0,
     id: 169,
