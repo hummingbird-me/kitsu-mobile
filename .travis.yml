@@ -1,4 +1,5 @@
 dist: bionic
+group: edge
 cache:
   yarn: true
   directories:
