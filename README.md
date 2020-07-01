@@ -11,12 +11,14 @@
 ---
 
 ## Installation
-- [Setting up the development/debug environment](https://reactnative.dev/docs/environment-setup)
-- [Debugging on your device - React Native](https://reactnative.dev/docs/running-on-device)
 
-**The instructions below may work, but are more geared towards iOS development check the two links directly above this**
+- [Environment Setup](https://reactnative.dev/docs/environment-setup)
+- [Running on a Device](https://reactnative.dev/docs/running-on-device)
+
+The instructions below are primarily for iOS development on macOS devices. Check the two links above for cross-platform installation on Linux and Windows.
 
 ### Prerequsites
+
 - [yarn](https://yarnpkg.com/lang/en/docs/install/)
 - [watchman](https://facebook.github.io/watchman/docs/install)
 - react-native-cli
@@ -24,6 +26,7 @@
 - [cocoapods](https://guides.cocoapods.org/using/getting-started.html)
 
 ### Instructions
+
 If you run **OSX** then download the [iOS FacebookSDK](https://developers.facebook.com/docs/ios/getting-started/#download) and unzip the archive to `~/Documents/FacebookSDK`
 
 1. Run `yarn install`
@@ -31,11 +34,13 @@ If you run **OSX** then download the [iOS FacebookSDK](https://developers.facebo
 3. Run `cd ios && pod install` 
 
 ### Debugging
+
 - Install [react-native-debugger](https://github.com/jhen0409/react-native-debugger/releases)
 - Run `yarn debug`
 - Shake the device and tap `Debug JS Remotely`
 
 ### Known Issues :warning:
+
 1. Packager fails to resolve aliases at first run. Do `yarn start:reset` instead of `yarn start` at first launch. Same applies when running the app with `react-native run-ios` or `react-native run-android`. Kill the packager and type `yarn start:reset`
 
 ## Download
