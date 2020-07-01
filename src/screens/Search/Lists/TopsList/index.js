@@ -106,7 +106,7 @@ class TopsList extends PureComponent {
         image: require('kitsu/assets/img/anime-categories/Comedy.png'),
       },
       {
-        title: 'Daily Life',
+        title: 'Slice of Life',
         image: require('kitsu/assets/img/anime-categories/DailyLife.png'),
       },
       {
@@ -143,7 +143,7 @@ class TopsList extends PureComponent {
         image: require('kitsu/assets/img/manga-categories/Comedy.png'),
       },
       {
-        title: 'Daily Life',
+        title: 'Slice of Life',
         image: require('kitsu/assets/img/manga-categories/DailyLife.png'),
       },
       {
