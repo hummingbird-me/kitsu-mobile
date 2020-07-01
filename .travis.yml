@@ -21,7 +21,7 @@ matrix:
     - language: android
       jdk: openjdk8
       sudo: required
-      dist: bionic
+      dist: xenial
       group: edge
       before_cache:
         - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
