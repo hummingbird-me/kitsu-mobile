@@ -1,5 +1,3 @@
-dist: bionic
-group: edge
 cache:
   yarn: true
   directories:
@@ -23,7 +21,8 @@ matrix:
     - language: android
       jdk: oraclejdk8
       sudo: required
-      dist: precise
+      dist: bionic
+      group: edge
       before_cache:
         - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
         - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
