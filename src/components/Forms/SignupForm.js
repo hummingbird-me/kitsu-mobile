@@ -5,6 +5,7 @@ import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
 import styles from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 const SignupForm = ({
   handleChange,
@@ -17,7 +18,7 @@ const SignupForm = ({
 }) => (
   <View>
     <Input
-      placeholder="Email"
+      placeholder={I18n.t("components.account.email")}
       autoCapitalize="none"
       autoCorrect={false}
       value={data.email}
@@ -25,39 +26,39 @@ const SignupForm = ({
       onChangeText={text => handleChange(text, 'email')}
     />
     <Input
-      placeholder="Username"
+      placeholder={I18n.t("components.account.username")}
       autoCapitalize="none"
       autoCorrect={false}
       value={data.username}
       onChangeText={text => handleChange(text, 'username')}
     />
     <PasswordInput
-      placeholder="Password"
+      placeholder={I18n.t("components.account.password")}
       value={data.password}
       onChangeText={text => handleChange(text, 'password')}
     />
     <PasswordInput
-      placeholder="Confirm Password"
+      placeholder={I18n.t("components.account.confirmpassword")}
       value={data.confirmPassword}
       onChangeText={text => handleChange(text, 'confirmPassword')}
     />
     <Button
       loading={loading}
-      title={'Create account'}
+      title={I18n.t("components.account.create")}
       onPress={() => onSubmit()}
       style={{ marginTop: 10 }}
     />
     <Button
       style={styles.buttonFacebook}
-      title={'Login with Facebook'}
+      title={I18n.t("components.account.facebook")}
       icon={'facebook-official'}
       loading={signingInFacebook}
       onPress={onSignInFacebook}
     />
     <View style={styles.termsWrapper}>
-      <Text style={styles.terms}>By creating an account, you agree our </Text>
+      <Text style={styles.terms}>{I18n.t("components.account.termspart1")}</Text>
       <TouchableOpacity onPress={onPressTerms}>
-        <Text style={[styles.terms, styles.termsHightlight]}>Terms of Service</Text>
+        <Text style={[styles.terms, styles.termsHightlight]}>{I18n.t("components.account.termspart2")}</Text>
       </TouchableOpacity>
     </View>
   </View>

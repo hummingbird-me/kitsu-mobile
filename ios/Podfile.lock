@@ -9,7 +9,7 @@ DEPENDENCIES:
   - RSKImageCropper
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - Google-Mobile-Ads-SDK
     - QBImagePickerController
     - RSKImageCropper
@@ -19,6 +19,6 @@ SPEC CHECKSUMS:
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
 
-PODFILE CHECKSUM: 37945ddf970518caaf601c510c923862cf4aaa85
+PODFILE CHECKSUM: 458aa2a99752b9631818844b9201e21e3fc9e501
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.9.1

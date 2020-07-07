@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated, Text, ViewPropTypes } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export class Feedback extends React.Component {
   static propTypes = {
@@ -16,7 +17,7 @@ export class Feedback extends React.Component {
   static defaultProps = {
     containerStyle: styles.defaultStyles,
     titleStyle: styles.defaultStyles,
-    title: 'Something went wrong.',
+    title: (I18n.t("components.feedback.error")),
     autoHide: true,
     autoHideDuration: 3000,
     fadeDuration: 300,

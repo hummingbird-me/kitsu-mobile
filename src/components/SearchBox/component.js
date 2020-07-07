@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { commonStyles } from 'kitsu/common/styles';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export class SearchBox extends React.PureComponent {
   static propTypes = {
@@ -19,7 +20,7 @@ export class SearchBox extends React.PureComponent {
   static defaultProps = {
     defaultValue: '',
     onChangeText: () => {},
-    placeholder: 'Search',
+    placeholder: (I18n.t("components.searchbox.search")),
     style: null,
     value: '',
     showClearButton: true,

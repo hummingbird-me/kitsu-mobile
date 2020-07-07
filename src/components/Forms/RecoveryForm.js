@@ -6,18 +6,19 @@ import { Input } from 'kitsu/components/Input';
 import CustomIcon from 'kitsu/components/Icon';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 const RecoveryForm = ({ handleChange, data, onReset, loading, onCancel }) => (
   <View>
     <Input
-      placeholder="E-mail"
+      placeholder={I18n.t("components.account.email")}
       value={data.email}
       onChangeText={text => handleChange(text, 'email')}
       autoCapitalize="none"
     />
     <Button
       loading={loading}
-      title={'Send password reset'}
+      title={I18n.t("components.account.reset")}
       onPress={onReset}
       style={{ marginTop: 10 }}
     />

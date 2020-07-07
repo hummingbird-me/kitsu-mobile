@@ -8,6 +8,7 @@ import { commonStyles } from 'kitsu/common/styles';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { styles } from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export const ProfileHeader = ({
   profile,
@@ -68,7 +69,7 @@ export const ProfileHeader = ({
 
           {showFollowButton && (
             <TouchableOpacity transparent style={styles.followButton} onPress={onFollow}>
-              <Text style={[commonStyles.text, commonStyles.colorWhite]}>Follow</Text>
+              <Text style={[commonStyles.text, commonStyles.colorWhite]}>{I18n.t("components.profileheader.follow")}</Text>
             </TouchableOpacity>
           )}
         </View>

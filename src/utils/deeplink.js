@@ -10,6 +10,7 @@ import store from 'kitsu/store/config';
 import { isEmpty, isNull } from 'lodash';
 import { toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
 import { fetchPost, fetchComment } from './feed';
+import I18n from 'kitsu/translations/i18n';
 
 // The current visible component id
 let visibleComponentId = null;
@@ -70,7 +71,7 @@ export function registerDeepLinks() {
     if (url) {
       openUrl(url);
     }
-  }).catch(err => console.error('An error occurred', err));
+  }).catch(err => console.error((I18n.t("utils.deeplink.error")), err));
 
   registeredDeepLinks = true;
 }
@@ -87,7 +88,7 @@ export function unregisterDeepLinks() {
 /**
  * Set the `visibleComponentId` for deep linking.
  * This is a hack method as we don't get a callback from `registerBottomTabSelectedListener` on initial launch.
- * 
+ *
  * @param {number} tabIndex The index of the tab.
  */
 export function setDeepLinkTabIndex(tabIndex) {
@@ -279,7 +280,7 @@ const handleUser = async (response) => {
     Linking.openURL(`${response.scheme}${response.path}`);
     return;
   }
-  
+
   if (!visibleComponentId || !response.id) return;
   let userId = response.id;
 
@@ -371,7 +372,7 @@ const handleFeedback = (response) => {
         component: {
           name: Screens.SIDEBAR_CANNY_BOARD,
           passProps: {
-            title: 'Report Bugs',
+            title: (I18n.t("utils.deeplink.bugs")),
             type: 'bugReport',
             token: accessToken,
           },
@@ -383,7 +384,7 @@ const handleFeedback = (response) => {
         component: {
           name: Screens.SIDEBAR_CANNY_BOARD,
           passProps: {
-            title: 'Suggest Features',
+            title: (I18n.t("utils.deeplink.features")),
             type: 'featureRequest',
             token: accessToken,
           },
@@ -395,7 +396,7 @@ const handleFeedback = (response) => {
         component: {
           name: Screens.SIDEBAR_CANNY_BOARD,
           passProps: {
-            title: 'Database Requests',
+            title: (I18n.t("utils.deeplink.database")),
             type: 'databaseRequest',
             token: accessToken,
           },

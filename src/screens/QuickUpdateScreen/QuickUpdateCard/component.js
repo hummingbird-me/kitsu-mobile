@@ -6,6 +6,7 @@ import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
 import PropTypes from 'prop-types';
 import styles from './styles';
+import I18n from 'kitsu/translations/i18n';
 
 export default class QuickUpdateCard extends PureComponent {
   static propTypes = {
@@ -178,13 +179,13 @@ export default class QuickUpdateCard extends PureComponent {
                 {progress > 0 ? (
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.currentEpisodeText}>
-                      {media.type === 'anime' ? 'EP' : 'CH'}
+                      {media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.ep")) : (I18n.t("screens.quickupdatescreen.ch"))}
                       {' '}
                       {progress}
                     </Text>
                     <Text numberOfLines={1} style={styles.totalEpisodesText}>
                       {unitCount > 0 && (
-                        ` of ${unitCount}`
+                        (I18n.t("screens.quickupdatescreen.card.outof", {count: unitCount}))
                       )}
                       {' '}
                       {unit[0] && unit[0].canonicalTitle}
@@ -192,7 +193,7 @@ export default class QuickUpdateCard extends PureComponent {
                   </View>
                 ) : (
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.totalEpisodesText}>Not Started</Text>
+                    <Text style={styles.totalEpisodesText}>{I18n.t("screens.quickupdatescreen.card.notstarted")}</Text>
                   </View>
                 )}
               </View>
@@ -208,16 +209,17 @@ export default class QuickUpdateCard extends PureComponent {
               <View style={styles.episodeRow}>
                 {!isCompleted ? ( // finished ?
                   <Text style={styles.seriesExtraInfo} numberOfLines={1}>
-                    UP NEXT{' '}
+                    {I18n.t("screens.quickupdatescreen.card.upnext")}{' '}
                     {nextUnit ? ( // Might not exist
                       <Text style={styles.seriesNextEpisodeTitle}>
-                        {media.type === 'anime' ? 'EP' : 'CH'}
+                        {media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.ep"))
+ : (I18n.t("screens.quickupdatescreen.ch"))}
                         {' '}
                         {nextUnit.number} {nextUnit.canonicalTitle ? `- ${nextUnit.canonicalTitle}` : ''}
                       </Text>
                     ) : (
                       <Text style={styles.seriesNextEpisodeTitle}>
-                        {media.type === 'anime' ? 'EP' : 'CH'}
+                        {media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.ep")) : (I18n.t("screens.quickupdatescreen.ch"))}
                         {' '}
                         {nextProgress}
                       </Text>
@@ -239,15 +241,15 @@ export default class QuickUpdateCard extends PureComponent {
                   style={[styles.button, styles.markWatchedButton]}
                 >
                   {unitCount === progress + 1 ? ( // is final episode?
-                    <Text style={styles.buttonText}>Mark as Complete</Text>
+                    <Text style={styles.buttonText}>{I18n.t("screens.quickupdatescreen.card.markcomplete")}</Text>
                   ) : (
-                    <Text style={styles.buttonText}>Mark
+                    <Text style={styles.buttonText}>{I18n.t("screens.quickupdatescreen.card.mark")}
                       <Text style={{ fontWeight: 'bold' }}>
-                        {' '}{media.type === 'anime' ? 'Episode' : 'Chapter'}
+                        {' '}{media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.episode")) : (I18n.t("screens.quickupdatescreen.chapter"))}
                         {' '}
                         {data.item.progress + 1}{' '}
                       </Text>
-                      {media.type === 'anime' ? 'Watched' : 'Read'}
+                      {media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.watched")) : (I18n.t("screens.quickupdatescreen.read"))}
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -262,7 +264,7 @@ export default class QuickUpdateCard extends PureComponent {
                   alignItems: 'center',
                 }}
               >
-                <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
+                <Text style={styles.seriesCompleteText}>{I18n.t("screens.quickupdatescreen.card.complete")}</Text>
                 {this.renderRatingComponent()}
               </View>
             ))}

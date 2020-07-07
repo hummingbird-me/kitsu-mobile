@@ -34,6 +34,7 @@ import { Navigation } from 'react-native-navigation';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 import styles from './styles';
 import { EventBus } from 'kitsu/utils/eventBus';
+import I18n from 'kitsu/translations/i18n';
 
 // API request fields
 const LIBRARY_ENTRIES_FIELDS = [
@@ -457,8 +458,8 @@ class QuickUpdate extends Component {
     }, { include: this._requestIncludeFields });
 
     if (!record.progress) {
-      Alert.alert('Error', 'Error while updating progress, please try again.', [
-        { text: 'OK', style: 'cancel' },
+      Alert.alert('Error', (I18n.t("screens.quickupdatescreen.quickupdate.error")), [
+        { text: (I18n.t("screens.quickupdatescreen.quickupdate.ok")), style: 'cancel' },
       ]);
     } else {
       KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, media.type, KitsuLibraryEventSource.QUICK_UPDATE);
@@ -527,7 +528,7 @@ class QuickUpdate extends Component {
       <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          <Text style={styles.headerText}>Quick Update</Text>
+          <Text style={styles.headerText}>{I18n.t("screens.quickupdatescreen.header")}</Text>
         </Animated.View>
         <View style={styles.loadingWrapper}>
           <ActivityIndicator size="large" />
@@ -541,14 +542,14 @@ class QuickUpdate extends Component {
     const searchIndex = filterMode === 'manga' ? 1 : 0;
 
     const emptyTitle =
-      (filterMode === 'anime' && 'START WATCHING ANIME') ||
-      (filterMode === 'manga' && 'START READING MANGA') ||
-      'START TRACKING MEDIA';
+      (filterMode === 'anime' && (I18n.t("screens.quickupdatescreen.startanime"))) ||
+      (filterMode === 'manga' && (I18n.t("screens.quickupdatescreen.startmanga"))) ||
+      (I18n.t("screens.quickupdatescreen.startmedia"));
 
     const buttonTitle =
-      (filterMode === 'anime' && 'Find Anime to Watch') ||
-      (filterMode === 'manga' && 'Find Manga to Read') ||
-      'Find Media to Add';
+      (filterMode === 'anime' && (I18n.t("screens.quickupdatescreen.findanime"))) ||
+      (filterMode === 'manga' && (I18n.t("screens.quickupdatescreen.findmanga"))) ||
+      (I18n.t("screens.quickupdatescreen.findmedia"));
 
     const descriptionType = filterMode === 'all' ? 'anime or manga' : filterMode;
 
@@ -556,7 +557,7 @@ class QuickUpdate extends Component {
       <View style={[styles.wrapper, styles.xWrapper]}>
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-          <Text style={styles.headerText}>Quick Update</Text>
+          <Text style={styles.headerText}>{I18n.t("screens.quickupdatescreen.header")}</Text>
           <HeaderFilterButton
             mode={filterMode}
             onModeChanged={this.filterModeChanged}
@@ -578,7 +579,7 @@ class QuickUpdate extends Component {
           <View style={styles.emptyStateContainer}>
             <ImageStatus
               title={emptyTitle}
-              text={`As you add ${descriptionType} to your library, they'll start to displaying here and you'll be able to update them and join community discussions.`}
+              text={I18n.t("screens.quickupdatescreen.sharethoughts", {type: descriptionType})}
               image={unstarted}
             />
             <TouchableOpacity
@@ -620,8 +621,10 @@ class QuickUpdate extends Component {
     const entry = library[(this.carousel && this.carousel.currentIndex) || 0];
     const progress = (entry && entry.progress) || 0;
     const media = entry && getMedia(entry);
-    const episodeOrChapter = media && media.type === 'manga' ? 'chapter' : 'episode';
-    const watchedOrRead = media && media.type === 'manga' ? 'read' : 'watched';
+    const episodeOrChapter = media && media.type === 'manga' ? (I18n.t("screens.quickupdatescreen.chapter")) : (I18n.t("screens.quickupdatescreen.episode"));
+    const watchedOrRead = media && media.type === 'manga' ? (I18n.t("screens.quickupdatescreen.read")) : (I18n.t("screens.quickupdatescreen.watched"));
+    const shortEpisodeOrChapter = media && media.type === 'anime' ? (I18n.t("screens.quickupdatescreen.ep")) : (I18n.t("screens.quickupdatescreen.ch"));
+    const watchingOrReading = media && media.type === 'manga' ? (I18n.t("screens.quickupdatescreen.reading")) : (I18n.t("screens.quickupdatescreen.watching"));
 
     return (
       <View style={styles.wrapper}>
@@ -642,7 +645,7 @@ class QuickUpdate extends Component {
         >
           {/* Header */}
           <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-            <Text style={styles.headerText}>Quick Update</Text>
+            <Text style={styles.headerText}>{I18n.t("screens.quickupdatescreen.header")}</Text>
             <HeaderFilterButton
               mode={filterMode}
               onModeChanged={this.filterModeChanged}
@@ -675,7 +678,7 @@ class QuickUpdate extends Component {
                   {progress}
                   {' '}
                 </Text>
-                Discussion
+                {I18n.t("screens.quickupdatescreen.discussionlong")}
               </Text>
             </View>
           )}
@@ -692,15 +695,15 @@ class QuickUpdate extends Component {
                   onEndReachedThreshold={0.6}
                   ListHeaderComponent={
                     <CreatePostRow
-                      title={`What do you think of ${media && media.type === 'anime' ? 'EP' : 'CH'} ${progress}?`}
+                      title={I18n.t("screens.quickupdatescreen.yourthoughts", {type: shortEpisodeOrChapter, number:progress})}
                       onPress={this.toggleEditor}
                     />
                   }
                   ListFooterComponent={() => isLoadingNextFeedPage && <ActivityIndicator />}
                   ListEmptyComponent={() => (
                     <ImageStatus
-                      title="START THE DISCUSSION"
-                      text={`Be the first to share your thoughts about ${episodeOrChapter} ${progress}`}
+                      title={I18n.t("screens.quickupdatescreen.discussion")}
+                      text={I18n.t("screens.quickupdatescreen.sharethoughts", {type: episodeOrChapter, number:progress})}
                       image={emptyComment}
                     />
                   )}
@@ -720,8 +723,8 @@ class QuickUpdate extends Component {
           ) : (
             <ScrollView style={styles.unstartedWrapper}>
               <ImageStatus
-                title={`START ${media && media.type === 'manga' ? 'READING' : 'WATCHING'} TO JOIN IN`}
-                text={`As you update your progress, you'll see the thoughts from the community on the ${episodeOrChapter}s you've ${watchedOrRead}!`}
+                title={I18n.t("screens.quickupdatescreen.starttojoin", {state:watchingOrReading})}
+                text={I18n.t("screens.quickupdatescreen.communitythoughts", {type: episodeOrChapter, state:watchedOrRead})}
                 image={unstarted}
               />
             </ScrollView>
