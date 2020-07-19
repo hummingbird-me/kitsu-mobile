@@ -1,59 +1,53 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import {
   View,
   TouchableOpacity,
-  Text,
   ActivityIndicator,
-  TextStyle,
   ViewStyle,
+  TextStyle,
+  Text,
 } from 'react-native';
-import { FontAwesome as Icon } from '@expo/vector-icons';
-import { styles } from './styles';
+import * as styles from './styles';
 
-const LoadingComponent = () => (
-  <View style={styles.contentWrapper}>
-    <ActivityIndicator color={'rgba(255,255,255,0.6)'} />
-  </View>
-);
-
-export default function Button({
-  style,
-  title = 'Save',
-  titleStyle,
-  icon,
-  iconStyle,
-  onPress,
-  loading = false,
-  disabled = false,
-  bold = false,
-}: {
+const Button: FunctionComponent<{
+  kind?: keyof typeof styles.kinds;
   style?: ViewStyle;
-  title: string;
-  titleStyle?: TextStyle;
-  icon?: string;
-  iconStyle?: TextStyle;
-  onPress: Function;
-  loading: boolean;
-  disabled: boolean;
-  bold: boolean;
+  textStyle?: TextStyle;
+  onPress: any;
+  bare?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+}> = function ({
+  kind,
+  style,
+  textStyle,
+  onPress,
+  children,
+  bare = true,
+  disabled = false,
+  loading = false,
 }) {
-  const Component = onPress ? TouchableOpacity : View;
+  if (disabled) kind = 'disabled';
+
+  const { button, text } = styles.styleSheetForKind(kind);
+
   return (
-    <Component
+    <TouchableOpacity
       disabled={disabled || loading}
       onPress={onPress}
-      style={[styles.button, disabled ? styles.buttonDisabled : null, style]}>
-      {loading ? (
-        <LoadingComponent />
-      ) : (
-        <View style={styles.contentWrapper}>
-          {icon ? <Icon name={icon} style={[styles.icon, iconStyle]} /> : null}
-          <Text
-            style={[styles.title, titleStyle, bold ? styles.titleBold : null]}>
-            {title}
-          </Text>
-        </View>
-      )}
-    </Component>
+      style={[styles.base.button, button, style]}>
+      <View style={styles.base.contentWrapper}>
+        {loading ? (
+          <ActivityIndicator color={'rgba(255,255,255,0.6)'} />
+        ) : bare ? (
+          <Text style={[text, textStyle]}>{children}</Text>
+        ) : (
+          children
+        )}
+      </View>
+    </TouchableOpacity>
   );
-}
+};
+
+export default Button;
+export { styles };
