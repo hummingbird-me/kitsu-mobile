@@ -1,44 +1,22 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { enableScreens } from 'react-native-screens';
+import { NavigationContainer } from '@react-navigation/native';
 
-import {
-  useFonts,
-  OpenSans_400Regular,
-  OpenSans_700Bold,
-} from '@expo-google-fonts/open-sans';
-import { Asap_700Bold } from '@expo-google-fonts/asap';
+import AppNavigator from 'app/navigation/App';
+import BootScreen from 'app/screens/Boot';
 
-import Intro from 'app/screens/Intro';
-import BootAnimation from 'app/components/boot-animation';
+enableScreens();
+
 
 export default function App() {
-  let [fontsLoaded] = useFonts({
-    OpenSans_400Regular,
-    OpenSans_700Bold,
-    Asap_700Bold,
-  });
-  let [appLoaded, setAppLoaded] = useState(false);
-
   return (
     <SafeAreaProvider>
-      <View style={styles.container}>
-        <StatusBar style="light" animated hidden={!fontsLoaded || !appLoaded} />
-        {fontsLoaded && <Intro />}
-        {!fontsLoaded || !appLoaded ? (
-          <BootAnimation onAnimationFinish={() => setAppLoaded(true)} />
-        ) : null}
-      </View>
+      <NavigationContainer>
+        <BootScreen>
+          <AppNavigator />
+        </BootScreen>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#402F3F',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
