@@ -8,15 +8,18 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@apollo/client": "^3.0.2",
     "@expo-google-fonts/asap": "^0.1.0",
     "@expo-google-fonts/open-sans": "^0.1.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.7.0",
+    "babel-plugin-import-graphql": "^2.7.0",
     "expo": "^38.0.0",
     "expo-font": "~8.2.1",
     "expo-localization": "~8.2.1",
     "expo-status-bar": "^1.0.0",
+    "graphql": "^15.3.0",
     "lottie-react-native": "~2.6.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",
@@ -32,6 +35,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
+    "@expo/config": "^3.2.15",
     "@types/react": "~16.9.41",
     "@types/react-native": "~0.62.13",
     "@types/react-native-snap-carousel": "^3.8.1",
