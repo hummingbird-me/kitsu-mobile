@@ -10,7 +10,7 @@ import {
 import * as styles from './styles';
 
 const Button: FunctionComponent<{
-  kind?: keyof typeof styles.kinds;
+  kind: keyof typeof styles.kinds;
   style?: ViewStyle;
   textStyle?: TextStyle;
   onPress: any;
@@ -23,7 +23,7 @@ const Button: FunctionComponent<{
   textStyle,
   onPress,
   children,
-  bare = true,
+  bare = false,
   disabled = false,
   loading = false,
 }) {
@@ -40,9 +40,11 @@ const Button: FunctionComponent<{
         {loading ? (
           <ActivityIndicator color={'rgba(255,255,255,0.6)'} />
         ) : bare ? (
-          <Text style={[text, textStyle]}>{children}</Text>
-        ) : (
           children
+        ) : (
+          <Text style={[styles.accessory.text, text, textStyle]}>
+            {children}
+          </Text>
         )}
       </View>
     </TouchableOpacity>
