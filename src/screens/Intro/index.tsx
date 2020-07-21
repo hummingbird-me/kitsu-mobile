@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Image,
   View,
-  Text,
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
@@ -12,6 +11,7 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import logo from 'app/assets/img/intro/slidelogo.png';
 import Button, { styles as btnStyles } from 'app/components/button';
 import Carousel from './Carousel';
+import Registration from './Registration';
 import * as colors from 'app/constants/colors';
 
 // The Intro screen handles
@@ -50,7 +50,7 @@ export default function Intro() {
               }}>
               <Button
                 kind="white"
-                onPress={() => scrollView.current.scrollToEnd()}
+                onPress={() => scrollView.current?.scrollToEnd()}
                 style={styles.getStartedButton}
                 textStyle={btnStyles.accessory.textBold}>
                 Get Started
@@ -58,7 +58,7 @@ export default function Intro() {
             </View>
           </View>
           <View style={{ width: windowWidth }}>
-            <Text>Hello!</Text>
+            <Registration />
           </View>
         </ScrollView>
       </View>
