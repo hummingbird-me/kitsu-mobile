@@ -30,7 +30,12 @@ export default function Intro() {
         <Image source={logo} />
       </View>
       <View style={{ flex: 4 }}>
-        <ScrollView horizontal bounces={false} pagingEnabled ref={scrollView}>
+        <ScrollView
+          horizontal
+          bounces={false}
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          ref={scrollView}>
           <View style={{ width: windowWidth }}>
             <View style={{ flex: 4 }}>
               <Carousel />
