@@ -27,7 +27,7 @@ export const kinds: {
   outline: {
     background: colors.transparent,
     text: colors.white,
-    border: colors.grey,
+    border: colors.darkGrey,
   },
   disabled: {
     background: colors.buttonDisabledColor,
@@ -43,7 +43,7 @@ export function styleSheetForKind(kind: keyof typeof kinds) {
     button: {
       backgroundColor: theme.background,
       borderColor: theme.border ? theme.border : undefined,
-      borderWidth: theme.border ? StyleSheet.hairlineWidth * 2 : 0,
+      borderWidth: theme.border ? StyleSheet.hairlineWidth * 4 : 0,
     },
     text: {
       color: theme.text,
