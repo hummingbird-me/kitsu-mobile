@@ -1,21 +1,28 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   StyleSheet,
   Image,
   View,
   ScrollView,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import logo from 'app/assets/img/intro/slidelogo.png';
-import Button, { styles as btnStyles } from 'app/components/button';
+import Button, { styles as btnStyles } from 'app/components/Button';
 import Carousel from './Carousel';
 import Registration from './Registration';
 import * as colors from 'app/constants/colors';
+import { IntroNavigatorParamList } from 'app/navigation/Intro';
 
 // The Intro screen handles
-export default function Intro() {
+export default function IntroScreen({
+  navigation,
+}: {
+  navigation: StackNavigationProp<IntroNavigatorParamList, 'Intro'>;
+}) {
   const insets = useSafeArea();
   const { width: windowWidth } = useWindowDimensions();
   const scrollView = useRef(null);
@@ -34,11 +41,19 @@ export default function Intro() {
           horizontal
           bounces={false}
           pagingEnabled
+          scrollEnabled={Platform.OS === 'ios'}
+          nestedScrollEnabled={true}
           showsHorizontalScrollIndicator={false}
           ref={scrollView}>
           <View style={{ width: windowWidth }}>
             <View style={{ flex: 4 }}>
-              <Carousel />
+              <Carousel
+                onProgress={(progress) => {
+                  if (progress > 3) {
+                    scrollView.current?.scrollToEnd();
+                  }
+                }}
+              />
             </View>
             <View
               style={{
@@ -58,7 +73,7 @@ export default function Intro() {
             </View>
           </View>
           <View style={{ width: windowWidth }}>
-            <Registration />
+            <Registration navigation={navigation} />
           </View>
         </ScrollView>
       </View>

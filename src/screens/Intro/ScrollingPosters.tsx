@@ -10,7 +10,6 @@ import * as Sentry from 'sentry-expo';
 import _ from 'lodash';
 
 import useScrollingPosters from './useScrollingPosters';
-import * as colors from 'app/constants/colors';
 
 export default function ScrollingPosters({
   posterSize = 115,

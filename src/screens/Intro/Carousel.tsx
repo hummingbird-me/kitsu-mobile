@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 
 import { white } from 'app/constants/colors';
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
   slideDescription: {
     color: white,
     fontFamily: 'OpenSans_400Regular',
-    fontSize: 18,
+    fontSize: Platform.select({ ios: 18, android: 16 }),
     textAlign: 'center',
     marginTop: 5,
   },
@@ -87,7 +88,13 @@ function renderSlide({
   );
 }
 
-export default function IntroCarousel({ style }: { style?: ViewStyle }) {
+export default function IntroCarousel({
+  style,
+  onProgress = () => {},
+}: {
+  style?: ViewStyle;
+  onProgress?: (progress: number) => any;
+}) {
   const { width: windowWidth } = useWindowDimensions();
 
   // 2 2.25 3
@@ -137,15 +144,18 @@ export default function IntroCarousel({ style }: { style?: ViewStyle }) {
         alignItems: 'center',
         ...style,
       }}>
-      <View style={{ flex: 4 }}>
+      <View style={{ flex: 4, minHeight: 150 }}>
         <ScrollView
+          nestedScrollEnabled={true}
           horizontal
           pagingEnabled
           bounces={false}
           showsHorizontalScrollIndicator={false}
           onScroll={({ nativeEvent: { contentOffset, layoutMeasurement } }) => {
             // Page number as a decimal, updated during scroll
-            setProgress(contentOffset.x / layoutMeasurement.width);
+            const progress = contentOffset.x / layoutMeasurement.width;
+            setProgress(progress);
+            onProgress(progress);
           }}
           style={style}
           scrollEventThrottle={50}>
@@ -154,6 +164,9 @@ export default function IntroCarousel({ style }: { style?: ViewStyle }) {
               renderSlide({ ...slide, width: windowWidth })
             ),
           ]}
+          {Platform.OS == 'android' ? (
+            <View style={{ width: windowWidth }} />
+          ) : null}
         </ScrollView>
       </View>
       <View
