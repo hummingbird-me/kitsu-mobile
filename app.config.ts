@@ -11,6 +11,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   splash: {
     backgroundColor: '#402F3F',
   },
+  androidNavigationBar: {
+    barStyle: 'light-content',
+    backgroundColor: '#402F3F',
+  },
   updates: {
     fallbackToCacheTimeout: 0,
   },
