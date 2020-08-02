@@ -8,6 +8,7 @@ import { ApolloProvider } from '@apollo/client';
 import AppNavigator from 'app/navigation/App';
 import BootScreen from 'app/screens/Boot';
 import client from 'app/utils/client';
+import { SessionContextProvider } from 'app/contexts/SessionContext';
 
 enableScreens();
 
@@ -21,13 +22,15 @@ Sentry.init({
 export default function App() {
   return (
     <SafeAreaProvider>
-      <ApolloProvider client={client}>
-        <NavigationContainer>
-          <BootScreen>
-            <AppNavigator />
-          </BootScreen>
-        </NavigationContainer>
-      </ApolloProvider>
+      <SessionContextProvider>
+        <ApolloProvider client={client}>
+          <NavigationContainer>
+            <BootScreen>
+              <AppNavigator />
+            </BootScreen>
+          </NavigationContainer>
+        </ApolloProvider>
+      </SessionContextProvider>
     </SafeAreaProvider>
   );
 }
