@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   subheading: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     backgroundColor: 'transparent',
     textAlign: 'center',
     flex: 1,

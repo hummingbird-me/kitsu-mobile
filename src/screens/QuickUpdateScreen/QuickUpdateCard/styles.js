@@ -45,20 +45,20 @@ const styles = StyleSheet.create({
   currentEpisodeText: {
     backgroundColor: 'transparent',
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
   },
   totalEpisodesText: {
     backgroundColor: 'transparent',
     color: '#999999',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     flex: 1,
   },
   episodeName: {
     backgroundColor: 'transparent',
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '700',
     fontSize: 16,
   },
@@ -109,14 +109,14 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   seriesTitle: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '600',
     marginRight: 5,
     color: colors.white,
     backgroundColor: colors.transparent,
   },
   seriesExtraInfo: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     color: colors.grey,
     fontWeight: '200',
     fontSize: 12,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 1,
     fontSize: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     textAlign: 'center',
   },
   placeholderWrapper: {
@@ -142,14 +142,14 @@ const styles = StyleSheet.create({
     color: colors.lightGrey,
     flex: 1,
     fontSize: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     margin: 10,
   },
   updateText: {
     color: 'black',
     flex: 1,
     fontSize: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     margin: 10,
   },
   actionRow: {
@@ -169,14 +169,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
   },
   seriesCompleteText: {
     color: colors.darkGrey,
     fontSize: 10,
     fontWeight: 'bold',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
   },
   markWatchedButton: {
     flex: 1,

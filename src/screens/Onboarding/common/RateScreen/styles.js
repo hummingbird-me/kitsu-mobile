@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
   },
   showTitle: {
     marginBottom: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     marginHorizontal: 4,
     color: colors.white,
     fontWeight: '600',
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '600',
     color: colors.white,
     textAlign: 'center',

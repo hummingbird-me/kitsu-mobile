@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 const text = {
-  fontFamily: 'OpenSans',
+  fontFamily: 'OpenSans_400Regular',
   fontSize: 12,
   fontWeight: '700',
 };

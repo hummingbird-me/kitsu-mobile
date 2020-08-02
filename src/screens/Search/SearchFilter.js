@@ -340,14 +340,14 @@ const pickerData = {
 const styles = {
   outerText: {
     color: '#C7C1C6',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 16,
     lineHeight: 18,
     fontWeight: 'bold',
   },
   innerText: {
     color: '#FFFFFF',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     lineHeight: 12,
     fontWeight: '600',

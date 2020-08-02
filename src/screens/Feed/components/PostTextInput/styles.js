@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   },
   postTextInputField: {
     width: '100%',
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 17,
     paddingHorizontal: scenePadding,
     textAlignVertical: 'top',

@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
   modalHeaderText: {
     color: colors.white,
     fontWeight: '700',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 18,
     margin: 10,
   },
@@ -74,14 +74,14 @@ export const styles = StyleSheet.create({
   modalRatingText: {
     color: 'rgb(255, 218, 168)',
     fontSize: 60,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '700',
     marginLeft: 16,
   },
   modalNoRatingText: {
     color: colors.lightGrey,
     fontSize: 30,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '700',
     minHeight: 82,
     textAlignVertical: 'center',

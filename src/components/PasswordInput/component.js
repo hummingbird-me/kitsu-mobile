@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { FontAwesome as Icon } from '@expo/vector-icons';
 import { Input } from 'app/components/Input';
 import { styles } from './styles';
 
@@ -24,7 +24,7 @@ export class PasswordInput extends PureComponent {
     this.setState({
       passwordVisible: !this.state.passwordVisible,
     });
-  }
+  };
 
   render() {
     const { value, onChangeText, ...props } = this.props;

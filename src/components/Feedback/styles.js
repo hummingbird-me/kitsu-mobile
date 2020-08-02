@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     textAlign: 'center',
   },
   defaultStyles: {

@@ -48,7 +48,7 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
           <Text
             numberOfLines={1}
             ellipsizeMode={'tail'}
-            style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}
+            style={{ fontWeight: '600', fontFamily: 'OpenSans_400Regular', fontSize: 12 }}
           >
             {canonicalTitle}
           </Text>
@@ -319,7 +319,7 @@ class ExportLibrary extends React.Component {
         <View style={[styles.card, { flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'space-between' }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }} >
             <FastImage source={pending} style={{ width: 30, height: 30 }} cache="web" />
-            <Text style={{ marginLeft: 8, fontFamily: 'OpenSans', fontWeight: '500' }}>{linkedAccount.externalUserId}</Text>
+            <Text style={{ marginLeft: 8, fontFamily: 'OpenSans_400Regular', fontWeight: '500' }}>{linkedAccount.externalUserId}</Text>
           </View>
           <TouchableOpacity onPress={this.onDisconnectButtonPressed} style={{}}>
             <FastImage source={failed} style={{ width: 16, height: 16 }} cache="web" />

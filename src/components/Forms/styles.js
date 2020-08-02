@@ -39,7 +39,7 @@ export default StyleSheet.create({
   terms: {
     fontSize: 12,
     color: 'grey',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
   },
   termsHightlight: {
     fontWeight: 'bold',
@@ -51,6 +51,6 @@ export default StyleSheet.create({
     fontSize: 12,
     color: 'grey',
     textAlign: 'center',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
   },
 });

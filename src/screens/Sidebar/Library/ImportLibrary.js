@@ -70,10 +70,10 @@ const ImportItem = ({ kind, status, date, total }) => {
   return (
     <View style={[styles.item, { paddingHorizontal: 12 }]}>
       <View style={{ justifyContent: 'center' }}>
-        <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
+        <Text style={{ fontWeight: '600', fontFamily: 'OpenSans_400Regular', fontSize: 12 }}>
           {title}
         </Text>
-        <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
+        <Text style={{ fontFamily: 'OpenSans_400Regular', fontSize: 10, color: colors.darkGrey }}>
           {details}
         </Text>
       </View>

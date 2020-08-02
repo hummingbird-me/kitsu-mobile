@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
   },
   text: {
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '600',
   },
   textSelected: {
@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
   tutorialText: {
     marginVertical: 16,
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     textAlign: 'center',
     fontWeight: '600',
     fontSize: 16,

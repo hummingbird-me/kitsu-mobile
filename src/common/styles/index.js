@@ -10,7 +10,7 @@ export const commonStyles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     fontWeight: '600',
   },

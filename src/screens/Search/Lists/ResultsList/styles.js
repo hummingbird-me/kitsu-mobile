@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: 'transparent',
     fontSize: 11,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     padding: 2,
   },
 });

@@ -56,10 +56,10 @@ class TopsList extends PureComponent {
     // Get the data object for the given season and year
     const getData = (season, year) => {
       const images = {
-        Winter: require('kitsu/assets/img/seasons/Winter.png'),
-        Spring: require('kitsu/assets/img/seasons/Spring.png'),
-        Summer: require('kitsu/assets/img/seasons/Summer.png'),
-        Fall: require('kitsu/assets/img/seasons/Fall.png'),
+        Winter: require('app/assets/img/seasons/Winter.png'),
+        Spring: require('app/assets/img/seasons/Spring.png'),
+        Summer: require('app/assets/img/seasons/Summer.png'),
+        Fall: require('app/assets/img/seasons/Fall.png'),
       };
 
       return {
@@ -95,35 +95,35 @@ class TopsList extends PureComponent {
     return [
       {
         title: 'Action',
-        image: require('kitsu/assets/img/anime-categories/Action.png'),
+        image: require('app/assets/img/anime-categories/Action.png'),
       },
       {
         title: 'Adventure',
-        image: require('kitsu/assets/img/anime-categories/Adventure.png'),
+        image: require('app/assets/img/anime-categories/Adventure.png'),
       },
       {
         title: 'Comedy',
-        image: require('kitsu/assets/img/anime-categories/Comedy.png'),
+        image: require('app/assets/img/anime-categories/Comedy.png'),
       },
       {
         title: 'Daily Life',
-        image: require('kitsu/assets/img/anime-categories/DailyLife.png'),
+        image: require('app/assets/img/anime-categories/DailyLife.png'),
       },
       {
         title: 'Fantasy',
-        image: require('kitsu/assets/img/anime-categories/Fantasy.png'),
+        image: require('app/assets/img/anime-categories/Fantasy.png'),
       },
       {
         title: 'Romance',
-        image: require('kitsu/assets/img/anime-categories/Romance.png'),
+        image: require('app/assets/img/anime-categories/Romance.png'),
       },
       {
         title: 'Science Fiction',
-        image: require('kitsu/assets/img/anime-categories/ScienceFiction.png'),
+        image: require('app/assets/img/anime-categories/ScienceFiction.png'),
       },
       {
         title: 'Sports',
-        image: require('kitsu/assets/img/anime-categories/Sports.png'),
+        image: require('app/assets/img/anime-categories/Sports.png'),
       },
     ];
   }
@@ -132,35 +132,35 @@ class TopsList extends PureComponent {
     return [
       {
         title: 'Action',
-        image: require('kitsu/assets/img/manga-categories/Action.png'),
+        image: require('app/assets/img/manga-categories/Action.png'),
       },
       {
         title: 'Adventure',
-        image: require('kitsu/assets/img/manga-categories/Adventure.png'),
+        image: require('app/assets/img/manga-categories/Adventure.png'),
       },
       {
         title: 'Comedy',
-        image: require('kitsu/assets/img/manga-categories/Comedy.png'),
+        image: require('app/assets/img/manga-categories/Comedy.png'),
       },
       {
         title: 'Daily Life',
-        image: require('kitsu/assets/img/manga-categories/DailyLife.png'),
+        image: require('app/assets/img/manga-categories/DailyLife.png'),
       },
       {
         title: 'Fantasy',
-        image: require('kitsu/assets/img/manga-categories/Fantasy.png'),
+        image: require('app/assets/img/manga-categories/Fantasy.png'),
       },
       {
         title: 'Romance',
-        image: require('kitsu/assets/img/manga-categories/Romance.png'),
+        image: require('app/assets/img/manga-categories/Romance.png'),
       },
       {
         title: 'Science Fiction',
-        image: require('kitsu/assets/img/manga-categories/ScienceFiction.png'),
+        image: require('app/assets/img/manga-categories/ScienceFiction.png'),
       },
       {
         title: 'Sports',
-        image: require('kitsu/assets/img/manga-categories/Sports.png'),
+        image: require('app/assets/img/manga-categories/Sports.png'),
       },
     ];
   }

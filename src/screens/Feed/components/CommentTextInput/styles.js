@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   textInputField: {
     flex: 1,
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 13,
     paddingHorizontal: scenePadding,
     paddingVertical: 4,

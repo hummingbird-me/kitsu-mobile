@@ -88,7 +88,7 @@ const styles = {
     textAlign: 'center',
     backgroundColor: 'transparent',
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 14,
     fontWeight: 'bold',
   },

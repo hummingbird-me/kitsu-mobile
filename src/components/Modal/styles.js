@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   modalHeaderText: {
     color: colors.white,
     fontWeight: '700',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 18,
     margin: 10,
   },

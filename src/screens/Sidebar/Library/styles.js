@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   cardText: {
     textAlign: 'center',
     paddingHorizontal: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
   },
   cardLogo: {
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
   modalText: {
     textAlign: 'center',
     paddingHorizontal: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
   },
 });

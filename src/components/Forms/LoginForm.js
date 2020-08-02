@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { Button } from 'app/components/Button/';
+import { Button } from 'app/components/Button/legacy';
 import { Input } from 'app/components/Input';
 import { PasswordInput } from 'app/components/PasswordInput';
 import * as colors from 'app/constants/colors';
@@ -23,12 +23,12 @@ const LoginForm = ({
       autoCorrect={false}
       value={data.email}
       keyboardType={'email-address'}
-      onChangeText={text => handleChange(text, 'email')}
+      onChangeText={(text) => handleChange(text, 'email')}
     />
     <PasswordInput
       placeholder="Password"
       value={data.password}
-      onChangeText={text => handleChange(text, 'password')}
+      onChangeText={(text) => handleChange(text, 'password')}
     />
     <Button
       loading={loading}

@@ -15,26 +15,26 @@ export const styles = StyleSheet.create({
   },
 
   hintText: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 10,
     color: colors.grey,
   },
   valueText: {
     // TODO: Find a better name for this and remove margin to generalize more.
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     marginTop: 4,
     color: colors.softBlack,
   },
   linkText: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     color: colors.linkBlue,
   },
   emptyText: {
     marginVertical: 4,
     marginLeft: 13,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     color: colors.white,
   },
@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 14,
   },
   selectMenu: {
@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   privacySettingsText: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     color: colors.softBlack,
     fontSize: 14,
   },
@@ -136,7 +136,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   userProfileName: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     color: colors.white,
     fontSize: 16,
     fontWeight: '600',

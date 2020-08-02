@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   text: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     marginLeft: 6,
     color: colors.softBlack,

@@ -29,14 +29,14 @@ export const styles = StyleSheet.create({
   },
   libraryCount: {
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '200',
     fontSize: 11,
   },
   ps: {
     marginVertical: 16,
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     textAlign: 'center',
     fontSize: 11,
   },

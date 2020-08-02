@@ -5,7 +5,7 @@ import { statusBarHeight } from 'app/constants/app';
 
 const text = {
   color: colors.white,
-  fontFamily: 'OpenSans',
+  fontFamily: 'OpenSans_400Regular',
   fontSize: 16,
 };
 

@@ -4,7 +4,7 @@ import { scenePadding } from 'app/screens/Feed/constants';
 
 const text = {
   color: colors.lightGrey,
-  fontFamily: 'OpenSans',
+  fontFamily: 'OpenSans_400Regular',
   fontSize: 10,
   fontWeight: '800',
 };

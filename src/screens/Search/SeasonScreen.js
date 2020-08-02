@@ -21,19 +21,19 @@ class SeasonScreen extends PureComponent {
     const seasons = [
       {
         title: 'Winter',
-        image: require('kitsu/assets/img/seasons/Winter.png'),
+        image: require('app/assets/img/seasons/Winter.png'),
       },
       {
         title: 'Spring',
-        image: require('kitsu/assets/img/seasons/Spring.png'),
+        image: require('app/assets/img/seasons/Spring.png'),
       },
       {
         title: 'Summer',
-        image: require('kitsu/assets/img/seasons/Summer.png'),
+        image: require('app/assets/img/seasons/Summer.png'),
       },
       {
         title: 'Fall',
-        image: require('kitsu/assets/img/seasons/Fall.png'),
+        image: require('app/assets/img/seasons/Fall.png'),
       },
     ];
 

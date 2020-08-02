@@ -36,7 +36,7 @@ const RowItem = ({ type, item, onPress }) => {
             />
           </View>
           <Text
-            style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: colors.softBlack }}
+            style={{ fontFamily: 'OpenSans_400Regular', fontSize: 12, marginLeft: 8, color: colors.softBlack }}
           >
             {item.name}
           </Text>
@@ -57,7 +57,7 @@ const RowItem = ({ type, item, onPress }) => {
           }}
         >
           <Text
-            style={{ fontSize: 10, fontFamily: 'OpenSans', fontWeight: '600', color: colors.white }}
+            style={{ fontSize: 10, fontFamily: 'OpenSans_400Regular', fontWeight: '600', color: colors.white }}
           >
             {buttonText}
           </Text>

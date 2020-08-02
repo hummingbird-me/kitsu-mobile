@@ -12,6 +12,6 @@ export const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     color: colors.white,
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans_400Regular',
   },
 });

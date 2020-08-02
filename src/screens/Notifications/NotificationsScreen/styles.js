@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   },
   noticeText: {
     fontWeight: '600',
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans_400Regular',
     paddingVertical: 10,
   },
   actionButton: {
@@ -38,14 +38,14 @@ export const styles = StyleSheet.create({
   },
   outerText: {
     color: 'black',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 16,
     lineHeight: 18,
     fontWeight: 'bold',
   },
   innerText: {
     color: 'black',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     lineHeight: 12,
     fontWeight: '600',
@@ -73,8 +73,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flex: 1,
   },
-  activityText: { color: '#333', fontFamily: 'OpenSans', fontSize: 12 },
+  activityText: { color: '#333', fontFamily: 'OpenSans_400Regular', fontSize: 12 },
   activityTextHighlight: { fontWeight: 'bold' },
   activityMetaContainer: { justifyContent: 'flex-start' },
-  activityMetaText: { fontSize: 11, color: '#919191', fontFamily: 'OpenSans' },
+  activityMetaText: { fontSize: 11, color: '#919191', fontFamily: 'OpenSans_400Regular' },
 });

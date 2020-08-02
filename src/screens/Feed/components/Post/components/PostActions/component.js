@@ -16,10 +16,10 @@ const actionButtonLabels = {
 /* eslint-disable global-require */
 export const PostActionButton = ({ variant, isActive, onPress }) => {
   const icons = {
-    like: require('kitsu/assets/img/feed/heart.png'),
-    liked: require('kitsu/assets/img/feed/heart__active.png'),
-    comment: require('kitsu/assets/img/feed/comment.png'),
-    share: require('kitsu/assets/img/feed/share.png'),
+    like: require('app/assets/img/feed/heart.png'),
+    liked: require('app/assets/img/feed/heart__active.png'),
+    comment: require('app/assets/img/feed/comment.png'),
+    share: require('app/assets/img/feed/share.png'),
   };
 
   return (

@@ -21,11 +21,11 @@ export const styles = StyleSheet.create({
   text: {
     color: colors.offWhite,
     fontWeight: '700',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     margin: 10,
   },
   userAvatar: { width: 40, height: 40, borderRadius: 20 },
-  activityText: { color: colors.white, fontFamily: 'OpenSans', fontSize: 12 },
+  activityText: { color: colors.white, fontFamily: 'OpenSans_400Regular', fontSize: 12 },
   activityTextHighlight: { fontWeight: 'bold', color: colors.tabRed },
 });

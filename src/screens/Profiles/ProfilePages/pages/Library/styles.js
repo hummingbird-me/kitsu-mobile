@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
     borderRadius: 3,
   },
   searchText: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     fontWeight: '600',
     color: colors.lightGrey,

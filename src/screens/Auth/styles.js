@@ -48,13 +48,13 @@ export default StyleSheet.create({
     fontSize: 12,
     color: 'white',
     marginTop: 10,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     textAlign: 'center',
   },
   forgotTitle: {
     fontSize: 21,
     color: 'white',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     textAlign: 'center',
   },
   dateModalBody: {

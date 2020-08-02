@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   },
   customHeaderText: {
     fontWeight: 'bold',
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans_400Regular',
     color: colors.white,
     fontSize: 14,
     paddingHorizontal: 8,
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
   },
   customHeaderButtonText: {
     fontWeight: '600',
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans_400Regular',
     color: colors.darkPurple,
     fontSize: 12,
   },

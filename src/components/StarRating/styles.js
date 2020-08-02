@@ -10,14 +10,14 @@ export const styles = StyleSheet.create({
   modalRatingText: {
     color: 'rgb(255, 218, 168)',
     fontSize: 40,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '700',
     marginLeft: 12,
   },
   modalNoRatingText: {
     color: colors.lightGrey,
     fontSize: 20,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontWeight: '700',
     minHeight: 36,
     textAlignVertical: 'center',

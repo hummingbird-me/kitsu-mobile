@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   settingHeader: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     fontWeight: 'normal',
     color: colors.white,
@@ -42,12 +42,12 @@ export const styles = StyleSheet.create({
     borderBottomColor: colors.lightGrey,
   },
   hintText: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 10,
     color: colors.grey,
   },
   valueText: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 13,
     marginTop: 3,
     color: colors.softBlack,

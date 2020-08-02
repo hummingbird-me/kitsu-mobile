@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   cardText: {
     textAlign: 'center',
     paddingHorizontal: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
   },
   cardLogo: {
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     textAlign: 'center',
     height: 50,
     fontSize: 14,
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
   importModalText: {
     textAlign: 'center',
     paddingHorizontal: 12,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 12,
     marginBottom: 8,
   },

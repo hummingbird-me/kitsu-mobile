@@ -39,7 +39,7 @@ export default StyleSheet.create({
     paddingRight: 8,
   },
   buttonRightText: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     fontSize: 13,
     color: colors.lightestGrey,
     backgroundColor: colors.transparent,

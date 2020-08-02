@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   contentListHeaderText: {
     fontSize: 12,
     fontWeight: '400',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     color: '#392F39',
   },
   contentListActionLink: {
@@ -35,13 +35,13 @@ export const styles = StyleSheet.create({
   contentListActionLinkText: {
     fontSize: 12,
     fontWeight: '400',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     color: '#392F39',
   },
   linkIcon: {
     fontSize: 12,
     fontWeight: '200',
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     paddingLeft: 4,
   },
   iconDark: {

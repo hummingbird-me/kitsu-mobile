@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   text: {
     fontSize: 12,
     color: colors.white,
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans_400Regular',
     backgroundColor: 'transparent',
   },
   icon: {
