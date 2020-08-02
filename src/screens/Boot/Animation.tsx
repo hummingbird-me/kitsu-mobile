@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Easing, Animated } from 'react-native';
+import { Easing, Animated, useWindowDimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import LottieView from 'lottie-react-native';
 import logoAnimation from 'app/assets/animation/kitsu.json';
@@ -19,6 +19,7 @@ export default function BootAnimation({
   onAnimationFinish: any;
   isBooted: Boolean;
 }) {
+  const { width, height } = useWindowDimensions();
   const opacity = useRef(new Animated.Value(1)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const [isLottieFinished, setLottieFinished] = useState(false);
@@ -63,10 +64,13 @@ export default function BootAnimation({
       <LottieView
         source={logoAnimation}
         autoPlay
-        autoSize
         loop={false}
         onAnimationFinish={() => setLottieFinished(true)}
-        style={{ width: '100%' }}
+        style={{
+          width,
+          height,
+          position: 'absolute',
+        }}
       />
     </Overlay>
   );

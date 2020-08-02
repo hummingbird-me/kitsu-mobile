@@ -1,9 +1,10 @@
 import React from 'react';
-import { Animated, ViewStyle } from 'react-native';
+import { Animated, ViewStyle, useWindowDimensions } from 'react-native';
 
 const Overlay: React.FunctionComponent<{
-  style: ViewStyle;
+  style: Animated.WithAnimatedValue<ViewStyle>;
 }> = ({ children, style }) => {
+  const { width, height } = useWindowDimensions();
   return (
     <Animated.View
       style={{
@@ -12,8 +13,8 @@ const Overlay: React.FunctionComponent<{
         left: 0,
         bottom: 0,
         right: 0,
-        height: '100%',
-        width: '100%',
+        height,
+        width,
         ...style,
       }}>
       {children}
