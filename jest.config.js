@@ -3,6 +3,7 @@ const { defaults: tsjPreset } = require('ts-jest/presets');
 
 module.exports = {
   ...tsjPreset,
+  testRunner: 'jest-circus/runner',
   preset: 'react-native',
   transform: {
     ...tsjPreset.transform,
