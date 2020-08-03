@@ -11,6 +11,7 @@ import InvariantViolation from 'app/errors/InvariantViolation';
 import LoginCancelled from 'app/errors/LoginCancelled';
 import Button from 'app/components/Button';
 import { fbBlue, white } from 'app/constants/colors';
+import * as Log from 'app/utils/log';
 
 export default function FacebookAuthButton({
   style = {},
@@ -83,7 +84,7 @@ export default function FacebookAuthButton({
       </Button>
     );
   } else {
-    Sentry.captureException(error);
+    Log.error(error);
     onFailure(error);
     return null;
   }

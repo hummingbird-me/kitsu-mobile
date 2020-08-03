@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, ActivityIndicator, ViewStyle } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import * as Sentry from 'sentry-expo';
 import { getRandomBytesAsync } from 'expo-random';
 
 import usePromise from 'app/hooks/usePromise';
 import { SocialAuthResponse } from './SocialAuthResponse';
 import LoginCancelled from 'app/errors/LoginCancelled';
 import InvariantViolation from 'app/errors/InvariantViolation';
+import * as Log from 'app/utils/log';
 
 export default function AppleAuthButton({
   style = {},
@@ -88,7 +88,8 @@ export default function AppleAuthButton({
   } else if (state === 'fulfilled' && !value) {
     return null;
   } else {
-    Sentry.captureException(error);
+    onFailure(error);
+    Log.error(error);
     return null;
   }
 }

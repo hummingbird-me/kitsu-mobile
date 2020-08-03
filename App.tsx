@@ -9,15 +9,10 @@ import AppNavigator from 'app/navigation/App';
 import BootScreen from 'app/screens/Boot';
 import client from 'app/utils/client';
 import { SessionContextProvider } from 'app/contexts/SessionContext';
+import { init as logInit } from 'app/utils/log';
 
 enableScreens();
-
-Sentry.init({
-  dsn:
-    'https://068b9ab849bf4485beb4884adcc5be83@o55600.ingest.sentry.io/200469',
-  enableInExpoDevelopment: false,
-  debug: true,
-});
+logInit();
 
 export default function App() {
   return (
