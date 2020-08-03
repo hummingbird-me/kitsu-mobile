@@ -3,6 +3,8 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
     "lib": ["dom", "esnext"],
+    "target": "ES2019",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
