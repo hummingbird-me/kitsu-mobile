@@ -8,7 +8,6 @@ import { white } from 'app/constants/colors';
 import { IntroNavigatorParamList } from 'app/navigation/Intro';
 import Apple from 'app/components/Auth/Apple';
 import Facebook from 'app/components/Auth/Facebook';
-import loginWithAssertion from 'app/actions/loginWithAssertion';
 
 export default function RegistrationScreen({
   navigation,
@@ -34,7 +33,7 @@ export default function RegistrationScreen({
               marginBottom: 4,
             }}
           />
-          <Facebook onSuccess={async ({ token }) => {}} />
+          <Facebook />
           <Button
             kind="outline"
             onPress={() => navigation.navigate('Auth', { page: 'SIGN_UP' })}
