@@ -11,19 +11,23 @@ import * as Log from 'app/utils/log';
 
 export default function AppleAuthButton({
   style = {},
+  onPress = () => {},
   onSuccess,
   onFailure,
+  pending = false,
 }: {
   style?: ViewStyle;
+  onPress?: () => void;
   onSuccess: (response: SocialAuthResponse) => {};
   onFailure: (error: any) => {};
+  pending: boolean;
 }) {
   const { state, value, error } = usePromise(
     () => AppleAuthentication.isAvailableAsync(),
     []
   );
 
-  if (state === 'pending') {
+  if (state === 'pending' || pending) {
     return (
       <View
         style={{
@@ -45,6 +49,8 @@ export default function AppleAuthButton({
         style={style}
         onPress={async () => {
           try {
+            onPress();
+
             const stateBytes = await getRandomBytesAsync(32);
             const decoder = new TextDecoder('utf8');
             const state = btoa(decoder.decode(stateBytes));

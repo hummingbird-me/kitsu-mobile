@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, ViewStyle, Text } from 'react-native';
 import * as Facebook from 'expo-facebook';
-import * as Sentry from 'sentry-expo';
-import { getRandomBytesAsync } from 'expo-random';
 import { FontAwesome } from '@expo/vector-icons';
 
 import usePromise from 'app/hooks/usePromise';
@@ -15,27 +13,34 @@ import * as Log from 'app/utils/log';
 
 export default function FacebookAuthButton({
   style = {},
+  onPress = () => {},
   onSuccess,
   onFailure,
+  pending = false,
 }: {
   style?: ViewStyle;
+  onPress: () => void;
   onSuccess: (response: SocialAuthResponse) => {};
   onFailure: (error: any) => {};
+  pending?: boolean;
 }) {
   const { state, error } = usePromise(
     () => Facebook.initializeAsync('325314560922421'),
     []
   );
 
-  if (state === 'pending') {
+  if (state === 'pending' || pending) {
     return (
       <View
         style={{
           ...style,
+          marginVertical: 4,
+          marginHorizontal: 16,
           backgroundColor: fbBlue,
           borderRadius: 8,
           justifyContent: 'center',
           alignItems: 'center',
+          height: 47,
         }}>
         <ActivityIndicator />
       </View>
@@ -47,6 +52,8 @@ export default function FacebookAuthButton({
         style={style}
         onPress={async () => {
           try {
+            onPress();
+
             const result = await Facebook.logInWithReadPermissionsAsync({
               permissions: ['public_profile', 'email'],
             });
