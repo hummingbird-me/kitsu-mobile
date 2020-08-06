@@ -13,7 +13,9 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
   },
   input: {
+    backgroundColor: 'transparent',
     flex: 1,
+    zIndex: 1,
     marginHorizontal: 0,
     marginVertical: 0,
   },
@@ -25,6 +27,7 @@ export const styles = StyleSheet.create({
   },
   toggle: {
     height: 47,
+    zIndex: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -1,23 +1,24 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'app/constants/colors';
+import { white, softBlack } from 'app/constants/colors';
 
 export const styles = StyleSheet.create({
   container: {
     marginVertical: 4,
     marginHorizontal: 16,
-    backgroundColor: colors.white,
+    backgroundColor: white,
     height: 47,
     borderRadius: 8,
-    borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: white,
+    padding: 2,
   },
   input: {
+    borderRadius: 4,
     height: 40,
     flex: 1,
     marginLeft: 8,
-    backgroundColor: colors.white,
+    backgroundColor: 'transparent',
     fontSize: 14,
     fontFamily: 'OpenSans_400Regular',
-    color: colors.softBlack,
+    color: softBlack,
   },
 });
