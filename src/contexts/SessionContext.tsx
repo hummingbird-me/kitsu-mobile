@@ -7,7 +7,7 @@ export type Session = {
   expiresAt: Date;
 } | null;
 
-const Context = React.createContext<{
+export const SessionContext = React.createContext<{
   session: Session;
   setSession: React.Dispatch<React.SetStateAction<Session>>;
 }>({
@@ -21,17 +21,17 @@ export const SessionContextProvider: React.FunctionComponent<{}> = function ({
   const [session, setSession] = useState<Session>(null);
 
   return (
-    <Context.Provider
+    <SessionContext.Provider
       value={{
         session,
         setSession,
       }}>
       {children}
-    </Context.Provider>
+    </SessionContext.Provider>
   );
 };
 
 export const useSession = function () {
-  const { session } = useContext(Context);
+  const { session } = useContext(SessionContext);
   return session;
 };

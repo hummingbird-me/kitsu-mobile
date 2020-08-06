@@ -10,8 +10,9 @@ import LoginCancelled from 'app/errors/LoginCancelled';
 import Button from 'app/components/Button';
 import { fbBlue, white } from 'app/constants/colors';
 import * as Log from 'app/utils/log';
+import connectAssertionLogin from './connectAssertionLogin';
 
-export default function FacebookAuthButton({
+function FacebookAuthButton({
   style = {},
   onPress = () => {},
   onSuccess,
@@ -96,3 +97,5 @@ export default function FacebookAuthButton({
     return null;
   }
 }
+
+export default connectAssertionLogin(FacebookAuthButton, 'facebook');

@@ -6,7 +6,7 @@ import { LoginFailed, NetworkError } from 'app/errors';
 export default async function loginWithAssertion(
   { token, provider }: { token: string; provider: 'apple' | 'facebook' },
   init: RequestInit = {}
-): Promise<Session> {
+): Promise<NonNullable<Session>> {
   const params = new URLSearchParams({
     grant_type: 'assertion',
     assertion: token,

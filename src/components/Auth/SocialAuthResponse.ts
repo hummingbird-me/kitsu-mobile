@@ -1,5 +1,7 @@
+export type SocialAuthProviderName = 'apple' | 'facebook';
+
 export type SocialAuthResponse = {
-  service: 'apple' | 'facebook';
+  service: SocialAuthProviderName;
   token: string;
   // These two are not always available
   suggestedUsername?: string;
