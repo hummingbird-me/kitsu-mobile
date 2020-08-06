@@ -20,6 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     backgroundColor: '#402F3F',
   },
   ios: {
+    bundleIdentifier: 'com.EverFox.AnimeTrakr',
     supportsTablet: false,
   },
   android: {
@@ -31,4 +32,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   extra: {
     apiHost: 'https://kitsu.io/',
   },
+  facebookAppId: '325314560922421',
+  facebookScheme: 'fb325314560922421',
 });
