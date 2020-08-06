@@ -36,14 +36,14 @@ export default function RegistrationScreen({
           <Facebook />
           <Button
             kind="outline"
-            onPress={() => navigation.navigate('Auth', { page: 'SIGN_UP' })}
+            onPress={() => navigation.navigate('Auth', { tab: 'sign-up' })}
             bare>
             <Text style={{ color: white, fontSize: 17, fontWeight: '600' }}>
               Create an Account
             </Text>
           </Button>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Auth', { page: 'SIGN_IN' })}>
+            onPress={() => navigation.navigate('Auth', { tab: 'sign-in' })}>
             <Text
               style={{
                 fontSize: 15,

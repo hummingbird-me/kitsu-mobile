@@ -7,7 +7,7 @@ import * as colors from 'app/constants/colors';
 
 export type IntroNavigatorParamList = {
   Intro: undefined;
-  Auth: { page: 'SIGN_IN' | 'SIGN_UP' };
+  Auth: { tab: 'sign-in' | 'sign-up' };
 };
 
 const Stack = createStackNavigator<IntroNavigatorParamList>();
