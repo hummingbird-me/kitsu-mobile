@@ -22,6 +22,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
   },
+  android: {
+    adaptiveIcon: {
+      foregroundImage: './src/assets/icon-fg.png',
+      backgroundColor: '#402F3F',
+    },
+  },
   extra: {
     apiHost: 'https://kitsu.io/',
   },
