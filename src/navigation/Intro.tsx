@@ -1,5 +1,8 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 
 import Intro from 'app/screens/Intro';
 import Auth from 'app/screens/Auth/AuthScreen';
@@ -19,6 +22,7 @@ export default function IntroNavigator() {
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: colors.darkPurple, flex: 2 },
+        ...TransitionPresets.FadeFromBottomAndroid,
       }}>
       <Stack.Screen name="Intro" component={Intro} />
       <Stack.Screen name="Auth" component={Auth} />
