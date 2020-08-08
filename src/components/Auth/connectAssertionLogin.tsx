@@ -6,6 +6,7 @@ import {
   SocialAuthResponse,
 } from './SocialAuthResponse';
 import { SessionContext } from 'app/contexts/SessionContext';
+import * as SessionStore from 'app/utils/session-store';
 
 /**
  * Wraps the auth components which provide
@@ -32,7 +33,7 @@ export default function connectAssertionLogin(
         onSuccess={async ({ token }) => {
           const session = await loginWithAssertion({ token, provider });
           setSession(session);
-          console.log(session);
+          SessionStore.save(session);
           // TODO: navigate to app screen
           setPending(false);
         }}
