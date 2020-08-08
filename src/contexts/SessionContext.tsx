@@ -1,11 +1,6 @@
 import React, { useState, useContext } from 'react';
 
-export type Session = {
-  loggedIn: true;
-  accessToken: string;
-  refreshToken: string;
-  expiresAt: Date;
-} | null;
+import { Session } from 'app/types/session';
 
 export const SessionContext = React.createContext<{
   session: Session;

@@ -1,6 +1,6 @@
 import { addSeconds } from 'date-fns';
 
-import { Session } from 'app/contexts/SessionContext';
+import { Session } from 'app/types/session';
 import { LoginFailed, NetworkError } from 'app/errors';
 
 export default async function loginWithAssertion(
