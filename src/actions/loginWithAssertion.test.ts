@@ -1,6 +1,7 @@
 // FIXME: fetchMock doesn't like being imported in ESM style???
 import fetchMock = require('fetch-mock');
 afterEach(() => fetchMock.reset());
+jest.mock('expo-constants');
 
 import { LoginFailed, NetworkError } from 'app/errors';
 
