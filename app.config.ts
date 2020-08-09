@@ -50,7 +50,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   extra: {
-    apiHost: 'https://kitsu.io/',
+    kitsu: {
+      host: 'https://kitsu.io/',
+    },
   },
   facebookAppId: '325314560922421',
   facebookScheme: 'fb325314560922421',
