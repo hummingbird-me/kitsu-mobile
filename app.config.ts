@@ -2,6 +2,26 @@ import { ExpoConfig, ConfigContext } from '@expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
+  expo: {
+    ...config.expo,
+    packagerOpts: {
+      config: 'metro.config.js',
+      sourceExts: [
+        'expo.ts',
+        'expo.tsx',
+        'expo.js',
+        'expo.jsx',
+        'ts',
+        'tsx',
+        'js',
+        'jsx',
+        'json',
+        'wasm',
+        'svg',
+        'graphql',
+      ],
+    },
+  },
   name: 'Kitsu',
   slug: 'Kitsu',
   platforms: ['ios', 'android', 'web'],
