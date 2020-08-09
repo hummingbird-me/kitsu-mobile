@@ -15,7 +15,11 @@ export default async function login({
   const body = new URLSearchParams(params);
   const response = await fetch(`${host}api/oauth/token`, {
     method: 'POST',
-    body,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body.toString(),
     ...init,
   }).catch((e) => {
     throw new NetworkError(e.message);

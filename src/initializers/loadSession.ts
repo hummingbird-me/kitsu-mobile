@@ -6,7 +6,7 @@ import * as SessionStore from 'app/utils/session-store';
 
 export default function loadSession() {
   let { setSession } = useContext(SessionContext);
-  let { state, value } = usePromise(
+  let { state } = usePromise(
     () =>
       SessionStore.load().then((value) => {
         if (value) setSession(value);
@@ -16,7 +16,6 @@ export default function loadSession() {
   );
 
   if (state === 'fulfilled') {
-    console.log('SESSION', value);
     return true;
   } else {
     return false;

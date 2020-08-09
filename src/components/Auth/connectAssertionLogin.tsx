@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 import loginWithAssertion from 'app/actions/loginWithAssertion';
 import {
@@ -25,6 +26,7 @@ export default function connectAssertionLogin(
   return () => {
     const [pending, setPending] = useState(false);
     const { setSession } = useContext(SessionContext);
+    const navigation = useNavigation();
 
     return (
       <WrappedComponent
@@ -32,10 +34,11 @@ export default function connectAssertionLogin(
         onPress={() => setPending(true)}
         onSuccess={async ({ token }) => {
           const session = await loginWithAssertion({ token, provider });
+          await SessionStore.save(session);
           setSession(session);
-          SessionStore.save(session);
           // TODO: navigate to app screen
           setPending(false);
+          navigation.navigate('ProfileDrawer');
         }}
         onFailure={(error) => {
           setPending(false);
