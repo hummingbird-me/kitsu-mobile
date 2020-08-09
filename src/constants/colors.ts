@@ -16,7 +16,7 @@ export const extraDarkPurple = '#302530';
 export const darkPurple = '#402F3F';
 export const lightPurple = '#624E5F';
 export const listBackPurple = '#443443';
-export const tabBarPuple = '#453342';
+export const tabBarPurple = '#453342';
 
 /* greens */
 export const green = '#16A085';
