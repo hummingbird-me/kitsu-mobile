@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
 
 import { IntroNavigatorParamList } from 'app/navigation/Intro';
 import * as colors from 'app/constants/colors';
@@ -32,11 +33,16 @@ export default function AuthScreen({
   const tabAnim = useRef(new Animated.Value(tab === 'sign-in' ? 0 : 1)).current;
   const setTab = (tab: 'sign-in' | 'sign-up') => {
     const toValue = tab === 'sign-in' ? 0 : 1;
-    Animated.timing(tabAnim, {
-      useNativeDriver: false,
-      toValue,
-      duration: 300,
-    }).start();
+    // Don't bother animating on shitty devices
+    if (Constants.deviceYearClass && Constants.deviceYearClass < 2015) {
+      tabAnim.setValue(toValue);
+    } else {
+      Animated.timing(tabAnim, {
+        useNativeDriver: false,
+        toValue,
+        duration: 300,
+      }).start();
+    }
     return navigation.setParams({ tab });
   };
   const [email, setEmail] = useState('');
