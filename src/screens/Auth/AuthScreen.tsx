@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -15,6 +15,9 @@ import Button from 'app/components/Button';
 import Input from 'app/components/Input';
 import PasswordInput from 'app/components/PasswordInput';
 import FacebookButton from 'app/components/Auth/Facebook';
+import loginWithPassword from 'app/actions/loginWithPassword';
+import { SessionContext } from 'app/contexts/SessionContext';
+import * as SessionStore from 'app/utils/session-store';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
@@ -46,6 +49,20 @@ export default function AuthScreen({
   const confirmPasswordInput = useRef<TextInput>(null);
   const afterEmail = tab === 'sign-up' ? usernameInput : passwordInput;
   const afterPassword = tab === 'sign-up' ? confirmPasswordInput : null;
+
+  const { setSession } = useContext(SessionContext);
+  const onSubmit =
+    tab === 'sign-up'
+      ? () => {}
+      : async () => {
+          const session = await loginWithPassword({
+            username: email,
+            password,
+          });
+          await SessionStore.save(session);
+          setSession(session);
+          navigation.navigate('ProfileDrawer');
+        };
 
   return (
     <View style={styles.container}>
@@ -133,10 +150,7 @@ export default function AuthScreen({
                   blurOnSubmit={true}
                 />
               </Animated.View>
-              <Button
-                kind="green"
-                onPress={() => console.log('Submit')}
-                style={{ marginTop: 10 }}>
+              <Button kind="green" onPress={onSubmit} style={{ marginTop: 10 }}>
                 {tab === 'sign-up' ? 'Create an account' : 'Sign in'}
               </Button>
               <FacebookButton />
