@@ -16,7 +16,6 @@ import {
   BottomTabNavigationOptions,
 } from '@react-navigation/bottom-tabs';
 import { Route } from '@react-navigation/native';
-import { useSafeArea } from 'react-native-safe-area-context';
 
 import {
   extraDarkPurple,
@@ -33,7 +32,15 @@ import {
 
 import Home from './Home';
 
-const Tab = createBottomTabNavigator();
+export type TabBarNavigatorParamList = {
+  Home: undefined;
+  Search: undefined;
+  QuickUpdate: undefined;
+  Notifications: undefined;
+  Library: undefined;
+};
+
+const Tab = createBottomTabNavigator<TabBarNavigatorParamList>();
 
 type TouchableComponent = React.FC<
   TouchableNativeFeedbackProps | TouchableWithoutFeedbackProps

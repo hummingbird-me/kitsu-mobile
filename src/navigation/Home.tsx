@@ -1,20 +1,23 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-const Stack = createStackNavigator();
+import { darkPurple } from 'app/constants/colors';
+import Feed from 'app/screens/Feed';
 
-function Placeholder() {
-  return <Text>Placeholder</Text>;
-}
+export type HomeNavigatorParamList = {
+  Feed: undefined;
+};
+
+const Stack = createStackNavigator<HomeNavigatorParamList>();
 
 export default function HomeNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        cardStyle: { backgroundColor: darkPurple, flex: 2 },
       }}>
-      <Stack.Screen name="Feed" component={Placeholder} />
+      <Stack.Screen name="Feed" component={Feed} />
     </Stack.Navigator>
   );
 }
