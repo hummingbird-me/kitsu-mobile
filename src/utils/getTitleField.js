@@ -2,7 +2,7 @@ import { lowerCase } from 'lodash';
 
 export function getTitleField(preference) {
   switch (preference) {
-    case 'localized':
+    case 'english':
       return 'en';
     case 'romanized':
       return 'en_jp';
