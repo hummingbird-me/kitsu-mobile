@@ -17,7 +17,7 @@ const mediaPreferenceKeyToTitle = (key) => {
   const mapper = {
     romanized: 'Romanized',
     canonical: 'Most Common Usage',
-    english: 'English',
+    localized: 'English',
   };
   return mapper[key] || '-';
 };
@@ -26,7 +26,7 @@ const mediaPreferenceTitleToKey = (title) => {
   switch (title) {
     case 'Romanized': return 'romanized';
     case 'Most Common Usage': return 'canonical';
-    case 'English': return 'english';
+    case 'English': return 'localized';
     default: return null;
   }
 };
