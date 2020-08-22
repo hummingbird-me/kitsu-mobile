@@ -259,7 +259,6 @@ async function renderBlurhash({
   gl.endFrameEXP();
 
   return GLView.takeSnapshotAsync(gl, {
-    flip: true,
     // @ts-ignore The types don't have WebP support
     format: Platform.OS === 'android' ? 'webp' : 'png'
   });
@@ -270,12 +269,10 @@ function tryRender() {
     isRendering = true;
     if (renderQueue.length > 0) {
       const { options, resolve, reject } = renderQueue.shift()!;
-      console.log(`STARTING ${options.blurhash}`);
 
       renderBlurhash(options)
         .then(resolve, reject)
         .finally(() => {
-          console.log(`FINISHED ${options.blurhash}`);
           isRendering = false;
           tryRender();
         });

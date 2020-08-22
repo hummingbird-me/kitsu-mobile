@@ -4,13 +4,14 @@ import { StatusBar } from 'expo-status-bar';
 import BootAnimation from './Animation';
 import loadFonts from 'app/initializers/loadFonts';
 import loadSession from 'app/initializers/loadSession';
+import setupBlurhash from 'app/initializers/setupBlurhash';
 
 const BootScreen: FunctionComponent<{}> = ({ children }) => {
   const [animationFinished, setAnimationFinished] = useState(false);
   const [booted, setBooted] = useState(false);
 
   // Check the boot requirements to see if they've finished loading
-  const BOOT_REQUIREMENTS = [loadFonts(), loadSession()];
+  const BOOT_REQUIREMENTS = [loadFonts(), loadSession(), setupBlurhash()];
   useEffect(() => {
     setBooted(BOOT_REQUIREMENTS.reduce((acc, val) => acc && val, true));
   }, BOOT_REQUIREMENTS);
