@@ -1,11 +1,5 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Image,
-  LayoutRectangle,
-  ImageProps,
-  ImageSourcePropType,
-} from 'react-native';
+import React from 'react';
+import { View, Image, ImageProps, ImageSourcePropType } from 'react-native';
 import { GLSnapshot } from 'expo-gl';
 
 import * as Console from 'app/utils/log';
@@ -46,7 +40,6 @@ export default function Blurhash({
       height,
       width,
     };
-    console.log(value);
     return <Image height={height} width={width} source={source} {...props} />;
   } else {
     if (error) Console.error(error);
