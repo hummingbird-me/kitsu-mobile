@@ -45,8 +45,8 @@ export default function Image({
   width: number;
   source: ImageType;
   resizeMode?: ImageResizeMode;
-  style: ViewStyle;
-  imageStyle: ImageStyle;
+  style?: ViewStyle;
+  imageStyle?: ImageStyle;
 }) {
   const imageOpacity = useRef(new Animated.Value(0)).current;
   const fadeInImage = () => {
