@@ -22,7 +22,7 @@ export default function usePromise<T>(
         if (mounted) setState({ state: 'fulfilled', value: value });
       },
       (error) => {
-        if (mounted) setState({ state: 'rejected', value: error });
+        if (mounted) setState({ state: 'rejected', error: error });
       }
     );
     return () => {
