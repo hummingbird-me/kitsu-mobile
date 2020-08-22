@@ -9,6 +9,7 @@ import {
 import Constants from 'expo-constants';
 
 import authenticationLink from 'app/apollo-links/authentication';
+import loggerLink from 'app/apollo-links/logger';
 import { SessionContext } from './SessionContext';
 
 const ApolloContext: React.FC = function ApolloContext({ children }) {
@@ -16,6 +17,7 @@ const ApolloContext: React.FC = function ApolloContext({ children }) {
   const host = Constants.manifest.extra.kitsu.host;
 
   const link = linkFrom([
+    loggerLink(),
     authenticationLink(sessionContext),
     new HttpLink({ uri: `${host}/api/graphql` }),
   ]);
