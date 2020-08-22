@@ -11,6 +11,7 @@ import {
 
 import TabBar from './components/TabBar';
 import Home from './Home';
+import MainNavigator from './MainNavigator';
 
 export type TabBarNavigatorParamList = {
   Home: undefined;
@@ -33,11 +34,9 @@ const tabBarIconFor = (Icon: React.FC<SvgProps>) => ({
 export default function TabBarNavigator() {
   return (
     <Tab.Navigator tabBar={TabBar}>
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{ tabBarIcon: tabBarIconFor(HomeIcon) }}
-      />
+      <Tab.Screen name="Home" options={{ tabBarIcon: tabBarIconFor(HomeIcon) }}>
+        {() => <MainNavigator initialRouteName="Feed" />}
+      </Tab.Screen>
       <Tab.Screen
         name="Search"
         component={Home}
@@ -53,7 +52,9 @@ export default function TabBarNavigator() {
         component={Home}
         options={{ tabBarIcon: tabBarIconFor(NotificationsIcon) }}
       />
-      <Tab.Screen name="Library" component={Home} />
+      <Tab.Screen name="Library">
+        {() => <MainNavigator initialRouteName="Library" />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
