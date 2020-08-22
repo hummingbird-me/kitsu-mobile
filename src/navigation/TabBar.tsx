@@ -108,6 +108,7 @@ function TabBar({
 
         return (
           <TabBarIcon
+            key={route.key}
             route={route}
             options={options}
             focused={focused}
