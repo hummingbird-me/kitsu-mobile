@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { placeholderScreen as todo } from 'app/utils/Placeholder';
+import DebugScreen from 'app/screens/Debug';
 
 export type MainNavigatorParamList = {
   Feed: undefined;
@@ -9,6 +10,7 @@ export type MainNavigatorParamList = {
   QuickUpdate: undefined;
   Notifications: undefined;
   Library: undefined;
+  Debug: undefined;
 };
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
@@ -29,6 +31,7 @@ export default function MainNavigator({
       <Stack.Screen name="QuickUpdate" component={todo('Quick Update')} />
       <Stack.Screen name="Notifications" component={todo('Notifications')} />
       <Stack.Screen name="Library" component={todo('Library')} />
+      <Stack.Screen name="Debug" component={DebugScreen} />
     </Stack.Navigator>
   );
 }

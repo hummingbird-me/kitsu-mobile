@@ -49,9 +49,9 @@ export default function TabBarNavigator() {
       />
       <Tab.Screen
         name="Notifications"
-        component={Home}
-        options={{ tabBarIcon: tabBarIconFor(NotificationsIcon) }}
-      />
+        options={{ tabBarIcon: tabBarIconFor(NotificationsIcon) }}>
+        {() => <MainNavigator initialRouteName="Debug" />}
+      </Tab.Screen>
       <Tab.Screen name="Library">
         {() => <MainNavigator initialRouteName="Library" />}
       </Tab.Screen>
