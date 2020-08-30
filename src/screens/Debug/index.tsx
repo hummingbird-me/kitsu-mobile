@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
+import i18n from 'i18next';
 
 import * as SettingsList from 'app/components/SettingsList';
 
@@ -50,6 +51,9 @@ export default function DebugScreen() {
       <SettingsList.Title title="Expo SDK">
         {Constants.manifest.sdkVersion}
       </SettingsList.Title>
+
+      <SettingsList.Group>Settings</SettingsList.Group>
+      <SettingsList.Title title="Locale">{i18n.language}</SettingsList.Title>
     </ScrollView>
   );
 }
