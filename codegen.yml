@@ -7,7 +7,6 @@ generates:
       - 'typescript'
     config:
       immutableTypes: true
-      enumsAsTypes: true
 
   src/:
     preset: near-operation-file
