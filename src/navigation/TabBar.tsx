@@ -7,6 +7,7 @@ import {
   NotificationsIcon,
   QuickUpdateIcon,
   SearchIcon,
+  LibraryIcon,
 } from 'app/assets/icons/tabs';
 
 import TabBar from './components/TabBar';
@@ -52,7 +53,9 @@ export default function TabBarNavigator() {
         options={{ tabBarIcon: tabBarIconFor(NotificationsIcon) }}>
         {() => <MainNavigator initialRouteName="Debug" />}
       </Tab.Screen>
-      <Tab.Screen name="Library">
+      <Tab.Screen
+        name="Library"
+        options={{ tabBarIcon: tabBarIconFor(LibraryIcon) }}>
         {() => <MainNavigator initialRouteName="Library" />}
       </Tab.Screen>
     </Tab.Navigator>
