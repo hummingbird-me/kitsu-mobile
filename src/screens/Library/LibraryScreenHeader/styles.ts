@@ -1,12 +1,8 @@
 import { StyleSheet } from 'react-native';
 import * as colors from 'app/constants/colors';
-import { navigationBarHeight, statusBarHeight } from 'app/constants/app';
-import { isX, paddingX } from 'app/utils/isX';
 
 export const styles = StyleSheet.create({
   headerContainer: {
-    height: navigationBarHeight + statusBarHeight + (isX ? paddingX : 0),
-    paddingTop: statusBarHeight + (isX ? paddingX : 0),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.listBackPurple,
@@ -20,7 +16,7 @@ export const styles = StyleSheet.create({
     zIndex: 2,
   },
   headerContent: {
-    flex: 1,
+    height: 44,
     width: '100%',
   },
   headerTitle: {
