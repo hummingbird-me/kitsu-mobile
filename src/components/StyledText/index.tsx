@@ -11,8 +11,8 @@ import {
   green,
   black,
 } from 'app/constants/colors';
+import { OpenSans } from 'app/constants/fonts';
 import { ViewMoreText } from 'app/components/ViewMoreText';
-import { styles } from './styles';
 
 const textSizes = {
   xxsmall: 11,
@@ -42,20 +42,20 @@ type StyledTextProps = {
   size?: keyof typeof textSizes;
 } & TextProps;
 
-export const StyledText = ({
+export const StyledText: React.FC<StyledTextProps> = ({
   size = 'default',
   color = 'light',
   bold = false,
   style,
   ...props
-}: StyledTextProps) => (
+}) => (
   <Text
     style={[
-      styles.formattedText,
       {
+        backgroundColor: 'transparent',
         fontSize: textSizes[size],
         color: textColors[color],
-        fontWeight: bold ? '700' : 'normal',
+        fontFamily: bold ? OpenSans.bold : OpenSans.normal,
         // Messes up color highlighting of links on Android
         lineHeight: textSizes[size] * 1.25,
       },
@@ -81,11 +81,11 @@ export const ViewMoreStyledText = ({
 }: ViewMoreStyledTextProps) => (
   <ViewMoreText
     textStyle={[
-      styles.formattedText,
       {
+        backgroundColor: 'transparent',
         fontSize: textSizes[size],
         color: textColors[color],
-        fontWeight: bold ? '700' : 'normal',
+        fontFamily: bold ? OpenSans.bold : OpenSans.normal,
         // Messes up color highlighting of links on Android
         lineHeight: textSizes[size] * 1.25,
       },
