@@ -1,0 +1,24 @@
+query fetchLibraryCounts($mediaType: media_type!) {
+  currentAccount {
+    id
+    profile {
+      library {
+        current(mediaType: $mediaType) {
+          totalCount
+        }
+        planned(mediaType: $mediaType) {
+          totalCount
+        }
+        completed(mediaType: $mediaType) {
+          totalCount
+        }
+        onHold(mediaType: $mediaType) {
+          totalCount
+        }
+        dropped(mediaType: $mediaType) {
+          totalCount
+        }
+      }
+    }
+  }
+}
