@@ -1,0 +1,18 @@
+overwrite: true
+schema: 'https://kitsu.io/api/graphql'
+documents: 'src/**/*.graphql'
+generates:
+  src/types/graphql.ts:
+    plugins:
+      - 'typescript'
+    config:
+      immutableTypes: true
+      enumsAsTypes: true
+
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .types.ts
+      baseTypesPath: types/graphql.ts
+    plugins:
+      - typescript-operations
