@@ -1,0 +1,20 @@
+{
+  "library": {
+    "statusWithCount": {
+      "anime": {
+        "current": "Watching <1>({count})</1>",
+        "planned": "Want To Watch <1>({count})</1>",
+        "completed": "Complete <1>({count})</1>",
+        "on_hold": "On Hold <1>({count})</1>",
+        "dropped": "Dropped <1>({count})</1>"
+      },
+      "manga": {
+        "current": "Reading <1>({count})</1>",
+        "planned": "Want To Read <1>({count})</1>",
+        "completed": "Complete <1>({count})</1>",
+        "on_hold": "On Hold <1>({count})</1>",
+        "dropped": "Dropped <1>({count})</1>"
+      }
+    }
+  }
+}
