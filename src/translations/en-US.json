@@ -1,17 +1,24 @@
 {
+  "LibraryList": {
+    "EmptyState": {
+      "title": "This Library Section is Empty!",
+      "body": "You're not tracking any of the {mediaType, select, ANIME {anime {status, select, CURRENT {you're currently watching} PLANNED {you want to watch} COMPLETED {you've completed} ON_HOLD {you have on hold} DROPPED {you've dropped}}} MANGA {manga {status, select, CURRENT {you're currently reading} PLANNED {you want to read} COMPLETED {you've completed} ON_HOLD {you have on hold} DROPPED {you've dropped}}}}. Let's find some!",
+      "button": "{mediaType, select, ANIME {{status, select, CURRENT {Top Airing} PLANNED {Upcoming} COMPLETED {Most Popular} ON_HOLD {Most Popular} DROPPED {Most Popular}} Anime} MANGA {{status, select, CURRENT {Top Publishing} PLANNED {Highest Rated} COMPLETED {Most Popular} ON_HOLD {Most Popular} DROPPED {Most Popular}} Manga}}"
+    }
+  },
   "library": {
     "statusWithCount": {
       "anime": {
         "current": "Watching <1>({count})</1>",
         "planned": "Want To Watch <1>({count})</1>",
-        "completed": "Complete <1>({count})</1>",
+        "completed": "Completed <1>({count})</1>",
         "on_hold": "On Hold <1>({count})</1>",
         "dropped": "Dropped <1>({count})</1>"
       },
       "manga": {
         "current": "Reading <1>({count})</1>",
         "planned": "Want To Read <1>({count})</1>",
-        "completed": "Complete <1>({count})</1>",
+        "completed": "Completed <1>({count})</1>",
         "on_hold": "On Hold <1>({count})</1>",
         "dropped": "Dropped <1>({count})</1>"
       }
