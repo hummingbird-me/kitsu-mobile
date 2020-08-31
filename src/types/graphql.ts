@@ -50,15 +50,16 @@ export type Account = WithTimestamps & {
   readonly updatedAt: Scalars['ISO8601DateTime'];
 };
 
-export type AgeRating = 
+export enum AgeRating {
   /** Acceptable for all ages */
-  | 'G'
+  G = 'G',
   /** Parental guidance suggested; should be safe for preteens and older */
-  | 'PG'
+  Pg = 'PG',
   /** Possible lewd or intense themes; should be safe for teens and older */
-  | 'R'
+  R = 'R',
   /** Contains adult content or themes; should only be viewed by adults */
-  | 'R18';
+  R18 = 'R18'
+}
 
 /** Generic Amount Consumed based on Media */
 export type AmountConsumed = {
@@ -332,16 +333,17 @@ export type AnimeMutationUpdateArgs = {
   input: AnimeUpdateInput;
 };
 
-export type AnimeSubtype = 
-  | 'TV'
+export enum AnimeSubtype {
+  Tv = 'TV',
   /** Spinoffs or Extras of the original. */
-  | 'SPECIAL'
+  Special = 'SPECIAL',
   /** Original Video Animation. Anime directly released to video market. */
-  | 'OVA'
+  Ova = 'OVA',
   /** Original Net Animation (Web Anime). */
-  | 'ONA'
-  | 'MOVIE'
-  | 'MUSIC';
+  Ona = 'ONA',
+  Movie = 'MOVIE',
+  Music = 'MUSIC'
+}
 
 export type AnimeUpdateInput = {
   readonly id: Scalars['ID'];
@@ -538,15 +540,16 @@ export type CharacterMediaArgs = {
   last?: Maybe<Scalars['Int']>;
 };
 
-export type CharacterRole = 
+export enum CharacterRole {
   /** A character who appears throughout a series and is a focal point of the media */
-  | 'MAIN'
+  Main = 'MAIN',
   /** A character who appears in multiple episodes but is not a main character */
-  | 'RECURRING'
+  Recurring = 'RECURRING',
   /** A background character who generally only appears in a few episodes */
-  | 'BACKGROUND'
+  Background = 'BACKGROUND',
   /** A character from a different franchise making a (usually brief) appearance */
-  | 'CAMEO';
+  Cameo = 'CAMEO'
+}
 
 /** Information about a VA (Person) voicing a Character in a Media */
 export type CharacterVoice = WithTimestamps & {
@@ -1130,17 +1133,18 @@ export type LibraryEntryMutationUpdateStatusByMediaArgs = {
   input: UpdateStatusByMediaInput;
 };
 
-export type LibraryEntryStatus = 
+export enum LibraryEntryStatus {
   /** The user is currently reading or watching this media. */
-  | 'CURRENT'
+  Current = 'CURRENT',
   /** The user plans to read or watch this media in future. */
-  | 'PLANNED'
+  Planned = 'PLANNED',
   /** The user completed this media. */
-  | 'COMPLETED'
+  Completed = 'COMPLETED',
   /** The user started but paused reading or watching this media. */
-  | 'ON_HOLD'
+  OnHold = 'ON_HOLD',
   /** The user started but chose not to finish this media. */
-  | 'DROPPED';
+  Dropped = 'DROPPED'
+}
 
 export type LibraryEntryUpdateInput = {
   readonly id: Scalars['ID'];
@@ -1252,17 +1256,18 @@ export type LibraryEventEdge = {
   readonly node?: Maybe<LibraryEvent>;
 };
 
-export type LibraryEventKind = 
+export enum LibraryEventKind {
   /** Progress or Time Spent was added/updated. */
-  | 'PROGRESSED'
+  Progressed = 'PROGRESSED',
   /** Status or Reconsuming was added/updated. */
-  | 'UPDATED'
+  Updated = 'UPDATED',
   /** Reaction was added/updated. */
-  | 'REACTED'
+  Reacted = 'REACTED',
   /** Rating was added/updated. */
-  | 'RATED'
+  Rated = 'RATED',
   /** Notes were added/updated. */
-  | 'ANNOTATED';
+  Annotated = 'ANNOTATED'
+}
 
 export type Manga = Media & WithTimestamps & {
   readonly __typename?: 'Manga';
@@ -1450,18 +1455,19 @@ export type MangaEdge = {
   readonly node?: Maybe<Manga>;
 };
 
-export type MangaSubtype = 
-  | 'MANGA'
-  | 'NOVEL'
+export enum MangaSubtype {
+  Manga = 'MANGA',
+  Novel = 'NOVEL',
   /** Chinese comics produced in China and in the Greater China region. */
-  | 'MANHUA'
-  | 'ONESHOT'
+  Manhua = 'MANHUA',
+  Oneshot = 'ONESHOT',
   /** Self published work. */
-  | 'DOUJIN'
+  Doujin = 'DOUJIN',
   /** A style of South Korean comic books and graphic novels */
-  | 'MANHWA'
+  Manhwa = 'MANHWA',
   /** Original English Language. */
-  | 'OEL';
+  Oel = 'OEL'
+}
 
 
 /** Media Mappings from External Sites (MAL, Anilist, etc..) to Kitsu. */
@@ -1500,25 +1506,26 @@ export type MappingEdge = {
   readonly node?: Maybe<Mapping>;
 };
 
-export type MappingExternalSite = 
-  | 'MYANIMELIST_ANIME'
-  | 'MYANIMELIST_MANGA'
-  | 'MYANIMELIST_CHARACTERS'
-  | 'MYANIMELIST_PEOPLE'
-  | 'MYANIMELIST_PRODUCERS'
-  | 'ANILIST_ANIME'
-  | 'ANILIST_MANGA'
-  | 'THETVDB'
-  | 'THETVDB_SERIES'
-  | 'THETVDB_SEASON'
-  | 'ANIDB'
-  | 'ANIMENEWSNETWORK'
-  | 'MANGAUPDATES'
-  | 'HULU'
-  | 'IMDB_EPISODES'
-  | 'AOZORA'
-  | 'TRAKT'
-  | 'MYDRAMALIST';
+export enum MappingExternalSite {
+  MyanimelistAnime = 'MYANIMELIST_ANIME',
+  MyanimelistManga = 'MYANIMELIST_MANGA',
+  MyanimelistCharacters = 'MYANIMELIST_CHARACTERS',
+  MyanimelistPeople = 'MYANIMELIST_PEOPLE',
+  MyanimelistProducers = 'MYANIMELIST_PRODUCERS',
+  AnilistAnime = 'ANILIST_ANIME',
+  AnilistManga = 'ANILIST_MANGA',
+  Thetvdb = 'THETVDB',
+  ThetvdbSeries = 'THETVDB_SERIES',
+  ThetvdbSeason = 'THETVDB_SEASON',
+  Anidb = 'ANIDB',
+  Animenewsnetwork = 'ANIMENEWSNETWORK',
+  Mangaupdates = 'MANGAUPDATES',
+  Hulu = 'HULU',
+  ImdbEpisodes = 'IMDB_EPISODES',
+  Aozora = 'AOZORA',
+  Trakt = 'TRAKT',
+  Mydramalist = 'MYDRAMALIST'
+}
 
 /** Objects which are Mappable */
 export type MappingItem = Anime | Category | Character | Episode | Manga | Person | Producer;
@@ -2015,15 +2022,16 @@ export type ProSubscription = WithTimestamps & {
   readonly updatedAt: Scalars['ISO8601DateTime'];
 };
 
-export type ProTier = 
+export enum ProTier {
   /** Aozora Pro (only hides ads) */
-  | 'AO_PRO'
+  AoPro = 'AO_PRO',
   /** Aozora Pro+ (only hides ads) */
-  | 'AO_PRO_PLUS'
+  AoProPlus = 'AO_PRO_PLUS',
   /** Basic tier of Kitsu Pro */
-  | 'PRO'
+  Pro = 'PRO',
   /** Top tier of Kitsu Pro */
-  | 'PATRON';
+  Patron = 'PATRON'
+}
 
 /** A company involved in the creation or localization of media */
 export type Producer = WithTimestamps & {
@@ -2489,45 +2497,49 @@ export type QuoteLineEdge = {
   readonly node?: Maybe<QuoteLine>;
 };
 
-export type RatingSystem = 
+export enum RatingSystem {
   /** 1-20 displayed as 4 smileys - Awful (1), Meh (8), Good (14) and Great (20) */
-  | 'SIMPLE'
+  Simple = 'SIMPLE',
   /** 1-20 in increments of 2 displayed as 5 stars in 0.5 star increments */
-  | 'REGULAR'
+  Regular = 'REGULAR',
   /** 1-20 in increments of 1 displayed as 1-10 in 0.5 increments */
-  | 'ADVANCED';
+  Advanced = 'ADVANCED'
+}
 
-export type RecurringBillingService = 
+export enum RecurringBillingService {
   /** Bill a credit card via Stripe */
-  | 'STRIPE'
+  Stripe = 'STRIPE',
   /** Bill a PayPal account */
-  | 'PAYPAL'
+  Paypal = 'PAYPAL',
   /** Billed through Apple In-App Subscription */
-  | 'APPLE'
+  Apple = 'APPLE',
   /** Billed through Google Play Subscription */
-  | 'GOOGLE_PLAY';
+  GooglePlay = 'GOOGLE_PLAY'
+}
 
-export type ReleaseSeason = 
+export enum ReleaseSeason {
   /** Released during the Winter season */
-  | 'WINTER'
+  Winter = 'WINTER',
   /** Released during the Spring season */
-  | 'SPRING'
+  Spring = 'SPRING',
   /** Released during the Summer season */
-  | 'SUMMER'
+  Summer = 'SUMMER',
   /** Released during the Fall season */
-  | 'FALL';
+  Fall = 'FALL'
+}
 
-export type ReleaseStatus = 
+export enum ReleaseStatus {
   /** The release date has not been announced yet */
-  | 'TBA'
+  Tba = 'TBA',
   /** This media is no longer releasing */
-  | 'FINISHED'
+  Finished = 'FINISHED',
   /** This media is currently releasing */
-  | 'CURRENT'
+  Current = 'CURRENT',
   /** This media is releasing soon */
-  | 'UPCOMING'
+  Upcoming = 'UPCOMING',
   /** This media is not released yet */
-  | 'UNRELEASED';
+  Unreleased = 'UNRELEASED'
+}
 
 /** Information about a user session */
 export type Session = {
@@ -2674,13 +2686,14 @@ export type StreamingLinkEdge = {
   readonly node?: Maybe<StreamingLink>;
 };
 
-export type TitleLanguagePreference = 
+export enum TitleLanguagePreference {
   /** Prefer the most commonly-used title for media */
-  | 'CANONICAL'
+  Canonical = 'CANONICAL',
   /** Prefer the romanized title for media */
-  | 'ROMANIZED'
+  Romanized = 'ROMANIZED',
   /** Prefer the localized title for media */
-  | 'LOCALIZED';
+  Localized = 'LOCALIZED'
+}
 
 export type TitlesList = {
   readonly __typename?: 'TitlesList';
@@ -2845,6 +2858,7 @@ export type WithTimestamps = {
 };
 
 /** これはアニメやマンガです */
-export type Media_Type = 
-  | 'ANIME'
-  | 'MANGA';
+export enum Media_Type {
+  Anime = 'ANIME',
+  Manga = 'MANGA'
+}
