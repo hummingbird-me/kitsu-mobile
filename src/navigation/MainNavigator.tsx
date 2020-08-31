@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { placeholderScreen as todo } from 'app/utils/Placeholder';
+import LibraryScreen from 'app/screens/Library';
 import DebugScreen from 'app/screens/Debug';
 
 export type MainNavigatorParamList = {
@@ -30,8 +31,12 @@ export default function MainNavigator({
       <Stack.Screen name="Search" component={todo('Search')} />
       <Stack.Screen name="QuickUpdate" component={todo('Quick Update')} />
       <Stack.Screen name="Notifications" component={todo('Notifications')} />
-      <Stack.Screen name="Library" component={todo('Library')} />
       <Stack.Screen name="Debug" component={DebugScreen} />
+      <Stack.Screen
+        name="Library"
+        component={LibraryScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
