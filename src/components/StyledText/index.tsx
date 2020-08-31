@@ -64,6 +64,7 @@ export const StyledText: React.FC<StyledTextProps> = ({
     {...props}
   />
 );
+export default StyledText;
 
 type ViewMoreStyledTextProps = StyledTextProps & {
   cacheKey?: string;
