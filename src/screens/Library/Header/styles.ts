@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.listBackPurple,
+    backgroundColor: colors.purple,
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowOffset: {
       width: 0,
@@ -13,11 +13,11 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     elevation: 3,
-    zIndex: 2,
   },
   headerContent: {
     height: 44,
     width: '100%',
+    overflow: 'hidden',
   },
   headerTitle: {
     justifyContent: 'center',

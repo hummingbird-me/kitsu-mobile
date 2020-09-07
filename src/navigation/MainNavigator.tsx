@@ -1,8 +1,15 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackScreenProps,
+} from '@react-navigation/stack';
 
 import { placeholderScreen as todo } from 'app/utils/Placeholder';
-import LibraryScreen from 'app/screens/Library';
+import {
+  Screen as LibraryScreen,
+  Params as LibraryParams,
+  screenOptions as libraryScreenOptions,
+} from 'app/screens/Library';
 import DebugScreen from 'app/screens/Debug';
 
 export type MainNavigatorParamList = {
@@ -10,9 +17,12 @@ export type MainNavigatorParamList = {
   Search: undefined;
   QuickUpdate: undefined;
   Notifications: undefined;
-  Library: undefined;
+  Library: LibraryParams;
   Debug: undefined;
 };
+export type MainNavigatorScreenProps<
+  T extends keyof MainNavigatorParamList
+> = StackScreenProps<MainNavigatorParamList, T>;
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
 
@@ -35,7 +45,7 @@ export default function MainNavigator({
       <Stack.Screen
         name="Library"
         component={LibraryScreen}
-        options={{ headerShown: false }}
+        options={libraryScreenOptions}
       />
     </Stack.Navigator>
   );

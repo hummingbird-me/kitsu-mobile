@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { ScrollView, View, ImageBackground, Image } from 'react-native';
-import { camelCase } from 'lodash';
-import { useTranslation } from 'react-i18next';
 
 import useScopedTranslation from 'app/hooks/useScopedTranslation';
 import { ohNo, mystery } from 'app/assets/img/library';

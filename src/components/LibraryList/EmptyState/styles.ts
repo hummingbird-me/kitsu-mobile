@@ -21,9 +21,10 @@ export const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     marginVertical: 10,
+    marginHorizontal: 16,
   },
   text: {
     textAlign: 'center',
     marginVertical: 10,
-  }
+  },
 });

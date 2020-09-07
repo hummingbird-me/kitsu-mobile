@@ -1,4 +1,10 @@
 {
+  "LibraryScreen": {
+    "Header": {
+      "ANIME": "Anime",
+      "MANGA": "Manga"
+    }
+  },
   "LibraryList": {
     "EmptyState": {
       "title": "This Library Section is Empty!",
