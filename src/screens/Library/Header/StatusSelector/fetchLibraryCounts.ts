@@ -6,13 +6,13 @@ import {
   FetchLibraryCountsQuery,
   FetchLibraryCountsQueryVariables,
 } from './fetchLibraryCounts.types';
-import { LibraryEntryStatus } from 'app/types/graphql';
+import { LibraryEntryStatusEnum } from 'app/types/graphql';
 
 export default function fetchLibraryCounts({
   mediaType,
 }: FetchLibraryCountsQueryVariables): ApolloQueryResult<
   {
-    [key in LibraryEntryStatus]: number;
+    [key in LibraryEntryStatusEnum]: number;
   }
 > {
   const query = useQuery<FetchLibraryCountsQuery>(fetchLibraryCountsQuery, {

@@ -5,7 +5,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackHeaderProps, StackNavigationProp } from '@react-navigation/stack';
 import { useLayout } from '@react-native-community/hooks';
 
-import { Media_Type as MediaType, LibraryEntryStatus } from 'app/types/graphql';
+import { MediaTypeEnum, LibraryEntryStatusEnum } from 'app/types/graphql';
 import useScopedTranslation from 'app/hooks/useScopedTranslation';
 import { StyledText } from 'app/components/StyledText';
 import { MainNavigatorParamList } from 'app/navigation/MainNavigator';
@@ -25,8 +25,10 @@ export default function LibraryScreenHeader({
     route: RouteProp<MainNavigatorParamList, 'Library'>;
   };
 }) {
-  const { type = MediaType.Anime, status = LibraryEntryStatus.Current } =
-    route.params ?? {};
+  const {
+    type = MediaTypeEnum.Anime,
+    status = LibraryEntryStatusEnum.Current,
+  } = route.params ?? {};
   const { t } = useScopedTranslation('LibraryScreen');
   const [typeSelectVisible, setTypeSelectVisible] = useState(false);
   const { onLayout, height } = useLayout();

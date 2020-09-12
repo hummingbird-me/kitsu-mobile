@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import useScopedTranslation from 'app/hooks/useScopedTranslation';
 import { StyledText } from 'app/components/StyledText';
-import { Media_Type as MediaType } from 'app/types/graphql';
+import { MediaTypeEnum } from 'app/types/graphql';
 
 import styles from './styles';
 
@@ -18,8 +18,8 @@ export default function LibraryTypeSelector({
 }: {
   visible: boolean;
   top: number;
-  currentType: MediaType;
-  onSelectType: (type: MediaType) => void;
+  currentType: MediaTypeEnum;
+  onSelectType: (type: MediaTypeEnum) => void;
   onDismiss: () => void;
 }) {
   const reveal = useRef(new Animated.Value(0)).current;
@@ -36,7 +36,7 @@ export default function LibraryTypeSelector({
     }).start(() => setReallyVisible(visible));
   }, [visible]);
 
-  const touchableItem = (type: MediaType) => (
+  const touchableItem = (type: MediaTypeEnum) => (
     <RectButton
       onPress={() => onSelectType(type)}
       style={styles.typeTextContainer}>
@@ -69,8 +69,8 @@ export default function LibraryTypeSelector({
                   ],
                 },
               ]}>
-              {touchableItem(MediaType.Anime)}
-              {touchableItem(MediaType.Manga)}
+              {touchableItem(MediaTypeEnum.Anime)}
+              {touchableItem(MediaTypeEnum.Manga)}
             </Animated.View>
           </Animated.View>
         </TouchableWithoutFeedback>

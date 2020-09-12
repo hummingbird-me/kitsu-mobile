@@ -4,14 +4,16 @@ import _ from 'lodash';
 
 import { MainNavigatorScreenProps } from 'app/navigation/MainNavigator';
 import EmptyState from 'app/components/LibraryList/EmptyState';
-import { LibraryEntryStatus, Media_Type as MediaType } from 'app/types/graphql';
+import { LibraryEntryStatusEnum, MediaTypeEnum } from 'app/types/graphql';
 
 export default function LibraryScreen({
   navigation,
   route,
 }: MainNavigatorScreenProps<'Library'>) {
-  const { type = MediaType.Anime, status = LibraryEntryStatus.Current } =
-    route.params ?? {};
+  const {
+    type = MediaTypeEnum.Anime,
+    status = LibraryEntryStatusEnum.Current,
+  } = route.params ?? {};
 
   return (
     <View>

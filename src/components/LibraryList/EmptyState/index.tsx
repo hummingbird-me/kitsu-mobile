@@ -5,7 +5,7 @@ import useScopedTranslation from 'app/hooks/useScopedTranslation';
 import { ohNo, mystery } from 'app/assets/img/library';
 import StyledText from 'app/components/StyledText';
 import Button from 'app/components/Button';
-import { LibraryEntryStatus, Media_Type as MediaType } from 'app/types/graphql';
+import { LibraryEntryStatusEnum, MediaTypeEnum } from 'app/types/graphql';
 
 import { styles } from './styles';
 
@@ -14,8 +14,8 @@ export default function LibraryEmptyState({
   status,
   onPress,
 }: {
-  mediaType: MediaType;
-  status: LibraryEntryStatus;
+  mediaType: MediaTypeEnum;
+  status: LibraryEntryStatusEnum;
   onPress: () => void;
 }) {
   const { t } = useScopedTranslation('LibraryList.EmptyState');

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { RectButton } from 'react-native-gesture-handler';
 
 import Touchable from 'app/components/Touchable';
-import { LibraryEntryStatus, Media_Type as MediaType } from 'app/types/graphql';
+import { LibraryEntryStatusEnum, MediaTypeEnum } from 'app/types/graphql';
 
 import fetchLibraryCounts from './fetchLibraryCounts';
 import styles from './styles';
@@ -17,11 +17,11 @@ function StatusTabBarItem({
   count,
   onPress,
 }: {
-  mediaType: MediaType;
-  status: LibraryEntryStatus;
+  mediaType: MediaTypeEnum;
+  status: LibraryEntryStatusEnum;
   selected: boolean;
   count: number;
-  onPress: (name: LibraryEntryStatus) => void;
+  onPress: (name: LibraryEntryStatusEnum) => void;
 }) {
   const i18nKey = `library.statusWithCount.${mediaType.toLowerCase()}.${status.toLowerCase()}`;
 
@@ -45,9 +45,9 @@ export default function LibraryStatusSelector({
   selected,
   onSelect,
 }: {
-  mediaType: MediaType;
-  selected: LibraryEntryStatus;
-  onSelect: (status: LibraryEntryStatus) => void;
+  mediaType: MediaTypeEnum;
+  selected: LibraryEntryStatusEnum;
+  onSelect: (status: LibraryEntryStatusEnum) => void;
 }) {
   const { loading, data } = fetchLibraryCounts({ mediaType });
 
@@ -58,7 +58,7 @@ export default function LibraryStatusSelector({
       showsHorizontalScrollIndicator={false}>
       {loading
         ? null
-        : _.map(data, (count: number, status: LibraryEntryStatus) => (
+        : _.map(data, (count: number, status: LibraryEntryStatusEnum) => (
             <StatusTabBarItem
               mediaType={mediaType}
               status={status}
