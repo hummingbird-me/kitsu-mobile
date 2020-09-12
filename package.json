@@ -7,7 +7,8 @@
     "web": "expo start --web",
     "test": "jest",
     "eject": "expo eject",
-    "generate-graphql-types": "graphql-codegen --config codegen.yml"
+    "generate-graphql-types": "graphql-codegen --config codegen.yml",
+    "validate-graphql-queries": "graphql-inspector validate --apollo --deprecated 'src/**/*.graphql' https://kitsu.io/api/graphql"
   },
   "dependencies": {
     "@apollo/client": "^3.0.2",
@@ -66,6 +67,7 @@
     "@graphql-codegen/near-operation-file-preset": "^1.17.11",
     "@graphql-codegen/typescript": "1.17.8",
     "@graphql-codegen/typescript-operations": "1.17.8",
+    "@graphql-inspector/cli": "^2.2.0",
     "@testing-library/jest-native": "^3.3.0",
     "@testing-library/react-native": "^7.0.1",
     "@types/fetch-mock": "^7.3.2",
