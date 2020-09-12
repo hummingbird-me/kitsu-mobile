@@ -38,19 +38,19 @@ export type Account = WithTimestamps & {
   /** The profile for this account */
   readonly profile: Profile;
   /** Media rating system used for the account */
-  readonly ratingSystem: RatingSystem;
+  readonly ratingSystem: RatingSystemEnum;
   /** Whether Not Safe For Work content is accessible */
   readonly sfwFilter?: Maybe<Scalars['Boolean']>;
   /** Time zone of the account */
   readonly timeZone?: Maybe<Scalars['String']>;
   /** Preferred language for media titles */
-  readonly titleLanguagePreference?: Maybe<TitleLanguagePreference>;
+  readonly titleLanguagePreference?: Maybe<TitleLanguagePreferenceEnum>;
   /** Twitter account linked to the account */
   readonly twitterId?: Maybe<Scalars['String']>;
   readonly updatedAt: Scalars['ISO8601DateTime'];
 };
 
-export enum AgeRating {
+export enum AgeRatingEnum {
   /** Acceptable for all ages */
   G = 'G',
   /** Parental guidance suggested; should be safe for preteens and older */
@@ -79,7 +79,7 @@ export type AmountConsumed = {
 export type Anime = Media & Episodic & WithTimestamps & {
   readonly __typename?: 'Anime';
   /** The recommended minimum age group for this media */
-  readonly ageRating?: Maybe<AgeRating>;
+  readonly ageRating?: Maybe<AgeRatingEnum>;
   /** An explanation of why this received the age rating it did */
   readonly ageRatingGuide?: Maybe<Scalars['String']>;
   /** The average rating of this media amongst all Kitsu users */
@@ -117,7 +117,7 @@ export type Anime = Media & Episodic & WithTimestamps & {
   /** A list of reactions for this media */
   readonly reactions: MediaReactionConnection;
   /** The season this was released in */
-  readonly season?: Maybe<ReleaseSeason>;
+  readonly season?: Maybe<ReleaseSeasonEnum>;
   /** Whether the media is Safe-for-Work */
   readonly sfw: Scalars['Boolean'];
   /** The URL-friendly identifier of this media */
@@ -127,11 +127,11 @@ export type Anime = Media & Episodic & WithTimestamps & {
   /** The day that this media first released */
   readonly startDate?: Maybe<Scalars['Date']>;
   /** The current releasing status of this media */
-  readonly status: ReleaseStatus;
+  readonly status: ReleaseStatusEnum;
   /** The stream links. */
   readonly streamingLinks: StreamingLinkConnection;
   /** A secondary type for categorizing Anime. */
-  readonly subtype: AnimeSubtype;
+  readonly subtype: AnimeSubtypeEnum;
   /** Description of when this media is expected to release */
   readonly tba?: Maybe<Scalars['String']>;
   /** The titles for this media in various locales */
@@ -271,7 +271,7 @@ export type AnimeConnection = {
 export type AnimeCreateInput = {
   readonly titles: TitlesListInput;
   readonly description: Scalars['Map'];
-  readonly ageRating?: Maybe<AgeRating>;
+  readonly ageRating?: Maybe<AgeRatingEnum>;
   readonly ageRatingGuide?: Maybe<Scalars['String']>;
   readonly tba?: Maybe<Scalars['String']>;
   readonly startDate?: Maybe<Scalars['Date']>;
@@ -333,7 +333,7 @@ export type AnimeMutationUpdateArgs = {
   input: AnimeUpdateInput;
 };
 
-export enum AnimeSubtype {
+export enum AnimeSubtypeEnum {
   Tv = 'TV',
   /** Spinoffs or Extras of the original. */
   Special = 'SPECIAL',
@@ -349,7 +349,7 @@ export type AnimeUpdateInput = {
   readonly id: Scalars['ID'];
   readonly titles?: Maybe<TitlesListInput>;
   readonly description?: Maybe<Scalars['Map']>;
-  readonly ageRating?: Maybe<AgeRating>;
+  readonly ageRating?: Maybe<AgeRatingEnum>;
   readonly ageRatingGuide?: Maybe<Scalars['String']>;
   readonly tba?: Maybe<Scalars['String']>;
   readonly startDate?: Maybe<Scalars['Date']>;
@@ -540,7 +540,7 @@ export type CharacterMediaArgs = {
   last?: Maybe<Scalars['Int']>;
 };
 
-export enum CharacterRole {
+export enum CharacterRoleEnum {
   /** A character who appears throughout a series and is a focal point of the media */
   Main = 'MAIN',
   /** A character who appears in multiple episodes but is not a main character */
@@ -695,7 +695,7 @@ export type EpisodeConnection = {
 
 export type EpisodeCreateInput = {
   readonly mediaId: Scalars['ID'];
-  readonly mediaType: Media_Type;
+  readonly mediaType: MediaTypeEnum;
   readonly titles: TitlesListInput;
   readonly number: Scalars['Int'];
   readonly description?: Maybe<Scalars['Map']>;
@@ -800,7 +800,7 @@ export type Favorite = WithTimestamps & {
   readonly createdAt: Scalars['ISO8601DateTime'];
   readonly id: Scalars['ID'];
   /** The kitsu object that is mapped */
-  readonly item: FavoriteItem;
+  readonly item: FavoriteItemUnion;
   readonly updatedAt: Scalars['ISO8601DateTime'];
   /** The user who favorited this item */
   readonly user: Profile;
@@ -829,7 +829,7 @@ export type FavoriteEdge = {
 };
 
 /** Objects which are Favoritable */
-export type FavoriteItem = Anime | Character | Manga | Person;
+export type FavoriteItemUnion = Anime | Character | Manga | Person;
 
 export type Generic = Base & {
   readonly __typename?: 'Generic';
@@ -905,8 +905,8 @@ export type LibraryAllArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
-  status?: Maybe<ReadonlyArray<LibraryEntryStatus>>;
+  mediaType: MediaTypeEnum;
+  status?: Maybe<ReadonlyArray<LibraryEntryStatusEnum>>;
 };
 
 
@@ -916,7 +916,7 @@ export type LibraryCompletedArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
+  mediaType: MediaTypeEnum;
 };
 
 
@@ -926,7 +926,7 @@ export type LibraryCurrentArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
+  mediaType: MediaTypeEnum;
 };
 
 
@@ -936,7 +936,7 @@ export type LibraryDroppedArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
+  mediaType: MediaTypeEnum;
 };
 
 
@@ -946,7 +946,7 @@ export type LibraryOnHoldArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
+  mediaType: MediaTypeEnum;
 };
 
 
@@ -956,7 +956,7 @@ export type LibraryPlannedArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
+  mediaType: MediaTypeEnum;
 };
 
 /** Information about a specific media entry for a user */
@@ -994,7 +994,7 @@ export type LibraryEntry = WithTimestamps & {
   readonly reconsuming: Scalars['Boolean'];
   /** When the user started this media. */
   readonly startedAt?: Maybe<Scalars['ISO8601DateTime']>;
-  readonly status: LibraryEntryStatus;
+  readonly status: LibraryEntryStatusEnum;
   readonly updatedAt: Scalars['ISO8601DateTime'];
   /** The user who created this library entry. */
   readonly user: Profile;
@@ -1009,7 +1009,7 @@ export type LibraryEntryEventsArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaTypes?: Maybe<ReadonlyArray<Media_Type>>;
+  mediaTypes?: Maybe<ReadonlyArray<MediaTypeEnum>>;
 };
 
 /** The connection type for LibraryEntry. */
@@ -1028,8 +1028,8 @@ export type LibraryEntryConnection = {
 export type LibraryEntryCreateInput = {
   readonly userId: Scalars['ID'];
   readonly mediaId: Scalars['ID'];
-  readonly mediaType: Media_Type;
-  readonly status: LibraryEntryStatus;
+  readonly mediaType: MediaTypeEnum;
+  readonly status: LibraryEntryStatusEnum;
   readonly progress?: Maybe<Scalars['Int']>;
   readonly private?: Maybe<Scalars['Boolean']>;
   readonly notes?: Maybe<Scalars['String']>;
@@ -1133,7 +1133,7 @@ export type LibraryEntryMutationUpdateStatusByMediaArgs = {
   input: UpdateStatusByMediaInput;
 };
 
-export enum LibraryEntryStatus {
+export enum LibraryEntryStatusEnum {
   /** The user is currently reading or watching this media. */
   Current = 'CURRENT',
   /** The user plans to read or watch this media in future. */
@@ -1148,7 +1148,7 @@ export enum LibraryEntryStatus {
 
 export type LibraryEntryUpdateInput = {
   readonly id: Scalars['ID'];
-  readonly status?: Maybe<LibraryEntryStatus>;
+  readonly status?: Maybe<LibraryEntryStatusEnum>;
   readonly progress?: Maybe<Scalars['Int']>;
   readonly private?: Maybe<Scalars['Boolean']>;
   readonly notes?: Maybe<Scalars['String']>;
@@ -1224,7 +1224,7 @@ export type LibraryEvent = WithTimestamps & {
   readonly createdAt: Scalars['ISO8601DateTime'];
   readonly id: Scalars['ID'];
   /** The type of library event. */
-  readonly kind: LibraryEventKind;
+  readonly kind: LibraryEventKindEnum;
   /** The library entry related to this library event. */
   readonly libraryEntry: LibraryEntry;
   /** The media related to this library event. */
@@ -1256,7 +1256,7 @@ export type LibraryEventEdge = {
   readonly node?: Maybe<LibraryEvent>;
 };
 
-export enum LibraryEventKind {
+export enum LibraryEventKindEnum {
   /** Progress or Time Spent was added/updated. */
   Progressed = 'PROGRESSED',
   /** Status or Reconsuming was added/updated. */
@@ -1272,7 +1272,7 @@ export enum LibraryEventKind {
 export type Manga = Media & WithTimestamps & {
   readonly __typename?: 'Manga';
   /** The recommended minimum age group for this media */
-  readonly ageRating?: Maybe<AgeRating>;
+  readonly ageRating?: Maybe<AgeRatingEnum>;
   /** An explanation of why this received the age rating it did */
   readonly ageRatingGuide?: Maybe<Scalars['String']>;
   /** The average rating of this media amongst all Kitsu users */
@@ -1310,7 +1310,7 @@ export type Manga = Media & WithTimestamps & {
   /** A list of reactions for this media */
   readonly reactions: MediaReactionConnection;
   /** The season this was released in */
-  readonly season?: Maybe<ReleaseSeason>;
+  readonly season?: Maybe<ReleaseSeasonEnum>;
   /** Whether the media is Safe-for-Work */
   readonly sfw: Scalars['Boolean'];
   /** The URL-friendly identifier of this media */
@@ -1320,9 +1320,9 @@ export type Manga = Media & WithTimestamps & {
   /** The day that this media first released */
   readonly startDate?: Maybe<Scalars['Date']>;
   /** The current releasing status of this media */
-  readonly status: ReleaseStatus;
+  readonly status: ReleaseStatusEnum;
   /** A secondary type for categorizing Manga. */
-  readonly subtype: MangaSubtype;
+  readonly subtype: MangaSubtypeEnum;
   /** Description of when this media is expected to release */
   readonly tba?: Maybe<Scalars['String']>;
   /** The titles for this media in various locales */
@@ -1455,7 +1455,7 @@ export type MangaEdge = {
   readonly node?: Maybe<Manga>;
 };
 
-export enum MangaSubtype {
+export enum MangaSubtypeEnum {
   Manga = 'MANGA',
   Novel = 'NOVEL',
   /** Chinese comics produced in China and in the Greater China region. */
@@ -1477,10 +1477,10 @@ export type Mapping = WithTimestamps & {
   /** The ID of the media from the external site. */
   readonly externalId: Scalars['ID'];
   /** The name of the site which kitsu media is being linked from. */
-  readonly externalSite: MappingExternalSite;
+  readonly externalSite: MappingExternalSiteEnum;
   readonly id: Scalars['ID'];
   /** The kitsu object that is mapped. */
-  readonly item: MappingItem;
+  readonly item: MappingItemUnion;
   readonly updatedAt: Scalars['ISO8601DateTime'];
 };
 
@@ -1506,7 +1506,7 @@ export type MappingEdge = {
   readonly node?: Maybe<Mapping>;
 };
 
-export enum MappingExternalSite {
+export enum MappingExternalSiteEnum {
   MyanimelistAnime = 'MYANIMELIST_ANIME',
   MyanimelistManga = 'MYANIMELIST_MANGA',
   MyanimelistCharacters = 'MYANIMELIST_CHARACTERS',
@@ -1528,12 +1528,12 @@ export enum MappingExternalSite {
 }
 
 /** Objects which are Mappable */
-export type MappingItem = Anime | Category | Character | Episode | Manga | Person | Producer;
+export type MappingItemUnion = Anime | Category | Character | Episode | Manga | Person | Producer;
 
 /** A media in the Kitsu database */
 export type Media = {
   /** The recommended minimum age group for this media */
-  readonly ageRating?: Maybe<AgeRating>;
+  readonly ageRating?: Maybe<AgeRatingEnum>;
   /** An explanation of why this received the age rating it did */
   readonly ageRatingGuide?: Maybe<Scalars['String']>;
   /** The average rating of this media amongst all Kitsu users */
@@ -1564,7 +1564,7 @@ export type Media = {
   /** A list of reactions for this media */
   readonly reactions: MediaReactionConnection;
   /** The season this was released in */
-  readonly season?: Maybe<ReleaseSeason>;
+  readonly season?: Maybe<ReleaseSeasonEnum>;
   /** Whether the media is Safe-for-Work */
   readonly sfw: Scalars['Boolean'];
   /** The URL-friendly identifier of this media */
@@ -1574,7 +1574,7 @@ export type Media = {
   /** The day that this media first released */
   readonly startDate?: Maybe<Scalars['Date']>;
   /** The current releasing status of this media */
-  readonly status: ReleaseStatus;
+  readonly status: ReleaseStatusEnum;
   /** Description of when this media is expected to release */
   readonly tba?: Maybe<Scalars['String']>;
   /** The titles for this media in various locales */
@@ -1664,7 +1664,7 @@ export type MediaCharacter = WithTimestamps & {
   /** The media */
   readonly media: Media;
   /** The role this character had in the media */
-  readonly role: CharacterRole;
+  readonly role: CharacterRoleEnum;
   readonly updatedAt: Scalars['ISO8601DateTime'];
   /** The voices of this character */
   readonly voices?: Maybe<CharacterVoiceConnection>;
@@ -1845,6 +1845,12 @@ export type MediaStaffEdge = {
   readonly node?: Maybe<MediaStaff>;
 };
 
+/** これはアニメやマンガです */
+export enum MediaTypeEnum {
+  Anime = 'ANIME',
+  Manga = 'MANGA'
+}
+
 export type Mutation = {
   readonly __typename?: 'Mutation';
   readonly anime?: Maybe<AnimeMutation>;
@@ -2015,14 +2021,14 @@ export type ProSubscription = WithTimestamps & {
   /** The account which is subscribed to Pro benefits */
   readonly account: Account;
   /** The billing service used for this subscription */
-  readonly billingService: RecurringBillingService;
+  readonly billingService: RecurringBillingServiceEnum;
   readonly createdAt: Scalars['ISO8601DateTime'];
   /** The tier of Pro the account is subscribed to */
-  readonly tier: ProTier;
+  readonly tier: ProTierEnum;
   readonly updatedAt: Scalars['ISO8601DateTime'];
 };
 
-export enum ProTier {
+export enum ProTierEnum {
   /** Aozora Pro (only hides ads) */
   AoPro = 'AO_PRO',
   /** Aozora Pro+ (only hides ads) */
@@ -2083,7 +2089,7 @@ export type Profile = WithTimestamps & {
   /** The message this user has submitted to the Hall of Fame */
   readonly proMessage?: Maybe<Scalars['String']>;
   /** The PRO level the user currently has */
-  readonly proTier?: Maybe<ProTier>;
+  readonly proTier?: Maybe<ProTierEnum>;
   /** Links to the user on other (social media) sites. */
   readonly siteLinks?: Maybe<SiteLinkConnection>;
   /** The URL-friendly identifier for this profile */
@@ -2142,7 +2148,7 @@ export type ProfileLibraryEventsArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  kind?: Maybe<ReadonlyArray<LibraryEventKind>>;
+  kind?: Maybe<ReadonlyArray<LibraryEventKindEnum>>;
 };
 
 
@@ -2213,6 +2219,8 @@ export type Query = {
   readonly anime: AnimeConnection;
   /** All Anime with specific Status */
   readonly animeByStatus?: Maybe<AnimeConnection>;
+  /** All Categories in the Kitsu Database */
+  readonly categories?: Maybe<CategoryConnection>;
   /** Kitsu account details. You must supply an Authorization token in header. */
   readonly currentAccount?: Maybe<Account>;
   /** Find a single Anime by ID */
@@ -2252,7 +2260,7 @@ export type Query = {
   /** List trending media within your network */
   readonly localTrending: MediaConnection;
   /** Find a specific Mapping Item by External ID and External Site. */
-  readonly lookupMapping?: Maybe<MappingItem>;
+  readonly lookupMapping?: Maybe<MappingItemUnion>;
   /** All Manga in the Kitsu database */
   readonly manga: MangaConnection;
   /** All Manga with specific Status */
@@ -2277,7 +2285,15 @@ export type QueryAnimeByStatusArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  status: ReleaseStatus;
+  status: ReleaseStatusEnum;
+};
+
+
+export type QueryCategoriesArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2365,7 +2381,7 @@ export type QueryLibraryEntriesByMediaArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
+  mediaType: MediaTypeEnum;
   mediaId: Scalars['ID'];
 };
 
@@ -2375,7 +2391,7 @@ export type QueryLibraryEntriesByMediaTypeArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  mediaType: Media_Type;
+  mediaType: MediaTypeEnum;
 };
 
 
@@ -2390,7 +2406,7 @@ export type QueryLocalTrendingArgs = {
 
 export type QueryLookupMappingArgs = {
   externalId: Scalars['ID'];
-  externalSite: MappingExternalSite;
+  externalSite: MappingExternalSiteEnum;
 };
 
 
@@ -2407,7 +2423,7 @@ export type QueryMangaByStatusArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  status: ReleaseStatus;
+  status: ReleaseStatusEnum;
 };
 
 
@@ -2497,7 +2513,7 @@ export type QuoteLineEdge = {
   readonly node?: Maybe<QuoteLine>;
 };
 
-export enum RatingSystem {
+export enum RatingSystemEnum {
   /** 1-20 displayed as 4 smileys - Awful (1), Meh (8), Good (14) and Great (20) */
   Simple = 'SIMPLE',
   /** 1-20 in increments of 2 displayed as 5 stars in 0.5 star increments */
@@ -2506,7 +2522,7 @@ export enum RatingSystem {
   Advanced = 'ADVANCED'
 }
 
-export enum RecurringBillingService {
+export enum RecurringBillingServiceEnum {
   /** Bill a credit card via Stripe */
   Stripe = 'STRIPE',
   /** Bill a PayPal account */
@@ -2517,7 +2533,7 @@ export enum RecurringBillingService {
   GooglePlay = 'GOOGLE_PLAY'
 }
 
-export enum ReleaseSeason {
+export enum ReleaseSeasonEnum {
   /** Released during the Winter season */
   Winter = 'WINTER',
   /** Released during the Spring season */
@@ -2528,7 +2544,7 @@ export enum ReleaseSeason {
   Fall = 'FALL'
 }
 
-export enum ReleaseStatus {
+export enum ReleaseStatusEnum {
   /** The release date has not been announced yet */
   Tba = 'TBA',
   /** This media is no longer releasing */
@@ -2686,7 +2702,7 @@ export type StreamingLinkEdge = {
   readonly node?: Maybe<StreamingLink>;
 };
 
-export enum TitleLanguagePreference {
+export enum TitleLanguagePreferenceEnum {
   /** Prefer the most commonly-used title for media */
   Canonical = 'CANONICAL',
   /** Prefer the romanized title for media */
@@ -2752,7 +2768,7 @@ export type UpdateProgressByIdInput = {
 
 export type UpdateProgressByMediaInput = {
   readonly mediaId: Scalars['ID'];
-  readonly mediaType: Media_Type;
+  readonly mediaType: MediaTypeEnum;
   readonly progress: Scalars['Int'];
 };
 
@@ -2764,20 +2780,20 @@ export type UpdateRatingByIdInput = {
 
 export type UpdateRatingByMediaInput = {
   readonly mediaId: Scalars['ID'];
-  readonly mediaType: Media_Type;
+  readonly mediaType: MediaTypeEnum;
   /** A number between 2 - 20 */
   readonly rating: Scalars['Int'];
 };
 
 export type UpdateStatusByIdInput = {
   readonly id: Scalars['ID'];
-  readonly status: LibraryEntryStatus;
+  readonly status: LibraryEntryStatusEnum;
 };
 
 export type UpdateStatusByMediaInput = {
   readonly mediaId: Scalars['ID'];
-  readonly mediaType: Media_Type;
-  readonly status: LibraryEntryStatus;
+  readonly mediaType: MediaTypeEnum;
+  readonly status: LibraryEntryStatusEnum;
 };
 
 
@@ -2856,9 +2872,3 @@ export type WithTimestamps = {
   readonly createdAt: Scalars['ISO8601DateTime'];
   readonly updatedAt: Scalars['ISO8601DateTime'];
 };
-
-/** これはアニメやマンガです */
-export enum Media_Type {
-  Anime = 'ANIME',
-  Manga = 'MANGA'
-}

@@ -1,7 +1,7 @@
-import * as Types from '../../types/graphql';
+import * as Types from '../../../../types/graphql';
 
 export type FetchLibraryCountsQueryVariables = Types.Exact<{
-  mediaType: Types.Media_Type;
+  mediaType: Types.MediaTypeEnum;
 }>;
 
 

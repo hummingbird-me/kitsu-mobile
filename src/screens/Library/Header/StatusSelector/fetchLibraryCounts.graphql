@@ -1,4 +1,4 @@
-query fetchLibraryCounts($mediaType: media_type!) {
+query fetchLibraryCounts($mediaType: MediaTypeEnum!) {
   currentAccount {
     id
     profile {
