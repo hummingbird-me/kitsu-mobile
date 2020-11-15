@@ -4,7 +4,7 @@
 **<p align="center">This is our mobile repository. It contains the React Native app.<br />Check out the [tools], [client], [server] and [api docs] repositories.</p>**
 
 [tools]:https://github.com/hummingbird-me/kitsu-tools
-[client]:https://github.com/hummingbird-me/hummingbird-client
+[client]:https://github.com/hummingbird-me/kitsu-web
 [server]:https://github.com/hummingbird-me/kitsu-server
 [api docs]:https://github.com/hummingbird-me/api-docs
 
