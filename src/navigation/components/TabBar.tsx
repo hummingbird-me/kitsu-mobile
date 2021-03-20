@@ -72,16 +72,20 @@ export default function TabBar({
   state,
   descriptors,
   navigation,
+  safeAreaInsets,
 }: BottomTabBarProps<BottomTabBarOptions>) {
   return (
     <View
       style={{
-        height: 50,
+        height: 50 + (safeAreaInsets?.bottom ?? 0),
         backgroundColor: tabBarPurple,
         borderColor: extraDarkPurple,
         borderTopWidth: StyleSheet.hairlineWidth,
         flexDirection: 'row',
         alignItems: 'stretch',
+        paddingBottom: safeAreaInsets?.bottom,
+        paddingRight: safeAreaInsets?.right,
+        paddingLeft: safeAreaInsets?.left,
       }}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];

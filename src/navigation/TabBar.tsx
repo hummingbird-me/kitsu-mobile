@@ -13,6 +13,7 @@ import {
 import TabBar from './components/TabBar';
 import Home from './Home';
 import MainNavigator from './MainNavigator';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export type TabBarNavigatorParamList = {
   Home: undefined;
@@ -33,8 +34,9 @@ const tabBarIconFor = (Icon: React.FC<SvgProps>) => ({
 }) => <Icon opacity={focused ? 1 : 0.5} color={color} />;
 
 export default function TabBarNavigator() {
+  const safeAreaInsets = useSafeAreaInsets();
   return (
-    <Tab.Navigator tabBar={TabBar}>
+    <Tab.Navigator tabBar={(props) => <TabBar {...props} safeAreaInsets={safeAreaInsets} />}>
       <Tab.Screen name="Home" options={{ tabBarIcon: tabBarIconFor(HomeIcon) }}>
         {() => <MainNavigator initialRouteName="Feed" />}
       </Tab.Screen>
