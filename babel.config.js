@@ -9,6 +9,15 @@ module.exports = function (api) {
       [
         'module-resolver',
         {
+          extensions: [
+            '.js',
+            '.ts',
+            '.ios.js',
+            '.ios.ts',
+            '.android.js',
+            '.android.ts',
+            '.json',
+          ],
           alias: {
             app: path.resolve(__dirname, 'src'),
           },
