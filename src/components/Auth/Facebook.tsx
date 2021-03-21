@@ -26,7 +26,7 @@ function FacebookAuthButton({
   pending?: boolean;
 }) {
   const { state, error } = usePromise(
-    () => Facebook.initializeAsync('325314560922421'),
+    () => Facebook.initializeAsync({ appId: '325314560922421' }),
     []
   );
 
