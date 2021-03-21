@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
+import { NavigatorScreenParams } from '@react-navigation/native';
 
 import { placeholderScreen as todo } from 'app/utils/Placeholder';
 import {
@@ -11,6 +12,7 @@ import {
   screenOptions as libraryScreenOptions,
 } from 'app/screens/Library';
 import DebugScreen from 'app/screens/Debug';
+import { purple } from 'app/constants/colors';
 
 export type MainNavigatorParamList = {
   Feed: undefined;
@@ -24,15 +26,22 @@ export type MainNavigatorScreenProps<
   T extends keyof MainNavigatorParamList
 > = StackScreenProps<MainNavigatorParamList, T>;
 
-const Stack = createStackNavigator<MainNavigatorParamList>();
-
 export default function MainNavigator({
   initialRouteName,
 }: {
   initialRouteName: keyof MainNavigatorParamList;
 }) {
+  const Stack = useMemo(
+    () => createStackNavigator<MainNavigatorParamList>(),
+    []
+  );
+
   return (
-    <Stack.Navigator initialRouteName={initialRouteName}>
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={{
+        cardStyle: { backgroundColor: purple },
+      }}>
       <Stack.Screen
         name="Feed"
         component={todo('Feed')}

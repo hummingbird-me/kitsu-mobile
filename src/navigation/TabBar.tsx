@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SvgProps } from 'react-native-svg';
 
@@ -12,11 +13,11 @@ import {
 
 import TabBar from './components/TabBar';
 import Home from './Home';
-import MainNavigator from './MainNavigator';
+import MainNavigator, { MainNavigatorParamList } from './MainNavigator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export type TabBarNavigatorParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<MainNavigatorParamList>;
   Search: undefined;
   QuickUpdate: undefined;
   Notifications: undefined;
@@ -36,20 +37,21 @@ const tabBarIconFor = (Icon: React.FC<SvgProps>) => ({
 export default function TabBarNavigator() {
   const safeAreaInsets = useSafeAreaInsets();
   return (
-    <Tab.Navigator tabBar={(props) => <TabBar {...props} safeAreaInsets={safeAreaInsets} />}>
+    <Tab.Navigator
+      tabBar={(props) => <TabBar {...props} safeAreaInsets={safeAreaInsets} />}>
       <Tab.Screen name="Home" options={{ tabBarIcon: tabBarIconFor(HomeIcon) }}>
         {() => <MainNavigator initialRouteName="Feed" />}
       </Tab.Screen>
       <Tab.Screen
         name="Search"
-        component={Home}
-        options={{ tabBarIcon: tabBarIconFor(SearchIcon) }}
-      />
+        options={{ tabBarIcon: tabBarIconFor(SearchIcon) }}>
+        {() => <MainNavigator initialRouteName="Search" />}
+      </Tab.Screen>
       <Tab.Screen
         name="QuickUpdate"
-        component={Home}
-        options={{ tabBarIcon: tabBarIconFor(QuickUpdateIcon) }}
-      />
+        options={{ tabBarIcon: tabBarIconFor(QuickUpdateIcon) }}>
+        {() => <MainNavigator initialRouteName="QuickUpdate" />}
+      </Tab.Screen>
       <Tab.Screen
         name="Notifications"
         options={{ tabBarIcon: tabBarIconFor(NotificationsIcon) }}>
