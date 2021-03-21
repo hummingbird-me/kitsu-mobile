@@ -1,14 +1,22 @@
 import React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { View, Text, useWindowDimensions } from 'react-native';
+import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
 import TabBar from './TabBar';
-
-const Drawer = createDrawerNavigator();
+import ProfileSidebar from './components/ProfileSidebar';
+import { extraDarkPurple } from 'app/constants/colors';
 
 export default function ProfileDrawerNavigator() {
+  const { width } = useWindowDimensions();
+
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="TabBar" component={TabBar} />
-    </Drawer.Navigator>
+    <DrawerLayout
+      drawerWidth={width * 0.8}
+      drawerPosition="left"
+      drawerType="back"
+      drawerBackgroundColor={extraDarkPurple}
+      renderNavigationView={(props) => <ProfileSidebar {...props} />}>
+      <TabBar />
+    </DrawerLayout>
   );
 }
