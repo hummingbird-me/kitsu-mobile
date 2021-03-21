@@ -49,7 +49,7 @@ export default function LibraryScreenHeader({
               {t(`Header.${type}`)}
             </StyledText>
             <Ionicons
-              name="ios-arrow-down"
+              name="chevron-down-outline"
               color="white"
               style={styles.arrowIcon}
             />

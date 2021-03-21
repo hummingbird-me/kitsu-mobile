@@ -38,7 +38,7 @@ export default function SettingsListChild({
       <View>
         <Ionicons
           style={{ marginRight: 2 }}
-          name={'ios-arrow-forward'}
+          name={'ios-chevron-forward-outline'}
           color={colors.lightGrey}
           size={16}
         />
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: OpenSans.normal,
-    fontSize: 12,
+    fontSize: 14,
     marginLeft: 6,
     color: colors.softBlack,
   },
