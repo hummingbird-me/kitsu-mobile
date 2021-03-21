@@ -1,0 +1,33 @@
+query loadAccount {
+  currentAccount {
+    id
+    language
+    ratingSystem
+    sfwFilter
+    timeZone
+    country
+    profile {
+      id
+      url
+      name
+      avatarImage {
+        blurhash
+        views {
+          name
+          url
+          height
+          width
+        }
+      }
+      bannerImage {
+        blurhash
+        views {
+          name
+          url
+          height
+          width
+        }
+      }
+    }
+  }
+}
