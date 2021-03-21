@@ -11,6 +11,12 @@ export default () =>
       if (__DEV__) {
         const query = print(_query).replace(/\s+/g, ' ');
         Console.log(query, JSON.stringify(variables));
+        if (result.errors) {
+          for (const error of result.errors) {
+            const path = error.path?.join('.');
+            Console.error(`Error: ${path}: ${error.message}`)
+          }
+        }
       } else {
         // @ts-ignore
         const operationType = _query.definitions[0].operation;
