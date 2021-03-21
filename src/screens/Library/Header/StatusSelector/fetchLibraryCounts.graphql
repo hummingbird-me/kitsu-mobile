@@ -3,19 +3,19 @@ query fetchLibraryCounts($mediaType: MediaTypeEnum!) {
     id
     profile {
       library {
-        current(mediaType: $mediaType) {
+        current(mediaType: $mediaType, first: 1) {
           totalCount
         }
-        planned(mediaType: $mediaType) {
+        planned(mediaType: $mediaType, first: 1) {
           totalCount
         }
-        completed(mediaType: $mediaType) {
+        completed(mediaType: $mediaType, first: 1) {
           totalCount
         }
-        onHold(mediaType: $mediaType) {
+        onHold(mediaType: $mediaType, first: 1) {
           totalCount
         }
-        dropped(mediaType: $mediaType) {
+        dropped(mediaType: $mediaType, first: 1) {
           totalCount
         }
       }

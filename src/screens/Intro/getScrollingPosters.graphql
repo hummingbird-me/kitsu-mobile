@@ -1,5 +1,5 @@
 query getScrollingPosters {
-  trendingAnime: globalTrending(medium: "Anime", first: 10) {
+  trendingAnime: globalTrending(mediaType: ANIME, first: 10) {
     nodes {
       posterImage {
         small: views(names: ["small"]) {
@@ -10,7 +10,7 @@ query getScrollingPosters {
       }
     }
   }
-  trendingManga: globalTrending(medium: "Manga", first: 10) {
+  trendingManga: globalTrending(mediaType: MANGA, first: 10) {
     nodes {
       posterImage {
         small: views(names: ["small"]) {
