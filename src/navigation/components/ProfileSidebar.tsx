@@ -1,17 +1,27 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, ScrollView, Animated } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLayout } from '@react-native-community/hooks';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 
 import useAccount from 'app/hooks/useAccount';
 import Image from 'app/components/Image';
-import Blurhash from 'app/components/Blurhash';
 import { Asap } from 'app/constants/fonts';
+import * as colors from 'app/constants/colors';
 import Button from 'app/components/Button';
 import { SessionContext } from 'app/contexts/SessionContext';
+import Touchable from 'app/components/Touchable';
+import * as SettingsList from 'app/components/SettingsList';
+import * as SettingsIcons from 'app/assets/icons/sidebar';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function ProfileSidebar() {
+export default function ProfileSidebar({
+  closeDrawer,
+}: {
+  closeDrawer: Function;
+}) {
   const { loading, error, data } = useAccount();
   const { top, left, bottom } = useSafeAreaInsets();
   const { onLayout, ...layout } = useLayout();
@@ -19,8 +29,14 @@ export default function ProfileSidebar() {
   const navigation = useNavigation();
 
   return (
-    <View onLayout={onLayout} style={{ flexDirection: 'column' }}>
-      <View
+    <View
+      onLayout={onLayout}
+      style={{ flexDirection: 'column', height: '100%' }}>
+      <Touchable
+        onPress={() => {
+          navigation.navigate('Home', { screen: 'Profile' });
+          closeDrawer();
+        }}
         style={{
           width: '100%',
           height: 150,
@@ -53,22 +69,62 @@ export default function ProfileSidebar() {
             imageStyle={{ borderRadius: 50 }}
             blurhashStyle={{ borderRadius: 50 }}
           />
-          <Text style={{ color: 'white', fontFamily: Asap.bold, fontSize: 20 }}>
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: Asap.bold,
+              fontSize: 20,
+              flex: 1,
+            }}>
             {data?.profile.name}
           </Text>
+          <Ionicons
+            name="chevron-forward-outline"
+            color="white"
+            size={24}
+            style={{ marginLeft: 'auto', marginRight: 15 }}
+          />
         </View>
-      </View>
-      <ScrollView style={{ height: '100%' }}>
+      </Touchable>
+      <View style={{ flex: 1 }}>
+        <SettingsList.Group>Account Settings</SettingsList.Group>
+        <SettingsList.Child image={SettingsIcons.settings}>
+          Settings & Preferences
+        </SettingsList.Child>
+        <SettingsList.Child image={SettingsIcons.bugs}>
+          Report Bugs
+        </SettingsList.Child>
+        <SettingsList.Child image={SettingsIcons.suggest}>
+          Suggest Features
+        </SettingsList.Child>
+        <SettingsList.Child image={SettingsIcons.suggest}>
+          Database Requests
+        </SettingsList.Child>
+        <SettingsList.Child image={SettingsIcons.contact}>
+          Contact Us
+        </SettingsList.Child>
         <Button
           kind="white"
           onPress={() => {
             clearSession();
             navigation.navigate('Intro');
+            closeDrawer();
           }}>
           Log out
         </Button>
-        <Text>Hewwo {data?.profile?.name}</Text>
-      </ScrollView>
+      </View>
+      <View style={{ width: layout.width, marginBottom: bottom }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Home', { screen: 'Debug' });
+            closeDrawer();
+          }}>
+          <Text style={{ textAlign: 'center', color: colors.lightPurple }}>
+            Kitsu App {Constants.manifest.version} ({Constants.nativeAppVersion}
+            )
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
