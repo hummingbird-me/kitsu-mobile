@@ -2,9 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Easing, Animated, useWindowDimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import LottieView from 'lottie-react-native';
-import logoAnimation from 'app/assets/animation/kitsu.json';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import logoAnimation from 'app/assets/animation/splash/full.json';
 import Overlay from 'app/components/overlay';
 import { darkPurple } from 'app/constants/colors';
+import usePromise from 'app/hooks/usePromise';
 
 /*
   Two things are happening in parallel: the app is booting, and the animation is
@@ -22,8 +25,13 @@ export default function BootAnimation({
   const { width, height } = useWindowDimensions();
   const opacity = useRef(new Animated.Value(1)).current;
   const scale = useRef(new Animated.Value(1)).current;
+  const animation = useRef<LottieView | null>();
   const [isLottieFinished, setLottieFinished] = useState(false);
   const [isAnimationFinished, setAnimationFinished] = useState(false);
+  const { state, value: hasSeenAnimation } = usePromise(
+    () => AsyncStorage.getItem('screens/BootAnimation:seen'),
+    []
+  );
 
   const fadeOut = () => {
     return new Promise((resolve) =>
@@ -52,6 +60,16 @@ export default function BootAnimation({
     }
   };
   useEffect(tryFadeOut, [isBooted, isLottieFinished]);
+  useEffect(() => {
+    if (state !== 'fulfilled') return;
+
+    if (hasSeenAnimation) {
+      animation?.current?.play(69, 105);
+    } else {
+      AsyncStorage.setItem('screens/BootAnimation:seen', 'true');
+      animation?.current?.play();
+    }
+  }, [state]);
 
   return (
     <Overlay
@@ -63,8 +81,9 @@ export default function BootAnimation({
       <StatusBar style="light" animated hidden={!isAnimationFinished} />
       <LottieView
         source={logoAnimation}
-        autoPlay
+        ref={(ref) => (animation.current = ref)}
         loop={false}
+        autoPlay={false}
         onAnimationFinish={() => setLottieFinished(true)}
         style={{
           width,
