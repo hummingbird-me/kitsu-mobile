@@ -11,7 +11,7 @@
     "validate-graphql-queries": "graphql-inspector validate --apollo --deprecated 'src/**/*.graphql' https://kitsu.io/api/graphql"
   },
   "dependencies": {
-    "@apollo/client": "^3.0.2",
+    "@apollo/client": "^3.4.0",
     "@expo-google-fonts/asap": "^0.1.0",
     "@expo-google-fonts/open-sans": "^0.1.0",
     "@expo/metro-config": "^0.1.59",
