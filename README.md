@@ -13,26 +13,24 @@
 ## Installation
 
 ### Prerequsites
-- [yarn](https://yarnpkg.com/lang/en/docs/install/)
-- [watchman](https://facebook.github.io/watchman/docs/install)
-- react-native-cli
-    - `yarn global add react-native-cli`
-- [cocoapods](https://guides.cocoapods.org/using/getting-started.html)
+- [Node 14+](https://nodejs.org/en/)
 
 ### Instructions
-If you run **OSX** then download the [iOS FacebookSDK](https://developers.facebook.com/docs/ios/getting-started/#download) and unzip the archive to `~/Documents/FacebookSDK`
 
-1. Run `yarn install`
-2. Run `react-native link`
-3. Run `cd ios && pod install` 
+1. Run `npm install`
+2. Run `npm start`
+3. Install Expo Go on a phone
+   - Android and iOS: https://expo.dev/client
+   - Alternatively, Expo's web interface will give you a button to open Android Emulator or iOS Simulator
+4. Scan the QR Code on your phone
 
 ### Debugging
 - Install [react-native-debugger](https://github.com/jhen0409/react-native-debugger/releases)
-- Run `yarn debug`
-- Shake the device and tap `Debug JS Remotely`
+- Run `npm start`
+- Follow the instructions here: https://docs.expo.dev/workflow/debugging/#startup
 
 ### Known Issues :warning:
-1. Packager fails to resolve aliases at first run. Do `yarn start:reset` instead of `yarn start` at first launch. Same applies when running the app with `react-native run-ios` or `react-native run-android`. Kill the packager and type `yarn start:reset`
+1. It spams the console with "Could not resolve..." error messages during bundling, but these are harmless and will not affect the app.
 
 ## Download
 
