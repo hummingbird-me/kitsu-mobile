@@ -9,6 +9,7 @@ module.exports = function (api) {
       [
         'module-resolver',
         {
+          root: './src/',
           extensions: [
             '.js',
             '.ts',
