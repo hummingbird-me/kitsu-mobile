@@ -22,7 +22,7 @@
     "@react-navigation/drawer": "^5.9.0",
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.7.0",
-    "@reduxjs/toolkit": "^1.4.0",
+    "@reduxjs/toolkit": "^1.6.0",
     "babel-plugin-import-graphql": "^2.7.0",
     "date-fns": "^2.15.0",
     "expo": "^40.0.0",
