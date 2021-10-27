@@ -27,7 +27,7 @@ const viewsToSource = (
   width: number;
   uri: string;
 }> =>
-  views.map(({ height, width, url }) => ({
+  views?.map(({ height, width, url }) => ({
     height,
     width,
     uri: url,
@@ -59,7 +59,7 @@ export default function Image({
 
   return (
     <View style={[style]}>
-      {source.blurhash ? (
+      {source?.blurhash ? (
         <Blurhash
           blurhash={source.blurhash}
           height={height}
@@ -78,10 +78,12 @@ export default function Image({
             imageStyle,
           ]}
         />
-      ) : null}
+      ) : (
+        <></>
+      )}
       <Animated.Image
         onLoad={() => fadeInImage()}
-        source={viewsToSource(source.views)}
+        source={viewsToSource(source?.views)}
         resizeMode={resizeMode}
         style={[
           {
