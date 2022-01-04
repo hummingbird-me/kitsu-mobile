@@ -410,7 +410,7 @@ export class UserLibraryEditScreenComponent extends React.Component {
             <View style={[styles.editRow, { maxHeight: 'auto' }]}>
               <View style={styles.notesSection}>
                 <Text style={[styles.editRowLabel, styles.withValueLabel]}>
-                  Personal Notes
+                  Notes
                 </Text>
                 <TextInput
                   style={[styles.editRowValue]}
