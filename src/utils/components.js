@@ -1,6 +1,4 @@
 import { Platform } from 'react-native';
-import WKWebView from 'react-native-wkwebview-reborn';
-import WebView from 'react-native-android-fullscreen-webview';
+import WebView from 'react-native-webview';
 
-
-export const WebComponent = Platform.OS === 'ios' ? WKWebView : WebView;
+export const WebComponent = WebView;

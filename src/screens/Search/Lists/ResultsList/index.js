@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import * as PropTypes from 'prop-types';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { isEqual, intersectionWith } from 'lodash';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Animated, Text, ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Animated, Text } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 

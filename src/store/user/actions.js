@@ -1,4 +1,8 @@
-import { LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import {
+  LoginManager,
+  GraphRequest,
+  GraphRequestManager,
+} from 'react-native-fbsdk-next';
 import * as types from 'kitsu/store/types';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { loginUser } from 'kitsu/store/auth/actions';

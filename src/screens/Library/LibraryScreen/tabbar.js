@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { ViewPropTypes, Platform, Dimensions, View } from 'react-native';
+import { Platform, Dimensions, View } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { PropTypes } from 'prop-types';
 import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
 

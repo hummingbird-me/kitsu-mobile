@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, TouchableOpacity, Modal as ModalRN } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { View, Text, TouchableOpacity, Modal as ModalRN } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 

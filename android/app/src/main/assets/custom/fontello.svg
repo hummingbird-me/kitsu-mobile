@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2017 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="fb-icon" unicode="&#xe800;" d="M422 676c-20 0-40-24-40-58l0-113 199 0 0-164-199 0 0-491-189 0 0 491-170 0 0 164 170 0 0 95c0 138 98 249 229 249l159 0 0-173-159 0" horiz-adv-x="583" />
+<glyph glyph-name="mail-icon" unicode="&#xe806;" d="M1230 52c0-9-2-16-4-23l-351 377 355 277 0-631 0 0z m-1043-77l356 379 135-102 129 103 361-380c-5-2-976-2-981 0l0 0z m-62 77l0 631 355-277-351-377c-2 7-4 14-4 23l0 0z m1065 709l-512-394-513 394 1025 0 0 0z m-39 79l-947 0c-87 0-158-70-158-157l0-631c0-88 71-158 158-158l947 0c87 0 158 70 158 158l0 631c0 87-71 157-158 157l0 0z" horiz-adv-x="1385" />
+
+<glyph glyph-name="password-icon" unicode="&#xe807;" d="M320-49c-126 0-228 102-228 228 0 126 102 228 228 228 121 0 228-107 228-228 0-126-102-228-228-228l0 0z m-171 627c0 94 76 171 171 171 94 0 171-77 171-171l0-172c-48 36-107 58-171 58-64 0-123-22-171-58l0 172 0 0z m399-229l0 229c0 126-102 228-228 228-126 0-228-102-228-228l0-229c-36-47-57-106-57-170 0-157 128-285 285-285 157 0 285 128 285 285 0 64-22 123-57 170l0 0z m-228-113c-16 0-29-13-29-29l0-114c0-15 13-28 29-28 16 0 28 13 28 28l0 114c0 16-12 29-28 29l0 0z" horiz-adv-x="611" />
+</font>
+</defs>
+</svg>

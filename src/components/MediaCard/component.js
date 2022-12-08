@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Text, TouchableOpacity, View, ViewPropTypes, ActivityIndicator } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';

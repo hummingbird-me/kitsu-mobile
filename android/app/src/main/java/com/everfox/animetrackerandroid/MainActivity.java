@@ -1,34 +1,33 @@
 package com.everfox.animetrackerandroid;
+
 import com.reactnativenavigation.NavigationActivity;
-import android.content.Intent;
-import android.os.Bundle;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
-import com.google.android.gms.ads.MobileAds;
+import com.facebook.react.ReactActivityDelegate;
+import com.facebook.react.ReactRootView;
 
 public class MainActivity extends NavigationActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
-        MobileAds.initialize(this, "ca-app-pub-1730996169473196~3842160171");
+  
+
+  
+
+  public static class MainActivityDelegate extends ReactActivityDelegate {
+    public MainActivityDelegate(NavigationActivity activity, String mainComponentName) {
+      super(activity, mainComponentName);
     }
 
-    /**
-     * NOTE: DISABLED because React Native Navigation handles this automatically
-     * Returns the name of the main component registered from JavaScript.
-     * This is used to schedule rendering of the component.
-     
     @Override
-    protected String getMainComponentName() {
-        return "kitsu_mobile";
+    protected ReactRootView createRootView() {
+      ReactRootView reactRootView = new ReactRootView(getContext());
+      // If you opted-in for the New Architecture, we enable the Fabric Renderer.
+      reactRootView.setIsFabric(BuildConfig.IS_NEW_ARCHITECTURE_ENABLED);
+      return reactRootView;
     }
-    */
-    
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+    protected boolean isConcurrentRootEnabled() {
+      // If you opted-in for the New Architecture, we enable Concurrent Root (i.e. React 18).
+      // More on this on https://reactjs.org/blog/2022/03/29/react-v18.html
+      return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     }
+  }
 }

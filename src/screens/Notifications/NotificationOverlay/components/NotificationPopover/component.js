@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, StatusBar, TouchableOpacity } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { View, Text, StatusBar, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/utils/notifications';

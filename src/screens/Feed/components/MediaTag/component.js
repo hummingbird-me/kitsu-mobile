@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity, ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { View, TouchableOpacity } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import PropTypes from 'prop-types';
 import { Navigation } from 'react-native-navigation';

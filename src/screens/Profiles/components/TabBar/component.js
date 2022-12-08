@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ScrollView,
-  View,
-  TouchableOpacity,
-  ViewPropTypes,
-} from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { ScrollView, View, TouchableOpacity } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 

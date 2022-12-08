@@ -1,0 +1,55 @@
+diff --git a/node_modules/react-native-scrollable-tab-view/DefaultTabBar.js b/node_modules/react-native-scrollable-tab-view/DefaultTabBar.js
+index 4cb92de..08f0dac 100644
+--- a/node_modules/react-native-scrollable-tab-view/DefaultTabBar.js
++++ b/node_modules/react-native-scrollable-tab-view/DefaultTabBar.js
+@@ -1,5 +1,6 @@
+ const React = require('react');
+-const { ViewPropTypes } = ReactNative = require('react-native');
++const { ViewPropTypes, TextPropTypes } = require('deprecated-react-native-prop-types');
++const ReactNative = require('react-native');
+ const PropTypes = require('prop-types');
+ const createReactClass = require('create-react-class');
+ const {
+@@ -18,7 +19,7 @@ const DefaultTabBar = createReactClass({
+     backgroundColor: PropTypes.string,
+     activeTextColor: PropTypes.string,
+     inactiveTextColor: PropTypes.string,
+-    textStyle: Text.propTypes.style,
++    textStyle: TextPropTypes.style,
+     tabStyle: ViewPropTypes.style,
+     renderTab: PropTypes.func,
+     underlineStyle: ViewPropTypes.style,
+diff --git a/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js b/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js
+index 5db3793..6408ffc 100644
+--- a/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js
++++ b/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js
+@@ -1,5 +1,6 @@
+ const React = require('react');
+-const { ViewPropTypes } = ReactNative = require('react-native');
++const ReactNative = require('react-native');
++const { ViewPropTypes, TextPropTypes } = require('deprecated-react-native-prop-types');
+ const PropTypes = require('prop-types');
+ const createReactClass = require('create-react-class');
+ const {
+@@ -27,7 +28,7 @@ const ScrollableTabBar = createReactClass({
+     style: ViewPropTypes.style,
+     tabStyle: ViewPropTypes.style,
+     tabsContainerStyle: ViewPropTypes.style,
+-    textStyle: Text.propTypes.style,
++    textStyle: TextPropTypes.style,
+     renderTab: PropTypes.func,
+     underlineStyle: ViewPropTypes.style,
+     onScroll: PropTypes.func,
+diff --git a/node_modules/react-native-scrollable-tab-view/index.js b/node_modules/react-native-scrollable-tab-view/index.js
+index 82e53c5..4c7e6d6 100644
+--- a/node_modules/react-native-scrollable-tab-view/index.js
++++ b/node_modules/react-native-scrollable-tab-view/index.js
+@@ -1,6 +1,7 @@
+ const React = require('react');
+ const { Component } = React;
+-const { ViewPropTypes } = ReactNative = require('react-native');
++const ReactNative = require('react-native');
++const { ViewPropTypes } = require('deprecated-react-native-prop-types');
+ const createReactClass = require('create-react-class');
+ const PropTypes = require('prop-types');
+ const {

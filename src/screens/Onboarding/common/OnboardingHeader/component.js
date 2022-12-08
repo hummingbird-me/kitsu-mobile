@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { View, Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';

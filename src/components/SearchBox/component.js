@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PropTypes } from 'prop-types';
-import { TextInput, View, ViewPropTypes, TouchableOpacity } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { TextInput, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { commonStyles } from 'kitsu/common/styles';
 import { isEmpty } from 'lodash';

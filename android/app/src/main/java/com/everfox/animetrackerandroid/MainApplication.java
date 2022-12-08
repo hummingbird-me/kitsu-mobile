@@ -1,106 +1,92 @@
 package com.everfox.animetrackerandroid;
 
 import android.app.Application;
-import android.support.multidex.MultiDex;
 import android.content.Context;
-
-import com.sbugert.rnadmob.RNAdMobPackage;
-import io.sentry.RNSentryPackage;
-import com.airship.customwebview.CustomWebViewPackage;
-import com.dylanvann.fastimage.FastImageViewPackage;
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
-import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
-import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.microsoft.codepush.react.CodePush;
-
-import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
-import com.facebook.soloader.SoLoader;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.facebook.appevents.AppEventsLogger;
-
+import com.facebook.react.PackageList;
 import com.reactnativenavigation.NavigationApplication;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactNativeHost;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
-import com.reactnativenavigation.react.ReactGateway;
-
-import java.util.Arrays;
+import com.facebook.react.ReactPackage;
+import com.facebook.react.config.ReactFeatureFlags;
+import com.facebook.soloader.SoLoader;
+import com.kitsumobile.newarchitecture.MainApplicationReactNativeHost;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class MainApplication extends NavigationApplication  {
-  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+public class MainApplication extends NavigationApplication {
 
-  protected static CallbackManager getCallbackManager() {
-    return mCallbackManager;
+  private final ReactNativeHost mReactNativeHost =
+      new NavigationReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+          return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+          @SuppressWarnings("UnnecessaryLocalVariable")
+          List<ReactPackage> packages = new PackageList(this).getPackages();
+          // Packages that cannot be autolinked yet can be added manually here, for example:
+          // packages.add(new MyReactNativePackage());
+          return packages;
+        }
+
+        @Override
+        protected String getJSMainModuleName() {
+          return "index";
+        }
+      };
+
+  private final ReactNativeHost mNewArchitectureNativeHost =
+      new MainApplicationReactNativeHost(this);
+
+  @Override
+  public ReactNativeHost getReactNativeHost() {
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      return mNewArchitectureNativeHost;
+    } else {
+      return mReactNativeHost;
+    }
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
-    FacebookSdk.sdkInitialize(getApplicationContext());
-    // If you want to use AppEventsLogger to log events.
-    AppEventsLogger.activateApp(this);
-    SoLoader.init(this, /* native exopackage */ false);
+    // If you opted-in for the New Architecture, we enable the TurboModule system
+    ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+    
+    initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
-  @Override
-  protected void attachBaseContext(Context base) {
-    super.attachBaseContext(base);
-    MultiDex.install(this);
-  }
-
-  @Override
-  protected ReactGateway createReactGateway() {
-      ReactNativeHost host = new NavigationReactNativeHost(this, isDebug(), createAdditionalReactPackages()) {
-          @Override
-          protected String getJSMainModuleName() {
-              return "index";
-          }
-
-          @Override
-          protected String getJSBundleFile() {
-            return CodePush.getJSBundleFile();
-          }
-
-          @Override
-          public boolean getUseDeveloperSupport() {
-            return BuildConfig.DEBUG;
-          }
-      };
-      return new ReactGateway(this, isDebug(), host);
-  }
-
-  @Override
-  public boolean isDebug() {
-      return BuildConfig.DEBUG;
-  }
-
-  protected List<ReactPackage> getPackages() {
-    // Add additional packages you require here
-    // No need to add RnnPackage and MainReactPackage
-    return Arrays.<ReactPackage>asList(
-          new RNAdMobPackage(),
-          new RNSentryPackage(MainApplication.this),
-          new CustomWebViewPackage(),
-          new FastImageViewPackage(),
-          new PickerPackage(),
-          new ReactNativeOneSignalPackage(),
-          new ReactNativeYouTube(),
-          new LinearGradientPackage(),
-          new FBSDKPackage(mCallbackManager),
-          new VectorIconsPackage(),
-          new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG)
-    );
-  }
-
-  @Override
-  public List<ReactPackage> createAdditionalReactPackages() {
-    return getPackages();
+  /**
+   * Loads Flipper in React Native templates. Call this in the onCreate method with something like
+   * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+   *
+   * @param context
+   * @param reactInstanceManager
+   */
+  private static void initializeFlipper(
+      Context context, ReactInstanceManager reactInstanceManager) {
+    if (BuildConfig.DEBUG) {
+      try {
+        /*
+         We use reflection here to pick up the class that initializes Flipper,
+        since Flipper library is not available in release mode
+        */
+        Class<?> aClass = Class.forName("com.kitsumobile.ReactNativeFlipper");
+        aClass
+            .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
+            .invoke(null, context, reactInstanceManager);
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      } catch (NoSuchMethodException e) {
+        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      } catch (InvocationTargetException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

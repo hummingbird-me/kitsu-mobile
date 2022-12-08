@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, ActivityIndicator, ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types';
 import { styles } from './styles';

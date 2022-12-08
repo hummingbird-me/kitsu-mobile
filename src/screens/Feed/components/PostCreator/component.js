@@ -21,7 +21,7 @@ import { giphy, photo, tag } from 'kitsu/assets/img/post-creation';
 import { prettyBytes } from 'kitsu/utils/prettyBytes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { extractUrls } from 'kitsu/utils/url';
-import { Sentry } from 'react-native-sentry';
+import * as Sentry from '@sentry/react-native';
 import { CheckBox } from 'kitsu/components/Checkbox';
 import { MediaItem } from './components/MediaItem';
 import { EmbedItem } from './components/EmbedItem';

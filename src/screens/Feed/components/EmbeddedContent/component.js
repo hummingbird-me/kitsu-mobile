@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, Platform, TouchableOpacity, Linking } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { View, Platform, TouchableOpacity, Linking } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import YouTube from 'react-native-youtube';
 import { StyledText } from 'kitsu/components/StyledText';

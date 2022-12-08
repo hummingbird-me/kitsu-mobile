@@ -1,11 +1,16 @@
-import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
+import {
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+  LoginManager,
+} from 'react-native-fbsdk-next';
 import { NetInfo } from 'react-native';
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 import { getAccountConflicts, setOnboardingComplete } from 'kitsu/store/onboarding/actions';
 import * as types from 'kitsu/store/types';
-import { Sentry } from 'react-native-sentry';
+import * as Sentry from '@sentry/react-native';
 import { isEmpty } from 'lodash';
 import { fetchAlgoliaKeys, toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
 import { Navigation } from 'react-native-navigation';

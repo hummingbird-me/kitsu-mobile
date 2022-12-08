@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Animated, View, ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Animated, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';

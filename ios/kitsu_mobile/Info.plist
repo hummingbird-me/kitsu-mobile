@@ -17,49 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>6.10.2</string>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb325314560922421</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>CodePushDeploymentKey</key>
-	<string>vHpLQFUfuH4hrSoZvao4c_IgvEAiNJyXT3z-z</string>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>b4ccb0473f2023c511cbd8fbd2dcef86b2cf7b00</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict/>
-				<key>KitName</key>
-				<string>Crashlytics</string>
-			</dict>
-		</array>
-	</dict>
 	<key>FacebookAppID</key>
 	<string>325314560922421</string>
 	<key>FacebookDisplayName</key>
 	<string>Kitsu</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbapi</string>
-		<string>fb-messenger-api</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
-	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -70,48 +38,15 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Kitsu needs to access your camera to let you upload photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Kitsu needs to access your photo library to let you upload photos.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>fontello.ttf</string>
-		<string>Andale Mono.ttf</string>
-		<string>Arial Black.ttf</string>
-		<string>Arial.ttf</string>
-		<string>Comic Sans MS.ttf</string>
-		<string>Courier New.ttf</string>
-		<string>Entypo.ttf</string>
-		<string>EvilIcons.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>Foundation.ttf</string>
-		<string>Georgia.ttf</string>
-		<string>Ionicons.ttf</string>
 		<string>MaterialIcons.ttf</string>
-		<string>Microsoft Sans Serif.ttf</string>
-		<string>Octicons.ttf</string>
-		<string>Roboto_medium.ttf</string>
-		<string>Roboto.ttf</string>
-		<string>rubicon-icon-font.ttf</string>
-		<string>Rubik-Black.ttf</string>
-		<string>Rubik-BlackItalic.ttf</string>
-		<string>Rubik-Bold.ttf</string>
-		<string>Rubik-BoldItalic.ttf</string>
-		<string>Rubik-Italic.ttf</string>
-		<string>Rubik-Light.ttf</string>
-		<string>Rubik-LightItalic.ttf</string>
-		<string>Rubik-Medium.ttf</string>
-		<string>Rubik-MediumItalic.ttf</string>
-		<string>Rubik-Regular.ttf</string>
-		<string>SanFrancisco.ttf</string>
-		<string>SanFranciscoBold.ttf</string>
-		<string>SanFranciscoThin.ttf</string>
-		<string>SF-UI-Text-Regular.otf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Skia.ttf</string>
-		<string>Times New Roman.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>Ionicons.ttf</string>
 		<string>OpenSans-Bold.ttf</string>
 		<string>OpenSans-BoldItalic.ttf</string>
 		<string>OpenSans-ExtraBold.ttf</string>
@@ -128,8 +63,6 @@
 		<string>Asap-Medium.otf</string>
 		<string>Asap-MediumItalic.otf</string>
 		<string>Asap-Regular.otf</string>
-		<string>Feather.ttf</string>
-		<string>AntDesign.ttf</string>
 		<string>FontAwesome5_Brands.ttf</string>
 		<string>FontAwesome5_Regular.ttf</string>
 		<string>FontAwesome5_Solid.ttf</string>
@@ -144,8 +77,6 @@
 	<array>
 		<string>armv7</string>
 	</array>
-	<key>UIRequiresFullScreen</key>
-	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

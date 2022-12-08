@@ -1,13 +1,16 @@
 /* global __DEV__, window */
 import { applyMiddleware, compose, createStore } from 'redux';
-import { persistStore as persistStoreRaw, persistCombineReducers } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import {
+  persistStore as persistStoreRaw,
+  persistCombineReducers,
+} from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import thunk from 'redux-thunk';
 import * as reducers from './reducers';
 
 const config = {
   key: 'primary',
-  storage,
+  storage: AsyncStorage,
   blacklist: ['anime', 'feed'],
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, TextInput, ViewPropTypes, Keyboard } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { View, TextInput, Keyboard } from 'react-native';
 import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';

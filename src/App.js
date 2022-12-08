@@ -3,8 +3,7 @@ import React, { PureComponent } from 'react';
 import { Platform, View, ActivityIndicator } from 'react-native';
 import * as colors from 'kitsu/constants/colors';
 import { identity, isNil, isEmpty } from 'lodash';
-import { Sentry } from 'react-native-sentry';
-import codePush from 'react-native-code-push';
+import * as Sentry from '@sentry/react-native';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
@@ -95,21 +94,22 @@ function onStoreUpdate() {
   // Update sentry
   if (authenticated) {
     if (!isEmpty(user)) {
-      Sentry.setUserContext({
+      Sentry.setUser({
         id: user.id,
         email: user.email,
         username: user.name,
       });
     }
   } else {
-    Sentry.clearContext();
+    Sentry.configureScope((scope) => scope.clear());
   }
 
-  Sentry.setTagsContext({
-    environment: kitsuConfig.isProduction ? 'production' : 'staging',
-    react: true,
-    version: kitsuConfig.version,
-  });
+  Sentry.setTag(
+    'environment',
+    kitsuConfig.isProduction ? 'production' : 'staging'
+  );
+  Sentry.setTag('react', true);
+  Sentry.setTag('version', kitsuConfig.version);
 
   // If the authentication state changed from `true` to `false` then take user to intro screen
   if (

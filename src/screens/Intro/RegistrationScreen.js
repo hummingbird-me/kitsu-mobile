@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, FlatList, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { LoginManager } from 'react-native-fbsdk';
+import { LoginManager } from 'react-native-fbsdk-next';
 import { connect } from 'react-redux';
 import { Button } from 'kitsu/components/Button';
 import { loginUser } from 'kitsu/store/auth/actions';
 import * as colors from 'kitsu/constants/colors';
 import { placeholderImage } from 'kitsu/assets/img/intro';
 import { kitsuConfig } from 'kitsu/config/env';
-import { Sentry } from 'react-native-sentry';
+import * as Sentry from '@sentry/react-native';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { IntroHeader } from './common/';

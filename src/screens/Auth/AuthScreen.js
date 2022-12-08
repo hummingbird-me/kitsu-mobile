@@ -10,7 +10,7 @@ import {
   DatePickerIOS,
   Linking,
 } from 'react-native';
-import { LoginManager } from 'react-native-fbsdk';
+import { LoginManager } from 'react-native-fbsdk-next';
 import * as colors from 'kitsu/constants/colors';
 import { connect } from 'react-redux';
 import { Modal } from 'kitsu/components/Modal';
@@ -22,7 +22,7 @@ import { createUser } from 'kitsu/store/user/actions';
 import { TERMS_URL } from 'kitsu/constants/app';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
-import { Sentry } from 'react-native-sentry';
+import * as Sentry from '@sentry/react-native';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import AuthWrapper from './AuthWrapper';

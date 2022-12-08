@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ViewPropTypes } from 'react-native';
+import { View } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import FastImage from 'react-native-fast-image';
 import { slidelogo } from 'kitsu/assets/img/intro/';
 import styles from './styles';
