@@ -14,16 +14,18 @@ const config = {
   blacklist: ['anime', 'feed'],
 };
 
-// if (__DEV__) {
-//   const { createLogger } = require('redux-logger');
-//   middlewares.push(createLogger({}));
-// }
+const middlewares = [thunk];
+
+if (__DEV__) {
+  const createDebugger = require('redux-flipper').default;
+  middlewares.push(createDebugger());
+}
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   persistCombineReducers(config, reducers),
   undefined,
-  composeEnhancers(applyMiddleware(thunk)),
+  composeEnhancers(applyMiddleware(...middlewares))
 );
 
 // promisify persistStore
