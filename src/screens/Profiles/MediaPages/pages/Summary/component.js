@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { FlatList, Linking, ActivityIndicator, View, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { AdMobBanner } from 'react-native-admob';
 import { Kitsu } from 'kitsu/config/api';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
@@ -224,9 +223,10 @@ class SummaryComponent extends PureComponent {
   }
 
   renderAdBanner = (margin) => {
-    if (isAoProOrKitsuPro(this.props.currentUser)) {
-      return null;
-    }
+    /*
+    if (isAoProOrKitsuPro(this.props.currentUser)) {*/
+    return null;
+    /*}
     return (
       <React.Fragment>
         <View style={{ marginTop: margin }} />
@@ -237,7 +237,7 @@ class SummaryComponent extends PureComponent {
           onAdFailedToLoad={error => console.log(error)}
         />
       </React.Fragment>
-    );
+    );*/
   };
 
   render() {

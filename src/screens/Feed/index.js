@@ -2,7 +2,6 @@ import React from 'react';
 import { StatusBar, View, StyleSheet, Platform, Dimensions, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { AdMobBanner } from 'react-native-admob';
 import PropTypes from 'prop-types';
 import URL from 'url-parse';
 import { Kitsu } from 'kitsu/config/api';
@@ -231,7 +230,7 @@ class Feed extends React.PureComponent {
               componentId={this.props.componentId}
             />
             {/* Render a AdMobBanner every 3 posts */}
-            {!isAoProOrKitsuPro(this.props.currentUser) &&
+            {/*!isAoProOrKitsuPro(this.props.currentUser) &&
               ((index + 1) % 3 === 0) && (
                 <React.Fragment>
                   <View style={{ marginTop: 10 }} />
@@ -242,7 +241,7 @@ class Feed extends React.PureComponent {
                     onAdFailedToLoad={error => console.log(error)}
                   />
                 </React.Fragment>
-              )}
+              )*/}
           </React.Fragment>
         );
       default:

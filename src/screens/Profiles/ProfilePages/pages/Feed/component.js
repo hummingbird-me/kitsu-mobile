@@ -14,7 +14,6 @@ import URL from 'url-parse';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { Button } from 'kitsu/components/Button';
 import { isEmpty, uniqBy } from 'lodash';
-import { AdMobBanner } from 'react-native-admob';
 import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
 
@@ -116,7 +115,7 @@ class FeedComponent extends PureComponent {
         componentId={this.props.componentId}
       />
       {/* Render a AdMobBanner every 3 posts */}
-      {!isAoProOrKitsuPro(this.props.currentUser) &&
+      {/*!isAoProOrKitsuPro(this.props.currentUser) &&
         ((index + 1) % 3 === 0) && (
         <React.Fragment>
           <View style={{ marginTop: 10 }} />
@@ -127,7 +126,7 @@ class FeedComponent extends PureComponent {
             onAdFailedToLoad={error => console.log(error)}
           />
         </React.Fragment>
-      )}
+        )*/}
     </React.Fragment>
   );
 
