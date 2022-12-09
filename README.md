@@ -1,47 +1,44 @@
 # Kitsu Mobile
 
 ---
+
 **<p align="center">This is our mobile repository. It contains the React Native app.<br />Check out the [tools], [web], [server] and [api docs] repositories.</p>**
 
-[tools]:https://github.com/hummingbird-me/kitsu-tools
-[web]:https://github.com/hummingbird-me/hummingbird-client
-[server]:https://github.com/hummingbird-me/kitsu-server
-[api docs]:https://github.com/hummingbird-me/api-docs
+[tools]: https://github.com/hummingbird-me/kitsu-tools
+[web]: https://github.com/hummingbird-me/hummingbird-client
+[server]: https://github.com/hummingbird-me/kitsu-server
+[api docs]: https://github.com/hummingbird-me/api-docs
 
 ---
 
-## Installation
+## Setup
 
-- [Environment Setup](https://reactnative.dev/docs/environment-setup)
-- [Running on a Device](https://reactnative.dev/docs/running-on-device)
+You can develop in one of two ways: in an emulator (recommended for general development) or on an
+actual device (good for performance testing and debugging device-specific issues)
 
-The instructions below are primarily for iOS development on macOS devices. Check the two links above for cross-platform installation on Linux and Windows.
+- [Emulator Environment Setup](https://reactnative.dev/docs/environment-setup)
+  - Follow the React Native CLI Quickstart, _not_ the Expo Go Quickstart!
+  - Make sure you pick the right OS combo that you're using!
+  - We use Ruby 2.7.3 and Node 18!
+- Or see [Running on a Device](https://reactnative.dev/docs/running-on-device)
 
-### Prerequsites
+### Running it
 
-- [yarn](https://yarnpkg.com/lang/en/docs/install/)
-- [watchman](https://facebook.github.io/watchman/docs/install)
-- react-native-cli
-    - `yarn global add react-native-cli`
-- [cocoapods](https://guides.cocoapods.org/using/getting-started.html)
-
-### Instructions
-
-If you run **OSX** then download the [iOS FacebookSDK](https://developers.facebook.com/docs/ios/getting-started/#download) and unzip the archive to `~/Documents/FacebookSDK`
-
-1. Run `yarn install`
-2. Run `react-native link`
-3. Run `cd ios && pod install` 
+1. Run `npm install`
+2. Run `bundle install`
+3. Install native dependencies:
+   - **iOS:** Go into the `ios` directory and run `bundle exec pod install`
+   - **Android:** No extra steps needed
+4. Go back to the root and run `npx react-native start`
+5. Run `npx react-native run-ios` or `npx react-native run-android` to open an emulator.
 
 ### Debugging
 
-- Install [react-native-debugger](https://github.com/jhen0409/react-native-debugger/releases)
-- Run `yarn debug`
-- Shake the device and tap `Debug JS Remotely`
-
-### Known Issues :warning:
-
-1. Packager fails to resolve aliases at first run. Do `yarn start:reset` instead of `yarn start` at first launch. Same applies when running the app with `react-native run-ios` or `react-native run-android`. Kill the packager and type `yarn start:reset`
+- Install [Flipper](https://fbflipper.com)
+- It should automatically connect when you start it
+- Install and enable useful plugins:
+  - Install the "Redux Debugger" plugin
+  - Enable the Network plugin
 
 ## Download
 
