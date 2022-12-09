@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { View, Linking, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
@@ -47,8 +46,7 @@ export function registerDeepLinks() {
   // Handle urls from `Linking`
   // Make sure we only add the listener once
   if (!registeredUrlHandler) {
-    Linking.addEventListener('url', handleUrl);
-    registeredUrlHandler = true;
+    registeredUrlHandler = Linking.addEventListener('url', handleUrl);
   }
 
   // Make sure we only register the events below once
@@ -79,7 +77,7 @@ export function registerDeepLinks() {
  * Unregister deeplinking event listeners
  */
 export function unregisterDeepLinks() {
-  Linking.removeEventListener('url', handleUrl);
+  registeredUrlHandler?.remove();
   registeredUrlHandler = false;
 }
 
