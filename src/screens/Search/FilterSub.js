@@ -28,7 +28,7 @@ class FilterSub extends Component {
     endV: 100,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.lengthRaw) {
       const { end, start } = this.props.lengthRaw;
       this.setState({

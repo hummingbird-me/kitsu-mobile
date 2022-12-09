@@ -16,7 +16,7 @@ class TopsList extends PureComponent {
     componentId: PropTypes.any.isRequired,
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { active } = this.props;
     this.props.getCategories();
     this.props.getDefaults('topAiring', active);

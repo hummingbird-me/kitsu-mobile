@@ -31,7 +31,7 @@ export class Counter extends React.PureComponent {
     value: this.props.initialValue,
   };
 
-  componentWillReceiveProps({ value }) {
+  UNSAFE_componentWillReceiveProps({ value }) {
     if (!isNil(value) && value !== this.state.value) {
       this.setState({ value });
     }

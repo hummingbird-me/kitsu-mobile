@@ -29,7 +29,7 @@ export class EmbedItem extends PureComponent {
     this.fetchEmbed(this.props.url);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.url !== nextProps.url) {
       this.fetchEmbed(nextProps.url, true);
     }

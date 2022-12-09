@@ -96,7 +96,7 @@ class QuickUpdate extends Component {
   isLoadingNextPage = false;
   hasNextPage = true;
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchLibrary();
   }
 

@@ -35,7 +35,7 @@ export class LibraryTabBar extends PureComponent {
     this.props.scrollValue.addListener(this.updateView);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (JSON.stringify(this.props.tabs) !== JSON.stringify(nextProps.tabs) && this.state.containerWidth) {
       this.setState({ containerWidth: null, });
     }

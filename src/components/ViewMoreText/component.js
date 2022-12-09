@@ -13,7 +13,7 @@ export class ViewMoreText extends PureComponent {
     shouldShowMore: false,
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { cacheKey } = this.props;
 
     // Load height from cache if possible

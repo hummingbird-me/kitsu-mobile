@@ -56,7 +56,7 @@ export class UserLibraryList extends PureComponent {
     isSwiping: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const dataProvider = new DataProvider((rowA, rowB) => {
       // If the rows are the same
       // Then we check if the data within them is different
@@ -90,7 +90,7 @@ export class UserLibraryList extends PureComponent {
     });
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     // Length is different, this will happen from a pagination event,
     // a removal of an entry, or a status update.
     const oldEntries = this.props.libraryEntries;

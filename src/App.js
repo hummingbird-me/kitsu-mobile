@@ -14,7 +14,7 @@ import store, { persistStore } from './store/config';
 import * as profile from './store/profile/actions';
 
 class App extends PureComponent {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // Register all global app events here
     store.subscribe(onStoreUpdate);
     KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, onLibraryEntryCreated);

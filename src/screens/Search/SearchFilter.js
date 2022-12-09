@@ -33,7 +33,7 @@ class SearchFilter extends Component {
     this.props.getStreamers();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.streamers !== this.props.streamers) {
       const streamers = nextProps.streamers.map(item => ({
         key: item.siteName,

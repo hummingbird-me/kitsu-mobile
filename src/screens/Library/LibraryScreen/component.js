@@ -39,11 +39,11 @@ export class LibraryScreenComponent extends PureComponent {
     typeSelectVisible: false,
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchLibrary(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { currentUser } = nextProps;
 
     // If we set the current user then fetch the library

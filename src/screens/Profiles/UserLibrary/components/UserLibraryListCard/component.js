@@ -60,7 +60,7 @@ export class UserLibraryListCard extends React.PureComponent {
     isRating: false,
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { libraryEntry, libraryType } = nextProps;
     const currentEntry = this.props.libraryEntry;
 

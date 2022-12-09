@@ -142,7 +142,7 @@ class PostCreator extends React.PureComponent {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
 

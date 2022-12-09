@@ -24,7 +24,7 @@ export class ProgressBar extends React.Component {
     fillPercentage: new Animated.Value(this.props.fillPercentage),
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.update(nextProps.fillPercentage);
   }
 

@@ -46,7 +46,7 @@ class AuthScreen extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { signingIn, signingUp, loginError, signupError, fbuser } = nextProps;
     if (fbuser && fbuser.name && fbuser.name !== (this.props.fbuser && this.props.fbuser.name)) {
       this.populateFB(fbuser);

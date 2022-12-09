@@ -83,7 +83,7 @@ class ProfilePage extends PureComponent {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { userId } = this.props;
 
     if (!userId) {

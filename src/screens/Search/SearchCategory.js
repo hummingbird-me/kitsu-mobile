@@ -33,7 +33,7 @@ class SearchCategory extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.getCategories();
   }
 

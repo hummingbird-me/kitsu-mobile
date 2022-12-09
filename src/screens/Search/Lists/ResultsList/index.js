@@ -31,7 +31,7 @@ export class ResultsList extends PureComponent {
     layoutProvider: null,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const rowHasChanged = this.props.rowHasChanged || this.rowHasChanged;
     const dataProvider = new DataProvider(rowHasChanged).cloneWithRows(this.props.hits.slice());
 
@@ -58,7 +58,7 @@ export class ResultsList extends PureComponent {
     this.setState({ dataProvider, layoutProvider });
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     // Length is different
     const oldHits = this.props.hits;
     const newHits = newProps.hits;

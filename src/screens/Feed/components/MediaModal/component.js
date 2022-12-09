@@ -42,7 +42,7 @@ class MediaModal extends PureComponent {
     this.doSearch(this.state.query, this.state.page);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { algoliaKeys } = nextProps;
     // Check if we get new algolia keys
     if (this.props.algoliaKeys !== algoliaKeys && algoliaKeys) {

@@ -55,7 +55,7 @@ class NotificationsScreen extends PureComponent {
     loadingOneSignalNotification: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // Register all global app events here
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.addEventListener('received', this.onReceived);
@@ -94,7 +94,7 @@ class NotificationsScreen extends PureComponent {
     OneSignal.clearOneSignalNotifications();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.notifications, nextProps.notifications)) {
       this.updateNotificationCount(nextProps);
     }

@@ -31,7 +31,7 @@ class SearchResults extends Component {
     this.getData();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.results !== this.props.results) {
       this.setState({ refreshing: false });
     }

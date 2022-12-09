@@ -49,12 +49,12 @@ export class PostImage extends PureComponent {
     loading: true,
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.mounted = true;
     this.fetchImageSize();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.uri !== nextProps.uri ||
         this.props.width !== nextProps.width ||
         this.props.height !== nextProps.height

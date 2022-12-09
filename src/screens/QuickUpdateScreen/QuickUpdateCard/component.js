@@ -53,7 +53,7 @@ export default class QuickUpdateCard extends PureComponent {
     updateText: null,
   };
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     // This means they've likely reloaded the data.
     if (this.props.data !== nextProps.data) {
       this.setState({

@@ -31,7 +31,7 @@ export class EditModal extends Component {
   }
 
   // This should fire each time the Modal is opened & closed.
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this.setState({
       changeset: cloneDeep(this.props.user),
       changes: {},

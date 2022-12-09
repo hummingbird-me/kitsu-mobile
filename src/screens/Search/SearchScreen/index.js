@@ -31,14 +31,14 @@ class SearchScreen extends PureComponent {
     },
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.updateScenes();
     this.unsubscribe = EventBus.subscribe(Screens.SEARCH, (page) => {
       if (this.tabView) this.tabView.goToPage(page);
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.algoliaKeys, nextProps.algoliaKeys)) {
       this.updateScenes(nextProps.algoliaKeys);
     }
