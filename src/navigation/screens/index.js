@@ -33,9 +33,19 @@ const routes = {
   [Screens.INITIAL]: App,
 };
 
-
 function registerComponent(name, callback) {
-  Navigation.registerComponentWithRedux(name, callback, Provider, store);
+  const Component = callback();
+  Navigation.registerComponent(
+    name,
+    () => (props) => {
+      return (
+        <Provider store={store}>
+          <Component {...props} />
+        </Provider>
+      );
+    },
+    () => <Component />
+  );
 }
 
 /**
@@ -43,6 +53,8 @@ function registerComponent(name, callback) {
  */
 export function registerScreens() {
   Object.keys(routes).forEach((key) => {
-    registerComponent(key, () => withNotifications(withActivityIndicatorHOC(routes[key])));
+    registerComponent(key, () => {
+      return withNotifications(withActivityIndicatorHOC(routes[key]));
+    });
   });
 }
