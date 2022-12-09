@@ -8,7 +8,7 @@ import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { MediaCard } from 'kitsu/components/MediaCard';
-import Swipeable from 'react-native-swipeable';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
 import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
