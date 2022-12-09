@@ -16,8 +16,6 @@ if (!__DEV__) {
 // Set notification display
 OneSignal.inFocusDisplaying(2);
 
-console.disableYellowBox = true;
-
 registerScreens();
 
 Navigation.events().registerAppLaunchedListener(() => {
