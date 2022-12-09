@@ -51,9 +51,8 @@ export class ProgressBar extends React.Component {
           styles.background,
           this.props.backgroundStyle,
           { height: this.props.height, borderRadius: this.props.height },
-        ]}
-      >
-        <Animated.View style={fillStyle} />
+        ]}>
+        <Animated.View style={fillStyle} useNativeDriver={true} />
       </View>
     );
   }
