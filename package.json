@@ -68,7 +68,7 @@
     "@graphql-codegen/near-operation-file-preset": "^1.17.13",
     "@graphql-codegen/typescript": "1.21.1",
     "@graphql-codegen/typescript-operations": "1.17.15",
-    "@graphql-inspector/cli": "^2.2.0",
+    "@graphql-inspector/cli": "^3.4.0",
     "@testing-library/jest-native": "^3.3.0",
     "@testing-library/react-native": "^7.0.1",
     "@types/fetch-mock": "^7.3.2",
