@@ -1,14 +1,8 @@
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { isEmpty, isEqual } from 'lodash';
 import moment from 'moment';
 import React, { PureComponent } from 'react';
-import {
-  FlatList,
-  Platform,
-  PushNotificationIOS,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, Platform, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import OneSignal from 'react-native-onesignal';
@@ -291,8 +285,7 @@ class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
               <View style={styles.activityTextContainer}>
                 <Text style={[styles.activityText, { flex: 1 }]}>
                   <Text
-                    style={[styles.activityText, styles.activityTextHighlight]}
-                  >
+                    style={[styles.activityText, styles.activityTextHighlight]}>
                     {data.actorName}{' '}
                   </Text>
                   {!isEmpty(data.others) && <Text>and {data.others} </Text>}
@@ -320,8 +313,7 @@ class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
           </Text>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={this.handleActionBtnPress}
-          >
+            onPress={this.handleActionBtnPress}>
             <Text style={styles.actionButtonText}>Turn on notifications</Text>
           </TouchableOpacity>
           <Icon name="close" style={styles.closeIcon} />
