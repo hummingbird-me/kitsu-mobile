@@ -11,9 +11,10 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { kitsuConfig } from 'kitsu/config/env';
 import { styles } from './styles';
 
-const formatTime = (time) => (
-  moment().diff(time, 'days') < 2 ? moment(time).calendar() : `${moment(time).format('DD MMMM')} at ${moment(time).format('H:MMA')}`
-);
+const formatTime = (time) =>
+  moment().diff(time, 'days') < 2
+    ? moment(time).calendar()
+    : `${moment(time).format('DD MMMM')} at ${moment(time).format('H:MMA')}`;
 
 export const PostHeader = ({
   post,
@@ -26,14 +27,15 @@ export const PostHeader = ({
   onDelete,
   currentUser,
 }) => {
-  const user = (post && post.user);
-  const isCurrentUser = (user && currentUser && user.id === currentUser.id);
+  const user = post && post.user;
+  const isCurrentUser = user && currentUser && user.id === currentUser.id;
 
   const postDateTime = formatTime(time);
   const editDateTime = `Edited ${formatTime(post.editedAt)}`;
 
   const canMutate = () => {
-    const isStaffOrMod = currentUser.title === 'Staff' || currentUser.title === 'Mod';
+    const isStaffOrMod =
+      currentUser.title === 'Staff' || currentUser.title === 'Mod';
     return isCurrentUser || isStaffOrMod;
   };
 
@@ -55,10 +57,15 @@ export const PostHeader = ({
     {
       condition: canMutate,
       onSelected: () => {
-        Alert.alert('Delete Post', 'Are you sure you want to delete this post?', [
-          { text: 'Cancel', onPress: null, },
-          { text: 'I\'m sure', onPress: onDelete, },
-        ], { cancelable: false });
+        Alert.alert(
+          'Delete Post',
+          'Are you sure you want to delete this post?',
+          [
+            { text: 'Cancel', onPress: null },
+            { text: "I'm sure", onPress: onDelete },
+          ],
+          { cancelable: false }
+        );
       },
       text: 'Delete Post',
     },
@@ -77,18 +84,31 @@ export const PostHeader = ({
     <View style={styles.postHeader}>
       <Layout.RowWrap alignItems="center">
         {onBackButtonPress && (
-          <TouchableOpacity onPress={onBackButtonPress} style={styles.postHeaderBackButton}>
-            <Icon name="ios-arrow-back" color={colors.listBackPurple} style={{ fontSize: 28 }} />
+          <TouchableOpacity
+            onPress={onBackButtonPress}
+            style={styles.postHeaderBackButton}>
+            <Icon
+              name="ios-arrow-back"
+              color={colors.listBackPurple}
+              style={{ fontSize: 28 }}
+            />
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity onPress={onAvatarPress} style={styles.userDetailsLink}>
+        <TouchableOpacity
+          onPress={onAvatarPress}
+          style={styles.userDetailsLink}>
           <Avatar avatar={avatar} />
           <Layout.RowMain>
-            <StyledText color="dark" size="xsmall" bold>{name}</StyledText>
-            <StyledText color="grey" size="xxsmall" textStyle={{ marginTop: 3 }}>
+            <StyledText color="dark" size="xsmall" bold>
+              {name}
+            </StyledText>
+            <StyledText
+              color="grey"
+              size="xxsmall"
+              textStyle={{ marginTop: 3 }}>
               {postDateTime}
-              {post.editedAt && " · "}
+              {post.editedAt && ' · '}
               {post.editedAt && editDateTime}
             </StyledText>
           </Layout.RowMain>
@@ -99,9 +119,12 @@ export const PostHeader = ({
           onOptionSelected={(value, option) => {
             if (option.onSelected) option.onSelected();
           }}
-          activeOpacity={0.8}
-        >
-          <Icon name="ios-more" color={colors.lightGrey} style={styles.postHeaderActions} />
+          activeOpacity={0.8}>
+          <Icon
+            name="ios-ellipsis-horizontal-sharp"
+            color={colors.lightGrey}
+            style={styles.postHeaderActions}
+          />
         </SelectMenu>
       </Layout.RowWrap>
     </View>
@@ -117,7 +140,7 @@ PostHeader.propTypes = {
   onAvatarPress: PropTypes.func,
   currentUser: PropTypes.object,
   onEditPress: PropTypes.func,
-  onDelete: PropTypes.func
+  onDelete: PropTypes.func,
 };
 
 PostHeader.defaultProps = {
@@ -128,5 +151,5 @@ PostHeader.defaultProps = {
   onAvatarPress: null,
   currentUser: null,
   onEditPress: null,
-  onDelete: null
+  onDelete: null,
 };
