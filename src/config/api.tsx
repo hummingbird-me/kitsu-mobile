@@ -1,7 +1,11 @@
 import OAuth2 from 'client-oauth2';
 import JsonApi from 'devour-client';
 import { kitsuConfig } from './env';
-import { errorMiddleware, kitsuRequestMiddleware, titleMiddleware } from './middlewares';
+import {
+  errorMiddleware,
+  kitsuRequestMiddleware,
+  titleMiddleware,
+} from './middlewares';
 
 export const auth = new OAuth2({
   clientId: kitsuConfig.authConfig.CLIENT_ID,
@@ -124,7 +128,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'users' },
+  { collectionPath: 'users' }
 );
 
 Kitsu.define('profileLinks', {
@@ -183,7 +187,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'library-entries' },
+  { collectionPath: 'library-entries' }
 );
 
 Kitsu.define(
@@ -203,7 +207,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'characters' },
+  { collectionPath: 'characters' }
 );
 
 Kitsu.define(
@@ -217,6 +221,7 @@ Kitsu.define(
     volumeNumber: '',
     number: '',
     synopsis: '',
+    description: '',
     published: '',
     length: '',
     thumbnail: '',
@@ -224,7 +229,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'chapters' },
+  { collectionPath: 'chapters' }
 );
 
 Kitsu.define(
@@ -241,7 +246,7 @@ Kitsu.define(
       type: 'users',
     },
   },
-  { collectionPath: 'blocks' },
+  { collectionPath: 'blocks' }
 );
 
 Kitsu.define(
@@ -262,7 +267,7 @@ Kitsu.define(
       type: 'users',
     },
   },
-  { collectionPath: 'linked-accounts' },
+  { collectionPath: 'linked-accounts' }
 );
 
 Kitsu.define(
@@ -284,7 +289,7 @@ Kitsu.define(
       type: ['anime', 'manga', 'drama'],
     },
   },
-  { collectionPath: 'library-entry-logs' },
+  { collectionPath: 'library-entry-logs' }
 );
 
 Kitsu.define(
@@ -306,7 +311,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'castings' },
+  { collectionPath: 'castings' }
 );
 
 Kitsu.define(
@@ -324,7 +329,7 @@ Kitsu.define(
       type: 'users',
     },
   },
-  { collectionPath: 'follows' },
+  { collectionPath: 'follows' }
 );
 
 Kitsu.define(
@@ -346,7 +351,7 @@ Kitsu.define(
       type: 'users',
     },
   },
-  { collectionPath: 'list-imports' },
+  { collectionPath: 'list-imports' }
 );
 
 Kitsu.define(
@@ -420,7 +425,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'anime' },
+  { collectionPath: 'anime' }
 );
 
 Kitsu.define(
@@ -489,7 +494,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'manga' },
+  { collectionPath: 'manga' }
 );
 
 Kitsu.define(
@@ -502,7 +507,7 @@ Kitsu.define(
     slug: '',
     description: '',
   },
-  { collectionPath: 'genres' },
+  { collectionPath: 'genres' }
 );
 Kitsu.define(
   'mediaRelationships',
@@ -518,7 +523,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'mediaRelationships' },
+  { collectionPath: 'mediaRelationships' }
 );
 Kitsu.define(
   'episodes',
@@ -530,6 +535,7 @@ Kitsu.define(
     titles: '',
     updatedAt: '',
     synopsis: '',
+    description: '',
     airdate: '',
     length: '',
     thumbnail: '',
@@ -542,7 +548,7 @@ Kitsu.define(
     },
     createdAt: '',
   },
-  { collectionPath: 'episodes' },
+  { collectionPath: 'episodes' }
 );
 
 Kitsu.define(
@@ -562,35 +568,29 @@ Kitsu.define(
       type: 'streamers',
     },
   },
-  { collectionPath: 'videos' },
+  { collectionPath: 'videos' }
 );
 
-Kitsu.define(
-  'animeProductions',
-  {
-    role: '',
-    anime: {
-      jsonApi: 'hasOne',
-      type: 'anime',
-    },
-    producer: {
-      jsonApi: 'hasOne',
-      type: 'producers',
-    },
+Kitsu.define('animeProductions', {
+  role: '',
+  anime: {
+    jsonApi: 'hasOne',
+    type: 'anime',
   },
-);
+  producer: {
+    jsonApi: 'hasOne',
+    type: 'producers',
+  },
+});
 
-Kitsu.define(
-  'producers',
-  {
-    name: '',
-    slug: '',
-    animeProductions: {
-      jsonApi: 'hasMany',
-      type: 'animeProductions',
-    },
+Kitsu.define('producers', {
+  name: '',
+  slug: '',
+  animeProductions: {
+    jsonApi: 'hasMany',
+    type: 'animeProductions',
   },
-);
+});
 
 Kitsu.define(
   'reviews',
@@ -616,7 +616,7 @@ Kitsu.define(
       type: 'users',
     },
   },
-  { collectionPath: 'reviews' },
+  { collectionPath: 'reviews' }
 );
 
 Kitsu.define(
@@ -652,7 +652,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'media-reactions' },
+  { collectionPath: 'media-reactions' }
 );
 
 Kitsu.define(
@@ -667,7 +667,7 @@ Kitsu.define(
       type: 'users',
     },
   },
-  { collectionPath: 'media-reaction-votes' },
+  { collectionPath: 'media-reaction-votes' }
 );
 
 Kitsu.define(
@@ -685,7 +685,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'favorites' },
+  { collectionPath: 'favorites' }
 );
 
 Kitsu.define(
@@ -713,7 +713,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'categories' },
+  { collectionPath: 'categories' }
 );
 
 Kitsu.define(
@@ -732,7 +732,7 @@ Kitsu.define(
       type: 'users',
     },
   },
-  { collectionPath: 'category-favorites' },
+  { collectionPath: 'category-favorites' }
 );
 
 Kitsu.define(
@@ -751,6 +751,7 @@ Kitsu.define(
     verb: '',
     time: '',
     rating: '',
+    reason: '',
     media: {
       jsonApi: 'hasOne',
     },
@@ -770,7 +771,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/notifications' },
+  { collectionPath: 'feeds/notifications' }
 );
 
 Kitsu.define(
@@ -788,7 +789,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'uploads' },
+  { collectionPath: 'uploads' }
 );
 
 Kitsu.define(
@@ -824,7 +825,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'comments' },
+  { collectionPath: 'comments' }
 );
 
 Kitsu.define(
@@ -840,7 +841,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'comment-likes' },
+  { collectionPath: 'comment-likes' }
 );
 
 Kitsu.define(
@@ -869,7 +870,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/user_aggr' },
+  { collectionPath: 'feeds/user_aggr' }
 );
 
 Kitsu.define(
@@ -879,7 +880,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/media_aggr' },
+  { collectionPath: 'feeds/media_aggr' }
 );
 
 Kitsu.define(
@@ -889,7 +890,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/episode_aggr' },
+  { collectionPath: 'feeds/episode_aggr' }
 );
 
 Kitsu.define(
@@ -899,7 +900,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/chapter_aggr' },
+  { collectionPath: 'feeds/chapter_aggr' }
 );
 
 Kitsu.define(
@@ -909,7 +910,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/global' },
+  { collectionPath: 'feeds/global' }
 );
 
 Kitsu.define(
@@ -919,7 +920,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/timeline' },
+  { collectionPath: 'feeds/timeline' }
 );
 
 Kitsu.define(
@@ -929,7 +930,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/interest_timeline' },
+  { collectionPath: 'feeds/interest_timeline' }
 );
 
 Kitsu.define(
@@ -939,7 +940,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'feeds/interest_timeline' },
+  { collectionPath: 'feeds/interest_timeline' }
 );
 
 Kitsu.define(
@@ -965,12 +966,14 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'library-events' },
+  { collectionPath: 'library-events' }
 );
 
 Kitsu.define(
   'posts',
   {
+    lockedAt: '',
+    lockedReason: '',
     blocked: '',
     commentsCount: '',
     content: '',
@@ -1009,7 +1012,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'posts' },
+  { collectionPath: 'posts' }
 );
 
 Kitsu.define(
@@ -1025,7 +1028,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'post-likes' },
+  { collectionPath: 'post-likes' }
 );
 
 Kitsu.define(
@@ -1040,7 +1043,7 @@ Kitsu.define(
     },
     isRead: '',
   },
-  { collectionPath: 'feeds/notifications' },
+  { collectionPath: 'feeds/notifications' }
 );
 
 Kitsu.define(
@@ -1052,7 +1055,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'one-signal-players' },
+  { collectionPath: 'one-signal-players' }
 );
 
 Kitsu.define(
@@ -1070,7 +1073,7 @@ Kitsu.define(
       type: ['anime', 'manga', 'drama'],
     },
   },
-  { collectionPath: 'streaming-links' },
+  { collectionPath: 'streaming-links' }
 );
 
 Kitsu.define(
@@ -1083,7 +1086,7 @@ Kitsu.define(
       type: 'streamingLinks',
     },
   },
-  { collectionPath: 'streamers' },
+  { collectionPath: 'streamers' }
 );
 
 Kitsu.define(
@@ -1135,7 +1138,7 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'groups' },
+  { collectionPath: 'groups' }
 );
 
 Kitsu.define(
@@ -1159,7 +1162,7 @@ Kitsu.define(
       jsonApi: 'hasMany',
     },
   },
-  { collectionPath: 'group-members' },
+  { collectionPath: 'group-members' }
 );
 
 Kitsu.define(
@@ -1169,7 +1172,7 @@ Kitsu.define(
     slug: '',
     description: '',
   },
-  { collectionPath: 'group-categories' },
+  { collectionPath: 'group-categories' }
 );
 
 Kitsu.define(
@@ -1181,8 +1184,8 @@ Kitsu.define(
       jsonApi: 'hasOne',
     },
   },
-  { collectionPath: 'stats' },
-)
+  { collectionPath: 'stats' }
+);
 
 export const setToken = (token) => {
   Kitsu.headers.Authorization = `Bearer ${token}`;
