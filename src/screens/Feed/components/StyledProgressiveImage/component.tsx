@@ -6,7 +6,7 @@ interface StyledProgressiveImageProps {
   borderRadius?: number;
 }
 
-export const StyledProgressiveImage = props: StyledProgressiveImageProps => (
+export const StyledProgressiveImage = (props: StyledProgressiveImageProps) => (
   <ProgressiveImage
     style={{
       width: '100%',

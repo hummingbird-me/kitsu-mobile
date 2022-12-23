@@ -10,14 +10,15 @@ interface TabBarProps {
   containerStyle?: unknown;
 }
 
-export const TabBar = props: TabBarProps => (
+export const TabBar = (props: TabBarProps) => (
   <View style={[styles.container, props.style]} onLayout={props.onLayout}>
     <ScrollView
-      ref={r => { props.onRef && props.onRef(r) }}
+      ref={(r) => {
+        props.onRef && props.onRef(r);
+      }}
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={[styles.tab, props.containerStyle]}
-    >
+      contentContainerStyle={[styles.tab, props.containerStyle]}>
       {props.children}
     </ScrollView>
   </View>
@@ -29,19 +30,17 @@ interface TabBarLinkProps {
   isActive?: boolean;
 }
 
-export const TabBarLink = ({
-  onPress,
-  label,
-  isActive
-}: TabBarLinkProps) => (
+export const TabBarLink = ({ onPress, label, isActive }: TabBarLinkProps) => (
   <TouchableOpacity onPress={onPress} style={styles.link}>
-    <StyledText color={isActive ? 'dark' : 'grey'} size="xsmall" bold>{label}</StyledText>
+    <StyledText color={isActive ? 'dark' : 'grey'} size="xsmall" bold>
+      {label}
+    </StyledText>
   </TouchableOpacity>
 );
 
 TabBar.propTypes = {
   style: ViewPropTypes.style,
-  containerStyle: ViewPropTypes.style
+  containerStyle: ViewPropTypes.style,
 };
 
 TabBar.defaultProps = {
