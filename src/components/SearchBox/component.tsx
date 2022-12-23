@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PropTypes } from 'prop-types';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { TextInput, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -7,14 +6,18 @@ import { commonStyles } from 'kitsu/common/styles';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
-export class SearchBox extends React.PureComponent {
+interface SearchBoxProps {
+  style?: unknown;
+  defaultValue?: string;
+  onChangeText?(...args: unknown[]): unknown;
+  placeholder?: string;
+  value?: string;
+  showClearButton?: boolean;
+}
+
+export class SearchBox extends React.PureComponent<SearchBoxProps> {
   static propTypes = {
-    style: ViewPropTypes.style,
-    defaultValue: PropTypes.string,
-    onChangeText: PropTypes.func,
-    placeholder: PropTypes.string,
-    value: PropTypes.string,
-    showClearButton: PropTypes.bool,
+    style: ViewPropTypes.style
   };
 
   static defaultProps = {

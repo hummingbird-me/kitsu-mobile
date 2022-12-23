@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback } from 'react-native';
-import PropTypes from 'prop-types';
 import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { scene } from 'kitsu/screens/Feed/constants';
@@ -10,6 +9,21 @@ import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { handleURL } from 'kitsu/utils/url';
 import { styles } from './styles';
 import { PostStatus } from '../PostStatus';
+
+interface PostMainProps {
+  cacheKey?: string;
+  content?: string;
+  embed?: object;
+  uploads?: object[];
+  likesCount?: number;
+  commentsCount?: number;
+  taggedMedia?: object;
+  taggedEpisode?: object;
+  componentId: any;
+  onPress?(...args: unknown[]): unknown;
+  onStatusPress?(...args: unknown[]): unknown;
+  showViewParent?: boolean;
+}
 
 export const PostMain = ({
   cacheKey,
@@ -23,8 +37,8 @@ export const PostMain = ({
   componentId,
   onPress,
   onStatusPress,
-  showViewParent,
-}) => {
+  showViewParent
+}: PostMainProps) => {
   const hasContentAbove = !isEmpty(content) || taggedMedia;
   return (
     <View style={styles.postMain}>
@@ -69,20 +83,6 @@ export const PostMain = ({
   );
 };
 
-PostMain.propTypes = {
-  cacheKey: PropTypes.string,
-  content: PropTypes.string,
-  embed: PropTypes.object,
-  uploads: PropTypes.arrayOf(PropTypes.object),
-  likesCount: PropTypes.number,
-  commentsCount: PropTypes.number,
-  taggedMedia: PropTypes.object,
-  taggedEpisode: PropTypes.object,
-  componentId: PropTypes.any.isRequired,
-  onPress: PropTypes.func,
-  onStatusPress: PropTypes.func,
-  showViewParent: PropTypes.bool,
-};
 PostMain.defaultProps = {
   cacheKey: null,
   content: null,

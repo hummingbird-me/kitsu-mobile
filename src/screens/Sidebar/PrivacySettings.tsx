@@ -2,18 +2,17 @@ import React from 'react';
 import { View, Switch, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
-import { PropTypes } from 'prop-types';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common';
 import { styles } from './styles';
 
-class PrivacySettings extends React.Component {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    accessToken: PropTypes.string,
-    currentUser: PropTypes.object,
-  };
+interface PrivacySettingsProps {
+  componentId: any;
+  accessToken?: string;
+  currentUser?: object;
+}
 
+class PrivacySettings extends React.Component<PrivacySettingsProps> {
   static defaultProps = {
     accessToken: null,
     currentUser: {},

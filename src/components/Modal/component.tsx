@@ -1,8 +1,19 @@
 import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { View, Text, TouchableOpacity, Modal as ModalRN } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { styles } from './styles';
+
+interface ModalProps {
+  style?: unknown;
+  onConfirm(...args: unknown[]): unknown;
+  onCancel(...args: unknown[]): unknown;
+  title: string;
+  visible: boolean;
+  onRequestClose(...args: unknown[]): unknown;
+  contentStyle?: unknown;
+  headerStyle?: unknown;
+  bodyStyle?: unknown;
+}
 
 export const Modal = ({
   style,
@@ -16,7 +27,7 @@ export const Modal = ({
   headerStyle,
   bodyStyle,
   ...otherProps
-}) => (
+}: ModalProps) => (
   <ModalRN
     transparent
     animationType="slide"
@@ -42,14 +53,9 @@ export const Modal = ({
 Modal.propTypes = {
   ...ModalRN.propTypes,
   style: ViewPropTypes.style,
-  onConfirm: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  visible: PropTypes.bool.isRequired,
-  onRequestClose: PropTypes.func.isRequired,
   contentStyle: ViewPropTypes.style,
   headerStyle: ViewPropTypes.style,
-  bodyStyle: ViewPropTypes.style,
+  bodyStyle: ViewPropTypes.style
 };
 Modal.defaultProps = {
   style: null,

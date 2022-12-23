@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Kitsu } from 'kitsu/config/api';
 import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
@@ -17,14 +16,14 @@ import { isEmpty, uniqBy } from 'lodash';
 import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
 
-class FeedComponent extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    userId: PropTypes.string.isRequired,
-    currentUser: PropTypes.object.isRequired,
-    profile: PropTypes.object,
-  }
+interface FeedComponentProps {
+  componentId: any;
+  userId: string;
+  currentUser: object;
+  profile?: object;
+}
 
+class FeedComponent extends PureComponent<FeedComponentProps> {
   static defaultProps = {
     profile: null,
   }

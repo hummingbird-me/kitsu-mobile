@@ -1,17 +1,21 @@
 import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { Animated, Text } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 
-export class Feedback extends React.Component {
+interface FeedbackProps {
+  containerStyle?: unknown;
+  titleStyle?: unknown;
+  title: string;
+  autoHide?: boolean;
+  autoHideDuration?: number;
+  fadeDuration?: number;
+}
+
+export class Feedback extends React.Component<FeedbackProps> {
   static propTypes = {
     containerStyle: ViewPropTypes.style,
-    titleStyle: ViewPropTypes.style,
-    title: PropTypes.string.isRequired,
-    autoHide: PropTypes.bool,
-    autoHideDuration: PropTypes.number,
-    fadeDuration: PropTypes.number,
+    titleStyle: ViewPropTypes.style
   };
 
   static defaultProps = {

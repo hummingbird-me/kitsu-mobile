@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import { View } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -7,12 +6,19 @@ import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableS
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
 
+interface LibraryActivityBoxProps {
+  contentDark?: boolean;
+  title?: string;
+  onViewAllPress?(...args: unknown[]): unknown;
+  data?: unknown[];
+}
+
 export const LibraryActivityBox = ({
   contentDark,
   title,
   data,
-  onViewAllPress,
-}) => (
+  onViewAllPress
+}: LibraryActivityBoxProps) => (
   <ScrollableSection
     contentDark={contentDark}
     title={title}
@@ -44,13 +50,6 @@ export const LibraryActivityBox = ({
     }}
   />
 );
-
-LibraryActivityBox.propTypes = {
-  contentDark: PropTypes.bool,
-  title: PropTypes.string,
-  onViewAllPress: PropTypes.func,
-  data: PropTypes.array,
-};
 
 LibraryActivityBox.defaultProps = {
   contentDark: false,

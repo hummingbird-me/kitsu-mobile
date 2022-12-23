@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity } from 'react-native';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
@@ -61,7 +60,28 @@ const renderItem = (item, componentId) => {
   );
 };
 
-export const component = ({ media: { mediaRelationships }, componentId }) => {
+interface componentProps {
+  componentId: any;
+  media: {
+    mediaRelationships: {
+      role: string,
+      destination: {
+        canonicalTitle: string,
+        synopsis: string,
+        posterImage: {
+          large: string
+        },
+        subtype: string,
+        startDate?: string
+      }
+    }
+  };
+}
+
+export const component = ({
+  media: { mediaRelationships },
+  componentId
+}: componentProps) => {
   const relationships = mediaRelationships || [];
   const sorted = relationships.sort((a, b) => {
     const aStart = a.destination && a.destination.startDate;
@@ -81,22 +101,4 @@ export const component = ({ media: { mediaRelationships }, componentId }) => {
       />
     </TabContainer>
   );
-};
-
-component.propTypes = {
-  componentId: PropTypes.any.isRequired,
-  media: PropTypes.shape({
-    mediaRelationships: PropTypes.shape({
-      role: PropTypes.string.isRequired,
-      destination: PropTypes.shape({
-        canonicalTitle: PropTypes.string.isRequired,
-        synopsis: PropTypes.string.isRequired,
-        posterImage: PropTypes.shape({
-          large: PropTypes.string.isRequired,
-        }).isRequired,
-        subtype: PropTypes.string.isRequired,
-        startDate: PropTypes.string,
-      }).isRequired,
-    }).isRequired,
-  }).isRequired,
 };

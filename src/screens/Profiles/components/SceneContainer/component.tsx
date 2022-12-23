@@ -1,10 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { listBackPurple } from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-export const SceneContainer = ({ backgroundColor, marginTop, ...props }) => (
+interface SceneContainerProps {
+  backgroundColor?: string;
+  marginTop?: number;
+}
+
+export const SceneContainer = ({
+  backgroundColor,
+  marginTop,
+  ...props
+}: SceneContainerProps) => (
   <View
     style={[
       styles.sceneContainer,
@@ -16,11 +24,6 @@ export const SceneContainer = ({ backgroundColor, marginTop, ...props }) => (
     {...props}
   />
 );
-
-SceneContainer.propTypes = {
-  backgroundColor: PropTypes.string,
-  marginTop: PropTypes.number,
-};
 
 SceneContainer.defaultProps = {
   backgroundColor: null,

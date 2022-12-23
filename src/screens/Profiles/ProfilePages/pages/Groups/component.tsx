@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
-import PropTypes from 'prop-types';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
@@ -8,13 +7,13 @@ import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { Kitsu } from 'kitsu/config/api';
 
-class Groups extends PureComponent {
-  static propTypes = {
-    userId: PropTypes.number.isRequired,
-    loadingGroups: PropTypes.bool,
-    groups: PropTypes.array,
-  }
+interface GroupsProps {
+  userId: number;
+  loadingGroups?: boolean;
+  groups?: unknown[];
+}
 
+class Groups extends PureComponent<GroupsProps> {
   static defaultProps = {
     loadingGroups: false,
     groups: [],

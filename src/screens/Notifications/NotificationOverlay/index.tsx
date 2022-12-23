@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { Animated } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { Navigation } from 'react-native-navigation';
 import { EventBus } from 'kitsu/utils/eventBus';
 import { NOTIFICATION_PRESSED_EVENT } from 'kitsu/screens/Notifications/NotificationsScreen';
@@ -12,12 +11,12 @@ import { styles } from './styles';
 const ANIM_DURATION = 200;
 const NOTIFICATION_VISIBLE_TIME = 5000;
 
-class NotificationOverlayComponent extends PureComponent {
-  static propTypes = {
-    notification: PropTypes.object.isRequired,
-    dismissInAppNotification: PropTypes.func.isRequired,
-  }
+interface NotificationOverlayComponentProps {
+  notification: object;
+  dismissInAppNotification(...args: unknown[]): unknown;
+}
 
+class NotificationOverlayComponent extends PureComponent<NotificationOverlayComponentProps> {
   state = {
     opacity: new Animated.Value(0),
     yValue: new Animated.Value(-200),

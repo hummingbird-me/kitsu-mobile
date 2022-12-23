@@ -1,13 +1,25 @@
 import * as React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Rating } from 'kitsu/components/Rating';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
+
+interface MediaCardProps {
+  caption?: string;
+  cardDimensions: object;
+  cardStyle?: unknown;
+  mediaData: object;
+  componentId?: any;
+  progress?: number;
+  ratingTwenty?: number;
+  ratingSystem?: string;
+  style?: unknown;
+  loading?: boolean;
+}
 
 export const MediaCard = ({
   caption,
@@ -19,8 +31,8 @@ export const MediaCard = ({
   ratingTwenty,
   ratingSystem,
   style,
-  loading,
-}) => {
+  loading
+}: MediaCardProps) => {
   const onPress = () => {
     if (componentId && mediaData && mediaData.id && mediaData.type) {
       Navigation.push(componentId, {
@@ -78,16 +90,8 @@ export const MediaCard = ({
 };
 
 MediaCard.propTypes = {
-  caption: PropTypes.string,
-  cardDimensions: PropTypes.object.isRequired,
   cardStyle: ViewPropTypes.style,
-  mediaData: PropTypes.object.isRequired,
-  componentId: PropTypes.any,
-  progress: PropTypes.number,
-  ratingTwenty: PropTypes.number,
-  ratingSystem: PropTypes.string,
-  style: ViewPropTypes.style,
-  loading: PropTypes.bool,
+  style: ViewPropTypes.style
 };
 
 MediaCard.defaultProps = {

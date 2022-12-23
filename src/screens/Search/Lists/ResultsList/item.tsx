@@ -3,10 +3,21 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { getComputedTitle } from 'kitsu/utils/getTitleField';
-import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 
-export const ResultsListItem = ({ item, onPress, spacing, currentUser }) => {
+interface ResultsListItemProps {
+  item: object;
+  onPress?(...args: unknown[]): unknown;
+  spacing?: object;
+  currentUser?: object;
+}
+
+export const ResultsListItem = ({
+  item,
+  onPress,
+  spacing,
+  currentUser
+}: ResultsListItemProps) => {
   let title = null;
   const imageSource = item.image || (item.posterImage || {}).small;
 
@@ -41,13 +52,6 @@ export const ResultsListItem = ({ item, onPress, spacing, currentUser }) => {
       </TouchableOpacity>
     </View>
   );
-};
-
-ResultsListItem.propTypes = {
-  item: PropTypes.object.isRequired,
-  onPress: PropTypes.func,
-  spacing: PropTypes.object,
-  currentUser: PropTypes.object,
 };
 
 ResultsListItem.defaultProps = {

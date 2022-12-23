@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
 import { styles } from './styles';
@@ -42,11 +41,11 @@ const TITLE_MAP = {
   ar_ar: 'Arabic'
 };
 
-export class MediaDetails extends Component {
-  static propTypes = {
-    media: PropTypes.object.isRequired,
-  };
+interface MediaDetailsProps {
+  media: object;
+}
 
+export class MediaDetails extends Component<MediaDetailsProps> {
   static defaultProps = {
     media: null,
   };
@@ -189,7 +188,17 @@ export class MediaDetails extends Component {
   }
 }
 
-const DetailComponent = ({ label, content, details }) => (
+interface DetailComponentProps {
+  label?: string;
+  content?: string;
+  details?: string;
+}
+
+const DetailComponent = ({
+  label,
+  content,
+  details
+}: DetailComponentProps) => (
   <View style={styles.detailRow}>
     <StyledText textStyle={styles.detailLabel} size="xxsmall" color="grey" bold>{label}</StyledText>
     <StyledText textStyle={isEmpty(details) ? styles.detailContent : {}} size="xxsmall" color="dark" bold>{content}</StyledText>
@@ -198,12 +207,6 @@ const DetailComponent = ({ label, content, details }) => (
     )}
   </View>
 );
-
-DetailComponent.propTypes = {
-  label: PropTypes.string,
-  content: PropTypes.string,
-  details: PropTypes.string,
-};
 
 DetailComponent.defaultProps = {
   label: null,

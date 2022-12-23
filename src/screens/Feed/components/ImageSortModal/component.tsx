@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,20 +8,21 @@ import { prettyBytes } from 'kitsu/utils/prettyBytes';
 import { styles } from './styles';
 
 
-export class ImageSortModal extends PureComponent {
-  static propTypes = {
-    visible: PropTypes.bool,
-    onCancelPress: PropTypes.func,
-    onAddPress: PropTypes.func,
-    onChangeImageOrder: PropTypes.func,
-    onRemoveImage: PropTypes.func,
-    images: PropTypes.array,
-    disableAddButton: PropTypes.bool,
-    disableRemoveButton: PropTypes.bool,
-    maxUploadSize: PropTypes.number,
-    currentImagesSize: PropTypes.number,
-  }
+interface ImageSortModalProps {
+  visible?: boolean;
+  onCancelPress?(...args: unknown[]): unknown;
+  onAddPress?(...args: unknown[]): unknown;
+  onChangeImageOrder?(...args: unknown[]): unknown;
+  onRemoveImage?(...args: unknown[]): unknown;
+  images?: unknown[];
+  disableAddButton?: boolean;
+  disableRemoveButton?: boolean;
+  maxUploadSize?: number;
+  currentImagesSize?: number;
+}
 
+
+export class ImageSortModal extends PureComponent<ImageSortModalProps> {
   static defaultProps = {
     visible: false,
     onCancelPress: () => {},

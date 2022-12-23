@@ -1,20 +1,19 @@
 import React, { PureComponent } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import PropTypes from 'prop-types';
 import ActionSheet from 'react-native-actionsheet';
 
 import styles from './styles';
 
 const OPTIONS = ['all', 'anime', 'manga', 'nevermind'];
 
-export default class HeaderFilterButton extends PureComponent {
-  static propTypes = {
-    mode: PropTypes.oneOf(OPTIONS).isRequired,
-    onModeChanged: PropTypes.func.isRequired,
-    style: PropTypes.any,
-  };
+interface HeaderFilterButtonProps {
+  mode: unknown[];
+  onModeChanged(...args: unknown[]): unknown;
+  style?: any;
+}
 
+export default class HeaderFilterButton extends PureComponent<HeaderFilterButtonProps> {
   static defaultProps = {
     style: null,
   };

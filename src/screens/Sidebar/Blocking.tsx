@@ -11,7 +11,6 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { InstantSearch } from 'react-instantsearch/native';
 import { connectInfiniteHits, connectSearchBox } from 'react-instantsearch/connectors';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { Feedback } from 'kitsu/components/Feedback';
@@ -105,7 +104,13 @@ const InstantSearchBox = connectSearchBox(
     />
   ));
 
-class Blocking extends React.Component {
+interface BlockingProps {
+  componentId: any;
+  accessToken?: string;
+  currentUser?: object;
+}
+
+class Blocking extends React.Component<BlockingProps> {
   state = {
     loading: true,
     blocks: [],
@@ -305,12 +310,6 @@ const mapStateToProps = ({ app, auth, user }) => ({
   currentUser: user.currentUser,
   algoliaKeys: app.algoliaKeys,
 });
-
-Blocking.propTypes = {
-  componentId: PropTypes.any.isRequired,
-  accessToken: PropTypes.string,
-  currentUser: PropTypes.object,
-};
 
 Blocking.defaultProps = {
   accessToken: null,

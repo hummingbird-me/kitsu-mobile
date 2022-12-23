@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { FlatList, TouchableOpacity, View, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
@@ -17,7 +16,29 @@ import { NavigationActions } from 'kitsu/navigation';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
-export class SceneHeader extends PureComponent {
+interface SceneHeaderProps {
+  categories?: unknown[];
+  onCategoryPress?(...args: unknown[]): unknown;
+  description?: string;
+  followersCount?: number;
+  followingCount?: number;
+  mainButtonOptions?: unknown[];
+  mainButtonTitle?: string;
+  moreButtonOptions?: unknown[];
+  showMoreButton?: boolean;
+  onFollowButtonPress?(...args: unknown[]): unknown;
+  onMainButtonOptionsSelected?(...args: unknown[]): unknown;
+  onMoreButtonOptionsSelected?(...args: unknown[]): unknown;
+  posterImage?: string;
+  ratingRank?: number;
+  popularityRank?: number;
+  averageRating?: number;
+  title?: string;
+  subtitle?: string | string[];
+  variant?: "profile" | "media" | "group";
+}
+
+export class SceneHeader extends PureComponent<SceneHeaderProps> {
   renderDescription = () => {
     const {
       variant,
@@ -195,7 +216,15 @@ export class SceneHeader extends PureComponent {
   }
 }
 
-const Status = ({ statusType, ranking }) => (
+interface StatusProps {
+  statusType?: "popularity" | "rating";
+  ranking?: string;
+}
+
+const Status = ({
+  statusType,
+  ranking
+}: StatusProps) => (
   <View style={[styles.statusItemView, styles[`statusItem__${statusType}`]]}>
     <Icon
       name={statusType === 'popularity' ? 'md-heart' : 'ios-star'}
@@ -208,17 +237,20 @@ const Status = ({ statusType, ranking }) => (
   </View>
 );
 
-Status.propTypes = {
-  statusType: PropTypes.oneOf(['popularity', 'rating']),
-  ranking: PropTypes.string,
-};
-
 Status.defaultProps = {
   statusType: 'popularity',
   ranking: '',
 };
 
-const FollowStatus = ({ followStatusType, count }) => (
+interface FollowStatusProps {
+  followStatusType?: "following" | "followers";
+  count?: number;
+}
+
+const FollowStatus = ({
+  followStatusType,
+  count
+}: FollowStatusProps) => (
   <View style={[styles.followStatus, styles[`followStatus__${followStatusType}`]]}>
     <StyledText size="xsmall" color="dark">
       {count}
@@ -227,36 +259,9 @@ const FollowStatus = ({ followStatusType, count }) => (
   </View>
 );
 
-FollowStatus.propTypes = {
-  followStatusType: PropTypes.oneOf(['following', 'followers']),
-  count: PropTypes.number,
-};
-
 FollowStatus.defaultProps = {
   followStatusType: 'following',
   count: 0,
-};
-
-SceneHeader.propTypes = {
-  categories: PropTypes.array,
-  onCategoryPress: PropTypes.func,
-  description: PropTypes.string,
-  followersCount: PropTypes.number,
-  followingCount: PropTypes.number,
-  mainButtonOptions: PropTypes.array,
-  mainButtonTitle: PropTypes.string,
-  moreButtonOptions: PropTypes.array,
-  showMoreButton: PropTypes.bool,
-  onFollowButtonPress: PropTypes.func,
-  onMainButtonOptionsSelected: PropTypes.func,
-  onMoreButtonOptionsSelected: PropTypes.func,
-  posterImage: PropTypes.string,
-  ratingRank: PropTypes.number,
-  popularityRank: PropTypes.number,
-  averageRating: PropTypes.number,
-  title: PropTypes.string,
-  subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-  variant: PropTypes.oneOf(['profile', 'media', 'group']),
 };
 
 SceneHeader.defaultProps = {

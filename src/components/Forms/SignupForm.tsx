@@ -1,10 +1,21 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
 import styles from './styles';
+
+interface SignupFormProps {
+  handleChange(...args: unknown[]): unknown;
+  data: object;
+  onSubmit(...args: unknown[]): unknown;
+  loading: boolean;
+  signingInFacebook: boolean;
+  onSignInFacebook(...args: unknown[]): unknown;
+  birthday: string;
+  isBirthdaySet: boolean;
+  onPressTerms(...args: unknown[]): unknown;
+}
 
 const SignupForm = ({
   handleChange,
@@ -13,8 +24,8 @@ const SignupForm = ({
   loading,
   onSignInFacebook,
   signingInFacebook,
-  onPressTerms,
-}) => (
+  onPressTerms
+}: SignupFormProps) => (
   <View>
     <Input
       placeholder="Email"
@@ -62,17 +73,5 @@ const SignupForm = ({
     </View>
   </View>
 );
-
-SignupForm.propTypes = {
-  handleChange: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  signingInFacebook: PropTypes.bool.isRequired,
-  onSignInFacebook: PropTypes.func.isRequired,
-  birthday: PropTypes.string.isRequired,
-  isBirthdaySet: PropTypes.bool.isRequired,
-  onPressTerms: PropTypes.func.isRequired,
-};
 
 export default SignupForm;

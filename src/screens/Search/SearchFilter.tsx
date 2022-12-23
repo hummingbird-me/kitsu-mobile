@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import PropTypes from 'prop-types';
 import ModalSelector from 'react-native-modal-selector';
 import { forOwn, isObjectLike, values, isEmpty, upperFirst } from 'lodash';
 import { getStreamers } from 'kitsu/store/anime/actions';
@@ -11,7 +10,11 @@ import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 
-class SearchFilter extends Component {
+interface SearchFilterProps {
+  streamers: unknown[];
+}
+
+class SearchFilter extends Component<SearchFilterProps> {
   static options() {
     return {
       bottomTabs: {
@@ -286,10 +289,6 @@ class SearchFilter extends Component {
   }
 }
 
-SearchFilter.propTypes = {
-  streamers: PropTypes.array.isRequired,
-};
-
 const defaultState = {
   title: '',
   avail: { label: 'All', key: 'All' },
@@ -401,10 +400,6 @@ const styles = {
 const mapStateToProps = ({ anime }) => {
   const { categories, categoriesLoading, streamers } = anime;
   return { categories, categoriesLoading, streamers };
-};
-
-SearchFilter.propTypes = {
-  getStreamers: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, { getStreamers })(SearchFilter);

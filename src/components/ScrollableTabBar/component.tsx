@@ -1,10 +1,19 @@
 import * as React from 'react';
-import { PropTypes } from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
-export const ScrollableTabBar = ({ goToPage, activeTab, tabs }) => (
+interface ScrollableTabBarProps {
+  goToPage?(...args: unknown[]): unknown;
+  activeTab?: number;
+  tabs?: unknown[];
+}
+
+export const ScrollableTabBar = ({
+  goToPage,
+  activeTab,
+  tabs
+}: ScrollableTabBarProps) => (
   <View style={styles.tabBarContainer}>
     {tabs.map((tab, i) => (
       <TouchableOpacity
@@ -25,12 +34,6 @@ export const ScrollableTabBar = ({ goToPage, activeTab, tabs }) => (
     ))}
   </View>
 );
-
-ScrollableTabBar.propTypes = {
-  goToPage: PropTypes.func,
-  activeTab: PropTypes.number,
-  tabs: PropTypes.array,
-};
 
 ScrollableTabBar.defaultProps = {
   goToPage: () => {},

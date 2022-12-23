@@ -9,7 +9,6 @@ import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { library, settings, bugs, suggest, contact } from 'kitsu/assets/img/sidebar_icons';
 import { Button } from 'kitsu/components/Button';
 import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
-import { PropTypes } from 'prop-types';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { SidebarListItem, SidebarTitle } from './common';
@@ -17,12 +16,13 @@ import { styles } from './styles';
 import { darkPurple, listBackPurple } from 'kitsu/constants/colors';
 
 
-class SidebarScreen extends PureComponent {
-  static propTypes = {
-    currentUser: PropTypes.object,
-    accessToken: PropTypes.string,
-  };
+interface SidebarScreenProps {
+  currentUser?: object;
+  accessToken?: string;
+}
 
+
+class SidebarScreen extends PureComponent<SidebarScreenProps> {
   static defaultProps = {
     currentUser: null,
     accessToken: '',

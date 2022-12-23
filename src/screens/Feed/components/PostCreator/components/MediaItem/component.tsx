@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
@@ -8,7 +7,21 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
-export const MediaItem = ({ media, episode, onClear, disabled }) => {
+interface MediaItemProps {
+  media: object;
+  onClear(...args: unknown[]): unknown;
+  disabled?: boolean;
+  episode?: {
+    number: number
+  };
+}
+
+export const MediaItem = ({
+  media,
+  episode,
+  onClear,
+  disabled
+}: MediaItemProps) => {
   const episodePrefix = media.type === 'manga' ? 'CH' : 'EP';
   const episodeTitle = (episode && !isEmpty(episode.canonicalTitle) && `- ${episode.canonicalTitle}`) || '';
 
@@ -46,15 +59,6 @@ export const MediaItem = ({ media, episode, onClear, disabled }) => {
       )}
     </View>
   );
-};
-
-MediaItem.propTypes = {
-  media: PropTypes.object.isRequired,
-  onClear: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-  episode: PropTypes.shape({
-    number: PropTypes.number.isRequired,
-  }),
 };
 
 MediaItem.defaultProps = {

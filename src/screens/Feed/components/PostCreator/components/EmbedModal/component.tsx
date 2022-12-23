@@ -1,21 +1,20 @@
 import React, { PureComponent } from 'react';
 import { View, Modal, FlatList, TouchableOpacity, Text } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { isEmpty, uniq } from 'lodash';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { EmbedItem } from 'kitsu/screens/Feed/components/PostCreator/components/EmbedItem';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
 
-export class EmbedModal extends PureComponent {
-  static propTypes = {
-    urls: PropTypes.arrayOf(PropTypes.string).isRequired,
-    currentEmbed: PropTypes.string,
-    visible: PropTypes.bool,
-    onCancelPress: PropTypes.func,
-    onEmbedSelect: PropTypes.func,
-  }
+interface EmbedModalProps {
+  urls: string[];
+  currentEmbed?: string;
+  visible?: boolean;
+  onCancelPress?(...args: unknown[]): unknown;
+  onEmbedSelect?(...args: unknown[]): unknown;
+}
 
+export class EmbedModal extends PureComponent<EmbedModalProps> {
   static defaultProps = {
     currentEmbed: null,
     visible: false,

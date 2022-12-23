@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
 import { isEmpty } from 'lodash';
 import capitalize from 'lodash/capitalize';
@@ -17,20 +16,20 @@ import { Screens } from 'kitsu/navigation';
 import { UserStats } from 'kitsu/screens/Profiles/components/UserStats';
 import { isIdForCurrentUser } from 'kitsu/utils/id';
 
-export default class Summary extends PureComponent {
-  static propTypes = {
-    setActiveTab: PropTypes.func,
-    userId: PropTypes.number.isRequired,
-    componentId: PropTypes.any.isRequired,
-    currentUser: PropTypes.object.isRequired,
-    loadingLibraryActivity: PropTypes.bool,
-    libraryActivity: PropTypes.arrayOf(PropTypes.object),
-    loadingReactions: PropTypes.bool,
-    reactions: PropTypes.arrayOf(PropTypes.object),
-    loadingStats: PropTypes.bool,
-    stats: PropTypes.arrayOf(PropTypes.object),
-  }
+interface SummaryProps {
+  setActiveTab?(...args: unknown[]): unknown;
+  userId: number;
+  componentId: any;
+  currentUser: object;
+  loadingLibraryActivity?: boolean;
+  libraryActivity?: object[];
+  loadingReactions?: boolean;
+  reactions?: object[];
+  loadingStats?: boolean;
+  stats?: object[];
+}
 
+export default class Summary extends PureComponent<SummaryProps> {
   static defaultProps = {
     setActiveTab: null,
     loadingLibraryActivity: false,

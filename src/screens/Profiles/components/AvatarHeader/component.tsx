@@ -1,11 +1,26 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { Avatar } from 'kitsu/screens/Profiles/components/Avatar';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-export const AvatarHeader = ({ avatar, title, subtitle, sideElement, boxed, numberOfLinesTitle }) => (
+interface AvatarHeaderProps {
+  avatar?: string;
+  title?: string;
+  subtitle?: string;
+  sideElement?: React.ReactElement;
+  boxed?: boolean;
+  numberOfLinesTitle?: number;
+}
+
+export const AvatarHeader = ({
+  avatar,
+  title,
+  subtitle,
+  sideElement,
+  boxed,
+  numberOfLinesTitle
+}: AvatarHeaderProps) => (
   <View style={styles.wrap}>
     <Avatar avatar={avatar} />
     <View style={styles.main}>
@@ -19,15 +34,6 @@ export const AvatarHeader = ({ avatar, title, subtitle, sideElement, boxed, numb
     )}
   </View>
 );
-
-AvatarHeader.propTypes = {
-  avatar: PropTypes.string,
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  sideElement: PropTypes.element,
-  boxed: PropTypes.bool,
-  numberOfLinesTitle: PropTypes.number,
-};
 
 AvatarHeader.defaultProps = {
   avatar: null,

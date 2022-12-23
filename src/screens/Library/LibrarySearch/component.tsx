@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { View, FlatList, ScrollView, Keyboard, ActivityIndicator, Text, Image } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { capitalize, isEmpty } from 'lodash';
 import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
 import { SearchBox } from 'kitsu/components/SearchBox';
@@ -28,14 +27,14 @@ const HEADER_MAPPING = {
   },
 };
 
-export class LibrarySearchComponent extends PureComponent {
-  static propTypes = {
-    currentUser: PropTypes.object.isRequired,
-    profile: PropTypes.object.isRequired,
-    updateUserLibraryEntry: PropTypes.func.isRequired,
-    deleteUserLibraryEntry: PropTypes.func.isRequired,
-  };
+interface LibrarySearchComponentProps {
+  currentUser: object;
+  profile: object;
+  updateUserLibraryEntry(...args: unknown[]): unknown;
+  deleteUserLibraryEntry(...args: unknown[]): unknown;
+}
 
+export class LibrarySearchComponent extends PureComponent<LibrarySearchComponentProps> {
   state = {
     loadingAnime: false,
     loadingManga: false,

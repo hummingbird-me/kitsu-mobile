@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Text, FlatList, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
 import values from 'lodash/values';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
@@ -15,7 +14,12 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { isEqual } from 'lodash';
 
-class SearchCategory extends Component {
+interface SearchCategoryProps {
+  getCategories(...args: unknown[]): unknown;
+  categories: object;
+}
+
+class SearchCategory extends Component<SearchCategoryProps> {
   static options() {
     return {
       bottomTabs: {
@@ -294,11 +298,6 @@ const styles = {
 const mapStateToProps = ({ anime }) => {
   const { categories, categoriesLoading } = anime;
   return { categories, categoriesLoading };
-};
-
-SearchCategory.propTypes = {
-  getCategories: PropTypes.func.isRequired,
-  categories: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, { getCategories })(SearchCategory);

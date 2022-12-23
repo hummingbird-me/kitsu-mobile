@@ -2,7 +2,6 @@ import React from 'react';
 import { View, ScrollView, Dimensions } from 'react-native';
 import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/intro/';
 import { Button } from 'kitsu/components/Button';
-import { PropTypes } from 'prop-types';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { IntroHeader } from './common/';
@@ -39,11 +38,11 @@ const INTROS = [
   },
 ];
 
-export default class OnboardingScreen extends React.Component {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-  }
+interface OnboardingScreenProps {
+  componentId: any;
+}
 
+export default class OnboardingScreen extends React.Component<OnboardingScreenProps> {
   state = {
     step: 0,
   };

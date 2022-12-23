@@ -1,19 +1,23 @@
 import React, { PureComponent } from 'react';
 import { Platform, Dimensions, View } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { PropTypes } from 'prop-types';
 import { TabBar } from 'kitsu/screens/Profiles/components/TabBar';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
-export class LibraryTabBar extends PureComponent {
+interface LibraryTabBarProps {
+  goToPage?(...args: unknown[]): unknown;
+  renderTab(...args: unknown[]): unknown;
+  activeTab?: number;
+  tabs?: unknown[];
+  tabBarStyle?: unknown;
+  tabBarContainerStyle?: unknown;
+}
+
+export class LibraryTabBar extends PureComponent<LibraryTabBarProps> {
   static propTypes = {
-    goToPage: PropTypes.func,
-    renderTab: PropTypes.func.isRequired,
-    activeTab: PropTypes.number,
-    tabs: PropTypes.array,
     tabBarStyle: ViewPropTypes.style,
-    tabBarContainerStyle: ViewPropTypes.style,
+    tabBarContainerStyle: ViewPropTypes.style
   };
 
   static defaultProps = {

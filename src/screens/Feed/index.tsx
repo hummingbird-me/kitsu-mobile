@@ -2,7 +2,6 @@ import React from 'react';
 import { StatusBar, View, StyleSheet, Platform, Dimensions, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import PropTypes from 'prop-types';
 import URL from 'url-parse';
 import { Kitsu } from 'kitsu/config/api';
 import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
@@ -34,12 +33,12 @@ const styles = StyleSheet.create({
   },
 });
 
-class Feed extends React.PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    currentUser: PropTypes.object.isRequired,
-  };
+interface FeedProps {
+  componentId: any;
+  currentUser: object;
+}
 
+class Feed extends React.PureComponent<FeedProps> {
   static options() {
     return {
       sideMenu: {

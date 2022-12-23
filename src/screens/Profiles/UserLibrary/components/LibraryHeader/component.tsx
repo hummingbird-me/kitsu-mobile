@@ -1,12 +1,25 @@
 import * as React from 'react';
-import { PropTypes } from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 
-export const LibraryHeader = ({ libraryStatus, libraryType, listTitle, componentId, profile }) => {
+interface LibraryHeaderProps {
+  libraryStatus: string;
+  libraryType: string;
+  listTitle: string;
+  componentId: any;
+  profile: object;
+}
+
+export const LibraryHeader = ({
+  libraryStatus,
+  libraryType,
+  listTitle,
+  componentId,
+  profile
+}: LibraryHeaderProps) => {
   const viewAll = () => {
     Navigation.push(componentId, {
       component: {
@@ -34,12 +47,4 @@ export const LibraryHeader = ({ libraryStatus, libraryType, listTitle, component
       </TouchableOpacity>
     </View>
   );
-};
-
-LibraryHeader.propTypes = {
-  libraryStatus: PropTypes.string.isRequired,
-  libraryType: PropTypes.string.isRequired,
-  listTitle: PropTypes.string.isRequired,
-  componentId: PropTypes.any.isRequired,
-  profile: PropTypes.object.isRequired,
 };

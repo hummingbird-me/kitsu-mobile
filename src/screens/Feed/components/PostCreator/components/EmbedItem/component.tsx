@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { View, Dimensions, ActivityIndicator } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { isEmpty } from 'lodash';
 import { EmbedUrlCache } from 'kitsu/utils/cache';
 import { kitsuConfig } from 'kitsu/config/env';
@@ -8,12 +7,12 @@ import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { darkGrey } from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-export class EmbedItem extends PureComponent {
-  static propTypes = {
-    url: PropTypes.string,
-    width: PropTypes.number,
-  }
+interface EmbedItemProps {
+  url?: string;
+  width?: number;
+}
 
+export class EmbedItem extends PureComponent<EmbedItemProps> {
   static defaultProps = {
     url: '',
     width: null,

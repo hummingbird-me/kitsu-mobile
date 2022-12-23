@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -17,20 +16,20 @@ const HEADER_TEXT_MAPPING = {
   dropped: { anime: 'Dropped', manga: 'Dropped' },
 };
 
-export class UserLibraryListScreenComponent extends PureComponent {
-  static propTypes = {
-    currentUser: PropTypes.object.isRequired,
-    profile: PropTypes.object.isRequired,
-    componentId: PropTypes.any.isRequired,
-    libraryEntries: PropTypes.object.isRequired,
-    libraryStatus: PropTypes.string.isRequired,
-    libraryType: PropTypes.string.isRequired,
-    updateUserLibraryEntry: PropTypes.func.isRequired,
-    deleteUserLibraryEntry: PropTypes.func.isRequired,
-    loading: PropTypes.bool,
-    refreshing: PropTypes.bool,
-  };
+interface UserLibraryListScreenComponentProps {
+  currentUser: object;
+  profile: object;
+  componentId: any;
+  libraryEntries: object;
+  libraryStatus: string;
+  libraryType: string;
+  updateUserLibraryEntry(...args: unknown[]): unknown;
+  deleteUserLibraryEntry(...args: unknown[]): unknown;
+  loading?: boolean;
+  refreshing?: boolean;
+}
 
+export class UserLibraryListScreenComponent extends PureComponent<UserLibraryListScreenComponentProps> {
   static defaultProps = {
     loading: false,
     refreshing: false,

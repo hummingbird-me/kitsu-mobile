@@ -2,12 +2,21 @@ import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { View, Text, StatusBar, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { PropTypes } from 'prop-types';
 import { parseNotificationData } from 'kitsu/utils/notifications';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
-export const NotificationPopover = ({ style, onPress, data }) => {
+interface NotificationPopoverProps {
+  style?: unknown;
+  data?: object;
+  onPress(...args: unknown[]): unknown;
+}
+
+export const NotificationPopover = ({
+  style,
+  onPress,
+  data
+}: NotificationPopoverProps) => {
   if (!data) return null;
   const { actorName, actorAvatar, others, text } = parseNotificationData(data.activities);
 
@@ -33,9 +42,7 @@ export const NotificationPopover = ({ style, onPress, data }) => {
 };
 
 NotificationPopover.propTypes = {
-  style: ViewPropTypes.style,
-  data: PropTypes.object,
-  onPress: PropTypes.func.isRequired,
+  style: ViewPropTypes.style
 };
 NotificationPopover.defaultProps = {
   style: null,

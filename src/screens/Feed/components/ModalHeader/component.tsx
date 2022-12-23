@@ -1,9 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { StyledText } from 'kitsu/components/StyledText';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { View } from 'react-native';
 import { styles } from './styles';
+
+interface ModalHeaderProps {
+  title?: string;
+  leftButtonTitle?: string;
+  leftButtonAction?(...args: unknown[]): unknown;
+  leftButtonDisabled?: boolean;
+  leftButtonLoading?: boolean;
+  rightButtonTitle?: string;
+  rightButtonAction?(...args: unknown[]): unknown;
+  rightButtonDisabled?: boolean;
+  rightButtonLoading?: boolean;
+  style?: object;
+}
 
 export const ModalHeader = ({
   title,
@@ -15,8 +27,8 @@ export const ModalHeader = ({
   rightButtonAction,
   rightButtonDisabled,
   rightButtonLoading,
-  style,
-}) => (
+  style
+}: ModalHeaderProps) => (
   <View style={[styles.modalHeader, style]}>
     <View style={styles.modalButton}>
       <HeaderButton
@@ -40,19 +52,6 @@ export const ModalHeader = ({
     </View>
   </View>
 );
-
-ModalHeader.propTypes = {
-  title: PropTypes.string,
-  leftButtonTitle: PropTypes.string,
-  leftButtonAction: PropTypes.func,
-  leftButtonDisabled: PropTypes.bool,
-  leftButtonLoading: PropTypes.bool,
-  rightButtonTitle: PropTypes.string,
-  rightButtonAction: PropTypes.func,
-  rightButtonDisabled: PropTypes.bool,
-  rightButtonLoading: PropTypes.bool,
-  style: PropTypes.object,
-};
 
 ModalHeader.defaultProps = {
   title: '',

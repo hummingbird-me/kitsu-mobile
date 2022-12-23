@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
 import { ImageLightbox } from 'kitsu/components/ImageLightbox';
 import { Navigation } from 'react-native-navigation';
-import { PropTypes } from 'prop-types';
 
-export class LightBox extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    images: PropTypes.array,
-    initialImageIndex: PropTypes.number,
-  };
+interface LightBoxProps {
+  componentId: any;
+  images?: unknown[];
+  initialImageIndex?: number;
+}
 
+export class LightBox extends PureComponent<LightBoxProps> {
   static defaultProps = {
     images: [],
     initialImageIndex: 0,

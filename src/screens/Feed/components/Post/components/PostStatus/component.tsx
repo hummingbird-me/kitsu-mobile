@@ -1,10 +1,21 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-export const PostStatus = ({ showViewParent, likesCount, commentsCount, onPress }) => (
+interface PostStatusProps {
+  likesCount?: number;
+  commentsCount?: number;
+  showViewParent?: boolean;
+  onPress?(...args: unknown[]): unknown;
+}
+
+export const PostStatus = ({
+  showViewParent,
+  likesCount,
+  commentsCount,
+  onPress
+}: PostStatusProps) => (
   <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
     <View style={styles.postStatusRow}>
       <StyledText color="grey" size="xxsmall">{likesCount + (likesCount === 1 ? ' like' : ' likes')}</StyledText>
@@ -13,13 +24,6 @@ export const PostStatus = ({ showViewParent, likesCount, commentsCount, onPress 
     </View>
   </TouchableOpacity>
 );
-
-PostStatus.propTypes = {
-  likesCount: PropTypes.number,
-  commentsCount: PropTypes.number,
-  showViewParent: PropTypes.bool,
-  onPress: PropTypes.func,
-};
 
 PostStatus.defaultProps = {
   showViewParent: false,

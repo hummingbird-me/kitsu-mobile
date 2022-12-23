@@ -1,16 +1,15 @@
 import React, { PureComponent } from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { PropTypes } from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'kitsu/components/Input';
 import { styles } from './styles';
 
-export class PasswordInput extends PureComponent {
-  static propTypes = {
-    value: PropTypes.string,
-    onChangeText: PropTypes.func,
-  };
+interface PasswordInputProps {
+  value?: string;
+  onChangeText?(...args: unknown[]): unknown;
+}
 
+export class PasswordInput extends PureComponent<PasswordInputProps> {
   static defaultProps = {
     value: '',
     onChangeText: null,

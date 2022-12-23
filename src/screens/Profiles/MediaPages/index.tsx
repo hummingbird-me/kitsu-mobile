@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { StatusBar, Share, View } from 'react-native';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -40,13 +39,13 @@ const TAB_ITEMS = [
 
 const tabs = TAB_ITEMS.map(t => t.key);
 
-class MediaPages extends PureComponent {
-  static propTypes = {
-    mediaId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    mediaType: PropTypes.string.isRequired,
-    activeTab: PropTypes.oneOf(tabs),
-  }
+interface MediaPagesProps {
+  mediaId: number | string;
+  mediaType: string;
+  activeTab?: unknown[];
+}
 
+class MediaPages extends PureComponent<MediaPagesProps> {
   static defaultProps = {
     activeTab: 'summary',
   }

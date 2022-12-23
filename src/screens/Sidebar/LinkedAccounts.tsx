@@ -8,16 +8,15 @@ import fblogo from 'kitsu/assets/img/fblogo.png';
 import * as Sentry from '@sentry/react-native';
 import { connectFBUser, disconnectFBUser } from 'kitsu/store/user/actions';
 import { Navigation } from 'react-native-navigation';
-import { PropTypes } from 'prop-types';
 import { SidebarHeader, SidebarTitle, ItemSeparator } from './common';
 import { styles } from './styles';
 
-class LinkedAccounts extends React.Component {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    currentUser: PropTypes.object,
-  };
+interface LinkedAccountsProps {
+  componentId: any;
+  currentUser?: object;
+}
 
+class LinkedAccounts extends React.Component<LinkedAccountsProps> {
   static defaultProps = {
     currentUser: {},
   };

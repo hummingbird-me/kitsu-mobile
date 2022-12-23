@@ -1,17 +1,16 @@
 import React, { PureComponent } from 'react';
 import { View, FlatList, ScrollView } from 'react-native';
 import { Navigation } from 'react-native-navigation';
-import { PropTypes } from 'prop-types';
 import { blocking, library, privacy, settings, linked, app } from 'kitsu/assets/img/sidebar_icons/';
 import { Screens } from 'kitsu/navigation';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarListItem } from './common';
 import { styles } from './styles';
 
-export class SettingsScreen extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-  };
+interface SettingsScreenProps {
+  componentId: any;
+}
 
+export class SettingsScreen extends PureComponent<SettingsScreenProps> {
   render() {
     return (
       <View style={styles.containerStyle}>

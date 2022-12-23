@@ -1,12 +1,22 @@
 import React from 'react';
 import { View } from 'react-native';
-import PropTypes from 'prop-types';
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { styles } from './styles';
 import { Spoiler } from './Overlays/Spoiler';
 import { NotSafeForWork } from './Overlays/NotSafeForWork';
 import { NSFWandSpoiler } from './Overlays/NSFWandSpoiler';
 import { PostStatus } from '../PostStatus';
+
+interface PostOverlayProps {
+  nsfw?: boolean;
+  spoiler?: boolean;
+  componentId: any;
+  likesCount?: number;
+  commentsCount?: number;
+  taggedMedia?: object;
+  taggedEpisode?: object;
+  onPress?(...args: unknown[]): unknown;
+}
 
 export const PostOverlay = ({
   nsfw,
@@ -16,8 +26,8 @@ export const PostOverlay = ({
   taggedEpisode,
   likesCount,
   commentsCount,
-  componentId,
-}) => {
+  componentId
+}: PostOverlayProps) => {
   let postOverlay = <View />;
 
   if (spoiler && nsfw) {
@@ -41,17 +51,6 @@ export const PostOverlay = ({
       <PostStatus likesCount={likesCount} commentsCount={commentsCount} />
     </View>
   );
-};
-
-PostOverlay.propTypes = {
-  nsfw: PropTypes.bool,
-  spoiler: PropTypes.bool,
-  componentId: PropTypes.any.isRequired,
-  likesCount: PropTypes.number,
-  commentsCount: PropTypes.number,
-  taggedMedia: PropTypes.object,
-  taggedEpisode: PropTypes.object,
-  onPress: PropTypes.func,
 };
 
 PostOverlay.defaultProps = {

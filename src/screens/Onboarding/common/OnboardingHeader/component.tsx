@@ -3,12 +3,17 @@ import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { View, Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
-import PropTypes from 'prop-types';
 import kitsuLogo from 'kitsu/assets/img/kitsu-logo.png';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 import { Navigation } from 'react-native-navigation';
 import { isEmpty } from 'lodash';
+
+interface OnboardingHeaderProps {
+  style?: unknown;
+  backEnabled?: boolean;
+  componentId?: any;
+}
 
 export const OnboardingHeader = ({
   componentId,
@@ -16,8 +21,8 @@ export const OnboardingHeader = ({
   style,
   buttonRightEnabled,
   buttonRightText,
-  buttonRightOnPress,
-}) => (
+  buttonRightOnPress
+}: OnboardingHeaderProps) => (
   <View style={[styles.absolute, style]}>
     <View style={styles.headerContainer}>
       <View style={{ width: 70 }}>
@@ -47,9 +52,7 @@ export const OnboardingHeader = ({
 );
 
 OnboardingHeader.propTypes = {
-  style: ViewPropTypes.style,
-  backEnabled: PropTypes.bool,
-  componentId: PropTypes.any,
+  style: ViewPropTypes.style
 };
 
 OnboardingHeader.defaultProps = {

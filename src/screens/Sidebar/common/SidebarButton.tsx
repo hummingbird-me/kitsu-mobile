@@ -1,9 +1,22 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
-const SidebarButton = ({ disabled = false, loading = false, onPress, title, style }) => (
+interface SidebarButtonProps {
+  style?: number | object;
+  loading?: boolean;
+  onPress(...args: unknown[]): unknown;
+  title: string;
+  disabled?: boolean;
+}
+
+const SidebarButton = ({
+  disabled = false,
+  loading = false,
+  onPress,
+  title,
+  style
+}: SidebarButtonProps) => (
   <View style={[styles.wrapper, style]}>
     <TouchableOpacity
       disabled={disabled || loading}
@@ -42,14 +55,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.buttonDisabledColor,
   },
 });
-
-SidebarButton.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  loading: PropTypes.bool,
-  onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-};
 
 SidebarButton.defaultProps = {
   style: null,

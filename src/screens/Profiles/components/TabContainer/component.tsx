@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { styles } from './styles';
 
-export const TabContainer = ({ light, padded, ...props }) => (
+interface TabContainerProps {
+  light?: boolean;
+  padded?: boolean;
+}
+
+export const TabContainer = ({
+  light,
+  padded,
+  ...props
+}: TabContainerProps) => (
   <View style={styles.container}>
     <View
       style={[
@@ -15,11 +23,6 @@ export const TabContainer = ({ light, padded, ...props }) => (
     />
   </View>
 );
-
-TabContainer.propTypes = {
-  light: PropTypes.bool,
-  padded: PropTypes.bool,
-};
 
 TabContainer.defaultProps = {
   light: false,

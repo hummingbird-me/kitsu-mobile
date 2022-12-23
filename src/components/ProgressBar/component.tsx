@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { Animated, View } from 'react-native';
-import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-export class ProgressBar extends React.Component {
+interface ProgressBarProps {
+  backgroundStyle?: unknown;
+  fillColor?: string;
+  fillPercentage?: number;
+  height?: number;
+}
+
+export class ProgressBar extends React.Component<ProgressBarProps> {
   static propTypes = {
-    backgroundStyle: ViewPropTypes.style,
-    fillColor: PropTypes.string,
-    fillPercentage: PropTypes.number,
-    height: PropTypes.number,
+    backgroundStyle: ViewPropTypes.style
   };
 
   static defaultProps = {

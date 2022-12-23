@@ -1,11 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { defaultAvatar } from 'kitsu/constants/app';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
 import { styles } from './styles';
 
-export const Avatar = ({ avatar }) => (
+interface AvatarProps {
+  avatar?: string;
+}
+
+export const Avatar = ({
+  avatar
+}: AvatarProps) => (
   <View style={styles.wrap}>
     <StyledProgressiveImage
       resize="cover"
@@ -14,10 +19,6 @@ export const Avatar = ({ avatar }) => (
   </View>
 );
 
-
-Avatar.propTypes = {
-  avatar: PropTypes.string,
-};
 
 Avatar.defaultProps = {
   avatar: null,

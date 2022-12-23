@@ -1,10 +1,18 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import PropTypes from 'prop-types';
 import styles from './styles';
 
-const Step = ({ title, desc, image }) => (
+interface StepProps {
+  title: string;
+  desc: string;
+}
+
+const Step = ({
+  title,
+  desc,
+  image
+}: StepProps) => (
   <View style={styles.stepContainer}>
     <View style={styles.slide}>
       <FastImage style={styles.stepImage} source={image} cache="web" />
@@ -13,10 +21,5 @@ const Step = ({ title, desc, image }) => (
     </View>
   </View>
 );
-
-Step.propTypes = {
-  title: PropTypes.string.isRequired,
-  desc: PropTypes.string.isRequired,
-};
 
 export default Step;

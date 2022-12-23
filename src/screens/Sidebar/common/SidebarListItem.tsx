@@ -2,10 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 
-export const ItemSeparator = ({ underlineImage }) => {
+interface ItemSeparatorProps {
+  underlineImage?: boolean;
+}
+
+export const ItemSeparator = ({
+  underlineImage
+}: ItemSeparatorProps) => {
   if (!underlineImage) {
     return ( // done to show white border under image (when list has non-white background)
       <View style={{ flexDirection: 'row', height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }}>
@@ -19,15 +24,25 @@ export const ItemSeparator = ({ underlineImage }) => {
   );
 };
 
-ItemSeparator.propTypes = {
-  underlineImage: PropTypes.bool,
-};
-
 ItemSeparator.defaultProps = {
   underlineImage: true,
 };
 
-export const SidebarListItem = ({ image, imageURL, title, onPress, style }) => (
+interface SidebarListItemProps {
+  title: string;
+  image?: number;
+  imageURL?: string;
+  onPress?(...args: unknown[]): unknown;
+  style?: object | number;
+}
+
+export const SidebarListItem = ({
+  image,
+  imageURL,
+  title,
+  onPress,
+  style
+}: SidebarListItemProps) => (
   <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={[styles.item, style]}>
     <View style={styles.leftContentWrapper}>
       {(image &&
@@ -54,14 +69,6 @@ export const SidebarListItem = ({ image, imageURL, title, onPress, style }) => (
     </View>
   </TouchableOpacity>
 );
-
-SidebarListItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  image: PropTypes.number,
-  imageURL: PropTypes.string,
-  onPress: PropTypes.func,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
-};
 
 SidebarListItem.defaultProps = {
   title: 'Settings',

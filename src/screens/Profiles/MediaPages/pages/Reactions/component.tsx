@@ -1,18 +1,17 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
-import PropTypes from 'prop-types';
 
 import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 
-class Reactions extends PureComponent {
-  static propTypes = {
-    media: PropTypes.object.isRequired,
-    mediaReactions: PropTypes.array.isRequired,
-  }
+interface ReactionsProps {
+  media: object;
+  mediaReactions: unknown[];
+}
 
+class Reactions extends PureComponent<ReactionsProps> {
   renderReactionRows = () => {
     const { mediaReactions, media } = this.props;
 

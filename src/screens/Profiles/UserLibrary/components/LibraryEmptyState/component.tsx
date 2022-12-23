@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PropTypes } from 'prop-types';
 import { ScrollView, View, ImageBackground, Image } from 'react-native';
 import { upperFirst } from 'lodash';
 import { ohNo, mystery } from 'kitsu/assets/img/library';

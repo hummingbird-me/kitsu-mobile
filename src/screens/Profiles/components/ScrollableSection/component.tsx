@@ -1,11 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View, FlatList, ActivityIndicator } from 'react-native';
 import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
 const keyExtractor = (item, index) => index.toString();
+
+interface ScrollableSectionProps {
+  title?: string;
+  titleAction?(...args: unknown[]): unknown;
+  titleLabel?: string;
+  contentDark?: boolean;
+  onViewAllPress?(...args: unknown[]): unknown;
+  data?: unknown[];
+  renderItem?(...args: unknown[]): unknown;
+  loading?: boolean;
+}
 
 export const ScrollableSection = ({
   contentDark,
@@ -15,8 +25,8 @@ export const ScrollableSection = ({
   onViewAllPress,
   data,
   renderItem,
-  loading,
-}) => (
+  loading
+}: ScrollableSectionProps) => (
   <View style={[styles.wrap, contentDark && styles.wrap__dark]}>
     <SectionHeader
       title={title}
@@ -45,17 +55,6 @@ export const ScrollableSection = ({
     }
   </View>
 );
-
-ScrollableSection.propTypes = {
-  title: PropTypes.string,
-  titleAction: PropTypes.func,
-  titleLabel: PropTypes.string,
-  contentDark: PropTypes.bool,
-  onViewAllPress: PropTypes.func,
-  data: PropTypes.array,
-  renderItem: PropTypes.func,
-  loading: PropTypes.bool,
-};
 
 ScrollableSection.defaultProps = {
   title: '',

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,14 +7,23 @@ import { styles } from './styles';
 
 const StyledImage = ({ ...props }) => <FastImage style={styles.imageView} {...props} cache="web" />;
 
+interface MaskedImageProps {
+  maskedTop?: boolean;
+  maskedBottom?: boolean;
+  progressive?: boolean;
+  overlay?: boolean;
+  resizeMode?: string;
+  source?: object;
+}
+
 export const MaskedImage = ({
   maskedTop = false,
   maskedBottom = false,
   overlay = false,
   resizeMode = 'cover',
   source = {},
-  progressive,
-}) => {
+  progressive
+}: MaskedImageProps) => {
   const ImageComponent = progressive ? StyledProgressiveImage : StyledImage;
   return (
     <View style={styles.wrap}>
@@ -28,15 +36,6 @@ export const MaskedImage = ({
       {overlay && <View style={styles.overlay} />}
     </View>
   );
-};
-
-MaskedImage.propTypes = {
-  maskedTop: PropTypes.bool,
-  maskedBottom: PropTypes.bool,
-  progressive: PropTypes.bool,
-  overlay: PropTypes.bool,
-  resizeMode: PropTypes.string,
-  source: PropTypes.object,
 };
 
 MaskedImage.defaultProps = {

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
-import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
@@ -16,15 +15,15 @@ import { Screens, NavigationActions } from 'kitsu/navigation';
 import { styles } from './styles';
 import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
 
-// Post
-export class Post extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    post: PropTypes.object.isRequired,
-    currentUser: PropTypes.object.isRequired,
-    onPostPress: PropTypes.func,
-  }
+interface PostProps {
+  componentId: any;
+  post: object;
+  currentUser: object;
+  onPostPress?(...args: unknown[]): unknown;
+}
 
+// Post
+export class Post extends PureComponent<PostProps> {
   static defaultProps = {
     onPostPress: null,
   }
@@ -423,7 +422,15 @@ export class Post extends PureComponent {
   }
 }
 
-export const PostReplyBanner = ({ name, onClose }) => (
+interface PostReplyBannerProps {
+  name?: string;
+  onClose?(...args: unknown[]): unknown;
+}
+
+export const PostReplyBanner = ({
+  name,
+  onClose
+}: PostReplyBannerProps) => (
   <View style={styles.postReplyBanner}>
     <StyledText size="xsmall" color="grey">
       Replying to {name}
@@ -434,10 +441,6 @@ export const PostReplyBanner = ({ name, onClose }) => (
   </View>
 );
 
-PostReplyBanner.propTypes = {
-  name: PropTypes.string,
-  onClose: PropTypes.func,
-};
 PostReplyBanner.defaultProps = {
   name: '',
   onClose: null,

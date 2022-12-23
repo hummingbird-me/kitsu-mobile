@@ -1,12 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import PropTypes from 'prop-types';
 import styles from './styles';
 
-const Dot = ({ active }) => <View style={[styles.stepDot, active ? styles.stepDotActive : '']} />;
+interface DotProps {
+  active: boolean;
+}
 
-Dot.propTypes = {
-  active: PropTypes.bool.isRequired,
-};
+const Dot = ({
+  active
+}: DotProps) => <View style={[styles.stepDot, active ? styles.stepDotActive : '']} />;
 
 export default Dot;

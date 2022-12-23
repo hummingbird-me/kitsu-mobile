@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar, statusBarHeight } from 'kitsu/constants/app';
 import {
@@ -32,21 +31,21 @@ import { Screens, NavigationActions } from 'kitsu/navigation';
 import { StyledText } from 'kitsu/components/StyledText';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
-export default class PostDetails extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    currentUser: PropTypes.object.isRequired,
-    post: PropTypes.object.isRequired,
-    postLikesCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    comments: PropTypes.arrayOf(PropTypes.object),
-    topLevelCommentsCount: PropTypes.number,
-    commentsCount: PropTypes.number,
-    like: PropTypes.object,
-    isLiked: PropTypes.bool,
-    syncComments: PropTypes.func,
-    showLoadMoreComments: PropTypes.bool,
-  };
+interface PostDetailsProps {
+  componentId: any;
+  currentUser: object;
+  post: object;
+  postLikesCount?: string | number;
+  comments?: object[];
+  topLevelCommentsCount?: number;
+  commentsCount?: number;
+  like?: object;
+  isLiked?: boolean;
+  syncComments?(...args: unknown[]): unknown;
+  showLoadMoreComments?: boolean;
+}
 
+export default class PostDetails extends PureComponent<PostDetailsProps> {
   static defaultProps = {
     postLikesCount: 0,
     comments: [],

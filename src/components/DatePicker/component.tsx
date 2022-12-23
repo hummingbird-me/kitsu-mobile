@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -13,13 +12,13 @@ import {
 } from 'react-native';
 import { styles } from './styles';
 
-export class DatePicker extends PureComponent {
-  static propTypes = {
-    duration: PropTypes.number,
-    style: PropTypes.object,
-    disabled: PropTypes.bool,
-  };
+interface DatePickerProps {
+  duration?: number;
+  style?: object;
+  disabled?: boolean;
+}
 
+export class DatePicker extends PureComponent<DatePickerProps> {
   static defaultProps = {
     duration: 300,
     style: null,

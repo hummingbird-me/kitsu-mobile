@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
@@ -36,13 +35,13 @@ function getBestSpacing() {
 // Just need to calculate this once since we don't have landscape.
 const bestSpacing = getBestSpacing();
 
-export class GiphyModal extends PureComponent {
-  static propTypes = {
-    visible: PropTypes.bool,
-    onCancelPress: PropTypes.func,
-    onGifSelect: PropTypes.func,
-  }
+interface GiphyModalProps {
+  visible?: boolean;
+  onCancelPress?(...args: unknown[]): unknown;
+  onGifSelect?(...args: unknown[]): unknown;
+}
 
+export class GiphyModal extends PureComponent<GiphyModalProps> {
   static defaultProps = {
     visible: false,
     onCancelPress: () => {},

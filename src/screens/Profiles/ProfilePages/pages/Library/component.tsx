@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { Dimensions, FlatList, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -46,14 +45,14 @@ const progressFromLibraryEntry = (libraryEntry) => {
   return Math.floor((libraryEntry.progress / count) * 100);
 };
 
-class Library extends PureComponent {
-  static propTypes = {
-    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    currentUser: PropTypes.object.isRequired,
-    profile: PropTypes.object.isRequired,
-    componentId: PropTypes.any.isRequired,
-  }
+interface LibraryProps {
+  userId: string | number;
+  currentUser: object;
+  profile: object;
+  componentId: any;
+}
 
+class Library extends PureComponent<LibraryProps> {
   navigateToSearch = () => {
     const { profile, componentId } = this.props;
     if (profile) {

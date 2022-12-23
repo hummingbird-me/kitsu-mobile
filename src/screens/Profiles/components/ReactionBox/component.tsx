@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -10,7 +9,13 @@ import { Kitsu } from 'kitsu/config/api';
 import { isIdForCurrentUser } from 'kitsu/utils/id';
 import { styles } from './styles';
 
-export class ReactionBoxComponent extends PureComponent {
+interface ReactionBoxComponentProps {
+  reactedMedia?: string;
+  boxed?: boolean;
+  reaction: object;
+}
+
+export class ReactionBoxComponent extends PureComponent<ReactionBoxComponentProps> {
   static defaultProps = {
     reaction: null,
     reactedMedia: '',
@@ -104,7 +109,17 @@ export class ReactionBoxComponent extends PureComponent {
   }
 }
 
-export const UpVoteCountBox = ({ canVote, isVotedOn, upVotesCount, onPress }) => (
+interface UpVoteCountBoxProps {
+  upVotesCount?: number;
+  onPress?(...args: unknown[]): unknown;
+}
+
+export const UpVoteCountBox = ({
+  canVote,
+  isVotedOn,
+  upVotesCount,
+  onPress
+}: UpVoteCountBoxProps) => (
   canVote ?
     <TouchableOpacity activeOpacity={0.6} onPress={onPress} style={[styles.voteBox, isVotedOn && styles.voteBox__voted]}>
       <Icon name="md-arrow-dropup" style={[styles.voteIcon, isVotedOn && styles.voteIcon__voted]} />
@@ -118,20 +133,9 @@ export const UpVoteCountBox = ({ canVote, isVotedOn, upVotesCount, onPress }) =>
 );
 
 
-UpVoteCountBox.propTypes = {
-  upVotesCount: PropTypes.number,
-  onPress: PropTypes.func
-};
-
 UpVoteCountBox.defaultProps = {
   upVotesCount: '',
   onPress: null
-};
-
-ReactionBoxComponent.propTypes = {
-  reactedMedia: PropTypes.string,
-  boxed: PropTypes.bool,
-  reaction: PropTypes.object.isRequired,
 };
 
 ReactionBoxComponent.defaultProps = {

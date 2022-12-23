@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, Image, Dimensions, ActivityIndicator, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageSizeCache } from 'kitsu/utils/cache';
@@ -14,25 +13,23 @@ const MAX_PHONE_WIDTH = 480;
 // Change the auto height value based on device
 const MAX_AUTO_HEIGHT = Dimensions.get('window').width > MAX_PHONE_WIDTH ? 400 : 325;
 
-export class PostImage extends PureComponent {
-  static propTypes = {
-    uri: PropTypes.string.isRequired,
-    width: PropTypes.number,
-    height: PropTypes.number,
-    borderRadius: PropTypes.number,
-    // The maximum height an image can be if the width is set and height is not set.
-    maxAutoHeight: PropTypes.number,
+interface PostImageProps {
+  uri: string;
+  width?: number;
+  height?: number;
+  borderRadius?: number;
+  // The maximum height an image can be if the width is set and height is not set.
+  maxAutoHeight?: number;
+  // Whether to show a GIF overlay on *Kitsu* GIF images
+  // This will ignore any external gif urls since we don't have a way to show only 1 frame of a gif yet :/
+  showGIFOverlayForKitsu?: boolean;
+  // Whether to show the Animated Kitsu GIF
+  // This will default to true if `showGIFOverlayForKitsu` is `false`
+  // If this is set to false then the GIF will get passed to imgix which will convert it to a 1 frame image
+  showAnimatedGIF?: boolean;
+}
 
-    // Whether to show a GIF overlay on *Kitsu* GIF images
-    // This will ignore any external gif urls since we don't have a way to show only 1 frame of a gif yet :/
-    showGIFOverlayForKitsu: PropTypes.bool,
-
-    // Whether to show the Animated Kitsu GIF
-    // This will default to true if `showGIFOverlayForKitsu` is `false`
-    // If this is set to false then the GIF will get passed to imgix which will convert it to a 1 frame image
-    showAnimatedGIF: PropTypes.bool,
-  };
-
+export class PostImage extends PureComponent<PostImageProps> {
   static defaultProps = {
     width: null,
     height: null,

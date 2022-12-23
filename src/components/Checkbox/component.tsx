@@ -1,11 +1,33 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { TouchableOpacity, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
 
-export const CheckBox = (props) => {
+interface CheckBoxProps {
+  component?: any;
+  checked?: boolean;
+  iconRight?: boolean;
+  title?: string | React.ReactElement;
+  center?: boolean;
+  right?: boolean;
+  containerStyle?: unknown;
+  textStyle?: unknown;
+  onPress?(...args: unknown[]): unknown;
+  onLongPress?(...args: unknown[]): unknown;
+  checkedIcon?: string;
+  uncheckedIcon?: string;
+  iconType?: string;
+  size?: number;
+  checkedColor?: string;
+  uncheckedColor?: string;
+  checkedTitle?: string;
+  onIconPress?(...args: unknown[]): unknown;
+  onLongIconPress?(...args: unknown[]): unknown;
+  fontFamily?: string;
+}
+
+export const CheckBox = (props: CheckBoxProps) => {
   const {
     component,
     checked,
@@ -97,24 +119,6 @@ CheckBox.defaultProps = {
 };
 
 CheckBox.propTypes = {
-  component: PropTypes.any,
-  checked: PropTypes.bool,
-  iconRight: PropTypes.bool,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  center: PropTypes.bool,
-  right: PropTypes.bool,
   containerStyle: ViewPropTypes.style,
-  textStyle: Text.propTypes.style,
-  onPress: PropTypes.func,
-  onLongPress: PropTypes.func,
-  checkedIcon: PropTypes.string,
-  uncheckedIcon: PropTypes.string,
-  iconType: PropTypes.string,
-  size: PropTypes.number,
-  checkedColor: PropTypes.string,
-  uncheckedColor: PropTypes.string,
-  checkedTitle: PropTypes.string,
-  onIconPress: PropTypes.func,
-  onLongIconPress: PropTypes.func,
-  fontFamily: PropTypes.string,
+  textStyle: Text.propTypes.style
 };

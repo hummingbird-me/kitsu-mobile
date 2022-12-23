@@ -19,7 +19,6 @@ import * as colors from 'kitsu/constants/colors';
 import moment from 'moment';
 import { WebComponent } from 'kitsu/utils/components';
 import { Navigation } from 'react-native-navigation';
-import { PropTypes } from 'prop-types';
 import { Screens, NavigationActions } from 'kitsu/navigation';
 import { uniqBy, isNil, startCase, isEmpty } from 'lodash';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
@@ -32,15 +31,15 @@ const LANGUAGE_LOOKUP = {
 };
 const ITEM_WIDTH = 50;
 
-class Unit extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    unit: PropTypes.object.isRequired,
-    media: PropTypes.object.isRequired,
-    currentUser: PropTypes.object,
-    shouldShowMediaCard: PropTypes.bool,
-  };
+interface UnitProps {
+  componentId: any;
+  unit: object;
+  media: object;
+  currentUser?: object;
+  shouldShowMediaCard?: boolean;
+}
 
+class Unit extends PureComponent<UnitProps> {
   static defaultProps = {
     currentUser: null,
     shouldShowMediaCard: false,
@@ -335,7 +334,7 @@ class Unit extends PureComponent {
       </View>
     );
   }
-};
+}
 
 const mapStateToProps = ({ user }) => {
   const { currentUser } = user;

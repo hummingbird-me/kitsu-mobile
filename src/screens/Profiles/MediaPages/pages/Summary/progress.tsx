@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import { isNull, isFunction } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -22,14 +21,14 @@ const STATUS_TEXT = {
   dropped: 'Dropped',
 };
 
-export class SummaryProgress extends PureComponent {
-  static propTypes = {
-    media: PropTypes.object,
-    libraryEntry: PropTypes.object,
-    onPress: PropTypes.func,
-    onEditPress: PropTypes.func,
-  }
+interface SummaryProgressProps {
+  media?: object;
+  libraryEntry?: object;
+  onPress?(...args: unknown[]): unknown;
+  onEditPress?(...args: unknown[]): unknown;
+}
 
+export class SummaryProgress extends PureComponent<SummaryProgressProps> {
   static defaultProps = {
     media: null,
     libraryEntry: null,

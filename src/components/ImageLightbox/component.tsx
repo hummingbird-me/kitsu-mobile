@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, Share, Linking } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -8,17 +7,17 @@ import { parseURL } from 'kitsu/utils/url';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
-export class ImageLightbox extends PureComponent {
-  static propTypes = {
-    images: PropTypes.arrayOf(PropTypes.string).isRequired,
-    visible: PropTypes.bool,
-    initialImageIndex: PropTypes.number,
-    onClose: PropTypes.func.isRequired,
-    onShare: PropTypes.func,
-    onDownload: PropTypes.func,
-    onOpen: PropTypes.func,
-  }
+interface ImageLightboxProps {
+  images: string[];
+  visible?: boolean;
+  initialImageIndex?: number;
+  onClose(...args: unknown[]): unknown;
+  onShare?(...args: unknown[]): unknown;
+  onDownload?(...args: unknown[]): unknown;
+  onOpen?(...args: unknown[]): unknown;
+}
 
+export class ImageLightbox extends PureComponent<ImageLightboxProps> {
   static defaultProps = {
     visible: false,
     initialImageIndex: 0,

@@ -18,7 +18,41 @@ import { Screens, NavigationActions } from 'kitsu/navigation';
 import { handleURL } from 'kitsu/utils/url';
 import { styles } from './styles';
 
-class EmbeddedContent extends PureComponent {
+interface EmbeddedContentProps {
+  embed?: {
+    kind?: string,
+    site?: {
+      name: string
+    },
+    image?: unknown,
+    video?: {
+      url: string,
+      width?: unknown,
+      height?: unknown
+    },
+    url?: string,
+    title?: string,
+    description?: string
+  };
+  uploads?: {
+    uploadOrder: number,
+    content?: {
+      original?: string
+    }
+  }[];
+  style?: unknown;
+  maxWidth: number;
+  minWidth?: number;
+  borderRadius?: number;
+  componentId?: any;
+  compact?: boolean;
+  dataSaver?: boolean;
+  // Manual override for data saver
+  ignoreDataSaver?: boolean;
+  disabled?: boolean;
+}
+
+class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
   // The reason for the combination of string or number is that
   // sometimes the embeds return width/height as strings
   // othertimes as numbers ...
@@ -38,40 +72,7 @@ class EmbeddedContent extends PureComponent {
   ]);
 
   static propTypes = {
-    embed: PropTypes.shape({
-      kind: PropTypes.string,
-      site: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-      }),
-      image: this.typeStringImage,
-      video: PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        width: this.typeStringNumber,
-        height: this.typeStringNumber,
-      }),
-      url: PropTypes.string,
-      title: PropTypes.string,
-      description: PropTypes.string,
-    }),
-    uploads: PropTypes.arrayOf(
-      PropTypes.shape({
-        uploadOrder: PropTypes.number.isRequired,
-        content: PropTypes.shape({
-          original: PropTypes.string,
-        }),
-      }),
-    ),
-    style: ViewPropTypes.style,
-    maxWidth: PropTypes.number.isRequired,
-    minWidth: PropTypes.number,
-    borderRadius: PropTypes.number,
-    componentId: PropTypes.any,
-    compact: PropTypes.bool,
-    dataSaver: PropTypes.bool,
-
-    // Manual override for data saver
-    ignoreDataSaver: PropTypes.bool,
-    disabled: PropTypes.bool,
+    style: ViewPropTypes.style
   }
 
   static defaultProps = {

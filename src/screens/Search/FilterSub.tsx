@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, SectionList, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { getCategories } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
@@ -10,7 +9,9 @@ import { Navigation } from 'react-native-navigation';
 
 const width = Dimensions.get('screen').width - 40;
 
-class FilterSub extends Component {
+interface FilterSubProps {}
+
+class FilterSub extends Component<FilterSubProps> {
   static options() {
     return {
       bottomTabs: {
@@ -305,9 +306,6 @@ const styles = {
 const mapStateToProps = ({ anime }) => {
   const { categories, categoriesLoading } = anime;
   return { categories, categoriesLoading };
-};
-
-FilterSub.propTypes = {
 };
 
 export default connect(mapStateToProps, { getCategories })(FilterSub);

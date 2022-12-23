@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
 import { kitsuConfig } from 'kitsu/config/env';
@@ -13,14 +12,14 @@ import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
 
-class MediaModal extends PureComponent {
-  static propTypes = {
-    visible: PropTypes.bool,
-    onCancelPress: PropTypes.func,
-    onMediaSelect: PropTypes.func,
-    algoliaKeys: PropTypes.object,
-  }
+interface MediaModalProps {
+  visible?: boolean;
+  onCancelPress?(...args: unknown[]): unknown;
+  onMediaSelect?(...args: unknown[]): unknown;
+  algoliaKeys?: object;
+}
 
+class MediaModal extends PureComponent<MediaModalProps> {
   static defaultProps = {
     visible: false,
     onCancelPress: null,

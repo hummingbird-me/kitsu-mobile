@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -19,7 +18,23 @@ const paddingOptions = {
   thumbnail: 10,
 };
 
-const TextView = ({ variant, title, subtitle, boldTitle, centerTitle, noMask }) => {
+interface TextViewProps {
+  variant?: "landscape" | "portrait" | "square" | "landscapeLarge" | "landscapeSmall" | "portraitLarge" | "thumbnail" | "filled";
+  title?: string;
+  subtitle?: string;
+  noMask?: boolean;
+  boldTitle?: boolean;
+  centerTitle?: boolean;
+}
+
+const TextView = ({
+  variant,
+  title,
+  subtitle,
+  boldTitle,
+  centerTitle,
+  noMask
+}: TextViewProps) => {
   const titleSize = variant === 'landscapeLarge' ? 'default' : 'xsmall';
   const subtitleSize = variant === 'landscapeLarge' ? 'small' : 'xxsmall';
 
@@ -46,15 +61,6 @@ const TextView = ({ variant, title, subtitle, boldTitle, centerTitle, noMask }) 
   );
 };
 
-TextView.propTypes = {
-  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'landscapeSmall', 'portraitLarge', 'thumbnail', 'filled']),
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  noMask: PropTypes.bool,
-  boldTitle: PropTypes.bool,
-  centerTitle: PropTypes.bool,
-};
-
 TextView.defaultProps = {
   variant: 'portrait',
   title: null,
@@ -63,6 +69,20 @@ TextView.defaultProps = {
   boldTitle: true,
   centerTitle: false,
 };
+
+interface ImageCardProps {
+  variant?: "landscape" | "portrait" | "square" | "landscapeLarge" | "landscapeSmall" | "portraitLarge" | "thumbnail" | "filled";
+  title?: string;
+  subtitle?: string;
+  subheading?: string;
+  source?: object;
+  noMask?: boolean;
+  boldTitle?: boolean;
+  centerTitle?: boolean;
+  style?: unknown;
+  cardStyle?: unknown;
+  onPress?(...args: unknown[]): unknown;
+}
 
 export const ImageCard = ({
   variant,
@@ -75,8 +95,8 @@ export const ImageCard = ({
   centerTitle,
   style,
   cardStyle,
-  onPress,
-}) => {
+  onPress
+}: ImageCardProps) => {
   const cardDimensions = {
     width: cardSize[variant].width,
     height: cardSize[variant].height,
@@ -115,17 +135,8 @@ export const ImageCard = ({
 };
 
 ImageCard.propTypes = {
-  variant: PropTypes.oneOf(['landscape', 'portrait', 'square', 'landscapeLarge', 'landscapeSmall', 'portraitLarge', 'thumbnail', 'filled']),
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  subheading: PropTypes.string,
-  source: PropTypes.object,
-  noMask: PropTypes.bool,
-  boldTitle: PropTypes.bool,
-  centerTitle: PropTypes.bool,
   style: ViewPropTypes.style,
-  cardStyle: ViewPropTypes.style,
-  onPress: PropTypes.func,
+  cardStyle: ViewPropTypes.style
 };
 
 ImageCard.defaultProps = {

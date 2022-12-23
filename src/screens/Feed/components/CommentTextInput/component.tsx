@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, TextInput, TouchableOpacity, Text, ActivityIndicator, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from 'kitsu/constants/colors';
@@ -9,21 +8,21 @@ import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { isEmpty } from 'lodash';
 import { styles } from './styles';
 
-export class CommentTextInput extends PureComponent {
-  static propTypes = {
-    inputRef: PropTypes.func,
-    currentUser: PropTypes.object.isRequired,
-    autoFocus: PropTypes.bool,
-    placeholderText: PropTypes.string,
-    showAvatar: PropTypes.bool,
-    onSubmit: PropTypes.func,
-    comment: PropTypes.string,
-    onCommentChanged: PropTypes.func,
-    onGifSelected: PropTypes.func,
-    loading: PropTypes.bool,
-    multiline: PropTypes.bool,
-  }
+interface CommentTextInputProps {
+  inputRef?(...args: unknown[]): unknown;
+  currentUser: object;
+  autoFocus?: boolean;
+  placeholderText?: string;
+  showAvatar?: boolean;
+  onSubmit?(...args: unknown[]): unknown;
+  comment?: string;
+  onCommentChanged?(...args: unknown[]): unknown;
+  onGifSelected?(...args: unknown[]): unknown;
+  loading?: boolean;
+  multiline?: boolean;
+}
 
+export class CommentTextInput extends PureComponent<CommentTextInputProps> {
   static defaultProps = {
     inputRef: null,
     autoFocus: false,

@@ -6,17 +6,16 @@ import { commonStyles } from 'kitsu/common/styles';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common';
 import { WebComponent } from 'kitsu/utils/components';
 import { Navigation } from 'react-native-navigation';
-import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 
-export class CannyBoard extends React.Component {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    token: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    title: PropTypes.string,
-  };
+interface CannyBoardProps {
+  componentId: any;
+  token: string;
+  type: string;
+  title?: string;
+}
 
+export class CannyBoard extends React.Component<CannyBoardProps> {
   static defaultProps = {
     title: 'Canny',
   }

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { debounce } from 'lodash';
-import { PropTypes } from 'prop-types';
 import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Counter } from 'kitsu/components/Counter';
@@ -34,19 +33,19 @@ const HEADER_TEXT_MAPPING = {
   dropped: { anime: 'Dropped', manga: 'Dropped' },
 };
 
-export class UserLibraryListCard extends React.PureComponent {
-  static propTypes = {
-    currentUser: PropTypes.object.isRequired,
-    libraryEntry: PropTypes.object.isRequired,
-    libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
-    libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
-    onSwipingItem: PropTypes.func.isRequired,
-    profile: PropTypes.object.isRequired,
-    updateUserLibraryEntry: PropTypes.func.isRequired,
-    deleteUserLibraryEntry: PropTypes.func.isRequired,
-    componentId: PropTypes.any,
-  }
+interface UserLibraryListCardProps {
+  currentUser: object;
+  libraryEntry: object;
+  libraryStatus: "current" | "planned" | "completed" | "on_hold" | "dropped";
+  libraryType: "anime" | "manga";
+  onSwipingItem(...args: unknown[]): unknown;
+  profile: object;
+  updateUserLibraryEntry(...args: unknown[]): unknown;
+  deleteUserLibraryEntry(...args: unknown[]): unknown;
+  componentId?: any;
+}
 
+export class UserLibraryListCard extends React.PureComponent<UserLibraryListCardProps> {
   static defaultProps = {
     componentId: null,
   }

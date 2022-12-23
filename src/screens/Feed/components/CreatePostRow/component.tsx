@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import { defaultAvatar } from 'kitsu/constants/app';
@@ -8,7 +7,30 @@ import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { styles } from './styles';
 
-const CreatePostRowComponent = ({ currentUser, targetUser, onPress, title, style }) => {
+interface CreatePostRowComponentProps {
+  currentUser: {
+    id?: string,
+    avatar?: {
+      medium?: string
+    },
+    name?: string
+  };
+  targetUser?: {
+    id?: string,
+    name?: string
+  };
+  onPress?(...args: unknown[]): unknown;
+  title?: string;
+  style?: object;
+}
+
+const CreatePostRowComponent = ({
+  currentUser,
+  targetUser,
+  onPress,
+  title,
+  style
+}: CreatePostRowComponentProps) => {
   const defaultTitle = `Want to share an update, ${currentUser.name}?`;
   const shareTitle = `Share an update with ${targetUser ? targetUser.name : 'Someone'}`;
   const isTargetCurrentUser = targetUser ? targetUser.id === currentUser.id : true;
@@ -26,23 +48,6 @@ const CreatePostRowComponent = ({ currentUser, targetUser, onPress, title, style
       </TouchableOpacity>
     </View>
   );
-};
-
-CreatePostRowComponent.propTypes = {
-  currentUser: PropTypes.shape({
-    id: PropTypes.string,
-    avatar: PropTypes.shape({
-      medium: PropTypes.string,
-    }),
-    name: PropTypes.string,
-  }).isRequired,
-  targetUser: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  }),
-  onPress: PropTypes.func,
-  title: PropTypes.string,
-  style: PropTypes.object,
 };
 
 CreatePostRowComponent.defaultProps = {

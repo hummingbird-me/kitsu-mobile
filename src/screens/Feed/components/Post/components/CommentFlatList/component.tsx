@@ -1,19 +1,18 @@
 import React, { PureComponent } from 'react';
 import { FlatList, View } from 'react-native';
-import PropTypes from 'prop-types';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 
-export class CommentFlatList extends PureComponent {
-  static propTypes = {
-    post: PropTypes.object.isRequired,
-    hideEmbeds: PropTypes.bool,
-    latestComments: PropTypes.array.isRequired,
-    componentId: PropTypes.any.isRequired,
-    isTruncated: PropTypes.bool,
-  }
+interface CommentFlatListProps {
+  post: object;
+  hideEmbeds?: boolean;
+  latestComments: unknown[];
+  componentId: any;
+  isTruncated?: boolean;
+}
 
+export class CommentFlatList extends PureComponent<CommentFlatListProps> {
   static defaultProps = {
     hideEmbeds: false,
     isTruncated: false,

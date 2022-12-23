@@ -1,21 +1,20 @@
 import * as React from 'react';
-import { PropTypes } from 'prop-types';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { isNil, isFinite } from 'lodash';
 import { styles } from './styles';
 
-export class Counter extends React.PureComponent {
-  static propTypes = {
-    disabled: PropTypes.bool,
-    initialValue: PropTypes.number.isRequired,
-    value: PropTypes.number,
-    maxValue: PropTypes.number,
-    minValue: PropTypes.number,
-    onValueChanged: PropTypes.func,
-    progressCounter: PropTypes.bool,
-    inputRef: PropTypes.func,
-  }
+interface CounterProps {
+  disabled?: boolean;
+  initialValue: number;
+  value?: number;
+  maxValue?: number;
+  minValue?: number;
+  onValueChanged?(...args: unknown[]): unknown;
+  progressCounter?: boolean;
+  inputRef?(...args: unknown[]): unknown;
+}
 
+export class Counter extends React.PureComponent<CounterProps> {
   static defaultProps = {
     disabled: false,
     maxValue: undefined,

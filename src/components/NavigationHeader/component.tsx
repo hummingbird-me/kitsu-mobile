@@ -1,11 +1,25 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import * as PropTypes from 'prop-types';
 import { SimpleHeader } from 'kitsu/components/SimpleHeader';
 import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
 
-export const NavigationHeader = ({ navigation, title, leftIcon, rightIcon, componentId, ...props }) => (
+interface NavigationHeaderProps {
+  navigation?: object;
+  componentId?: any;
+  leftIcon?: string;
+  rightIcon?: string;
+  title?: string;
+}
+
+export const NavigationHeader = ({
+  navigation,
+  title,
+  leftIcon,
+  rightIcon,
+  componentId,
+  ...props
+}: NavigationHeaderProps) => (
   <SimpleHeader
     titleContent={title}
     leftContent={leftIcon ? <Icon name={leftIcon} style={[styles.icon, { fontSize: 16 }]} /> : null}
@@ -18,14 +32,6 @@ export const NavigationHeader = ({ navigation, title, leftIcon, rightIcon, compo
     {...props}
   />
 );
-
-NavigationHeader.propTypes = {
-  navigation: PropTypes.object,
-  componentId: PropTypes.any,
-  leftIcon: PropTypes.string,
-  rightIcon: PropTypes.string,
-  title: PropTypes.string,
-};
 
 NavigationHeader.defaultProps = {
   navigation: null,

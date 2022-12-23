@@ -2,18 +2,17 @@ import React, { PureComponent } from 'react';
 import { Animated, Text, Platform } from 'react-native';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
-import PropTypes from 'prop-types';
 import styles from './styles';
 
-export default class QuickUpdateEditor extends PureComponent {
-  static propTypes = {
-    media: PropTypes.object.isRequired,
-    currentEpisode: PropTypes.object.isRequired,
-    progress: PropTypes.number.isRequired,
-    onCancel: PropTypes.func,
-    onPostCreated: PropTypes.func,
-  };
+interface QuickUpdateEditorProps {
+  media: object;
+  currentEpisode: object;
+  progress: number;
+  onCancel?(...args: unknown[]): unknown;
+  onPostCreated?(...args: unknown[]): unknown;
+}
 
+export default class QuickUpdateEditor extends PureComponent<QuickUpdateEditorProps> {
   static defaultProps = {
     onCancel: () => {},
     onPostCreated: () => {},

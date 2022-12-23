@@ -1,23 +1,22 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Profiles/constants';
 import { isEmpty, isNull } from 'lodash';
 import { styles } from './styles';
 
-export class ImageGrid extends PureComponent {
-  static propTypes = {
-    images: PropTypes.arrayOf(PropTypes.string),
-    heightToWidthRatio: PropTypes.number,
-    width: PropTypes.number,
-    compact: PropTypes.bool,
-    imageBorderWidth: PropTypes.number,
-    borderRadius: PropTypes.number,
-    onImageTapped: PropTypes.func,
-    disabled: PropTypes.bool,
-  };
+interface ImageGridProps {
+  images?: string[];
+  heightToWidthRatio?: number;
+  width?: number;
+  compact?: boolean;
+  imageBorderWidth?: number;
+  borderRadius?: number;
+  onImageTapped?(...args: unknown[]): unknown;
+  disabled?: boolean;
+}
 
+export class ImageGrid extends PureComponent<ImageGridProps> {
   static defaultProps = {
     images: [],
     heightToWidthRatio: Dimensions.get('window').width > 600 ? (3 / 4) : 1,

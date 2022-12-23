@@ -1,16 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
+interface SectionTitleProps {
+  contentDark?: boolean;
+  title?: string;
+  titleAction?(...args: unknown[]): unknown;
+  titleLabel?: string;
+}
+
 export const SectionTitle = ({
   contentDark,
   title,
   titleAction,
-  titleLabel,
-}) => (
+  titleLabel
+}: SectionTitleProps) => (
   <View style={styles.main}>
     <StyledText bold size="xsmall" color={contentDark ? 'dark' : 'lightGrey'}>{title}</StyledText>
     {(titleAction && titleLabel) && (
@@ -22,13 +28,6 @@ export const SectionTitle = ({
   </View>
 );
 
-SectionTitle.propTypes = {
-  contentDark: PropTypes.bool,
-  title: PropTypes.string,
-  titleAction: PropTypes.func,
-  titleLabel: PropTypes.string,
-};
-
 SectionTitle.defaultProps = {
   contentDark: false,
   title: '',
@@ -36,14 +35,23 @@ SectionTitle.defaultProps = {
   titleLabel: '',
 };
 
+interface SectionHeaderProps {
+  contentDark?: boolean;
+  onViewAllPress?(...args: unknown[]): unknown;
+  title?: string;
+  titleAction?(...args: unknown[]): unknown;
+  titleLabel?: string;
+  viewAllText?: string;
+}
+
 export const SectionHeader = ({
   contentDark,
   title,
   titleAction,
   titleLabel,
   onViewAllPress,
-  viewAllText,
-}) => (
+  viewAllText
+}: SectionHeaderProps) => (
   <View style={styles.wrap}>
     <SectionTitle
       contentDark={contentDark}
@@ -59,15 +67,6 @@ export const SectionHeader = ({
     )}
   </View>
 );
-
-SectionHeader.propTypes = {
-  contentDark: PropTypes.bool,
-  onViewAllPress: PropTypes.func,
-  title: PropTypes.string,
-  titleAction: PropTypes.func,
-  titleLabel: PropTypes.string,
-  viewAllText: PropTypes.string,
-};
 
 SectionHeader.defaultProps = {
   contentDark: false,

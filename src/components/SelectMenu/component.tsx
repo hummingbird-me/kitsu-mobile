@@ -1,24 +1,20 @@
 import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
 import ActionSheet from 'react-native-actionsheet';
 import * as colors from 'kitsu/constants/colors';
 
-export class SelectMenu extends React.PureComponent {
-  static propTypes = {
-    cancelButtonIndex: PropTypes.number,
-    activeOpacity: PropTypes.number,
-    children: PropTypes.element,
-    disabled: PropTypes.bool,
-    options: PropTypes.arrayOf(PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-    ])).isRequired,
-    onOptionSelected: PropTypes.func.isRequired,
-    style: PropTypes.any,
-    tintColor: PropTypes.string,
-  };
+interface SelectMenuProps {
+  cancelButtonIndex?: number;
+  activeOpacity?: number;
+  children?: React.ReactElement;
+  disabled?: boolean;
+  options: string | object[];
+  onOptionSelected(...args: unknown[]): unknown;
+  style?: any;
+  tintColor?: string;
+}
 
+export class SelectMenu extends React.PureComponent<SelectMenuProps> {
   static defaultProps = {
     cancelButtonIndex: -1,
     activeOpacity: 1,

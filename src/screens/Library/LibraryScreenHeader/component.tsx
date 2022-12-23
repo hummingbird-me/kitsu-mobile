@@ -3,10 +3,21 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { capitalize } from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 
-export const LibraryScreenHeader = ({ title, onTitlePress, onOptionPress, onSearchPress }) => (
+interface LibraryScreenHeaderProps {
+  title: string;
+  onTitlePress?(...args: unknown[]): unknown;
+  onOptionPress?(...args: unknown[]): unknown;
+  onSearchPress?(...args: unknown[]): unknown;
+}
+
+export const LibraryScreenHeader = ({
+  title,
+  onTitlePress,
+  onOptionPress,
+  onSearchPress
+}: LibraryScreenHeaderProps) => (
   <View style={styles.headerContainer}>
     <View style={styles.headerContent}>
       <TouchableOpacity onPress={onTitlePress} style={styles.headerTitle}>
@@ -24,13 +35,6 @@ export const LibraryScreenHeader = ({ title, onTitlePress, onOptionPress, onSear
     </View>
   </View>
 );
-
-LibraryScreenHeader.propTypes = {
-  title: PropTypes.string.isRequired,
-  onTitlePress: PropTypes.func,
-  onOptionPress: PropTypes.func,
-  onSearchPress: PropTypes.func,
-};
 
 LibraryScreenHeader.defaultProps = {
   onTitlePress: null,

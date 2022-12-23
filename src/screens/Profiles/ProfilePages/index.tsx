@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { StatusBar, Share, View } from 'react-native';
 import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
@@ -42,15 +41,15 @@ const TAB_ITEMS = [
 
 const tabs = TAB_ITEMS.map(t => t.key);
 
-class ProfilePage extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    currentUser: PropTypes.object.isRequired,
-    activeTab: PropTypes.oneOf(tabs),
-    fetchCurrentUser: PropTypes.any.isRequired,
-  }
+interface ProfilePageProps {
+  componentId: any;
+  userId: number | string;
+  currentUser: object;
+  activeTab?: unknown[];
+  fetchCurrentUser: any;
+}
 
+class ProfilePage extends PureComponent<ProfilePageProps> {
   static defaultProps = {
     activeTab: 'summary',
   }

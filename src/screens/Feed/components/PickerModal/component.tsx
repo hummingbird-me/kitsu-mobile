@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, Modal, FlatList, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -10,7 +9,19 @@ import { styles } from './styles';
 
 const ModalMain = props => <View style={styles.modalMain} {...props} />;
 
-const PickerRow = ({ isPicked, title, description, onPress }) => (
+interface PickerRowProps {
+  isPicked?: boolean;
+  title?: string;
+  description?: string;
+  onPress?(...args: unknown[]): unknown;
+}
+
+const PickerRow = ({
+  isPicked,
+  title,
+  description,
+  onPress
+}: PickerRowProps) => (
   <TouchableHighlight onPress={onPress}>
     <View style={styles.pickerRow}>
       <Layout.RowWrap alignItems="center">
@@ -26,13 +37,6 @@ const PickerRow = ({ isPicked, title, description, onPress }) => (
   </TouchableHighlight>
 );
 
-PickerRow.propTypes = {
-  isPicked: PropTypes.bool,
-  title: PropTypes.string,
-  description: PropTypes.string,
-  onPress: PropTypes.func,
-};
-
 PickerRow.defaultProps = {
   isPicked: false,
   title: '',
@@ -42,14 +46,15 @@ PickerRow.defaultProps = {
 
 const PickerRowSeparator = () => <View style={styles.rowPickerSeparator} />;
 
-export class PickerModal extends PureComponent {
-  static propTypes = {
-    visible: PropTypes.bool,
-    onCancelPress: PropTypes.func,
-    onDonePress: PropTypes.func,
-    data: PropTypes.array,
-    currentPick: PropTypes.object,
-  }
+interface PickerModalProps {
+  visible?: boolean;
+  onCancelPress?(...args: unknown[]): unknown;
+  onDonePress?(...args: unknown[]): unknown;
+  data?: unknown[];
+  currentPick?: object;
+}
+
+export class PickerModal extends PureComponent<PickerModalProps> {
   static defaultProps = {
     visible: false,
     onCancelPress: null,

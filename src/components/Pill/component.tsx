@@ -1,11 +1,25 @@
 import React from 'react';
 import { View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { PropTypes } from 'prop-types';
 import { startCase, toLower } from 'lodash';
 import { styles } from './styles';
 
-export const Pill = ({ onPress, loading, color, selected, title, ...otherProps }) => (
+interface PillProps {
+  onPress(...args: unknown[]): unknown;
+  title: string;
+  color?: string;
+  selected?: boolean;
+  loading?: boolean;
+}
+
+export const Pill = ({
+  onPress,
+  loading,
+  color,
+  selected,
+  title,
+  ...otherProps
+}: PillProps) => (
   <TouchableOpacity
     activeOpacity={0.4}
     onPress={onPress}
@@ -36,12 +50,7 @@ export const Pill = ({ onPress, loading, color, selected, title, ...otherProps }
 );
 
 Pill.propTypes = {
-  ...TouchableOpacity.propTypes,
-  onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  color: PropTypes.string,
-  selected: PropTypes.bool,
-  loading: PropTypes.bool,
+  ...TouchableOpacity.propTypes
 };
 Pill.defaultProps = {
   selected: false,

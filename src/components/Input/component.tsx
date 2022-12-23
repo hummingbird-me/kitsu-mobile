@@ -1,11 +1,19 @@
 import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { View, TextInput, Keyboard } from 'react-native';
-import { PropTypes } from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { styles } from './styles';
 
-export const Input = ({ style, containerStyle, ...otherProps }) => (
+interface InputProps {
+  style?: object;
+  containerStyle?: unknown;
+}
+
+export const Input = ({
+  style,
+  containerStyle,
+  ...otherProps
+}: InputProps) => (
   <View style={[styles.container, containerStyle]}>
     <TextInput
       {...otherProps}
@@ -20,8 +28,7 @@ export const Input = ({ style, containerStyle, ...otherProps }) => (
 
 Input.propTypes = {
   ...TextInput.propTypes,
-  style: PropTypes.object,
-  containerStyle: ViewPropTypes.style,
+  containerStyle: ViewPropTypes.style
 };
 Input.defaultProps = {
   style: null,

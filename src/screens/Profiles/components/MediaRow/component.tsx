@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
+
+interface MediaRowProps {
+  imageVariant?: "square" | "thumbnail" | "portrait" | "landscape" | "landscapeSmall";
+  title?: string;
+  summary?: string;
+  subtitle?: string;
+  thumbnail?: object;
+  summaryLines?: number;
+}
 
 export const MediaRow = ({
   imageVariant,
@@ -11,8 +19,8 @@ export const MediaRow = ({
   summary,
   subtitle,
   thumbnail,
-  summaryLines,
-}) => (
+  summaryLines
+}: MediaRowProps) => (
   <View style={styles.row}>
     <ImageCard
       noMask
@@ -27,15 +35,6 @@ export const MediaRow = ({
   </View>
 );
 
-
-MediaRow.propTypes = {
-  imageVariant: PropTypes.oneOf(['square', 'thumbnail', 'portrait', 'landscape', 'landscapeSmall']),
-  title: PropTypes.string,
-  summary: PropTypes.string,
-  subtitle: PropTypes.string,
-  thumbnail: PropTypes.object,
-  summaryLines: PropTypes.number,
-};
 
 MediaRow.defaultProps = {
   imageVariant: 'portrait',

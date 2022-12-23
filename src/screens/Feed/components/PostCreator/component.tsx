@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity, Keyboard, BackHandler, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { isEmpty, isNil, isNull } from 'lodash';
@@ -34,65 +33,50 @@ const MAX_UPLOAD_COUNT = 20;
 // Maximum upload limit (20mb)
 const MAX_UPLOAD_SIZE_LIMIT = 20000000;
 
-class PostCreator extends React.PureComponent {
-  static propTypes = {
-    // Whether to apply `KeyboardAvoidingView` to the component
-    // Sometimes on android devices having this set to `true` will cause the component to mess up rendering
-    // So it's best to test and disable if needed
-    // In our case it messes up when you make this component a child of a `Modal`.
-    avoidKeyboard: PropTypes.bool,
+interface PostCreatorProps {
+  // Whether to apply `KeyboardAvoidingView` to the component
+  // Sometimes on android devices having this set to `true` will cause the component to mess up rendering
+  // So it's best to test and disable if needed
+  // In our case it messes up when you make this component a child of a `Modal`.
+  avoidKeyboard?: boolean;
+  // The current user - provided by redux
+  currentUser: object;
+  // Whether to hide the PostMeta header
+  hideMeta?: boolean;
+  // Allow user to select media
+  disableMedia?: boolean;
+  // Stlye of the editor container view (everything except header)
+  editorContainerStyle?: object;
+  // The media to associate with the post
+  // Leave this blank if you're passing in `post` prop.
+  media?: object;
+  // Mark post as NSFW?
+  nsfw?: boolean;
+  // Callback handler for when 'Cancel' is pressed.
+  onCancel?(...args: unknown[]): unknown;
+  // Callback handler for when post is created. The new post is passed back in this callback.
+  onPostCreated?(...args: unknown[]): unknown;
+  // The placeholder text to use
+  placeholder?: string;
+  // A post object
+  // If this is set then it is assummed that we are editing instead of creating
+  // This will automatically populate: content, uploads, media, nsfw and spoiler
+  post?: object;
+  // A function to render a custom header
+  // This will pass in: busy, isEditing, onPostPress, onCancel
+  // Leave blank for default implementation
+  renderHeader?(...args: unknown[]): unknown;
+  // The spoiled unit(episode/chapter) to apply to the post
+  spoiledUnit?: object;
+  // Mark post as Spoiler?
+  spoiler?: boolean;
+  // Main container style
+  style?: object;
+  // The user we are targetting in the post
+  targetUser?: object;
+}
 
-    // The current user - provided by redux
-    currentUser: PropTypes.object.isRequired,
-
-    // Whether to hide the PostMeta header
-    hideMeta: PropTypes.bool,
-
-    // Allow user to select media
-    disableMedia: PropTypes.bool,
-
-    // Stlye of the editor container view (everything except header)
-    editorContainerStyle: PropTypes.object,
-
-    // The media to associate with the post
-    // Leave this blank if you're passing in `post` prop.
-    media: PropTypes.object,
-
-    // Mark post as NSFW?
-    nsfw: PropTypes.bool,
-
-    // Callback handler for when 'Cancel' is pressed.
-    onCancel: PropTypes.func,
-
-    // Callback handler for when post is created. The new post is passed back in this callback.
-    onPostCreated: PropTypes.func,
-
-    // The placeholder text to use
-    placeholder: PropTypes.string,
-
-    // A post object
-    // If this is set then it is assummed that we are editing instead of creating
-    // This will automatically populate: content, uploads, media, nsfw and spoiler
-    post: PropTypes.object,
-
-    // A function to render a custom header
-    // This will pass in: busy, isEditing, onPostPress, onCancel
-    // Leave blank for default implementation
-    renderHeader: PropTypes.func,
-
-    // The spoiled unit(episode/chapter) to apply to the post
-    spoiledUnit: PropTypes.object,
-
-    // Mark post as Spoiler?
-    spoiler: PropTypes.bool,
-
-    // Main container style
-    style: PropTypes.object,
-
-    // The user we are targetting in the post
-    targetUser: PropTypes.object,
-  }
-
+class PostCreator extends React.PureComponent<PostCreatorProps> {
   static defaultProps = {
     avoidKeyboard: true,
     hideMeta: false,

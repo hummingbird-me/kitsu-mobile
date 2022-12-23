@@ -1,10 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
-export const HeaderButton = ({ disabled, highlighted, title, onPress, loading, style, textStyle, ...other }) => (
+interface HeaderButtonProps {
+  disabled?: boolean;
+  title?: string;
+  highlighted?: boolean;
+  onPress?(...args: unknown[]): unknown;
+  loading?: boolean;
+  style?: object;
+  textStyle?: object;
+}
+
+export const HeaderButton = ({
+  disabled,
+  highlighted,
+  title,
+  onPress,
+  loading,
+  style,
+  textStyle,
+  ...other
+}: HeaderButtonProps) => (
   <TouchableOpacity
     {...other}
     disabled={disabled}
@@ -26,16 +44,6 @@ export const HeaderButton = ({ disabled, highlighted, title, onPress, loading, s
   </TouchableOpacity>
 );
 
-
-HeaderButton.propTypes = {
-  disabled: PropTypes.bool,
-  title: PropTypes.string,
-  highlighted: PropTypes.bool,
-  onPress: PropTypes.func,
-  loading: PropTypes.bool,
-  style: PropTypes.object,
-  textStyle: PropTypes.object,
-};
 
 HeaderButton.defaultProps = {
   disabled: false,

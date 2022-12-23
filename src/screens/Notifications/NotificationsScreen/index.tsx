@@ -10,7 +10,6 @@ import {
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import PropTypes from 'prop-types';
 import OneSignal from 'react-native-onesignal';
 import moment from 'moment';
 import {
@@ -33,18 +32,18 @@ export const NOTIFICATION_PRESSED_EVENT = 'notification_pressed_event';
 // Fetch notifications every 5 minutes
 export const NOTIFICATION_FETCH_INTERVAL = 5 * 60 * 1000;
 
-class NotificationsScreen extends PureComponent {
-  static propTypes = {
-    fetchNotifications: PropTypes.func.isRequired,
-    currentUser: PropTypes.object.isRequired,
-    notifications: PropTypes.array.isRequired,
-    loadingNotifications: PropTypes.bool.isRequired,
-    markNotifications: PropTypes.func.isRequired,
-    markAllNotificationsAsRead: PropTypes.func.isRequired,
-    markingRead: PropTypes.bool.isRequired,
-    pushNotificationEnabled: PropTypes.bool.isRequired,
-  };
+interface NotificationsScreenProps {
+  fetchNotifications(...args: unknown[]): unknown;
+  currentUser: object;
+  notifications: unknown[];
+  loadingNotifications: boolean;
+  markNotifications(...args: unknown[]): unknown;
+  markAllNotificationsAsRead(...args: unknown[]): unknown;
+  markingRead: boolean;
+  pushNotificationEnabled: boolean;
+}
 
+class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
   constructor(props) {
     super(props);
     Navigation.events().bindComponent(this);

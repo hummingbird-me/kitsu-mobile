@@ -2,21 +2,20 @@ import React from 'react';
 import { View, Text, TextInput, ScrollView, LayoutAnimation } from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
-import PropTypes from 'prop-types';
 import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import isEmpty from 'lodash/isEmpty';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common';
 import { styles } from './styles';
 
-class GeneralSettings extends React.Component {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    updateGeneralSettings: PropTypes.func,
-    currentUser: PropTypes.object,
-    loading: PropTypes.bool,
-  };
+interface GeneralSettingsProps {
+  componentId: any;
+  updateGeneralSettings?(...args: unknown[]): unknown;
+  currentUser?: object;
+  loading?: boolean;
+}
 
+class GeneralSettings extends React.Component<GeneralSettingsProps> {
   static defaultProps = {
     updateGeneralSettings: () => { },
     currentUser: {},

@@ -1,23 +1,22 @@
 import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
 import { View, Animated } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { commonStyles } from 'kitsu/common/styles';
 import { styles } from './styles';
 
-export class ProgressiveImage extends PureComponent {
-  static propTypes = {
-    backgroundStyle: PropTypes.object,
-    children: PropTypes.object,
-    duration: PropTypes.number,
-    style: PropTypes.any,
-    resizeMode: PropTypes.string,
-    source: PropTypes.any.isRequired,
-    defaultSource: PropTypes.number,
-    hasOverlay: PropTypes.bool,
-  };
+interface ProgressiveImageProps {
+  backgroundStyle?: object;
+  children?: object;
+  duration?: number;
+  style?: any;
+  resizeMode?: string;
+  source: any;
+  defaultSource?: number;
+  hasOverlay?: boolean;
+}
 
+export class ProgressiveImage extends PureComponent<ProgressiveImageProps> {
   static defaultProps = {
     backgroundStyle: undefined,
     children: undefined,

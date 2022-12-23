@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { ContentList } from 'kitsu/components/ContentList';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 import { showSeasonResults } from './SearchNavigationHelper';
@@ -16,7 +15,13 @@ const styles = StyleSheet.create({
   },
 });
 
-class SeasonScreen extends PureComponent {
+interface SeasonScreenProps {
+  minYear?: number;
+  maxYear?: number;
+  label?: string;
+}
+
+class SeasonScreen extends PureComponent<SeasonScreenProps> {
   getSeasonData(year) {
     const seasons = [
       {
@@ -82,12 +87,6 @@ class SeasonScreen extends PureComponent {
     );
   }
 }
-
-SeasonScreen.propTypes = {
-  minYear: PropTypes.number,
-  maxYear: PropTypes.number,
-  label: PropTypes.string,
-};
 
 SeasonScreen.defaultProps = {
   label: 'Seasons',

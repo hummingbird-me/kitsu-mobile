@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, TouchableOpacity, Text, FlatList, StyleSheet, TouchableHighlight } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import * as PropTypes from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
 import { Navigation } from 'react-native-navigation';
@@ -81,7 +80,17 @@ const onUserPress = (componentId, userId) => {
   }
 };
 
-const User = ({ componentId, user, onFollow }) => {
+interface UserProps {
+  user: object;
+  onFollow(...args: unknown[]): unknown;
+  componentId: any;
+}
+
+const User = ({
+  componentId,
+  user,
+  onFollow
+}: UserProps) => {
   const userAvatar = user.avatar ? { uri: user.avatar.small } : DEFAULT_AVATAR;
   const followerTxt = user.followersCount > 1 ? 'followers' : 'follower';
   return (
@@ -103,13 +112,19 @@ const User = ({ componentId, user, onFollow }) => {
   );
 };
 
-User.propTypes = {
-  user: PropTypes.object.isRequired,
-  onFollow: PropTypes.func.isRequired,
-  componentId: PropTypes.any.isRequired,
-};
+interface UsersListProps {
+  hits?: unknown[];
+  onFollow(...args: unknown[]): unknown;
+  onData(...args: unknown[]): unknown;
+  componentId: any;
+}
 
-const UsersList = ({ hits, onFollow, onData, componentId }) => {
+const UsersList = ({
+  hits,
+  onFollow,
+  onData,
+  componentId
+}: UsersListProps) => {
   // Send users data to reducer to maintain single source of truth
   onData(hits);
 
@@ -123,13 +138,6 @@ const UsersList = ({ hits, onFollow, onData, componentId }) => {
       renderItem={({ item }) => <User key={`${item.name}`} componentId={componentId} user={item} onFollow={onFollow} />}
     />
   );
-};
-
-UsersList.propTypes = {
-  hits: PropTypes.array,
-  onFollow: PropTypes.func.isRequired,
-  onData: PropTypes.func.isRequired,
-  componentId: PropTypes.any.isRequired,
 };
 
 UsersList.defaultProps = {

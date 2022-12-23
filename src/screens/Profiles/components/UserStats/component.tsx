@@ -143,7 +143,7 @@ export class UserStats extends PureComponent {
           </View>
         </View>
       </View>
-    )
+    );
   }
 
   // header: "Looks like you don't have enough data yet! Ready to start something new?"

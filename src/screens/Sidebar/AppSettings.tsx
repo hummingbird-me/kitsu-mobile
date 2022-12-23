@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
@@ -11,15 +10,16 @@ import { SidebarHeader, SidebarTitle } from './common/';
 import { styles } from './styles';
 
 
-class AppSettings extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    dataSaver: PropTypes.bool,
-    setDataSaver: PropTypes.func,
-    setInitialPage: PropTypes.func,
-    initialPage: PropTypes.string,
-  };
+interface AppSettingsProps {
+  componentId: any;
+  dataSaver?: boolean;
+  setDataSaver?(...args: unknown[]): unknown;
+  setInitialPage?(...args: unknown[]): unknown;
+  initialPage?: string;
+}
 
+
+class AppSettings extends PureComponent<AppSettingsProps> {
   static defaultProps = {
     dataSaver: false,
     setDataSaver: null,

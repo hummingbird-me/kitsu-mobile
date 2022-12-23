@@ -7,15 +7,14 @@ import { ContentList } from 'kitsu/components/ContentList';
 import { showSeasonResults, showStreamerResults, showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
 import { STREAMING_SERVICES } from 'kitsu/constants/app';
 import { Navigation } from 'react-native-navigation';
-import { PropTypes } from 'prop-types';
 import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
-class TopsList extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-  }
+interface TopsListProps {
+  componentId: any;
+}
 
+class TopsList extends PureComponent<TopsListProps> {
   UNSAFE_componentWillMount() {
     const { active } = this.props;
     this.props.getCategories();

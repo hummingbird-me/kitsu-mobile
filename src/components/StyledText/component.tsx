@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Text } from 'react-native';
 import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red, green, black } from 'kitsu/constants/colors';
 import { ViewMoreText } from 'kitsu/components/ViewMoreText';
@@ -27,13 +26,20 @@ const textColors = {
   black,
 };
 
+interface StyledTextProps {
+  bold?: boolean;
+  color?: "light" | "dark" | "grey" | "darkGrey" | "lightGrey" | "yellow" | "orange" | "red" | "green" | "black";
+  size?: "default" | "xxsmall" | "xsmall" | "small" | "large" | "xlarge";
+  textStyle?: object | number;
+}
+
 export const StyledText = ({
   size,
   color,
   bold,
   textStyle,
   ...props
-}) => (
+}: StyledTextProps) => (
   <Text
     style={[
       styles.formattedText,
@@ -50,19 +56,21 @@ export const StyledText = ({
   />
 );
 
-StyledText.propTypes = {
-  bold: PropTypes.bool,
-  color: PropTypes.oneOf(['light', 'dark', 'grey', 'darkGrey', 'lightGrey', 'yellow', 'orange', 'red', 'green', 'black']),
-  size: PropTypes.oneOf(['default', 'xxsmall', 'xsmall', 'small', 'large', 'xlarge']),
-  textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
-};
-
 StyledText.defaultProps = {
   bold: false,
   color: 'light',
   size: 'default',
   textStyle: null,
 };
+
+interface ViewMoreStyledTextProps {
+  bold?: boolean;
+  color?: "light" | "dark" | "grey" | "darkGrey" | "lightGrey" | "yellow" | "orange" | "red" | "green" | "black";
+  size?: "default" | "xxsmall" | "xsmall" | "small" | "large" | "xlarge";
+  textStyle?: object;
+  disabled?: boolean;
+  cacheKey?: string;
+}
 
 export const ViewMoreStyledText = ({
   cacheKey,
@@ -72,7 +80,7 @@ export const ViewMoreStyledText = ({
   textStyle,
   disabled,
   ...props
-}) => (
+}: ViewMoreStyledTextProps) => (
   <ViewMoreText
     textStyle={[
       styles.formattedText,
@@ -89,15 +97,6 @@ export const ViewMoreStyledText = ({
     {...props}
   />
 );
-
-ViewMoreStyledText.propTypes = {
-  bold: PropTypes.bool,
-  color: PropTypes.oneOf(['light', 'dark', 'grey', 'darkGrey', 'lightGrey', 'yellow', 'orange', 'red', 'green', 'black']),
-  size: PropTypes.oneOf(['default', 'xxsmall', 'xsmall', 'small', 'large', 'xlarge']),
-  textStyle: PropTypes.object,
-  disabled: PropTypes.bool,
-  cacheKey: PropTypes.string,
-};
 
 ViewMoreStyledText.defaultProps = {
   bold: false,

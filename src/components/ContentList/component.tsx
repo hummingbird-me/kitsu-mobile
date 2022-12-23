@@ -1,11 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View, FlatList } from 'react-native';
 import { ContentListHeader } from './ContentListHeader';
 import { ItemRenderer } from './ItemRenderer';
 import { styles } from './styles';
 
-export const ContentList = ({ title, data, onPress, dark = false, showViewAll = true, ...props }) => (
+interface ContentListProps {
+  title: string;
+  data?: unknown[];
+  onPress(...args: unknown[]): unknown;
+  dark?: boolean;
+  showViewAll?: boolean;
+}
+
+export const ContentList = ({
+  title,
+  data,
+  onPress,
+  dark = false,
+  showViewAll = true,
+  ...props
+}: ContentListProps) => (
   // console.log('data is', title, data);
   <View style={[styles.contentListContainer, dark ? styles.darkBg : styles.lightBg]}>
     <ContentListHeader dark={dark} title={title} onPress={onPress} showViewAll={showViewAll} />
@@ -17,14 +31,6 @@ export const ContentList = ({ title, data, onPress, dark = false, showViewAll = 
     />
   </View>
 );
-
-ContentList.propTypes = {
-  title: PropTypes.string.isRequired,
-  data: PropTypes.array,
-  onPress: PropTypes.func.isRequired,
-  dark: PropTypes.bool,
-  showViewAll: PropTypes.bool,
-};
 
 ContentList.defaultProps = {
   data: [],

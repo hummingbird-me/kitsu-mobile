@@ -1,10 +1,20 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from './styles';
 
-export const ContentListHeader = ({ title, dark, showViewAll, ...props }) => (
+interface ContentListHeaderProps {
+  title: string;
+  dark: boolean;
+  showViewAll?: boolean;
+}
+
+export const ContentListHeader = ({
+  title,
+  dark,
+  showViewAll,
+  ...props
+}: ContentListHeaderProps) => (
   <View style={styles.contentListHeaderContainer}>
     <Text style={[styles.contentListHeaderText, dark ? styles.lightText : '']}>{title}</Text>
     {showViewAll && <TouchableOpacity style={styles.contentListActionLink} {...props}>
@@ -16,12 +26,6 @@ export const ContentListHeader = ({ title, dark, showViewAll, ...props }) => (
     </TouchableOpacity>}
   </View>
 );
-
-ContentListHeader.propTypes = {
-  title: PropTypes.string.isRequired,
-  dark: PropTypes.bool.isRequired,
-  showViewAll: PropTypes.bool,
-};
 
 ContentListHeader.defaultProps = {
   showViewAll: true,

@@ -1,9 +1,17 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 
-export const SimpleHeader = (props) => {
+interface SimpleHeaderProps {
+  leftAction?: any;
+  leftContent?: any;
+  rightAction?: any;
+  rightContent?: any;
+  titleAction?: any;
+  titleContent?: any;
+}
+
+export const SimpleHeader = (props: SimpleHeaderProps) => {
   const LeftWrapper = props.leftAction ? TouchableOpacity : View;
   const TitleWrapper = props.titleAction ? TouchableOpacity : View;
   const RightWrapper = props.rightAction ? TouchableOpacity : View;
@@ -45,15 +53,6 @@ export const SimpleHeader = (props) => {
       }
     </View>
   );
-};
-
-SimpleHeader.propTypes = {
-  leftAction: PropTypes.any,
-  leftContent: PropTypes.any,
-  rightAction: PropTypes.any,
-  rightContent: PropTypes.any,
-  titleAction: PropTypes.any,
-  titleContent: PropTypes.any,
 };
 
 SimpleHeader.defaultProps = {

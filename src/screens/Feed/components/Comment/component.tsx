@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { View, TouchableOpacity, ActivityIndicator, FlatList, Text, Dimensions } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -24,7 +23,28 @@ const CACHE_WIDTH_KEYS = {
   reply: 'commentReplyWidth',
 };
 
-export class Comment extends PureComponent {
+interface CommentProps {
+  post: {
+    id?: string
+  };
+  comment: {
+    avatar?: string,
+    name?: string,
+    content?: string,
+    time?: string,
+    likesCount?: number,
+    repliesCount?: number,
+    createdAt?: string
+  };
+  componentId?: any;
+  isTruncated?: boolean;
+  onAvatarPress?(...args: unknown[]): unknown;
+  onReplyPress?(...args: unknown[]): unknown;
+  hideEmbeds?: boolean;
+  isCommentReply?: boolean;
+}
+
+export class Comment extends PureComponent<CommentProps> {
   constructor(props) {
     super(props);
     const key = props.isCommentReply ? CACHE_WIDTH_KEYS.reply : CACHE_WIDTH_KEYS.comment;
@@ -304,27 +324,6 @@ export class Comment extends PureComponent {
   }
 }
 
-Comment.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.string,
-  }).isRequired,
-  comment: PropTypes.shape({
-    avatar: PropTypes.string,
-    name: PropTypes.string,
-    content: PropTypes.string,
-    time: PropTypes.string,
-    likesCount: PropTypes.number,
-    repliesCount: PropTypes.number,
-    createdAt: PropTypes.string,
-  }).isRequired,
-  componentId: PropTypes.any,
-  isTruncated: PropTypes.bool,
-  onAvatarPress: PropTypes.func,
-  onReplyPress: PropTypes.func,
-  hideEmbeds: PropTypes.bool,
-  isCommentReply: PropTypes.bool,
-};
-
 Comment.defaultProps = {
   isTruncated: false,
   onAvatarPress: null,
@@ -334,7 +333,17 @@ Comment.defaultProps = {
   componentId: null,
 };
 
-export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (
+interface ToggleRepliesProps {
+  onPress?(...args: unknown[]): unknown;
+  isLoading?: boolean;
+  repliesCount?: number;
+}
+
+export const ToggleReplies = ({
+  onPress,
+  isLoading,
+  repliesCount
+}: ToggleRepliesProps) => (
   <View>
     {isLoading && (
       <ActivityIndicator color={listBackPurple} />
@@ -347,19 +356,21 @@ export const ToggleReplies = ({ onPress, isLoading, repliesCount }) => (
   </View>
 );
 
-ToggleReplies.propTypes = {
-  onPress: PropTypes.func,
-  isLoading: PropTypes.bool,
-  repliesCount: PropTypes.number,
-};
-
 ToggleReplies.defaultProps = {
   onPress: null,
   isLoading: false,
   repliesCount: 0,
 };
 
-export const CommentPagination = ({ onPress, isLoading }) => (
+interface CommentPaginationProps {
+  onPress?(...args: unknown[]): unknown;
+  isLoading?: boolean;
+}
+
+export const CommentPagination = ({
+  onPress,
+  isLoading
+}: CommentPaginationProps) => (
   <View style={{ marginBottom: 14 }}>
     {isLoading && (
       <ActivityIndicator color={listBackPurple} />
@@ -371,11 +382,6 @@ export const CommentPagination = ({ onPress, isLoading }) => (
     )}
   </View>
 );
-
-CommentPagination.propTypes = {
-  onPress: PropTypes.func,
-  isLoading: PropTypes.bool,
-};
 
 CommentPagination.defaultProps = {
   onPress: null,

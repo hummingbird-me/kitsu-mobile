@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
@@ -11,7 +10,12 @@ import { kitsuConfig } from 'kitsu/config/env';
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
-class RecoveryScreen extends Component {
+interface RecoveryScreenProps {
+  signingIn: boolean;
+  componentId: any;
+}
+
+class RecoveryScreen extends Component<RecoveryScreenProps> {
   state = {
     email: '',
     loading: false,
@@ -80,11 +84,6 @@ class RecoveryScreen extends Component {
     );
   }
 }
-
-RecoveryScreen.propTypes = {
-  signingIn: PropTypes.bool.isRequired,
-  componentId: PropTypes.any.isRequired,
-};
 
 RecoveryScreen.defaultProps = {
   loginError: '',

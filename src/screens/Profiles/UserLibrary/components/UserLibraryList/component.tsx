@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { View, ActivityIndicator, Dimensions, RefreshControl, ScrollView } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { intersectionWith, isEqual } from 'lodash';
-import { PropTypes } from 'prop-types';
 import { UserLibraryListCard, LibraryEmptyState } from 'kitsu/screens/Profiles/UserLibrary';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
@@ -28,22 +27,22 @@ const SEARCH_MAP = {
   },
 };
 
-export class UserLibraryList extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    currentUser: PropTypes.object.isRequired,
-    profile: PropTypes.object.isRequired,
-    libraryEntries: PropTypes.array.isRequired,
-    libraryStatus: PropTypes.string.isRequired,
-    libraryType: PropTypes.string.isRequired,
-    onLibraryEntryUpdate: PropTypes.func.isRequired,
-    onLibraryEntryDelete: PropTypes.func.isRequired,
-    onRefresh: PropTypes.func,
-    onEndReached: PropTypes.func,
-    loading: PropTypes.bool,
-    refreshing: PropTypes.bool,
-  };
+interface UserLibraryListProps {
+  componentId: any;
+  currentUser: object;
+  profile: object;
+  libraryEntries: unknown[];
+  libraryStatus: string;
+  libraryType: string;
+  onLibraryEntryUpdate(...args: unknown[]): unknown;
+  onLibraryEntryDelete(...args: unknown[]): unknown;
+  onRefresh?(...args: unknown[]): unknown;
+  onEndReached?(...args: unknown[]): unknown;
+  loading?: boolean;
+  refreshing?: boolean;
+}
 
+export class UserLibraryList extends PureComponent<UserLibraryListProps> {
   static defaultProps = {
     onRefresh: () => {},
     onEndReached: () => {},

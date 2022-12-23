@@ -3,18 +3,17 @@ import { View, TextInput, Text, Modal, ScrollView } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import * as colors from 'kitsu/constants/colors';
-import PropTypes from 'prop-types';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { Navigation } from 'react-native-navigation';
 import { SidebarHeader, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common';
 import { styles } from './styles';
 
-class ImportDetail extends React.Component {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    item: PropTypes.object.isRequired,
-  };
+interface ImportDetailProps {
+  componentId: any;
+  item: object;
+}
 
+class ImportDetail extends React.Component<ImportDetailProps> {
   state = {
     showModal: false,
     errMessage: null,

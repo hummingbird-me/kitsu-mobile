@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import PropTypes from 'prop-types';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
 
@@ -13,8 +12,19 @@ const actionButtonLabels = {
 };
 
 
+interface PostActionButtonProps {
+  variant?: "like" | "liked" | "comment" | "share";
+  isActive?: boolean;
+  onPress?(...args: unknown[]): unknown;
+}
+
+
 /* eslint-disable global-require */
-export const PostActionButton = ({ variant, isActive, onPress }) => {
+export const PostActionButton = ({
+  variant,
+  isActive,
+  onPress
+}: PostActionButtonProps) => {
   const icons = {
     like: require('kitsu/assets/img/feed/heart.png'),
     liked: require('kitsu/assets/img/feed/heart__active.png'),
@@ -41,18 +51,23 @@ export const PostActionButton = ({ variant, isActive, onPress }) => {
   );
 };
 
-PostActionButton.propTypes = {
-  variant: PropTypes.oneOf(['like', 'liked', 'comment', 'share']),
-  isActive: PropTypes.bool,
-  onPress: PropTypes.func,
-};
 PostActionButton.defaultProps = {
   variant: 'like',
   isActive: false,
   onPress: null,
 };
 
-export const PostActions = ({ isLiked, onLikePress, onCommentPress /* , onSharePress */ }) => (
+interface PostActionsProps {
+  isLiked?: boolean;
+  onLikePress?(...args: unknown[]): unknown;
+  onCommentPress?(...args: unknown[]): unknown;
+}
+
+export const PostActions = ({
+  isLiked,
+  onLikePress,
+  onCommentPress /* , onSharePress */
+}: PostActionsProps) => (
   <View style={styles.postActionRow}>
     <PostActionButton variant={isLiked ? 'liked' : 'like'} onPress={onLikePress} isActive={isLiked} />
     <PostActionButton variant="comment" onPress={onCommentPress} />
@@ -60,12 +75,6 @@ export const PostActions = ({ isLiked, onLikePress, onCommentPress /* , onShareP
   </View>
 );
 
-PostActions.propTypes = {
-  isLiked: PropTypes.bool,
-  onLikePress: PropTypes.func,
-  onCommentPress: PropTypes.func,
-  // onSharePress: PropTypes.func,
-};
 PostActions.defaultProps = {
   isLiked: false,
   onLikePress: null,

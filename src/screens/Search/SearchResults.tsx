@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, RefreshControl, ActivityIndicator, View } from 'react-native';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { search } from 'kitsu/store/anime/actions';
 import * as colors from 'kitsu/constants/colors';
@@ -11,7 +10,20 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { ResultsList } from './Lists';
 
-class SearchResults extends Component {
+interface SearchResultsProps {
+  componentId: any;
+  results: unknown[];
+  loading: boolean;
+  search(...args: unknown[]): unknown;
+  currentUser?: object;
+  label?: string;
+  default?: any;
+  active: "anime" | "manga";
+  filter?: any;
+  sort?: string;
+}
+
+class SearchResults extends Component<SearchResultsProps> {
   constructor(props) {
     super(props);
 
@@ -177,19 +189,6 @@ class SearchResults extends Component {
     );
   }
 }
-
-SearchResults.propTypes = {
-  componentId: PropTypes.any.isRequired,
-  results: PropTypes.array.isRequired,
-  loading: PropTypes.bool.isRequired,
-  search: PropTypes.func.isRequired,
-  currentUser: PropTypes.object,
-  label: PropTypes.string,
-  default: PropTypes.any,
-  active: PropTypes.oneOf(['anime', 'manga']).isRequired,
-  filter: PropTypes.any,
-  sort: PropTypes.string,
-};
 
 SearchResults.defaultProps = {
   label: 'Results',

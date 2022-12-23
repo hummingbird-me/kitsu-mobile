@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyledText } from 'kitsu/components/StyledText';
 import { styles } from './styles';
+
+interface CustomHeaderProps {
+  leftButtonAction?(...args: unknown[]): unknown;
+  leftButtonTitle?: string;
+  rightButtonAction?(...args: unknown[]): unknown;
+  rightButtonTitle?: string;
+  title?: string;
+  backgroundColor?: string;
+}
 
 export const CustomHeader = ({
   title,
@@ -11,8 +19,8 @@ export const CustomHeader = ({
   leftButtonAction,
   rightButtonTitle,
   rightButtonAction,
-  backgroundColor,
-}) => (
+  backgroundColor
+}: CustomHeaderProps) => (
   <View style={[styles.headerView, { backgroundColor }]}>
     <View style={[styles.buttonView, styles.buttonView__left]}>
       {leftButtonAction && (
@@ -37,15 +45,6 @@ export const CustomHeader = ({
   </View>
 );
 
-
-CustomHeader.propTypes = {
-  leftButtonAction: PropTypes.func,
-  leftButtonTitle: PropTypes.string,
-  rightButtonAction: PropTypes.func,
-  rightButtonTitle: PropTypes.string,
-  title: PropTypes.string,
-  backgroundColor: PropTypes.string,
-};
 
 CustomHeader.defaultProps = {
   leftButtonAction: null,

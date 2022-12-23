@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import * as PropTypes from 'prop-types';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { isEqual, intersectionWith } from 'lodash';
 import { bestSpacing, getCurrentVisibleRows } from './spacing';
@@ -9,14 +8,18 @@ import { styles } from './styles';
 
 const LAYOUT_PROVIDER_TYPE = 'ResultsListItem';
 
-export class ResultsList extends PureComponent {
+interface ResultsListProps {
+  hits: unknown[];
+  onPress(...args: unknown[]): unknown;
+  style?: unknown;
+  rowHasChanged?(...args: unknown[]): unknown;
+  currentUser?: object;
+  onEndReached?(...args: unknown[]): unknown;
+}
+
+export class ResultsList extends PureComponent<ResultsListProps> {
   static propTypes = {
-    hits: PropTypes.array.isRequired,
-    onPress: PropTypes.func.isRequired,
-    style: ViewPropTypes.style,
-    rowHasChanged: PropTypes.func,
-    currentUser: PropTypes.object,
-    onEndReached: PropTypes.func,
+    style: ViewPropTypes.style
   };
 
   static defaultProps = {

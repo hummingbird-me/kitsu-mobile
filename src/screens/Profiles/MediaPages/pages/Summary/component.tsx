@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FlatList, Linking, ActivityIndicator, View, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Kitsu } from 'kitsu/config/api';
 import { Post } from 'kitsu/screens/Feed/components/Post';
 import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
@@ -22,19 +21,19 @@ import { Button } from 'kitsu/components/Button';
 import URL from 'url-parse';
 import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 
-class SummaryComponent extends PureComponent {
-  static propTypes = {
-    castings: PropTypes.array,
-    currentUser: PropTypes.object.isRequired,
-    media: PropTypes.object.isRequired,
-    mediaReactions: PropTypes.array,
-    componentId: PropTypes.any.isRequired,
-    setActiveTab: PropTypes.func.isRequired,
-    loadingAdditional: PropTypes.bool,
-    libraryEntry: PropTypes.object,
-    onLibraryEditPress: PropTypes.func,
-  }
+interface SummaryComponentProps {
+  castings?: unknown[];
+  currentUser: object;
+  media: object;
+  mediaReactions?: unknown[];
+  componentId: any;
+  setActiveTab(...args: unknown[]): unknown;
+  loadingAdditional?: boolean;
+  libraryEntry?: object;
+  onLibraryEditPress?(...args: unknown[]): unknown;
+}
 
+class SummaryComponent extends PureComponent<SummaryComponentProps> {
   static defaultProps = {
     castings: null,
     mediaReactions: null,

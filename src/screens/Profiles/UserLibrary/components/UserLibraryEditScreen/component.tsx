@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import moment from 'moment';
 import { Text, TextInput, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -26,18 +25,19 @@ const parseISO8601Date = (date) => {
 };
 
 
-export class UserLibraryEditScreenComponent extends React.Component {
-  static propTypes = {
-    updateUserLibraryEntry: PropTypes.func.isRequired,
-    deleteUserLibraryEntry: PropTypes.func.isRequired,
-    libraryEntry: PropTypes.object.isRequired,
-    libraryStatus: PropTypes.oneOf(['current', 'planned', 'completed', 'on_hold', 'dropped']).isRequired,
-    libraryType: PropTypes.oneOf(['anime', 'manga']).isRequired,
-    media: PropTypes.object,
-    ratingSystem: PropTypes.string.isRequired,
-    canEdit: PropTypes.bool,
-  }
+interface UserLibraryEditScreenComponentProps {
+  updateUserLibraryEntry(...args: unknown[]): unknown;
+  deleteUserLibraryEntry(...args: unknown[]): unknown;
+  libraryEntry: object;
+  libraryStatus: "current" | "planned" | "completed" | "on_hold" | "dropped";
+  libraryType: "anime" | "manga";
+  media?: object;
+  ratingSystem: string;
+  canEdit?: boolean;
+}
 
+
+export class UserLibraryEditScreenComponent extends React.Component<UserLibraryEditScreenComponentProps> {
   static defaultProps = {
     canEdit: false,
     media: null,

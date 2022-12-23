@@ -3,7 +3,6 @@ import { View, Text, TextInput, FlatList, ActivityIndicator, TouchableOpacity, S
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import * as colors from 'kitsu/constants/colors';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';

@@ -1,10 +1,24 @@
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal as ModalRN } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { styles } from './styles';
 
-export const Toast = ({ style, visible, title, onRequestClose, onDismiss, ...otherProps }) => (
+interface ToastProps {
+  style?: unknown;
+  onDismiss(...args: unknown[]): unknown;
+  title: string;
+  visible: boolean;
+  onRequestClose(...args: unknown[]): unknown;
+}
+
+export const Toast = ({
+  style,
+  visible,
+  title,
+  onRequestClose,
+  onDismiss,
+  ...otherProps
+}: ToastProps) => (
   <ModalRN
     transparent
     animationType="fade"
@@ -22,11 +36,7 @@ export const Toast = ({ style, visible, title, onRequestClose, onDismiss, ...oth
 
 Toast.propTypes = {
   ...ModalRN.propTypes,
-  style: ViewPropTypes.style,
-  onDismiss: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  visible: PropTypes.bool.isRequired,
-  onRequestClose: PropTypes.func.isRequired,
+  style: ViewPropTypes.style
 };
 
 Toast.defaultProps = {

@@ -6,10 +6,19 @@ import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { defaultCover as defaultCoverUri, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import PropTypes from 'prop-types';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
-const SidebarHeader = ({ headerTitle, coverImage, onBackPress }) => {
+interface SidebarHeaderProps {
+  headerTitle: string;
+  coverImage?: object;
+  onBackPress?(...args: unknown[]): unknown;
+}
+
+const SidebarHeader = ({
+  headerTitle,
+  coverImage,
+  onBackPress
+}: SidebarHeaderProps) => {
   const goBack = onBackPress;
   return (
     <View style={styles.container}>
@@ -35,12 +44,6 @@ const SidebarHeader = ({ headerTitle, coverImage, onBackPress }) => {
       </ProgressiveImage>
     </View>
   );
-};
-
-SidebarHeader.propTypes = {
-  headerTitle: PropTypes.string.isRequired,
-  coverImage: PropTypes.object,
-  onBackPress: PropTypes.func,
 };
 
 SidebarHeader.defaultProps = {

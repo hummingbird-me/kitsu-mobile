@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import { FlatList, View } from 'react-native';
 import { Kitsu } from 'kitsu/config/api';
@@ -9,11 +8,11 @@ import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import capitalize from 'lodash/capitalize';
 
-class About extends PureComponent {
-  static propTypes = {
-    profile: PropTypes.object.isRequired,
-  };
+interface AboutProps {
+  profile: object;
+}
 
+class About extends PureComponent<AboutProps> {
   render() {
     const { profile } = this.props;
     const aboutRows = [

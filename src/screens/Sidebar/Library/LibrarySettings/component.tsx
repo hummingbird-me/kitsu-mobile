@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { View, ScrollView, Text } from 'react-native';
-import { PropTypes } from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
 import * as colors from 'kitsu/constants/colors';
@@ -31,15 +30,15 @@ const mediaPreferenceTitleToKey = (title) => {
   }
 };
 
-export class LibrarySettingsComponent extends PureComponent {
-  static propTypes = {
-    currentUser: PropTypes.object.isRequired,
-    sort: PropTypes.object.isRequired,
-    fetchUserLibrary: PropTypes.func.isRequired,
-    setLibrarySort: PropTypes.func.isRequired,
-    navigateBackOnSave: PropTypes.bool,
-  };
+interface LibrarySettingsComponentProps {
+  currentUser: object;
+  sort: object;
+  fetchUserLibrary(...args: unknown[]): unknown;
+  setLibrarySort(...args: unknown[]): unknown;
+  navigateBackOnSave?: boolean;
+}
 
+export class LibrarySettingsComponent extends PureComponent<LibrarySettingsComponentProps> {
   static defaultProps = {
     navigateBackOnSave: false,
   }

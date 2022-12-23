@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as colors from 'kitsu/constants/colors';
 import awfulImage from 'kitsu/assets/img/ratings/awful.png';
@@ -92,19 +91,19 @@ function getRatingTwentyForText(text, type) {
   }
 }
 
-export class Rating extends PureComponent {
-  static propTypes = {
-    disabled: PropTypes.bool,
-    onRatingChanged: PropTypes.func,
-    onRatingModalDisplay: PropTypes.func,
-    ratingTwenty: PropTypes.number,
-    ratingSystem: PropTypes.oneOf(['simple', 'regular', 'advanced']),
-    showNotRated: PropTypes.bool,
-    size: PropTypes.string,
-    style: PropTypes.any,
-    viewType: PropTypes.oneOf(['single', 'select']),
-  }
+interface RatingProps {
+  disabled?: boolean;
+  onRatingChanged?(...args: unknown[]): unknown;
+  onRatingModalDisplay?(...args: unknown[]): unknown;
+  ratingTwenty?: number;
+  ratingSystem?: "simple" | "regular" | "advanced";
+  showNotRated?: boolean;
+  size?: string;
+  style?: any;
+  viewType?: "single" | "select";
+}
 
+export class Rating extends PureComponent<RatingProps> {
   static defaultProps = {
     disabled: false,
     onRatingChanged: () => { },

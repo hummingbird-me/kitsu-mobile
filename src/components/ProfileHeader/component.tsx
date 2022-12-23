@@ -2,12 +2,22 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
 import { commonStyles } from 'kitsu/common/styles';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
 import { styles } from './styles';
+
+interface ProfileHeaderProps {
+  onClickFollow?(...args: unknown[]): unknown;
+  onClickBack(...args: unknown[]): unknown;
+  profile: object;
+  showCoverImage?: boolean;
+  showFollowButton?: boolean;
+  showProfileImage?: boolean;
+  title?: string;
+  hasOverlay?: boolean;
+}
 
 export const ProfileHeader = ({
   profile,
@@ -17,8 +27,8 @@ export const ProfileHeader = ({
   title,
   onClickBack,
   onClickFollow,
-  hasOverlay,
-}) => {
+  hasOverlay
+}: ProfileHeaderProps) => {
   const coverImageUri = getImgixCoverImage(profile.coverImage) || defaultCover;
   const profileImageUri = (profile.avatar && profile.avatar.tiny) || defaultAvatar;
   const goBack = () => onClickBack();
@@ -75,17 +85,6 @@ export const ProfileHeader = ({
       </View>
     </View>
   );
-};
-
-ProfileHeader.propTypes = {
-  onClickFollow: PropTypes.func,
-  onClickBack: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
-  showCoverImage: PropTypes.bool,
-  showFollowButton: PropTypes.bool,
-  showProfileImage: PropTypes.bool,
-  title: PropTypes.string,
-  hasOverlay: PropTypes.bool,
 };
 
 ProfileHeader.defaultProps = {

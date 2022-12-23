@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity, Share, Alert } from 'react-native';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import * as colors from 'kitsu/constants/colors';
@@ -16,6 +15,18 @@ const formatTime = (time) =>
     ? moment(time).calendar()
     : `${moment(time).format('DD MMMM')} at ${moment(time).format('H:MMA')}`;
 
+interface PostHeaderProps {
+  post: object;
+  avatar?: string;
+  name?: string;
+  time?: string;
+  onBackButtonPress?(...args: unknown[]): unknown;
+  onAvatarPress?(...args: unknown[]): unknown;
+  currentUser?: object;
+  onEditPress?(...args: unknown[]): unknown;
+  onDelete?(...args: unknown[]): unknown;
+}
+
 export const PostHeader = ({
   post,
   avatar,
@@ -25,8 +36,8 @@ export const PostHeader = ({
   onBackButtonPress,
   onEditPress,
   onDelete,
-  currentUser,
-}) => {
+  currentUser
+}: PostHeaderProps) => {
   const user = post && post.user;
   const isCurrentUser = user && currentUser && user.id === currentUser.id;
 
@@ -129,18 +140,6 @@ export const PostHeader = ({
       </Layout.RowWrap>
     </View>
   );
-};
-
-PostHeader.propTypes = {
-  post: PropTypes.object.isRequired,
-  avatar: PropTypes.string,
-  name: PropTypes.string,
-  time: PropTypes.string,
-  onBackButtonPress: PropTypes.func,
-  onAvatarPress: PropTypes.func,
-  currentUser: PropTypes.object,
-  onEditPress: PropTypes.func,
-  onDelete: PropTypes.func,
 };
 
 PostHeader.defaultProps = {

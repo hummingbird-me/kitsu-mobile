@@ -1,21 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
 import { Navigation } from 'react-native-navigation';
 
-export default class CreatePost extends React.PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    targetUser: PropTypes.object,
-    spoiledUnit: PropTypes.object,
-    nsfw: PropTypes.bool,
-    spoiler: PropTypes.bool,
-    media: PropTypes.object,
-    post: PropTypes.object,
-    onPostCreated: PropTypes.func,
-    disableMedia: PropTypes.bool,
-  }
+interface CreatePostProps {
+  componentId: any;
+  targetUser?: object;
+  spoiledUnit?: object;
+  nsfw?: boolean;
+  spoiler?: boolean;
+  media?: object;
+  post?: object;
+  onPostCreated?(...args: unknown[]): unknown;
+  disableMedia?: boolean;
+}
 
+export default class CreatePost extends React.PureComponent<CreatePostProps> {
   static defaultProps = {
     targetUser: null,
     spoiledUnit: null,

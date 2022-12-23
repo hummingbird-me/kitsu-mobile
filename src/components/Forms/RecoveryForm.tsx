@@ -1,13 +1,26 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import CustomIcon from 'kitsu/components/Icon';
 import * as colors from 'kitsu/constants/colors';
 import styles from './styles';
 
-const RecoveryForm = ({ handleChange, data, onReset, loading, onCancel }) => (
+interface RecoveryFormProps {
+  handleChange(...args: unknown[]): unknown;
+  data: object;
+  onReset(...args: unknown[]): unknown;
+  loading: boolean;
+  onCancel(...args: unknown[]): unknown;
+}
+
+const RecoveryForm = ({
+  handleChange,
+  data,
+  onReset,
+  loading,
+  onCancel
+}: RecoveryFormProps) => (
   <View>
     <Input
       placeholder="E-mail"
@@ -26,13 +39,5 @@ const RecoveryForm = ({ handleChange, data, onReset, loading, onCancel }) => (
     </TouchableOpacity>
   </View>
 );
-
-RecoveryForm.propTypes = {
-  handleChange: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
-  onReset: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  onCancel: PropTypes.func.isRequired,
-};
 
 export default RecoveryForm;

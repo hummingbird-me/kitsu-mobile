@@ -14,7 +14,6 @@ import {
 import FastImage from 'react-native-fast-image';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
 import URL from 'url-parse';
 import { Post } from 'kitsu/screens/Feed/components/Post';
@@ -65,12 +64,12 @@ const CAROUSEL_WIDTH = Dimensions.get('window').width;
 const CAROUSEL_ITEM_WIDTH = Dimensions.get('window').width * 0.85;
 const DOUBLE_PRESS_DELAY = 500;
 
-class QuickUpdate extends Component {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    currentUser: PropTypes.object.isRequired,
-  };
+interface QuickUpdateProps {
+  componentId: any;
+  currentUser: object;
+}
 
+class QuickUpdate extends Component<QuickUpdateProps> {
   state = {
     library: null,
     discussions: null,

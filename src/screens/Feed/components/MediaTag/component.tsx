@@ -2,7 +2,6 @@ import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
-import PropTypes from 'prop-types';
 import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
@@ -18,7 +17,25 @@ const navigateToMedia = (media, componentId) => {
   }
 };
 
-export const MediaTag = ({ disabled, media, episode, componentId, style }) => {
+interface MediaTagProps {
+  media: {
+    canonicalTitle: string
+  };
+  episode?: {
+    number: number
+  };
+  componentId: any;
+  disabled?: boolean;
+  style?: unknown;
+}
+
+export const MediaTag = ({
+  disabled,
+  media,
+  episode,
+  componentId,
+  style
+}: MediaTagProps) => {
   if (!media) return null;
   const episodePrefix = media.type === 'anime' ? 'E' : 'CH';
   return (
@@ -49,15 +66,7 @@ export const MediaTag = ({ disabled, media, episode, componentId, style }) => {
 };
 
 MediaTag.propTypes = {
-  media: PropTypes.shape({
-    canonicalTitle: PropTypes.string.isRequired,
-  }).isRequired,
-  episode: PropTypes.shape({
-    number: PropTypes.number.isRequired,
-  }),
-  componentId: PropTypes.any.isRequired,
-  disabled: PropTypes.bool,
-  style: ViewPropTypes.style,
+  style: ViewPropTypes.style
 };
 
 MediaTag.defaultProps = {

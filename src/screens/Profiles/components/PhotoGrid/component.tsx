@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   FlatList,
   View,
@@ -8,7 +7,12 @@ import {
 import { scene, scenePadding } from 'kitsu/screens/Profiles/constants';
 import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
 
-export class PhotoGrid extends React.Component {
+interface PhotoGridProps {
+  itemMargin?: number;
+  photos?: unknown[];
+}
+
+export class PhotoGrid extends React.Component<PhotoGridProps> {
   buildRows = (items, itemsPerRow) => (
     items.reduce((rows, item, idx) => {
       if (idx % itemsPerRow === 0 && idx > 0) rows.push([]);
@@ -79,11 +83,6 @@ export class PhotoGrid extends React.Component {
     );
   }
 }
-
-PhotoGrid.propTypes = {
-  itemMargin: PropTypes.number,
-  photos: PropTypes.array,
-};
 
 PhotoGrid.defaultProps = {
   itemMargin: 5,

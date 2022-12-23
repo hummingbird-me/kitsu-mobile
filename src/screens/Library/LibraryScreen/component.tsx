@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { View, TouchableOpacity, Text, Animated, TouchableWithoutFeedback } from 'react-native';
 import { StyledText } from 'kitsu/components/StyledText';
-import { PropTypes } from 'prop-types';
 import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
 import { capitalize, isEmpty, camelCase } from 'lodash';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -20,15 +19,15 @@ const TAB_TEXT_MAPPING = {
 };
 const LIBRARY_PAGINATION_LIMIT = 60;
 
-export class LibraryScreenComponent extends PureComponent {
-  static propTypes = {
-    currentUser: PropTypes.object.isRequired,
-    library: PropTypes.object,
-    updateUserLibraryEntry: PropTypes.func.isRequired,
-    deleteUserLibraryEntry: PropTypes.func.isRequired,
-    fetchUserLibrary: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
-  };
+interface LibraryScreenComponentProps {
+  currentUser: object;
+  library?: object;
+  updateUserLibraryEntry(...args: unknown[]): unknown;
+  deleteUserLibraryEntry(...args: unknown[]): unknown;
+  fetchUserLibrary(...args: unknown[]): unknown;
+}
 
+export class LibraryScreenComponent extends PureComponent<LibraryScreenComponentProps> {
   static defaultProps = {
     library: null,
   }

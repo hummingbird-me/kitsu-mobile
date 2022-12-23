@@ -4,39 +4,38 @@ import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
-import PropTypes from 'prop-types';
 import styles from './styles';
 
-export default class QuickUpdateCard extends PureComponent {
-  static propTypes = {
-    // TODO: Not yet a complete definition of the things we use in data.
-    ratingSystem: PropTypes.string.isRequired,
-    data: PropTypes.shape({
-      loading: PropTypes.bool,
-      item: PropTypes.shape({
-        anime: PropTypes.shape({
-          canonicalTitle: PropTypes.string.isRequired,
-          id: PropTypes.string.isRequired,
-          posterImage: PropTypes.shape({
-            large: PropTypes.string.isRequired,
-          }),
-        }),
-        manga: PropTypes.shape({
-          canonicalTitle: PropTypes.string.isRequired,
-          id: PropTypes.string.isRequired,
-          posterImage: PropTypes.shape({
-            large: PropTypes.string.isRequired,
-          }),
-        }),
-      }).isRequired,
-    }).isRequired,
-    onBeginEditing: PropTypes.func,
-    onEndEditing: PropTypes.func,
-    onMarkComplete: PropTypes.func,
-    onRate: PropTypes.func.isRequired,
-    onMediaTapped: PropTypes.func,
+interface QuickUpdateCardProps {
+  // TODO: Not yet a complete definition of the things we use in data.
+  ratingSystem: string;
+  data: {
+    loading?: boolean,
+    item: {
+      anime?: {
+        canonicalTitle: string,
+        id: string,
+        posterImage?: {
+          large: string
+        }
+      },
+      manga?: {
+        canonicalTitle: string,
+        id: string,
+        posterImage?: {
+          large: string
+        }
+      }
+    }
   };
+  onBeginEditing?(...args: unknown[]): unknown;
+  onEndEditing?(...args: unknown[]): unknown;
+  onMarkComplete?(...args: unknown[]): unknown;
+  onRate(...args: unknown[]): unknown;
+  onMediaTapped?(...args: unknown[]): unknown;
+}
 
+export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps> {
   static defaultProps = {
     onBeginEditing: () => { },
     onEndEditing: () => { },

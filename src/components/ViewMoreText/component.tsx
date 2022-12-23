@@ -1,11 +1,18 @@
 import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
-import { PropTypes } from 'prop-types';
 import { isNull } from 'lodash';
 import { ViewMoreTextCache } from 'kitsu/utils/cache';
 import { styles } from './styles';
 
-export class ViewMoreText extends PureComponent {
+interface ViewMoreTextProps {
+  cacheKey?: string;
+  textStyle?: object | unknown[];
+  numberOfLines?: number;
+  renderViewMore?(...args: unknown[]): unknown;
+  renderViewLess?(...args: unknown[]): unknown;
+}
+
+export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
   state = {
     showAllText: false,
     measured: false,
@@ -97,14 +104,6 @@ export class ViewMoreText extends PureComponent {
     );
   }
 }
-
-ViewMoreText.propTypes = {
-  cacheKey: PropTypes.string,
-  textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  numberOfLines: PropTypes.number,
-  renderViewMore: PropTypes.func,
-  renderViewLess: PropTypes.func,
-};
 
 ViewMoreText.defaultProps = {
   cacheKey: null,

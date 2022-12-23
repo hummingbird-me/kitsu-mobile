@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { FlatList, TouchableOpacity, View, ActivityIndicator, Text } from 'react-native';
-import PropTypes from 'prop-types';
 import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -11,18 +10,18 @@ import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
 import { styles } from './styles';
 
-class Episodes extends PureComponent {
-  static propTypes = {
-    componentId: PropTypes.any.isRequired,
-    media: PropTypes.shape({
-      episodes: PropTypes.array.isRequired,
-    }).isRequired,
-    libraryEntry: PropTypes.object,
-    loadingLibrary: PropTypes.bool,
-    onEpisodeProgress: PropTypes.func,
-    loadingAdditional: PropTypes.bool,
-  }
+interface EpisodesProps {
+  componentId: any;
+  media: {
+    episodes: unknown[]
+  };
+  libraryEntry?: object;
+  loadingLibrary?: boolean;
+  onEpisodeProgress?(...args: unknown[]): unknown;
+  loadingAdditional?: boolean;
+}
 
+class Episodes extends PureComponent<EpisodesProps> {
   static defaultProps = {
     loadingLibrary: false,
     libraryEntry: null,

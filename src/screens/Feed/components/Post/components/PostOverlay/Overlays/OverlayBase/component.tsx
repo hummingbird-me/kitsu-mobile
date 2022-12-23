@@ -1,9 +1,18 @@
 import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
-import PropTypes from 'prop-types';
 import { styles } from './styles';
 
-export const OverlayBase = ({ onPress, foregroundText, backgroundText }) => (
+interface OverlayBaseProps {
+  onPress?(...args: unknown[]): unknown;
+  foregroundText?: string;
+  backgroundText?: string;
+}
+
+export const OverlayBase = ({
+  onPress,
+  foregroundText,
+  backgroundText
+}: OverlayBaseProps) => (
   <TouchableOpacity onPress={onPress}>
     <View style={styles.wrapper}>
       <Text style={styles.foregroundText}>{foregroundText}</Text>
@@ -11,12 +20,6 @@ export const OverlayBase = ({ onPress, foregroundText, backgroundText }) => (
     </View>
   </TouchableOpacity>
 );
-
-OverlayBase.propTypes = {
-  onPress: PropTypes.func,
-  foregroundText: PropTypes.string,
-  backgroundText: PropTypes.string,
-};
 
 OverlayBase.defaultProps = {
   onPress: null,
