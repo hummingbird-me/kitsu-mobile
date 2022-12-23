@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
+
 import { styles } from './styles';
 
 interface NotificationHeaderProps {
@@ -17,12 +14,16 @@ interface NotificationHeaderProps {
 export const NotificationHeader = ({
   unreadCount,
   markingRead,
-  onMarkAll
+  onMarkAll,
 }: NotificationHeaderProps) => (
   <View style={styles.customHeaderWrapper}>
     <Text style={styles.customHeaderText}>Notifications</Text>
     {unreadCount > 0 && (
-      <TouchableOpacity activeOpacity={0.8} onPress={onMarkAll} style={styles.customHeaderButton}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={onMarkAll}
+        style={styles.customHeaderButton}
+      >
         {markingRead ? (
           <ActivityIndicator color={colors.offBlack} />
         ) : (

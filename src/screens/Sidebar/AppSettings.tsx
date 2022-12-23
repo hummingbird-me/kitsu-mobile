@@ -1,14 +1,15 @@
 import React, { PureComponent } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import * as colors from 'kitsu/constants/colors';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { setDataSaver, setInitialPage } from 'kitsu/store/app/actions';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { connect } from 'react-redux';
+
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import * as colors from 'kitsu/constants/colors';
+import { setDataSaver, setInitialPage } from 'kitsu/store/app/actions';
+
 import { SidebarHeader, SidebarTitle } from './common/';
 import { styles } from './styles';
-
 
 interface AppSettingsProps {
   componentId: any;
@@ -18,26 +19,25 @@ interface AppSettingsProps {
   initialPage?: string;
 }
 
-
 class AppSettings extends PureComponent<AppSettingsProps> {
   static defaultProps = {
     dataSaver: false,
     setDataSaver: null,
     setInitialPage: null,
     initialPage: '-',
-  }
+  };
 
   onStartingPageChange = (option) => {
     if (this.props.setInitialPage) {
       this.props.setInitialPage(option);
     }
-  }
+  };
 
   toggleDataSaver = () => {
     if (this.props.setDataSaver) {
       this.props.setDataSaver(!this.props.dataSaver);
     }
-  }
+  };
 
   render() {
     const { dataSaver, initialPage, componentId } = this.props;
@@ -71,23 +71,18 @@ class AppSettings extends PureComponent<AppSettingsProps> {
             options={pages}
           >
             <View>
-              <Text style={styles.hintText}>
-                Starting Page
-              </Text>
-              <Text style={styles.valueText}>
-                {pageText}
-              </Text>
+              <Text style={styles.hintText}>Starting Page</Text>
+              <Text style={styles.valueText}>{pageText}</Text>
             </View>
           </SelectMenu>
           <SidebarTitle title={'Feed'} />
-          <TouchableOpacity style={styles.checkBoxContainer} onPress={this.toggleDataSaver}>
+          <TouchableOpacity
+            style={styles.checkBoxContainer}
+            onPress={this.toggleDataSaver}
+          >
             <View style={{ flexDirection: 'column', flex: 1 }}>
-              <Text style={styles.hintText}>
-                Data Saver Mode
-              </Text>
-              <Text style={styles.valueText}>
-                Tap to load images
-              </Text>
+              <Text style={styles.hintText}>Data Saver Mode</Text>
+              <Text style={styles.valueText}>Tap to load images</Text>
             </View>
             <Icon
               name={dataSaver ? 'check-circle' : 'circle-thin'}
@@ -106,4 +101,6 @@ const mapStateToProps = ({ app }) => {
   return { dataSaver, initialPage };
 };
 
-export default connect(mapStateToProps, { setDataSaver, setInitialPage })(AppSettings);
+export default connect(mapStateToProps, { setDataSaver, setInitialPage })(
+  AppSettings
+);

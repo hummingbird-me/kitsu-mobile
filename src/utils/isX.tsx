@@ -16,8 +16,12 @@ export const paddingX = safeAreaInsetX.top;
 export const isX = (() => {
   if (Platform.OS === 'web') return false;
 
-  const X = (D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) || (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT);
-  const XSMAX = (D_HEIGHT === XSMAX_HEIGHT && D_WIDTH === XSMAX_WIDTH) || (D_HEIGHT === XSMAX_WIDTH && D_WIDTH === XSMAX_HEIGHT);
+  const X =
+    (D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
+    (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT);
+  const XSMAX =
+    (D_HEIGHT === XSMAX_HEIGHT && D_WIDTH === XSMAX_WIDTH) ||
+    (D_HEIGHT === XSMAX_WIDTH && D_WIDTH === XSMAX_HEIGHT);
 
   return Platform.OS === 'ios' && (X || XSMAX);
 })();

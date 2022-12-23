@@ -1,4 +1,5 @@
 import { REHYDRATE } from 'redux-persist';
+
 import * as types from 'kitsu/store/types';
 import { KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
 
@@ -16,7 +17,7 @@ function updateObjectInArray(array, entry) {
 }
 
 function removeObjectFromArray(array, entry) {
-  return array.filter(currentItem => currentItem.id !== entry.id);
+  return array.filter((currentItem) => currentItem.id !== entry.id);
 }
 
 const userLibraryInitial = {
@@ -149,7 +150,9 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
             [action.library]: {
               ...state.userLibrary[action.userId][action.library],
               [action.status]: {
-                ...state.userLibrary[action.userId][action.library][action.status],
+                ...state.userLibrary[action.userId][action.library][
+                  action.status
+                ],
                 loading: true,
                 refreshing: action.refresh || false,
               },
@@ -197,7 +200,9 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
             [action.library]: {
               ...state.userLibrary[action.userId][action.library],
               [action.status]: {
-                ...state.userLibrary[action.userId][action.library][action.status],
+                ...state.userLibrary[action.userId][action.library][
+                  action.status
+                ],
                 loading: false,
                 refreshing: false,
               },
@@ -220,7 +225,8 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
                 [action.libraryType]: {
                   ...state.userLibrary[action.userId].meta[action.libraryType],
                   statusCounts: {
-                    ...state.userLibrary[action.userId].meta[action.libraryType].statusCounts,
+                    ...state.userLibrary[action.userId].meta[action.libraryType]
+                      .statusCounts,
                     ...action.statusCounts,
                   },
                 },
@@ -230,19 +236,30 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
 
                 // remove from previousLibraryEntry.status
                 [action.previousLibraryStatus]: {
-                  ...state.userLibrary[action.userId][action.libraryType][action.previousLibraryStatus],
+                  ...state.userLibrary[action.userId][action.libraryType][
+                    action.previousLibraryStatus
+                  ],
                   data: removeObjectFromArray(
-                    state.userLibrary[action.userId][action.libraryType][action.previousLibraryStatus].data,
-                    action.newLibraryEntry,
+                    state.userLibrary[action.userId][action.libraryType][
+                      action.previousLibraryStatus
+                    ].data,
+                    action.newLibraryEntry
                   ),
                 },
 
                 // add to newLibraryEntry.status
                 [action.newLibraryStatus]: {
-                  ...state.userLibrary[action.userId][action.libraryType][action.newLibraryStatus],
+                  ...state.userLibrary[action.userId][action.libraryType][
+                    action.newLibraryStatus
+                  ],
                   data: [
-                    { ...action.previousLibraryEntry, ...action.newLibraryEntry },
-                    ...state.userLibrary[action.userId][action.libraryType][action.newLibraryStatus].data,
+                    {
+                      ...action.previousLibraryEntry,
+                      ...action.newLibraryEntry,
+                    },
+                    ...state.userLibrary[action.userId][action.libraryType][
+                      action.newLibraryStatus
+                    ].data,
                   ],
                 },
               },
@@ -261,10 +278,14 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
               [action.libraryStatus]: {
-                ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus],
+                ...state.userLibrary[action.userId][action.libraryType][
+                  action.libraryStatus
+                ],
                 data: updateObjectInArray(
-                  state.userLibrary[action.userId][action.libraryType][action.libraryStatus].data,
-                  action.newLibraryEntry,
+                  state.userLibrary[action.userId][action.libraryType][
+                    action.libraryStatus
+                  ].data,
+                  action.newLibraryEntry
                 ),
               },
             },
@@ -285,7 +306,8 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
               [action.libraryType]: {
                 ...state.userLibrary[action.userId].meta[action.libraryType],
                 statusCounts: {
-                  ...state.userLibrary[action.userId].meta[action.libraryType].statusCounts,
+                  ...state.userLibrary[action.userId].meta[action.libraryType]
+                    .statusCounts,
                   ...action.statusCounts,
                 },
               },
@@ -293,10 +315,14 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
               [action.libraryStatus]: {
-                ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus],
+                ...state.userLibrary[action.userId][action.libraryType][
+                  action.libraryStatus
+                ],
                 data: [
                   action.newLibraryEntry,
-                  ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus].data,
+                  ...state.userLibrary[action.userId][action.libraryType][
+                    action.libraryStatus
+                  ].data,
                 ],
               },
             },
@@ -318,7 +344,8 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
               [action.libraryType]: {
                 ...state.userLibrary[action.userId].meta[action.libraryType],
                 statusCounts: {
-                  ...state.userLibrary[action.userId].meta[action.libraryType].statusCounts,
+                  ...state.userLibrary[action.userId].meta[action.libraryType]
+                    .statusCounts,
                   ...action.statusCounts,
                 },
               },
@@ -326,9 +353,12 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
             [action.libraryType]: {
               ...state.userLibrary[action.userId][action.libraryType],
               [action.libraryStatus]: {
-                ...state.userLibrary[action.userId][action.libraryType][action.libraryStatus],
-                data: state.userLibrary[action.userId][action.libraryType][action.libraryStatus]
-                  .data.filter(entry => entry.id !== action.id),
+                ...state.userLibrary[action.userId][action.libraryType][
+                  action.libraryStatus
+                ],
+                data: state.userLibrary[action.userId][action.libraryType][
+                  action.libraryStatus
+                ].data.filter((entry) => entry.id !== action.id),
               },
             },
           },
@@ -444,7 +474,8 @@ export const profileReducer = (state = INITIAL_STATE, action) => {
     case REHYDRATE: {
       const payload = action && action.payload;
       const user = (payload && payload.user) || {};
-      const sort = (payload && payload.profile && payload.profile.librarySort) || {};
+      const sort =
+        (payload && payload.profile && payload.profile.librarySort) || {};
 
       return {
         ...state,

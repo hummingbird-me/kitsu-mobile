@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import { commonStyles } from 'kitsu/common/styles';
+
 import { styles } from './styles';
 
 interface ScrollableTabBarProps {
@@ -12,7 +14,7 @@ interface ScrollableTabBarProps {
 export const ScrollableTabBar = ({
   goToPage,
   activeTab,
-  tabs
+  tabs,
 }: ScrollableTabBarProps) => (
   <View style={styles.tabBarContainer}>
     {tabs.map((tab, i) => (
@@ -25,7 +27,9 @@ export const ScrollableTabBar = ({
         <Text
           style={[
             commonStyles.text,
-            (activeTab === i ? commonStyles.colorActiveRed : commonStyles.colorLightGrey),
+            activeTab === i
+              ? commonStyles.colorActiveRed
+              : commonStyles.colorLightGrey,
           ]}
         >
           {tab}

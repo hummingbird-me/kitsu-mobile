@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
+
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
+import { Kitsu } from 'kitsu/config/api';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
-import { Kitsu } from 'kitsu/config/api';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 
 interface ReactionsProps {
   loadingReactions?: boolean;
@@ -15,7 +16,7 @@ class Reactions extends PureComponent<ReactionsProps> {
   static defaultProps = {
     loadingReactions: false,
     reactions: [],
-  }
+  };
 
   render() {
     const { loadingReactions, reactions } = this.props;
@@ -32,15 +33,13 @@ class Reactions extends PureComponent<ReactionsProps> {
           renderItem={({ item }) => {
             const title =
               (item.anime && item.anime.canonicalTitle) ||
-              (item.manga && item.manga.canonicalTitle) || '-';
-            return (
-              <ReactionBox
-                reactedMedia={title}
-                reaction={item}
-              />
-            );
+              (item.manga && item.manga.canonicalTitle) ||
+              '-';
+            return <ReactionBox reactedMedia={title} reaction={item} />;
           }}
-          ItemSeparatorComponent={() => <RowSeparator size="large" transparent />}
+          ItemSeparatorComponent={() => (
+            <RowSeparator size="large" transparent />
+          )}
         />
       </TabContainer>
     );

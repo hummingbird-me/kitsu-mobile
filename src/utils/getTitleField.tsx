@@ -13,7 +13,9 @@ export function getTitleField(preference) {
 }
 
 export function getComputedTitle(user, media) {
-  if (!user) { return media.canonicalTitle; }
+  if (!user) {
+    return media.canonicalTitle;
+  }
   const preference = lowerCase(user.titleLanguagePreference);
   const key = getTitleField(preference);
   return (media.titles && media.titles[key]) || media.canonicalTitle;

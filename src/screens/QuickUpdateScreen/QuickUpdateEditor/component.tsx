@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Animated, Text, Platform } from 'react-native';
+import { Animated, Platform, Text } from 'react-native';
+
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
 import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
+
 import styles from './styles';
 
 interface QuickUpdateEditorProps {
@@ -35,7 +37,8 @@ export default class QuickUpdateEditor extends PureComponent<QuickUpdateEditorPr
   };
 
   render() {
-    const { progress, onCancel, onPostCreated, media, currentEpisode } = this.props;
+    const { progress, onCancel, onPostCreated, media, currentEpisode } =
+      this.props;
     const { headerOpacity } = this.state;
 
     return (

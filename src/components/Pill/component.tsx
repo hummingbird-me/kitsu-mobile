@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { startCase, toLower } from 'lodash';
+import React from 'react';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { styles } from './styles';
 
 interface PillProps {
@@ -39,7 +40,9 @@ export const Pill = ({
         {selected ? (
           <View style={styles.row}>
             <Icon style={[styles.icon, { color }]} name="md-checkmark" />
-            <Text style={[styles.text, { color, marginTop: 1 }]}>{startCase(toLower(title))}</Text>
+            <Text style={[styles.text, { color, marginTop: 1 }]}>
+              {startCase(toLower(title))}
+            </Text>
           </View>
         ) : (
           <Text style={styles.text}>{startCase(toLower(title))}</Text>
@@ -50,7 +53,7 @@ export const Pill = ({
 );
 
 Pill.propTypes = {
-  ...TouchableOpacity.propTypes
+  ...TouchableOpacity.propTypes,
 };
 Pill.defaultProps = {
   selected: false,

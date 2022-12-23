@@ -1,6 +1,7 @@
-import { StyleSheet, Platform } from 'react-native';
-import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { Platform, StyleSheet } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
+import { scenePadding } from 'kitsu/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   loading: {

@@ -1,20 +1,21 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { Kitsu } from 'kitsu/config/api';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { View, FlatList, Platform } from 'react-native';
-import { Screens, NavigationActions } from 'kitsu/navigation';
-import { Navigation } from 'react-native-navigation';
-import URL from 'url-parse';
-import { listBackPurple } from 'kitsu/constants/colors';
-import { Button } from 'kitsu/components/Button';
 import { isEmpty, uniqBy } from 'lodash';
-import { isAoProOrKitsuPro } from 'kitsu/utils/user';
+import React, { PureComponent } from 'react';
+import { FlatList, Platform, View } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+import URL from 'url-parse';
+
+import { Button } from 'kitsu/components/Button';
+import { SceneLoader } from 'kitsu/components/SceneLoader';
+import { Kitsu } from 'kitsu/config/api';
 import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
+import { listBackPurple } from 'kitsu/constants/colors';
+import { NavigationActions, Screens } from 'kitsu/navigation';
+import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
+import { Post } from 'kitsu/screens/Feed/components/Post';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 
 interface FeedComponentProps {
   componentId: any;
@@ -26,14 +27,14 @@ interface FeedComponentProps {
 class FeedComponent extends PureComponent<FeedComponentProps> {
   static defaultProps = {
     profile: null,
-  }
+  };
 
   state = {
     error: null,
     feed: [],
     loadingFeed: true,
     loadingNextFeed: false,
-  }
+  };
 
   componentDidMount() {
     this.fetchFeed({ reset: true });
@@ -46,7 +47,7 @@ class FeedComponent extends PureComponent<FeedComponentProps> {
         passProps: props,
       },
     });
-  }
+  };
 
   canFetchNextFeed = true;
   feedCursor = undefined;
@@ -64,7 +65,8 @@ class FeedComponent extends PureComponent<FeedComponentProps> {
     let data = [];
     try {
       const result = await Kitsu.one('userFeed', userId).get({
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
+        include:
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: {
           kind: 'posts',
         },
@@ -75,12 +77,14 @@ class FeedComponent extends PureComponent<FeedComponentProps> {
       });
 
       // I need to read the cursor value out of the 'next' link in the result.
-      this.canFetchNextFeed = !isEmpty(result && result.links && result.links.next);
+      this.canFetchNextFeed = !isEmpty(
+        result && result.links && result.links.next
+      );
       const url = new URL(result.links.next, true);
       this.feedCursor = url.query['page[cursor]'];
 
       // Need to change this here if we want to also display media updates, follows, etc
-      const feed = preprocessFeed(result).filter(i => i.type === 'posts');
+      const feed = preprocessFeed(result).filter((i) => i.type === 'posts');
       data = reset ? [...feed] : [...this.state.feed, ...feed];
       data = uniqBy(data, 'id');
     } catch (error) {
@@ -94,7 +98,7 @@ class FeedComponent extends PureComponent<FeedComponentProps> {
         loadingNextFeed: false,
       });
     }
-  }
+  };
 
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
@@ -137,30 +141,35 @@ class FeedComponent extends PureComponent<FeedComponentProps> {
     return (
       <SceneContainer>
         <View style={{ paddingTop: 10 }}>
-          <CreatePostRow onPress={this.navigateToCreatePost} targetUser={profile} />
+          <CreatePostRow
+            onPress={this.navigateToCreatePost}
+            targetUser={profile}
+          />
         </View>
         {/* Feed */}
-        { loadingFeed ?
+        {loadingFeed ? (
           <SceneLoader />
-          :
+        ) : (
           <React.Fragment>
             <FlatList
               listKey="feed"
               data={feed || []}
-              keyExtractor={item => `${item.id}`}
+              keyExtractor={(item) => `${item.id}`}
               renderItem={this.renderItem}
-              />
+            />
             {/* @Temporary - Load more button */}
-            { this.canFetchNextFeed && (
+            {this.canFetchNextFeed && (
               <Button
                 style={{ backgroundColor: listBackPurple }}
                 title="Load More"
-                onPress={() => { this.fetchFeed(); } }
+                onPress={() => {
+                  this.fetchFeed();
+                }}
                 loading={loadingNextFeed}
               />
             )}
           </React.Fragment>
-        }
+        )}
       </SceneContainer>
     );
   }

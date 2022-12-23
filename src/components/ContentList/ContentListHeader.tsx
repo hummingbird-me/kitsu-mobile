@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { styles } from './styles';
 
 interface ContentListHeaderProps {
@@ -16,14 +17,25 @@ export const ContentListHeader = ({
   ...props
 }: ContentListHeaderProps) => (
   <View style={styles.contentListHeaderContainer}>
-    <Text style={[styles.contentListHeaderText, dark ? styles.lightText : '']}>{title}</Text>
-    {showViewAll && <TouchableOpacity style={styles.contentListActionLink} {...props}>
-      <Text style={[styles.contentListActionLinkText, dark ? styles.lightText : '']}>View All</Text>
-      <Icon
-        name="chevron-right"
-        style={[styles.linkIcon, dark ? styles.iconLight : styles.iconDark]}
-      />
-    </TouchableOpacity>}
+    <Text style={[styles.contentListHeaderText, dark ? styles.lightText : '']}>
+      {title}
+    </Text>
+    {showViewAll && (
+      <TouchableOpacity style={styles.contentListActionLink} {...props}>
+        <Text
+          style={[
+            styles.contentListActionLinkText,
+            dark ? styles.lightText : '',
+          ]}
+        >
+          View All
+        </Text>
+        <Icon
+          name="chevron-right"
+          style={[styles.linkIcon, dark ? styles.iconLight : styles.iconDark]}
+        />
+      </TouchableOpacity>
+    )}
   </View>
 );
 

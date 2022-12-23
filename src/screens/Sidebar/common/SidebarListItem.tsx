@@ -1,26 +1,37 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import * as colors from 'kitsu/constants/colors';
 
 interface ItemSeparatorProps {
   underlineImage?: boolean;
 }
 
-export const ItemSeparator = ({
-  underlineImage
-}: ItemSeparatorProps) => {
+export const ItemSeparator = ({ underlineImage }: ItemSeparatorProps) => {
   if (!underlineImage) {
-    return ( // done to show white border under image (when list has non-white background)
-      <View style={{ flexDirection: 'row', height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }}>
+    return (
+      // done to show white border under image (when list has non-white background)
+      <View
+        style={{
+          flexDirection: 'row',
+          height: StyleSheet.hairlineWidth,
+          backgroundColor: colors.lightGrey,
+        }}
+      >
         <View style={{ width: 38, backgroundColor: colors.white }} />
         <View />
       </View>
     );
   }
   return (
-    <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.lightGrey }} />
+    <View
+      style={{
+        height: StyleSheet.hairlineWidth,
+        backgroundColor: colors.lightGrey,
+      }}
+    />
   );
 };
 
@@ -41,23 +52,31 @@ export const SidebarListItem = ({
   imageURL,
   title,
   onPress,
-  style
+  style,
 }: SidebarListItemProps) => (
-  <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={[styles.item, style]}>
+  <TouchableOpacity
+    activeOpacity={0.8}
+    onPress={onPress}
+    style={[styles.item, style]}
+  >
     <View style={styles.leftContentWrapper}>
-      {(image &&
-        <FastImage source={image} style={styles.image} resizeMode="contain" cache="web" />
-      ) ||
-        (imageURL &&
+      {(image && (
+        <FastImage
+          source={image}
+          style={styles.image}
+          resizeMode="contain"
+          cache="web"
+        />
+      )) ||
+        (imageURL && (
           <FastImage
             source={{ uri: imageURL }}
             style={[styles.image, { borderRadius: 4 }]}
             resizeMode="stretch"
             cache="web"
-          />)}
-      <Text style={styles.text}>
-        {title}
-      </Text>
+          />
+        ))}
+      <Text style={styles.text}>{title}</Text>
     </View>
     <View>
       <Icon

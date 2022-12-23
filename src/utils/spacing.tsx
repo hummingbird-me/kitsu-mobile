@@ -19,8 +19,12 @@ export function getBestGridItemSpacing(itemWidths, availableWidth, minMargin) {
       bestSpacing = spacing;
       bestWidth = width;
       // Best spacing is the one with the smallest margin and smallest extra space
-    } else if (spacing.columnCount > 0 && (spacing.margin < bestSpacing.margin ||
-      (spacing.margin === bestSpacing.margin && spacing.extra < bestSpacing.extra))) {
+    } else if (
+      spacing.columnCount > 0 &&
+      (spacing.margin < bestSpacing.margin ||
+        (spacing.margin === bestSpacing.margin &&
+          spacing.extra < bestSpacing.extra))
+    ) {
       bestSpacing = spacing;
       bestWidth = width;
     }
@@ -48,7 +52,7 @@ export function getGridItemSpacing(
   itemWidth,
   availableWidth,
   minMargin,
-  distributeExtraToMargin = true,
+  distributeExtraToMargin = true
 ) {
   // The margin we are working with
   let edgeMargin = minMargin;
@@ -56,7 +60,7 @@ export function getGridItemSpacing(
 
   // The amount of space we can work with
   // Not sure if we need to make this a float or not.
-  const maxContentWidth = availableWidth - (edgeMargin * 2);
+  const maxContentWidth = availableWidth - edgeMargin * 2;
 
   // The amount of items we can fit in the given space
   let columnCount = Math.floor(maxContentWidth / itemWidth);
@@ -65,7 +69,8 @@ export function getGridItemSpacing(
   // Or if we have to reduce the columnCount to meet minMargin.
   let neededContentWidth = Infinity;
   while (columnCount > 0 && neededContentWidth > maxContentWidth) {
-    neededContentWidth = (columnCount * itemWidth) + ((columnCount - 1) * innerMargin);
+    neededContentWidth =
+      columnCount * itemWidth + (columnCount - 1) * innerMargin;
     columnCount -= 1;
   }
 
@@ -73,11 +78,11 @@ export function getGridItemSpacing(
   columnCount += 1;
 
   // Get the extra space we have remaining
-  let extraSpace = availableWidth - (
-    (edgeMargin * 2) + // Margin around first and last items
-    (columnCount * itemWidth) + // Number of items we can fit in the space
-    ((columnCount - 1) * innerMargin) // Margin between the items
-  );
+  let extraSpace =
+    availableWidth -
+    (edgeMargin * 2 + // Margin around first and last items
+      columnCount * itemWidth + // Number of items we can fit in the space
+      (columnCount - 1) * innerMargin); // Margin between the items
 
   // Try and distribute extra space between the margins
   if (distributeExtraToMargin) {

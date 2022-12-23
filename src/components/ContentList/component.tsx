@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
+
 import { ContentListHeader } from './ContentListHeader';
 import { ItemRenderer } from './ItemRenderer';
 import { styles } from './styles';
@@ -21,8 +22,15 @@ export const ContentList = ({
   ...props
 }: ContentListProps) => (
   // console.log('data is', title, data);
-  <View style={[styles.contentListContainer, dark ? styles.darkBg : styles.lightBg]}>
-    <ContentListHeader dark={dark} title={title} onPress={onPress} showViewAll={showViewAll} />
+  <View
+    style={[styles.contentListContainer, dark ? styles.darkBg : styles.lightBg]}
+  >
+    <ContentListHeader
+      dark={dark}
+      title={title}
+      onPress={onPress}
+      showViewAll={showViewAll}
+    />
     <FlatList
       horizontal
       data={data}

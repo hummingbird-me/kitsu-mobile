@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { orange } from 'kitsu/constants/colors';
+import { TouchableOpacity, View } from 'react-native';
+
 import { StyledText } from 'kitsu/components/StyledText';
+import { orange } from 'kitsu/constants/colors';
+
 import { styles } from './styles';
 
 interface PillProps {
@@ -10,15 +12,16 @@ interface PillProps {
   onPress?(...args: unknown[]): unknown;
 }
 
-export const Pill = ({
-  color,
-  label,
-  onPress
-}: PillProps) => {
+export const Pill = ({ color, label, onPress }: PillProps) => {
   const Container = onPress ? TouchableOpacity : View;
   return (
-    <Container style={[styles.pill, { backgroundColor: color }]} onPress={onPress}>
-      <StyledText color="light" size="xsmall">{label}</StyledText>
+    <Container
+      style={[styles.pill, { backgroundColor: color }]}
+      onPress={onPress}
+    >
+      <StyledText color="light" size="xsmall">
+        {label}
+      </StyledText>
     </Container>
   );
 };

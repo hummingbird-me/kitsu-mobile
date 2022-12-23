@@ -11,7 +11,7 @@ class _FetchCache {
     // cached result?
     if (this.FETCH_CACHE[request]) {
       // Expired?
-      if ((new Date()) > this.FETCH_CACHE[request].expiry) {
+      if (new Date() > this.FETCH_CACHE[request].expiry) {
         delete this.FETCH_CACHE[request];
       } else {
         return this.FETCH_CACHE[request].promise;
@@ -19,9 +19,9 @@ class _FetchCache {
     }
 
     // execute and then cache with expiry date
-    const promise = fetch(request).then(r => r.json());
+    const promise = fetch(request).then((r) => r.json());
     const expiry = new Date();
-    expiry.setTime(expiry.getTime() + (this.CACHE_TIME_HOUR * 60 * 60 * 1000));
+    expiry.setTime(expiry.getTime() + this.CACHE_TIME_HOUR * 60 * 60 * 1000);
     this.FETCH_CACHE[request] = {
       promise,
       expiry,

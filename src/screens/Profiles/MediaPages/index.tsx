@@ -1,43 +1,68 @@
-import React, { PureComponent } from 'react';
-import { StatusBar, Share, View } from 'react-native';
-import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
-import { Kitsu } from 'kitsu/config/api';
-// TODO: Maybe replace this with const { statusBarHeight, topBarHeight } = await Navigation.constants()
-import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
-import { listBackPurple } from 'kitsu/constants/colors';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Summary, Episodes, Reactions, Franchise } from 'kitsu/screens/Profiles/MediaPages/pages';
-import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
-import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
-import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
-import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { capitalize, upperFirst, isNull, isEmpty } from 'lodash';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
-import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
-import { kitsuConfig } from 'kitsu/config/env';
-import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
+import { capitalize, isEmpty, isNull, upperFirst } from 'lodash';
+import React, { PureComponent } from 'react';
+import { Share, StatusBar, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
-import { handleURL } from 'kitsu/utils/url';
-import { showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
+import { connect } from 'react-redux';
 
-const HEADER_HEIGHT = statusBarHeight + navigationBarHeight + (isX ? paddingX : 0);
+import { SceneLoader } from 'kitsu/components/SceneLoader';
+import { Kitsu } from 'kitsu/config/api';
+import { kitsuConfig } from 'kitsu/config/env';
+// TODO: Maybe replace this with const { statusBarHeight, topBarHeight } = await Navigation.constants()
+import {
+  defaultCover,
+  navigationBarHeight,
+  statusBarHeight,
+} from 'kitsu/constants/app';
+import { listBackPurple } from 'kitsu/constants/colors';
+import { NavigationActions, Screens } from 'kitsu/navigation';
+import {
+  Episodes,
+  Franchise,
+  Reactions,
+  Summary,
+} from 'kitsu/screens/Profiles/MediaPages/pages';
+import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
+import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
+import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
+import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
+import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
+import { showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
+import { isX, paddingX } from 'kitsu/utils/isX';
+import {
+  KitsuLibrary,
+  KitsuLibraryEventSource,
+  KitsuLibraryEvents,
+} from 'kitsu/utils/kitsuLibrary';
+import { handleURL } from 'kitsu/utils/url';
+
+const HEADER_HEIGHT =
+  statusBarHeight + navigationBarHeight + (isX ? paddingX : 0);
 
 const TAB_ITEMS = [
   { key: 'summary', label: 'Summary', screen: Summary },
-  { key: 'episodes', label: 'Episodes', screen: Episodes, if: (state) => state.media.type === 'anime'},
-  { key: 'chapters', label: 'Chapters', screen: Episodes, if: (state) => state.media.type === 'manga'},
+  {
+    key: 'episodes',
+    label: 'Episodes',
+    screen: Episodes,
+    if: (state) => state.media.type === 'anime',
+  },
+  {
+    key: 'chapters',
+    label: 'Chapters',
+    screen: Episodes,
+    if: (state) => state.media.type === 'manga',
+  },
   // NOTE: Disabled until we improve char db
   // { key: 'characters', label: 'Characters', screen: 'Characters' },
   { key: 'reactions', label: 'Reactions', screen: Reactions },
   { key: 'franchise', label: 'Franchise', screen: Franchise },
 ];
 
-const tabs = TAB_ITEMS.map(t => t.key);
+const tabs = TAB_ITEMS.map((t) => t.key);
 
 interface MediaPagesProps {
   mediaId: number | string;
@@ -48,7 +73,7 @@ interface MediaPagesProps {
 class MediaPages extends PureComponent<MediaPagesProps> {
   static defaultProps = {
     activeTab: 'summary',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -84,10 +109,19 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     this.fetchMedia(mediaType, mediaId);
     this.fetchFavorite(mediaType, mediaId);
     this.fetchLibraryEntry(mediaType, mediaId);
-    this.unsubscribeCreate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, this.onLibraryEntryCreated);
-    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.onLibraryEntryUpdated);
-    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.onLibraryEntryDeleted);
-  }
+    this.unsubscribeCreate = KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_CREATE,
+      this.onLibraryEntryCreated
+    );
+    this.unsubscribeUpdate = KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE,
+      this.onLibraryEntryUpdated
+    );
+    this.unsubscribeDelete = KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_DELETE,
+      this.onLibraryEntryDeleted
+    );
+  };
 
   componentWillUnmount() {
     this.unsubscribeUpdate();
@@ -104,20 +138,27 @@ class MediaPages extends PureComponent<MediaPagesProps> {
       case 'on_hold':
       case 'dropped': {
         const data = { status: option };
-        libraryEntry ? await this.updateLibraryEntry(data) : await this.createLibraryEntry(data);
+        libraryEntry
+          ? await this.updateLibraryEntry(data)
+          : await this.createLibraryEntry(data);
         break;
       }
       case 'remove':
         this.setState({ loadingLibrary: true });
         await Kitsu.destroy('libraryEntries', libraryEntry.id);
-        KitsuLibrary.onLibraryEntryDelete(libraryEntry.id, mediaType, libraryEntry.status, KitsuLibraryEventSource.MEDIA_PAGE);
+        KitsuLibrary.onLibraryEntryDelete(
+          libraryEntry.id,
+          mediaType,
+          libraryEntry.status,
+          KitsuLibraryEventSource.MEDIA_PAGE
+        );
         this.setState({ libraryEntry: null, loadingLibrary: false });
         break;
       default:
         console.log('unhandled option selected:', option);
         break;
     }
-  }
+  };
 
   onMoreButtonOptionsSelected = async (option) => {
     const { mediaId, mediaType, currentUser } = this.props;
@@ -151,7 +192,8 @@ class MediaPages extends PureComponent<MediaPagesProps> {
       }
       case 'cover': {
         if (!media || !media.coverImage) return;
-        const coverURL = media.coverImage.original ||
+        const coverURL =
+          media.coverImage.original ||
           media.coverImage.large ||
           media.coverImage.medium ||
           media.coverImage.small ||
@@ -169,7 +211,7 @@ class MediaPages extends PureComponent<MediaPagesProps> {
         console.log('unhandled option selected:', option);
         break;
     }
-  }
+  };
 
   onLibraryEntryCreated = (data) => {
     const { mediaId, mediaType } = this.props;
@@ -185,7 +227,7 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     if (media && media.id == mediaId) {
       this.setState({ libraryEntry: entry });
     }
-  }
+  };
 
   onLibraryEntryUpdated = (data) => {
     const { id, newEntry } = data;
@@ -196,7 +238,7 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: newEntry });
     }
-  }
+  };
 
   onLibraryEntryDeleted = (data) => {
     const { id } = data;
@@ -206,7 +248,7 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     if (libraryEntry && libraryEntry.id == id) {
       this.setState({ libraryEntry: null });
     }
-  }
+  };
 
   onEpisodeProgress = async (number) => {
     const { media, libraryEntry } = this.state;
@@ -220,7 +262,8 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     // If library progress is at 1 and `number` is also 1 then we need to set progress back to 0.
     // This is there incase a user accidentally marks episode 1 as watched and can't go back to progress 0 without going back to their library and editing it there.
     let progress = number;
-    if (libraryEntry && libraryEntry.progress === 1 && number === 1) progress = 0;
+    if (libraryEntry && libraryEntry.progress === 1 && number === 1)
+      progress = 0;
 
     // Check progress is within the bounds
     if (progress < 0) progress = 0;
@@ -249,13 +292,17 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     }
 
     // If entry was 'completed' and we progressed then set reconsuming to true
-    if (libraryStatus && libraryStatus === 'completed' && mediaCount && progress !== mediaCount) {
+    if (
+      libraryStatus &&
+      libraryStatus === 'completed' &&
+      mediaCount &&
+      progress !== mediaCount
+    ) {
       changes = { ...changes, reconsuming: true };
     }
 
     // Set the new status
     changes = { ...changes, status };
-
 
     // Now we just call the relevant method
     // Could have the case where user taps progress but doesn't have an entry
@@ -264,18 +311,19 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     } else {
       await this.updateLibraryEntry(changes);
     }
-  }
+  };
 
   getSubtitles(media) {
     if (!media) return null;
 
     // The media sub type
-    const type = (media.showType && upperFirst(media.showType)) ||
+    const type =
+      (media.showType && upperFirst(media.showType)) ||
       (media.mangaType && capitalize(media.mangaType)) ||
       '';
 
     // Date when media started
-    const startDate = media.startDate && (new Date(media.startDate));
+    const startDate = media.startDate && new Date(media.startDate);
     const year = (startDate && startDate.getFullYear().toString()) || null;
 
     // Episode or chapter counts
@@ -292,34 +340,43 @@ class MediaPages extends PureComponent<MediaPagesProps> {
   setActiveTab = (tab) => {
     if (tab) {
       this.setState({ active: tab.toLowerCase() });
-      if (this.scrollView) this.scrollView.scrollTo({ x: 0, y: coverImageHeight, animated: true });
+      if (this.scrollView)
+        this.scrollView.scrollTo({ x: 0, y: coverImageHeight, animated: true });
     }
-  }
+  };
 
   createLibraryEntry = async (options) => {
     const { mediaId, mediaType } = this.props;
     try {
       this.setState({ loadingLibrary: true });
-      const record = await Kitsu.create('libraryEntries', {
-        ...options,
-        [mediaType]: {
-          id: mediaId,
-          type: mediaType
+      const record = await Kitsu.create(
+        'libraryEntries',
+        {
+          ...options,
+          [mediaType]: {
+            id: mediaId,
+            type: mediaType,
+          },
+          user: {
+            id: this.props.currentUser.id,
+            type: 'users',
+          },
         },
-        user: {
-          id: this.props.currentUser.id,
-          type: 'users',
-        },
-      }, {
-        include: 'anime,manga',
-      });
-      KitsuLibrary.onLibraryEntryCreate(record, mediaType, KitsuLibraryEventSource.MEDIA_PAGE);
+        {
+          include: 'anime,manga',
+        }
+      );
+      KitsuLibrary.onLibraryEntryCreate(
+        record,
+        mediaType,
+        KitsuLibraryEventSource.MEDIA_PAGE
+      );
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error creating library entry:', err);
       this.setState({ loadingLibrary: false });
     }
-  }
+  };
 
   updateLibraryEntry = async (changes) => {
     const { libraryEntry } = this.state;
@@ -331,13 +388,18 @@ class MediaPages extends PureComponent<MediaPagesProps> {
         ...changes,
       };
       const record = await Kitsu.update('libraryEntries', updates);
-      KitsuLibrary.onLibraryEntryUpdate(libraryEntry, record, mediaType, KitsuLibraryEventSource.MEDIA_PAGE);
+      KitsuLibrary.onLibraryEntryUpdate(
+        libraryEntry,
+        record,
+        mediaType,
+        KitsuLibraryEventSource.MEDIA_PAGE
+      );
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error updating library entry:', err);
       this.setState({ loadingLibrary: false });
     }
-  }
+  };
 
   goBack = () => Navigation.pop(this.props.componentId);
 
@@ -362,7 +424,7 @@ class MediaPages extends PureComponent<MediaPagesProps> {
         },
       },
     });
-  }
+  };
 
   /**
    * Fetch the media information
@@ -395,7 +457,7 @@ class MediaPages extends PureComponent<MediaPagesProps> {
         error,
       });
     }
-  }
+  };
 
   /**
    * Fetch the episodes/chapter and related media types
@@ -405,17 +467,29 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     try {
       // To make this simple, we'll just refetch the media object with these fields.
       const media = await Kitsu.one(type, id).get({
-        include: `mediaRelationships.destination,${type === 'anime' ? 'episodes.videos' : 'chapters'}`,
+        include: `mediaRelationships.destination,${
+          type === 'anime' ? 'episodes.videos' : 'chapters'
+        }`,
       });
 
-      const previousCategories = (this.state.media && this.state.media.categories) || null;
-      const categories = (previousCategories && { categories: previousCategories }) || {};
+      const previousCategories =
+        (this.state.media && this.state.media.categories) || null;
+      const categories =
+        (previousCategories && { categories: previousCategories }) || {};
 
-      const previousProductions = (this.state.media && this.state.media.animeProductions) || null;
-      const productions = (previousProductions && { animeProductions: previousProductions }) || {};
+      const previousProductions =
+        (this.state.media && this.state.media.animeProductions) || null;
+      const productions =
+        (previousProductions && { animeProductions: previousProductions }) ||
+        {};
 
-      const previousStreamingLinks = (this.state.media && this.state.media.streamingLinks) || null;
-      const streamingLinks = (previousStreamingLinks && { streamingLinks: previousStreamingLinks }) || {};
+      const previousStreamingLinks =
+        (this.state.media && this.state.media.streamingLinks) || null;
+      const streamingLinks =
+        (previousStreamingLinks && {
+          streamingLinks: previousStreamingLinks,
+        }) ||
+        {};
 
       // Combine the 2 object that we have
       this.setState({
@@ -463,7 +537,7 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   fetchFavorite = async (type, id) => {
     try {
@@ -479,25 +553,29 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     } catch (err) {
       console.log('Error fetching favorite state:', err);
     }
-  }
+  };
 
   fetchLibraryEntry = async (type, id) => {
     try {
       this.setState({ loadingLibrary: true });
-      const response = await Kitsu.findAll('libraryEntries', {
-        filter: {
-          user_id: this.props.currentUser.id,
-          [`${type}_id`]: id,
+      const response = await Kitsu.findAll(
+        'libraryEntries',
+        {
+          filter: {
+            user_id: this.props.currentUser.id,
+            [`${type}_id`]: id,
+          },
         },
-      }, {
-        include: 'anime,manga',
-      });
+        {
+          include: 'anime,manga',
+        }
+      );
       const record = response && response[0];
       this.setState({ libraryEntry: record, loadingLibrary: false });
     } catch (err) {
       console.log('Error fetching library entry:', err);
     }
-  }
+  };
 
   renderTabNav = () => (
     <TabBar>
@@ -567,25 +645,16 @@ class MediaPages extends PureComponent<MediaPagesProps> {
         {...otherProps}
       />
     );
-  }
+  };
 
   render() {
-    const {
-      error,
-      loading,
-      media,
-      favorite,
-      libraryEntry,
-      loadingLibrary,
-    } = this.state;
+    const { error, loading, media, favorite, libraryEntry, loadingLibrary } =
+      this.state;
 
     if (loading) {
       return (
         <SceneContainer>
-          <CustomHeader
-            leftButtonAction={this.goBack}
-            leftButtonTitle="Back"
-          />
+          <CustomHeader leftButtonAction={this.goBack} leftButtonTitle="Back" />
           <SceneLoader />
         </SceneContainer>
       );
@@ -599,19 +668,31 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     let MAIN_BUTTON_OPTIONS = [
       { text: 'Watching', value: 'current', if: (type) => type === 'anime' },
       { text: 'Reading', value: 'current', if: (type) => type === 'manga' },
-      { text: 'Want to Watch', value: 'planned', if: (type) => type === 'anime' },
-      { text: 'Want to Read', value: 'planned', if: (type) => type === 'manga' },
+      {
+        text: 'Want to Watch',
+        value: 'planned',
+        if: (type) => type === 'anime',
+      },
+      {
+        text: 'Want to Read',
+        value: 'planned',
+        if: (type) => type === 'manga',
+      },
       { text: 'Completed', value: 'completed' },
       { text: 'On Hold', value: 'on_hold' },
       { text: 'Dropped', value: 'dropped' },
     ];
-    MAIN_BUTTON_OPTIONS = MAIN_BUTTON_OPTIONS.filter(item => (item.if ? item.if(media.type) : true));
+    MAIN_BUTTON_OPTIONS = MAIN_BUTTON_OPTIONS.filter((item) =>
+      item.if ? item.if(media.type) : true
+    );
 
     let mainButtonTitle = 'Add to Library';
     if (libraryEntry) {
       MAIN_BUTTON_OPTIONS.push({ text: 'Remove', value: 'remove' });
 
-      const entry = MAIN_BUTTON_OPTIONS.find(item => item.value === libraryEntry.status);
+      const entry = MAIN_BUTTON_OPTIONS.find(
+        (item) => item.value === libraryEntry.status
+      );
       mainButtonTitle = (entry && entry.text) || mainButtonTitle;
     }
     MAIN_BUTTON_OPTIONS.push('Nevermind');
@@ -619,13 +700,24 @@ class MediaPages extends PureComponent<MediaPagesProps> {
     const MORE_BUTTON_OPTIONS = [
       { text: 'Share Media Link', value: 'share' },
       // Only display if media has a valid cover image
-      { text: 'View Cover Image', value: 'cover', if: m => !!(m && m.coverImage) },
-      { text: 'View Youtube Trailer', value: 'trailer', if: m => !!(m && m.youtubeVideoId) },
+      {
+        text: 'View Cover Image',
+        value: 'cover',
+        if: (m) => !!(m && m.coverImage),
+      },
+      {
+        text: 'View Youtube Trailer',
+        value: 'trailer',
+        if: (m) => !!(m && m.youtubeVideoId),
+      },
       'Nevermind',
-    ].filter(item => (item.if ? item.if(media) : true));
+    ].filter((item) => (item.if ? item.if(media) : true));
 
     if (favorite) {
-      MORE_BUTTON_OPTIONS.unshift({ text: 'Remove from Favorites', value: 'remove' });
+      MORE_BUTTON_OPTIONS.unshift({
+        text: 'Remove from Favorites',
+        value: 'remove',
+      });
     } else {
       MORE_BUTTON_OPTIONS.unshift({ text: 'Add to Favorites', value: 'add' });
     }
@@ -634,7 +726,9 @@ class MediaPages extends PureComponent<MediaPagesProps> {
       <SceneContainer>
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
-          innerRef={(r) => { this.scrollView = r; }}
+          innerRef={(r) => {
+            this.scrollView = r;
+          }}
           style={{ flex: 1 }}
           headerHeight={HEADER_HEIGHT}
           isHeaderFixed
@@ -644,11 +738,12 @@ class MediaPages extends PureComponent<MediaPagesProps> {
               maskedTop
               maskedBottom
               source={{
-                uri: getImgixCoverImage(media.coverImage, {
-                  h: coverImageHeight * 2,
-                  w: scene.width * 2,
-                  'max-h': null,
-                }) || defaultCover,
+                uri:
+                  getImgixCoverImage(media.coverImage, {
+                    h: coverImageHeight * 2,
+                    w: scene.width * 2,
+                    'max-h': null,
+                  }) || defaultCover,
               }}
             />
           )}
@@ -673,7 +768,11 @@ class MediaPages extends PureComponent<MediaPagesProps> {
             categories={media.categories}
             onCategoryPress={(item) => {
               if (media) {
-                showCategoryResults(this.props.componentId, media.type, item.title);
+                showCategoryResults(
+                  this.props.componentId,
+                  media.type,
+                  item.title
+                );
               }
             }}
             mainButtonTitle={mainButtonTitle}

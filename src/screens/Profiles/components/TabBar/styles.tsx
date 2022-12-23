@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { offWhite, lightestGrey } from 'kitsu/constants/colors';
-import { scenePadding, borderWidth } from 'kitsu/screens/Profiles/constants';
+
+import { lightestGrey, offWhite } from 'kitsu/constants/colors';
+import { borderWidth, scenePadding } from 'kitsu/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   tab: {

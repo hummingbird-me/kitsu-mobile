@@ -1,10 +1,25 @@
-import React, { PureComponent } from 'react';
-import { View, ActivityIndicator, Dimensions, RefreshControl, ScrollView } from 'react-native';
-import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import { intersectionWith, isEqual } from 'lodash';
-import { UserLibraryListCard, LibraryEmptyState } from 'kitsu/screens/Profiles/UserLibrary';
+import React, { PureComponent } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  RefreshControl,
+  ScrollView,
+  View,
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import {
+  DataProvider,
+  LayoutProvider,
+  RecyclerListView,
+} from 'recyclerlistview';
+
 import { Screens } from 'kitsu/navigation';
+import {
+  LibraryEmptyState,
+  UserLibraryListCard,
+} from 'kitsu/screens/Profiles/UserLibrary';
+
 import { styles } from './styles';
 
 const LAYOUT_PROVIDER_TYPE = 'UserLibraryListCard';
@@ -69,24 +84,27 @@ export class UserLibraryList extends PureComponent<UserLibraryListProps> {
     this.setState({ dataProvider });
 
     // Only one type of row item
-    this.layoutProvider = new LayoutProvider(() => LAYOUT_PROVIDER_TYPE, (type, dim, index) => {
-      switch (type) {
-        case LAYOUT_PROVIDER_TYPE: {
-          dim.width = LAYOUT_WIDTH;
-          dim.height = LAYOUT_HEIGHT;
-          // We need to increase the height if the card is showing the `Moved` text.
-          const data = this.state.dataProvider.getDataForIndex(index);
-          if (data.status !== this.props.libraryStatus) {
-            dim.height = LAYOUT_HEIGHT + 27;
+    this.layoutProvider = new LayoutProvider(
+      () => LAYOUT_PROVIDER_TYPE,
+      (type, dim, index) => {
+        switch (type) {
+          case LAYOUT_PROVIDER_TYPE: {
+            dim.width = LAYOUT_WIDTH;
+            dim.height = LAYOUT_HEIGHT;
+            // We need to increase the height if the card is showing the `Moved` text.
+            const data = this.state.dataProvider.getDataForIndex(index);
+            if (data.status !== this.props.libraryStatus) {
+              dim.height = LAYOUT_HEIGHT + 27;
+            }
+            break;
           }
-          break;
+          default:
+            dim.width = 0;
+            dim.height = 0;
+            break;
         }
-        default:
-          dim.width = 0;
-          dim.height = 0;
-          break;
       }
-    });
+    );
   }
 
   UNSAFE_componentWillReceiveProps(newProps) {
@@ -94,7 +112,8 @@ export class UserLibraryList extends PureComponent<UserLibraryListProps> {
     // a removal of an entry, or a status update.
     const oldEntries = this.props.libraryEntries;
     const newEntries = newProps.libraryEntries;
-    const differentLength = (oldEntries && oldEntries.length) !== (newEntries && newEntries.length);
+    const differentLength =
+      (oldEntries && oldEntries.length) !== (newEntries && newEntries.length);
 
     // We need to check if there are any updated entries
     const intersection = intersectionWith(oldEntries, newEntries, isEqual);
@@ -107,7 +126,6 @@ export class UserLibraryList extends PureComponent<UserLibraryListProps> {
       });
     }
   }
-
 
   onSwipingItem = (isSwiping) => {
     this.setState({ isSwiping });
@@ -131,10 +149,8 @@ export class UserLibraryList extends PureComponent<UserLibraryListProps> {
   renderFooter = () => {
     const { loading, refreshing } = this.props;
     if (!loading || refreshing) return <View />;
-    return (
-      <ActivityIndicator color="white" style={{ paddingVertical: 16 }} />
-    );
-  }
+    return <ActivityIndicator color="white" style={{ paddingVertical: 16 }} />;
+  };
 
   renderRow = (_type, data) => (
     <UserLibraryListCard

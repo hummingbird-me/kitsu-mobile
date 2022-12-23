@@ -1,44 +1,46 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { View, Platform, TouchableOpacity, Linking } from 'react-native';
+import { isEmpty, isNil, startCase } from 'lodash';
+import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react';
+import { Linking, Platform, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import YouTube from 'react-native-youtube';
-import { StyledText } from 'kitsu/components/StyledText';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import dataBunny from 'kitsu/assets/img/data-bunny.png';
-import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
-import { startCase, isNil, isEmpty } from 'lodash';
-import { WebComponent } from 'kitsu/utils/components';
 import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import YouTube from 'react-native-youtube';
+import { connect } from 'react-redux';
+
+import dataBunny from 'kitsu/assets/img/data-bunny.png';
+import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { StyledText } from 'kitsu/components/StyledText';
+import { NavigationActions, Screens } from 'kitsu/navigation';
+import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { WebComponent } from 'kitsu/utils/components';
 import { handleURL } from 'kitsu/utils/url';
+
 import { styles } from './styles';
 
 interface EmbeddedContentProps {
   embed?: {
-    kind?: string,
+    kind?: string;
     site?: {
-      name: string
-    },
-    image?: unknown,
+      name: string;
+    };
+    image?: unknown;
     video?: {
-      url: string,
-      width?: unknown,
-      height?: unknown
-    },
-    url?: string,
-    title?: string,
-    description?: string
+      url: string;
+      width?: unknown;
+      height?: unknown;
+    };
+    url?: string;
+    title?: string;
+    description?: string;
   };
   uploads?: {
-    uploadOrder: number,
+    uploadOrder: number;
     content?: {
-      original?: string
-    }
+      original?: string;
+    };
   }[];
   style?: unknown;
   maxWidth: number;
@@ -72,8 +74,8 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
   ]);
 
   static propTypes = {
-    style: ViewPropTypes.style
-  }
+    style: ViewPropTypes.style,
+  };
 
   static defaultProps = {
     embed: null,
@@ -86,7 +88,7 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
     componentId: null,
     ignoreDataSaver: false,
     disabled: false,
-  }
+  };
 
   state = {
     visible: false,
@@ -99,28 +101,35 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
 
   toggleVisibility = () => {
     this.setState({ visible: !this.state.visible });
-  }
+  };
 
   renderTapToLoad(width) {
     const { borderRadius } = this.props;
     const showDataBunny = !isNil(width) && width > 300;
 
-    const textContainerStyle = (!showDataBunny && { alignItems: 'center' }) || {};
+    const textContainerStyle =
+      (!showDataBunny && { alignItems: 'center' }) || {};
 
     return (
       <TouchableOpacity
         style={[styles.dataSaver, { borderRadius }]}
         onPress={this.toggleVisibility}
       >
-        {showDataBunny &&
+        {showDataBunny && (
           <FastImage
             source={dataBunny}
             style={styles.dataBunny}
             resizeMode="contain"
           />
-        }
+        )}
         <View style={[styles.dataSaverTextContainer, textContainerStyle]}>
-          <StyledText color="light" size="default" bold numberOfLines={1} textStyle={{ marginBottom: 4 }}>
+          <StyledText
+            color="light"
+            size="default"
+            bold
+            numberOfLines={1}
+            textStyle={{ marginBottom: 4 }}
+          >
             Tap to load image
           </StyledText>
           <StyledText color="light" size="xxsmall">
@@ -141,10 +150,17 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
    */
   renderImageGrid(images, width) {
     // Make sure that the image url strings are not empty
-    const filtered = (images || []).filter(i => !isEmpty(i));
+    const filtered = (images || []).filter((i) => !isEmpty(i));
     if (isEmpty(filtered)) return null;
 
-    const { maxWidth, borderRadius, compact, dataSaver, ignoreDataSaver, disabled } = this.props;
+    const {
+      maxWidth,
+      borderRadius,
+      compact,
+      dataSaver,
+      ignoreDataSaver,
+      disabled,
+    } = this.props;
     const { visible } = this.state;
 
     if (!ignoreDataSaver && dataSaver && !visible) {
@@ -158,7 +174,7 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
         borderRadius={borderRadius}
         compact={compact}
         onImageTapped={(index) => {
-          NavigationActions.showLightBox(filtered, (index || 0));
+          NavigationActions.showLightBox(filtered, index || 0);
         }}
         disabled={disabled}
       />
@@ -200,7 +216,8 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
     const videoHeight = video.height && parseInt(video.height, 10);
 
     // Get the scaled height
-    const height = (videoHeight && videoWidth) ? (videoHeight / videoWidth) * maxWidth : 300;
+    const height =
+      videoHeight && videoWidth ? (videoHeight / videoWidth) * maxWidth : 300;
     const style = { width: maxWidth, height: Math.max(200, height) };
 
     /* The youtube video url for Android
@@ -208,29 +225,28 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
         E.g https://www.youtube.com/embed/c9FIvUcjhFg?start=80
        If so then we use '&' to join the other options otherwise we apply our own.
     */
-    const videoOptions = 'rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1';
-    const joinOperator = (video && video.url && video.url.includes('?')) ? '&' : '?';
+    const videoOptions =
+      'rel=0&autoplay=0&showinfo=1&controls=1&modestbranding=1';
+    const joinOperator =
+      video && video.url && video.url.includes('?') ? '&' : '?';
     const videoUrl = `${video.url}${joinOperator}${videoOptions}`;
 
-    return (
-      Platform.OS === 'ios' ?
-        <YouTube
-          videoId={youTubeVideoId}
-          modestBranding
-          rel={false}
-          style={style}
-        />
-        :
-        <WebComponent
-          style={style}
-          source={{ uri: videoUrl }}
-        />
+    return Platform.OS === 'ios' ? (
+      <YouTube
+        videoId={youTubeVideoId}
+        modestBranding
+        rel={false}
+        style={style}
+      />
+    ) : (
+      <WebComponent style={style} source={{ uri: videoUrl }} />
     );
   }
 
   renderKitsu(embed) {
     if (embed.url) {
-      if (embed.url.includes('anime') || embed.url.includes('manga')) return this.renderMedia(embed);
+      if (embed.url.includes('anime') || embed.url.includes('manga'))
+        return this.renderMedia(embed);
       if (embed.url.includes('users')) return this.renderUser(embed);
     }
 
@@ -261,18 +277,28 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
         disabled={disabled}
       >
         <Layout.RowWrap style={styles.kitsuContent}>
-          {!isNil(image) &&
+          {!isNil(image) && (
             <ProgressiveImage
               source={{ uri: image }}
               style={styles.mediaPoster}
             />
-          }
+          )}
           <Layout.RowMain>
-            <StyledText color="dark" size="small" numberOfLines={1} bold>{embed.title || '-'}</StyledText>
-            <StyledText color="dark" size="xxsmall" numberOfLines={1} bold textStyle={{ paddingVertical: 4 }}>
+            <StyledText color="dark" size="small" numberOfLines={1} bold>
+              {embed.title || '-'}
+            </StyledText>
+            <StyledText
+              color="dark"
+              size="xxsmall"
+              numberOfLines={1}
+              bold
+              textStyle={{ paddingVertical: 4 }}
+            >
               {startCase(type)}
             </StyledText>
-            <StyledText color="dark" size="xsmall" numberOfLines={5}>{embed.description || '-'}</StyledText>
+            <StyledText color="dark" size="xsmall" numberOfLines={5}>
+              {embed.description || '-'}
+            </StyledText>
           </Layout.RowMain>
         </Layout.RowWrap>
       </TouchableOpacity>
@@ -286,7 +312,9 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
     const { componentId, maxWidth, disabled } = this.props;
 
     const imageUri = this.getImageUrl(embed);
-    const image = (imageUri && imageUri.includes('http') && { uri: imageUri }) || defaultAvatar;
+    const image =
+      (imageUri && imageUri.includes('http') && { uri: imageUri }) ||
+      defaultAvatar;
 
     return (
       <TouchableOpacity
@@ -304,13 +332,11 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
         disabled={disabled}
       >
         <Layout.RowWrap style={styles.kitsuContent} alignItems="center">
-          <FastImage
-            source={image}
-            style={styles.userPoster}
-            cache="web"
-          />
+          <FastImage source={image} style={styles.userPoster} cache="web" />
           <Layout.RowMain>
-            <StyledText color="dark" size="small" numberOfLines={2} bold>{embed.title || '-'}</StyledText>
+            <StyledText color="dark" size="small" numberOfLines={2} bold>
+              {embed.title || '-'}
+            </StyledText>
           </Layout.RowMain>
         </Layout.RowWrap>
       </TouchableOpacity>
@@ -331,18 +357,29 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
         onPress={() => handleURL(embed.url)}
         disabled={disabled}
       >
-        <Layout.RowWrap style={[styles.kitsuContent, isDescriptionEmpty && styles.center]}>
-          {!isNil(image) &&
+        <Layout.RowWrap
+          style={[styles.kitsuContent, isDescriptionEmpty && styles.center]}
+        >
+          {!isNil(image) && (
             <ProgressiveImage
               source={{ uri: image }}
               style={styles.linkImage}
             />
-          }
+          )}
           <Layout.RowMain>
-            <StyledText color="dark" size="small" numberOfLines={isDescriptionEmpty ? 4 : 1} bold>{embed.title || '-'}</StyledText>
-            {!isDescriptionEmpty &&
-              <StyledText color="dark" size="xsmall" numberOfLines={3}>{embed.description || '-'}</StyledText>
-            }
+            <StyledText
+              color="dark"
+              size="small"
+              numberOfLines={isDescriptionEmpty ? 4 : 1}
+              bold
+            >
+              {embed.title || '-'}
+            </StyledText>
+            {!isDescriptionEmpty && (
+              <StyledText color="dark" size="xsmall" numberOfLines={3}>
+                {embed.description || '-'}
+              </StyledText>
+            )}
           </Layout.RowMain>
         </Layout.RowWrap>
       </TouchableOpacity>
@@ -356,12 +393,19 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
     // Only render video & image embeds if we don't have uploads
     if (isEmpty(uploads)) {
       // Youtube
-      if (embed.video && ((embed.site && embed.site.name === 'YouTube') || embed.site_name === 'YouTube')) {
+      if (
+        embed.video &&
+        ((embed.site && embed.site.name === 'YouTube') ||
+          embed.site_name === 'YouTube')
+      ) {
         return this.renderYoutube(embed);
       }
 
       // Image/GIF
-      if (embed.kind && (embed.kind.includes('image') || embed.kind.includes('gif'))) {
+      if (
+        embed.kind &&
+        (embed.kind.includes('image') || embed.kind.includes('gif'))
+      ) {
         return this.renderImage(embed);
       }
     }
@@ -381,9 +425,10 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
 
     const { maxWidth } = this.props;
 
-    const images = uploads.sort((a, b) => (a.uploadOrder - b.uploadOrder))
-      .map(u => u.content && u.content.original)
-      .filter(i => !isEmpty(i));
+    const images = uploads
+      .sort((a, b) => a.uploadOrder - b.uploadOrder)
+      .map((u) => u.content && u.content.original)
+      .filter((i) => !isEmpty(i));
 
     return this.renderImageGrid(images, maxWidth);
   }

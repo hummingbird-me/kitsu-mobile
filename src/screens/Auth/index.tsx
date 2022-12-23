@@ -1,7 +1,4 @@
-import RecoveryScreen from './RecoveryScreen';
 import AuthScreen from './AuthScreen';
+import RecoveryScreen from './RecoveryScreen';
 
-export {
-  RecoveryScreen,
-  AuthScreen,
-};
+export { RecoveryScreen, AuthScreen };

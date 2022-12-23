@@ -1,7 +1,9 @@
-import * as React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import * as React from 'react';
 import { Animated, View } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
+
 import { styles } from './styles';
 
 interface ProgressBarProps {
@@ -13,7 +15,7 @@ interface ProgressBarProps {
 
 export class ProgressBar extends React.Component<ProgressBarProps> {
   static propTypes = {
-    backgroundStyle: ViewPropTypes.style
+    backgroundStyle: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -54,7 +56,8 @@ export class ProgressBar extends React.Component<ProgressBarProps> {
           styles.background,
           this.props.backgroundStyle,
           { height: this.props.height, borderRadius: this.props.height },
-        ]}>
+        ]}
+      >
         <Animated.View style={fillStyle} useNativeDriver={true} />
       </View>
     );

@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { ProfileHeader } from 'kitsu/components/ProfileHeader';
-import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
-import { StyledText } from 'kitsu/components/StyledText';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { TouchableOpacity, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import { ProfileHeader } from 'kitsu/components/ProfileHeader';
+import { StyledText } from 'kitsu/components/StyledText';
 import { Screens } from 'kitsu/navigation';
+import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
+
 import { styles } from './styles';
 
 const HEADER_TEXT_MAPPING = {
@@ -41,7 +43,7 @@ export class UserLibraryListScreenComponent extends PureComponent<UserLibraryLis
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   onEntryDelete = async (id, type, status) => {
     if (!id) return;
@@ -50,21 +52,21 @@ export class UserLibraryListScreenComponent extends PureComponent<UserLibraryLis
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   onRefresh = () => {
     const { refreshing, libraryEntries } = this.props;
     if (!refreshing && libraryEntries && libraryEntries.refresh) {
       libraryEntries.refresh();
     }
-  }
+  };
 
   onEndReached = () => {
     const { loading, libraryEntries } = this.props;
     if (!loading && libraryEntries && libraryEntries.fetchMore) {
       libraryEntries.fetchMore();
     }
-  }
+  };
 
   navigateToSearch = () => {
     const { profile, componentId } = this.props;
@@ -83,11 +85,10 @@ export class UserLibraryListScreenComponent extends PureComponent<UserLibraryLis
 
   renderSearchBar = () => (
     <TouchableOpacity style={styles.searchBox} onPress={this.navigateToSearch}>
-      <Icon
-        name="search"
-        style={styles.searchIcon}
-      />
-      <StyledText color="dark" textStyle={styles.searchText}>Search Library</StyledText>
+      <Icon name="search" style={styles.searchIcon} />
+      <StyledText color="dark" textStyle={styles.searchText}>
+        Search Library
+      </StyledText>
     </TouchableOpacity>
   );
 

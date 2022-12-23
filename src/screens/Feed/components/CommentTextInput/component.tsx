@@ -1,11 +1,20 @@
+import { isEmpty } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, TextInput, TouchableOpacity, Text, ActivityIndicator, Platform } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import * as colors from 'kitsu/constants/colors';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
-import { isEmpty } from 'lodash';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
+
 import { styles } from './styles';
 
 interface CommentTextInputProps {
@@ -34,11 +43,11 @@ export class CommentTextInput extends PureComponent<CommentTextInputProps> {
     onGifSelected: null,
     loading: false,
     multiline: false,
-  }
+  };
 
   state = {
     gifModalVisible: false,
-  }
+  };
 
   onGifSelect = (gif) => {
     this.setState({ gifModalVisible: false });
@@ -63,7 +72,12 @@ export class CommentTextInput extends PureComponent<CommentTextInputProps> {
 
     return (
       <Layout.RowWrap alignItems="center">
-        {showAvatar && <Avatar avatar={currentUser.avatar && currentUser.avatar.medium} size="small" />}
+        {showAvatar && (
+          <Avatar
+            avatar={currentUser.avatar && currentUser.avatar.medium}
+            size="small"
+          />
+        )}
         <Layout.RowMain>
           <View style={styles.textInputBox}>
             <TextInput
@@ -90,12 +104,20 @@ export class CommentTextInput extends PureComponent<CommentTextInputProps> {
           </View>
         </Layout.RowMain>
         {!isEmpty(comment.trim()) && (
-          <TouchableOpacity onPress={onSubmit} style={styles.submitButton} disabled={loading}>
-            { loading ?
+          <TouchableOpacity
+            onPress={onSubmit}
+            style={styles.submitButton}
+            disabled={loading}
+          >
+            {loading ? (
               <ActivityIndicator color={colors.blue} />
-              :
-              <Icon name="md-send" color={colors.blue} style={styles.submitButtonIcon} />
-            }
+            ) : (
+              <Icon
+                name="md-send"
+                color={colors.blue}
+                style={styles.submitButtonIcon}
+              />
+            )}
           </TouchableOpacity>
         )}
         <GiphyModal

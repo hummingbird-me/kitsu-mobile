@@ -1,7 +1,9 @@
 import React from 'react';
+import { View } from 'react-native';
+
 import { StyledText } from 'kitsu/components/StyledText';
 import { HeaderButton } from 'kitsu/screens/Feed/components/HeaderButton';
-import { View } from 'react-native';
+
 import { styles } from './styles';
 
 interface ModalHeaderProps {
@@ -27,7 +29,7 @@ export const ModalHeader = ({
   rightButtonAction,
   rightButtonDisabled,
   rightButtonLoading,
-  style
+  style,
 }: ModalHeaderProps) => (
   <View style={[styles.modalHeader, style]}>
     <View style={styles.modalButton}>
@@ -39,7 +41,9 @@ export const ModalHeader = ({
       />
     </View>
     <View style={styles.modalTitle}>
-      <StyledText color="light" size="small" bold>{title}</StyledText>
+      <StyledText color="light" size="small" bold>
+        {title}
+      </StyledText>
     </View>
     <View style={[styles.modalButton, styles.modalRightButton]}>
       <HeaderButton

@@ -1,24 +1,29 @@
 import React from 'react';
 import {
-  View,
-  TouchableOpacity,
+  connectInfiniteHits,
+  connectSearchBox,
+} from 'react-instantsearch/connectors';
+import { InstantSearch } from 'react-instantsearch/native';
+import {
+  ActivityIndicator,
   FlatList,
   Keyboard,
   Text,
-  ActivityIndicator,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
-import { InstantSearch } from 'react-instantsearch/native';
-import { connectInfiniteHits, connectSearchBox } from 'react-instantsearch/connectors';
-import * as colors from 'kitsu/constants/colors';
-import { SearchBox } from 'kitsu/components/SearchBox';
+
+import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
 import { Feedback } from 'kitsu/components/Feedback';
+import { SearchBox } from 'kitsu/components/SearchBox';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
-import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { Navigation } from 'react-native-navigation';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common/';
+import * as colors from 'kitsu/constants/colors';
+
+import { ItemSeparator, SidebarHeader, SidebarTitle } from './common/';
 import { styles } from './styles';
 
 const RowItem = ({ type, item, onPress }) => {
@@ -29,13 +34,25 @@ const RowItem = ({ type, item, onPress }) => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
             <FastImage
-              source={(item.avatar && { uri: item.avatar.small }) || defaultAvatar}
-              style={{ resizeMode: 'contain', width: 24, height: 24, borderRadius: 12 }}
+              source={
+                (item.avatar && { uri: item.avatar.small }) || defaultAvatar
+              }
+              style={{
+                resizeMode: 'contain',
+                width: 24,
+                height: 24,
+                borderRadius: 12,
+              }}
               cache="web"
             />
           </View>
           <Text
-            style={{ fontFamily: 'OpenSans', fontSize: 12, marginLeft: 8, color: colors.softBlack }}
+            style={{
+              fontFamily: 'OpenSans',
+              fontSize: 12,
+              marginLeft: 8,
+              color: colors.softBlack,
+            }}
           >
             {item.name}
           </Text>
@@ -56,7 +73,12 @@ const RowItem = ({ type, item, onPress }) => {
           }}
         >
           <Text
-            style={{ fontSize: 10, fontFamily: 'OpenSans', fontWeight: '600', color: colors.white }}
+            style={{
+              fontSize: 10,
+              fontFamily: 'OpenSans',
+              fontWeight: '600',
+              color: colors.white,
+            }}
           >
             {buttonText}
           </Text>
@@ -81,18 +103,29 @@ const BlockingResultList = ({ hits, hasMore, refine, onPress }) => {
       onEndReachedThreshold={0.5}
       initialNumToRender={10}
       contentContainerStyle={styles.list}
-      keyExtractor={item => `${item.id}`}
-      renderItem={({ item }) => <RowItem type={'search'} item={item} onPress={onPress} />}
+      keyExtractor={(item) => `${item.id}`}
+      renderItem={({ item }) => (
+        <RowItem type={'search'} item={item} onPress={onPress} />
+      )}
       ItemSeparatorComponent={() => <ItemSeparator />}
       style={{ maxHeight: 200 }}
     />
   );
 };
 
-const Hits = connectInfiniteHits(({ hits, hasMore, refine, onPress, currentUser }) => {
-  const data = hits.filter(item => item.id != currentUser.id);
-  return <BlockingResultList hits={data} hasMore={hasMore} refine={refine} onPress={onPress} />
-});
+const Hits = connectInfiniteHits(
+  ({ hits, hasMore, refine, onPress, currentUser }) => {
+    const data = hits.filter((item) => item.id != currentUser.id);
+    return (
+      <BlockingResultList
+        hits={data}
+        hasMore={hasMore}
+        refine={refine}
+        onPress={onPress}
+      />
+    );
+  }
+);
 
 const InstantSearchBox = connectSearchBox(
   ({ refine, currentRefinement, placeholder, style }) => (
@@ -102,7 +135,8 @@ const InstantSearchBox = connectSearchBox(
       placeholder={placeholder}
       style={style}
     />
-  ));
+  )
+);
 
 interface BlockingProps {
   componentId: any;
@@ -127,12 +161,15 @@ class Blocking extends React.Component<BlockingProps> {
   }
 
   onError = (e) => {
-    this.setState({
-      error: (e && e[0] && e[0].title) || 'Something went wrong',
-      loading: false,
-      loadingMore: false,
-    }, this.feedback.show);
-  }
+    this.setState(
+      {
+        error: (e && e[0] && e[0].title) || 'Something went wrong',
+        loading: false,
+        loadingMore: false,
+      },
+      this.feedback.show
+    );
+  };
 
   onBlockUser = async (user) => {
     const { currentUser, accessToken } = this.props;
@@ -163,7 +200,7 @@ class Blocking extends React.Component<BlockingProps> {
     try {
       await Kitsu.destroy('blocks', id);
       this.setState({
-        blocks: blocks.filter(v => v.id !== id),
+        blocks: blocks.filter((v) => v.id !== id),
         loading: false,
       });
     } catch (e) {
@@ -215,7 +252,7 @@ class Blocking extends React.Component<BlockingProps> {
         this.onError(e);
       }
     }
-  }
+  };
 
   handleSearchStateChange = (searchState) => {
     if (searchState.query === '') {
@@ -229,7 +266,12 @@ class Blocking extends React.Component<BlockingProps> {
     const { query } = this.state.searchState;
     return (
       <View>
-        {query && <Hits onPress={this.onBlockUser} currentUser={this.props.currentUser} />}
+        {query && (
+          <Hits
+            onPress={this.onBlockUser}
+            currentUser={this.props.currentUser}
+          />
+        )}
       </View>
     );
   };
@@ -242,20 +284,21 @@ class Blocking extends React.Component<BlockingProps> {
     />
   );
 
-  renderItemSeparatorComponent = () => (
-    <ItemSeparator />
-  );
+  renderItemSeparatorComponent = () => <ItemSeparator />;
 
   renderListEmptyComponent = () => (
     <Text style={styles.emptyText}>
-      You aren{'\''}t currently blocking anyone.
+      You aren{"'"}t currently blocking anyone.
     </Text>
   );
 
   render() {
     const { error, blocks, loading, searchState } = this.state;
     const { algoliaKeys, componentId } = this.props;
-    const listTitle = blocks.length > 0 ? 'Blocked Users' : 'You aren\'t currently blocking any users.';
+    const listTitle =
+      blocks.length > 0
+        ? 'Blocked Users'
+        : "You aren't currently blocking any users.";
     return (
       <View style={styles.containerStyle}>
         <SidebarHeader
@@ -263,15 +306,20 @@ class Blocking extends React.Component<BlockingProps> {
           onBackPress={() => Navigation.pop(componentId)}
         />
         <Feedback
-          ref={(r) => this.feedback = r}
+          ref={(r) => (this.feedback = r)}
           title={error}
           containerStyle={{ top: 85 }}
         />
         <View style={styles.blockingWrapper}>
           <Text
-            style={[styles.valueText, { padding: 12, paddingTop: 8, marginTop: 0 }]}
+            style={[
+              styles.valueText,
+              { padding: 12, paddingTop: 8, marginTop: 0 },
+            ]}
           >
-            Once you block someone, that person can no longer tag you, follow you, view your profile, or see the things you post in your feed. They basically stop existing.
+            Once you block someone, that person can no longer tag you, follow
+            you, view your profile, or see the things you post in your feed.
+            They basically stop existing.
           </Text>
           <ItemSeparator />
           <InstantSearch
@@ -285,21 +333,22 @@ class Blocking extends React.Component<BlockingProps> {
             {this.renderResults()}
           </InstantSearch>
         </View>
-        {loading
-          ? <ActivityIndicator style={{ marginTop: 8 }} color={'white'} />
-          :
+        {loading ? (
+          <ActivityIndicator style={{ marginTop: 8 }} color={'white'} />
+        ) : (
           <View style={{ flex: 1 }}>
             <SidebarTitle title={listTitle} />
             <FlatList
               data={blocks}
-              keyExtractor={item => `${item.blocked.id}`}
+              keyExtractor={(item) => `${item.blocked.id}`}
               renderItem={this.renderBlocksItem}
               ItemSeparatorComponent={this.renderItemSeparatorComponent}
               removeClippedSubviews={false}
               onEndReached={this.loadMoreBlocks}
               onEndReachedThreshold={0.3}
             />
-          </View>}
+          </View>
+        )}
       </View>
     );
   }

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+
 import { listBackPurple } from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
 

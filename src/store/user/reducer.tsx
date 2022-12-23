@@ -1,4 +1,5 @@
 import { REHYDRATE } from 'redux-persist';
+
 import * as types from 'kitsu/store/types';
 
 const INITIAL_STATE = {
@@ -132,7 +133,8 @@ export const userReducer = (state = INITIAL_STATE, action) => {
           ...state.currentUser,
           ratingSystem: action.payload.ratingSystem,
           titleLanguagePreference:
-            action.payload.titleLanguagePreference || state.currentUser.titleLanguagePreference,
+            action.payload.titleLanguagePreference ||
+            state.currentUser.titleLanguagePreference,
         },
       };
     case types.UPDATE_LIBRARY_SETTINGS_FAIL:

@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
-import { View, Modal, FlatList, TouchableHighlight } from 'react-native';
+import { FlatList, Modal, TouchableHighlight, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import { StyledText } from 'kitsu/components/StyledText';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
+
 import { styles } from './styles';
 
-
-const ModalMain = props => <View style={styles.modalMain} {...props} />;
+const ModalMain = (props) => <View style={styles.modalMain} {...props} />;
 
 interface PickerRowProps {
   isPicked?: boolean;
@@ -20,17 +21,32 @@ const PickerRow = ({
   isPicked,
   title,
   description,
-  onPress
+  onPress,
 }: PickerRowProps) => (
   <TouchableHighlight onPress={onPress}>
     <View style={styles.pickerRow}>
       <Layout.RowWrap alignItems="center">
-        <View style={[styles.pickerIconCircle, isPicked && styles.pickerIconCircle__isPicked]}>
-          {isPicked && <Icon name="ios-checkmark" color="#FFFFFF" style={styles.pickerIcon} />}
+        <View
+          style={[
+            styles.pickerIconCircle,
+            isPicked && styles.pickerIconCircle__isPicked,
+          ]}
+        >
+          {isPicked && (
+            <Icon
+              name="ios-checkmark"
+              color="#FFFFFF"
+              style={styles.pickerIcon}
+            />
+          )}
         </View>
         <Layout.RowMain>
-          <StyledText color="dark" size="small" bold>{title}</StyledText>
-          <StyledText color="dark" size="xsmall">{description}</StyledText>
+          <StyledText color="dark" size="small" bold>
+            {title}
+          </StyledText>
+          <StyledText color="dark" size="xsmall">
+            {description}
+          </StyledText>
         </Layout.RowMain>
       </Layout.RowWrap>
     </View>
@@ -61,7 +77,7 @@ export class PickerModal extends PureComponent<PickerModalProps> {
     onDonePress: null,
     data: [],
     currentPick: null,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -72,18 +88,14 @@ export class PickerModal extends PureComponent<PickerModalProps> {
 
   handlePicker = (currentPick) => {
     this.setState({ currentPick });
-  }
+  };
 
   handleOnDonePress = () => {
     this.props.onDonePress(this.state.currentPick);
-  }
+  };
 
   render() {
-    const {
-      visible,
-      onCancelPress,
-      data,
-    } = this.props;
+    const { visible, onCancelPress, data } = this.props;
 
     return (
       <Modal

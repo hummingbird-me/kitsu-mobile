@@ -15,8 +15,8 @@ export class _BasicCache {
     // Check if we have a function, if so return the filered values
     if (typeof key === 'function') {
       const keys = Object.keys(this.CACHE);
-      const filtered = keys.filter(k => key(k));
-      return filtered.map(f => this.CACHE[f]);
+      const filtered = keys.filter((k) => key(k));
+      return filtered.map((f) => this.CACHE[f]);
     }
 
     return this.CACHE[key];
@@ -71,8 +71,8 @@ export class _BasicCache {
 
     // Clear only selected values
     const keys = Object.keys(this.CACHE);
-    const filtered = keys.filter(k => condition(k));
-    filtered.forEach(k => this.delete(k));
+    const filtered = keys.filter((k) => condition(k));
+    filtered.forEach((k) => this.delete(k));
   }
 }
 

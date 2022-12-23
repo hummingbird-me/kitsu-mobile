@@ -1,7 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { defaultAvatar } from 'kitsu/constants/app';
 import { StyledProgressiveImage } from 'kitsu/screens/Feed/components/StyledProgressiveImage';
+
 import { styles } from './styles';
 
 const avatarSizes = {
@@ -14,13 +16,10 @@ const avatarSizes = {
 
 interface AvatarProps {
   avatar?: string;
-  size?: "large" | "default" | "medium" | "small" | "xsmall";
+  size?: 'large' | 'default' | 'medium' | 'small' | 'xsmall';
 }
 
-export const Avatar = ({
-  size,
-  avatar
-}: AvatarProps) => (
+export const Avatar = ({ size, avatar }: AvatarProps) => (
   <View
     style={[
       styles.wrap,
@@ -38,7 +37,6 @@ export const Avatar = ({
     />
   </View>
 );
-
 
 Avatar.defaultProps = {
   avatar: null,

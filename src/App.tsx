@@ -1,15 +1,22 @@
 /* global __DEV__ */
-import React, { PureComponent } from 'react';
-import { Platform, View, ActivityIndicator } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
-import { identity, isNil, isEmpty } from 'lodash';
+
 import * as Sentry from '@sentry/react-native';
-import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
+import { identity, isEmpty, isNil } from 'lodash';
+import React, { PureComponent } from 'react';
+import { ActivityIndicator, Platform, View } from 'react-native';
+
 import { kitsuConfig } from 'kitsu/config/env';
-import { KitsuLibrary, KitsuLibraryEvents, KitsuLibraryEventSource } from 'kitsu/utils/kitsuLibrary';
+import * as colors from 'kitsu/constants/colors';
 import { NavigationActions } from 'kitsu/navigation';
-import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { fetchNotifications } from 'kitsu/store/feed/actions';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import {
+  KitsuLibrary,
+  KitsuLibraryEventSource,
+  KitsuLibraryEvents,
+} from 'kitsu/utils/kitsuLibrary';
+
 import store, { persistStore } from './store/config';
 import * as profile from './store/profile/actions';
 
@@ -17,9 +24,18 @@ class App extends PureComponent {
   UNSAFE_componentWillMount() {
     // Register all global app events here
     store.subscribe(onStoreUpdate);
-    KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_CREATE, onLibraryEntryCreated);
-    KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, onLibraryEntryUpdated);
-    KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, onLibraryEntryDeleted);
+    KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_CREATE,
+      onLibraryEntryCreated
+    );
+    KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE,
+      onLibraryEntryUpdated
+    );
+    KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_DELETE,
+      onLibraryEntryDeleted
+    );
   }
 
   componentDidMount() {
@@ -35,7 +51,11 @@ class App extends PureComponent {
 
     // Navigate to initial page
     const { auth, onboarding, app } = store.getState();
-    this.navigate(!!auth.isAuthenticated, !!onboarding.completed, app.initialPage);
+    this.navigate(
+      !!auth.isAuthenticated,
+      !!onboarding.completed,
+      app.initialPage
+    );
   }
 
   navigate(authenticated, onBoardingCompleted, initialTab = 'Feed') {
@@ -115,7 +135,8 @@ function onStoreUpdate() {
   if (
     !isNil(isAuthenticated) &&
     !isNil(authenticated) &&
-    isAuthenticated !== authenticated && !authenticated
+    isAuthenticated !== authenticated &&
+    !authenticated
   ) {
     // Take user back to intro
     NavigationActions.showIntro();
@@ -135,7 +156,9 @@ function onLibraryEntryCreated(data) {
   if (!entry || source === KitsuLibraryEventSource.STORE) return;
 
   // Add  the store entry
-  store.dispatch(profile.onLibraryEntryCreate(entry, currentUser.id, type, status));
+  store.dispatch(
+    profile.onLibraryEntryCreate(entry, currentUser.id, type, status)
+  );
 }
 
 function onLibraryEntryUpdated(data) {
@@ -145,10 +168,18 @@ function onLibraryEntryUpdated(data) {
 
   // Check to see if we got this event from something other than 'store'
   const { type, oldEntry, newEntry, source } = data;
-  if (!oldEntry || !newEntry || source === KitsuLibraryEventSource.STORE) return;
+  if (!oldEntry || !newEntry || source === KitsuLibraryEventSource.STORE)
+    return;
 
   // Update the store entry
-  store.dispatch(profile.onLibraryEntryUpdate(currentUser.id, type, oldEntry.status, newEntry));
+  store.dispatch(
+    profile.onLibraryEntryUpdate(
+      currentUser.id,
+      type,
+      oldEntry.status,
+      newEntry
+    )
+  );
 }
 
 function onLibraryEntryDeleted(data) {
@@ -161,7 +192,9 @@ function onLibraryEntryDeleted(data) {
   if (!id || source === KitsuLibraryEventSource.STORE) return;
 
   // Delete the store entry
-  store.dispatch(profile.onLibraryEntryDelete(id, currentUser.id, type, status));
+  store.dispatch(
+    profile.onLibraryEntryDelete(id, currentUser.id, type, status)
+  );
 }
 
 // FIXME: Codepush is making android crash

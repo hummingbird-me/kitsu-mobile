@@ -1,26 +1,31 @@
 import React, { PureComponent } from 'react';
+import { Linking, Platform, ScrollView, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { View, Text, Linking, ScrollView, Platform } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 
-import { logoutUser } from 'kitsu/store/auth/actions';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
-import { library, settings, bugs, suggest, contact } from 'kitsu/assets/img/sidebar_icons';
+import {
+  bugs,
+  contact,
+  library,
+  settings,
+  suggest,
+} from 'kitsu/assets/img/sidebar_icons';
 import { Button } from 'kitsu/components/Button';
-import { defaultCover, defaultAvatar } from 'kitsu/constants/app';
-import { Navigation } from 'react-native-navigation';
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
+import { darkPurple, listBackPurple } from 'kitsu/constants/colors';
 import { Screens } from 'kitsu/navigation';
+import { logoutUser } from 'kitsu/store/auth/actions';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
+
 import { SidebarListItem, SidebarTitle } from './common';
 import { styles } from './styles';
-import { darkPurple, listBackPurple } from 'kitsu/constants/colors';
-
 
 interface SidebarScreenProps {
   currentUser?: object;
   accessToken?: string;
 }
-
 
 class SidebarScreen extends PureComponent<SidebarScreenProps> {
   static defaultProps = {
@@ -78,10 +83,22 @@ class SidebarScreen extends PureComponent<SidebarScreenProps> {
     return {
       title: 'Account Settings',
       data: [
-        { title: 'Settings & Preferences', image: settings, target: 'Settings' },
+        {
+          title: 'Settings & Preferences',
+          image: settings,
+          target: 'Settings',
+        },
         { title: 'Report Bugs', image: bugs, target: 'ReportBugs' },
-        { title: 'Suggest Features', image: suggest, target: 'SuggestFeatures' },
-        { title: 'Database Requests', image: suggest, target: 'DatabaseRequests' },
+        {
+          title: 'Suggest Features',
+          image: suggest,
+          target: 'SuggestFeatures',
+        },
+        {
+          title: 'Database Requests',
+          image: suggest,
+          target: 'DatabaseRequests',
+        },
         { title: 'Contact Us', image: contact, target: 'mailto' },
       ],
     };
@@ -108,11 +125,9 @@ class SidebarScreen extends PureComponent<SidebarScreenProps> {
     });
   };
 
-  renderSectionHeader = section => (
-    <SidebarTitle title={section.title} />
-  );
+  renderSectionHeader = (section) => <SidebarTitle title={section.title} />;
 
-  renderSectionItem = item => (
+  renderSectionItem = (item) => (
     <SidebarListItem
       key={item.title}
       style={styles.sidebarListItem}
@@ -131,13 +146,18 @@ class SidebarScreen extends PureComponent<SidebarScreenProps> {
       // ref: https://github.com/wix/react-native-navigation/issues/3924
       // ref: https://github.com/wix/react-native-navigation/issues/3956
       <View
-        style={[{ flex: 1, backgroundColor: listBackPurple }, Platform.OS === 'ios' && iOSWidth]}
+        style={[
+          { flex: 1, backgroundColor: listBackPurple },
+          Platform.OS === 'ios' && iOSWidth,
+        ]}
       >
         {/* Header */}
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
-          source={{ uri: (coverImage && getImgixCoverImage(coverImage)) || defaultCover }}
+          source={{
+            uri: (coverImage && getImgixCoverImage(coverImage)) || defaultCover,
+          }}
         >
           <View style={styles.userProfileContainer}>
             <FastImage
@@ -162,9 +182,9 @@ class SidebarScreen extends PureComponent<SidebarScreenProps> {
 
           {/* Account Settings */}
           {this.renderSectionHeader(this.accountSections)}
-          {this.accountSections.data.map(item => (
+          {this.accountSections.data.map((item) =>
             this.renderSectionItem(item)
-          ))}
+          )}
 
           {/* Logout */}
           <Button

@@ -1,16 +1,15 @@
+import * as Screens from 'kitsu/navigation/types';
 import {
   CreateAccountScreen,
+  FavoritesScreen,
+  ImportDetail,
+  ImportLibrary,
+  ManageLibrary,
+  RateScreen,
+  RatingSystemScreen,
   SelectAccountScreen,
   WelcomeScreen,
-  RateScreen,
-  FavoritesScreen,
-  ManageLibrary,
-  RatingSystemScreen,
-  ImportLibrary,
-  ImportDetail,
 } from 'kitsu/screens/Onboarding/';
-
-import * as Screens from 'kitsu/navigation/types';
 
 export default onboardingRoutes = {
   [Screens.ONBOARDING_WELCOME]: WelcomeScreen,

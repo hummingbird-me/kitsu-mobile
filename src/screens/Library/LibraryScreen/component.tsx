@@ -1,14 +1,22 @@
+import { camelCase, capitalize, isEmpty } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity, Text, Animated, TouchableWithoutFeedback } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
-import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
-import { capitalize, isEmpty, camelCase } from 'lodash';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
-import { styles } from './styles';
-import { LibraryScreenHeader } from '../LibraryScreenHeader';
-import { LibraryTabBar } from './tabbar';
+import {
+  Animated,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
+
+import { StyledText } from 'kitsu/components/StyledText';
 import { Screens } from 'kitsu/navigation';
+import { UserLibraryList } from 'kitsu/screens/Profiles/UserLibrary/components/UserLibraryList';
+
+import { LibraryScreenHeader } from '../LibraryScreenHeader';
+import { styles } from './styles';
+import { LibraryTabBar } from './tabbar';
 
 const TAB_TEXT_MAPPING = {
   current: { anime: 'Watching', manga: 'Reading' },
@@ -30,13 +38,13 @@ interface LibraryScreenComponentProps {
 export class LibraryScreenComponent extends PureComponent<LibraryScreenComponentProps> {
   static defaultProps = {
     library: null,
-  }
+  };
 
   state = {
     type: 'anime',
     opacity: new Animated.Value(0),
     typeSelectVisible: false,
-  }
+  };
 
   UNSAFE_componentWillMount() {
     this.fetchLibrary(this.props);
@@ -60,7 +68,7 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
         },
       },
     });
-  }
+  };
 
   onSearchPress = () => {
     const { componentId, currentUser } = this.props;
@@ -74,7 +82,7 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
         },
       });
     }
-  }
+  };
 
   onEntryUpdate = async (type, status, updates) => {
     try {
@@ -82,7 +90,7 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   onEntryDelete = async (id, type, status) => {
     if (!id) return;
@@ -91,7 +99,7 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   onRefresh = (status) => {
     const { currentUser } = this.props;
@@ -102,7 +110,7 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
     if (!currentLibrary.refreshing && currentLibrary.refresh) {
       currentLibrary.refresh();
     }
-  }
+  };
 
   onEndReached = (status) => {
     const { currentUser } = this.props;
@@ -112,7 +120,7 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
     if (!currentLibrary.loading && currentLibrary.fetchMore) {
       currentLibrary.fetchMore(LIBRARY_PAGINATION_LIMIT);
     }
-  }
+  };
 
   getTabLabel(type, status) {
     const { library } = this.props;
@@ -120,15 +128,16 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
     // The meta data
     const meta = library && library.meta && library.meta[type];
 
-    const statusText = (TAB_TEXT_MAPPING[status] && TAB_TEXT_MAPPING[status][type]) ||
+    const statusText =
+      (TAB_TEXT_MAPPING[status] && TAB_TEXT_MAPPING[status][type]) ||
       capitalize(status);
 
-    const count = meta && meta.statusCounts && meta.statusCounts[camelCase(status)];
+    const count =
+      meta && meta.statusCounts && meta.statusCounts[camelCase(status)];
     const countText = (count && count.toString()) || '0';
 
     return `${statusText} (${countText})`;
   }
-
 
   getLibrary(status) {
     const { type } = this.state;
@@ -149,18 +158,26 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
     const { opacity } = this.state;
     if (!this.state.typeSelectVisible) {
       this.setState({ typeSelectVisible: true });
-      Animated.timing(opacity, { toValue: 1, duration: 100, useNativeDriver: true }).start();
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }).start();
     }
-  }
+  };
 
   hideTypeSelect = () => {
     const { opacity } = this.state;
     if (this.state.typeSelectVisible) {
-      Animated.timing(opacity, { toValue: 0, duration: 100, useNativeDriver: true }).start(() => {
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }).start(() => {
         this.setState({ typeSelectVisible: false });
       });
     }
-  }
+  };
 
   renderTypeSelect() {
     const { type: currentType, opacity } = this.state;
@@ -173,7 +190,12 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
         }}
         style={styles.typeTextContainer}
       >
-        <StyledText size="default" color="light" bold={currentType === type} textStyle={styles.typeText}>
+        <StyledText
+          size="default"
+          color="light"
+          bold={currentType === type}
+          textStyle={styles.typeText}
+        >
           {title}
         </StyledText>
       </TouchableOpacity>
@@ -253,7 +275,9 @@ export class LibraryScreenComponent extends PureComponent<LibraryScreenComponent
         <LibraryScreenHeader
           title={type}
           onTitlePress={() => {
-            const toggle = typeSelectVisible ? this.hideTypeSelect : this.showTypeSelect;
+            const toggle = typeSelectVisible
+              ? this.hideTypeSelect
+              : this.showTypeSelect;
             toggle();
           }}
           onOptionPress={this.onOptionPress}

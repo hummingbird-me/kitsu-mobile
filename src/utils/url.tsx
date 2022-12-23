@@ -1,8 +1,10 @@
-import { Linking } from 'react-native';
 import { isEmpty } from 'lodash';
-import { Screens, NavigationActions } from 'kitsu/navigation';
-import { Navigation } from 'react-native-navigation';
+import { Linking } from 'react-native';
 import { DeepLinking } from 'react-native-deep-linking';
+import { Navigation } from 'react-native-navigation';
+
+import { NavigationActions, Screens } from 'kitsu/navigation';
+
 import { openUrl } from './deeplink';
 
 /**
@@ -14,7 +16,7 @@ import { openUrl } from './deeplink';
  */
 export function isKitsuUrl(url) {
   // Parse it
-  const parsed = parseURL((url || ''));
+  const parsed = parseURL(url || '');
   if (!parsed) return false;
 
   // Check if we have a kitsu image
@@ -30,10 +32,10 @@ export function isKitsuUrl(url) {
  * @returns If the url is a data url.
  */
 export function isDataUrl(url) {
-  const regex = /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z0-9-.!#$%*+.{}|~`]+=[a-z0-9-.!#$%*+.{}|~`]+)*)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)$/i;
+  const regex =
+    /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z0-9-.!#$%*+.{}|~`]+=[a-z0-9-.!#$%*+.{}|~`]+)*)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)$/i;
   return regex.test((url || '').trim());
 }
-
 
 /**
  * Checks whether a url is a gif url.
@@ -72,7 +74,8 @@ export function isImageUrl(url) {
  */
 export function extractUrls(text) {
   if (!text) return [];
-  const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+  const regex =
+    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
   return text.match(regex) || [];
 }
 
@@ -94,18 +97,21 @@ export function parseURL(url) {
   */
   if (typeof url !== 'string' || isEmpty(url)) return null;
 
-  const regex = /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/i;
+  const regex =
+    /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/i;
   const match = url.match(regex);
-  return match && {
-    url,
-    protocol: match[1],
-    host: match[2],
-    hostname: match[3],
-    port: match[4],
-    pathname: match[5],
-    search: match[6],
-    hash: match[7],
-  };
+  return (
+    match && {
+      url,
+      protocol: match[1],
+      host: match[2],
+      hostname: match[3],
+      port: match[4],
+      pathname: match[5],
+      search: match[6],
+      hash: match[7],
+    }
+  );
 }
 
 /**

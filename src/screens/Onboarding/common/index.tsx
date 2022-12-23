@@ -1,7 +1,13 @@
-import { OnboardingHeader } from './OnboardingHeader';
 import FavoritesScreen from './FavoritesScreen';
 import ManageLibrary from './ManageLibrary';
-import RatingSystemScreen from './RatingSystemScreen';
+import { OnboardingHeader } from './OnboardingHeader';
 import { RateScreen } from './RateScreen';
+import RatingSystemScreen from './RatingSystemScreen';
 
-export { OnboardingHeader, FavoritesScreen, ManageLibrary, RatingSystemScreen, RateScreen };
+export {
+  OnboardingHeader,
+  FavoritesScreen,
+  ManageLibrary,
+  RatingSystemScreen,
+  RateScreen,
+};

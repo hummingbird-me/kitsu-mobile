@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
 import ActionSheet from 'react-native-actionsheet';
+
 import * as colors from 'kitsu/constants/colors';
 
 interface SelectMenuProps {
@@ -34,13 +35,14 @@ export class SelectMenu extends React.PureComponent<SelectMenuProps> {
     this.ActionSheet = component;
   };
 
-  displayOptions = () => this.props.options.map((option) => {
-    if (typeof option === 'string') {
-      return option.charAt(0).toUpperCase() + option.slice(1);
-    }
+  displayOptions = () =>
+    this.props.options.map((option) => {
+      if (typeof option === 'string') {
+        return option.charAt(0).toUpperCase() + option.slice(1);
+      }
 
-    return option.text;
-  });
+      return option.text;
+    });
 
   handleFilterChange = (selectedIndex) => {
     const cancelButtonIndex = this.getCancelButtonIndex();

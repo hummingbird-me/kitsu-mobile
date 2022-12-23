@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
+
 import { commonStyles, flattenCommon } from 'kitsu/common/styles';
+import * as colors from 'kitsu/constants/colors';
 
 const MENU_BUTTON_WIDTH = 24;
 

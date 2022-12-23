@@ -1,10 +1,20 @@
+import { isEmpty } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, Platform, TouchableOpacity, Modal, ActivityIndicator, Share, Linking } from 'react-native';
+import {
+  ActivityIndicator,
+  Linking,
+  Modal,
+  Platform,
+  Share,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import { parseURL } from 'kitsu/utils/url';
-import { isEmpty } from 'lodash';
+
 import { styles } from './styles';
 
 interface ImageLightboxProps {
@@ -24,17 +34,17 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
     onShare: null,
     onDownload: null,
     onOpen: null,
-  }
+  };
 
   shareImage = (url) => {
     if (isEmpty(url)) return;
     const key = Platform.select({ ios: 'url', android: 'message' });
     Share.share({ [key]: url });
-  }
+  };
 
   downloadImage = (url) => {
     console.log(url);
-  }
+  };
 
   openImage = async (url) => {
     if (isEmpty(url)) return;
@@ -47,7 +57,7 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
     } catch (e) {
       console.log(`Error handling ${url}: ${e}`);
     }
-  }
+  };
 
   renderFooter(imageUrls) {
     const { onClose, onShare, onDownload, onOpen } = this.props;
@@ -61,7 +71,8 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
 
       // Check if we have a remote URL
       const parsed = parseURL(url);
-      const isRemoteUrl = parsed && parsed.protocol && parsed.protocol.includes('http');
+      const isRemoteUrl =
+        parsed && parsed.protocol && parsed.protocol.includes('http');
 
       return (
         <View style={styles.imageModalFooter}>
@@ -74,7 +85,7 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
           </TouchableOpacity>
 
           {/* Open */}
-          {isRemoteUrl &&
+          {isRemoteUrl && (
             <TouchableOpacity
               style={styles.iconContainer}
               onPress={() => openImage(url)}
@@ -84,7 +95,7 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
                 name={Platform.select({ ios: 'ios-open', android: 'md-open' })}
               />
             </TouchableOpacity>
-          }
+          )}
 
           {/* Share */}
           <TouchableOpacity
@@ -93,7 +104,10 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
           >
             <Icon
               style={styles.icon}
-              name={Platform.select({ ios: 'ios-share-alt', android: 'md-share' })}
+              name={Platform.select({
+                ios: 'ios-share-alt',
+                android: 'md-share',
+              })}
             />
           </TouchableOpacity>
 
@@ -120,19 +134,15 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
     };
   }
 
-  renderImage = props => (
-    <FastImage
-      {...props}
-      cache="web"
-    />
-  );
+  renderImage = (props) => <FastImage {...props} cache="web" />;
 
   render() {
-    const { images, visible, initialImageIndex, onClose, onShare, onDownload } = this.props;
+    const { images, visible, initialImageIndex, onClose, onShare, onDownload } =
+      this.props;
 
     if (isEmpty(images)) return null;
 
-    const imageUrls = images.map(i => ({
+    const imageUrls = images.map((i) => ({
       url: i,
     }));
 
@@ -145,7 +155,7 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
       <ImageViewer
         imageUrls={imageUrls}
         onCancel={onClose}
-        onLongPress={i => shareImage(i && i.url)}
+        onLongPress={(i) => shareImage(i && i.url)}
         saveToLocalByLongPress={false}
         backgroundColor={'rgba(0,0,0,0.97)'}
         index={index}

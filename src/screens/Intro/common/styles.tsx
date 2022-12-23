@@ -1,7 +1,8 @@
-import { StyleSheet, Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  logoWrapper: { // TODO: set a height to fix top and bottom space.
+  logoWrapper: {
+    // TODO: set a height to fix top and bottom space.
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -13,4 +14,3 @@ export default StyleSheet.create({
     resizeMode: 'contain',
   },
 });
-

@@ -1,4 +1,5 @@
 import * as types from 'kitsu/store/types';
+
 import favoriteCategories from './favoriteCategories';
 
 const initialState = {

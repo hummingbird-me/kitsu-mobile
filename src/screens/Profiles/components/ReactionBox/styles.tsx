@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
-import { lightGrey, grey, orange, white } from 'kitsu/constants/colors';
-import { scenePadding, cardSize, borderWidth } from 'kitsu/screens/Profiles/constants';
+
+import { grey, lightGrey, orange, white } from 'kitsu/constants/colors';
+import {
+  borderWidth,
+  cardSize,
+  scenePadding,
+} from 'kitsu/screens/Profiles/constants';
 
 export const styles = StyleSheet.create({
   wrap: {
@@ -27,7 +32,7 @@ export const styles = StyleSheet.create({
   },
   voteBox__voted: {
     borderColor: orange,
-    backgroundColor: orange
+    backgroundColor: orange,
   },
   voteIcon: {
     fontSize: 19,
@@ -35,6 +40,6 @@ export const styles = StyleSheet.create({
     marginRight: 5,
   },
   voteIcon__voted: {
-    color: white
-  }
+    color: white,
+  },
 });

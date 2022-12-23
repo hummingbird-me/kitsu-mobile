@@ -1,15 +1,16 @@
 import React, { PureComponent } from 'react';
 import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
+  Animated,
   DatePickerAndroid,
   DatePickerIOS,
-  Platform,
-  Animated,
   Keyboard,
+  Modal,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+
 import { styles } from './styles';
 
 interface DatePickerProps {
@@ -51,38 +52,41 @@ export class DatePicker extends PureComponent<DatePickerProps> {
     Keyboard.dismiss();
 
     // Default the date values to null
-    const minDate = (min instanceof Date) ? min : null;
-    const maxDate = (max instanceof Date) ? max : null;
+    const minDate = min instanceof Date ? min : null;
+    const maxDate = max instanceof Date ? max : null;
 
     // reset state
-    this.setState({
-      date: this._getDate(initial, minDate, maxDate),
-      minDate,
-      maxDate,
-      onDateChange,
-    }, async () => {
-      if (Platform.OS === 'ios') {
-        this._setModalVisible(true);
-      } else {
-        try {
-          const selection = await DatePickerAndroid.open({
-            date: this.state.date,
-            minDate,
-            maxDate,
-          });
-          this._onDatePicked(selection);
-        } catch (e) {
-          console.log(e);
+    this.setState(
+      {
+        date: this._getDate(initial, minDate, maxDate),
+        minDate,
+        maxDate,
+        onDateChange,
+      },
+      async () => {
+        if (Platform.OS === 'ios') {
+          this._setModalVisible(true);
+        } else {
+          try {
+            const selection = await DatePickerAndroid.open({
+              date: this.state.date,
+              minDate,
+              maxDate,
+            });
+            this._onDatePicked(selection);
+          } catch (e) {
+            console.log(e);
+          }
         }
       }
-    });
+    );
   }
 
   // Get the `date` bounded by `minDate` and `maxDate`
   _getDate(date, minDate = this.state.minDate, maxDate = this.state.maxDate) {
     // If no date is provided then use current date
     // Make sure we constrain it to the min and max
-    const current = (date instanceof Date) ? date : new Date();
+    const current = date instanceof Date ? date : new Date();
 
     if (minDate && current < minDate) {
       return minDate;
@@ -115,13 +119,13 @@ export class DatePicker extends PureComponent<DatePickerProps> {
   _onPressCancel = () => {
     this._setModalVisible(false);
     this._resetState();
-  }
+  };
 
   _onPressConfirm = () => {
     this._datePicked();
     this._setModalVisible(false);
     this._resetState();
-  }
+  };
 
   // iOS: callback
   _setDate = (date) => {
@@ -135,18 +139,20 @@ export class DatePicker extends PureComponent<DatePickerProps> {
       });
       clearTimeout(timeoutId);
     }, 200);
-  }
-
+  };
 
   // Android: Callback
   _onDatePicked({ action, year, month, day }) {
     if (action !== DatePickerAndroid.dismissedAction) {
-      this.setState({
-        date: new Date(year, month, day),
-      }, () => {
-        this._datePicked();
-        this._resetState();
-      });
+      this.setState(
+        {
+          date: new Date(year, month, day),
+        },
+        () => {
+          this._datePicked();
+          this._resetState();
+        }
+      );
     } else {
       this._onPressCancel();
     }
@@ -162,22 +168,16 @@ export class DatePicker extends PureComponent<DatePickerProps> {
     // slide animation
     if (visible) {
       this.setState({ modalVisible: visible });
-      return Animated.timing(
-        this.state.animatedHeight,
-        {
-          toValue: height,
-          duration,
-        },
-      ).start();
+      return Animated.timing(this.state.animatedHeight, {
+        toValue: height,
+        duration,
+      }).start();
     }
 
-    return Animated.timing(
-      this.state.animatedHeight,
-      {
-        toValue: 0,
-        duration,
-      },
-    ).start(() => {
+    return Animated.timing(this.state.animatedHeight, {
+      toValue: 0,
+      duration,
+    }).start(() => {
       this.setState({ modalVisible: visible });
     });
   }
@@ -186,32 +186,45 @@ export class DatePicker extends PureComponent<DatePickerProps> {
     if (Platform.OS === 'android') return null;
 
     const { style } = this.props;
-    const { modalVisible, allowPointerEvents, animatedHeight, date, minDate, maxDate } = this.state;
+    const {
+      modalVisible,
+      allowPointerEvents,
+      animatedHeight,
+      date,
+      minDate,
+      maxDate,
+    } = this.state;
 
     return (
       <Modal
         transparent
         animationType="none"
         visible={modalVisible}
-        onRequestClose={() => { this.setModalVisible(false); }}
+        onRequestClose={() => {
+          this.setModalVisible(false);
+        }}
       >
-        <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={this._onPressCancel}>
+        <TouchableOpacity
+          style={styles.overlay}
+          activeOpacity={1}
+          onPress={this._onPressCancel}
+        >
           <Animated.View
             style={[styles.dateContainer, style, { height: animatedHeight }]}
           >
             <TouchableOpacity style={styles.buttonContainer} activeOpacity={1}>
-              <TouchableOpacity onPress={this._onPressCancel} style={styles.button}>
-                <Text style={styles.text}>
-                  Cancel
-                </Text>
+              <TouchableOpacity
+                onPress={this._onPressCancel}
+                style={styles.button}
+              >
+                <Text style={styles.text}>Cancel</Text>
               </TouchableOpacity>
-              <Text style={[styles.text, styles.title]}>
-                Select a Date
-              </Text>
-              <TouchableOpacity onPress={this._onPressConfirm} style={styles.button}>
-                <Text style={[styles.text, styles.confirm]}>
-                  Confirm
-                </Text>
+              <Text style={[styles.text, styles.title]}>Select a Date</Text>
+              <TouchableOpacity
+                onPress={this._onPressConfirm}
+                style={styles.button}
+              >
+                <Text style={[styles.text, styles.confirm]}>Confirm</Text>
               </TouchableOpacity>
             </TouchableOpacity>
             <View pointerEvents={allowPointerEvents ? 'auto' : 'none'}>

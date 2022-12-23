@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
+
+import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
-import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({

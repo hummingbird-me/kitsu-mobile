@@ -1,17 +1,19 @@
-import * as React from 'react';
 import { debounce } from 'lodash';
+import * as React from 'react';
 import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { Navigation } from 'react-native-navigation';
+
+import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
 import { Counter } from 'kitsu/components/Counter';
+import { MediaCard } from 'kitsu/components/MediaCard';
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { MediaCard } from 'kitsu/components/MediaCard';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
-import menuImage from 'kitsu/assets/img/menus/three-dot-horizontal-grey.png';
-import { styles } from './styles';
-import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+
+import { styles } from './styles';
 
 const USER_LIBRARY_EDIT_SCREEN = 'UserLibraryEdit';
 
@@ -21,7 +23,11 @@ export const STATUS_SELECT_OPTIONS = [
   { value: 'on_hold', anime: 'On Hold', manga: 'On Hold' },
   { value: 'dropped', anime: 'Dropped', manga: 'Dropped' },
   { value: 'completed', anime: 'Completed', manga: 'Completed' },
-  { value: 'remove', anime: 'Remove From Library', manga: 'Remove From Library' },
+  {
+    value: 'remove',
+    anime: 'Remove From Library',
+    manga: 'Remove From Library',
+  },
   { value: 'cancel', anime: 'Nevermind', manga: 'Nevermind' },
 ];
 
@@ -36,8 +42,8 @@ const HEADER_TEXT_MAPPING = {
 interface UserLibraryListCardProps {
   currentUser: object;
   libraryEntry: object;
-  libraryStatus: "current" | "planned" | "completed" | "on_hold" | "dropped";
-  libraryType: "anime" | "manga";
+  libraryStatus: 'current' | 'planned' | 'completed' | 'on_hold' | 'dropped';
+  libraryType: 'anime' | 'manga';
   onSwipingItem(...args: unknown[]): unknown;
   profile: object;
   updateUserLibraryEntry(...args: unknown[]): unknown;
@@ -48,7 +54,7 @@ interface UserLibraryListCardProps {
 export class UserLibraryListCard extends React.PureComponent<UserLibraryListCardProps> {
   static defaultProps = {
     componentId: null,
-  }
+  };
 
   state = {
     isUpdating: false,
@@ -57,7 +63,7 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
     ratingTwenty: this.props.libraryEntry.ratingTwenty,
     isSliderActive: false,
     isRating: false,
-  }
+  };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { libraryEntry, libraryType } = nextProps;
@@ -66,7 +72,8 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
     const differentId = currentEntry.id !== libraryEntry.id;
     const differentProgress = currentEntry.progress !== libraryEntry.progress;
     const differentStatus = currentEntry.status !== libraryEntry.status;
-    const differentRating = currentEntry.ratingTwenty !== libraryEntry.ratingTwenty;
+    const differentRating =
+      currentEntry.ratingTwenty !== libraryEntry.ratingTwenty;
 
     // Update state if library entry has changed
     if (
@@ -87,40 +94,46 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
     // Check if user has completed the media
     const maxProgress = this.getMaxProgress();
     const hasCompletedMedia = maxProgress && newProgress >= maxProgress;
-    const newStatus = (hasCompletedMedia && this.state.libraryStatus !== 'completed' && {
-      libraryStatus: 'completed',
-    }) || {};
+    const newStatus =
+      (hasCompletedMedia &&
+        this.state.libraryStatus !== 'completed' && {
+          libraryStatus: 'completed',
+        }) ||
+      {};
 
-    this.setState({
-      progress: newProgress,
-      ...newStatus,
-    }, this.debounceSave);
-  }
+    this.setState(
+      {
+        progress: newProgress,
+        ...newStatus,
+      },
+      this.debounceSave
+    );
+  };
 
   onRatingChanged = (ratingTwenty) => {
     this.onSwipeRelease();
     this.setState({ ratingTwenty }, this.debounceSave);
-  }
+  };
 
   onRatingModalDisplay = (visible) => {
     this.setState({ isRating: visible });
-  }
+  };
 
   onRightActionActivate = () => {
     this.setState({ isSliderActive: true });
-  }
+  };
 
   onRightActionDeactivate = () => {
     this.setState({ isSliderActive: false });
-  }
+  };
 
   onStatusSelected = (libraryStatus) => {
     this.setState({ libraryStatus }, this.debounceSave);
-  }
+  };
 
-  onSwipeStart = () => this.props.onSwipingItem(true)
+  onSwipeStart = () => this.props.onSwipingItem(true);
 
-  onSwipeRelease = () => this.props.onSwipingItem(false)
+  onSwipeRelease = () => this.props.onSwipingItem(false);
 
   getMaxProgress() {
     const { libraryEntry, libraryType } = this.props;
@@ -162,7 +175,7 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
         });
       }
     }
-  }
+  };
 
   saveEntry = async () => {
     // send the status from props because that is the list we're looking
@@ -173,7 +186,11 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
 
     if (newStatus === 'remove') {
       if (this.props.deleteUserLibraryEntry) {
-        this.props.deleteUserLibraryEntry(libraryEntry.id, libraryType, libraryEntry.status);
+        this.props.deleteUserLibraryEntry(
+          libraryEntry.id,
+          libraryType,
+          libraryEntry.status
+        );
       }
     } else {
       this.props.updateUserLibraryEntry(libraryType, libraryEntry.status, {
@@ -183,14 +200,15 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
         status: newStatus,
       });
     }
-  }
+  };
 
   debounceSave = debounce(this.saveEntry, 200);
 
-  selectOptions = () => STATUS_SELECT_OPTIONS.map(option => ({
-    value: option.value,
-    text: option[this.props.libraryType],
-  })).filter(option => option.value !== this.props.libraryEntry.status);
+  selectOptions = () =>
+    STATUS_SELECT_OPTIONS.map((option) => ({
+      value: option.value,
+      text: option[this.props.libraryType],
+    })).filter((option) => option.value !== this.props.libraryEntry.status);
 
   // We maintain our own state of progress and rating on this component,
   // so update them here and then proxy pass to the update function.
@@ -206,7 +224,7 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   render() {
     const { libraryEntry, libraryType, currentUser, componentId } = this.props;
@@ -216,7 +234,9 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
     const maxProgress = this.getMaxProgress();
 
     // Calculate the percentages
-    const fractionProgress = maxProgress ? (libraryEntry.progress / maxProgress) : 0;
+    const fractionProgress = maxProgress
+      ? libraryEntry.progress / maxProgress
+      : 0;
     const progressPercentage = Math.floor(fractionProgress * 100);
 
     return (
@@ -227,36 +247,41 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
         onSwipeStart={this.onSwipeStart}
         onSwipeRelease={this.onSwipeRelease}
         rightActionActivationDistance={145}
-        rightContent={!isRating && [
-          <View
-            key={0}
-            style={[
-              styles.swipeButton,
-              (isSliderActive ? styles.swipeButtonActive : styles.swipeButtonInactive),
-            ]}
-          >
-            <Text style={styles.swipeButtonText}>{canEdit ? 'Edit Entry' : 'View Details'}</Text>
-          </View>,
-        ]}
+        rightContent={
+          !isRating && [
+            <View
+              key={0}
+              style={[
+                styles.swipeButton,
+                isSliderActive
+                  ? styles.swipeButtonActive
+                  : styles.swipeButtonInactive,
+              ]}
+            >
+              <Text style={styles.swipeButtonText}>
+                {canEdit ? 'Edit Entry' : 'View Details'}
+              </Text>
+            </View>,
+          ]
+        }
       >
         <View style={styles.container}>
-          { libraryEntry.status !== this.props.libraryStatus &&
+          {libraryEntry.status !== this.props.libraryStatus && (
             <View style={styles.moved}>
               <View style={styles.horizontalRule} />
-              { (libraryEntry.status in HEADER_TEXT_MAPPING) ?
+              {libraryEntry.status in HEADER_TEXT_MAPPING ? (
                 <Text style={styles.movedText}>
-                  Moved to <Text style={styles.movedToText}>
+                  Moved to{' '}
+                  <Text style={styles.movedToText}>
                     {HEADER_TEXT_MAPPING[libraryEntry.status][libraryType]}
                   </Text>
                 </Text>
-                :
-                <Text style={styles.movedText}>
-                  Removed from Library
-                </Text>
-              }
+              ) : (
+                <Text style={styles.movedText}>Removed from Library</Text>
+              )}
               <View style={styles.horizontalRule} />
             </View>
-          }
+          )}
           <View style={styles.metaDataContainer}>
             <MediaCard
               cardDimensions={{ height: 75, width: 65 }}
@@ -267,10 +292,7 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
 
             <View style={styles.content}>
               <View style={styles.titleSection}>
-                <Text
-                  numberOfLines={1}
-                  style={styles.titleText}
-                >
+                <Text numberOfLines={1} style={styles.titleText}>
                   {(mediaData && mediaData.canonicalTitle) || '-'}
                 </Text>
                 {canEdit && (
@@ -301,7 +323,9 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
                   disabled={!canEdit}
                   initialValue={libraryEntry.progress}
                   value={progress}
-                  maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
+                  maxValue={
+                    typeof maxProgress === 'number' ? maxProgress : undefined
+                  }
                   progressCounter={typeof maxProgress === 'number'}
                   onValueChanged={this.onProgressValueChanged}
                 />

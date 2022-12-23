@@ -1,14 +1,16 @@
+import { isEmpty, isNull } from 'lodash';
 import * as React from 'react';
-import { View, Linking, ActivityIndicator } from 'react-native';
-import { connect } from 'react-redux';
+import { ActivityIndicator, Linking, View } from 'react-native';
 import DeepLinking from 'react-native-deep-linking';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
+import { connect } from 'react-redux';
+
 import { Kitsu } from 'kitsu/config/api';
-import store from 'kitsu/store/config';
-import { isEmpty, isNull } from 'lodash';
+import { Screens } from 'kitsu/navigation';
 import { toggleActivityIndicatorHOC } from 'kitsu/store/app/actions';
-import { fetchPost, fetchComment } from './feed';
+import store from 'kitsu/store/config';
+
+import { fetchComment, fetchPost } from './feed';
 
 // The current visible component id
 let visibleComponentId = null;
@@ -52,23 +54,29 @@ export function registerDeepLinks() {
   // Make sure we only register the events below once
   if (registeredDeepLinks) return;
 
-  Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex }) => setDeepLinkTabIndex(selectedTabIndex));
+  Navigation.events().registerBottomTabSelectedListener(
+    ({ selectedTabIndex }) => setDeepLinkTabIndex(selectedTabIndex)
+  );
 
   // Check to see if user is on a valid screen for deep linking
-  Navigation.events().registerComponentDidAppearListener(({ componentName }) => {
-    // If user views the auth screen then set the visible component id to null
-    if (componentName === Screens.AUTH_INTRO) {
-      visibleComponentId = null;
+  Navigation.events().registerComponentDidAppearListener(
+    ({ componentName }) => {
+      // If user views the auth screen then set the visible component id to null
+      if (componentName === Screens.AUTH_INTRO) {
+        visibleComponentId = null;
+      }
     }
-  });
+  );
 
   registerDeepLinkRoutes();
 
-  Linking.getInitialURL().then((url) => {
-    if (url) {
-      openUrl(url);
-    }
-  }).catch(err => console.error('An error occurred', err));
+  Linking.getInitialURL()
+    .then((url) => {
+      if (url) {
+        openUrl(url);
+      }
+    })
+    .catch((err) => console.error('An error occurred', err));
 
   registeredDeepLinks = true;
 }
@@ -81,16 +89,21 @@ export function unregisterDeepLinks() {
   registeredUrlHandler = false;
 }
 
-
 /**
  * Set the `visibleComponentId` for deep linking.
  * This is a hack method as we don't get a callback from `registerBottomTabSelectedListener` on initial launch.
- * 
+ *
  * @param {number} tabIndex The index of the tab.
  */
 export function setDeepLinkTabIndex(tabIndex) {
   // We just listen to tab events and push accordingly
-  const tabs = [Screens.FEED, Screens.SEARCH, Screens.QUICK_UPDATE, Screens.NOTIFICATION, Screens.LIBRARY];
+  const tabs = [
+    Screens.FEED,
+    Screens.SEARCH,
+    Screens.QUICK_UPDATE,
+    Screens.NOTIFICATION,
+    Screens.LIBRARY,
+  ];
   if (tabIndex < 0 || tabIndex >= tabs.length) {
     visibleComponentId = null;
   }
@@ -106,12 +119,24 @@ function registerDeepLinkRoutes() {
   DeepLinking.addScheme('http://');
 
   // Media pages
-  DeepLinking.addRoute('kitsu.io/anime/:id', response => handleMedia(response, 'anime'));
-  DeepLinking.addRoute('kitsu.io/manga/:id', response => handleMedia(response, 'manga'));
-  DeepLinking.addRoute('kitsu.io/anime/:id/:tab', response => handleMedia(response, 'anime'));
-  DeepLinking.addRoute('kitsu.io/manga/:id/:tab', response => handleMedia(response, 'manga'));
-  DeepLinking.addRoute('kitsu.io/anime/:id/episodes/:number', response => handleUnit(response, 'anime'));
-  DeepLinking.addRoute('kitsu.io/manga/:id/chapters/:number', response => handleUnit(response, 'manga'));
+  DeepLinking.addRoute('kitsu.io/anime/:id', (response) =>
+    handleMedia(response, 'anime')
+  );
+  DeepLinking.addRoute('kitsu.io/manga/:id', (response) =>
+    handleMedia(response, 'manga')
+  );
+  DeepLinking.addRoute('kitsu.io/anime/:id/:tab', (response) =>
+    handleMedia(response, 'anime')
+  );
+  DeepLinking.addRoute('kitsu.io/manga/:id/:tab', (response) =>
+    handleMedia(response, 'manga')
+  );
+  DeepLinking.addRoute('kitsu.io/anime/:id/episodes/:number', (response) =>
+    handleUnit(response, 'anime')
+  );
+  DeepLinking.addRoute('kitsu.io/manga/:id/chapters/:number', (response) =>
+    handleUnit(response, 'manga')
+  );
 
   // User pages
   DeepLinking.addRoute('kitsu.io/users/:id', handleUser);
@@ -130,9 +155,8 @@ function registerDeepLinkRoutes() {
  * @returns Whether `x` is numeric
  */
 function isNumeric(x) {
-  return ((typeof x === 'number' || typeof x === 'string') && !isNaN(Number(x)));
+  return (typeof x === 'number' || typeof x === 'string') && !isNaN(Number(x));
 }
-
 
 /**
  * Handle media deeplinks
@@ -165,7 +189,7 @@ const handleMedia = async (response, type) => {
           manga: 'id',
         },
       });
-      mediaId = (media && media.length > 0) ? media[0].id : null;
+      mediaId = media && media.length > 0 ? media[0].id : null;
     } catch (e) {
       console.log(`Failed to fetch ${type} with slug: ${response.id}`, e);
       mediaId = null;
@@ -277,7 +301,7 @@ const handleUser = async (response) => {
     Linking.openURL(`${response.scheme}${response.path}`);
     return;
   }
-  
+
   if (!visibleComponentId || !response.id) return;
   let userId = response.id;
 
@@ -293,7 +317,7 @@ const handleUser = async (response) => {
           users: 'id',
         },
       });
-      userId = (user && user.length > 0) ? user[0].id : null;
+      userId = user && user.length > 0 ? user[0].id : null;
     } catch (e) {
       console.log(`Failed to fetch user with slug: ${userId}`, e);
       userId = null;
@@ -454,7 +478,7 @@ export const withActivityIndicatorHOC = (Component) => {
       return (
         <View style={{ flex: 1 }}>
           <Component {...props} />
-          {showIndicator &&
+          {showIndicator && (
             <View
               style={{
                 position: 'absolute',
@@ -469,7 +493,7 @@ export const withActivityIndicatorHOC = (Component) => {
             >
               <ActivityIndicator color="white" />
             </View>
-          }
+          )}
         </View>
       );
     }

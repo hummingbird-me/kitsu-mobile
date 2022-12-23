@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
-import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
+import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
+
 import { styles } from './styles';
 
 const keyExtractor = (item, index) => index.toString();
@@ -25,7 +27,7 @@ export const ScrollableSection = ({
   onViewAllPress,
   data,
   renderItem,
-  loading
+  loading,
 }: ScrollableSectionProps) => (
   <View style={[styles.wrap, contentDark && styles.wrap__dark]}>
     <SectionHeader
@@ -35,13 +37,15 @@ export const ScrollableSection = ({
       onViewAllPress={onViewAllPress}
       contentDark={contentDark}
     />
-    {loading ?
+    {loading ? (
       <View style={{ height: 120 }}>
         <View style={styles.loading}>
-          <ActivityIndicator color={contentDark ? colors.darkPurple : colors.transparentWhite} />
+          <ActivityIndicator
+            color={contentDark ? colors.darkPurple : colors.transparentWhite}
+          />
         </View>
       </View>
-      :
+    ) : (
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
@@ -51,8 +55,7 @@ export const ScrollableSection = ({
         renderItem={renderItem}
         style={styles.list}
       />
-
-    }
+    )}
   </View>
 );
 

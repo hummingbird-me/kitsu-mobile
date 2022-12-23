@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
 
 export const commonStyles = StyleSheet.create({
@@ -35,6 +36,6 @@ export const commonStyles = StyleSheet.create({
 });
 
 export const flattenCommon = (...styles) => {
-  const includedStyles = styles.map(style => commonStyles[style]);
+  const includedStyles = styles.map((style) => commonStyles[style]);
   return StyleSheet.flatten(includedStyles);
 };

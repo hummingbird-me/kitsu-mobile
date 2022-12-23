@@ -1,7 +1,8 @@
-import { StyleSheet, Platform } from 'react-native';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import * as colors from 'kitsu/constants/colors';
+import { Platform, StyleSheet } from 'react-native';
+
 import { statusBarHeight } from 'kitsu/constants/app';
+import * as colors from 'kitsu/constants/colors';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 const text = {
   color: colors.white,
@@ -13,11 +14,16 @@ const styles = StyleSheet.create({
   header: {
     // Height is different for android because the modal doesn't cover the status bar
     // If it does in the future then the height would be the nav bar height + Status bar height
-    height: 60 + (isX ? paddingX : 0) + Platform.select({
-      ios: statusBarHeight,
-      android: 0,
-    }),
-    paddingTop: Platform.select({ ios: statusBarHeight, android: 0 }) + (isX ? paddingX : 0),
+    height:
+      60 +
+      (isX ? paddingX : 0) +
+      Platform.select({
+        ios: statusBarHeight,
+        android: 0,
+      }),
+    paddingTop:
+      Platform.select({ ios: statusBarHeight, android: 0 }) +
+      (isX ? paddingX : 0),
     backgroundColor: 'transparent',
     flexDirection: 'row',
     alignItems: 'center',

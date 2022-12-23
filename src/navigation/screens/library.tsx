@@ -1,8 +1,7 @@
+import * as Screens from 'kitsu/navigation/types';
 import { LibraryScreen } from 'kitsu/screens/Library/LibraryScreen';
 import { LibrarySearch } from 'kitsu/screens/Library/LibrarySearch';
 import { UserLibraryEditScreen } from 'kitsu/screens/Profiles';
-
-import * as Screens from 'kitsu/navigation/types';
 
 export default libraryRoutes = {
   [Screens.LIBRARY]: LibraryScreen,

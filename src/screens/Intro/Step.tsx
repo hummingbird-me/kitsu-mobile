@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+
 import styles from './styles';
 
 interface StepProps {
@@ -8,11 +9,7 @@ interface StepProps {
   desc: string;
 }
 
-const Step = ({
-  title,
-  desc,
-  image
-}: StepProps) => (
+const Step = ({ title, desc, image }: StepProps) => (
   <View style={styles.stepContainer}>
     <View style={styles.slide}>
       <FastImage style={styles.stepImage} source={image} cache="web" />

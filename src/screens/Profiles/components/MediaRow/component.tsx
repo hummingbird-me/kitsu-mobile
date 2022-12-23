@@ -1,11 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
+
 import { StyledText } from 'kitsu/components/StyledText';
+import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
+
 import { styles } from './styles';
 
 interface MediaRowProps {
-  imageVariant?: "square" | "thumbnail" | "portrait" | "landscape" | "landscapeSmall";
+  imageVariant?:
+    | 'square'
+    | 'thumbnail'
+    | 'portrait'
+    | 'landscape'
+    | 'landscapeSmall';
   title?: string;
   summary?: string;
   subtitle?: string;
@@ -19,22 +26,30 @@ export const MediaRow = ({
   summary,
   subtitle,
   thumbnail,
-  summaryLines
+  summaryLines,
 }: MediaRowProps) => (
   <View style={styles.row}>
-    <ImageCard
-      noMask
-      variant={imageVariant}
-      source={thumbnail}
-    />
+    <ImageCard noMask variant={imageVariant} source={thumbnail} />
     <View style={styles.main}>
-      <StyledText color="dark" size="small" bold>{title}</StyledText>
-      {!!subtitle && (<StyledText color="grey" size="xsmall" bold style={{ marginTop: 2 }}>{subtitle}</StyledText>)}
-      <StyledText color="grey" size="xsmall" numberOfLines={summaryLines} style={{ marginTop: 5 }}>{summary}</StyledText>
+      <StyledText color="dark" size="small" bold>
+        {title}
+      </StyledText>
+      {!!subtitle && (
+        <StyledText color="grey" size="xsmall" bold style={{ marginTop: 2 }}>
+          {subtitle}
+        </StyledText>
+      )}
+      <StyledText
+        color="grey"
+        size="xsmall"
+        numberOfLines={summaryLines}
+        style={{ marginTop: 5 }}
+      >
+        {summary}
+      </StyledText>
     </View>
   </View>
 );
-
 
 MediaRow.defaultProps = {
   imageVariant: 'portrait',

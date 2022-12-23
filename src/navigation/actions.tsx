@@ -1,8 +1,9 @@
 import { Navigation } from 'react-native-navigation';
-import { setDeepLinkTabIndex } from 'kitsu/utils/deeplink';
-import * as Screens from './types';
-import * as Layouts from './layouts';
 
+import { setDeepLinkTabIndex } from 'kitsu/utils/deeplink';
+
+import * as Layouts from './layouts';
+import * as Screens from './types';
 
 /**
  * Show the application intro/auth screen
@@ -10,7 +11,6 @@ import * as Layouts from './layouts';
 export function showIntro() {
   Navigation.setRoot(Layouts.INTRO);
 }
-
 
 /**
  * Show the main application screen.
@@ -30,7 +30,7 @@ export async function showMainApp(initialTab = 'Feed') {
 
   // Set the initial tab index for deep link
   setDeepLinkTabIndex(currentTabIndex);
-  
+
   Navigation.setRoot(Layouts.MAIN);
   Navigation.mergeOptions(Screens.BOTTOM_TABS, {
     bottomTabs: {
@@ -39,14 +39,12 @@ export async function showMainApp(initialTab = 'Feed') {
   });
 }
 
-
 /**
  * Show the onboarding screen
  */
 export function showOnboarding() {
   Navigation.setRoot(Layouts.ONBOARDING);
 }
-
 
 /**
  * Show the modal to create post.
@@ -56,12 +54,14 @@ export function showOnboarding() {
 export function showCreatePostModal(props) {
   Navigation.showModal({
     stack: {
-      children: [{
-        component: {
-          name: Screens.FEED_CREATE_POST,
-          passProps: props,
+      children: [
+        {
+          component: {
+            name: Screens.FEED_CREATE_POST,
+            passProps: props,
+          },
         },
-      }],
+      ],
     },
   });
 }

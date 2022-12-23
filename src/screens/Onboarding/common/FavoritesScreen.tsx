@@ -1,15 +1,25 @@
 import React from 'react';
-import { View, ScrollView, Text, Platform, UIManager, LayoutAnimation, ActivityIndicator } from 'react-native';
+import {
+  ActivityIndicator,
+  LayoutAnimation,
+  Platform,
+  ScrollView,
+  Text,
+  UIManager,
+  View,
+} from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
 import { Button } from 'kitsu/components/Button';
 import { Pill } from 'kitsu/components/Pill';
-import { connect } from 'react-redux';
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { setScreenName, updateFavorites } from 'kitsu/store/onboarding/actions';
 import * as colors from 'kitsu/constants/colors';
-import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
 import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { setScreenName, updateFavorites } from 'kitsu/store/onboarding/actions';
+
+import { styles } from './styles';
 
 const COLOR_LIST = ['#d95e40', '#f2992e', '#56bc8a', '#529ecc', '#a77dc2'];
 class FavoritesScreen extends React.Component {
@@ -19,7 +29,9 @@ class FavoritesScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.updateCategoryColors().then(() => this.fetchFavoritesFromKitsu(this.props.currentUser.id));
+    this.updateCategoryColors().then(() =>
+      this.fetchFavoritesFromKitsu(this.props.currentUser.id)
+    );
   }
 
   onConfirm = () => {
@@ -47,7 +59,11 @@ class FavoritesScreen extends React.Component {
         if (!isSubCategory) {
           if (category.selected) {
             const start = index + 1;
-            for (let i = start; i < start + category.subCategoryLength; i += 1) {
+            for (
+              let i = start;
+              i < start + category.subCategoryLength;
+              i += 1
+            ) {
               if (categories[i].favoritesId) {
                 // also remove subpills if they're selected as well.
                 // there is no way to unfave them at once.
@@ -167,7 +183,7 @@ class FavoritesScreen extends React.Component {
       console.log('id doesnt exist', id);
     }
     return [];
-  }
+  };
 
   /**
    * Fetch favorites from kitsu and update the categories accordingly.
@@ -217,7 +233,6 @@ class FavoritesScreen extends React.Component {
     await this.props.updateFavorites(categories);
   }
 
-
   prepareAnimation = () => {
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -228,18 +243,19 @@ class FavoritesScreen extends React.Component {
   render() {
     const { favoriteCategories: categories } = this.props;
     const { loadingFromKitsu } = this.state;
-    const buttonDisabled = categories.filter(v => v.selected).length < 5;
+    const buttonDisabled = categories.filter((v) => v.selected).length < 5;
     const buttonTitle = buttonDisabled ? 'Pick at least 5' : 'Looks good!';
     return (
       <View style={styles.container}>
         <OnboardingHeader />
         <View style={styles.contentWrapper}>
           <Text style={styles.tutorialText}>
-            Tap categories you like, we’ll use these to help you find new anime and manga.
+            Tap categories you like, we’ll use these to help you find new anime
+            and manga.
           </Text>
-          {loadingFromKitsu ?
+          {loadingFromKitsu ? (
             <ActivityIndicator color={colors.white} />
-            :
+          ) : (
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 20 }}
@@ -265,7 +281,7 @@ class FavoritesScreen extends React.Component {
                 titleStyle={styles.buttonTitleStyle}
               />
             </ScrollView>
-          }
+          )}
         </View>
       </View>
     );
@@ -278,4 +294,6 @@ const mapStateToProps = ({ onboarding, auth, user }) => ({
   currentUser: user.currentUser,
 });
 
-export default connect(mapStateToProps, { setScreenName, updateFavorites })(FavoritesScreen);
+export default connect(mapStateToProps, { setScreenName, updateFavorites })(
+  FavoritesScreen
+);

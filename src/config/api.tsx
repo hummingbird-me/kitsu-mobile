@@ -1,5 +1,6 @@
 import OAuth2 from 'client-oauth2';
 import JsonApi from 'devour-client';
+
 import { kitsuConfig } from './env';
 import {
   errorMiddleware,

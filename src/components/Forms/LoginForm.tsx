@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
 import * as colors from 'kitsu/constants/colors';
+
 import styles from './styles';
 
 interface LoginFormProps {
@@ -23,7 +25,7 @@ const LoginForm = ({
   loading,
   onSignInFacebook,
   signingInFacebook,
-  onForgotPassword
+  onForgotPassword,
 }: LoginFormProps) => (
   <View>
     <Input
@@ -32,12 +34,12 @@ const LoginForm = ({
       autoCorrect={false}
       value={data.email}
       keyboardType={'email-address'}
-      onChangeText={text => handleChange(text, 'email')}
+      onChangeText={(text) => handleChange(text, 'email')}
     />
     <PasswordInput
       placeholder="Password"
       value={data.password}
-      onChangeText={text => handleChange(text, 'password')}
+      onChangeText={(text) => handleChange(text, 'password')}
     />
     <Button
       loading={loading}

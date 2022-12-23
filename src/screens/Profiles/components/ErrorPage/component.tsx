@@ -1,8 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+
 import { StyledText } from 'kitsu/components/StyledText';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+
 import { styles } from './styles';
 
 interface ErrorPageProps {
@@ -14,14 +16,11 @@ interface ErrorPageProps {
 export const ErrorPage = ({
   errorText,
   showHeader,
-  onBackPress
+  onBackPress,
 }: ErrorPageProps) => (
   <SceneContainer>
     {showHeader && (
-      <CustomHeader
-        leftButtonAction={onBackPress}
-        leftButtonTitle="Back"
-      />
+      <CustomHeader leftButtonAction={onBackPress} leftButtonTitle="Back" />
     )}
     <View style={styles.wrapper}>
       <StyledText color="light" textStyle={styles.text}>

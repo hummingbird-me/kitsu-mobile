@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Dimensions } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Image } from 'react-native-animatable';
 
 export default class AnimatedWrapped extends PureComponent {
@@ -22,7 +22,7 @@ export default class AnimatedWrapped extends PureComponent {
         { opacity: 0, scale: s1, translateX: 0, translateY: 0 },
         { opacity: 0.6, scale: 1.05, translateX: tx2 / 2, translateY: ty2 / 2 },
         animDuration,
-        'ease-in',
+        'ease-in'
       );
       setTimeout(
         () =>
@@ -36,9 +36,9 @@ export default class AnimatedWrapped extends PureComponent {
             },
             { opacity: 0, scale: s2, translateX: tx2, translateY: ty2 },
             animDuration,
-            'ease-out',
+            'ease-out'
           ),
-        animDuration - 10,
+        animDuration - 10
       );
       setTimeout(this.startAnimation, 2 * animDuration - 400);
       const ind = this.state.ind === images.length - 1 ? 0 : this.state.ind + 1;
@@ -58,7 +58,7 @@ export default class AnimatedWrapped extends PureComponent {
         }}
       >
         <Image
-          ref={el => (this.image = el)}
+          ref={(el) => (this.image = el)}
           style={{
             opacity: 0.4,
             width: Dimensions.get('window').width,

@@ -1,14 +1,16 @@
-import React from 'react';
-import { View, TouchableOpacity, ScrollView, Text } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { connect } from 'react-redux';
-import { LoginManager } from 'react-native-fbsdk-next';
-import * as colors from 'kitsu/constants/colors';
-import fblogo from 'kitsu/assets/img/fblogo.png';
 import * as Sentry from '@sentry/react-native';
-import { connectFBUser, disconnectFBUser } from 'kitsu/store/user/actions';
+import React from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
+import { LoginManager } from 'react-native-fbsdk-next';
 import { Navigation } from 'react-native-navigation';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from './common';
+import { connect } from 'react-redux';
+
+import fblogo from 'kitsu/assets/img/fblogo.png';
+import * as colors from 'kitsu/constants/colors';
+import { connectFBUser, disconnectFBUser } from 'kitsu/store/user/actions';
+
+import { ItemSeparator, SidebarHeader, SidebarTitle } from './common';
 import { styles } from './styles';
 
 interface LinkedAccountsProps {
@@ -22,12 +24,14 @@ class LinkedAccounts extends React.Component<LinkedAccountsProps> {
   };
 
   handleFacebookLinking = async (isLinked) => {
-    if (isLinked) { // if linked, unlink the account
+    if (isLinked) {
+      // if linked, unlink the account
       this.props.disconnectFBUser();
-    } else { // link the account
+    } else {
+      // link the account
       LoginManager.logOut();
-      LoginManager.logInWithReadPermissions(['public_profile', 'email'])
-        .then((result) => {
+      LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
+        (result) => {
           if (!result.isCancelled) {
             this.props.connectFBUser();
           }
@@ -39,9 +43,10 @@ class LinkedAccounts extends React.Component<LinkedAccountsProps> {
             },
           });
           console.log(`Login fail with error: ${error}`);
-        });
+        }
+      );
     }
-  }
+  };
 
   renderFacebookAccount = () => {
     const { currentUser } = this.props;
@@ -73,15 +78,20 @@ class LinkedAccounts extends React.Component<LinkedAccountsProps> {
             }}
           >
             <Text
-              style={{ fontSize: 10, fontFamily: 'OpenSans', fontWeight: '600', color: colors.white }}
+              style={{
+                fontSize: 10,
+                fontFamily: 'OpenSans',
+                fontWeight: '600',
+                color: colors.white,
+              }}
             >
-              { isLinked ? 'Disconnect' : 'Connect' }
+              {isLinked ? 'Disconnect' : 'Connect'}
             </Text>
           </TouchableOpacity>
         </View>
       </View>
     );
-  }
+  };
 
   render() {
     return (
@@ -104,5 +114,6 @@ const mapStateToProps = ({ auth, user }) => ({
   currentUser: user.currentUser,
 });
 
-
-export default connect(mapStateToProps, { connectFBUser, disconnectFBUser })(LinkedAccounts);
+export default connect(mapStateToProps, { connectFBUser, disconnectFBUser })(
+  LinkedAccounts
+);

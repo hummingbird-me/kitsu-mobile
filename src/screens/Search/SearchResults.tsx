@@ -1,13 +1,23 @@
-import React, { Component } from 'react';
-import { StyleSheet, RefreshControl, ActivityIndicator, View } from 'react-native';
-import { connect } from 'react-redux';
-import { search } from 'kitsu/store/anime/actions';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
-import { getMaxVisibleRows, getCurrentVisibleRows } from 'kitsu/screens/Search/Lists/ResultsList/spacing';
 import { isEqual } from 'lodash';
+import React, { Component } from 'react';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import * as colors from 'kitsu/constants/colors';
 import { Screens } from 'kitsu/navigation';
+import {
+  getCurrentVisibleRows,
+  getMaxVisibleRows,
+} from 'kitsu/screens/Search/Lists/ResultsList/spacing';
+import { search } from 'kitsu/store/anime/actions';
+
 import { ResultsList } from './Lists';
 
 interface SearchResultsProps {
@@ -18,7 +28,7 @@ interface SearchResultsProps {
   currentUser?: object;
   label?: string;
   default?: any;
-  active: "anime" | "manga";
+  active: 'anime' | 'manga';
   filter?: any;
   sort?: string;
 }
@@ -96,10 +106,8 @@ class SearchResults extends Component<SearchResultsProps> {
 
     if (!loading || refreshing) return null;
 
-    return (
-      <ActivityIndicator color="white" style={{ paddingVertical: 16 }} />
-    );
-  }
+    return <ActivityIndicator color="white" style={{ paddingVertical: 16 }} />;
+  };
 
   renderNavigationHeader = () => {
     const { componentId } = this.props;
@@ -109,7 +117,7 @@ class SearchResults extends Component<SearchResultsProps> {
         componentId={componentId}
         title={label}
         rightIcon="sliders"
-        rightAction={() => (
+        rightAction={() =>
           Navigation.push(componentId, {
             component: {
               name: Screens.SEARCH_FILTER,
@@ -117,29 +125,35 @@ class SearchResults extends Component<SearchResultsProps> {
                 data: filterData,
                 onApply: (data, state) => {
                   Navigation.popTo(componentId);
-                  this.setState({
-                    filter: data.filter,
-                    sort: data.sort,
-                    defaultSearch: null,
-                    label: 'Search',
-                    filterData: state,
-                    fade: data.fade,
-                  }, () => {
-                    this.getData();
-                  });
+                  this.setState(
+                    {
+                      filter: data.filter,
+                      sort: data.sort,
+                      defaultSearch: null,
+                      label: 'Search',
+                      filterData: state,
+                      fade: data.fade,
+                    },
+                    () => {
+                      this.getData();
+                    }
+                  );
                 },
               },
             },
           })
-        )}
+        }
       />
     );
-  }
+  };
 
   render() {
     const { results, loading, currentUser } = this.props;
-    const emptyArray = Array(20).fill(1).map((item, index) => ({ key: index }));
-    const data = (!loading || results.length > 0) ? this.props.results : emptyArray;
+    const emptyArray = Array(20)
+      .fill(1)
+      .map((item, index) => ({ key: index }));
+    const data =
+      !loading || results.length > 0 ? this.props.results : emptyArray;
 
     // Check if we have to load more entries
     // There's a bug with `onEndReached` where it will only get called once and if content does not fill all of the screen
@@ -202,7 +216,7 @@ const mapStateToProps = ({ anime, user }, ownProps) => {
   const { resultsLoading } = anime;
   const { currentUser } = user;
   const { active } = ownProps;
-  const data = anime[`results${active}`].map(item => ({
+  const data = anime[`results${active}`].map((item) => ({
     image: item.posterImage ? item.posterImage.small : 'none',
     titles: item.titles ? item.titles : {},
     canonicalTitle: item.canonicalTitle,

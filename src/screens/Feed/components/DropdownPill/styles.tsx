@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+
 import { grey } from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({

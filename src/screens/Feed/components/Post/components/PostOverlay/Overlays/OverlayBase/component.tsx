@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+
 import { styles } from './styles';
 
 interface OverlayBaseProps {
@@ -11,7 +12,7 @@ interface OverlayBaseProps {
 export const OverlayBase = ({
   onPress,
   foregroundText,
-  backgroundText
+  backgroundText,
 }: OverlayBaseProps) => (
   <TouchableOpacity onPress={onPress}>
     <View style={styles.wrapper}>

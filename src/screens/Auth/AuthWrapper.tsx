@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { slidelogo } from 'kitsu/assets/img/intro/';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import { slidelogo } from 'kitsu/assets/img/intro/';
+
 import AnimatedWrapper from './AnimatedWrapper';
 import styles from './styles';
 
@@ -15,7 +17,11 @@ const AuthWrapper = ({ children }) => (
   >
     <View style={styles.stretch}>
       <AnimatedWrapper />
-      <FastImage style={styles.logo} resizeMode={'contain'} source={slidelogo} />
+      <FastImage
+        style={styles.logo}
+        resizeMode={'contain'}
+        source={slidelogo}
+      />
     </View>
     {children}
   </KeyboardAwareScrollView>

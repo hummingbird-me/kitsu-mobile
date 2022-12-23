@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
+
 import config from 'kitsu/assets/fonts/icons/config.json';
 
 const Icon = createIconSetFromFontello(config);

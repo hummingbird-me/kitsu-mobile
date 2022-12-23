@@ -1,8 +1,10 @@
-import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
 import { capitalize } from 'lodash';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+import { StyledText } from 'kitsu/components/StyledText';
+
 import { styles } from './styles';
 
 interface LibraryScreenHeaderProps {
@@ -16,12 +18,14 @@ export const LibraryScreenHeader = ({
   title,
   onTitlePress,
   onOptionPress,
-  onSearchPress
+  onSearchPress,
 }: LibraryScreenHeaderProps) => (
   <View style={styles.headerContainer}>
     <View style={styles.headerContent}>
       <TouchableOpacity onPress={onTitlePress} style={styles.headerTitle}>
-        <StyledText color="light" size="default" bold>{capitalize(title)}</StyledText>
+        <StyledText color="light" size="default" bold>
+          {capitalize(title)}
+        </StyledText>
         <Icon name="ios-arrow-down" color="white" style={styles.arrowIcon} />
       </TouchableOpacity>
       <View style={styles.rightButtons}>
@@ -41,4 +45,3 @@ LibraryScreenHeader.defaultProps = {
   onOptionPress: null,
   onSearchPress: null,
 };
-

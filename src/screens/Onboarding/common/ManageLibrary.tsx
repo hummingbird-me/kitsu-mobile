@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { completeOnboarding } from 'kitsu/store/onboarding/actions';
-import { connect } from 'react-redux';
-import { Button } from 'kitsu/components/Button';
+import { Text, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import { Button } from 'kitsu/components/Button';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
+import { completeOnboarding } from 'kitsu/store/onboarding/actions';
+
 import { OnboardingHeader } from './OnboardingHeader/component';
+import { styles } from './styles';
 
 const getTitle = (selectedAccount, hasRatedAnimes) => {
   if (selectedAccount === 'aozora') {
@@ -24,13 +26,22 @@ const getButtonTitle = (selectedAccount, hasRatedAnimes, buttonIndex) => {
     }
     return 'Start building your library';
   }
-  if (selectedAccount === 'aozora' || (selectedAccount === 'kitsu' && hasRatedAnimes)) {
+  if (
+    selectedAccount === 'aozora' ||
+    (selectedAccount === 'kitsu' && hasRatedAnimes)
+  ) {
     return 'Skip for now';
   }
   return 'Import MyAnimelist or Anilist account';
 };
 
-const onPress = (componentId, selectedAccount, hasRatedAnimes, buttonIndex, _completeOnboarding) => {
+const onPress = (
+  componentId,
+  selectedAccount,
+  hasRatedAnimes,
+  buttonIndex,
+  _completeOnboarding
+) => {
   if (buttonIndex === 0) {
     if (selectedAccount === 'aozora') {
       Navigation.push(componentId, {
@@ -54,7 +65,10 @@ const onPress = (componentId, selectedAccount, hasRatedAnimes, buttonIndex, _com
         },
       });
     }
-  } else if (selectedAccount === 'aozora' || (selectedAccount === 'kitsu' && hasRatedAnimes)) {
+  } else if (
+    selectedAccount === 'aozora' ||
+    (selectedAccount === 'kitsu' && hasRatedAnimes)
+  ) {
     _completeOnboarding();
   } else {
     Navigation.push(componentId, {
@@ -71,20 +85,17 @@ class ManageLibrary extends React.Component {
   };
 
   render() {
-    const { componentId, selectedAccount, accounts, hasRatedAnimes } = this.props;
+    const { componentId, selectedAccount, accounts, hasRatedAnimes } =
+      this.props;
 
-    const kitsuAccountHasEntries = (
-      accounts && accounts.kitsu && accounts.kitsu.library_entries >= 5
-    );
+    const kitsuAccountHasEntries =
+      accounts && accounts.kitsu && accounts.kitsu.library_entries >= 5;
 
     const ratedAnime = hasRatedAnimes || kitsuAccountHasEntries;
 
     return (
       <View style={styles.container}>
-        <OnboardingHeader
-          componentId={componentId}
-          backEnabled
-        />
+        <OnboardingHeader componentId={componentId} backEnabled />
         <View style={styles.contentWrapper}>
           <Text style={[styles.tutorialText, styles.tutorialText]}>
             {getTitle(selectedAccount, ratedAnime)}
@@ -92,14 +103,28 @@ class ManageLibrary extends React.Component {
           <Button
             style={[styles.button, { marginTop: 24 }]}
             onPress={() =>
-              onPress(componentId, selectedAccount, ratedAnime, 0, this.completeOnboarding)}
+              onPress(
+                componentId,
+                selectedAccount,
+                ratedAnime,
+                0,
+                this.completeOnboarding
+              )
+            }
             title={getButtonTitle(selectedAccount, ratedAnime, 0)}
             titleStyle={styles.buttonTitleStyle}
           />
           <Button
             style={[styles.button, styles.buttonSecondary]}
             onPress={() =>
-              onPress(componentId, selectedAccount, ratedAnime, 1, this.completeOnboarding)}
+              onPress(
+                componentId,
+                selectedAccount,
+                ratedAnime,
+                1,
+                this.completeOnboarding
+              )
+            }
             title={getButtonTitle(selectedAccount, ratedAnime, 1)}
             titleStyle={styles.buttonSecondaryTitle}
           />

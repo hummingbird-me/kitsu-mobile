@@ -1,20 +1,29 @@
-import React, { PureComponent } from 'react';
-import { Dimensions, FlatList, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import { connect } from 'react-redux';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
-import { fetchUserLibrary } from 'kitsu/store/profile/actions';
-import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
-import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
-import { MediaCard } from 'kitsu/components/MediaCard';
-import { commonStyles } from 'kitsu/common/styles';
-import { isIdForCurrentUser } from 'kitsu/utils/id';
 import { isEmpty } from 'lodash';
-import { StyledText } from 'kitsu/components/StyledText';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { PureComponent } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { connect } from 'react-redux';
+
+import { commonStyles } from 'kitsu/common/styles';
+import { MediaCard } from 'kitsu/components/MediaCard';
+import { ScrollableTabBar } from 'kitsu/components/ScrollableTabBar';
+import { StyledText } from 'kitsu/components/StyledText';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
+import { LibraryHeader } from 'kitsu/screens/Profiles/UserLibrary';
+import { fetchUserLibrary } from 'kitsu/store/profile/actions';
+import { isIdForCurrentUser } from 'kitsu/utils/id';
+
 import * as constants from './constants';
+import { styles } from './styles';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const renderScrollTabBar = () => <ScrollableTabBar />;
@@ -39,7 +48,10 @@ const progressFromLibraryEntry = (libraryEntry) => {
   if (!mediaData) return 0;
 
   // Make sure we have an episode or chapter count
-  const count = mediaData.type === 'anime' ? mediaData.episodeCount : mediaData.chapterCount;
+  const count =
+    mediaData.type === 'anime'
+      ? mediaData.episodeCount
+      : mediaData.chapterCount;
   if (!count) return 0;
 
   return Math.floor((libraryEntry.progress / count) * 100);
@@ -64,7 +76,6 @@ class Library extends PureComponent<LibraryProps> {
       });
     }
   };
-
 
   renderEmptyItem() {
     return <View style={styles.emptyPosterImageCard} />;
@@ -93,13 +104,13 @@ class Library extends PureComponent<LibraryProps> {
         componentId={this.props.componentId}
       />
     );
-  }
+  };
 
   renderLoadingList = () => (
     <View style={styles.loadingList}>
       <ActivityIndicator color="white" />
     </View>
-  )
+  );
 
   renderEmptyList = (type, status) => {
     const { currentUser, profile } = this.props;
@@ -117,11 +128,12 @@ class Library extends PureComponent<LibraryProps> {
 
     return (
       <View style={styles.emptyList}>
-        <Text style={[
-          commonStyles.text,
-          commonStyles.colorWhite,
-          styles.browseText,
-        ]}
+        <Text
+          style={[
+            commonStyles.text,
+            commonStyles.colorWhite,
+            styles.browseText,
+          ]}
         >
           {`${messagePrefix} marked any ${type} as ${messageMapping[status][type]} yet!`}
         </Text>
@@ -131,7 +143,8 @@ class Library extends PureComponent<LibraryProps> {
 
   renderFetchingMoreSpinner = (userId, type, status) => {
     const { userLibrary } = this.props;
-    const library = userLibrary[userId] &&
+    const library =
+      userLibrary[userId] &&
       userLibrary[userId][type] &&
       userLibrary[userId][type][status];
 
@@ -147,7 +160,7 @@ class Library extends PureComponent<LibraryProps> {
     }
 
     return null;
-  }
+  };
 
   renderLists = (userId, type) => {
     const { componentId, userLibrary, profile } = this.props;
@@ -161,7 +174,8 @@ class Library extends PureComponent<LibraryProps> {
 
     return listOrder.map((currentList, index) => {
       const { status } = currentList;
-      const library = userLibrary[userId] &&
+      const library =
+        userLibrary[userId] &&
         userLibrary[userId][type] &&
         userLibrary[userId][type][status];
 
@@ -169,7 +183,8 @@ class Library extends PureComponent<LibraryProps> {
       const loading = isEmpty(library) || library.loading;
       const fetchMore = library && library.fetchMore;
 
-      const { countForCurrentWidth, countForMaxWidth } = getCardVisibilityCounts();
+      const { countForCurrentWidth, countForMaxWidth } =
+        getCardVisibilityCounts();
       const emptyItemsToAdd = countForMaxWidth - data.length;
       const dataFilled = data.slice();
 
@@ -180,7 +195,8 @@ class Library extends PureComponent<LibraryProps> {
       }
 
       const renderData = emptyItemsToAdd > 0 ? dataFilled : data;
-      const listStyle = index === listOrder.length - 1 ? styles.listLastChild : null;
+      const listStyle =
+        index === listOrder.length - 1 ? styles.listLastChild : null;
       return (
         <View key={`${status}-${type}`} style={listStyle}>
           <LibraryHeader
@@ -192,21 +208,23 @@ class Library extends PureComponent<LibraryProps> {
           />
 
           {/* TODO: Fix this. It shouldn't show loading indicator if we already have data */}
-          {loading && !data.length &&
-            this.renderLoadingList()
-          }
+          {loading && !data.length && this.renderLoadingList()}
 
-          {!loading && !data.length ?
+          {!loading && !data.length ? (
             this.renderEmptyList(type, status)
-            :
+          ) : (
             <FlatList
-              ListFooterComponent={this.renderFetchingMoreSpinner(userId, type, status)}
+              ListFooterComponent={this.renderFetchingMoreSpinner(
+                userId,
+                type,
+                status
+              )}
               horizontal
               data={renderData}
               initialNumToRender={countForMaxWidth}
               initialScrollIndex={0}
               getItemLayout={getItemLayout}
-              keyExtractor={item => `${item.id}`}
+              keyExtractor={(item) => `${item.id}`}
               onEndReached={fetchMore}
               onEndReachedThreshold={0.5}
               removeClippedSubviews={false}
@@ -214,20 +232,22 @@ class Library extends PureComponent<LibraryProps> {
               scrollEnabled={data.length >= countForCurrentWidth}
               showsHorizontalScrollIndicator={false}
             />
-          }
+          )}
         </View>
       );
     });
-  }
+  };
 
   renderSearchBox() {
     return (
-      <TouchableOpacity style={styles.searchBox} onPress={this.navigateToSearch}>
-        <Icon
-          name="search"
-          style={styles.searchIcon}
-        />
-        <StyledText color="dark" textStyle={styles.searchText}>Search Library</StyledText>
+      <TouchableOpacity
+        style={styles.searchBox}
+        onPress={this.navigateToSearch}
+      >
+        <Icon name="search" style={styles.searchIcon} />
+        <StyledText color="dark" textStyle={styles.searchText}>
+          Search Library
+        </StyledText>
       </TouchableOpacity>
     );
   }
@@ -261,4 +281,6 @@ const mapStateToProps = ({ profile }) => {
   return { userLibrary };
 };
 
-export const component = connect(mapStateToProps, { fetchUserLibrary })(Library);
+export const component = connect(mapStateToProps, { fetchUserLibrary })(
+  Library
+);

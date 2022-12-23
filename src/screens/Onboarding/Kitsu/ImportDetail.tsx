@@ -1,15 +1,17 @@
 import React from 'react';
-import { View, TextInput, Text, Modal } from 'react-native';
+import { Modal, Text, TextInput, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
-import * as colors from 'kitsu/constants/colors';
-import { Kitsu, setToken } from 'kitsu/config/api';
+
 import { Button } from 'kitsu/components/Button';
+import { Kitsu, setToken } from 'kitsu/config/api';
+import * as colors from 'kitsu/constants/colors';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 import { ItemSeparator } from 'kitsu/screens/Sidebar/common/';
 import { completeOnboarding } from 'kitsu/store/onboarding/actions';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
-import { styles } from './styles';
+
 import { styles as commonStyles } from '../common/styles';
+import { styles } from './styles';
 
 class ImportDetail extends React.Component {
   state = {
@@ -54,9 +56,9 @@ class ImportDetail extends React.Component {
       },
       !this.state.errMessage // determines modal button behavior
         ? () => {
-          this.props.completeOnboarding();
-        }
-        : null,
+            this.props.completeOnboarding();
+          }
+        : null
     );
   };
 
@@ -70,18 +72,20 @@ class ImportDetail extends React.Component {
 
     return (
       <View style={commonStyles.container}>
-        <OnboardingHeader
-          componentId={this.props.componentId}
-          backEnabled
-        />
+        <OnboardingHeader componentId={this.props.componentId} backEnabled />
         <View style={{ flex: 1 }}>
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <FastImage source={item.image} style={styles.cardLogo} cache="web" />
+                <FastImage
+                  source={item.image}
+                  style={styles.cardLogo}
+                  cache="web"
+                />
               </View>
               <Text style={styles.cardText}>
-                Enter your username below to import your existing anime and manga progress.
+                Enter your username below to import your existing anime and
+                manga progress.
               </Text>
             </View>
             <ItemSeparator />
@@ -89,7 +93,7 @@ class ImportDetail extends React.Component {
               <TextInput
                 style={styles.input}
                 value={username}
-                onChangeText={t => this.setState({ username: t })}
+                onChangeText={(t) => this.setState({ username: t })}
                 placeholder={`Your ${item.title} Username`}
                 placeholderTextColor={colors.grey}
                 underlineColorAndroid={'transparent'}
@@ -126,8 +130,9 @@ class ImportDetail extends React.Component {
                     Hang tight! We{"'"}re importing your data!
                   </Text>
                   <Text style={styles.importModalText}>
-                    Your {item.title} import will continue in the background. We{"'"}ll send you a
-                    notification when your import has completed!
+                    Your {item.title} import will continue in the background. We
+                    {"'"}ll send you a notification when your import has
+                    completed!
                   </Text>
                 </View>
               ) : (
@@ -146,7 +151,11 @@ class ImportDetail extends React.Component {
                   </Text>
                 </View>
               )}
-              <Button onPress={this.onFinish} title={'Done'} loading={loading} />
+              <Button
+                onPress={this.onFinish}
+                title={'Done'}
+                loading={loading}
+              />
             </View>
           </View>
         </Modal>

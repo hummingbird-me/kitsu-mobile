@@ -1,15 +1,24 @@
 import React, { PureComponent } from 'react';
-import { Modal, Slider, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Modal,
+  Slider,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import * as colors from 'kitsu/constants/colors';
+
 import awfulImage from 'kitsu/assets/img/ratings/awful.png';
 import goodImage from 'kitsu/assets/img/ratings/good.png';
 import greatImage from 'kitsu/assets/img/ratings/great.png';
 import mehImage from 'kitsu/assets/img/ratings/meh.png';
-import noRatingImage from 'kitsu/assets/img/ratings/no-rating.png';
 import noRatingStarImage from 'kitsu/assets/img/ratings/no-rating-star.png';
+import noRatingImage from 'kitsu/assets/img/ratings/no-rating.png';
 import starImage from 'kitsu/assets/img/ratings/star.png';
+import * as colors from 'kitsu/constants/colors';
+
 import { styles } from './styles';
 
 const TextSize = {
@@ -87,7 +96,9 @@ function getRatingTwentyForText(text, type) {
     case 'great':
       return 20;
     default:
-      throw new Error(`Unknown text while determining simple rating type: "${text}"`);
+      throw new Error(
+        `Unknown text while determining simple rating type: "${text}"`
+      );
   }
 }
 
@@ -96,31 +107,31 @@ interface RatingProps {
   onRatingChanged?(...args: unknown[]): unknown;
   onRatingModalDisplay?(...args: unknown[]): unknown;
   ratingTwenty?: number;
-  ratingSystem?: "simple" | "regular" | "advanced";
+  ratingSystem?: 'simple' | 'regular' | 'advanced';
   showNotRated?: boolean;
   size?: string;
   style?: any;
-  viewType?: "single" | "select";
+  viewType?: 'single' | 'select';
 }
 
 export class Rating extends PureComponent<RatingProps> {
   static defaultProps = {
     disabled: false,
-    onRatingChanged: () => { },
-    onRatingModalDisplay: () => { },
+    onRatingChanged: () => {},
+    onRatingModalDisplay: () => {},
     ratingTwenty: null,
     ratingSystem: 'simple',
     showNotRated: true,
     size: 'normal',
     style: null,
     viewType: 'select',
-  }
+  };
 
   state = {
     inlineFacesVisible: false,
     modalVisible: false,
     ratingTwenty: this.props.ratingTwenty,
-  }
+  };
 
   UNSAFE_componentWillReceiveProps({ ratingTwenty }) {
     if (ratingTwenty !== this.state.ratingTwenty) {
@@ -130,11 +141,11 @@ export class Rating extends PureComponent<RatingProps> {
 
   onModalClosed = () => {
     this.cancel();
-  }
+  };
 
   setSimpleRating = (ratingTwenty) => {
     this.setState({ ratingTwenty });
-  }
+  };
 
   toggleModal = (selectedButton) => {
     const { ratingSystem, onRatingModalDisplay, onRatingChanged } = this.props;
@@ -155,32 +166,34 @@ export class Rating extends PureComponent<RatingProps> {
       this.setState({ modalVisible: !this.state.modalVisible });
       onRatingModalDisplay(!this.state.modalVisible);
     }
-  }
+  };
 
   confirm = () => {
     const { ratingTwenty } = this.state;
 
     this.toggleModal();
     this.props.onRatingChanged(ratingTwenty === 0 ? null : ratingTwenty);
-  }
+  };
 
   cancel = () => {
     this.toggleModal();
 
     // Reset the rating.
     this.setState({ ratingTwenty: this.props.ratingTwenty });
-  }
+  };
 
   sliderValueChanged = (ratingTwenty, ratingSystem) => {
     // We use the 0 or 1 rating to indicate 'no rating',
     // but we don't want to deal with that in our actual state.
-    if ((ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
-        (ratingSystem === 'advanced' && ratingTwenty >= 1.5)) {
+    if (
+      (ratingSystem !== 'advanced' && ratingTwenty >= 1) ||
+      (ratingSystem === 'advanced' && ratingTwenty >= 1.5)
+    ) {
       this.setState({ ratingTwenty });
     } else {
       this.setState({ ratingTwenty: null });
     }
-  }
+  };
 
   styleForRatingTwenty(ratingTwenty, image) {
     const displayNone = { display: 'none' };
@@ -209,8 +222,14 @@ export class Rating extends PureComponent<RatingProps> {
         break;
       case 'normal':
       default:
-        defaultStyle.push({ width: ImageSize.Normal, height: ImageSize.Normal });
-        selectedStyle.push({ width: ImageSize.Normal, height: ImageSize.Normal });
+        defaultStyle.push({
+          width: ImageSize.Normal,
+          height: ImageSize.Normal,
+        });
+        selectedStyle.push({
+          width: ImageSize.Normal,
+          height: ImageSize.Normal,
+        });
         break;
     }
 
@@ -232,7 +251,11 @@ export class Rating extends PureComponent<RatingProps> {
     }
 
     // handle non-simple ratings
-    if (ratingSystem !== 'simple' && image.includes('star') && !image.includes('no-rating')) {
+    if (
+      ratingSystem !== 'simple' &&
+      image.includes('star') &&
+      !image.includes('no-rating')
+    ) {
       return selectedStyle;
     }
 
@@ -255,18 +278,28 @@ export class Rating extends PureComponent<RatingProps> {
 
     let fontSize;
     switch (size) {
-      case 'tiny': fontSize = TextSize.Tiny; break;
-      case 'small': fontSize = TextSize.Small; break;
-      case 'normal': default: fontSize = TextSize.Normal; break;
+      case 'tiny':
+        fontSize = TextSize.Tiny;
+        break;
+      case 'small':
+        fontSize = TextSize.Small;
+        break;
+      case 'normal':
+      default:
+        fontSize = TextSize.Normal;
+        break;
     }
 
     if (ratingTwenty === null) {
-      return this.props.showNotRated
-        ? <Text style={[styles.textNotRated, { fontSize }]}>Not Rated</Text>
-        : null;
+      return this.props.showNotRated ? (
+        <Text style={[styles.textNotRated, { fontSize }]}>Not Rated</Text>
+      ) : null;
     }
 
-    const { text, textStyle } = getRatingTwentyProperties(ratingTwenty, ratingSystem);
+    const { text, textStyle } = getRatingTwentyProperties(
+      ratingTwenty,
+      ratingSystem
+    );
     return <Text style={[textStyle, { fontSize }]}>{text}</Text>;
   }
 
@@ -283,38 +316,59 @@ export class Rating extends PureComponent<RatingProps> {
           disabled={this.props.disabled}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <FastImage source={noRatingStarImage} style={this.styleForRatingTwenty(ratingTwenty, 'no-rating-star')} />
-            <FastImage source={starImage} style={this.styleForRatingTwenty(ratingTwenty, 'star')} />
+            <FastImage
+              source={noRatingStarImage}
+              style={this.styleForRatingTwenty(ratingTwenty, 'no-rating-star')}
+            />
+            <FastImage
+              source={starImage}
+              style={this.styleForRatingTwenty(ratingTwenty, 'star')}
+            />
 
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'no-rating')}
               disabled={this.props.disabled}
             >
-              <FastImage source={noRatingImage} style={this.styleForRatingTwenty(ratingTwenty, 'no-rating')} />
+              <FastImage
+                source={noRatingImage}
+                style={this.styleForRatingTwenty(ratingTwenty, 'no-rating')}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'awful')}
               disabled={this.props.disabled}
             >
-              <FastImage source={awfulImage} style={this.styleForRatingTwenty(ratingTwenty, 'awful')} />
+              <FastImage
+                source={awfulImage}
+                style={this.styleForRatingTwenty(ratingTwenty, 'awful')}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'meh')}
               disabled={this.props.disabled}
             >
-              <FastImage source={mehImage} style={this.styleForRatingTwenty(ratingTwenty, 'meh')} />
+              <FastImage
+                source={mehImage}
+                style={this.styleForRatingTwenty(ratingTwenty, 'meh')}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'good')}
               disabled={this.props.disabled}
             >
-              <FastImage source={goodImage} style={this.styleForRatingTwenty(ratingTwenty, 'good')} />
+              <FastImage
+                source={goodImage}
+                style={this.styleForRatingTwenty(ratingTwenty, 'good')}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'great')}
               disabled={this.props.disabled}
             >
-              <FastImage source={greatImage} style={this.styleForRatingTwenty(ratingTwenty, 'great')} />
+              <FastImage
+                source={greatImage}
+                style={this.styleForRatingTwenty(ratingTwenty, 'great')}
+              />
             </TouchableOpacity>
 
             {this.textForRatingTwenty(ratingTwenty)}
@@ -327,59 +381,75 @@ export class Rating extends PureComponent<RatingProps> {
           onRequestClose={this.onModalClosed}
           transparent
         >
-          <View style={ratingSystem === 'simple' ? styles.modalContentSimple : styles.modalContent}>
+          <View
+            style={
+              ratingSystem === 'simple'
+                ? styles.modalContentSimple
+                : styles.modalContent
+            }
+          >
             <View style={styles.modalHeader}>
               {/* Cancel, Slide / Tap to Rate, Done */}
               <TouchableOpacity onPress={this.cancel}>
-                <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>Cancel</Text>
+                <Text
+                  style={[styles.modalHeaderText, styles.modalCancelButton]}
+                >
+                  Cancel
+                </Text>
               </TouchableOpacity>
               <Text style={styles.modalHeaderText}>
-                {ratingSystem === 'simple' ? 'Tap' : 'Slide'} to Rate</Text>
+                {ratingSystem === 'simple' ? 'Tap' : 'Slide'} to Rate
+              </Text>
               <TouchableOpacity onPress={this.confirm}>
-                <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>Done</Text>
+                <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>
+                  Done
+                </Text>
               </TouchableOpacity>
             </View>
 
-            {ratingSystem === 'simple' &&
-              <View style={styles.modalBodySimple} >
+            {ratingSystem === 'simple' && (
+              <View style={styles.modalBodySimple}>
                 <Rating
                   ratingTwenty={this.state.ratingTwenty}
                   onRatingChanged={this.setSimpleRating}
                   viewType="select"
                 />
               </View>
-            }
+            )}
 
-            {ratingSystem !== 'simple' &&
-            <View style={styles.modalBody}>
-              { /* Star, 4.5 */
-                ratingTwenty ?
-                  <View style={styles.modalStarRow}>
-                    <Icon name="star" size={65} color={colors.yellow} />
-                    <Text style={styles.modalRatingText}>
-                      {getRatingTwentyProperties(ratingTwenty, ratingSystem).text}
-                    </Text>
-                  </View>
-                  :
-                  <View style={styles.modalStarRow}>
-                    <Text style={styles.modalNoRatingText}>
-                      No Rating
-                    </Text>
-                  </View>
-              }
-              {/* Slider */}
-              <Slider
-                minimumValue={0}
-                maximumValue={20}
-                step={ratingSystem === 'regular' ? 2 : 1}
-                value={ratingTwenty}
-                minimumTrackTintColor={colors.tabRed}
-                maximumTrackTintColor={'rgb(43, 33, 32)'}
-                onValueChange={this.sliderValueChanged}
-                style={styles.modalSlider}
-              />
-            </View>
-            }
+            {ratingSystem !== 'simple' && (
+              <View style={styles.modalBody}>
+                {
+                  /* Star, 4.5 */
+                  ratingTwenty ? (
+                    <View style={styles.modalStarRow}>
+                      <Icon name="star" size={65} color={colors.yellow} />
+                      <Text style={styles.modalRatingText}>
+                        {
+                          getRatingTwentyProperties(ratingTwenty, ratingSystem)
+                            .text
+                        }
+                      </Text>
+                    </View>
+                  ) : (
+                    <View style={styles.modalStarRow}>
+                      <Text style={styles.modalNoRatingText}>No Rating</Text>
+                    </View>
+                  )
+                }
+                {/* Slider */}
+                <Slider
+                  minimumValue={0}
+                  maximumValue={20}
+                  step={ratingSystem === 'regular' ? 2 : 1}
+                  value={ratingTwenty}
+                  minimumTrackTintColor={colors.tabRed}
+                  maximumTrackTintColor={'rgb(43, 33, 32)'}
+                  onValueChange={this.sliderValueChanged}
+                  style={styles.modalSlider}
+                />
+              </View>
+            )}
           </View>
         </Modal>
       </View>

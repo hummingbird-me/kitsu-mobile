@@ -1,30 +1,32 @@
-import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Platform,
-  LayoutAnimation,
-  UIManager,
-  DatePickerAndroid,
-  DatePickerIOS,
-  Linking,
-} from 'react-native';
-import { LoginManager } from 'react-native-fbsdk-next';
-import * as colors from 'kitsu/constants/colors';
-import { connect } from 'react-redux';
-import { Modal } from 'kitsu/components/Modal';
-import { Toast } from 'kitsu/components/Toast';
-import SignupForm from 'kitsu/components/Forms/SignupForm';
-import LoginForm from 'kitsu/components/Forms/LoginForm';
-import { loginUser } from 'kitsu/store/auth/actions';
-import { createUser } from 'kitsu/store/user/actions';
-import { TERMS_URL } from 'kitsu/constants/app';
+import * as Sentry from '@sentry/react-native';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
-import * as Sentry from '@sentry/react-native';
+import React from 'react';
+import {
+  DatePickerAndroid,
+  DatePickerIOS,
+  LayoutAnimation,
+  Linking,
+  Platform,
+  Text,
+  TouchableOpacity,
+  UIManager,
+  View,
+} from 'react-native';
+import { LoginManager } from 'react-native-fbsdk-next';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import LoginForm from 'kitsu/components/Forms/LoginForm';
+import SignupForm from 'kitsu/components/Forms/SignupForm';
+import { Modal } from 'kitsu/components/Modal';
+import { Toast } from 'kitsu/components/Toast';
+import { TERMS_URL } from 'kitsu/constants/app';
+import * as colors from 'kitsu/constants/colors';
 import { Screens } from 'kitsu/navigation';
+import { loginUser } from 'kitsu/store/auth/actions';
+import { createUser } from 'kitsu/store/user/actions';
+
 import AuthWrapper from './AuthWrapper';
 import styles from './styles';
 
@@ -48,7 +50,11 @@ class AuthScreen extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { signingIn, signingUp, loginError, signupError, fbuser } = nextProps;
-    if (fbuser && fbuser.name && fbuser.name !== (this.props.fbuser && this.props.fbuser.name)) {
+    if (
+      fbuser &&
+      fbuser.name &&
+      fbuser.name !== (this.props.fbuser && this.props.fbuser.name)
+    ) {
       this.populateFB(fbuser);
     }
     // current login/signup process triggers falsy toast
@@ -87,7 +93,10 @@ class AuthScreen extends React.Component {
         toastVisible: true,
       });
     } else {
-      this.props.createUser({ email, username, password: password.trim() }, componentId);
+      this.props.createUser(
+        { email, username, password: password.trim() },
+        componentId
+      );
     }
   };
 
@@ -119,7 +128,7 @@ class AuthScreen extends React.Component {
           },
         });
         console.log(`Login fail with error: ${error}`);
-      },
+      }
     );
   };
 
@@ -136,7 +145,9 @@ class AuthScreen extends React.Component {
   };
 
   onPressTerms = () => {
-    Linking.openURL(TERMS_URL).catch(err => console.log('An error occurred', err));
+    Linking.openURL(TERMS_URL).catch((err) =>
+      console.log('An error occurred', err)
+    );
   };
 
   populateFB = (fbuser) => {
@@ -161,12 +172,7 @@ class AuthScreen extends React.Component {
 
   render() {
     const { signingIn, signingUp, loadFBuser } = this.props;
-    const {
-      authType,
-      loading,
-      toastVisible,
-      toastTitle,
-    } = this.state;
+    const { authType, loading, toastVisible, toastTitle } = this.state;
     return (
       <View style={styles.container}>
         <AuthWrapper>
@@ -178,7 +184,10 @@ class AuthScreen extends React.Component {
                 onPress={() => this.switchForm('signup')}
               >
                 <Text
-                  style={[styles.tabTitle, authType === 'signup' ? { color: colors.tabRed } : {}]}
+                  style={[
+                    styles.tabTitle,
+                    authType === 'signup' ? { color: colors.tabRed } : {},
+                  ]}
                 >
                   Sign up
                 </Text>
@@ -189,7 +198,10 @@ class AuthScreen extends React.Component {
                 onPress={() => this.switchForm('login')}
               >
                 <Text
-                  style={[styles.tabTitle, authType === 'login' ? { color: colors.tabRed } : {}]}
+                  style={[
+                    styles.tabTitle,
+                    authType === 'login' ? { color: colors.tabRed } : {},
+                  ]}
                 >
                   Sign in
                 </Text>

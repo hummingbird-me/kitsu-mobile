@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+
 import { Button } from 'kitsu/components/Button/';
-import { Input } from 'kitsu/components/Input';
 import CustomIcon from 'kitsu/components/Icon';
+import { Input } from 'kitsu/components/Input';
 import * as colors from 'kitsu/constants/colors';
+
 import styles from './styles';
 
 interface RecoveryFormProps {
@@ -19,13 +21,13 @@ const RecoveryForm = ({
   data,
   onReset,
   loading,
-  onCancel
+  onCancel,
 }: RecoveryFormProps) => (
   <View>
     <Input
       placeholder="E-mail"
       value={data.email}
-      onChangeText={text => handleChange(text, 'email')}
+      onChangeText={(text) => handleChange(text, 'email')}
       autoCapitalize="none"
     />
     <Button

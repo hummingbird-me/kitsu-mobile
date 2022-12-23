@@ -1,5 +1,11 @@
 import { connect } from 'react-redux';
-import { fetchUserLibraryByType, updateUserLibraryEntry, deleteUserLibraryEntry } from 'kitsu/store/profile/actions';
+
+import {
+  deleteUserLibraryEntry,
+  fetchUserLibraryByType,
+  updateUserLibraryEntry,
+} from 'kitsu/store/profile/actions';
+
 import { UserLibraryListScreenComponent } from './component';
 
 const mapStateToProps = ({ user, profile }, ownProps) => {
@@ -7,12 +13,15 @@ const mapStateToProps = ({ user, profile }, ownProps) => {
   const { libraryStatus, libraryType, profile: userProfile } = ownProps;
 
   const library = userLibrary && userLibrary[userProfile.id];
-  const libraryEntries = library && library[libraryType] && library[libraryType][libraryStatus];
+  const libraryEntries =
+    library && library[libraryType] && library[libraryType][libraryStatus];
 
   return {
     currentUser: user.currentUser,
     libraryEntries,
-    loading: (library && library.loading) || (libraryEntries && libraryEntries.loading),
+    loading:
+      (library && library.loading) ||
+      (libraryEntries && libraryEntries.loading),
     refreshing: libraryEntries && libraryEntries.refreshing,
   };
 };

@@ -1,9 +1,23 @@
 import React, { PureComponent } from 'react';
-import { View, FlatList, ScrollView } from 'react-native';
+import { FlatList, ScrollView, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
-import { blocking, library, privacy, settings, linked, app } from 'kitsu/assets/img/sidebar_icons/';
+
+import {
+  app,
+  blocking,
+  library,
+  linked,
+  privacy,
+  settings,
+} from 'kitsu/assets/img/sidebar_icons/';
 import { Screens } from 'kitsu/navigation';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarListItem } from './common';
+
+import {
+  ItemSeparator,
+  SidebarHeader,
+  SidebarListItem,
+  SidebarTitle,
+} from './common';
 import { styles } from './styles';
 
 interface SettingsScreenProps {
@@ -22,23 +36,49 @@ export class SettingsScreen extends PureComponent<SettingsScreenProps> {
           <SidebarTitle title={'Account Settings'} />
           <FlatList
             data={[
-              { title: 'General', image: settings, target: Screens.SIDEBAR_SETTINGS_GENERAL },
-              { title: 'Privacy', image: privacy, target: Screens.SIDEBAR_SETTINGS_PRIVACY },
-              { title: 'Linked Accounts', image: linked, target: Screens.SIDEBAR_LINKED_ACCOUNTS },
-              { title: 'Library', image: library, target: Screens.SIDEBAR_SETTINGS_LIBRARY },
-              { title: 'Blocking', image: blocking, target: Screens.SIDEBAR_BLOCKING },
-              { title: 'App', image: app, target: Screens.SIDEBAR_SETTINGS_APP },
+              {
+                title: 'General',
+                image: settings,
+                target: Screens.SIDEBAR_SETTINGS_GENERAL,
+              },
+              {
+                title: 'Privacy',
+                image: privacy,
+                target: Screens.SIDEBAR_SETTINGS_PRIVACY,
+              },
+              {
+                title: 'Linked Accounts',
+                image: linked,
+                target: Screens.SIDEBAR_LINKED_ACCOUNTS,
+              },
+              {
+                title: 'Library',
+                image: library,
+                target: Screens.SIDEBAR_SETTINGS_LIBRARY,
+              },
+              {
+                title: 'Blocking',
+                image: blocking,
+                target: Screens.SIDEBAR_BLOCKING,
+              },
+              {
+                title: 'App',
+                image: app,
+                target: Screens.SIDEBAR_SETTINGS_APP,
+              },
             ]}
-            keyExtractor={item => item.title}
+            keyExtractor={(item) => item.title}
             renderItem={({ item }) => (
               <SidebarListItem
                 title={item.title}
                 image={item.image}
-                onPress={() => Navigation.push(this.props.componentId, {
-                  component: {
-                    name: item.target,
-                  },
-                })}
+                onPress={() =>
+                  Navigation.push(this.props.componentId, {
+                    component: {
+                      name: item.target,
+                    },
+                  })
+                }
               />
             )}
             ItemSeparatorComponent={() => <ItemSeparator />}

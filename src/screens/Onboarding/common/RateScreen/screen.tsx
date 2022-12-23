@@ -1,27 +1,29 @@
+import { uniqBy } from 'lodash';
 import React from 'react';
 import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  Dimensions,
-  Platform,
-  UIManager,
-  LayoutAnimation,
   ActivityIndicator,
+  Dimensions,
+  ImageBackground,
+  LayoutAnimation,
+  Platform,
   ScrollView,
+  Text,
+  TouchableOpacity,
+  UIManager,
+  View,
 } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
+import { Navigation } from 'react-native-navigation';
+import Carousel from 'react-native-snap-carousel';
 import { connect } from 'react-redux';
-import { Kitsu, setToken } from 'kitsu/config/api';
-import { completeOnboarding } from 'kitsu/store/onboarding/actions';
+
 import { SimpleRating } from 'kitsu/components/SimpleRating';
 import { StarRating } from 'kitsu/components/StarRating';
-import { Navigation } from 'react-native-navigation';
+import { Kitsu, setToken } from 'kitsu/config/api';
 import { Screens } from 'kitsu/navigation';
 import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
-import { uniqBy } from 'lodash';
+import { completeOnboarding } from 'kitsu/store/onboarding/actions';
+
 import { styles as commonStyles } from '../styles';
 import { styles } from './styles';
 
@@ -92,10 +94,14 @@ class RateScreen extends React.Component {
   };
 
   onDone = () => {
-    const { selectedAccount, completeOnboarding, hasRatedAnimes, componentId } = this.props;
+    const { selectedAccount, completeOnboarding, hasRatedAnimes, componentId } =
+      this.props;
     // if Kitsu & topMedia type is anime, navigate to ManageLibrary with
     // hasRatedAnimes flag set true to indicate the text should be for the next media: Manga.
-    if ((selectedAccount === 'kitsu' && hasRatedAnimes) || selectedAccount === 'aozora') {
+    if (
+      (selectedAccount === 'kitsu' && hasRatedAnimes) ||
+      selectedAccount === 'aozora'
+    ) {
       this.props.completeOnboarding();
     } else {
       Navigation.push(componentId, {
@@ -162,7 +168,8 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = ratingTwenty;
       updatedTopMedia[currentIndex].status = 'completed';
       updatedTopMedia[currentIndex].isRating = false;
-      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
+      const { ratedCount, mediaTotalDuration } =
+        this.calculateDurationCount(updatedTopMedia);
       // console.log('media total duration', mediaTotalDuration);
       this.updateHeaderButton(ratedCount);
       this.setState({
@@ -217,7 +224,8 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].isRating = false;
-      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
+      const { ratedCount, mediaTotalDuration } =
+        this.calculateDurationCount(updatedTopMedia);
       this.updateHeaderButton(ratedCount);
       this.setState({
         ratedCount,
@@ -273,7 +281,8 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].ratingTwenty = null;
       updatedTopMedia[currentIndex].libraryEntryId = response.id;
       updatedTopMedia[currentIndex].status = 'planned';
-      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
+      const { ratedCount, mediaTotalDuration } =
+        this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
       this.updateHeaderButton(ratedCount);
       this.setState({
@@ -307,7 +316,8 @@ class RateScreen extends React.Component {
       updatedTopMedia[currentIndex].libraryEntryId = null;
       updatedTopMedia[currentIndex].status = null;
       updatedTopMedia[currentIndex].ratingTwenty = null;
-      const { ratedCount, mediaTotalDuration } = this.calculateDurationCount(updatedTopMedia);
+      const { ratedCount, mediaTotalDuration } =
+        this.calculateDurationCount(updatedTopMedia);
       this.prepareAnimation();
       this.updateHeaderButton(ratedCount);
       this.setState({
@@ -333,14 +343,14 @@ class RateScreen extends React.Component {
     this.setState({
       buttonRightText: target > 0 ? `Rate ${target}` : "I'm done",
       buttonRightEnabled: !(target > 0),
-      buttonRightOnPress: target > 0 ? () => { } : this.onDone,
+      buttonRightOnPress: target > 0 ? () => {} : this.onDone,
     });
   };
 
   loadInitialMedia = async () => {
     try {
       const media = await this.fetchMedia();
-      
+
       // Get the unique media objects
       const topMedia = (media && uniqBy(media, 'id')) || [];
       const ratingTwenty = topMedia.length > 0 && topMedia[0].ratingTwenty;
@@ -384,8 +394,10 @@ class RateScreen extends React.Component {
     let ratedCount = this.state.ratedCount;
     let mediaTotalDuration = this.state.mediaTotalDuration;
 
-    const mediaFields = type === 'anime' ?
-      'posterImage,titles,episodeCount,episodeLength' : 'posterImage,titles,chapterCount';
+    const mediaFields =
+      type === 'anime'
+        ? 'posterImage,titles,episodeCount,episodeLength'
+        : 'posterImage,titles,chapterCount';
 
     const mediaIdField = type === 'anime' ? 'anime_id' : 'manga_id';
 
@@ -399,7 +411,6 @@ class RateScreen extends React.Component {
       },
       sort: '-averageRating',
     });
-
 
     topMedia = await Promise.all(
       topMedia.map(async (media) => {
@@ -415,9 +426,16 @@ class RateScreen extends React.Component {
             limit: 1,
           },
         });
-        if (response[0] && (response[0].ratingTwenty || response[0].status === 'planned')) {
+        if (
+          response[0] &&
+          (response[0].ratingTwenty || response[0].status === 'planned')
+        ) {
           ratedCount += 1;
-          if (media.episodeLength && media.episodeCount && response[0].status !== 'planned') {
+          if (
+            media.episodeLength &&
+            media.episodeCount &&
+            response[0].status !== 'planned'
+          ) {
             mediaTotalDuration += media.episodeLength * media.episodeCount;
           }
         }
@@ -429,7 +447,7 @@ class RateScreen extends React.Component {
           ...response[0],
           ...media, // media comes after, overriding anime id
         };
-      }),
+      })
     );
 
     this.updateHeaderButton(ratedCount);
@@ -445,7 +463,11 @@ class RateScreen extends React.Component {
     for (const media of updatedTopMedia) {
       if (media.ratingTwenty || media.status === 'planned') {
         ratedCount += 1;
-        if (media.episodeLength && media.episodeCount && media.status !== 'planned') {
+        if (
+          media.episodeLength &&
+          media.episodeCount &&
+          media.status !== 'planned'
+        ) {
           mediaTotalDuration += media.episodeLength * media.episodeCount;
         }
       }
@@ -455,7 +477,7 @@ class RateScreen extends React.Component {
       ratedCount,
       mediaTotalDuration,
     };
-  }
+  };
 
   sliderValueChanged = (ratingTwenty) => {
     const { ratingSystem } = this.props;
@@ -483,7 +505,11 @@ class RateScreen extends React.Component {
       return <View style={{ height: 50 }} />;
     }
     return ratingSystem === 'simple' ? (
-      <SimpleRating onRate={this.onRateSimple} disabled={false} selected={selected} />
+      <SimpleRating
+        onRate={this.onRateSimple}
+        disabled={false}
+        selected={selected}
+      />
     ) : (
       <StarRating
         sliderValueChanged={this.sliderValueChanged}
@@ -506,8 +532,13 @@ class RateScreen extends React.Component {
             <ActivityIndicator color={'white'} size={'large'} />
           </View>
         ) : (
-          <LinearGradient colors={['transparent', 'rgb(0,0,0)']} style={styles.posterInnerContainer}>
-            <Text style={styles.showTitle}>{titles.en || titles.en_us || titles.en_jp || titles.ja_jp}</Text>
+          <LinearGradient
+            colors={['transparent', 'rgb(0,0,0)']}
+            style={styles.posterInnerContainer}
+          >
+            <Text style={styles.showTitle}>
+              {titles.en || titles.en_us || titles.en_jp || titles.ja_jp}
+            </Text>
           </LinearGradient>
         )}
       </ImageBackground>
@@ -516,7 +547,8 @@ class RateScreen extends React.Component {
 
   renderHeader() {
     const { componentId } = this.props;
-    const { buttonRightText, buttonRightEnabled, buttonRightOnPress } = this.state;
+    const { buttonRightText, buttonRightEnabled, buttonRightOnPress } =
+      this.state;
     return (
       <OnboardingHeader
         componentId={componentId}
@@ -546,7 +578,11 @@ class RateScreen extends React.Component {
         <View style={commonStyles.container}>
           {this.renderHeader()}
           <View style={{ flex: 1, alignItems: 'center' }}>
-            <ActivityIndicator style={{ marginTop: 80 }} color="white" size="large" />
+            <ActivityIndicator
+              style={{ marginTop: 80 }}
+              color="white"
+              size="large"
+            />
           </View>
         </View>
       );
@@ -556,11 +592,9 @@ class RateScreen extends React.Component {
         {this.renderHeader()}
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>
-            {ratedCount > 0 && type === 'anime' ? (
-              `${formatTime(mediaTotalDuration)} spent watching anime`
-            ) : (
-              `Rate the ${type} you've ${type === 'anime' ? 'seen' : 'read'}`
-            )}
+            {ratedCount > 0 && type === 'anime'
+              ? `${formatTime(mediaTotalDuration)} spent watching anime`
+              : `Rate the ${type} you've ${type === 'anime' ? 'seen' : 'read'}`}
           </Text>
           <View style={styles.line} />
           <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
@@ -572,20 +606,30 @@ class RateScreen extends React.Component {
                 data={topMedia}
                 renderItem={this.renderItem}
                 sliderWidth={Dimensions.get('window').width}
-                itemWidth={Dimensions.get('window').width * 0.70}
+                itemWidth={Dimensions.get('window').width * 0.7}
                 onSnapToItem={this.onSwipe}
               />
             </View>
-            <View style={[styles.ratingWrapper, { marginVertical: ratingSystem === 'simple' ? 20 : 8 }]}>
+            <View
+              style={[
+                styles.ratingWrapper,
+                { marginVertical: ratingSystem === 'simple' ? 20 : 8 },
+              ]}
+            >
               {this.renderRatingComponents()}
             </View>
             <View style={styles.buttonWatchlistWrapper}>
-              <TouchableOpacity onPress={this.onPressWantToWatch} style={styles.buttonWatchlist}>
+              <TouchableOpacity
+                onPress={this.onPressWantToWatch}
+                style={styles.buttonWatchlist}
+              >
                 {loadingWtW ? (
                   <ActivityIndicator />
                 ) : (
                   <Text style={styles.buttonWatchlistTitle}>
-                    {wantToWatch ? `Saved in Want to ${watchOrRead}` : `Want to ${watchOrRead}`}
+                    {wantToWatch
+                      ? `Saved in Want to ${watchOrRead}`
+                      : `Want to ${watchOrRead}`}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -621,7 +665,7 @@ function formatTime(minutes) {
   let d = Math.floor(t / cd);
   let h = Math.floor((t - d * cd) / ch);
   let m = Math.round((t - d * cd - h * ch) / 60000);
-  pad = n => (n < 10 ? `0${n}` : n);
+  pad = (n) => (n < 10 ? `0${n}` : n);
   if (m === 60) {
     h += 1;
     m = 0;
@@ -677,6 +721,8 @@ function getRatingTwentyForText(text, type) {
     case 'great':
       return 20;
     default:
-      throw new Error(`Unknown text while determining simple rating type: "${text}"`);
+      throw new Error(
+        `Unknown text while determining simple rating type: "${text}"`
+      );
   }
 }

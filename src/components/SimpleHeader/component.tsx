@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import { styles } from './styles';
 
 interface SimpleHeaderProps {
@@ -25,32 +26,35 @@ export const SimpleHeader = (props: SimpleHeaderProps) => {
   // to the original navigation style.
   return (
     <View style={styles.headerContainer}>
-      {props.titleContent &&
+      {props.titleContent && (
         <TitleWrapper style={styles.titleContainer} onPress={titleAction}>
-          {typeof props.titleContent === 'string' ?
-            <Text style={styles.headerTitleText}>{props.titleContent}</Text> :
+          {typeof props.titleContent === 'string' ? (
+            <Text style={styles.headerTitleText}>{props.titleContent}</Text>
+          ) : (
             props.titleContent
-          }
+          )}
         </TitleWrapper>
-      }
+      )}
 
-      {props.leftContent &&
+      {props.leftContent && (
         <LeftWrapper style={styles.leftContainer} onPress={leftAction}>
-          {typeof props.leftContent === 'string' ?
-            <Text style={styles.headerItemText}>{props.leftContent}</Text> :
+          {typeof props.leftContent === 'string' ? (
+            <Text style={styles.headerItemText}>{props.leftContent}</Text>
+          ) : (
             props.leftContent
-          }
+          )}
         </LeftWrapper>
-      }
+      )}
 
-      {props.rightContent &&
+      {props.rightContent && (
         <RightWrapper style={styles.rightContainer} onPress={rightAction}>
-          {typeof props.rightContent === 'string' ?
-            <Text style={styles.headerItemText}>{props.rightContent}</Text> :
+          {typeof props.rightContent === 'string' ? (
+            <Text style={styles.headerItemText}>{props.rightContent}</Text>
+          ) : (
             props.rightContent
-          }
+          )}
         </RightWrapper>
-      }
+      )}
     </View>
   );
 };

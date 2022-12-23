@@ -1,13 +1,11 @@
-import SearchScreen from 'kitsu/screens/Search/SearchScreen';
+import * as Screens from 'kitsu/navigation/types';
+import FilterSub from 'kitsu/screens/Search/FilterSub';
 import SearchCategory from 'kitsu/screens/Search/SearchCategory';
-import SearchResults from 'kitsu/screens/Search/SearchResults';
-import SeasonScreen from 'kitsu/screens/Search/SeasonScreen';
-
 // Filter
 import SearchFilter from 'kitsu/screens/Search/SearchFilter';
-import FilterSub from 'kitsu/screens/Search/FilterSub';
-
-import * as Screens from 'kitsu/navigation/types';
+import SearchResults from 'kitsu/screens/Search/SearchResults';
+import SearchScreen from 'kitsu/screens/Search/SearchScreen';
+import SeasonScreen from 'kitsu/screens/Search/SeasonScreen';
 
 export default searchRoutes = {
   [Screens.SEARCH]: SearchScreen,

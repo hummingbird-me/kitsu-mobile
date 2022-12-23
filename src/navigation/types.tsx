@@ -13,7 +13,8 @@ export const ONBOARDING_CREATE_ACCOUNT = 'navigation.onboarding.createaccount';
 export const ONBOARDING_SELECT_ACCOUNT = 'navigation.onboarding.selectaccount';
 export const ONBOARDING_RATE_SCREEN = 'navigation.onboarding.ratescreen';
 export const ONBOARDING_RATING_SYSTEM = 'navigation.onboarding.ratingsystem';
-export const ONBOARDING_FAVORITES_SCREEN = 'navigation.onboarding.favoritesscreen';
+export const ONBOARDING_FAVORITES_SCREEN =
+  'navigation.onboarding.favoritesscreen';
 export const ONBOARDING_MANAGE_LIBRARY = 'navigation.onboarding.managelibrary';
 export const ONBOARDING_IMPORT_LIBRARY = 'navigation.onboarding.importlibrary';
 export const ONBOARDING_IMPORT_DETAIL = 'navigation.onboarding.importdetail';

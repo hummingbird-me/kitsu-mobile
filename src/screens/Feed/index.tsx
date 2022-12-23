@@ -1,25 +1,33 @@
+import { isEmpty } from 'lodash';
 import React from 'react';
-import { StatusBar, View, StyleSheet, Platform, Dimensions, Linking } from 'react-native';
-import { connect } from 'react-redux';
+import {
+  Dimensions,
+  Linking,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
 import URL from 'url-parse';
+
+import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { Kitsu } from 'kitsu/config/api';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { ADMOB_AD_UNITS, statusBarHeight } from 'kitsu/constants/app';
 import { listBackPurple, offWhite } from 'kitsu/constants/colors';
-import { ADMOB_AD_UNITS } from 'kitsu/constants/app';
-import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
+import { NavigationActions, Screens } from 'kitsu/navigation';
 import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
 import { Post } from 'kitsu/screens/Feed/components/Post';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { isEmpty } from 'lodash';
+import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
 import { FeedCache } from 'kitsu/utils/cache';
-import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
-import { statusBarHeight } from 'kitsu/constants/app';
 import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
-import { feedStreams } from './feedStreams';
+import { isX, paddingX } from 'kitsu/utils/isX';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
 import { isAoProOrKitsuPro } from 'kitsu/utils/user';
+
+import { feedStreams } from './feedStreams';
 
 const styles = StyleSheet.create({
   container: {
@@ -80,7 +88,7 @@ class Feed extends React.PureComponent<FeedProps> {
         },
       },
     });
-  }
+  };
 
   setActiveFeed = (activeFeed) => {
     this.setState(
@@ -91,7 +99,7 @@ class Feed extends React.PureComponent<FeedProps> {
       },
       () => {
         this.fetchFeed({ reset: true });
-      },
+      }
     );
   };
 
@@ -183,7 +191,7 @@ class Feed extends React.PureComponent<FeedProps> {
         passProps: props,
       },
     });
-  }
+  };
 
   navigateToCreatePost = () => {
     if (this.props.currentUser) {
@@ -213,7 +221,7 @@ class Feed extends React.PureComponent<FeedProps> {
 
   keyExtractor = (item, index) => {
     return `${item.id}-${item.updatedAt}`;
-  }
+  };
 
   renderPost = ({ item, index }) => {
     // This dispatches based on the type of an entity to the correct
@@ -254,7 +262,7 @@ class Feed extends React.PureComponent<FeedProps> {
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <TabBar currentUser={this.props.currentUser} onPress={this.onDrawer}>
-          {feedStreams.map(tabItem => (
+          {feedStreams.map((tabItem) => (
             <TabBarLink
               key={tabItem.key}
               label={tabItem.label}
@@ -282,11 +290,12 @@ class Feed extends React.PureComponent<FeedProps> {
               }
             }}
             onEndReachedThreshold={0.6}
-            ListHeaderComponent={<CreatePostRow onPress={this.navigateToCreatePost} />}
-            ListFooterComponent={() => this.state.isLoadingNextPage && (
-              <SceneLoader color={offWhite} />
-            )}
-
+            ListHeaderComponent={
+              <CreatePostRow onPress={this.navigateToCreatePost} />
+            }
+            ListFooterComponent={() =>
+              this.state.isLoadingNextPage && <SceneLoader color={offWhite} />
+            }
             /*
               Disable this on iOS if we start to get missing content
               We could also improve performance by setting `windowSize` prop (default is 21, 10 views above and 10 views below)

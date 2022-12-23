@@ -1,12 +1,17 @@
+import AppSettings from './AppSettings';
 import Blocking from './Blocking';
+import { CannyBoard } from './CannyBoard';
 import GeneralSettings from './GeneralSettings';
-import { LibrarySettings, ExportLibrary, ImportLibrary, ImportDetail } from './Library';
+import {
+  ExportLibrary,
+  ImportDetail,
+  ImportLibrary,
+  LibrarySettings,
+} from './Library';
 import LinkedAccounts from './LinkedAccounts';
 import PrivacySettings from './PrivacySettings';
 import { SettingsScreen } from './SettingsScreen';
 import SidebarScreen from './SidebarScreen';
-import { CannyBoard } from './CannyBoard';
-import AppSettings from './AppSettings';
 
 export {
   Blocking,

@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { TextInput, View } from 'react-native';
+
 import { styles } from './styles';
 
-export const PostTextInput = props => (
+export const PostTextInput = (props) => (
   <View style={styles.postTextInputBox}>
     <TextInput
       ref={props.inputRef}

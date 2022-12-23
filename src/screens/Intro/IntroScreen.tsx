@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, ScrollView, Dimensions } from 'react-native';
+import { Dimensions, ScrollView, View } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+
 import { slide1, slide2, slide3, slide4 } from 'kitsu/assets/img/intro/';
 import { Button } from 'kitsu/components/Button';
-import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+
+import Dot from './Dot';
+import Step from './Step';
 import { IntroHeader } from './common/';
 import styles from './styles';
-import Step from './Step';
-import Dot from './Dot';
 
 const INTROS = [
   {
@@ -49,7 +51,11 @@ export default class OnboardingScreen extends React.Component<OnboardingScreenPr
 
   navigating = false;
 
-  handleScroll = ({ nativeEvent: { contentOffset: { x } } }) => {
+  handleScroll = ({
+    nativeEvent: {
+      contentOffset: { x },
+    },
+  }) => {
     const SCREEN_WIDTH = Dimensions.get('window').width;
     const position = x / SCREEN_WIDTH;
     if (!this.navigating && position > INTROS.length - 2 + 0.05) {
@@ -65,12 +71,15 @@ export default class OnboardingScreen extends React.Component<OnboardingScreenPr
     Navigation.setStackRoot(this.props.componentId, {
       component: { name: Screens.AUTH_REGISTRATION },
     });
-  }
+  };
 
-  renderStep = () => INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
+  renderStep = () =>
+    INTROS.map((item, index) => <Step key={`step-${index}`} {...item} />);
 
   renderDots = () =>
-    INTROS.map((_, index) => <Dot key={`dot-${index}`} active={index === this.state.step} />);
+    INTROS.map((_, index) => (
+      <Dot key={`dot-${index}`} active={index === this.state.step} />
+    ));
 
   render() {
     return (

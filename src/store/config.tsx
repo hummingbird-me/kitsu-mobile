@@ -1,11 +1,13 @@
 /* global __DEV__, window */
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { applyMiddleware, compose, createStore } from 'redux';
 import {
-  persistStore as persistStoreRaw,
   persistCombineReducers,
+  persistStore as persistStoreRaw,
 } from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import thunk from 'redux-thunk';
+
 import * as reducers from './reducers';
 
 const config = {

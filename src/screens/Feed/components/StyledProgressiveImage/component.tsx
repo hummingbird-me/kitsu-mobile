@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
+
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 
 interface StyledProgressiveImageProps {

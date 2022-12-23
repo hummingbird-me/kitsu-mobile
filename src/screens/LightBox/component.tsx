@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
-import { ImageLightbox } from 'kitsu/components/ImageLightbox';
 import { Navigation } from 'react-native-navigation';
+
+import { ImageLightbox } from 'kitsu/components/ImageLightbox';
 
 interface LightBoxProps {
   componentId: any;
@@ -12,7 +13,7 @@ export class LightBox extends PureComponent<LightBoxProps> {
   static defaultProps = {
     images: [],
     initialImageIndex: 0,
-  }
+  };
 
   static options() {
     return {

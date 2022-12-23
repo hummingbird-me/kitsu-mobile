@@ -1,7 +1,8 @@
-import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { TouchableOpacity, View, Text } from 'react-native';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { styles } from './styles';
 
 interface CheckBoxProps {
@@ -72,18 +73,20 @@ export const CheckBox = (props: CheckBoxProps) => {
           center && { justifyContent: 'center' },
         ]}
       >
-        {!iconRight &&
+        {!iconRight && (
           <Icon
             color={checked ? checkedColor : uncheckedColor}
             name={iconName}
             size={size || 24}
             onLongPress={onLongIconPress}
             onPress={onIconPress}
-          />}
+          />
+        )}
 
-        {React.isValidElement(title)
-          ? title
-          : <Text
+        {React.isValidElement(title) ? (
+          title
+        ) : (
+          <Text
             style={[
               styles.text,
               textStyle && textStyle,
@@ -91,16 +94,18 @@ export const CheckBox = (props: CheckBoxProps) => {
             ]}
           >
             {checked ? checkedTitle || title : title}
-          </Text>}
+          </Text>
+        )}
 
-        {iconRight &&
+        {iconRight && (
           <Icon
             color={checked ? checkedColor : uncheckedColor}
             name={iconName}
             size={size || 24}
             onLongPress={onLongIconPress}
             onPress={onIconPress}
-          />}
+          />
+        )}
       </View>
     </Component>
   );
@@ -120,5 +125,5 @@ CheckBox.defaultProps = {
 
 CheckBox.propTypes = {
   containerStyle: ViewPropTypes.style,
-  textStyle: Text.propTypes.style
+  textStyle: Text.propTypes.style,
 };

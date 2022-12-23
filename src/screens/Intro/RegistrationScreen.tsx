@@ -1,16 +1,18 @@
+import * as Sentry from '@sentry/react-native';
 import React from 'react';
-import { View, FlatList, Platform } from 'react-native';
+import { FlatList, Platform, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { LoginManager } from 'react-native-fbsdk-next';
-import { connect } from 'react-redux';
-import { Button } from 'kitsu/components/Button';
-import { loginUser } from 'kitsu/store/auth/actions';
-import * as colors from 'kitsu/constants/colors';
-import { placeholderImage } from 'kitsu/assets/img/intro';
-import { kitsuConfig } from 'kitsu/config/env';
-import * as Sentry from '@sentry/react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import { placeholderImage } from 'kitsu/assets/img/intro';
+import { Button } from 'kitsu/components/Button';
+import { kitsuConfig } from 'kitsu/config/env';
+import * as colors from 'kitsu/constants/colors';
 import { Screens } from 'kitsu/navigation';
+import { loginUser } from 'kitsu/store/auth/actions';
+
 import { IntroHeader } from './common/';
 import styles from './styles';
 
@@ -35,17 +37,17 @@ class RegistrationScreen extends React.Component {
     // TODO: handle network error.
     try {
       const topAnime = await fetch(
-        `${kitsuConfig.baseUrl}/edge/trending/anime?limit=10`,
-      ).then(res => res.json());
+        `${kitsuConfig.baseUrl}/edge/trending/anime?limit=10`
+      ).then((res) => res.json());
       const topManga = await fetch(
-        `${kitsuConfig.baseUrl}/edge/trending/manga?limit=10`,
-      ).then(res => res.json());
+        `${kitsuConfig.baseUrl}/edge/trending/manga?limit=10`
+      ).then((res) => res.json());
       this.setState(
         {
           topAnime: topAnime.data,
           topManga: topManga.data,
         },
-        this.animateLists,
+        this.animateLists
       );
     } catch (e) {
       console.log(e);
@@ -83,7 +85,7 @@ class RegistrationScreen extends React.Component {
           },
         });
         console.log(`Login fail with error: ${error}`);
-      },
+      }
     );
   };
 
@@ -101,13 +103,16 @@ class RegistrationScreen extends React.Component {
         passProps: { authType: type },
       },
     });
-  }
+  };
 
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
     <FastImage
-      source={(item.attributes && { uri: item.attributes.posterImage.large }) || placeholderImage}
+      source={
+        (item.attributes && { uri: item.attributes.posterImage.large }) ||
+        placeholderImage
+      }
       style={styles.squareImage}
       cache="web"
     />

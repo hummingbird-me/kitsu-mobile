@@ -1,18 +1,24 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { View, Modal, TouchableOpacity } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
-import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
-import { Input } from 'kitsu/components/Input';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { defaultAvatar, defaultCover, originalCoverImageDimensions } from 'kitsu/constants/app';
-import * as colors from 'kitsu/constants/colors';
 import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
+import React, { Component } from 'react';
+import { Modal, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-crop-picker';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { connect } from 'react-redux';
+
+import { Input } from 'kitsu/components/Input';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import {
+  defaultAvatar,
+  defaultCover,
+  originalCoverImageDimensions,
+} from 'kitsu/constants/app';
+import * as colors from 'kitsu/constants/colors';
+import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
+import { InfoRow } from 'kitsu/screens/Profiles/components/InfoRow';
 import { getImgixCoverImage } from 'kitsu/utils/imgix';
+
 import { styles } from './styles';
 
 export class EditModal extends Component {
@@ -21,14 +27,14 @@ export class EditModal extends Component {
     visible: false,
     onCancel: null,
     onConfirm: null,
-  }
+  };
 
   state = {
     changeset: {},
     changes: {},
     hasMadeChanges: false,
     isEditingGender: false,
-  }
+  };
 
   // This should fire each time the Modal is opened & closed.
   UNSAFE_componentWillReceiveProps() {
@@ -59,11 +65,14 @@ export class EditModal extends Component {
         cropperCircleOverlay: mediaContext === 'avatar',
       });
       console.log(image);
-      this.updateChanges(mediaContext, `data:${image.mime};base64,${image.data}`);
+      this.updateChanges(
+        mediaContext,
+        `data:${image.mime};base64,${image.data}`
+      );
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   updateChanges(property, value) {
     const { changes, changeset } = this.state;
@@ -94,7 +103,9 @@ export class EditModal extends Component {
     // Use the imgix cover here otherwise if we use original
     // we may run into the problem where a users original cover is too large
     // and it causes a crash on android :(
-    let cover = { uri: getImgixCoverImage(changeset.coverImage) || defaultCover };
+    let cover = {
+      uri: getImgixCoverImage(changeset.coverImage) || defaultCover,
+    };
     if ('coverImage' in changes) {
       cover = { uri: changes.coverImage };
     }
@@ -104,65 +115,70 @@ export class EditModal extends Component {
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() =>
-            this.onMediaSelect('coverImage', originalCoverImageDimensions.width, originalCoverImageDimensions.height)
+            this.onMediaSelect(
+              'coverImage',
+              originalCoverImageDimensions.width,
+              originalCoverImageDimensions.height
+            )
           }
         >
-          <FastImage
-            style={styles.profileCover}
-            source={cover}
-            cache="web"
-          />
+          <FastImage style={styles.profileCover} source={cover} cache="web" />
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   renderAvatarComponent = () => {
     const { changeset, changes } = this.state;
-    let avatar = { uri: (changeset.avatar && changeset.avatar.medium) || defaultAvatar };
+    let avatar = {
+      uri: (changeset.avatar && changeset.avatar.medium) || defaultAvatar,
+    };
     if ('avatar' in changes) {
       avatar = { uri: changes.avatar };
     }
     return (
       <View style={styles.profileImageWrapper}>
-        <TouchableOpacity activeOpacity={0.6} onPress={() => this.onMediaSelect('avatar', 300, 300)}>
-          <FastImage
-            style={styles.profileImage}
-            source={avatar}
-            cache="web"
-          />
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => this.onMediaSelect('avatar', 300, 300)}
+        >
+          <FastImage style={styles.profileImage} source={avatar} cache="web" />
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   renderLocationComponent = () => (
     <Input
       placeholder="Location"
       value={this.state.changeset.location}
-      onChangeText={text => this.updateChanges('location', text)}
+      onChangeText={(text) => this.updateChanges('location', text)}
     />
-  )
+  );
 
   renderGenderComponent = () => {
-    const options = ['It\'s a secret', 'Male', 'Female', 'Custom', 'Nevermind'];
-    const gender = this.state.isEditingGender ? this.state.gender :
-      (this.state.changeset.gender && capitalize(this.state.changeset.gender) || 'It\'s a secret');
+    const options = ["It's a secret", 'Male', 'Female', 'Custom', 'Nevermind'];
+    const gender = this.state.isEditingGender
+      ? this.state.gender
+      : (this.state.changeset.gender &&
+          capitalize(this.state.changeset.gender)) ||
+        "It's a secret";
     return (
       <SelectMenu
         options={options}
-        onOptionSelected={(option) => this.handleGenderChange(option)}>
+        onOptionSelected={(option) => this.handleGenderChange(option)}
+      >
         <View pointerEvents={this.state.isEditingGender ? 'auto' : 'none'}>
           <Input
             selectTextOnFocus
             value={gender}
             editable={this.state.isEditingGender}
-            onChangeText={text => this.updateChanges('gender', text)}
+            onChangeText={(text) => this.updateChanges('gender', text)}
           />
         </View>
       </SelectMenu>
     );
-  }
+  };
 
   renderBioComponent = () => (
     <Input
@@ -170,11 +186,11 @@ export class EditModal extends Component {
       containerStyle={{ height: 140 }}
       placeholder="Tell the world your story."
       value={this.state.changeset.about}
-      onChangeText={text => this.updateChanges('about', text)}
+      onChangeText={(text) => this.updateChanges('about', text)}
       style={{ textAlignVertical: 'top' }}
       maxLength={500}
     />
-  )
+  );
 
   render() {
     const { hasMadeChanges } = this.state;
@@ -227,15 +243,12 @@ export class EditModal extends Component {
             <KeyboardAwareFlatList
               data={rows}
               renderItem={({ item }) => (
-                <InfoRow
-                  label={item.label}
-                  contentComponent={item.component}
-                />
+                <InfoRow label={item.label} contentComponent={item.component} />
               )}
             />
           </View>
         </Modal>
       </View>
-    )
+    );
   }
 }

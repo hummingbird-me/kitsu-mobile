@@ -1,10 +1,12 @@
-import React, { PureComponent } from 'react';
-import { View, Dimensions, ActivityIndicator } from 'react-native';
 import { isEmpty } from 'lodash';
-import { EmbedUrlCache } from 'kitsu/utils/cache';
+import React, { PureComponent } from 'react';
+import { ActivityIndicator, Dimensions, View } from 'react-native';
+
 import { kitsuConfig } from 'kitsu/config/env';
-import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { darkGrey } from 'kitsu/constants/colors';
+import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
+import { EmbedUrlCache } from 'kitsu/utils/cache';
+
 import { styles } from './styles';
 
 interface EmbedItemProps {
@@ -16,12 +18,12 @@ export class EmbedItem extends PureComponent<EmbedItemProps> {
   static defaultProps = {
     url: '',
     width: null,
-  }
+  };
 
   state = {
     loading: false,
     embed: null,
-  }
+  };
 
   componentDidMount() {
     this.mounted = true;
@@ -83,7 +85,11 @@ export class EmbedItem extends PureComponent<EmbedItemProps> {
 
       // Check if we have the same url as props
       // This could change if url is changed while we're fetching
-      if (url && this.props.url && url.toLowerCase() === this.props.url.toLowerCase()) {
+      if (
+        url &&
+        this.props.url &&
+        url.toLowerCase() === this.props.url.toLowerCase()
+      ) {
         this.setState({
           loading: false,
           embed,
@@ -93,7 +99,11 @@ export class EmbedItem extends PureComponent<EmbedItemProps> {
       console.log(e);
 
       // Check if we should update loading
-      if (url && this.props.url && url.toLowerCase() === this.props.url.toLowerCase()) {
+      if (
+        url &&
+        this.props.url &&
+        url.toLowerCase() === this.props.url.toLowerCase()
+      ) {
         this.setState({ loading: false });
       }
     }

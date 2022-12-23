@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
-import { View, Animated } from 'react-native';
+import { Animated, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
+
 import { commonStyles } from 'kitsu/common/styles';
+
 import { styles } from './styles';
 
 interface ProgressiveImageProps {
@@ -53,7 +55,7 @@ export class ProgressiveImage extends PureComponent<ProgressiveImageProps> {
     }
   };
 
-  hasFadedIn = false
+  hasFadedIn = false;
 
   render() {
     const { thumbnailOpacity } = this.state;
@@ -80,14 +82,14 @@ export class ProgressiveImage extends PureComponent<ProgressiveImageProps> {
           />
         )}
 
-        {(children || hasOverlay) && source.uri &&
+        {(children || hasOverlay) && source.uri && (
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.6)']}
             style={[commonStyles.absoluteFill, style]}
           >
             {children}
           </LinearGradient>
-        }
+        )}
       </View>
     );
   }

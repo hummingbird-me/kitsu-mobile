@@ -1,22 +1,27 @@
+import { toLower, upperFirst } from 'lodash';
 import React from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { upperFirst, toLower } from 'lodash';
+import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
+
+import {
+  aozora as aozoraLogo,
+  kitsu as kitsuLogo,
+} from 'kitsu/assets/img/onboarding/';
 import { Button } from 'kitsu/components/Button';
 import { defaultAvatar } from 'kitsu/constants/app';
-import { kitsu as kitsuLogo, aozora as aozoraLogo } from 'kitsu/assets/img/onboarding/';
-import {
-  resolveAccountConflicts,
-  setSelectedAccount,
-  setScreenName,
-  completeOnboarding,
-} from 'kitsu/store/onboarding/actions';
-import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
-import { styles as commonStyles } from '../common/styles';
 import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import {
+  completeOnboarding,
+  resolveAccountConflicts,
+  setScreenName,
+  setSelectedAccount,
+} from 'kitsu/store/onboarding/actions';
+
+import { styles as commonStyles } from '../common/styles';
+import { styles } from './styles';
 
 const AccountView = ({ style, data, selected, onSelectAccount }) => {
   const { libraryCount, username, profileImageURL, accountType } = data;
@@ -27,14 +32,22 @@ const AccountView = ({ style, data, selected, onSelectAccount }) => {
       onPress={() => onSelectAccount(data.accountType)}
       style={[commonStyles.rowWrapper, selectedRowStyle, style]}
     >
-      <FastImage style={styles.profileImage} source={{ uri: profileImageURL || defaultAvatar }} cache="web" />
+      <FastImage
+        style={styles.profileImage}
+        source={{ uri: profileImageURL || defaultAvatar }}
+        cache="web"
+      />
       <View style={styles.textWrapper}>
         <Text style={[commonStyles.text, selectedTextStyle]}>{username}</Text>
         <Text style={[styles.libraryCount, selectedTextStyle]}>
           {libraryCount ? `${libraryCount} library entries` : 'Empty Library'}
         </Text>
       </View>
-      <FastImage style={styles.brandImage} source={accountType === 'kitsu' ? kitsuLogo : aozoraLogo} cache="web" />
+      <FastImage
+        style={styles.brandImage}
+        source={accountType === 'kitsu' ? kitsuLogo : aozoraLogo}
+        cache="web"
+      />
     </TouchableOpacity>
   );
 };
@@ -104,8 +117,9 @@ class SelectAccountScreen extends React.Component {
                 }}
               />
               <Text style={styles.ps}>
-                Activity feed posts from both accounts will be merged. All other account information
-                will be overwritten by the account you select above.
+                Activity feed posts from both accounts will be merged. All other
+                account information will be overwritten by the account you
+                select above.
               </Text>
               <Button
                 loading={loading}

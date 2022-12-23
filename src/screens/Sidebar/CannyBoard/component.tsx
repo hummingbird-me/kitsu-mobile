@@ -1,11 +1,19 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, Keyboard, Platform } from 'react-native';
+import {
+  ActivityIndicator,
+  Keyboard,
+  Platform,
+  Text,
+  View,
+} from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
-import { kitsuConfig } from 'kitsu/config/env/';
+
 import { commonStyles } from 'kitsu/common/styles';
+import { kitsuConfig } from 'kitsu/config/env/';
 import { SidebarHeader } from 'kitsu/screens/Sidebar/common';
 import { WebComponent } from 'kitsu/utils/components';
-import { Navigation } from 'react-native-navigation';
+
 import { styles } from './styles';
 
 interface CannyBoardProps {
@@ -18,17 +26,23 @@ interface CannyBoardProps {
 export class CannyBoard extends React.Component<CannyBoardProps> {
   static defaultProps = {
     title: 'Canny',
-  }
+  };
 
   state = {
     token: null,
     loading: true,
     keyboardHeight: 0,
-  }
+  };
 
   componentDidMount() {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide
+    );
     this.getCannySsoToken();
   }
 
@@ -61,29 +75,27 @@ export class CannyBoard extends React.Component<CannyBoardProps> {
 
   keyboardDidShow = ({ endCoordinates: { height } }) => {
     this.setState({ keyboardHeight: height });
-  }
+  };
 
   keyboardDidHide = () => {
     this.setState({ keyboardHeight: 0 });
-  }
-
+  };
 
   renderErrorComponent = () => (
     <View style={[commonStyles.centerCenter, { flex: 1 }]}>
       <Text style={styles.errorText}>Error loading the board.</Text>
     </View>
-  )
+  );
 
-  renderLoadingComponent = () => (
-    <ActivityIndicator />
-  )
+  renderLoadingComponent = () => <ActivityIndicator />;
 
   render() {
     const { ssoToken, loading, keyboardHeight } = this.state;
     const { componentId, title, type } = this.props;
     const boardToken = kitsuConfig.cannyBoardTokens[type];
     const uri = `https://webview.canny.io?boardToken=${boardToken}&ssoToken=${ssoToken}`;
-    const adjustProperty = Platform.OS === 'ios' ? 'paddingBottom' : 'marginBottom';
+    const adjustProperty =
+      Platform.OS === 'ios' ? 'paddingBottom' : 'marginBottom';
 
     return (
       <View style={styles.wrapper}>
@@ -91,11 +103,12 @@ export class CannyBoard extends React.Component<CannyBoardProps> {
           headerTitle={title}
           onBackPress={() => Navigation.pop(componentId)}
         />
-        {loading
-          ? <View style={[commonStyles.centerCenter, { flex: 1 }]}>
+        {loading ? (
+          <View style={[commonStyles.centerCenter, { flex: 1 }]}>
             <ActivityIndicator />
           </View>
-          : <WebComponent
+        ) : (
+          <WebComponent
             style={[styles.webView, { [adjustProperty]: keyboardHeight }]}
             source={{
               uri,
@@ -103,7 +116,7 @@ export class CannyBoard extends React.Component<CannyBoardProps> {
             renderLoading={this.renderLoadingComponent}
             renderError={this.renderErrorComponent}
           />
-        }
+        )}
       </View>
     );
   }

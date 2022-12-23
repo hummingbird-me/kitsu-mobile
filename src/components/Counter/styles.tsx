@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+
 import { commonStyles } from 'kitsu/common/styles';
 import * as colors from 'kitsu/constants/colors';
 

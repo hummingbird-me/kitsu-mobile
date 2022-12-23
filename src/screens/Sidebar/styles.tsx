@@ -1,7 +1,8 @@
-import { StyleSheet, Platform } from 'react-native';
-import { isX, paddingX } from 'kitsu/utils/isX';
+import { Platform, StyleSheet } from 'react-native';
+
 import { statusBarHeight } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
+import { isX, paddingX } from 'kitsu/utils/isX';
 
 export const styles = StyleSheet.create({
   containerStyle: {
@@ -10,7 +11,10 @@ export const styles = StyleSheet.create({
     // paddingTop: Platform.select({ ios: 77, android: 72 }),
   },
   headerCoverImage: {
-    height: Platform.select({ ios: 77, android: 72 }) + statusBarHeight + (isX ? paddingX : 0),
+    height:
+      Platform.select({ ios: 77, android: 72 }) +
+      statusBarHeight +
+      (isX ? paddingX : 0),
     justifyContent: 'center',
   },
 
@@ -144,6 +148,6 @@ export const styles = StyleSheet.create({
 });
 
 export const flatten = (...additionalStyles) => {
-  const includedStyles = additionalStyles.map(style => styles[style]);
+  const includedStyles = additionalStyles.map((style) => styles[style]);
   return StyleSheet.flatten(includedStyles);
 };

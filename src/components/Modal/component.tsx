@@ -1,6 +1,7 @@
-import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { View, Text, TouchableOpacity, Modal as ModalRN } from 'react-native';
+import React from 'react';
+import { Modal as ModalRN, Text, TouchableOpacity, View } from 'react-native';
+
 import { styles } from './styles';
 
 interface ModalProps {
@@ -38,11 +39,15 @@ export const Modal = ({
     <View style={[styles.modalContent, contentStyle]}>
       <View style={[styles.modalHeader, headerStyle]}>
         <TouchableOpacity onPress={onCancel}>
-          <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>Cancel</Text>
+          <Text style={[styles.modalHeaderText, styles.modalCancelButton]}>
+            Cancel
+          </Text>
         </TouchableOpacity>
         <Text style={styles.modalHeaderText}>{title}</Text>
         <TouchableOpacity onPress={onConfirm}>
-          <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>Done</Text>
+          <Text style={[styles.modalHeaderText, styles.modalDoneButton]}>
+            Done
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={[styles.modalBody, bodyStyle]}>{children}</View>
@@ -55,7 +60,7 @@ Modal.propTypes = {
   style: ViewPropTypes.style,
   contentStyle: ViewPropTypes.style,
   headerStyle: ViewPropTypes.style,
-  bodyStyle: ViewPropTypes.style
+  bodyStyle: ViewPropTypes.style,
 };
 Modal.defaultProps = {
   style: null,

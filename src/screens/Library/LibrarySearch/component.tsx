@@ -1,14 +1,24 @@
-import React, { PureComponent } from 'react';
-import { View, FlatList, ScrollView, Keyboard, ActivityIndicator, Text, Image } from 'react-native';
 import { capitalize, isEmpty } from 'lodash';
-import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
+import React, { PureComponent } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Keyboard,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
+import { Navigation } from 'react-native-navigation';
+
+import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
+import { ProfileHeader } from 'kitsu/components/ProfileHeader';
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { Kitsu } from 'kitsu/config/api';
-import { ProfileHeader } from 'kitsu/components/ProfileHeader';
+import { UserLibraryListCard } from 'kitsu/screens/Profiles/UserLibrary';
 import { KitsuLibrary, KitsuLibraryEvents } from 'kitsu/utils/kitsuLibrary';
-import unstarted from 'kitsu/assets/img/quick_update/unstarted.png';
+
 import { styles } from './styles';
-import { Navigation } from 'react-native-navigation';
 
 const HEADER_MAPPING = {
   anime: {
@@ -42,11 +52,17 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
     manga: [],
     isSwiping: false,
     searchTerm: '',
-  }
+  };
 
   componentDidMount() {
-    this.unsubscribeUpdate = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE, this.kitsuLibraryEntryUpdated);
-    this.unsubscribeDelete = KitsuLibrary.subscribe(KitsuLibraryEvents.LIBRARY_ENTRY_DELETE, this.kitsuLibraryEntryDeleted);
+    this.unsubscribeUpdate = KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_UPDATE,
+      this.kitsuLibraryEntryUpdated
+    );
+    this.unsubscribeDelete = KitsuLibrary.subscribe(
+      KitsuLibraryEvents.LIBRARY_ENTRY_DELETE,
+      this.kitsuLibraryEntryDeleted
+    );
   }
 
   componentWillUnmount() {
@@ -60,7 +76,7 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   onEntryDelete = async (id, type, status) => {
     if (!id) return;
@@ -69,17 +85,17 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   onSwipingItem = (isSwiping) => {
     this.setState({ isSwiping });
-  }
+  };
 
   onSearchTermChanged = (newTerm) => {
     this.setState({ searchTerm: newTerm }, () => {
       this.searchLibrary();
     });
-  }
+  };
 
   kitsuLibraryEntryUpdated = ({ type, newEntry }) => {
     // If entry was updated then update our local copies
@@ -92,16 +108,16 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
       return newEntry;
     });
     this.setState({ [type]: newEntries });
-  }
+  };
 
   kitsuLibraryEntryDeleted = ({ id }) => {
     let { anime, manga } = this.state;
 
     if (!id) return;
-    anime = anime.filter(e => e.id != id);
-    manga = manga.filter(e => e.id != id);
+    anime = anime.filter((e) => e.id != id);
+    manga = manga.filter((e) => e.id != id);
     this.setState({ anime, manga });
-  }
+  };
 
   searchLibrary = async () => {
     const { profile } = this.props;
@@ -111,7 +127,7 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
 
     this.searchLibraryByType('anime', searchTerm);
     this.searchLibraryByType('manga', searchTerm);
-  }
+  };
 
   searchLibraryByType = async (type, searchTerm) => {
     const { profile } = this.props;
@@ -157,7 +173,7 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
       this.setState({ [loadingStateKey]: false });
       console.log(e);
     }
-  }
+  };
 
   goBack = () => Navigation.pop(this.props.componentId);
 
@@ -173,7 +189,7 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
     );
   }
 
-  renderListHeader = title => (
+  renderListHeader = (title) => (
     <View style={styles.listHeader}>
       <Text style={styles.listHeaderText}>{title}</Text>
     </View>
@@ -197,7 +213,7 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
         onSwipingItem={this.onSwipingItem}
       />
     );
-  }
+  };
 
   renderList(type) {
     const { loadingAnime, loadingManga } = this.state;
@@ -220,7 +236,7 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
 
     return (
       <View>
-        { statuses && statuses.map(status => this.renderSubList(type, status)) }
+        {statuses && statuses.map((status) => this.renderSubList(type, status))}
       </View>
     );
   }
@@ -230,14 +246,15 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
 
     // Filter the entries
     const data = this.state[type];
-    const filtered = data.filter(e => e.status === status);
+    const filtered = data.filter((e) => e.status === status);
 
     // Don't bother showing the list if data is empty
     if (filtered.length === 0) return null;
 
     // Setup header titles
     const count = (filtered && `(${filtered.length})`) || '';
-    const statusTitle = (HEADER_MAPPING[type] && HEADER_MAPPING[type][status]) || 'Unknown';
+    const statusTitle =
+      (HEADER_MAPPING[type] && HEADER_MAPPING[type][status]) || 'Unknown';
     const title = `${capitalize(type)} - ${statusTitle} ${count}`;
 
     return (
@@ -266,9 +283,15 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
 
     const name = profile && capitalize(profile.name);
 
-    const emptyTermTitle = isEmpty(name) ? 'Search for Media' : `Search ${name}'s Library`;
-    const title = isEmpty(searchTerm) ? emptyTermTitle : 'We couldn\'t find any results';
-    const subText = isEmpty(searchTerm) ? 'Type in a media title to start searching!' : 'Please try search for a different term.';
+    const emptyTermTitle = isEmpty(name)
+      ? 'Search for Media'
+      : `Search ${name}'s Library`;
+    const title = isEmpty(searchTerm)
+      ? emptyTermTitle
+      : "We couldn't find any results";
+    const subText = isEmpty(searchTerm)
+      ? 'Type in a media title to start searching!'
+      : 'Please try search for a different term.';
 
     return (
       <View style={styles.emptyStateContainer}>
@@ -299,10 +322,7 @@ export class LibrarySearchComponent extends PureComponent<LibrarySearchComponent
           />
         </View>
         {this.renderSearchBox()}
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
           {!dataLoading && dataEmpty && this.renderEmptyContent()}
           {(dataLoading || !dataEmpty) && this.renderContent()}
         </ScrollView>

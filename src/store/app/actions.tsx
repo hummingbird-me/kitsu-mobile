@@ -1,6 +1,7 @@
+import { isEmpty } from 'lodash';
+
 import { kitsuConfig } from 'kitsu/config/env';
 import * as types from 'kitsu/store/types';
-import { isEmpty } from 'lodash';
 
 export const fetchAlgoliaKeys = () => async (dispatch, getState) => {
   dispatch({ type: types.ALGOLIA_KEY_REQUEST, payload: {} });
@@ -27,18 +28,18 @@ export const fetchAlgoliaKeys = () => async (dispatch, getState) => {
   }
 };
 
-export const setDataSaver = value => (dispatch) => {
+export const setDataSaver = (value) => (dispatch) => {
   dispatch({ type: types.SETTING_DATA_SAVER, payload: !!value });
 };
 
-export const setInitialPage = value => (dispatch) => {
+export const setInitialPage = (value) => (dispatch) => {
   dispatch({ type: types.SETTING_INITIAL_PAGE, payload: value });
 };
 
-export const toggleActivityIndicatorHOC = visible => (dispatch) => {
+export const toggleActivityIndicatorHOC = (visible) => (dispatch) => {
   dispatch({ type: types.ACTIVITY_INDICATOR_HOC, payload: visible });
 };
 
 export const dismissBanner = () => (dispatch) => {
   dispatch({ type: types.DISMISS_BANNER });
-}
+};

@@ -1,19 +1,18 @@
-import {
-  SidebarScreen,
-  SettingsScreen,
-  GeneralSettings,
-  PrivacySettings,
-  LibrarySettings,
-  Blocking,
-  LinkedAccounts,
-  ImportLibrary,
-  ImportDetail,
-  ExportLibrary,
-  CannyBoard,
-  AppSettings,
-} from 'kitsu/screens/Sidebar';
-
 import * as Screens from 'kitsu/navigation/types';
+import {
+  AppSettings,
+  Blocking,
+  CannyBoard,
+  ExportLibrary,
+  GeneralSettings,
+  ImportDetail,
+  ImportLibrary,
+  LibrarySettings,
+  LinkedAccounts,
+  PrivacySettings,
+  SettingsScreen,
+  SidebarScreen,
+} from 'kitsu/screens/Sidebar';
 
 export default sidebarRoutes = {
   [Screens.SIDEBAR]: SidebarScreen,

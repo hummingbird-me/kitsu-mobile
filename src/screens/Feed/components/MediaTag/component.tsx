@@ -1,9 +1,11 @@
-import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { View, TouchableOpacity } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
+import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+
+import { StyledText } from 'kitsu/components/StyledText';
 import { Screens } from 'kitsu/navigation';
+
 import { styles } from './styles';
 
 const navigateToMedia = (media, componentId) => {
@@ -19,10 +21,10 @@ const navigateToMedia = (media, componentId) => {
 
 interface MediaTagProps {
   media: {
-    canonicalTitle: string
+    canonicalTitle: string;
   };
   episode?: {
-    number: number
+    number: number;
   };
   componentId: any;
   disabled?: boolean;
@@ -34,7 +36,7 @@ export const MediaTag = ({
   media,
   episode,
   componentId,
-  style
+  style,
 }: MediaTagProps) => {
   if (!media) return null;
   const episodePrefix = media.type === 'anime' ? 'E' : 'CH';
@@ -57,7 +59,10 @@ export const MediaTag = ({
         >
           <View style={styles.episodeTagLine} />
           <View style={styles.mediaTag}>
-            <StyledText color="green" size="xxsmall">{`${episodePrefix} ${episode.number}`}</StyledText>
+            <StyledText
+              color="green"
+              size="xxsmall"
+            >{`${episodePrefix} ${episode.number}`}</StyledText>
           </View>
         </TouchableOpacity>
       )}
@@ -66,7 +71,7 @@ export const MediaTag = ({
 };
 
 MediaTag.propTypes = {
-  style: ViewPropTypes.style
+  style: ViewPropTypes.style,
 };
 
 MediaTag.defaultProps = {

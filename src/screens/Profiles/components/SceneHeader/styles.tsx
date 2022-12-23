@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
 import {
-  scenePadding,
+  borderWidth,
   cardSize,
   coverImageHeight,
-  borderWidth,
+  scenePadding,
   spacing,
 } from 'kitsu/screens/Profiles/constants';
 
@@ -17,13 +18,13 @@ export const styles = StyleSheet.create({
   },
 
   container__profile: {
-    marginTop: cardSize.square.height * (-0.5),
+    marginTop: cardSize.square.height * -0.5,
   },
   container__group: {
-    marginTop: cardSize.square.height * (-0.5),
+    marginTop: cardSize.square.height * -0.5,
   },
   container__media: {
-    marginTop: cardSize.portraitLarge.height * (-0.65),
+    marginTop: cardSize.portraitLarge.height * -0.65,
   },
 
   backgroundView: {
@@ -66,7 +67,6 @@ export const styles = StyleSheet.create({
     borderRadius: cardSize.square.width,
   },
 
-
   profileImageView: {
     borderWidth: 4 * borderWidth.hairline,
     borderColor: '#FFFFFF',
@@ -87,7 +87,6 @@ export const styles = StyleSheet.create({
     height: cardSize.square.height,
     borderRadius: 6,
   },
-
 
   titleView: {
     flex: 1,

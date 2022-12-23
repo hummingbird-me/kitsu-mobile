@@ -1,10 +1,11 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
+import { navigationBarHeight, statusBarHeight } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { isX, paddingX } from 'kitsu/utils/isX';
-import { statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
 
 // Don't need to check for iPhone X as the container is the one that will pad the content with it.
-const TABBAR_HEIGHT = (navigationBarHeight - 1);
+const TABBAR_HEIGHT = navigationBarHeight - 1;
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
 export const styles = StyleSheet.create({

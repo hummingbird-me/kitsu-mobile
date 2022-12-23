@@ -1,10 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
 interface RowWrapProps {
-  alignItems?: "flex-start" | "center" | "flex-end";
-  justifyContent?: "flex-start" | "center" | "space-between" | "space-around" | "flex-end";
+  alignItems?: 'flex-start' | 'center' | 'flex-end';
+  justifyContent?:
+    | 'flex-start'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
+    | 'flex-end';
   style?: object;
 }
 
@@ -31,17 +37,8 @@ interface RowMainProps {
   style?: object;
 }
 
-export const RowMain = ({
-  style,
-  ...props
-}: RowMainProps) => (
-  <View
-    style={[
-      { flex: 1, paddingLeft: scenePadding },
-      style,
-    ]}
-    {...props}
-  />
+export const RowMain = ({ style, ...props }: RowMainProps) => (
+  <View style={[{ flex: 1, paddingLeft: scenePadding }, style]} {...props} />
 );
 
 RowWrap.defaultProps = {

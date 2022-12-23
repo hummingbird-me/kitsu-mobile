@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
 
 interface SidebarButtonProps {
@@ -15,7 +22,7 @@ const SidebarButton = ({
   loading = false,
   onPress,
   title,
-  style
+  style,
 }: SidebarButtonProps) => (
   <View style={[styles.wrapper, style]}>
     <TouchableOpacity
@@ -23,11 +30,11 @@ const SidebarButton = ({
       onPress={onPress}
       style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
     >
-      {loading
-        ? <ActivityIndicator color="rgba(255,255,255,0.4)" />
-        : <Text style={styles.title}>
-          {title}
-        </Text>}
+      {loading ? (
+        <ActivityIndicator color="rgba(255,255,255,0.4)" />
+      ) : (
+        <Text style={styles.title}>{title}</Text>
+      )}
     </TouchableOpacity>
   </View>
 );

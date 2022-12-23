@@ -1,8 +1,10 @@
+import { isEmpty, isNull } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Profiles/constants';
-import { isEmpty, isNull } from 'lodash';
+
 import { styles } from './styles';
 
 interface ImageGridProps {
@@ -19,7 +21,7 @@ interface ImageGridProps {
 export class ImageGrid extends PureComponent<ImageGridProps> {
   static defaultProps = {
     images: [],
-    heightToWidthRatio: Dimensions.get('window').width > 600 ? (3 / 4) : 1,
+    heightToWidthRatio: Dimensions.get('window').width > 600 ? 3 / 4 : 1,
     width: null,
     compact: false,
     imageBorderWidth: 1,
@@ -28,7 +30,14 @@ export class ImageGrid extends PureComponent<ImageGridProps> {
     disabled: false,
   };
 
-  renderImage(image, width, height, onPress, count = null, showGIFOverlay = false) {
+  renderImage(
+    image,
+    width,
+    height,
+    onPress,
+    count = null,
+    showGIFOverlay = false
+  ) {
     if (isEmpty(image)) return null;
 
     const { imageBorderWidth, borderRadius, compact, disabled } = this.props;
@@ -36,7 +45,10 @@ export class ImageGrid extends PureComponent<ImageGridProps> {
     return (
       <TouchableOpacity
         key={`${image}-${width}`}
-        style={[styles.imageWrap, { borderWidth: (compact ? 0 : imageBorderWidth) }]}
+        style={[
+          styles.imageWrap,
+          { borderWidth: compact ? 0 : imageBorderWidth },
+        ]}
         onPress={onPress}
         disabled={disabled}
       >
@@ -45,25 +57,31 @@ export class ImageGrid extends PureComponent<ImageGridProps> {
           width={width}
           height={height}
           borderRadius={borderRadius}
-
           // Only show the gif overlay if we're not showing the count
-          showGIFOverlayForKitsu={showGIFOverlay && (isNull(count) || count === 0)}
-
+          showGIFOverlayForKitsu={
+            showGIFOverlay && (isNull(count) || count === 0)
+          }
           // If user has chosen to show the overlay and we are showing the count
           // We don't want the gif to animate
           showAnimatedGIF={!showGIFOverlay}
         />
-        { !isNull(count) && count > 0 &&
+        {!isNull(count) && count > 0 && (
           <View style={[styles.countContainer, { borderRadius }]}>
             <Text style={styles.countText}>+{count}</Text>
           </View>
-        }
+        )}
       </TouchableOpacity>
     );
   }
 
   renderImages(images) {
-    const { heightToWidthRatio, width, compact, imageBorderWidth, onImageTapped } = this.props;
+    const {
+      heightToWidthRatio,
+      width,
+      compact,
+      imageBorderWidth,
+      onImageTapped,
+    } = this.props;
 
     // We only display maximum of 4 images at the moment
     // Or 1 image if compact
@@ -77,7 +95,7 @@ export class ImageGrid extends PureComponent<ImageGridProps> {
     // Current Width to image width ratio
     // This is for the case when we have more than 1 image
     const ratio = 1 / Math.max(2, currentImages.length - 1);
-    const ratioWidth = (currentWidth * ratio) - borderOffset;
+    const ratioWidth = currentWidth * ratio - borderOffset;
     const ratioHeight = ratioWidth * heightToWidthRatio;
 
     /*
@@ -89,7 +107,9 @@ export class ImageGrid extends PureComponent<ImageGridProps> {
     */
     const imageComponents = currentImages.map((image, index) => {
       const isLandscapeImage = index === 0 && currentImages.length !== 2;
-      const imageWidth = isLandscapeImage ? (currentWidth - borderOffset) : ratioWidth;
+      const imageWidth = isLandscapeImage
+        ? currentWidth - borderOffset
+        : ratioWidth;
       const imageHeight = isLandscapeImage ? null : ratioHeight;
 
       /*
@@ -97,28 +117,29 @@ export class ImageGrid extends PureComponent<ImageGridProps> {
           - We are showing the 4th image and we have more than 4 images
           - `compact` is set to `true` and more than 1 image is displaying
       */
-      const shouldShowCount = (index === 3 && images.length > 4) || (compact && images.length > 1);
+      const shouldShowCount =
+        (index === 3 && images.length > 4) || (compact && images.length > 1);
 
       // The text shown should count the image hidden by the overlay
       // E.g if we had 5 images then the count would show up as +2 since the 4th image is hidden by the text.
-      const count = shouldShowCount ? (images.length - currentImages.length) + 1 : null;
+      const count = shouldShowCount
+        ? images.length - currentImages.length + 1
+        : null;
 
       return this.renderImage(
         image,
         imageWidth,
         imageHeight,
-        () => { onImageTapped(index); },
+        () => {
+          onImageTapped(index);
+        },
         count,
         // Only show the GIF overlay on images if we have more than 1 displaying
-        currentImages.length > 1,
+        currentImages.length > 1
       );
     });
 
-    return (
-      <View style={styles.row}>
-        {imageComponents}
-      </View>
-    );
+    return <View style={styles.row}>{imageComponents}</View>;
   }
 
   render() {

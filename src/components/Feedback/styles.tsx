@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
 
 export const styles = StyleSheet.create({
@@ -21,6 +22,5 @@ export const styles = StyleSheet.create({
     fontFamily: 'OpenSans',
     textAlign: 'center',
   },
-  defaultStyles: {
-  },
+  defaultStyles: {},
 });

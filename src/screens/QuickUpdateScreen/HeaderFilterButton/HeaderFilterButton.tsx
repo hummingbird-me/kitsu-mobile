@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ActionSheet from 'react-native-actionsheet';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './styles';
 
@@ -20,7 +20,7 @@ export default class HeaderFilterButton extends PureComponent<HeaderFilterButton
 
   // Right now, just uppercases first letter, but could easily be more complicated
   // if necessary later.
-  textForMode = mode => mode.charAt(0).toUpperCase() + mode.slice(1);
+  textForMode = (mode) => mode.charAt(0).toUpperCase() + mode.slice(1);
 
   handleFilterChange = (index) => {
     const selectedMode = OPTIONS[index];

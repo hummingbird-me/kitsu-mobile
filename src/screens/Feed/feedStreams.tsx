@@ -14,7 +14,6 @@ export const feedStreams = [
     description: 'Shared with everyone',
     selectable: false,
     targetInterest: null,
-
   },
   // Disabled anime and manga feeds
   // {

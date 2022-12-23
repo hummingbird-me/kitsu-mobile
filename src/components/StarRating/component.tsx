@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Slider, Text } from 'react-native';
+import { Slider, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import * as colors from 'kitsu/constants/colors';
+
 import { styles } from './styles';
 
 export const StarRating = ({
@@ -11,7 +13,8 @@ export const StarRating = ({
   onSlidingComplete,
 }) => (
   <View>
-    {/* Star, 4.5 */
+    {
+      /* Star, 4.5 */
       ratingTwenty ? (
         <View style={styles.modalStarRow}>
           <Icon name="star" size={46} color={colors.yellow} />
@@ -23,7 +26,8 @@ export const StarRating = ({
         <View style={styles.modalStarRow}>
           <Text style={styles.modalNoRatingText}>Slide to rate</Text>
         </View>
-      )}
+      )
+    }
     {/* Slider */}
     <Slider
       minimumValue={ratingSystem === 'regular' ? 0 : 1}

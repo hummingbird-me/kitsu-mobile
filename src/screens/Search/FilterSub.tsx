@@ -1,11 +1,20 @@
-import React, { Component } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, SectionList, Dimensions, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { getCategories } from 'kitsu/store/anime/actions';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import React, { Component } from 'react';
+import {
+  Dimensions,
+  ScrollView,
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import * as colors from 'kitsu/constants/colors';
+import { getCategories } from 'kitsu/store/anime/actions';
 
 const width = Dimensions.get('screen').width - 40;
 
@@ -44,7 +53,7 @@ class FilterSub extends Component<FilterSubProps> {
   onSubmit = (item) => {
     const { onPressFilterButton } = this.props;
     if (onPressFilterButton) onPressFilterButton(item);
-  }
+  };
 
   renderItem = ({ item }) => (
     <TouchableOpacity
@@ -52,9 +61,7 @@ class FilterSub extends Component<FilterSubProps> {
       button
       style={styles.parentItem}
     >
-      <Text style={styles.outerText}>
-        {item.title}
-      </Text>
+      <Text style={styles.outerText}>{item.title}</Text>
     </TouchableOpacity>
   );
 
@@ -62,7 +69,13 @@ class FilterSub extends Component<FilterSubProps> {
     const { start, end, startV, endV } = this.state;
     return (
       <View style={{ padding: 20, paddingTop: 40, flexDirection: 'column' }}>
-        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            flex: 1,
+            justifyContent: 'space-between',
+          }}
+        >
           <Text style={{ ...styles.outerText, paddingLeft: 20 }}>
             Start: {startV}
           </Text>
@@ -72,9 +85,17 @@ class FilterSub extends Component<FilterSubProps> {
         </View>
         <MultiSlider
           values={[start, end]}
-          onValuesChange={values => this.setState({ startV: values[0], endV: values[1] })}
-          onValuesChangeFinish={values =>
-            this.setState({ start: values[0], end: values[1], startV: values[0], endV: values[1] })}
+          onValuesChange={(values) =>
+            this.setState({ startV: values[0], endV: values[1] })
+          }
+          onValuesChangeFinish={(values) =>
+            this.setState({
+              start: values[0],
+              end: values[1],
+              startV: values[0],
+              endV: values[1],
+            })
+          }
           step={1}
           min={0}
           max={100}
@@ -97,7 +118,7 @@ class FilterSub extends Component<FilterSubProps> {
         />
       </View>
     );
-  }
+  };
 
   renderSort = () => (
     <View style={{ padding: 20, paddingTop: 0 }}>
@@ -187,7 +208,14 @@ class FilterSub extends Component<FilterSubProps> {
   );
 
   renderSectionHeader = ({ section }) => (
-    <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 12 }}>
+    <Text
+      style={{
+        fontSize: 10,
+        color: '#887985',
+        marginBottom: 10,
+        marginTop: 12,
+      }}
+    >
       {section.title.toUpperCase()}
     </Text>
   );
@@ -217,28 +245,36 @@ class FilterSub extends Component<FilterSubProps> {
           style={styles.footerButton}
           onPress={() => Navigation.pop(componentId)}
         >
-          <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
+          <Text
+            style={{
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: 14,
+              fontWeight: '500',
+            }}
+          >
             Cancel
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.footerButton, { flex: 3, backgroundColor: '#16A085', marginRight: 0 }]}
+          style={[
+            styles.footerButton,
+            { flex: 3, backgroundColor: '#16A085', marginRight: 0 },
+          ]}
           onPress={() => this.onSubmit({ label: title, start, end })}
         >
-          <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{btnText}</Text>
+          <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>
+            {btnText}
+          </Text>
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   render() {
     const { filterKey, componentId, title, label } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <NavigationHeader
-          componentId={componentId}
-          title={title || label}
-        />
+        <NavigationHeader componentId={componentId} title={title || label} />
         <ScrollView style={{ flex: 1, backgroundColor: colors.darkPurple }}>
           <View style={{ flex: 1 }}>
             {filterKey === 'length' ? this.renderLength() : this.renderSort()}

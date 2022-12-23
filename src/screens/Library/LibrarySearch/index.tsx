@@ -1,5 +1,10 @@
 import { connect } from 'react-redux';
-import { updateUserLibraryEntry, deleteUserLibraryEntry } from 'kitsu/store/profile/actions';
+
+import {
+  deleteUserLibraryEntry,
+  updateUserLibraryEntry,
+} from 'kitsu/store/profile/actions';
+
 import { LibrarySearchComponent } from './component';
 
 const mapStateToProps = ({ user }) => {

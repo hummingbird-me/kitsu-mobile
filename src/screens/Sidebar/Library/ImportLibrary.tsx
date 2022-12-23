@@ -1,28 +1,46 @@
 import React from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import * as colors from 'kitsu/constants/colors';
-import { Kitsu, setToken } from 'kitsu/config/api';
-import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
-import myanimelist from 'kitsu/assets/img/myanimelist.png';
+
 import anilist from 'kitsu/assets/img/anilist.png';
-import { Navigation } from 'react-native-navigation';
+import myanimelist from 'kitsu/assets/img/myanimelist.png';
+import {
+  failed,
+  pending,
+  queued,
+  success,
+} from 'kitsu/assets/img/sidebar_icons/';
+import { Kitsu, setToken } from 'kitsu/config/api';
+import * as colors from 'kitsu/constants/colors';
 import { Screens } from 'kitsu/navigation';
-import { SidebarHeader, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common';
+import {
+  ItemSeparator,
+  SidebarHeader,
+  SidebarTitle,
+} from 'kitsu/screens/Sidebar/common';
+
 import { styles } from './styles';
 
 const MediaItem = ({ onPress, title, details, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
     <View style={{ justifyContent: 'center' }}>
       <FastImage source={image} style={styles.itemLogo} cache="web" />
-      <Text style={styles.hintText}>
-        {details}
-      </Text>
+      <Text style={styles.hintText}>{details}</Text>
     </View>
     <View>
-      <Icon name={'ios-arrow-forward'} style={{ color: colors.lightGrey, fontSize: 16 }} />
+      <Icon
+        name={'ios-arrow-forward'}
+        style={{ color: colors.lightGrey, fontSize: 16 }}
+      />
     </View>
   </TouchableOpacity>
 );
@@ -69,15 +87,27 @@ const ImportItem = ({ kind, status, date, total }) => {
   return (
     <View style={[styles.item, { paddingHorizontal: 12 }]}>
       <View style={{ justifyContent: 'center' }}>
-        <Text style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
+        <Text
+          style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}
+        >
           {title}
         </Text>
-        <Text style={{ fontFamily: 'OpenSans', fontSize: 10, color: colors.darkGrey }}>
+        <Text
+          style={{
+            fontFamily: 'OpenSans',
+            fontSize: 10,
+            color: colors.darkGrey,
+          }}
+        >
           {details}
         </Text>
       </View>
       <View>
-        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} cache="web" />
+        <FastImage
+          source={icon}
+          style={[styles.itemImage, { right: -2 }]}
+          cache="web"
+        />
       </View>
     </View>
   );
@@ -106,7 +136,7 @@ class ImportLibrary extends React.Component<ImportLibraryProps> {
       component: {
         name: Screens.SIDEBAR_IMPORT_DETAIL,
         passProps: { item },
-      }
+      },
     });
   };
 
@@ -163,12 +193,10 @@ class ImportLibrary extends React.Component<ImportLibraryProps> {
         });
       }
     }
-  }
+  };
 
   renderItemSeparatorComponent() {
-    return (
-      <ItemSeparator />
-    );
+    return <ItemSeparator />;
   }
 
   render() {

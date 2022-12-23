@@ -1,14 +1,16 @@
 import React from 'react';
-import { View, Text, ImageBackground, ScrollView } from 'react-native';
+import { ImageBackground, ScrollView, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Button } from 'kitsu/components/Button';
-import { iceBackground, iceCube } from 'kitsu/assets/img/onboarding/';
-import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import { iceBackground, iceCube } from 'kitsu/assets/img/onboarding/';
+import { Button } from 'kitsu/components/Button';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
-import { styles as commonStyles } from '../common/styles';
 import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+
+import { styles as commonStyles } from '../common/styles';
+import { styles } from './styles';
 
 class WelcomeScreen extends React.Component {
   onPress = () => {
@@ -54,13 +56,13 @@ class WelcomeScreen extends React.Component {
   render() {
     const { accounts } = this.props;
 
-    const title = !accounts ?
-      "Welcome to Kitsu, the home of all things weeb! Let's break the ice!" :
-      "Welcome to Kitsu, the new home of the Aozora community. Let's break the ice!";
+    const title = !accounts
+      ? "Welcome to Kitsu, the home of all things weeb! Let's break the ice!"
+      : "Welcome to Kitsu, the new home of the Aozora community. Let's break the ice!";
 
-    const subtitle = !accounts ?
-      "We'll walk you through setting up your account. This will only take a minute!" :
-      "We'll walk you through moving your Aozora content over to Kitsu. This will only take a minute!";
+    const subtitle = !accounts
+      ? "We'll walk you through setting up your account. This will only take a minute!"
+      : "We'll walk you through moving your Aozora content over to Kitsu. This will only take a minute!";
 
     return (
       <View style={commonStyles.container}>
@@ -79,7 +81,9 @@ class WelcomeScreen extends React.Component {
           >
             <FastImage style={styles.iceCube} source={iceCube} />
           </ImageBackground>
-          <Text style={[styles.ps, { marginHorizontal: 24, textAlign: 'center' }]}>
+          <Text
+            style={[styles.ps, { marginHorizontal: 24, textAlign: 'center' }]}
+          >
             {subtitle}
           </Text>
           <Button

@@ -1,11 +1,24 @@
-import React from 'react';
-import { View, Text, TextInput, ScrollView, LayoutAnimation } from 'react-native';
-import { connect } from 'react-redux';
-import { Navigation } from 'react-native-navigation';
-import { updateGeneralSettings } from 'kitsu/store/user/actions';
 import isEmpty from 'lodash/isEmpty';
+import React from 'react';
+import {
+  LayoutAnimation,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
 import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common';
+import { updateGeneralSettings } from 'kitsu/store/user/actions';
+
+import {
+  ItemSeparator,
+  SidebarButton,
+  SidebarHeader,
+  SidebarTitle,
+} from './common';
 import { styles } from './styles';
 
 interface GeneralSettingsProps {
@@ -17,7 +30,7 @@ interface GeneralSettingsProps {
 
 class GeneralSettings extends React.Component<GeneralSettingsProps> {
   static defaultProps = {
-    updateGeneralSettings: () => { },
+    updateGeneralSettings: () => {},
     currentUser: {},
     loading: true,
   };
@@ -37,7 +50,9 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
       password: '',
       confirmPassword: '',
       shouldShowValidationInput: false,
-      selectMenuText: sfwFilter ? this.filterOptions[0].text : this.filterOptions[1].text,
+      selectMenuText: sfwFilter
+        ? this.filterOptions[0].text
+        : this.filterOptions[1].text,
     };
   }
 
@@ -53,7 +68,11 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
     };
     if (!isEmpty(valuesToUpdate)) {
       this.props.updateGeneralSettings(valuesToUpdate);
-      this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
+      this.setState({
+        password: '',
+        confirmPassword: '',
+        shouldShowValidationInput: false,
+      });
     }
   };
 
@@ -95,7 +114,8 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
   passwordState() {
     const { password, confirmPassword } = this.state;
     const passwordSet = !isEmpty(password) || !isEmpty(confirmPassword);
-    const passwordsMatch = (password || '').trim() === (confirmPassword || '').trim();
+    const passwordsMatch =
+      (password || '').trim() === (confirmPassword || '').trim();
 
     return {
       passwordSet,
@@ -126,7 +146,10 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
     const modified = this.isModified();
 
     const { passwordSet, passwordsMatch } = this.passwordState();
-    const buttonTitle = passwordSet && !passwordsMatch ? 'Password Do Not Match' : 'Save General Settings';
+    const buttonTitle =
+      passwordSet && !passwordsMatch
+        ? 'Password Do Not Match'
+        : 'Save General Settings';
 
     return (
       <View style={styles.containerStyle}>
@@ -137,13 +160,11 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
         <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'Personal Settings'} />
           <View style={styles.inputWrapper}>
-            <Text style={styles.hintText}>
-              Username
-            </Text>
+            <Text style={styles.hintText}>Username</Text>
             <TextInput
               style={styles.input}
               value={this.state.name}
-              onChangeText={t => this.setState({ name: t })}
+              onChangeText={(t) => this.setState({ name: t })}
               autoCapitalize={'words'}
               autoCorrect={false}
               underlineColorAndroid={'transparent'}
@@ -152,13 +173,11 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
           </View>
           <ItemSeparator />
           <View style={styles.inputWrapper}>
-            <Text style={styles.hintText}>
-              Email Address
-            </Text>
+            <Text style={styles.hintText}>Email Address</Text>
             <TextInput
               style={styles.input}
               value={this.state.email}
-              onChangeText={t => this.setState({ email: t })}
+              onChangeText={(t) => this.setState({ email: t })}
               autoCapitalize={'none'}
               autoCorrect={false}
               underlineColorAndroid={'transparent'}
@@ -167,9 +186,7 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
           </View>
           <ItemSeparator />
           <View style={styles.inputWrapper}>
-            <Text style={styles.hintText}>
-              Password
-            </Text>
+            <Text style={styles.hintText}>Password</Text>
             <TextInput
               style={styles.input}
               value={this.state.password}
@@ -184,22 +201,21 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
               keyboardAppearance={'dark'}
             />
           </View>
-          {this.state.shouldShowValidationInput &&
+          {this.state.shouldShowValidationInput && (
             <View style={styles.inputWrapper}>
-              <Text style={styles.hintText}>
-                Confirm Password
-              </Text>
+              <Text style={styles.hintText}>Confirm Password</Text>
               <TextInput
                 style={styles.input}
                 value={this.state.confirmPassword}
-                onChangeText={t => this.setState({ confirmPassword: t })}
+                onChangeText={(t) => this.setState({ confirmPassword: t })}
                 secureTextEntry
                 placeholder={'Confirm password'}
                 autoCorrect={false}
                 underlineColorAndroid={'transparent'}
                 keyboardAppearance={'dark'}
               />
-            </View>}
+            </View>
+          )}
           <SidebarTitle title={'Content on Kitsu'} />
           <SelectMenu
             style={styles.selectMenu}
@@ -211,9 +227,7 @@ class GeneralSettings extends React.Component<GeneralSettingsProps> {
               <Text style={styles.hintText}>
                 R18+ titles in feed, libraries, or search?
               </Text>
-              <Text style={styles.valueText}>
-                {this.state.selectMenuText}
-              </Text>
+              <Text style={styles.valueText}>{this.state.selectMenuText}</Text>
             </View>
           </SelectMenu>
           <SidebarButton
@@ -236,4 +250,6 @@ const mapStateToProps = ({ user }) => {
   };
 };
 
-export default connect(mapStateToProps, { updateGeneralSettings })(GeneralSettings);
+export default connect(mapStateToProps, { updateGeneralSettings })(
+  GeneralSettings
+);

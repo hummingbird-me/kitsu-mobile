@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import { Animated } from 'react-native';
 import { Navigation } from 'react-native-navigation';
-import { EventBus } from 'kitsu/utils/eventBus';
+import { connect } from 'react-redux';
+
 import { NOTIFICATION_PRESSED_EVENT } from 'kitsu/screens/Notifications/NotificationsScreen';
 import { dismissInAppNotification } from 'kitsu/store/feed/actions';
-import { connect } from 'react-redux';
+import { EventBus } from 'kitsu/utils/eventBus';
+
 import { NotificationPopover } from './components/NotificationPopover';
 import { styles } from './styles';
 
@@ -48,7 +50,7 @@ class NotificationOverlayComponent extends PureComponent<NotificationOverlayComp
 
     EventBus.publish(NOTIFICATION_PRESSED_EVENT, notification);
     this.dismissOverlay();
-  }
+  };
 
   dismissOverlay = () => {
     Animated.timing(this.state.opacity, {
@@ -63,10 +65,13 @@ class NotificationOverlayComponent extends PureComponent<NotificationOverlayComp
   render() {
     return (
       <Animated.View
-        style={[styles.container, {
-          opacity: this.state.opacity,
-          transform: [{ translateY: this.state.yValue }],
-        }]}
+        style={[
+          styles.container,
+          {
+            opacity: this.state.opacity,
+            transform: [{ translateY: this.state.yValue }],
+          },
+        ]}
       >
         <NotificationPopover
           data={this.props.notification}
@@ -78,4 +83,6 @@ class NotificationOverlayComponent extends PureComponent<NotificationOverlayComp
   }
 }
 
-export const NotificationOverlay = connect(null, { dismissInAppNotification })(NotificationOverlayComponent);
+export const NotificationOverlay = connect(null, { dismissInAppNotification })(
+  NotificationOverlayComponent
+);

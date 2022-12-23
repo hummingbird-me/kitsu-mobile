@@ -1,11 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
-import { styles } from './styles';
-import { Spoiler } from './Overlays/Spoiler';
-import { NotSafeForWork } from './Overlays/NotSafeForWork';
-import { NSFWandSpoiler } from './Overlays/NSFWandSpoiler';
+
 import { PostStatus } from '../PostStatus';
+import { NSFWandSpoiler } from './Overlays/NSFWandSpoiler';
+import { NotSafeForWork } from './Overlays/NotSafeForWork';
+import { Spoiler } from './Overlays/Spoiler';
+import { styles } from './styles';
 
 interface PostOverlayProps {
   nsfw?: boolean;
@@ -26,7 +28,7 @@ export const PostOverlay = ({
   taggedEpisode,
   likesCount,
   commentsCount,
-  componentId
+  componentId,
 }: PostOverlayProps) => {
   let postOverlay = <View />;
 

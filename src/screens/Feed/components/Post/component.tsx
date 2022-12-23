@@ -1,19 +1,36 @@
+import { isEmpty, uniqBy } from 'lodash';
 import React, { PureComponent } from 'react';
-import { FlatList, View, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
+import {
+  Alert,
+  FlatList,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import { Navigation } from 'react-native-navigation';
+
+import { SceneLoader } from 'kitsu/components/SceneLoader';
+import { StyledText } from 'kitsu/components/StyledText';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
-import { StyledText } from 'kitsu/components/StyledText';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
+import { NavigationActions, Screens } from 'kitsu/navigation';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
-import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
-import { isEmpty, uniqBy } from 'lodash';
-import { extractUrls } from 'kitsu/utils/url';
 import { FeedCache } from 'kitsu/utils/cache';
-import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
+import {
+  preprocessFeedPost,
+  preprocessFeedPosts,
+} from 'kitsu/utils/preprocessFeed';
+import { extractUrls } from 'kitsu/utils/url';
+
+import {
+  CommentFlatList,
+  PostActions,
+  PostHeader,
+  PostMain,
+  PostOverlay,
+} from './components';
 import { styles } from './styles';
-import { PostHeader, PostMain, PostOverlay, PostActions, CommentFlatList } from './components';
 
 interface PostProps {
   componentId: any;
@@ -26,7 +43,7 @@ interface PostProps {
 export class Post extends PureComponent<PostProps> {
   static defaultProps = {
     onPostPress: null,
-  }
+  };
 
   state = {
     post: this.props.post,
@@ -44,7 +61,7 @@ export class Post extends PureComponent<PostProps> {
     embedUrl: null,
   };
 
-  mounted = false
+  mounted = false;
 
   componentDidMount() {
     this.mounted = true;
@@ -69,7 +86,10 @@ export class Post extends PureComponent<PostProps> {
       postLikesCount: this.state.postLikesCount,
       currentUser: this.props.currentUser,
       syncComments: (comments) => {
-        const uniqueComments = uniqBy([...this.state.comments, ...comments], 'id');
+        const uniqueComments = uniqBy(
+          [...this.state.comments, ...comments],
+          'id'
+        );
         FeedCache.setComments(this.state.post.id, uniqueComments);
         this.setState({
           comments: uniqueComments,
@@ -79,9 +99,9 @@ export class Post extends PureComponent<PostProps> {
         });
       },
     });
-  }
+  };
 
-  onCommentChanged = comment => this.setState({ comment })
+  onCommentChanged = (comment) => this.setState({ comment });
 
   onGifSelected = (gif) => {
     if (!(gif && gif.id)) return;
@@ -92,10 +112,11 @@ export class Post extends PureComponent<PostProps> {
       // Submit gif if comment was empty
       if (isEmpty(comment)) this.onSubmitComment();
     });
-  }
+  };
 
   onSubmitComment = async () => {
-    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
+    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment)
+      return;
     this.setState({ isPostingComment: true });
 
     // Update the embed
@@ -140,7 +161,7 @@ export class Post extends PureComponent<PostProps> {
     } finally {
       this.setState({ isPostingComment: false });
     }
-  }
+  };
 
   restoreCache() {
     const id = this.state.post.id;
@@ -189,7 +210,7 @@ export class Post extends PureComponent<PostProps> {
     } catch (err) {
       console.log('Error fetching comments: ', err);
     }
-  }
+  };
 
   fetchLikes = async () => {
     try {
@@ -212,7 +233,7 @@ export class Post extends PureComponent<PostProps> {
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
-  }
+  };
 
   toggleLike = async () => {
     try {
@@ -282,13 +303,13 @@ export class Post extends PureComponent<PostProps> {
 
   focusOnCommentInput = () => {
     if (this.commentInput) this.commentInput.focus();
-  }
+  };
 
   toggleOverlay = () => {
     this.setState({
       overlayRemoved: !this.state.overlayRemoved,
     });
-  }
+  };
 
   render() {
     const { currentUser, componentId } = this.props;
@@ -315,13 +336,15 @@ export class Post extends PureComponent<PostProps> {
       user,
       uploads,
     } = post;
-    if (isDeleted) { return null; }
+    if (isDeleted) {
+      return null;
+    }
 
-    const isSpoilerOrNSFW = (spoiler || nsfw);
+    const isSpoilerOrNSFW = spoiler || nsfw;
 
     // Build the post body based on if we have nsfw/spoiler content
-    const postBody = (isSpoilerOrNSFW && !overlayRemoved) ?
-      (
+    const postBody =
+      isSpoilerOrNSFW && !overlayRemoved ? (
         <PostOverlay
           nsfw={nsfw}
           spoiler={spoiler}
@@ -332,9 +355,7 @@ export class Post extends PureComponent<PostProps> {
           componentId={componentId}
           onPress={this.toggleOverlay}
         />
-      )
-      :
-      (
+      ) : (
         <PostMain
           cacheKey={`${id}-${updatedAt}`}
           content={content}
@@ -375,7 +396,7 @@ export class Post extends PureComponent<PostProps> {
 
         {postBody}
 
-        {(!isSpoilerOrNSFW || overlayRemoved) &&
+        {(!isSpoilerOrNSFW || overlayRemoved) && (
           // Only show comments if the post is not nsfw or spoiler
           // or if the overlay has been removed.
           <View>
@@ -387,9 +408,9 @@ export class Post extends PureComponent<PostProps> {
             />
 
             <PostFooter>
-              {commentsCount > 0 && latestComments.length === 0 &&
+              {commentsCount > 0 && latestComments.length === 0 && (
                 <SceneLoader />
-              }
+              )}
               {latestComments.length > 0 && (
                 <PostSection>
                   <CommentFlatList
@@ -405,7 +426,9 @@ export class Post extends PureComponent<PostProps> {
               <PostSection>
                 <CommentTextInput
                   currentUser={currentUser}
-                  inputRef={(el) => { this.commentInput = el; }}
+                  inputRef={(el) => {
+                    this.commentInput = el;
+                  }}
                   comment={comment}
                   onCommentChanged={this.onCommentChanged}
                   onSubmit={this.onSubmitComment}
@@ -416,7 +439,7 @@ export class Post extends PureComponent<PostProps> {
               </PostSection>
             </PostFooter>
           </View>
-        }
+        )}
       </View>
     );
   }
@@ -427,16 +450,15 @@ interface PostReplyBannerProps {
   onClose?(...args: unknown[]): unknown;
 }
 
-export const PostReplyBanner = ({
-  name,
-  onClose
-}: PostReplyBannerProps) => (
+export const PostReplyBanner = ({ name, onClose }: PostReplyBannerProps) => (
   <View style={styles.postReplyBanner}>
     <StyledText size="xsmall" color="grey">
       Replying to {name}
     </StyledText>
     <TouchableOpacity onPress={onClose}>
-      <StyledText size="large" color="grey">X</StyledText>
+      <StyledText size="large" color="grey">
+        X
+      </StyledText>
     </TouchableOpacity>
   </View>
 );
@@ -446,8 +468,13 @@ PostReplyBanner.defaultProps = {
   onClose: null,
 };
 
-
 // Post Footer
-export const PostFooter = props => <View style={styles.postFooter} {...props} />;
-export const PostSection = props => <View style={styles.postSection} {...props} />;
-export const PostCommentsSection = props => <View style={styles.postCommentsSection} {...props} />;
+export const PostFooter = (props) => (
+  <View style={styles.postFooter} {...props} />
+);
+export const PostSection = (props) => (
+  <View style={styles.postSection} {...props} />
+);
+export const PostCommentsSection = (props) => (
+  <View style={styles.postCommentsSection} {...props} />
+);

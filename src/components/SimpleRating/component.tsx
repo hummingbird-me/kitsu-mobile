@@ -1,15 +1,26 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+
 import awful from 'kitsu/assets/img/ratings/awful.png';
-import meh from 'kitsu/assets/img/ratings/meh.png';
 import good from 'kitsu/assets/img/ratings/good.png';
 import great from 'kitsu/assets/img/ratings/great.png';
+import meh from 'kitsu/assets/img/ratings/meh.png';
+
 import { styles } from './styles';
 
-export const SimpleRating = ({ disabled, onRate, selected, imageStyle, shadowStyle }) => {
+export const SimpleRating = ({
+  disabled,
+  onRate,
+  selected,
+  imageStyle,
+  shadowStyle,
+}) => {
   const imageSimpleStyle = [styles.imageSimple, imageStyle];
-  const imageSimpleShadowBackground = [styles.imageSimpleShadowBackground, shadowStyle];
+  const imageSimpleShadowBackground = [
+    styles.imageSimpleShadowBackground,
+    shadowStyle,
+  ];
   return (
     <View style={styles.ratingRow}>
       <TouchableOpacity onPress={() => onRate('awful')} disabled={disabled}>

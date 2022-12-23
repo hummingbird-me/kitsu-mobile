@@ -1,7 +1,7 @@
-import { isNull, isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil, isNull } from 'lodash';
 
-export const isIdForCurrentUser = (id, currentUser) => (!!currentUser) && (currentUser.id == id);
-
+export const isIdForCurrentUser = (id, currentUser) =>
+  !!currentUser && currentUser.id == id;
 
 /**
  * Check whether a user is PRO.
@@ -11,10 +11,10 @@ export const isIdForCurrentUser = (id, currentUser) => (!!currentUser) && (curre
  */
 export function isPro(user) {
   const current = new Date();
-  const expireDate = user && !isNull(user.proExpiresAt) ? new Date(user.proExpiresAt) : null;
-  return expireDate && (expireDate > current);
+  const expireDate =
+    user && !isNull(user.proExpiresAt) ? new Date(user.proExpiresAt) : null;
+  return expireDate && expireDate > current;
 }
-
 
 /**
  * Check whether a user is an Aozora PRO.

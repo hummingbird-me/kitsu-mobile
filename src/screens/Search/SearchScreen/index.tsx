@@ -1,20 +1,28 @@
-import React, { PureComponent } from 'react';
-import { Navigation } from 'react-native-navigation';
-import { View, ScrollView, Keyboard, TouchableOpacity, Platform } from 'react-native';
+import algolia from 'algoliasearch/reactnative';
+import { capitalize, debounce, isEmpty, isEqual, isNil } from 'lodash';
 import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react';
+import {
+  Keyboard,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
-import algolia from 'algoliasearch/reactnative';
-import { capitalize, isEmpty, debounce, isEqual, isNil } from 'lodash';
-import UsersList from 'kitsu/screens/Search/Lists/UsersList';
-import { kitsuConfig } from 'kitsu/config/env';
-import { followUser } from 'kitsu/store/user/actions';
-import { captureUsersData } from 'kitsu/store/users/actions';
-import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
+
 import { SearchBox } from 'kitsu/components/SearchBox';
 import { StyledText } from 'kitsu/components/StyledText';
+import { kitsuConfig } from 'kitsu/config/env';
 import { Screens } from 'kitsu/navigation';
+import { ResultsList, TopsList } from 'kitsu/screens/Search/Lists';
+import UsersList from 'kitsu/screens/Search/Lists/UsersList';
+import { followUser } from 'kitsu/store/user/actions';
+import { captureUsersData } from 'kitsu/store/users/actions';
 import { EventBus } from 'kitsu/utils/eventBus';
+
 import { styles } from './styles';
 
 class SearchScreen extends PureComponent {
@@ -71,7 +79,10 @@ class SearchScreen extends PureComponent {
   }
 
   handleQuery = (scene, query) => {
-    const nextState = { ...this.state.query, [scene]: isEmpty(query) ? undefined : query };
+    const nextState = {
+      ...this.state.query,
+      [scene]: isEmpty(query) ? undefined : query,
+    };
     this.setState({ query: nextState }, () => {
       this.debouncedSearch(query, scene);
     });
@@ -79,12 +90,14 @@ class SearchScreen extends PureComponent {
 
   executeSearch = (query, scene) => {
     const currentScene = this.scenes[scene];
-    if (isEmpty(currentScene.apiKey)) { return; }
+    if (isEmpty(currentScene.apiKey)) {
+      return;
+    }
 
     const client = algolia(kitsuConfig.algoliaAppId, currentScene.apiKey);
     const index = client.initIndex(currentScene.indexName);
     const filters = currentScene.kind ? `kind:${currentScene.kind}` : '';
-    index.search({ query, filters}, (err, content) => {
+    index.search({ query, filters }, (err, content) => {
       if (!err) {
         this.setState({
           searchResults: {
@@ -119,7 +132,11 @@ class SearchScreen extends PureComponent {
   );
 
   renderTabItem = (name, page, active, goToPage) => (
-    <TouchableOpacity key={name} style={styles.tabBarItem} onPress={() => goToPage(page)}>
+    <TouchableOpacity
+      key={name}
+      style={styles.tabBarItem}
+      onPress={() => goToPage(page)}
+    >
       <StyledText color={active ? 'orange' : 'grey'} size="xsmall" bold>
         {name}
       </StyledText>
@@ -136,7 +153,7 @@ class SearchScreen extends PureComponent {
             placeholder={`Search ${label}`}
             style={styles.searchBox}
             value={this.state.query[scene]}
-            onChangeText={t => this.handleQuery(scene, t)}
+            onChangeText={(t) => this.handleQuery(scene, t)}
             onSubmitEditing={() => Keyboard.dismiss()}
             returnKeyType="search"
           />
@@ -170,11 +187,7 @@ class SearchScreen extends PureComponent {
       case 'anime':
       case 'manga': {
         return isEmpty(query[scene]) ? (
-          <TopsList
-            mounted
-            active={scene}
-            componentId={componentId}
-          />
+          <TopsList mounted active={scene} componentId={componentId} />
         ) : (
           <View style={{ flex: 1 }}>
             <ResultsList
@@ -230,7 +243,10 @@ SearchScreen.defaultProps = {
 };
 
 const mapper = (state) => {
-  const { app: { algoliaKeys }, user: { currentUser } } = state;
+  const {
+    app: { algoliaKeys },
+    user: { currentUser },
+  } = state;
   return { algoliaKeys, currentUser };
 };
 

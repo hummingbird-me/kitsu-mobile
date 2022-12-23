@@ -1,14 +1,22 @@
+import { forOwn, isEmpty, isObjectLike, upperFirst, values } from 'lodash';
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
-import { forOwn, isObjectLike, values, isEmpty, upperFirst } from 'lodash';
-import { getStreamers } from 'kitsu/store/anime/actions';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import * as colors from 'kitsu/constants/colors';
 import { Screens } from 'kitsu/navigation';
+import { getStreamers } from 'kitsu/store/anime/actions';
 
 interface SearchFilterProps {
   streamers: unknown[];
@@ -38,7 +46,7 @@ class SearchFilter extends Component<SearchFilterProps> {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.streamers !== this.props.streamers) {
-      const streamers = nextProps.streamers.map(item => ({
+      const streamers = nextProps.streamers.map((item) => ({
         key: item.siteName,
         label: item.siteName,
       }));
@@ -63,7 +71,10 @@ class SearchFilter extends Component<SearchFilterProps> {
             break;
           case 'release':
             if (value.key === 'All') break;
-            query.filter = { ...query.filter, year: `${value.key}..${value.key + 10}` };
+            query.filter = {
+              ...query.filter,
+              year: `${value.key}..${value.key + 10}`,
+            };
             break;
           case 'released':
             if (value.key === 'All') break;
@@ -92,7 +103,7 @@ class SearchFilter extends Component<SearchFilterProps> {
       }
     });
     onApply(query, { ...this.state });
-  }
+  };
 
   renderFooter = () => {
     const { componentId } = this.props;
@@ -114,19 +125,30 @@ class SearchFilter extends Component<SearchFilterProps> {
           style={styles.footerButton}
           onPress={() => Navigation.pop(componentId)}
         >
-          <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
+          <Text
+            style={{
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: 14,
+              fontWeight: '500',
+            }}
+          >
             Cancel
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.footerButton, { flex: 3, backgroundColor: '#16A085', marginRight: 0 }]}
+          style={[
+            styles.footerButton,
+            { flex: 3, backgroundColor: '#16A085', marginRight: 0 },
+          ]}
           onPress={this.onApply}
         >
-          <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{btnText}</Text>
+          <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>
+            {btnText}
+          </Text>
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   renderItem = ({ item }) => {
     const { componentId } = this.props;
@@ -146,22 +168,31 @@ class SearchFilter extends Component<SearchFilterProps> {
           }}
         >
           <View style={{ ...styles.parentItem, ...styles.itemContainer }}>
-            <Text style={styles.outerText}>
-              {item.title}
-            </Text>
+            <Text style={styles.outerText}>{item.title}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
+              <Text
+                style={{
+                  ...styles.innerText,
+                  paddingRight: 10,
+                  alignSelf: 'center',
+                }}
+              >
                 {this.state[key].label}
               </Text>
-              <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+              <Icon
+                name="ios-arrow-forward"
+                style={{ fontSize: 17, color: colors.darkGrey }}
+              />
             </View>
           </View>
         </ModalSelector>
       );
     }
     const { categories } = this.state;
-    const first = categories.length > 0 && categories[0] && upperFirst(categories[0]);
-    const all = categories.length > 0 ? `${first}, +${categories.length - 1}` : 'All';
+    const first =
+      categories.length > 0 && categories[0] && upperFirst(categories[0]);
+    const all =
+      categories.length > 0 ? `${first}, +${categories.length - 1}` : 'All';
 
     return (
       <TouchableOpacity
@@ -177,7 +208,10 @@ class SearchFilter extends Component<SearchFilterProps> {
                 categoriesRaw: this.state.categoriesRaw,
                 onPressFilterButton: (data) => {
                   Navigation.popTo(componentId);
-                  this.setState({ categoriesRaw: data, categories: values(data).filter(a => a) });
+                  this.setState({
+                    categoriesRaw: data,
+                    categories: values(data).filter((a) => a),
+                  });
                 },
               },
             },
@@ -185,19 +219,26 @@ class SearchFilter extends Component<SearchFilterProps> {
         }
       >
         <View style={styles.itemContainer}>
-          <Text style={styles.outerText}>
-            {item.title}
-          </Text>
+          <Text style={styles.outerText}>{item.title}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-            <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
+            <Text
+              style={{
+                ...styles.innerText,
+                paddingRight: 10,
+                alignSelf: 'center',
+              }}
+            >
               {categories.length === 1 ? first : all}
             </Text>
-            <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+            <Icon
+              name="ios-arrow-forward"
+              style={{ fontSize: 17, color: colors.darkGrey }}
+            />
           </View>
         </View>
       </TouchableOpacity>
     );
-  }
+  };
 
   renderCustomItem = (header, param) => {
     const { componentId } = this.props;
@@ -225,22 +266,36 @@ class SearchFilter extends Component<SearchFilterProps> {
         }
       >
         <View style={styles.itemContainer}>
-          <Text style={styles.outerText}>
-            {header}
-          </Text>
+          <Text style={styles.outerText}>{header}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ ...styles.innerText, paddingRight: 10, alignSelf: 'center' }}>
+            <Text
+              style={{
+                ...styles.innerText,
+                paddingRight: 10,
+                alignSelf: 'center',
+              }}
+            >
               {this.state[param].label}
             </Text>
-            <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+            <Icon
+              name="ios-arrow-forward"
+              style={{ fontSize: 17, color: colors.darkGrey }}
+            />
           </View>
         </View>
       </TouchableOpacity>
     );
-  }
+  };
 
   renderSectionHeader = () => (
-    <Text style={{ fontSize: 10, color: '#887985', marginBottom: 10, marginTop: 20 }}>
+    <Text
+      style={{
+        fontSize: 10,
+        color: '#887985',
+        marginBottom: 10,
+        marginTop: 20,
+      }}
+    >
       Browse By
     </Text>
   );
@@ -270,14 +325,16 @@ class SearchFilter extends Component<SearchFilterProps> {
               data={data}
               ListHeaderComponent={this.renderSectionHeader}
               renderItem={this.renderItem}
-              keyExtractor={d => d.key}
+              keyExtractor={(d) => d.key}
             />
             <TouchableOpacity
               button
               style={styles.parentItem}
               onPress={() => this.setState(defaultState)}
             >
-              <Text style={{ ...styles.outerText, color: 'rgba(255,183,88,0.7)' }}>
+              <Text
+                style={{ ...styles.outerText, color: 'rgba(255,183,88,0.7)' }}
+              >
                 Reset Filters
               </Text>
             </TouchableOpacity>

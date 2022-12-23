@@ -1,6 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { listBackPurple } from 'kitsu/constants/colors';
+
 import { styles } from './styles';
 
 interface SceneContainerProps {

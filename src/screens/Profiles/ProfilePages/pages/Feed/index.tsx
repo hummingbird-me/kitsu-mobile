@@ -1,5 +1,3 @@
 import Feed from './component';
 
-export {
-  Feed,
-};
+export { Feed };

@@ -1,14 +1,16 @@
+import { isEmpty } from 'lodash';
 import React from 'react';
-import { View, TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback, View } from 'react-native';
+import Hyperlink from 'react-native-hyperlink';
+
 import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
+import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { MediaTag } from 'kitsu/screens/Feed/components/MediaTag';
 import { scene } from 'kitsu/screens/Feed/constants';
-import Hyperlink from 'react-native-hyperlink';
-import { isEmpty } from 'lodash';
-import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
 import { handleURL } from 'kitsu/utils/url';
-import { styles } from './styles';
+
 import { PostStatus } from '../PostStatus';
+import { styles } from './styles';
 
 interface PostMainProps {
   cacheKey?: string;
@@ -37,15 +39,18 @@ export const PostMain = ({
   componentId,
   onPress,
   onStatusPress,
-  showViewParent
+  showViewParent,
 }: PostMainProps) => {
   const hasContentAbove = !isEmpty(content) || taggedMedia;
   return (
     <View style={styles.postMain}>
-      {!isEmpty(content) &&
+      {!isEmpty(content) && (
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.postContent}>
-            <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url)}>
+            <Hyperlink
+              linkStyle={styles.linkStyle}
+              onPress={(url) => handleURL(url)}
+            >
               <ViewMoreStyledText
                 cacheKey={cacheKey}
                 color="dark"
@@ -59,7 +64,7 @@ export const PostMain = ({
             </Hyperlink>
           </View>
         </TouchableWithoutFeedback>
-      }
+      )}
       {taggedMedia && (
         <MediaTag
           media={taggedMedia}
@@ -68,17 +73,25 @@ export const PostMain = ({
           style={isEmpty(content) ? { marginTop: 0 } : null}
         />
       )}
-      {(embed || !isEmpty(uploads)) &&
+      {(embed || !isEmpty(uploads)) && (
         <EmbeddedContent
           embed={embed}
           uploads={uploads}
           maxWidth={scene.width}
           minWidth={scene.width}
-          style={[styles.postImagesView, !hasContentAbove && styles.postImagesView_noText]}
+          style={[
+            styles.postImagesView,
+            !hasContentAbove && styles.postImagesView_noText,
+          ]}
           componentId={componentId}
         />
-      }
-      <PostStatus onPress={onStatusPress || onPress} likesCount={likesCount} commentsCount={commentsCount} showViewParent={showViewParent}/>
+      )}
+      <PostStatus
+        onPress={onStatusPress || onPress}
+        likesCount={likesCount}
+        commentsCount={commentsCount}
+        showViewParent={showViewParent}
+      />
     </View>
   );
 };

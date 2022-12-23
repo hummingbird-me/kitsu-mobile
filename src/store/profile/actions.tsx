@@ -1,10 +1,15 @@
-import { capitalize, map, lowerCase, isEmpty, camelCase } from 'lodash';
-import * as types from 'kitsu/store/types';
-import { Kitsu } from 'kitsu/config/api';
-import { KitsuLibrary, KitsuLibraryEventSource, KitsuLibrarySort } from 'kitsu/utils/kitsuLibrary';
-import { getTitleField } from 'kitsu/utils/getTitleField';
+import { camelCase, capitalize, isEmpty, lowerCase, map } from 'lodash';
 
-export const fetchProfile = userId => async (dispatch) => {
+import { Kitsu } from 'kitsu/config/api';
+import * as types from 'kitsu/store/types';
+import { getTitleField } from 'kitsu/utils/getTitleField';
+import {
+  KitsuLibrary,
+  KitsuLibraryEventSource,
+  KitsuLibrarySort,
+} from 'kitsu/utils/kitsuLibrary';
+
+export const fetchProfile = (userId) => async (dispatch) => {
   dispatch({ type: types.FETCH_USER });
   try {
     const user = await Kitsu.findAll('users', {
@@ -12,7 +17,8 @@ export const fetchProfile = userId => async (dispatch) => {
         id: userId,
       },
       fields: {
-        users: 'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount' +
+        users:
+          'waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount' +
           ',coverImage,avatar,about,name,waifu',
       },
       include: 'waifu',
@@ -27,84 +33,85 @@ export const fetchProfile = userId => async (dispatch) => {
   }
 };
 
-export const fetchUserFeed = (userId, limit = 20) => async (dispatch) => {
-  dispatch({ type: types.FETCH_USER_FEED });
-  try {
-    const results = await Kitsu.one('userFeed', userId).get({
-      page: { limit },
-      filter: {
-        kind: 'media',
-      },
-      include: 'media',
-    });
+export const fetchUserFeed =
+  (userId, limit = 20) =>
+  async (dispatch) => {
+    dispatch({ type: types.FETCH_USER_FEED });
+    try {
+      const results = await Kitsu.one('userFeed', userId).get({
+        page: { limit },
+        filter: {
+          kind: 'media',
+        },
+        include: 'media',
+      });
 
-    dispatch({
-      type: types.FETCH_USER_FEED_SUCCESS,
-      payload: {
-        userId,
-        entries: [...results],
-      },
-    });
-  } catch (error) {
-    console.warn(error);
-    dispatch({
-      type: types.FETCH_USER_FEED_FAIL,
-      payload: {
-        error,
-      },
-    });
-  }
-};
+      dispatch({
+        type: types.FETCH_USER_FEED_SUCCESS,
+        payload: {
+          userId,
+          entries: [...results],
+        },
+      });
+    } catch (error) {
+      console.warn(error);
+      dispatch({
+        type: types.FETCH_USER_FEED_FAIL,
+        payload: {
+          error,
+        },
+      });
+    }
+  };
 
-export const fetchProfileFavorites = (userId, type = 'anime', limit = 20, pageIndex = 0) => async (
-  dispatch,
-  getState,
-) => {
-  dispatch({
-    type: types.FETCH_USER_FAVORITES,
-    payload: {
-      type,
-    },
-  });
-  let data = [];
-  if (pageIndex > 0) {
-    data = [...getState().profile[type]];
-  }
-  try {
-    const favorites = await Kitsu.findAll('favorites', {
-      filter: {
-        userId,
-        itemType: capitalize(type),
-      },
-      page: {
-        limit,
-        offset: pageIndex * limit,
-      },
-      fields: {
-        favorites: 'favRank,id,item',
-      },
-      include: 'item',
-    });
-    data = [...data, ...favorites];
+export const fetchProfileFavorites =
+  (userId, type = 'anime', limit = 20, pageIndex = 0) =>
+  async (dispatch, getState) => {
     dispatch({
-      type: types.FETCH_USER_FAVORITES_SUCCESS,
+      type: types.FETCH_USER_FAVORITES,
       payload: {
-        type,
-        userId,
-        favorites: data,
-      },
-    });
-  } catch (error) {
-    console.warn(error);
-    dispatch({
-      type: types.FETCH_USER_FAVORITES_FAIL,
-      payload: {
-        error: `Failed to load ${type}s`,
         type,
       },
     });
-  }
-};
+    let data = [];
+    if (pageIndex > 0) {
+      data = [...getState().profile[type]];
+    }
+    try {
+      const favorites = await Kitsu.findAll('favorites', {
+        filter: {
+          userId,
+          itemType: capitalize(type),
+        },
+        page: {
+          limit,
+          offset: pageIndex * limit,
+        },
+        fields: {
+          favorites: 'favRank,id,item',
+        },
+        include: 'item',
+      });
+      data = [...data, ...favorites];
+      dispatch({
+        type: types.FETCH_USER_FAVORITES_SUCCESS,
+        payload: {
+          type,
+          userId,
+          favorites: data,
+        },
+      });
+    } catch (error) {
+      console.warn(error);
+      dispatch({
+        type: types.FETCH_USER_FAVORITES_FAIL,
+        payload: {
+          error: `Failed to load ${type}s`,
+          type,
+        },
+      });
+    }
+  };
 
 const defaultFetchUserLibraryOptions = {
   limit: 25,
@@ -120,7 +127,7 @@ const defaultFetchUserLibraryOptions = {
  */
 function getSortString(sort, kind, user) {
   // Get the user preference
-  const preference = (user && lowerCase(user.titleLanguagePreference));
+  const preference = user && lowerCase(user.titleLanguagePreference);
   const key = (preference && getTitleField(preference)) || 'canonical';
 
   const titleSort = `${kind}.titles.${key}`;
@@ -153,73 +160,79 @@ function getSortString(sort, kind, user) {
   return `${ascending}${defaultSort},${titleSort}`;
 }
 
-export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState) => {
-  const options = {
-    ...defaultFetchUserLibraryOptions,
-    ...fetchOptions,
-  };
+export const fetchUserLibraryByType =
+  (fetchOptions) => async (dispatch, getState) => {
+    const options = {
+      ...defaultFetchUserLibraryOptions,
+      ...fetchOptions,
+    };
 
-  const filter = {
-    userId: options.userId,
-    status: options.status,
-    kind: options.library,
-  };
+    const filter = {
+      userId: options.userId,
+      status: options.status,
+      kind: options.library,
+    };
 
-  const { userLibrary, librarySort } = getState().profile;
-  const { currentUser } = getState().user;
+    const { userLibrary, librarySort } = getState().profile;
+    const { currentUser } = getState().user;
 
-  let data = userLibrary[options.userId][options.library][options.status].data;
-
-  dispatch({
-    type: types.FETCH_USER_LIBRARY_TYPE,
-    library: options.library,
-    status: options.status,
-    userId: options.userId,
-    refresh: options.refresh || false,
-  });
-
-  try {
-    const libraryEntries = await Kitsu.findAll('libraryEntries', {
-      fields: {
-        anime: 'titles,canonicalTitle,posterImage,episodeCount,startDate,endDate',
-        manga: 'titles,canonicalTitle,posterImage,chapterCount,startDate,endDate',
-        libraryEntries: 'anime,finishedAt,manga,notes,private,progress,ratingTwenty,reconsumeCount,startedAt,status',
-      },
-      filter,
-      include: 'anime,manga',
-      page: {
-        limit: options.limit,
-        offset: options.refresh ? 0 : data.length,
-      },
-      sort: getSortString(librarySort, options.library, currentUser),
-    });
-
-    if (options.refresh) {
-      data = libraryEntries;
-    } else {
-      // If we refresh then we need to reset data
-      data = data.concat(libraryEntries);
-    }
-
-    data.meta = libraryEntries.meta;
+    let data =
+      userLibrary[options.userId][options.library][options.status].data;
 
     dispatch({
-      data,
-      meta: libraryEntries.meta,
-      type: types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
-      refresh: () => {
-        const newOptions = {
-          ...options,
-          refresh: true,
-        };
-        console.log(options);
-        fetchUserLibraryByType(newOptions)(dispatch, getState);
-      },
-      fetchMore: (limit = 10) => {
-        const state = getState().profile;
-        if (!state || !options.userId || !options.library || !options.status) return;
+      type: types.FETCH_USER_LIBRARY_TYPE,
+      library: options.library,
+      status: options.status,
+      userId: options.userId,
+      refresh: options.refresh || false,
+    });
 
-        /*
+    try {
+      const libraryEntries = await Kitsu.findAll('libraryEntries', {
+        fields: {
+          anime:
+            'titles,canonicalTitle,posterImage,episodeCount,startDate,endDate',
+          manga:
+            'titles,canonicalTitle,posterImage,chapterCount,startDate,endDate',
+          libraryEntries:
+            'anime,finishedAt,manga,notes,private,progress,ratingTwenty,reconsumeCount,startedAt,status',
+        },
+        filter,
+        include: 'anime,manga',
+        page: {
+          limit: options.limit,
+          offset: options.refresh ? 0 : data.length,
+        },
+        sort: getSortString(librarySort, options.library, currentUser),
+      });
+
+      if (options.refresh) {
+        data = libraryEntries;
+      } else {
+        // If we refresh then we need to reset data
+        data = data.concat(libraryEntries);
+      }
+
+      data.meta = libraryEntries.meta;
+
+      dispatch({
+        data,
+        meta: libraryEntries.meta,
+        type: types.FETCH_USER_LIBRARY_TYPE_SUCCESS,
+        refresh: () => {
+          const newOptions = {
+            ...options,
+            refresh: true,
+          };
+          console.log(options);
+          fetchUserLibraryByType(newOptions)(dispatch, getState);
+        },
+        fetchMore: (limit = 10) => {
+          const state = getState().profile;
+          if (!state || !options.userId || !options.library || !options.status)
+            return;
+
+          /*
         We need to fetch the meta count dynamically here incase they were changed manually.
         This can happen when user added/moved/deleted library entries.
 
@@ -231,199 +244,275 @@ export const fetchUserLibraryByType = fetchOptions => async (dispatch, getState)
 
         We check the count dynamically as we know that when a user moves media between statuses, the status counts will be updated.
         */
-        const userLibrary = state.userLibrary[options.userId];
-        const meta = userLibrary && userLibrary.meta;
-        const statusCounts = meta && meta[options.library] && meta[options.library].statusCounts;
-        if (isEmpty(meta) || isEmpty(statusCounts)) return;
+          const userLibrary = state.userLibrary[options.userId];
+          const meta = userLibrary && userLibrary.meta;
+          const statusCounts =
+            meta && meta[options.library] && meta[options.library].statusCounts;
+          if (isEmpty(meta) || isEmpty(statusCounts)) return;
 
-        const metaEntryCount = statusCounts[camelCase(options.status)] || 0;
-        const entries = userLibrary[options.library] && userLibrary[options.library][options.status];
-        const data = (entries && entries.data) || [];
+          const metaEntryCount = statusCounts[camelCase(options.status)] || 0;
+          const entries =
+            userLibrary[options.library] &&
+            userLibrary[options.library][options.status];
+          const data = (entries && entries.data) || [];
 
-        if (data.length < metaEntryCount) {
-          const newOptions = {
-            ...options,
-            limit,
-            refresh: false,
-          };
-          fetchUserLibraryByType(newOptions)(dispatch, getState);
-        }
-      },
-      library: options.library,
-      status: options.status,
-      userId: options.userId,
-    });
-  } catch (error) {
-    console.warn(error);
-    dispatch({
-      error,
-      type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
-      library: options.library,
-      status: options.status,
-      userId: options.userId,
-    });
-  }
-};
-
-export const fetchUserLibrary = fetchOptions => async (dispatch, getState) => {
-  const options = {
-    ...defaultFetchUserLibraryOptions,
-    ...fetchOptions,
-  };
-
-  dispatch({
-    userId: options.userId,
-    type: types.FETCH_USER_LIBRARY,
-  });
-
-  const fetchUserTypeOptions = {
-    limit: options.limit,
-    userId: options.userId,
-    refresh: options.refresh,
-  };
-
-  try {
-    await Promise.all([
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'planned' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'on_hold' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'anime', status: 'dropped' })(dispatch, getState),
-    ]);
-
-    await Promise.all([
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'current' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'planned' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'completed' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'on_hold' })(dispatch, getState),
-      fetchUserLibraryByType({ ...fetchUserTypeOptions, library: 'manga', status: 'dropped' })(dispatch, getState),
-    ]);
-
-    dispatch({
-      type: types.FETCH_USER_LIBRARY_SUCCESS,
-      userId: options.userId,
-    });
-  } catch (error) {
-    console.warn(error);
-    dispatch({
-      error,
-      type: types.FETCH_USER_LIBRARY_FAIL,
-      userId: options.userId,
-    });
-  }
-};
-
-export const fetchNetwork = (userId, type = 'followed', limit = 20, pageIndex = 0) => async (
-  dispatch,
-  getState,
-) => {
-  const networkType = {
-    followed: 'follower',
-    follower: 'followed',
-  };
-  dispatch({ type: types.FETCH_USER_NETWORK, payload: { type } });
-  let data = [];
-  if (pageIndex > 0) {
-    data = [...getState().profile[type][userId]];
-  }
-  const { currentUser } = getState().user;
-  try {
-    const network = await Kitsu.findAll('follows', {
-      filter: {
-        [networkType[type]]: userId,
-      },
-      sort: '-created_at',
-      fields: {
-        users: 'avatar,name,followersCount',
-      },
-      page: {
-        limit,
-        offset: pageIndex * limit,
-      },
-      include: type,
-    });
-
-    dispatch({
-      type: types.FETCH_USER_NETWORK_SUCCESS,
-      payload: { network: [...data, ...network], type, userId },
-    });
-
-    map(network, async (item) => {
-      const aaaa = await Kitsu.findAll('follows', {
-        filter: {
-          followed: item[type].id,
-          follower: currentUser.id,
+          if (data.length < metaEntryCount) {
+            const newOptions = {
+              ...options,
+              limit,
+              refresh: false,
+            };
+            fetchUserLibraryByType(newOptions)(dispatch, getState);
+          }
         },
+        library: options.library,
+        status: options.status,
+        userId: options.userId,
       });
-      if (aaaa.length === 1) dispatch({ type: types.FETCH_NETWORK_FOLLOW, payload: item[type].id });
-    });
-  } catch (error) {
-    console.warn(error);
+    } catch (error) {
+      console.warn(error);
+      dispatch({
+        error,
+        type: types.FETCH_USER_LIBRARY_TYPE_FAIL,
+        library: options.library,
+        status: options.status,
+        userId: options.userId,
+      });
+    }
+  };
+
+export const fetchUserLibrary =
+  (fetchOptions) => async (dispatch, getState) => {
+    const options = {
+      ...defaultFetchUserLibraryOptions,
+      ...fetchOptions,
+    };
+
     dispatch({
-      type: types.FETCH_USER_NETWORK_FAIL,
-      payload: 'Failed to load user',
+      userId: options.userId,
+      type: types.FETCH_USER_LIBRARY,
     });
-  }
-};
 
-export const updateUserLibraryEntry = (
-  libraryType, libraryStatus, newLibraryEntry,
-) => async (dispatch, getState) => {
-  const { userLibrary } = getState().profile;
-  const { currentUser } = getState().user;
-  if (!currentUser || !currentUser.id || !userLibrary[currentUser.id]) return;
+    const fetchUserTypeOptions = {
+      limit: options.limit,
+      userId: options.userId,
+      refresh: options.refresh,
+    };
 
-  const libraryEntries = userLibrary[currentUser.id][libraryType][libraryStatus].data;
-  const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+    try {
+      await Promise.all([
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'anime',
+          status: 'current',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'anime',
+          status: 'planned',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'anime',
+          status: 'completed',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'anime',
+          status: 'on_hold',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'anime',
+          status: 'dropped',
+        })(dispatch, getState),
+      ]);
 
-  try {
-    const updateEntry = { ...newLibraryEntry };
+      await Promise.all([
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'manga',
+          status: 'current',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'manga',
+          status: 'planned',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'manga',
+          status: 'completed',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'manga',
+          status: 'on_hold',
+        })(dispatch, getState),
+        fetchUserLibraryByType({
+          ...fetchUserTypeOptions,
+          library: 'manga',
+          status: 'dropped',
+        })(dispatch, getState),
+      ]);
 
-    // optimistically update state
-    onLibraryEntryUpdate(currentUser.id, libraryType, libraryStatus, updateEntry)(dispatch, getState);
+      dispatch({
+        type: types.FETCH_USER_LIBRARY_SUCCESS,
+        userId: options.userId,
+      });
+    } catch (error) {
+      console.warn(error);
+      dispatch({
+        error,
+        type: types.FETCH_USER_LIBRARY_FAIL,
+        userId: options.userId,
+      });
+    }
+  };
 
-    const record = await Kitsu.update('libraryEntries', updateEntry);
-    KitsuLibrary.onLibraryEntryUpdate(previousLibraryEntry, record, libraryType, KitsuLibraryEventSource.STORE);
-  } catch (e) {
-    throw e;
-  }
-};
+export const fetchNetwork =
+  (userId, type = 'followed', limit = 20, pageIndex = 0) =>
+  async (dispatch, getState) => {
+    const networkType = {
+      followed: 'follower',
+      follower: 'followed',
+    };
+    dispatch({ type: types.FETCH_USER_NETWORK, payload: { type } });
+    let data = [];
+    if (pageIndex > 0) {
+      data = [...getState().profile[type][userId]];
+    }
+    const { currentUser } = getState().user;
+    try {
+      const network = await Kitsu.findAll('follows', {
+        filter: {
+          [networkType[type]]: userId,
+        },
+        sort: '-created_at',
+        fields: {
+          users: 'avatar,name,followersCount',
+        },
+        page: {
+          limit,
+          offset: pageIndex * limit,
+        },
+        include: type,
+      });
 
-export const deleteUserLibraryEntry = (id, libraryType, libraryStatus) => async (dispatch, getState) => {
-  const { currentUser } = getState().user;
-  if (!currentUser || !currentUser.id) return;
+      dispatch({
+        type: types.FETCH_USER_NETWORK_SUCCESS,
+        payload: { network: [...data, ...network], type, userId },
+      });
 
-  try {
-    await Kitsu.destroy('libraryEntries', id);
-    dispatch(onLibraryEntryDelete(id, currentUser.id, libraryType, libraryStatus));
-    KitsuLibrary.onLibraryEntryDelete(id, libraryType, libraryStatus, KitsuLibraryEventSource.STORE);
-  } catch (e) {
-    throw e;
-  }
-};
+      map(network, async (item) => {
+        const aaaa = await Kitsu.findAll('follows', {
+          filter: {
+            followed: item[type].id,
+            follower: currentUser.id,
+          },
+        });
+        if (aaaa.length === 1)
+          dispatch({
+            type: types.FETCH_NETWORK_FOLLOW,
+            payload: item[type].id,
+          });
+      });
+    } catch (error) {
+      console.warn(error);
+      dispatch({
+        type: types.FETCH_USER_NETWORK_FAIL,
+        payload: 'Failed to load user',
+      });
+    }
+  };
+
+export const updateUserLibraryEntry =
+  (libraryType, libraryStatus, newLibraryEntry) =>
+  async (dispatch, getState) => {
+    const { userLibrary } = getState().profile;
+    const { currentUser } = getState().user;
+    if (!currentUser || !currentUser.id || !userLibrary[currentUser.id]) return;
+
+    const libraryEntries =
+      userLibrary[currentUser.id][libraryType][libraryStatus].data;
+    const previousLibraryEntry = libraryEntries.find(
+      ({ id }) => id === newLibraryEntry.id
+    );
+
+    try {
+      const updateEntry = { ...newLibraryEntry };
+
+      // optimistically update state
+      onLibraryEntryUpdate(
+        currentUser.id,
+        libraryType,
+        libraryStatus,
+        updateEntry
+      )(dispatch, getState);
+
+      const record = await Kitsu.update('libraryEntries', updateEntry);
+      KitsuLibrary.onLibraryEntryUpdate(
+        previousLibraryEntry,
+        record,
+        libraryType,
+        KitsuLibraryEventSource.STORE
+      );
+    } catch (e) {
+      throw e;
+    }
+  };
+
+export const deleteUserLibraryEntry =
+  (id, libraryType, libraryStatus) => async (dispatch, getState) => {
+    const { currentUser } = getState().user;
+    if (!currentUser || !currentUser.id) return;
+
+    try {
+      await Kitsu.destroy('libraryEntries', id);
+      dispatch(
+        onLibraryEntryDelete(id, currentUser.id, libraryType, libraryStatus)
+      );
+      KitsuLibrary.onLibraryEntryDelete(
+        id,
+        libraryType,
+        libraryStatus,
+        KitsuLibraryEventSource.STORE
+      );
+    } catch (e) {
+      throw e;
+    }
+  };
 
 export function onLibraryEntryCreate(
   newLibraryEntry,
   userId,
   libraryType,
-  libraryStatus,
+  libraryStatus
 ) {
   return (dispatch, getState) => {
     const { userLibrary } = getState().profile;
     if (!userLibrary[userId]) return {};
 
     const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
-    const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+    const previousLibraryEntry = libraryEntries.find(
+      ({ id }) => id === newLibraryEntry.id
+    );
 
     // Make sure that we aren't adding a duplicate entry
     if (previousLibraryEntry) {
-      onLibraryEntryUpdate(userId, libraryType, libraryStatus, newLibraryEntry)(dispatch, getState);
+      onLibraryEntryUpdate(
+        userId,
+        libraryType,
+        libraryStatus,
+        newLibraryEntry
+      )(dispatch, getState);
     } else {
       const updateEntry = { ...newLibraryEntry };
 
       // Update meta counts
       const counts = {};
-      const meta = userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
+      const meta =
+        userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
       if (!isEmpty(meta)) {
         // We need to convert status to camelCase because that's what we recieve in the library meta
         const camelStatus = camelCase(libraryStatus);
@@ -447,14 +536,16 @@ export function onLibraryEntryUpdate(
   userId,
   libraryType,
   libraryStatus,
-  newLibraryEntry,
+  newLibraryEntry
 ) {
   return (dispatch, getState) => {
     const { userLibrary } = getState().profile;
     if (!userLibrary[userId]) return {};
 
     const libraryEntries = userLibrary[userId][libraryType][libraryStatus].data;
-    const previousLibraryEntry = libraryEntries.find(({ id }) => id === newLibraryEntry.id);
+    const previousLibraryEntry = libraryEntries.find(
+      ({ id }) => id === newLibraryEntry.id
+    );
 
     // Combine relationship data on the entries
     const combined = newLibraryEntry;
@@ -468,13 +559,15 @@ export function onLibraryEntryUpdate(
 
     // Update meta counts
     const counts = {};
-    const meta = userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
+    const meta =
+      userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
     const newStatus = newLibraryEntry.status;
     if (!isEmpty(meta) && newStatus && libraryStatus !== newStatus) {
       // We need to convert statuses to camelCase because that's what we recieve in the library meta
       const camelLibraryStatus = camelCase(libraryStatus);
       const camelNewStatus = camelCase(newStatus);
-      counts[camelLibraryStatus] = (meta.statusCounts[camelLibraryStatus] || 0) - 1;
+      counts[camelLibraryStatus] =
+        (meta.statusCounts[camelLibraryStatus] || 0) - 1;
       counts[camelNewStatus] = (meta.statusCounts[camelNewStatus] || 0) + 1;
     }
 
@@ -496,21 +589,16 @@ export function onLibraryEntryUpdate(
   };
 }
 
-export function onLibraryEntryDelete(
-  id,
-  userId,
-  libraryType,
-  libraryStatus,
-) {
+export function onLibraryEntryDelete(id, userId, libraryType, libraryStatus) {
   return (dispatch, getState) => {
     const { userLibrary } = getState().profile;
 
     // Delete if we have the state set
     if (userLibrary && userId in userLibrary) {
-
       // Update meta counts
       const counts = {};
-      const meta = userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
+      const meta =
+        userLibrary[userId].meta && userLibrary[userId].meta[libraryType];
       if (!isEmpty(meta)) {
         // We need to convert status to camelCase because that's what we recieve in the library meta
         const camelStatus = camelCase(libraryStatus);

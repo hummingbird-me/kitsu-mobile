@@ -1,13 +1,19 @@
+import { isEmpty, isNull, upperFirst } from 'lodash';
 import React, { PureComponent } from 'react';
 import { ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import { upperFirst, isEmpty, isNull } from 'lodash';
-import { getDefaults, getCategories } from 'kitsu/store/anime/actions';
-import { ContentList } from 'kitsu/components/ContentList';
-import { showSeasonResults, showStreamerResults, showCategoryResults } from 'kitsu/screens/Search/SearchNavigationHelper';
-import { STREAMING_SERVICES } from 'kitsu/constants/app';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import { ContentList } from 'kitsu/components/ContentList';
+import { STREAMING_SERVICES } from 'kitsu/constants/app';
 import { Screens } from 'kitsu/navigation';
+import {
+  showCategoryResults,
+  showSeasonResults,
+  showStreamerResults,
+} from 'kitsu/screens/Search/SearchNavigationHelper';
+import { getCategories, getDefaults } from 'kitsu/store/anime/actions';
+
 import { styles } from './styles';
 
 interface TopsListProps {
@@ -181,17 +187,20 @@ class TopsList extends PureComponent<TopsListProps> {
     };
 
     // Construct the streaming object
-    const streamingServices = Object.keys(STREAMING_SERVICES).map(k => (
-      !isNull(STREAMING_SERVICES[k]) && {
-        name: k,
-        image: STREAMING_SERVICES[k],
-      }
-    ))
-      .filter(s => !isEmpty(s))
-      .map(streamer => ({
+    const streamingServices = Object.keys(STREAMING_SERVICES)
+      .map(
+        (k) =>
+          !isNull(STREAMING_SERVICES[k]) && {
+            name: k,
+            image: STREAMING_SERVICES[k],
+          }
+      )
+      .filter((s) => !isEmpty(s))
+      .map((streamer) => ({
         ...streamer,
         // Add the touch handler for the streamers
-        onPress: () => showStreamerResults(this.props.componentId, streamer.name),
+        onPress: () =>
+          showStreamerResults(this.props.componentId, streamer.name),
       }));
 
     const streamingData = {
@@ -203,12 +212,14 @@ class TopsList extends PureComponent<TopsListProps> {
     };
 
     // Because react doesn't allow dynamic image loading, we have to do it this way :(
-    const categories = (type === 'Anime') ? this.getAnimeCategories() : this.getMangaCategories();
+    const categories =
+      type === 'Anime' ? this.getAnimeCategories() : this.getMangaCategories();
 
     // Add the touch handler for the categories
-    const mappedCategories = categories.map(category => ({
+    const mappedCategories = categories.map((category) => ({
       ...category,
-      onPress: () => showCategoryResults(this.props.componentId, type, category.title),
+      onPress: () =>
+        showCategoryResults(this.props.componentId, type, category.title),
     }));
 
     const categoryData = {
@@ -223,7 +234,7 @@ class TopsList extends PureComponent<TopsListProps> {
     const loadingData = Array(20).fill({});
 
     const topData = {
-      title: (type === 'Anime') ? `Top Airing ${type}` : `Top Publishing ${type}`,
+      title: type === 'Anime' ? `Top Airing ${type}` : `Top Publishing ${type}`,
       data: isEmpty(data.topAiring) ? loadingData : data.topAiring,
       type: isEmpty(data.topAiring) ? 'loading' : 'topAiring',
     };
@@ -263,7 +274,7 @@ class TopsList extends PureComponent<TopsListProps> {
       mostPopularData,
     ];
 
-    return (type === 'Anime') ? animeData : mangaData;
+    return type === 'Anime' ? animeData : mangaData;
   }
 
   handleViewAllPress = (title, type, action) => {
@@ -300,12 +311,18 @@ class TopsList extends PureComponent<TopsListProps> {
 
     return (
       <ScrollView style={styles.scrollContainer}>
-        {listData.map(listItem => (
+        {listData.map((listItem) => (
           <ContentList
             {...listItem}
             key={listItem.name || listItem.title}
             componentId={componentId}
-            onPress={() => this.handleViewAllPress(listItem.title, listItem.type, listItem.action)}
+            onPress={() =>
+              this.handleViewAllPress(
+                listItem.title,
+                listItem.type,
+                listItem.action
+              )
+            }
           />
         ))}
       </ScrollView>
@@ -352,4 +369,6 @@ const mapStateToProps = ({ anime }) => {
   };
 };
 
-export default connect(mapStateToProps, { getDefaults, getCategories })(TopsList);
+export default connect(mapStateToProps, { getDefaults, getCategories })(
+  TopsList
+);

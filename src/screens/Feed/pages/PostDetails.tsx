@@ -1,35 +1,46 @@
+import { isEmpty, isNull, uniqBy } from 'lodash';
 import React, { PureComponent } from 'react';
 import {
-  KeyboardAvoidingView,
   FlatList,
-  View,
-  StatusBar,
-  ScrollView,
+  KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
+  ScrollView,
+  StatusBar,
   Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+
+import { SceneLoader } from 'kitsu/components/SceneLoader';
+import { StyledText } from 'kitsu/components/StyledText';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar, statusBarHeight } from 'kitsu/constants/app';
-import {
-  PostFooter,
-  PostSection,
-  PostCommentsSection,
-  PostReplyBanner,
-} from 'kitsu/screens/Feed/components/Post';
-import { PostHeader, PostMain, PostActions } from 'kitsu/screens/Feed/components/Post/components';
-import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Comment, CommentPagination } from 'kitsu/screens/Feed/components/Comment';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { preprocessFeedPosts, preprocessFeedPost } from 'kitsu/utils/preprocessFeed';
 import * as colors from 'kitsu/constants/colors';
-import { extractUrls } from 'kitsu/utils/url';
-import { isEmpty, uniqBy, isNull } from 'lodash';
-import { Navigation } from 'react-native-navigation';
-import { Screens, NavigationActions } from 'kitsu/navigation';
-import { StyledText } from 'kitsu/components/StyledText';
+import { NavigationActions, Screens } from 'kitsu/navigation';
+import {
+  Comment,
+  CommentPagination,
+} from 'kitsu/screens/Feed/components/Comment';
+import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
+import {
+  PostCommentsSection,
+  PostFooter,
+  PostReplyBanner,
+  PostSection,
+} from 'kitsu/screens/Feed/components/Post';
+import {
+  PostActions,
+  PostHeader,
+  PostMain,
+} from 'kitsu/screens/Feed/components/Post/components';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { isX, paddingX } from 'kitsu/utils/isX';
+import {
+  preprocessFeedPost,
+  preprocessFeedPosts,
+} from 'kitsu/utils/preprocessFeed';
+import { extractUrls } from 'kitsu/utils/url';
 
 interface PostDetailsProps {
   componentId: any;
@@ -72,17 +83,20 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
     const postLikes =
       parseInt(postLikesCount, 10) ||
       parseInt(post.postLikesCount, 10) ||
-      parseInt(post.likesCount, 10) || 0;
+      parseInt(post.likesCount, 10) ||
+      0;
 
     const topLevelCommentsCount =
       parseInt(props.topLevelCommentsCount, 10) ||
       parseInt(post.topLevelCommentsCount, 10) ||
-      parseInt(post.repliesCount, 10) || 0;
+      parseInt(post.repliesCount, 10) ||
+      0;
 
     const commentsCount =
       parseInt(props.commentsCount, 10) ||
       parseInt(post.commentsCount, 10) ||
-      parseInt(post.repliesCount, 10) || 0;
+      parseInt(post.repliesCount, 10) ||
+      0;
 
     /**
      * Because we can also edit a post on this screen, we have to move the post from props to state
@@ -111,8 +125,12 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
 
   componentDidMount() {
     const { comments, like } = this.props;
-    if (!comments || comments.length === 0) { this.fetchComments(); }
-    if (!like) { this.fetchLikes(); }
+    if (!comments || comments.length === 0) {
+      this.fetchComments();
+    }
+    if (!like) {
+      this.fetchLikes();
+    }
   }
 
   onViewAllComment = () => {
@@ -121,9 +139,9 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
     this.setState({ comments: [], showLoadMoreComments: false }, () => {
       this.fetchComments();
     });
-  }
+  };
 
-  onCommentChanged = comment => this.setState({ comment });
+  onCommentChanged = (comment) => this.setState({ comment });
 
   onGifSelected = (gif) => {
     if (!(gif && gif.id)) return;
@@ -134,10 +152,11 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
       // Submit gif if comment was empty
       if (isEmpty(comment)) this.onSubmitComment();
     });
-  }
+  };
 
   onSubmitComment = async () => {
-    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment) return;
+    if (isEmpty(this.state.comment.trim()) || this.state.isPostingComment)
+      return;
 
     const { currentUser, syncComments } = this.props;
     const { post } = this.state;
@@ -213,7 +232,10 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
         this.replyRef = null;
       } else {
         this.replyRef = null;
-        const uniqueComments = uniqBy([...this.state.comments, processed], 'id');
+        const uniqueComments = uniqBy(
+          [...this.state.comments, processed],
+          'id'
+        );
         this.setState({
           comments: uniqueComments,
           topLevelCommentsCount: this.state.topLevelCommentsCount + 1,
@@ -274,7 +296,7 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
         },
       },
     });
-  }
+  };
 
   toggleLike = async () => {
     try {
@@ -293,17 +315,19 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
         await Kitsu.destroy(likesEndpoint, like.id);
         this.setState({ like: null });
       } else {
-        const relationship = isComment ? {
-          comment: {
-            id: post.id,
-            type: 'comments',
-          },
-        } : {
-          post: {
-            id: post.id,
-            type: 'posts',
-          },
-        };
+        const relationship = isComment
+          ? {
+              comment: {
+                id: post.id,
+                type: 'comments',
+              },
+            }
+          : {
+              post: {
+                id: post.id,
+                type: 'posts',
+              },
+            };
 
         like = await Kitsu.create(likesEndpoint, {
           ...relationship,
@@ -322,7 +346,7 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
         postLikesCount: isLiked ? postLikesCount - 1 : postLikesCount + 1,
       });
     }
-  }
+  };
 
   deletePost = async () => {
     try {
@@ -363,7 +387,7 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
           postId: post.id,
           parentId: '_none',
         };
-      // If however they passed us a comment to be used as the main, then we need to fetch the second level comments
+        // If however they passed us a comment to be used as the main, then we need to fetch the second level comments
       } else if (post.type === 'comments') {
         filter = {
           parentId: post.id,
@@ -381,7 +405,10 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
       });
 
       const processed = preprocessFeedPosts(comments);
-      const uniqueComments = uniqBy([...processed.reverse(), ...this.state.comments], 'id');
+      const uniqueComments = uniqBy(
+        [...processed.reverse(), ...this.state.comments],
+        'id'
+      );
 
       this.setState({ comments: uniqueComments, isLoadingComments: false });
     } catch (err) {
@@ -426,7 +453,7 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
     Navigation.pop(this.props.componentId);
   };
 
-  keyExtractor = item => `${item.id}`;
+  keyExtractor = (item) => `${item.id}`;
 
   navigateToUserProfile = (userId) => {
     if (userId) {
@@ -449,8 +476,10 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
         comment={item}
         currentUser={currentUser}
         componentId={componentId}
-        onAvatarPress={id => this.navigateToUserProfile(id)}
-        onReplyPress={(user, callback) => this.onReplyPress(item, user, callback)}
+        onAvatarPress={(id) => this.navigateToUserProfile(id)}
+        onReplyPress={(user, callback) =>
+          this.onReplyPress(item, user, callback)
+        }
       />
     );
   };
@@ -459,8 +488,18 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
 
   render() {
     const { currentUser, componentId } = this.props;
-    const { post, comment, comments, commentsCount, topLevelCommentsCount, isLiked, postLikesCount,
-      isPostingComment, showLoadMoreComments, isLoadingComments } = this.state;
+    const {
+      post,
+      comment,
+      comments,
+      commentsCount,
+      topLevelCommentsCount,
+      isLiked,
+      postLikesCount,
+      isPostingComment,
+      showLoadMoreComments,
+      isLoadingComments,
+    } = this.state;
 
     const { id, updatedAt, content, embed, media, spoiledUnit, uploads } = post;
 
@@ -478,7 +517,10 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
         <PostHeader
           post={post}
           currentUser={currentUser}
-          avatar={(post.user && post.user.avatar && post.user.avatar.medium) || defaultAvatar}
+          avatar={
+            (post.user && post.user.avatar && post.user.avatar.medium) ||
+            defaultAvatar
+          }
           onAvatarPress={() => {
             if (post.user) this.navigateToUserProfile(post.user.id);
           }}
@@ -511,7 +553,7 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
             />
 
             <PostCommentsSection>
-              {showLoadMoreComments &&
+              {showLoadMoreComments && (
                 <TouchableOpacity
                   style={{
                     paddingHorizontal: 8,
@@ -523,16 +565,19 @@ export default class PostDetails extends PureComponent<PostDetailsProps> {
                 >
                   <Text>View All Comments</Text>
                 </TouchableOpacity>
-              }
-              {(isLoadingComments || (comments.length === 0 && topLevelCommentsCount > 0)) &&
-                <SceneLoader />
-              }
-              {comments.length > 0 && topLevelCommentsCount > comments.length && !showLoadMoreComments && (
-                <CommentPagination
-                  onPress={this.onPagination}
-                  isLoading={this.state.isLoadingNextPage}
-                />
               )}
+              {(isLoadingComments ||
+                (comments.length === 0 && topLevelCommentsCount > 0)) && (
+                <SceneLoader />
+              )}
+              {comments.length > 0 &&
+                topLevelCommentsCount > comments.length &&
+                !showLoadMoreComments && (
+                  <CommentPagination
+                    onPress={this.onPagination}
+                    isLoading={this.state.isLoadingNextPage}
+                  />
+                )}
               {comments.length > 0 && (
                 <FlatList
                   listKey={`${post.id}`}

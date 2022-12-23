@@ -1,16 +1,23 @@
+import { capitalize, isEmpty, lowerCase } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, ScrollView, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { libraryImport, libraryExport } from 'kitsu/assets/img/sidebar_icons/';
-import * as colors from 'kitsu/constants/colors';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { capitalize, lowerCase, isEmpty } from 'lodash';
-import { Kitsu } from 'kitsu/config/api';
-import { SidebarHeader, SidebarListItem, SidebarTitle, SidebarButton } from 'kitsu/screens/Sidebar/common';
+import { ScrollView, Text, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import { libraryExport, libraryImport } from 'kitsu/assets/img/sidebar_icons/';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { Kitsu } from 'kitsu/config/api';
+import * as colors from 'kitsu/constants/colors';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
+import {
+  SidebarButton,
+  SidebarHeader,
+  SidebarListItem,
+  SidebarTitle,
+} from 'kitsu/screens/Sidebar/common';
+
 import { SORT_OPTIONS } from './sortOptions';
+import { styles } from './styles';
 
 const mediaPreferenceKeyToTitle = (key) => {
   const mapper = {
@@ -23,10 +30,14 @@ const mediaPreferenceKeyToTitle = (key) => {
 
 const mediaPreferenceTitleToKey = (title) => {
   switch (title) {
-    case 'Romanized': return 'romanized';
-    case 'Most Common Usage': return 'canonical';
-    case 'English': return 'english';
-    default: return null;
+    case 'Romanized':
+      return 'romanized';
+    case 'Most Common Usage':
+      return 'canonical';
+    case 'English':
+      return 'english';
+    default:
+      return null;
   }
 };
 
@@ -41,7 +52,7 @@ interface LibrarySettingsComponentProps {
 export class LibrarySettingsComponent extends PureComponent<LibrarySettingsComponentProps> {
   static defaultProps = {
     navigateBackOnSave: false,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -52,7 +63,9 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
       sortBy: (sort && sort.by) || 'updated_at',
       ascending: !!(sort && sort.ascending),
       ratingSystem: (currentUser && currentUser.ratingSystem) || 'simple',
-      titleLanguagePreference: (currentUser && lowerCase(currentUser.titleLanguagePreference)) || 'canonical',
+      titleLanguagePreference:
+        (currentUser && lowerCase(currentUser.titleLanguagePreference)) ||
+        'canonical',
       saving: false,
     };
   }
@@ -65,7 +78,8 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
       fetchCurrentUser,
       navigateBackOnSave,
     } = this.props;
-    const { sortBy, ascending, saving, ratingSystem, titleLanguagePreference } = this.state;
+    const { sortBy, ascending, saving, ratingSystem, titleLanguagePreference } =
+      this.state;
 
     // Only save if we're not already saving
     if (saving) return;
@@ -85,7 +99,10 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
       }
 
       // Media title preferences
-      if (lowerCase(currentUser.titleLanguagePreference) !== titleLanguagePreference) {
+      if (
+        lowerCase(currentUser.titleLanguagePreference) !==
+        titleLanguagePreference
+      ) {
         changes.titleLanguagePreference = titleLanguagePreference;
       }
 
@@ -109,8 +126,9 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
 
   librarySorting() {
     const { sortBy, ascending } = this.state;
-    const filteredOption = SORT_OPTIONS.filter(e => e.key === sortBy);
-    const currentSort = filteredOption && filteredOption[0] && filteredOption[0].text;
+    const filteredOption = SORT_OPTIONS.filter((e) => e.key === sortBy);
+    const currentSort =
+      filteredOption && filteredOption[0] && filteredOption[0].text;
 
     return {
       heading: 'Library Sorting',
@@ -196,7 +214,7 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
     if (!this.state.saving) {
       Navigation.pop(this.props.componentId);
     }
-  }
+  };
 
   renderSideBarRow = (row) => {
     return (
@@ -204,15 +222,17 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
         key={row.title}
         title={row.title}
         image={row.image}
-        onPress={() => Navigation.push(this.props.componentId, {
-          component: {
-            name: row.target,
-          },
-        })}
+        onPress={() =>
+          Navigation.push(this.props.componentId, {
+            component: {
+              name: row.target,
+            },
+          })
+        }
         style={styles.customRow}
       />
     );
-  }
+  };
 
   renderSettingRow(row) {
     if (row.renderRow) return row.renderRow(row);
@@ -228,21 +248,17 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
             <Text style={styles.hintText}>{row.title}</Text>
             <Text style={styles.valueText}>{row.value}</Text>
           </View>
-          <Icon
-            name={'ios-arrow-forward'}
-            color={colors.lightGrey}
-            size={16}
-          />
+          <Icon name={'ios-arrow-forward'} color={colors.lightGrey} size={16} />
         </View>
       </SelectMenu>
     );
   }
 
   renderSettings(settings) {
-    return settings.map(setting => (
+    return settings.map((setting) => (
       <View key={setting.heading}>
         <SidebarTitle title={setting.heading} />
-        {setting.rows.map(row => this.renderSettingRow(row))}
+        {setting.rows.map((row) => this.renderSettingRow(row))}
       </View>
     ));
   }
@@ -250,7 +266,11 @@ export class LibrarySettingsComponent extends PureComponent<LibrarySettingsCompo
   render() {
     const { saving } = this.state;
 
-    const settings = [this.librarySorting(), this.mediaPreferences(), this.manageLibrary()];
+    const settings = [
+      this.librarySorting(),
+      this.mediaPreferences(),
+      this.manageLibrary(),
+    ];
 
     return (
       <View style={styles.container}>

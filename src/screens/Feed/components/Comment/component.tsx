@@ -1,21 +1,30 @@
-import React, { PureComponent } from 'react';
-import { View, TouchableOpacity, ActivityIndicator, FlatList, Text, Dimensions } from 'react-native';
-import moment from 'moment';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
-import Hyperlink from 'react-native-hyperlink';
-import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
-import { listBackPurple } from 'kitsu/constants/colors';
-import { Kitsu } from 'kitsu/config/api';
 import { isEmpty, uniqBy } from 'lodash';
-import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
+import moment from 'moment';
+import React, { PureComponent } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Hyperlink from 'react-native-hyperlink';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
+import { Kitsu } from 'kitsu/config/api';
+import { defaultAvatar } from 'kitsu/constants/app';
+import { listBackPurple } from 'kitsu/constants/colors';
+import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
+import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
-import { handleURL } from 'kitsu/utils/url';
 import { BasicCache } from 'kitsu/utils/cache';
+import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
+import { handleURL } from 'kitsu/utils/url';
+
 import { styles } from './styles';
 
 const CACHE_WIDTH_KEYS = {
@@ -25,16 +34,16 @@ const CACHE_WIDTH_KEYS = {
 
 interface CommentProps {
   post: {
-    id?: string
+    id?: string;
   };
   comment: {
-    avatar?: string,
-    name?: string,
-    content?: string,
-    time?: string,
-    likesCount?: number,
-    repliesCount?: number,
-    createdAt?: string
+    avatar?: string;
+    name?: string;
+    content?: string;
+    time?: string;
+    likesCount?: number;
+    repliesCount?: number;
+    createdAt?: string;
   };
   componentId?: any;
   isTruncated?: boolean;
@@ -47,7 +56,9 @@ interface CommentProps {
 export class Comment extends PureComponent<CommentProps> {
   constructor(props) {
     super(props);
-    const key = props.isCommentReply ? CACHE_WIDTH_KEYS.reply : CACHE_WIDTH_KEYS.comment;
+    const key = props.isCommentReply
+      ? CACHE_WIDTH_KEYS.reply
+      : CACHE_WIDTH_KEYS.comment;
 
     this.state = {
       likesCount: props.comment.likesCount,
@@ -84,7 +95,7 @@ export class Comment extends PureComponent<CommentProps> {
       console.log('Error fetching replies: ', err);
     }
     this.setState({ isLoadingNextPage: false });
-  }
+  };
 
   onReplyPress = (item) => {
     this.props.onReplyPress(item.user, (comment) => {
@@ -93,7 +104,7 @@ export class Comment extends PureComponent<CommentProps> {
         repliesCount: this.state.repliesCount + 1,
       });
     });
-  }
+  };
 
   onCommentLayout = (event) => {
     // Only calculate this once, else we'll have lots of updates
@@ -107,9 +118,11 @@ export class Comment extends PureComponent<CommentProps> {
     this.setState({ commentWidth: newWidth });
 
     // Cache the value
-    const key = this.props.isCommentReply ? CACHE_WIDTH_KEYS.reply : CACHE_WIDTH_KEYS.comment;
+    const key = this.props.isCommentReply
+      ? CACHE_WIDTH_KEYS.reply
+      : CACHE_WIDTH_KEYS.comment;
     BasicCache.set(key, newWidth);
-  }
+  };
 
   fetchLikes = async () => {
     const { currentUser, comment } = this.props;
@@ -128,7 +141,7 @@ export class Comment extends PureComponent<CommentProps> {
     } catch (err) {
       console.log('Error fetching likes: ', err);
     }
-  }
+  };
 
   toggleLike = async () => {
     try {
@@ -165,7 +178,7 @@ export class Comment extends PureComponent<CommentProps> {
         likesCount: isLiked ? likesCount - 1 : likesCount + 1,
       });
     }
-  }
+  };
 
   fetchReplies = async (requestOptions = {}) => {
     try {
@@ -185,7 +198,10 @@ export class Comment extends PureComponent<CommentProps> {
       });
 
       const processed = preprocessFeedPosts(replies);
-      const uniqueReplies = uniqBy([...processed.reverse(), ...this.state.replies], 'id');
+      const uniqueReplies = uniqBy(
+        [...processed.reverse(), ...this.state.replies],
+        'id'
+      );
 
       this.setState({ replies: uniqueReplies });
     } catch (err) {
@@ -193,7 +209,7 @@ export class Comment extends PureComponent<CommentProps> {
     } finally {
       this.setState({ isLoadingNextPage: false });
     }
-  }
+  };
 
   renderItem = ({ item }) => (
     <Comment
@@ -206,31 +222,27 @@ export class Comment extends PureComponent<CommentProps> {
       componentId={this.props.componentId}
       isCommentReply
     />
-  )
+  );
 
   render() {
-    const {
-      componentId,
-      comment,
-      isTruncated,
-      onAvatarPress,
-      hideEmbeds,
-    } = this.props;
+    const { componentId, comment, isTruncated, onAvatarPress, hideEmbeds } =
+      this.props;
 
-    const { isLiked, likesCount, replies, repliesCount, commentWidth } = this.state;
+    const { isLiked, likesCount, replies, repliesCount, commentWidth } =
+      this.state;
 
     const { id, content, createdAt, user, embed, uploads, updatedAt } = comment;
 
     // Get the user avatar and name
-    const avatar = (user && user.avatar);
+    const avatar = user && user.avatar;
     const name = (user && user.name) || '-';
 
-    const AvatarContainer = props => (
-      user && onAvatarPress ?
+    const AvatarContainer = (props) =>
+      user && onAvatarPress ? (
         <TouchableOpacity onPress={() => onAvatarPress(user.id)} {...props} />
-        :
+      ) : (
         <View {...props} />
-    );
+      );
 
     // The width of the embeds
     const maxEmbedWidth = commentWidth || 200;
@@ -239,13 +251,21 @@ export class Comment extends PureComponent<CommentProps> {
     return (
       <Layout.RowWrap>
         <AvatarContainer>
-          <Avatar avatar={(avatar && avatar.medium) || defaultAvatar} size="medium" />
+          <Avatar
+            avatar={(avatar && avatar.medium) || defaultAvatar}
+            size="medium"
+          />
         </AvatarContainer>
         <Layout.RowMain onLayout={this.onCommentLayout}>
           <View style={[styles.bubble, isEmpty(content) && styles.emptyBubble]}>
-            <StyledText size="xxsmall" color="dark" bold>{name}</StyledText>
-            {!isEmpty(content) &&
-              <Hyperlink linkStyle={styles.linkStyle} onPress={url => handleURL(url)}>
+            <StyledText size="xxsmall" color="dark" bold>
+              {name}
+            </StyledText>
+            {!isEmpty(content) && (
+              <Hyperlink
+                linkStyle={styles.linkStyle}
+                onPress={(url) => handleURL(url)}
+              >
                 <ViewMoreStyledText
                   cacheKey={`${id}-${updatedAt}`}
                   size="xsmall"
@@ -256,12 +276,11 @@ export class Comment extends PureComponent<CommentProps> {
                 >
                   {content}
                 </ViewMoreStyledText>
-
               </Hyperlink>
-            }
+            )}
           </View>
 
-          {(embed || !isEmpty(uploads)) && !hideEmbeds &&
+          {(embed || !isEmpty(uploads)) && !hideEmbeds && (
             <EmbeddedContent
               embed={embed}
               uploads={uploads}
@@ -272,20 +291,37 @@ export class Comment extends PureComponent<CommentProps> {
               componentId={componentId}
               compact
             />
-          }
+          )}
 
           {!isTruncated && (
             <View style={styles.commentActions}>
-              <StyledText color="grey" size="xxsmall">{moment(createdAt).fromNow()}</StyledText>
-              <TouchableOpacity onPress={this.toggleLike} style={styles.commentActionItem}>
-                <StyledText color="grey" size="xxsmall">{`Like${isLiked ? 'd' : ''}`}</StyledText>
+              <StyledText color="grey" size="xxsmall">
+                {moment(createdAt).fromNow()}
+              </StyledText>
+              <TouchableOpacity
+                onPress={this.toggleLike}
+                style={styles.commentActionItem}
+              >
+                <StyledText color="grey" size="xxsmall">{`Like${
+                  isLiked ? 'd' : ''
+                }`}</StyledText>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onReplyPress(comment)} style={styles.commentActionItem}>
-                <StyledText color="grey" size="xxsmall">Reply</StyledText>
+              <TouchableOpacity
+                onPress={() => this.onReplyPress(comment)}
+                style={styles.commentActionItem}
+              >
+                <StyledText color="grey" size="xxsmall">
+                  Reply
+                </StyledText>
               </TouchableOpacity>
               <View style={styles.commentActionItem}>
-                <Icon name={isLiked ? 'md-heart' : 'md-heart-empty'} style={[styles.likeIcon, isLiked && styles.likeIcon__active]} />
-                <StyledText color={isLiked ? 'red' : 'grey'} size="xxsmall">{likesCount}</StyledText>
+                <Icon
+                  name={isLiked ? 'md-heart' : 'md-heart-empty'}
+                  style={[styles.likeIcon, isLiked && styles.likeIcon__active]}
+                />
+                <StyledText color={isLiked ? 'red' : 'grey'} size="xxsmall">
+                  {likesCount}
+                </StyledText>
               </View>
             </View>
           )}
@@ -294,7 +330,9 @@ export class Comment extends PureComponent<CommentProps> {
             <View style={styles.nestedComments}>
               {replies.length === 0 && (
                 <ToggleReplies
-                  onPress={() => { this.fetchReplies(); }}
+                  onPress={() => {
+                    this.fetchReplies();
+                  }}
                   isLoading={this.state.isLoadingNextPage}
                   repliesCount={repliesCount}
                 />
@@ -310,9 +348,11 @@ export class Comment extends PureComponent<CommentProps> {
                   <FlatList
                     listKey={`${comment.id}`}
                     data={replies}
-                    keyExtractor={item => `${item.id}`}
+                    keyExtractor={(item) => `${item.id}`}
                     renderItem={this.renderItem}
-                    ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
+                    ItemSeparatorComponent={() => (
+                      <View style={{ height: 17 }} />
+                    )}
                   />
                 </View>
               )}
@@ -342,15 +382,15 @@ interface ToggleRepliesProps {
 export const ToggleReplies = ({
   onPress,
   isLoading,
-  repliesCount
+  repliesCount,
 }: ToggleRepliesProps) => (
   <View>
-    {isLoading && (
-      <ActivityIndicator color={listBackPurple} />
-    )}
+    {isLoading && <ActivityIndicator color={listBackPurple} />}
     {!isLoading && (
       <TouchableOpacity onPress={onPress}>
-        <StyledText color="dark" size="xxsmall" bold>View replies ({repliesCount})</StyledText>
+        <StyledText color="dark" size="xxsmall" bold>
+          View replies ({repliesCount})
+        </StyledText>
       </TouchableOpacity>
     )}
   </View>
@@ -369,15 +409,15 @@ interface CommentPaginationProps {
 
 export const CommentPagination = ({
   onPress,
-  isLoading
+  isLoading,
 }: CommentPaginationProps) => (
   <View style={{ marginBottom: 14 }}>
-    {isLoading && (
-      <ActivityIndicator color={listBackPurple} />
-    )}
+    {isLoading && <ActivityIndicator color={listBackPurple} />}
     {!isLoading && (
       <TouchableOpacity onPress={onPress}>
-        <StyledText color="dark" size="xxsmall" bold>View previous comments</StyledText>
+        <StyledText color="dark" size="xxsmall" bold>
+          View previous comments
+        </StyledText>
       </TouchableOpacity>
     )}
   </View>

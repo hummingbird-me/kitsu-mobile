@@ -1,7 +1,9 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
+
 import { MediaCard } from 'kitsu/components/MediaCard';
+
 import { styles } from './styles';
 
 const MEDIA_CARD_DIMENSIONS = { width: 100, height: 150 };
@@ -24,5 +26,12 @@ export const ItemRenderer = ({ item, type, ...props }) => {
     return <LandscapeMediaCard {...item} />;
   }
 
-  return <MediaCard cardDimensions={MEDIA_CARD_DIMENSIONS} mediaData={item} loading={type === 'loading'} {...props} />;
+  return (
+    <MediaCard
+      cardDimensions={MEDIA_CARD_DIMENSIONS}
+      mediaData={item}
+      loading={type === 'loading'}
+      {...props}
+    />
+  );
 };

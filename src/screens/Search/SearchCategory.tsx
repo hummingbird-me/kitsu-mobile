@@ -1,18 +1,26 @@
-import React, { Component } from 'react';
-import { Text, FlatList, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { isEqual } from 'lodash';
 import orderBy from 'lodash/orderBy';
 import values from 'lodash/values';
+import React, { Component } from 'react';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import IconAwe from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+
 import { CheckBox } from 'kitsu/components/Checkbox';
+import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import * as colors from 'kitsu/constants/colors';
+import { Screens } from 'kitsu/navigation';
 import { getCategories } from 'kitsu/store/anime/actions';
 import { genres } from 'kitsu/utils/genres';
-import * as colors from 'kitsu/constants/colors';
-import { NavigationHeader } from 'kitsu/components/NavigationHeader';
-import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import { isEqual } from 'lodash';
 
 interface SearchCategoryProps {
   getCategories(...args: unknown[]): unknown;
@@ -58,7 +66,7 @@ class SearchCategory extends Component<SearchCategoryProps> {
         },
       });
     }
-  }
+  };
 
   renderFlatList = (data) => {
     const { active, componentId } = this.props;
@@ -74,36 +82,41 @@ class SearchCategory extends Component<SearchCategoryProps> {
               ...styles.parentItem,
               paddingLeft: 10,
             }}
-            onPress={() => Navigation.push(componentId, {
-              component: {
-                name: Screens.SEARCH_RESULTS,
-                passProps: { ...item, active },
-              },
-            })}
+            onPress={() =>
+              Navigation.push(componentId, {
+                component: {
+                  name: Screens.SEARCH_RESULTS,
+                  passProps: { ...item, active },
+                },
+              })
+            }
           >
             <View style={styles.itemContainer}>
-              <Text style={styles.outerText}>
-                {item.label}
-              </Text>
-              <Icon name="ios-arrow-forward" style={{ fontSize: 17, color: colors.darkGrey }} />
+              <Text style={styles.outerText}>{item.label}</Text>
+              <Icon
+                name="ios-arrow-forward"
+                style={{ fontSize: 17, color: colors.darkGrey }}
+              />
             </View>
           </TouchableOpacity>
         )}
       />
     );
-  }
+  };
 
   renderGenreList = (id, level) => {
     const { categories, getCategories } = this.props;
-    const genresArray = orderBy(values(categories[id]), ['title'], ['asc']).map(item => ({
-      key: item.id,
-      childCount: item.childCount,
-      label: item.title,
-      filter: { categories: item.title },
-      sort: '-userCount',
-    }));
+    const genresArray = orderBy(values(categories[id]), ['title'], ['asc']).map(
+      (item) => ({
+        key: item.id,
+        childCount: item.childCount,
+        label: item.title,
+        filter: { categories: item.title },
+        sort: '-userCount',
+      })
+    );
     const itemStyle = level === 0 ? styles.parentItem : styles.childItem;
-    const padding = level === 0 ? 20 : ((level - 1) * 10) + 20;
+    const padding = level === 0 ? 20 : (level - 1) * 10 + 20;
     return (
       <FlatList
         data={genresArray}
@@ -120,7 +133,8 @@ class SearchCategory extends Component<SearchCategoryProps> {
                 onPress={() => {
                   if (hasChild) {
                     this.setState({ [`show${item.key}`]: !show });
-                    if (!categories[item.key]) getCategories(item.key, item.key);
+                    if (!categories[item.key])
+                      getCategories(item.key, item.key);
                   } else {
                     const aaa = {
                       ...selected,
@@ -132,7 +146,7 @@ class SearchCategory extends Component<SearchCategoryProps> {
                 style={{ ...itemStyle, paddingLeft: padding }}
               >
                 <View style={styles.itemContainer}>
-                  {level !== 0 &&
+                  {level !== 0 && (
                     <CheckBox
                       checked={selected[item.key] === item.label}
                       title={item.label}
@@ -142,7 +156,11 @@ class SearchCategory extends Component<SearchCategoryProps> {
                       uncheckedIcon="circle-thin"
                       checkedColor="#C8E6C9"
                       uncheckedColor="#8E818C"
-                      containerStyle={{ backgroundColor: 'transparent', paddingRight: 0, borderWidth: 0 }}
+                      containerStyle={{
+                        backgroundColor: 'transparent',
+                        paddingRight: 0,
+                        borderWidth: 0,
+                      }}
                       onPress={() => {
                         const state = {
                           ...selected,
@@ -150,16 +168,24 @@ class SearchCategory extends Component<SearchCategoryProps> {
                         };
                         this.setState({ selected: state });
                       }}
-                    />}
-                  {level === 0 &&
-                    <Text style={styles.outerText}>
-                      {item.label}
-                    </Text>
-                  }
-                  {show
-                    ? <IconAwe name="minus-square-o" style={{ fontSize: 17, color: '#FFFFFF' }} />
-                    : hasChild &&
-                    <IconAwe name="plus-square-o" style={{ fontSize: 17, color: '#8E818C' }} />}
+                    />
+                  )}
+                  {level === 0 && (
+                    <Text style={styles.outerText}>{item.label}</Text>
+                  )}
+                  {show ? (
+                    <IconAwe
+                      name="minus-square-o"
+                      style={{ fontSize: 17, color: '#FFFFFF' }}
+                    />
+                  ) : (
+                    hasChild && (
+                      <IconAwe
+                        name="plus-square-o"
+                        style={{ fontSize: 17, color: '#8E818C' }}
+                      />
+                    )
+                  )}
                 </View>
               </TouchableOpacity>
               {show && this.renderGenreList(item.key, level + 1)}
@@ -168,32 +194,37 @@ class SearchCategory extends Component<SearchCategoryProps> {
         }}
       />
     );
-  }
+  };
 
   renderYears = () => {
     const today = new Date();
     const min = 1900;
     const step = 10;
     const max = Math.ceil(today.getUTCFullYear() / step) * step;
-    const years = new Array((max - min) / step).fill(step).map((item, index) => {
-      const year = (index * item) + min;
-      return {
-        key: year,
-        label: `${year}s`,
-        filter: { year: `${year}..${year + step}` },
-        sort: '-userCount',
-      };
-    });
+    const years = new Array((max - min) / step)
+      .fill(step)
+      .map((item, index) => {
+        const year = index * item + min;
+        return {
+          key: year,
+          label: `${year}s`,
+          filter: { year: `${year}..${year + step}` },
+          sort: '-userCount',
+        };
+      });
 
     return this.renderFlatList(years);
-  }
+  };
 
   renderFooter = () => {
     const { componentId } = this.props;
-    const genresArr = values(this.state.selected).filter(a => a);
-    const btnText = genresArr.length > 0
-      ? `Filter by (${genresArr.length}) ${genresArr.length > 1 ? 'categories' : 'category'}`
-      : 'Select at least one';
+    const genresArr = values(this.state.selected).filter((a) => a);
+    const btnText =
+      genresArr.length > 0
+        ? `Filter by (${genresArr.length}) ${
+            genresArr.length > 1 ? 'categories' : 'category'
+          }`
+        : 'Select at least one';
 
     return (
       <View
@@ -211,19 +242,30 @@ class SearchCategory extends Component<SearchCategoryProps> {
           style={styles.footerButton}
           onPress={() => Navigation.pop(componentId)}
         >
-          <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: '500' }}>
+          <Text
+            style={{
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: 14,
+              fontWeight: '500',
+            }}
+          >
             Cancel
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.footerButton, { flex: 3, backgroundColor: '#16A085', marginRight: 0 }]}
+          style={[
+            styles.footerButton,
+            { flex: 3, backgroundColor: '#16A085', marginRight: 0 },
+          ]}
           onPress={() => this.onSubmit(genresArr)}
         >
-          <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{btnText}</Text>
+          <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>
+            {btnText}
+          </Text>
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   render() {
     const { itemKey, componentId, title, label } = this.props;

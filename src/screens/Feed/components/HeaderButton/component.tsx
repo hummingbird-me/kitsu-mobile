@@ -1,6 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, TouchableOpacity } from 'react-native';
+
 import { StyledText } from 'kitsu/components/StyledText';
+
 import { styles } from './styles';
 
 interface HeaderButtonProps {
@@ -29,9 +31,12 @@ export const HeaderButton = ({
     style={[styles.headerButton, style]}
     onPress={onPress}
   >
-    {loading ?
-      <ActivityIndicator color={highlighted ? 'yellow' : 'lightGrey'} size="small" />
-      :
+    {loading ? (
+      <ActivityIndicator
+        color={highlighted ? 'yellow' : 'lightGrey'}
+        size="small"
+      />
+    ) : (
       <StyledText
         color={highlighted ? 'yellow' : 'lightGrey'}
         size="small"
@@ -40,10 +45,9 @@ export const HeaderButton = ({
       >
         {title}
       </StyledText>
-    }
+    )}
   </TouchableOpacity>
 );
-
 
 HeaderButton.defaultProps = {
   disabled: false,

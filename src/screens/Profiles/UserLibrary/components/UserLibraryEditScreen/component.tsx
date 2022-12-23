@@ -1,15 +1,23 @@
-import * as React from 'react';
+import { isEmpty, isNull } from 'lodash';
 import moment from 'moment';
-import { Text, TextInput, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import * as React from 'react';
+import {
+  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { STATUS_SELECT_OPTIONS } from 'kitsu/screens/Profiles/UserLibrary';
-import { Counter } from 'kitsu/components/Counter';
-import { Rating } from 'kitsu/components/Rating';
-import { SimpleHeader } from 'kitsu/components/SimpleHeader';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
-import { isNull, isEmpty } from 'lodash';
-import { DatePicker } from 'kitsu/components/DatePicker';
 import { Navigation } from 'react-native-navigation';
+
+import { Counter } from 'kitsu/components/Counter';
+import { DatePicker } from 'kitsu/components/DatePicker';
+import { Rating } from 'kitsu/components/Rating';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { SimpleHeader } from 'kitsu/components/SimpleHeader';
+import { STATUS_SELECT_OPTIONS } from 'kitsu/screens/Profiles/UserLibrary';
+
 import { styles } from './styles';
 
 const visibilityOptions = [
@@ -24,24 +32,22 @@ const parseISO8601Date = (date) => {
   return moment(date, moment.ISO_8601).toDate();
 };
 
-
 interface UserLibraryEditScreenComponentProps {
   updateUserLibraryEntry(...args: unknown[]): unknown;
   deleteUserLibraryEntry(...args: unknown[]): unknown;
   libraryEntry: object;
-  libraryStatus: "current" | "planned" | "completed" | "on_hold" | "dropped";
-  libraryType: "anime" | "manga";
+  libraryStatus: 'current' | 'planned' | 'completed' | 'on_hold' | 'dropped';
+  libraryType: 'anime' | 'manga';
   media?: object;
   ratingSystem: string;
   canEdit?: boolean;
 }
 
-
 export class UserLibraryEditScreenComponent extends React.Component<UserLibraryEditScreenComponentProps> {
   static defaultProps = {
     canEdit: false,
     media: null,
-  }
+  };
 
   state = {
     notes: this.getLibraryEntry().notes,
@@ -54,15 +60,15 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
     status: this.getLibraryEntry().status,
     loading: false,
     error: null,
-  }
+  };
 
   onNotesChanged = (notes) => {
     this.setState({ notes });
-  }
+  };
 
   onVisibilityChanged = (isPrivate) => {
     this.setState({ private: isPrivate });
-  }
+  };
 
   onProgressValueChanged = (progress) => {
     // Check if user has completed the media
@@ -78,15 +84,15 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
     }
 
     this.setState({ progress, ...other });
-  }
+  };
 
   onRatingChanged = (ratingTwenty) => {
     this.setState({ ratingTwenty });
-  }
+  };
 
   onTimesRewatchedChanged = (timesRewatched) => {
     this.setState({ reconsumeCount: timesRewatched });
-  }
+  };
 
   onStatusChanged = (libraryStatus) => {
     const { startedAt, finishedAt } = this.state;
@@ -100,7 +106,7 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
     }
 
     this.setState({ status: libraryStatus, ...dates });
-  }
+  };
 
   onDateStartedPress = () => {
     const { libraryEntry, libraryType, media } = this.props;
@@ -117,7 +123,7 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
     this.datePicker.show(startedAt, min, max, (newDate) => {
       this.setState({ startedAt: newDate });
     });
-  }
+  };
 
   onDateFinishedPress = () => {
     const { libraryEntry, libraryType, media } = this.props;
@@ -129,26 +135,31 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
     // If the start date is set then we should only be able to pick dates after that
     // If the end date is not set then set the current date as maximum
     const startDate = mediaData && mediaData.startDate;
-    const min = startedAt || (startDate && moment(startDate, 'YYYY-MM-DD').toDate());
+    const min =
+      startedAt || (startDate && moment(startDate, 'YYYY-MM-DD').toDate());
     const max = new Date();
 
     this.datePicker.show(finishedAt, min, max, (newDate) => {
       this.setState({ finishedAt: newDate });
     });
-  }
+  };
 
   onDeleteEntry = async () => {
     const { libraryEntry, libraryType } = this.props;
     this.setState({ loading: true, error: null });
     try {
-      await this.props.deleteUserLibraryEntry(libraryEntry.id, libraryType, libraryEntry.status);
+      await this.props.deleteUserLibraryEntry(
+        libraryEntry.id,
+        libraryType,
+        libraryEntry.status
+      );
       this.setState({ loading: false });
       Navigation.pop(this.props.componentId);
     } catch (e) {
       this.setState({ loading: false, error: e });
       console.log(e);
     }
-  }
+  };
 
   getMaxProgress() {
     const { libraryEntry, libraryType, media } = this.props;
@@ -166,21 +177,17 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
     return this.props.libraryEntry;
   }
 
-  selectOptions = STATUS_SELECT_OPTIONS.map(option => ({
+  selectOptions = STATUS_SELECT_OPTIONS.map((option) => ({
     value: option.value,
     text: option[this.props.libraryType],
-  })).filter(option => option.value !== this.props.libraryStatus);
+  })).filter((option) => option.value !== this.props.libraryStatus);
 
   saveEntry = async () => {
     // send the status from props because that is the list we're looking
     // at not the status from state because that is what the value of the
     // card may have just been changed to
-    const {
-      libraryEntry,
-      libraryStatus,
-      libraryType,
-      updateUserLibraryEntry,
-    } = this.props;
+    const { libraryEntry, libraryStatus, libraryType, updateUserLibraryEntry } =
+      this.props;
 
     const {
       finishedAt,
@@ -221,7 +228,7 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
       await updateUserLibraryEntry(libraryType, libraryStatus, {
         id: libraryEntry.id,
 
-        notes: (notes && notes.trim()),
+        notes: notes && notes.trim(),
         progress,
         ratingTwenty,
         reconsumeCount,
@@ -236,7 +243,7 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
       this.setState({ loading: false, error: e });
       console.log(e);
     }
-  }
+  };
 
   render() {
     const { canEdit, libraryEntry, libraryType, ratingSystem } = this.props;
@@ -258,7 +265,9 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
     const maxProgress = this.getMaxProgress();
 
     // { value: 'current', anime: 'Currently Watching', manga: 'Currently Reading' },
-    const status = STATUS_SELECT_OPTIONS.filter(item => item.value === stateStatus)[0][libraryType];
+    const status = STATUS_SELECT_OPTIONS.filter(
+      (item) => item.value === stateStatus
+    )[0][libraryType];
 
     const goBack = () => Navigation.pop(this.props.componentId);
 
@@ -274,38 +283,33 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
         />
         {/* Container for the content below the header */}
         <View style={{ flex: 1 }}>
-
           {/* Loading */}
-          {loading &&
+          {loading && (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="white" />
             </View>
-          }
+          )}
 
           {/* Error */}
-          {!isNull(error) &&
+          {!isNull(error) && (
             <View style={styles.error}>
               <Text style={styles.errorText}>
                 Error: {error.detail || 'Something went wrong'}
               </Text>
             </View>
-          }
+          )}
 
           {/* Fields */}
           <KeyboardAwareScrollView>
             {/* Status */}
             <View style={styles.editRow}>
-              <Text style={styles.editRowLabel}>
-                Library Status:
-              </Text>
+              <Text style={styles.editRowLabel}>Library Status:</Text>
               <SelectMenu
                 disabled={!canEdit}
                 options={this.selectOptions}
                 onOptionSelected={this.onStatusChanged}
               >
-                <Text style={styles.editRowValue}>
-                  {status}
-                </Text>
+                <Text style={styles.editRowValue}>{status}</Text>
               </SelectMenu>
             </View>
             {/* Progress */}
@@ -314,11 +318,15 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
                 {libraryType === 'anime' ? 'Episode' : 'Chapter'} Progress:
               </Text>
               <Counter
-                inputRef={(r) => { this.progressInput = r; }}
+                inputRef={(r) => {
+                  this.progressInput = r;
+                }}
                 disabled={!canEdit}
                 value={progress}
                 initialValue={libraryEntry.progress}
-                maxValue={typeof maxProgress === 'number' ? maxProgress : undefined}
+                maxValue={
+                  typeof maxProgress === 'number' ? maxProgress : undefined
+                }
                 progressCounter={typeof maxProgress === 'number'}
                 onValueChanged={this.onProgressValueChanged}
               />
@@ -342,7 +350,9 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
                 Times {libraryType === 'anime' ? 'Rewatched' : 'Read'}:
               </Text>
               <Counter
-                inputRef={(r) => { this.rewatchInput = r; }}
+                inputRef={(r) => {
+                  this.rewatchInput = r;
+                }}
                 disabled={!canEdit}
                 initialValue={libraryEntry.reconsumeCount}
                 onValueChanged={this.onTimesRewatchedChanged}
@@ -350,9 +360,7 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
             </View>
             {/* Visibility */}
             <View style={styles.editRow}>
-              <Text style={styles.editRowLabel}>
-                Library Entry Visibility:
-              </Text>
+              <Text style={styles.editRowLabel}>Library Entry Visibility:</Text>
               <SelectMenu
                 disabled={!canEdit}
                 options={visibilityOptions}
@@ -371,18 +379,19 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
                 onPress={this.onDateStartedPress}
               >
                 <View>
-                  <Text style={[
-                    styles.editRowLabel,
-                    startedAt && styles.withValueLabel,
-                  ]}
+                  <Text
+                    style={[
+                      styles.editRowLabel,
+                      startedAt && styles.withValueLabel,
+                    ]}
                   >
                     Date Started
                   </Text>
-                  {startedAt &&
+                  {startedAt && (
                     <Text style={styles.editRowValue}>
                       {moment(startedAt).format('MMM. DD, YYYY')}
                     </Text>
-                  }
+                  )}
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -391,18 +400,19 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
                 onPress={this.onDateFinishedPress}
               >
                 <View>
-                  <Text style={[
-                    styles.editRowLabel,
-                    finishedAt && styles.withValueLabel,
-                  ]}
+                  <Text
+                    style={[
+                      styles.editRowLabel,
+                      finishedAt && styles.withValueLabel,
+                    ]}
                   >
                     Date Finished
                   </Text>
-                  {finishedAt &&
+                  {finishedAt && (
                     <Text style={styles.editRowValue}>
                       {moment(finishedAt).format('MMM. DD, YYYY')}
                     </Text>
-                  }
+                  )}
                 </View>
               </TouchableOpacity>
             </View>
@@ -415,7 +425,9 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
                 <TextInput
                   style={[styles.editRowValue]}
                   value={notes}
-                  placeholder={canEdit ? "Type some notes..." : "User has no notes"}
+                  placeholder={
+                    canEdit ? 'Type some notes...' : 'User has no notes'
+                  }
                   onChangeText={this.onNotesChanged}
                   editable={canEdit}
                   multiline
@@ -423,14 +435,23 @@ export class UserLibraryEditScreenComponent extends React.Component<UserLibraryE
               </View>
             </View>
             {/* Delete */}
-            {canEdit &&
+            {canEdit && (
               <View style={[styles.deleteEntryRow]}>
-                <SelectMenu options={['Yes, Delete.', 'Nevermind']} onOptionSelected={this.onDeleteEntry}>
-                  <Text style={styles.deleteEntryText}>Delete Library Entry</Text>
+                <SelectMenu
+                  options={['Yes, Delete.', 'Nevermind']}
+                  onOptionSelected={this.onDeleteEntry}
+                >
+                  <Text style={styles.deleteEntryText}>
+                    Delete Library Entry
+                  </Text>
                 </SelectMenu>
               </View>
-            }
-            <DatePicker ref={(d) => { this.datePicker = d; }} />
+            )}
+            <DatePicker
+              ref={(d) => {
+                this.datePicker = d;
+              }}
+            />
           </KeyboardAwareScrollView>
         </View>
       </View>

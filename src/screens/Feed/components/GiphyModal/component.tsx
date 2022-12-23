@@ -1,15 +1,27 @@
+import { debounce, isEmpty, range } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
-import { SearchBox } from 'kitsu/components/SearchBox';
-import { isEmpty, range, debounce } from 'lodash';
-import { getBestGridItemSpacing } from 'kitsu/utils/spacing';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Keyboard,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { SearchBox } from 'kitsu/components/SearchBox';
+import { kitsuConfig } from 'kitsu/config/env';
 import * as colors from 'kitsu/constants/colors';
+import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { PostImage } from 'kitsu/screens/Feed/components/PostImage';
 import { scene } from 'kitsu/screens/Feed/constants';
-import { kitsuConfig } from 'kitsu/config/env';
 import { FetchCache } from 'kitsu/utils/cache';
+import { getBestGridItemSpacing } from 'kitsu/utils/spacing';
+
 import { styles } from './styles';
 
 const IMAGE_SIZE = { width: 150, height: 100 };
@@ -46,7 +58,7 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
     visible: false,
     onCancelPress: () => {},
     onGifSelect: null,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -57,7 +69,7 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
     gifs: [],
     query: '',
     selected: null,
-  }
+  };
 
   componentDidMount() {
     this.mounted = true;
@@ -72,19 +84,19 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
     const { onGifSelect } = this.props;
     onGifSelect(gif);
     this.setState({ selected: null });
-  }
+  };
 
   handleCancelPress = () => {
     const { onCancelPress } = this.props;
     onCancelPress();
     this.setState({ selected: null });
-  }
+  };
 
   handleSearchStateChange = (query) => {
     this.setState({ query }, () => {
       this.debouncedSearch(query);
     });
-  }
+  };
 
   searchGIF = async (query) => {
     const config = kitsuConfig.giphy;
@@ -107,7 +119,7 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
   debouncedSearch = debounce(this.searchGIF, 150);
 
   renderItem = (item, spacing) => {
@@ -135,7 +147,7 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   renderSelected(gif) {
     const images = gif.images;
@@ -156,7 +168,10 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
           </TouchableOpacity>
         </View>
         <View style={styles.imageContainer}>
-          <PostImage uri={images.downsized.url || images.original.url || ''} width={scene.width} />
+          <PostImage
+            uri={images.downsized.url || images.original.url || ''}
+            width={scene.width}
+          />
         </View>
       </View>
     );
@@ -167,7 +182,10 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
     const { gifs, selected, query } = this.state;
 
     // This will make it so the list will be centred should we have any extra space left over
-    const padding = { paddingLeft: bestSpacing.extra / 2, paddingTop: bestSpacing.margin / 2 };
+    const padding = {
+      paddingLeft: bestSpacing.extra / 2,
+      paddingTop: bestSpacing.margin / 2,
+    };
 
     return (
       <Modal
@@ -176,9 +194,7 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
         transparent={false}
         onRequestClose={this.handleCancelPress}
       >
-        {selected &&
-          this.renderSelected(selected)
-        }
+        {selected && this.renderSelected(selected)}
         <ModalHeader
           title="Select a GIF"
           leftButtonTitle="Cancel"
@@ -206,7 +222,7 @@ export class GiphyModal extends PureComponent<GiphyModalProps> {
             })}
             numColumns={bestSpacing.columnCount}
             ItemSeparatorComponent={() => <View />}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={(item) => `${item.id}`}
             renderItem={({ item }) => this.renderItem(item, bestSpacing)}
           />
         </View>

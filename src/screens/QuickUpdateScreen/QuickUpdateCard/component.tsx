@@ -1,32 +1,40 @@
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
+
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { Rating } from 'kitsu/components/Rating';
+
 import styles from './styles';
 
 interface QuickUpdateCardProps {
   // TODO: Not yet a complete definition of the things we use in data.
   ratingSystem: string;
   data: {
-    loading?: boolean,
+    loading?: boolean;
     item: {
       anime?: {
-        canonicalTitle: string,
-        id: string,
+        canonicalTitle: string;
+        id: string;
         posterImage?: {
-          large: string
-        }
-      },
+          large: string;
+        };
+      };
       manga?: {
-        canonicalTitle: string,
-        id: string,
+        canonicalTitle: string;
+        id: string;
         posterImage?: {
-          large: string
-        }
-      }
-    }
+          large: string;
+        };
+      };
+    };
   };
   onBeginEditing?(...args: unknown[]): unknown;
   onEndEditing?(...args: unknown[]): unknown;
@@ -37,10 +45,10 @@ interface QuickUpdateCardProps {
 
 export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps> {
   static defaultProps = {
-    onBeginEditing: () => { },
-    onEndEditing: () => { },
-    onMarkComplete: () => { },
-    onMediaTapped: () => { },
+    onBeginEditing: () => {},
+    onEndEditing: () => {},
+    onMarkComplete: () => {},
+    onMediaTapped: () => {},
   };
 
   state = {
@@ -78,7 +86,7 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
     if (media) {
       this.props.onMediaTapped(media);
     }
-  }
+  };
 
   updateTextAndToggle = () => {
     // Restore any previous text, and then toggle the editor.
@@ -136,8 +144,12 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
     const isCompleted = data.item.status === 'completed';
     const nextProgress = progress + 1;
 
-    const landscapeImage = (unit && unit.length && unit[0].thumbnail && unit[0].thumbnail.original) ||
-                          (media && media.posterImage && media.posterImage.large);
+    const landscapeImage =
+      (unit &&
+        unit.length &&
+        unit[0].thumbnail &&
+        unit[0].thumbnail.original) ||
+      (media && media.posterImage && media.posterImage.large);
 
     const squareImage = media && media.posterImage && media.posterImage.small;
     return (
@@ -155,7 +167,11 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
             />
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity onPress={() => this.onMediaTapped(media)}>
-                <FastImage source={{ uri: squareImage }} style={styles.avatarImage} cache="web" />
+                <FastImage
+                  source={{ uri: squareImage }}
+                  style={styles.avatarImage}
+                  cache="web"
+                />
               </TouchableOpacity>
               <View style={styles.descriptionRow}>
                 <TouchableOpacity onPress={() => this.onMediaTapped(media)}>
@@ -167,7 +183,9 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
                 {unitCount > 0 && (
                   <View style={styles.progressBarContainer}>
                     <ProgressBar
-                      backgroundStyle={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+                      backgroundStyle={{
+                        backgroundColor: 'rgba(255,255,255,0.15)',
+                      }}
                       height={6}
                       fillPercentage={(progress / unitCount) * 100}
                     />
@@ -177,15 +195,10 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
                 {progress > 0 ? (
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.currentEpisodeText}>
-                      {media.type === 'anime' ? 'EP' : 'CH'}
-                      {' '}
-                      {progress}
+                      {media.type === 'anime' ? 'EP' : 'CH'} {progress}
                     </Text>
                     <Text numberOfLines={1} style={styles.totalEpisodesText}>
-                      {unitCount > 0 && (
-                        ` of ${unitCount}`
-                      )}
-                      {' '}
+                      {unitCount > 0 && ` of ${unitCount}`}{' '}
                       {unit[0] && unit[0].canonicalTitle}
                     </Text>
                   </View>
@@ -210,15 +223,14 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
                     UP NEXT{' '}
                     {nextUnit ? ( // Might not exist
                       <Text style={styles.seriesNextEpisodeTitle}>
-                        {media.type === 'anime' ? 'EP' : 'CH'}
-                        {' '}
-                        {nextUnit.number} {nextUnit.canonicalTitle ? `- ${nextUnit.canonicalTitle}` : ''}
+                        {media.type === 'anime' ? 'EP' : 'CH'} {nextUnit.number}{' '}
+                        {nextUnit.canonicalTitle
+                          ? `- ${nextUnit.canonicalTitle}`
+                          : ''}
                       </Text>
                     ) : (
                       <Text style={styles.seriesNextEpisodeTitle}>
-                        {media.type === 'anime' ? 'EP' : 'CH'}
-                        {' '}
-                        {nextProgress}
+                        {media.type === 'anime' ? 'EP' : 'CH'} {nextProgress}
                       </Text>
                     )}
                   </Text>
@@ -228,7 +240,9 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
               </View>
             </View>
           </View>
-          {loading && <ActivityIndicator size="large" style={styles.loadingSpinner} />}
+          {loading && (
+            <ActivityIndicator size="large" style={styles.loadingSpinner} />
+          )}
           {/* Action Row */}
           {!loading &&
             (!isCompleted ? ( // finished ?
@@ -240,10 +254,11 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
                   {unitCount === progress + 1 ? ( // is final episode?
                     <Text style={styles.buttonText}>Mark as Complete</Text>
                   ) : (
-                    <Text style={styles.buttonText}>Mark
+                    <Text style={styles.buttonText}>
+                      Mark
                       <Text style={{ fontWeight: 'bold' }}>
-                        {' '}{media.type === 'anime' ? 'Episode' : 'Chapter'}
                         {' '}
+                        {media.type === 'anime' ? 'Episode' : 'Chapter'}{' '}
                         {data.item.progress + 1}{' '}
                       </Text>
                       {media.type === 'anime' ? 'Watched' : 'Read'}
@@ -261,7 +276,9 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
                   alignItems: 'center',
                 }}
               >
-                <Text style={styles.seriesCompleteText}>Series Complete! Rate it!</Text>
+                <Text style={styles.seriesCompleteText}>
+                  Series Complete! Rate it!
+                </Text>
                 {this.renderRatingComponent()}
               </View>
             ))}

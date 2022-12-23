@@ -1,17 +1,6 @@
-
 import { isFinite } from 'lodash';
 
-const UNITS = [
-  'B',
-  'kB',
-  'MB',
-  'GB',
-  'TB',
-  'PB',
-  'EB',
-  'ZB',
-  'YB',
-];
+const UNITS = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 /**
  * Convert byte display to a pretty byte display (human readable values).
@@ -24,11 +13,16 @@ const UNITS = [
  */
 export const prettyBytes = (number) => {
   if (!isFinite(number)) return '-';
-  const exponent = Math.min(Math.floor(Math.log10(number) / 3), UNITS.length - 1);
+  const exponent = Math.min(
+    Math.floor(Math.log10(number) / 3),
+    UNITS.length - 1
+  );
 
   // NOTE: Don't use `**` even if elint tells you to.
   // It will make it so the app won't work properly on android.
-  const numberString = Number((number / Math.pow(1000, exponent)).toPrecision(3));
+  const numberString = Number(
+    (number / Math.pow(1000, exponent)).toPrecision(3)
+  );
   const unit = UNITS[exponent];
 
   return `${numberString} ${unit}`;

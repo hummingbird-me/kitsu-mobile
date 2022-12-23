@@ -1,9 +1,11 @@
-import React, { PureComponent } from 'react';
-import { View, Modal, FlatList, TouchableOpacity, Text } from 'react-native';
 import { isEmpty, uniq } from 'lodash';
+import React, { PureComponent } from 'react';
+import { FlatList, Modal, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
 import { EmbedItem } from 'kitsu/screens/Feed/components/PostCreator/components/EmbedItem';
-import Icon from 'react-native-vector-icons/Ionicons';
+
 import { styles } from './styles';
 
 interface EmbedModalProps {
@@ -18,9 +20,9 @@ export class EmbedModal extends PureComponent<EmbedModalProps> {
   static defaultProps = {
     currentEmbed: null,
     visible: false,
-    onCancelPress: () => { },
+    onCancelPress: () => {},
     onEmbedSelect: null,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -30,7 +32,10 @@ export class EmbedModal extends PureComponent<EmbedModalProps> {
   }
 
   UNSAFE_componentWillReceiveProps(props) {
-    if (!this.state.selected || this.props.currentEmbed !== props.currentEmbed) {
+    if (
+      !this.state.selected ||
+      this.props.currentEmbed !== props.currentEmbed
+    ) {
       this.setState({
         selected: props.currentEmbed,
       });
@@ -43,13 +48,13 @@ export class EmbedModal extends PureComponent<EmbedModalProps> {
       onEmbedSelect(this.state.selected);
     }
     this.setState({ selected: null });
-  }
+  };
 
   handleCancelPress = () => {
     const { onCancelPress } = this.props;
     onCancelPress();
     this.setState({ selected: null });
-  }
+  };
 
   renderItem = ({ item: url }) => {
     const { selected } = this.state;
@@ -59,21 +64,33 @@ export class EmbedModal extends PureComponent<EmbedModalProps> {
         onPress={() => this.setState({ selected: url })}
         style={styles.item}
       >
-        <View style={[styles.itemContainer, isSelected && styles.item__selected]}>
-          <Text style={[styles.itemUrl, isSelected && styles.itemUrl__selected]}>{url}</Text>
-          <View style={[styles.checkmark, isSelected && styles.checkmark__selected]}>
-            <Icon name="ios-checkmark" color="#FFFFFF" style={styles.checkmarkIcon} />
+        <View
+          style={[styles.itemContainer, isSelected && styles.item__selected]}
+        >
+          <Text
+            style={[styles.itemUrl, isSelected && styles.itemUrl__selected]}
+          >
+            {url}
+          </Text>
+          <View
+            style={[styles.checkmark, isSelected && styles.checkmark__selected]}
+          >
+            <Icon
+              name="ios-checkmark"
+              color="#FFFFFF"
+              style={styles.checkmarkIcon}
+            />
           </View>
         </View>
         <EmbedItem url={url} disabled />
       </TouchableOpacity>
     );
-  }
+  };
 
   render() {
     const { visible, urls } = this.props;
 
-    const filtered = uniq(urls || []).filter(u => !isEmpty(u));
+    const filtered = uniq(urls || []).filter((u) => !isEmpty(u));
 
     return (
       <Modal
@@ -94,7 +111,7 @@ export class EmbedModal extends PureComponent<EmbedModalProps> {
             listKey="embeds"
             data={filtered}
             ItemSeparatorComponent={() => <View style={styles.seperator} />}
-            keyExtractor={item => item}
+            keyExtractor={(item) => item}
             renderItem={this.renderItem}
           />
         </View>

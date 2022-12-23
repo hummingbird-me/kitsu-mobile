@@ -1,18 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import * as colors from 'kitsu/constants/colors';
+import { StyleSheet, Text, View } from 'react-native';
+
 import { commonStyles } from 'kitsu/common/styles';
+import * as colors from 'kitsu/constants/colors';
 
 interface SidebarTitleProps {
   title: string;
 }
 
-const SidebarTitle = ({
-  title,
-  style
-}: SidebarTitleProps) => (
+const SidebarTitle = ({ title, style }: SidebarTitleProps) => (
   <View style={[styles.titleWrapper, style]}>
-    <Text style={[commonStyles.text, { color: colors.white, fontWeight: 'normal' }]}>
+    <Text
+      style={[commonStyles.text, { color: colors.white, fontWeight: 'normal' }]}
+    >
       {title}
     </Text>
   </View>

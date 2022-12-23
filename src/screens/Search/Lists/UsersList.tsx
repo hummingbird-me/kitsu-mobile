@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Text, FlatList, StyleSheet, TouchableHighlight } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
 import { Navigation } from 'react-native-navigation';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+import DEFAULT_AVATAR from 'kitsu/assets/img/default_avatar.png';
 import { Screens } from 'kitsu/navigation';
 
 const styles = StyleSheet.create({
@@ -86,20 +94,22 @@ interface UserProps {
   componentId: any;
 }
 
-const User = ({
-  componentId,
-  user,
-  onFollow
-}: UserProps) => {
+const User = ({ componentId, user, onFollow }: UserProps) => {
   const userAvatar = user.avatar ? { uri: user.avatar.small } : DEFAULT_AVATAR;
   const followerTxt = user.followersCount > 1 ? 'followers' : 'follower';
   return (
-    <TouchableOpacity onPress={() => onUserPress(componentId, user.id)} activeOpacity={0.6} style={styles.userContainer}>
+    <TouchableOpacity
+      onPress={() => onUserPress(componentId, user.id)}
+      activeOpacity={0.6}
+      style={styles.userContainer}
+    >
       <View style={styles.userLeftSection}>
         <FastImage source={userAvatar} style={styles.userAvatar} cache="web" />
         <View style={styles.userMetaContainer}>
           <Text style={styles.userNameText}>{user.name}</Text>
-          <Text style={styles.userFollowText}>{`${user.followersCount} ${followerTxt}`}</Text>
+          <Text
+            style={styles.userFollowText}
+          >{`${user.followersCount} ${followerTxt}`}</Text>
         </View>
       </View>
       {/* <View style={styles.userRightSection}>
@@ -119,12 +129,7 @@ interface UsersListProps {
   componentId: any;
 }
 
-const UsersList = ({
-  hits,
-  onFollow,
-  onData,
-  componentId
-}: UsersListProps) => {
+const UsersList = ({ hits, onFollow, onData, componentId }: UsersListProps) => {
   // Send users data to reducer to maintain single source of truth
   onData(hits);
 
@@ -135,7 +140,14 @@ const UsersList = ({
       style={styles.container}
       scrollEnabled
       contentContainerStyle={styles.userList}
-      renderItem={({ item }) => <User key={`${item.name}`} componentId={componentId} user={item} onFollow={onFollow} />}
+      renderItem={({ item }) => (
+        <User
+          key={`${item.name}`}
+          componentId={componentId}
+          user={item}
+          onFollow={onFollow}
+        />
+      )}
     />
   );
 };

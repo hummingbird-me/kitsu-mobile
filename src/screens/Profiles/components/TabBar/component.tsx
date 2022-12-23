@@ -1,7 +1,9 @@
-import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { ScrollView, View, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
+
 import { StyledText } from 'kitsu/components/StyledText';
+
 import { styles } from './styles';
 
 interface TabBarProps {
@@ -18,7 +20,8 @@ export const TabBar = (props: TabBarProps) => (
       }}
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={[styles.tab, props.containerStyle]}>
+      contentContainerStyle={[styles.tab, props.containerStyle]}
+    >
       {props.children}
     </ScrollView>
   </View>

@@ -1,12 +1,23 @@
-import React, { PureComponent } from 'react';
-import { View, Modal, FlatList, Keyboard, TouchableOpacity, Dimensions, Text, ActivityIndicator, ScrollView } from 'react-native';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
-import Icon from 'react-native-vector-icons/Ionicons';
-import FastImage from 'react-native-fast-image';
 import { isNil } from 'lodash';
-import { prettyBytes } from 'kitsu/utils/prettyBytes';
-import { styles } from './styles';
+import React, { PureComponent } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Keyboard,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import Icon from 'react-native-vector-icons/Ionicons';
 
+import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
+import { prettyBytes } from 'kitsu/utils/prettyBytes';
+
+import { styles } from './styles';
 
 interface ImageSortModalProps {
   visible?: boolean;
@@ -21,7 +32,6 @@ interface ImageSortModalProps {
   currentImagesSize?: number;
 }
 
-
 export class ImageSortModal extends PureComponent<ImageSortModalProps> {
   static defaultProps = {
     visible: false,
@@ -34,15 +44,14 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
     disableRemoveButton: false,
     maxUploadSize: null,
     currentImagesSize: 0,
-  }
+  };
 
   constructor(props) {
     super(props);
     this.mounted = false;
   }
 
-  state = {
-  }
+  state = {};
 
   componentDidMount() {
     this.mounted = true;
@@ -55,12 +64,12 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
   handleCancelPress = () => {
     const { onCancelPress } = this.props;
     onCancelPress();
-  }
+  };
 
   handleAddPress = () => {
     const { onAddPress } = this.props;
     onAddPress();
-  }
+  };
 
   handleSortPress(index, direction) {
     const { images, onChangeImageOrder } = this.props;
@@ -89,13 +98,11 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
 
     return (
       <View key={uri}>
-        {!isNil(item.size) &&
+        {!isNil(item.size) && (
           <View style={styles.sizeIndicatorContainer}>
-            <Text style={styles.sizeIndicator}>
-              {prettyBytes(item.size)}
-            </Text>
+            <Text style={styles.sizeIndicator}>{prettyBytes(item.size)}</Text>
           </View>
-        }
+        )}
         <View style={styles.imageContainer}>
           <FastImage
             key={uri}
@@ -106,14 +113,14 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
           />
         </View>
         <View style={styles.buttonContainer}>
-          {!disableRemoveButton &&
+          {!disableRemoveButton && (
             <TouchableOpacity
               onPress={() => this.handleRemoveImage(index)}
               style={[styles.button, { width: buttonWidth }]}
             >
               <Icon name="md-close" style={[styles.icon, styles.closeIcon]} />
             </TouchableOpacity>
-          }
+          )}
           <TouchableOpacity
             onPress={() => this.handleSortPress(index, 'up')}
             style={[styles.button, { width: buttonWidth }]}
@@ -129,10 +136,16 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
         </View>
       </View>
     );
-  }
+  };
 
   render() {
-    const { visible, images, disableAddButton, maxUploadSize, currentImagesSize } = this.props;
+    const {
+      visible,
+      images,
+      disableAddButton,
+      maxUploadSize,
+      currentImagesSize,
+    } = this.props;
 
     return (
       <Modal
@@ -148,19 +161,20 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
           rightButtonTitle={!disableAddButton && 'Add'}
           rightButtonAction={this.handleAddPress}
         />
-        {!isNil(maxUploadSize) && currentImagesSize > 0 &&
+        {!isNil(maxUploadSize) && currentImagesSize > 0 && (
           <View style={styles.imageSize}>
             <Text style={styles.imageSizeText} numberOfLines={1}>
-              Current Size: {prettyBytes(currentImagesSize)} (Max: {prettyBytes(maxUploadSize)})
+              Current Size: {prettyBytes(currentImagesSize)} (Max:{' '}
+              {prettyBytes(maxUploadSize)})
             </Text>
           </View>
-        }
+        )}
         <ScrollView style={styles.container}>
           <FlatList
             listKey="images"
             data={images}
             ItemSeparatorComponent={() => <View style={styles.seperator} />}
-            keyExtractor={item => item.uri}
+            keyExtractor={(item) => item.uri}
             renderItem={this.renderItem}
           />
         </ScrollView>

@@ -1,5 +1,5 @@
-
 import { isEmpty } from 'lodash';
+
 import { extractUrls } from 'kitsu/utils/url';
 
 const getHttpUrls = (url) => {
@@ -17,7 +17,6 @@ const getHttpUrls = (url) => {
  * @returns The processed post without embed links in their content
  */
 export const preprocessFeedPost = (post) => {
-
   // Save original content before we make any edits to it
   // eslint-disable-next-line no-param-reassign
   post.originalContent = post.content;
@@ -61,7 +60,7 @@ export const preprocessFeedPost = (post) => {
  * @param {Array} posts An array of posts
  * @returns The processed posts without embed links in their content
  */
-export const preprocessFeedPosts = posts => posts.map(preprocessFeedPost);
+export const preprocessFeedPosts = (posts) => posts.map(preprocessFeedPost);
 
 /**
  * Extract feed objects from the given results.
@@ -74,7 +73,9 @@ export const preprocessFeed = (result) => {
   result.forEach((group) => {
     // We only care about the top-most activity
     const activity = group.activities[0];
-    if (!activity) { return; }
+    if (!activity) {
+      return;
+    }
 
     // Push in the `target` if the first activity is a comment. This is a side-effect of
     // comment bumping posts. `target` = the post instance.

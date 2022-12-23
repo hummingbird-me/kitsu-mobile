@@ -1,14 +1,15 @@
 import React, { ComponentProps } from 'react';
 import {
+  ActivityIndicator,
   StyleProp,
-  View,
-  TouchableOpacity,
-  TouchableOpacityProps,
   Text,
   TextStyle,
-  ActivityIndicator,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { styles } from './styles';
 
 const LoadingComponent = () => (
@@ -45,14 +46,16 @@ export const Button = ({
     <Component
       disabled={disabled || loading}
       onPress={onPress}
-      style={[styles.button, disabled ? styles.buttonDisabled : null, style]}>
+      style={[styles.button, disabled ? styles.buttonDisabled : null, style]}
+    >
       {loading ? (
         <LoadingComponent />
       ) : (
         <View style={styles.contentWrapper}>
           {icon ? <Icon name={icon} style={[styles.icon, iconStyle]} /> : null}
           <Text
-            style={[styles.title, titleStyle, bold ? styles.titleBold : null]}>
+            style={[styles.title, titleStyle, bold ? styles.titleBold : null]}
+          >
             {title}
           </Text>
         </View>

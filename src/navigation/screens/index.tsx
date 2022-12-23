@@ -1,23 +1,22 @@
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
-import store from 'kitsu/store/config';
 
 import App from 'kitsu/App';
-import { withNotifications } from 'kitsu/utils/notifications';
-import { withActivityIndicatorHOC } from 'kitsu/utils/deeplink';
-import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
-import { LightBox } from 'kitsu/screens/LightBox';
-
 import * as Screens from 'kitsu/navigation/types';
+import { LightBox } from 'kitsu/screens/LightBox';
+import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
+import store from 'kitsu/store/config';
+import { withActivityIndicatorHOC } from 'kitsu/utils/deeplink';
+import { withNotifications } from 'kitsu/utils/notifications';
 
-import sidebarRoutes from './sidebar';
-import searchRoutes from './search';
+import authRoutes from './auth';
 import feedRoutes from './feed';
 import libraryRoutes from './library';
-import pageRoutes from './pages';
-import authRoutes from './auth';
-import onboardingRoutes from './onboarding';
 import notificationRoutes from './notification';
+import onboardingRoutes from './onboarding';
+import pageRoutes from './pages';
+import searchRoutes from './search';
+import sidebarRoutes from './sidebar';
 
 const routes = {
   ...feedRoutes,

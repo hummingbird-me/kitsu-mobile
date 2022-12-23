@@ -1,9 +1,11 @@
 import * as React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { Screens } from 'kitsu/navigation';
+
+import { styles } from './styles';
 
 interface LibraryHeaderProps {
   libraryStatus: string;
@@ -18,7 +20,7 @@ export const LibraryHeader = ({
   libraryType,
   listTitle,
   componentId,
-  profile
+  profile,
 }: LibraryHeaderProps) => {
   const viewAll = () => {
     Navigation.push(componentId, {

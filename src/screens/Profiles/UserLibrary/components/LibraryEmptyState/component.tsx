@@ -1,25 +1,27 @@
-import * as React from 'react';
-import { ScrollView, View, ImageBackground, Image } from 'react-native';
 import { upperFirst } from 'lodash';
-import { ohNo, mystery } from 'kitsu/assets/img/library';
-import { StyledText } from 'kitsu/components/StyledText';
+import * as React from 'react';
+import { Image, ImageBackground, ScrollView, View } from 'react-native';
+
+import { mystery, ohNo } from 'kitsu/assets/img/library';
 import { Button } from 'kitsu/components/Button';
+import { StyledText } from 'kitsu/components/StyledText';
+
 import { styles } from './styles';
 
 const STATUS_MAP = {
   anime: {
-    current: 'you\'re currently watching',
+    current: "you're currently watching",
     planned: 'you plan to watch',
-    completed: 'you\'ve completed',
+    completed: "you've completed",
     on_hold: 'you have on hold',
-    dropped: 'you\'ve dropped',
+    dropped: "you've dropped",
   },
   manga: {
-    current: 'you\'re currently reading',
+    current: "you're currently reading",
     planned: 'you plan to read',
-    completed: 'you\'ve completed',
+    completed: "you've completed",
     on_hold: 'you have on hold',
-    dropped: 'you\'ve dropped',
+    dropped: "you've dropped",
   },
 };
 
@@ -61,11 +63,7 @@ export const LibraryEmptyState = ({ type, status, onPress }) => {
             You're not tracking any of the {type} {statusText}. Let's find some!
           </StyledText>
         </View>
-        <Button
-          bold
-          title={buttonText}
-          onPress={onPress}
-        />
+        <Button bold title={buttonText} onPress={onPress} />
       </View>
     </ScrollView>
   );

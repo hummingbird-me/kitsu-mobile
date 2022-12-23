@@ -1,6 +1,8 @@
-import { toLower, upperFirst, startCase } from 'lodash';
+import { startCase, toLower, upperFirst } from 'lodash';
 import { Navigation } from 'react-native-navigation';
+
 import { Screens } from 'kitsu/navigation';
+
 /**
  * Navigates to SearchResults with the given category and type filter.
  *

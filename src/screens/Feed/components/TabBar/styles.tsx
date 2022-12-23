@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
+
+import { navigationBarHeight } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Feed/constants';
-import { navigationBarHeight } from 'kitsu/constants/app';
 
 export const styles = StyleSheet.create({
   tabBar: {

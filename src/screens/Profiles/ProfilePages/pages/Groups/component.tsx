@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
-import { defaultAvatar } from 'kitsu/constants/app';
+
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
+import { Kitsu } from 'kitsu/config/api';
+import { defaultAvatar } from 'kitsu/constants/app';
 import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
-import { Kitsu } from 'kitsu/config/api';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 
 interface GroupsProps {
   userId: number;
@@ -17,7 +18,7 @@ class Groups extends PureComponent<GroupsProps> {
   static defaultProps = {
     loadingGroups: false,
     groups: [],
-  }
+  };
 
   renderGroupItem = ({ item }) => {
     if (!item || !item.group) return null;
@@ -32,7 +33,7 @@ class Groups extends PureComponent<GroupsProps> {
         summaryLines={2}
       />
     );
-  }
+  };
 
   render() {
     const { loadingGroups, groups } = this.props;

@@ -1,13 +1,14 @@
 import {
-  LoginManager,
   GraphRequest,
   GraphRequestManager,
+  LoginManager,
 } from 'react-native-fbsdk-next';
-import * as types from 'kitsu/store/types';
+
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { loginUser } from 'kitsu/store/auth/actions';
 import { kitsuConfig } from 'kitsu/config/env';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
+import { loginUser } from 'kitsu/store/auth/actions';
+import * as types from 'kitsu/store/types';
 
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
@@ -31,14 +32,20 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
       return user[0];
     }
 
-    dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'No user found in request' });
+    dispatch({
+      type: types.FETCH_CURRENT_USER_FAIL,
+      payload: 'No user found in request',
+    });
 
     // Right interesting case here, there may be a case where api returns empty data array. No idea what causes it (maybe null tokens)
     // Now tokens might be null because redux persist hasn't loaded in the data yet.
     // Just incase, we return null since if it is indeed a user not logged in then somewhere down the line we'll get a 401 and the app will handle it
     return null;
   } catch (e) {
-    dispatch({ type: types.FETCH_CURRENT_USER_FAIL, payload: 'Failed to load user' });
+    dispatch({
+      type: types.FETCH_CURRENT_USER_FAIL,
+      payload: 'Failed to load user',
+    });
     throw e;
   }
 };
@@ -49,38 +56,51 @@ export const getAccountConflicts = () => async (dispatch, getState) => {
   try {
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${token}`);
-    const payload = await fetch(`${kitsuConfig.baseUrl}/edge/users/_conflicts`, {
-      method: 'GET',
-      headers,
-    }).then(res => res.json());
+    const payload = await fetch(
+      `${kitsuConfig.baseUrl}/edge/users/_conflicts`,
+      {
+        method: 'GET',
+        headers,
+      }
+    ).then((res) => res.json());
     dispatch({ type: types.GET_ACCOUNT_CONFLICTS_SUCCESS, payload });
   } catch (e) {
-    dispatch({ type: types.GET_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
+    dispatch({
+      type: types.GET_ACCOUNT_CONFLICTS_FAIL,
+      payload: 'Failed to load user',
+    });
   }
 };
 
-export const resolveAccountConflicts = account => async (dispatch, getState) => {
-  dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS });
-  const token = getState().auth.tokens.access_token;
-  try {
-    const headers = new Headers();
-    headers.append('Authorization', `Bearer ${token}`);
-    headers.append('Content-Type', 'application/json');
-    const body = JSON.stringify({
-      chosen: account,
-    });
-    const payload = await fetch(`${kitsuConfig.baseUrl}/edge/users/_conflicts`, {
-      method: 'POST',
-      headers,
-      body,
-    }).then(res => res.json());
-    dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS, payload });
-    return true;
-  } catch (e) {
-    dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_FAIL, payload: 'Failed to load user' });
-    return false;
-  }
-};
+export const resolveAccountConflicts =
+  (account) => async (dispatch, getState) => {
+    dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS });
+    const token = getState().auth.tokens.access_token;
+    try {
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Content-Type', 'application/json');
+      const body = JSON.stringify({
+        chosen: account,
+      });
+      const payload = await fetch(
+        `${kitsuConfig.baseUrl}/edge/users/_conflicts`,
+        {
+          method: 'POST',
+          headers,
+          body,
+        }
+      ).then((res) => res.json());
+      dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS_SUCCESS, payload });
+      return true;
+    } catch (e) {
+      dispatch({
+        type: types.RESOLVE_ACCOUNT_CONFLICTS_FAIL,
+        payload: 'Failed to load user',
+      });
+      return false;
+    }
+  };
 
 export const createUser = (data, componentId) => async (dispatch, getState) => {
   dispatch({ type: types.CREATE_USER });
@@ -127,17 +147,26 @@ export const connectFBUser = () => async (dispatch, getState) => {
         const currentUser = getState().user.currentUser;
         setToken(token);
         try {
-          await Kitsu.update('users', { id: currentUser.id, facebookId: fbdata.id });
+          await Kitsu.update('users', {
+            id: currentUser.id,
+            facebookId: fbdata.id,
+          });
           dispatch({ type: types.CONNECT_FBUSER_SUCCESS, payload: fbdata.id });
         } catch (e) {
-          dispatch({ type: types.CONNECT_FBUSER_FAIL, payload: 'Failed to connect Facebook user' });
+          dispatch({
+            type: types.CONNECT_FBUSER_FAIL,
+            payload: 'Failed to connect Facebook user',
+          });
           console.log(e);
         }
       } else {
         console.log(error);
-        dispatch({ type: types.CONNECT_FBUSER_FAIL, payload: 'Failed to connect Facebook user' });
+        dispatch({
+          type: types.CONNECT_FBUSER_FAIL,
+          payload: 'Failed to connect Facebook user',
+        });
       }
-    },
+    }
   );
   new GraphRequestManager().addRequest(infoRequest).start();
 };
@@ -152,12 +181,15 @@ export const disconnectFBUser = () => async (dispatch, getState) => {
     dispatch({ type: types.DISCONNECT_FBUSER_SUCCESS });
     LoginManager.logOut();
   } catch (e) {
-    dispatch({ type: types.DISCONNECT_FBUSER_FAIL, payload: 'Failed to disconnect fb user' });
+    dispatch({
+      type: types.DISCONNECT_FBUSER_FAIL,
+      payload: 'Failed to disconnect fb user',
+    });
     console.log(e);
   }
 };
 
-export const updateGeneralSettings = data => async (dispatch, getState) => {
+export const updateGeneralSettings = (data) => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_GENERAL_SETTINGS });
   const { user, auth } = getState();
   const { id } = user.currentUser;
@@ -177,7 +209,7 @@ export const updateGeneralSettings = data => async (dispatch, getState) => {
   }
 };
 
-export const updateLibrarySettings = data => async (dispatch, getState) => {
+export const updateLibrarySettings = (data) => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_LIBRARY_SETTINGS });
   const { user, auth } = getState();
   const { id } = user.currentUser;
@@ -208,15 +240,22 @@ const createOneSignalPlayer = async (dispatch, getState) => {
       dispatch({ type: types.CREATE_PLAYER_SUCCESS });
     } catch (e) {
       console.log(e);
-      dispatch({ type: types.CREATE_PLAYER_FAIL, payload: 'Failed to register notifications' });
+      dispatch({
+        type: types.CREATE_PLAYER_FAIL,
+        payload: 'Failed to register notifications',
+      });
     }
   }
 };
 
-export const followUser = userId => async (dispatch, getState) => {
+export const followUser = (userId) => async (dispatch, getState) => {
   dispatch({ type: types.USER_FOLLOW_REQUEST });
 
-  const { user: { currentUser: { id } } } = getState();
+  const {
+    user: {
+      currentUser: { id },
+    },
+  } = getState();
   const data = {
     follower: { id },
     followed: { id: userId },

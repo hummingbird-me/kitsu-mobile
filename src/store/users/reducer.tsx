@@ -6,7 +6,9 @@ export const usersReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.CAPTURE_USERS_DATA: {
       const users = {};
-      action.payload.filter(u => u.type !== 'user').map(u => (users[u.id] = u));
+      action.payload
+        .filter((u) => u.type !== 'user')
+        .map((u) => (users[u.id] = u));
       return {
         ...state,
         ...users,

@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { FlatList } from 'react-native';
 
-import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
 import { RowSeparator } from 'kitsu/screens/Profiles/components/RowSeparator';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
+import { TabHeader } from 'kitsu/screens/Profiles/components/TabHeader';
 
 interface ReactionsProps {
   media: object;
@@ -21,10 +21,7 @@ class Reactions extends PureComponent<ReactionsProps> {
       <FlatList
         data={mediaReactions}
         renderItem={({ item }) => (
-          <ReactionBox
-            reactedMedia={media.canonicalTitle}
-            reaction={item}
-          />
+          <ReactionBox reactedMedia={media.canonicalTitle} reaction={item} />
         )}
         ItemSeparatorComponent={() => <RowSeparator size="medium" />}
         ListHeaderComponent={() => (
@@ -37,14 +34,10 @@ class Reactions extends PureComponent<ReactionsProps> {
         )}
       />
     );
-  }
+  };
 
   render() {
-    return (
-      <TabContainer light>
-        {this.renderReactionRows()}
-      </TabContainer>
-    );
+    return <TabContainer light>{this.renderReactionRows()}</TabContainer>;
   }
 }
 

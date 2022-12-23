@@ -1,7 +1,8 @@
+import * as Sentry from '@sentry/react-native';
+import { isArray, isEmpty, isNull } from 'lodash';
+
 import { logoutUser, refreshTokens } from 'kitsu/store/auth/actions';
 import store from 'kitsu/store/config';
-import { isNull, isEmpty, isArray } from 'lodash';
-import * as Sentry from '@sentry/react-native';
 import { getComputedTitle } from 'kitsu/utils/getTitleField';
 
 let tokenPromise = null;
@@ -56,7 +57,8 @@ export const kitsuRequestMiddleware = {
               type: 'refresh_token',
             },
             extra: {
-              isTokenEmpty: !currentTokens || isEmpty(currentTokens.access_token),
+              isTokenEmpty:
+                !currentTokens || isEmpty(currentTokens.access_token),
               originalError: error,
               request,
               headers: request.headers,
@@ -106,7 +108,9 @@ export const kitsuRequestMiddleware = {
 };
 
 function applyTitle(item, currentUser) {
-  if (!item || !currentUser) { return; }
+  if (!item || !currentUser) {
+    return;
+  }
 
   // The objects we want to apply title preferences to
   const whitelist = ['anime', 'manga', 'episodes'];
@@ -114,9 +118,15 @@ function applyTitle(item, currentUser) {
   if (whitelist.includes(item.type) && item.canonicalTitle) {
     item.canonicalTitle = getComputedTitle(currentUser, item);
   }
-  if (item.anime) { applyTitle(item.anime, currentUser); }
-  if (item.manga) { applyTitle(item.manga, currentUser); }
-  if (item.media) { applyTitle(item.media, currentUser); }
+  if (item.anime) {
+    applyTitle(item.anime, currentUser);
+  }
+  if (item.manga) {
+    applyTitle(item.manga, currentUser);
+  }
+  if (item.media) {
+    applyTitle(item.media, currentUser);
+  }
 }
 
 export const titleMiddleware = {
@@ -124,10 +134,10 @@ export const titleMiddleware = {
   res: (payload) => {
     const currentUser = store.getState().user.currentUser;
     if (isArray(payload)) {
-      payload.forEach(item => applyTitle(item, currentUser));
+      payload.forEach((item) => applyTitle(item, currentUser));
     } else {
       applyTitle(payload, currentUser);
     }
     return payload;
-  }
+  },
 };

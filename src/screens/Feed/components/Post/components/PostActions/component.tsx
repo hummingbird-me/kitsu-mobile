@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+
 import { StyledText } from 'kitsu/components/StyledText';
+
 import { styles } from './styles';
 
 const actionButtonLabels = {
@@ -11,19 +13,17 @@ const actionButtonLabels = {
   share: 'Share',
 };
 
-
 interface PostActionButtonProps {
-  variant?: "like" | "liked" | "comment" | "share";
+  variant?: 'like' | 'liked' | 'comment' | 'share';
   isActive?: boolean;
   onPress?(...args: unknown[]): unknown;
 }
-
 
 /* eslint-disable global-require */
 export const PostActionButton = ({
   variant,
   isActive,
-  onPress
+  onPress,
 }: PostActionButtonProps) => {
   const icons = {
     like: require('kitsu/assets/img/feed/heart.png'),
@@ -66,10 +66,14 @@ interface PostActionsProps {
 export const PostActions = ({
   isLiked,
   onLikePress,
-  onCommentPress /* , onSharePress */
+  onCommentPress /* , onSharePress */,
 }: PostActionsProps) => (
   <View style={styles.postActionRow}>
-    <PostActionButton variant={isLiked ? 'liked' : 'like'} onPress={onLikePress} isActive={isLiked} />
+    <PostActionButton
+      variant={isLiked ? 'liked' : 'like'}
+      onPress={onLikePress}
+      isActive={isLiked}
+    />
     <PostActionButton variant="comment" onPress={onCommentPress} />
     {/* <PostActionButton variant="share" onPress={onSharePress} /> */}
   </View>

@@ -1,6 +1,7 @@
 import React from 'react';
-import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
 import { Navigation } from 'react-native-navigation';
+
+import { PostCreator } from 'kitsu/screens/Feed/components/PostCreator';
 
 interface CreatePostProps {
   componentId: any;
@@ -24,7 +25,7 @@ export default class CreatePost extends React.PureComponent<CreatePostProps> {
     post: null,
     disableMedia: false,
     onPostCreated: null,
-  }
+  };
 
   render() {
     const {

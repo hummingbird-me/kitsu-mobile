@@ -59,6 +59,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.1",
     "@react-native-community/eslint-config": "^2.0.0",
     "@tsconfig/react-native": "^2.0.3",
     "@types/jest": "^29.2.4",

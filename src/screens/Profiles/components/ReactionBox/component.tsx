@@ -1,12 +1,14 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { View, TouchableOpacity } from 'react-native';
 import moment from 'moment';
+import React, { PureComponent } from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { AvatarHeader } from 'kitsu/screens/Profiles/components/AvatarHeader';
+import { connect } from 'react-redux';
+
 import { StyledText } from 'kitsu/components/StyledText';
 import { Kitsu } from 'kitsu/config/api';
+import { AvatarHeader } from 'kitsu/screens/Profiles/components/AvatarHeader';
 import { isIdForCurrentUser } from 'kitsu/utils/id';
+
 import { styles } from './styles';
 
 interface ReactionBoxComponentProps {
@@ -19,14 +21,14 @@ export class ReactionBoxComponent extends PureComponent<ReactionBoxComponentProp
   static defaultProps = {
     reaction: null,
     reactedMedia: '',
-    boxed: false
-  }
+    boxed: false,
+  };
 
   state = {
     upVotesCount: this.props.reaction.upVotesCount,
     vote: null,
-    hasVoted: false
-  }
+    hasVoted: false,
+  };
 
   componentDidMount() {
     this.checkForVote();
@@ -38,9 +40,9 @@ export class ReactionBoxComponent extends PureComponent<ReactionBoxComponentProp
       let vote = await Kitsu.findAll('mediaReactionVotes', {
         filter: {
           mediaReactionId: reaction.id,
-          userId: currentUser.id
+          userId: currentUser.id,
         },
-        page: { limit: 1 }
+        page: { limit: 1 },
       });
       vote = vote && vote[0];
       this.setState({ vote, hasVoted: !!vote });
@@ -61,11 +63,11 @@ export class ReactionBoxComponent extends PureComponent<ReactionBoxComponentProp
         this.setState({ upVotesCount: upVotesCount + 1, hasVoted: true });
         const vote = await Kitsu.create('mediaReactionVotes', {
           mediaReaction: {
-            id: reaction.id
+            id: reaction.id,
           },
           user: {
-            id: currentUser.id
-          }
+            id: currentUser.id,
+          },
         });
         this.setState({ vote });
       }
@@ -96,13 +98,21 @@ export class ReactionBoxComponent extends PureComponent<ReactionBoxComponentProp
               canVote={!isIdForCurrentUser(user.id, currentUser)}
               isVotedOn={hasVoted}
               upVotesCount={upVotesCount}
-              onPress={() => { this.handleVote(); }}
+              onPress={() => {
+                this.handleVote();
+              }}
             />
           }
           boxed={boxed}
         />
         <View style={styles.main}>
-          <StyledText color="dark" size="small" numberOfLines={(boxed && 3) || undefined}>{reaction.reaction}</StyledText>
+          <StyledText
+            color="dark"
+            size="small"
+            numberOfLines={(boxed && 3) || undefined}
+          >
+            {reaction.reaction}
+          </StyledText>
         </View>
       </View>
     );
@@ -118,24 +128,34 @@ export const UpVoteCountBox = ({
   canVote,
   isVotedOn,
   upVotesCount,
-  onPress
-}: UpVoteCountBoxProps) => (
-  canVote ?
-    <TouchableOpacity activeOpacity={0.6} onPress={onPress} style={[styles.voteBox, isVotedOn && styles.voteBox__voted]}>
-      <Icon name="md-arrow-dropup" style={[styles.voteIcon, isVotedOn && styles.voteIcon__voted]} />
-      <StyledText color={isVotedOn ? "light" : "grey"} size="xxsmall">{upVotesCount}</StyledText>
+  onPress,
+}: UpVoteCountBoxProps) =>
+  canVote ? (
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={onPress}
+      style={[styles.voteBox, isVotedOn && styles.voteBox__voted]}
+    >
+      <Icon
+        name="md-arrow-dropup"
+        style={[styles.voteIcon, isVotedOn && styles.voteIcon__voted]}
+      />
+      <StyledText color={isVotedOn ? 'light' : 'grey'} size="xxsmall">
+        {upVotesCount}
+      </StyledText>
     </TouchableOpacity>
-    :
+  ) : (
     <View style={styles.voteBox}>
       <Icon name="md-arrow-dropup" style={styles.voteIcon} />
-      <StyledText color="grey" size="xxsmall">{upVotesCount}</StyledText>
+      <StyledText color="grey" size="xxsmall">
+        {upVotesCount}
+      </StyledText>
     </View>
-);
-
+  );
 
 UpVoteCountBox.defaultProps = {
   upVotesCount: '',
-  onPress: null
+  onPress: null,
 };
 
 ReactionBoxComponent.defaultProps = {

@@ -1,14 +1,16 @@
+import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { View } from 'react-native';
-import store from 'kitsu/store/config';
 import { Navigation } from 'react-native-navigation';
-import { Screens } from 'kitsu/navigation';
-import { markNotifications } from 'kitsu/store/feed/actions';
 import { connect } from 'react-redux';
-import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
+
 import { Kitsu } from 'kitsu/config/api';
-import { isEmpty } from 'lodash';
-import { fetchPost, fetchComment } from './feed';
+import { Screens } from 'kitsu/navigation';
+import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
+import store from 'kitsu/store/config';
+import { markNotifications } from 'kitsu/store/feed/actions';
+
+import { fetchComment, fetchPost } from './feed';
 
 const isMentioned = (arr, id) => arr.includes(id);
 
@@ -33,20 +35,24 @@ export const parseNotificationData = (activities, currentUserId) => {
   };
 
   const activity = activities[0];
-  const { replyToType, replyToUser, mentionedUsers, target, subject, actor } = activity;
+  const { replyToType, replyToUser, mentionedUsers, target, subject, actor } =
+    activity;
 
   // actor
   notificationData.actorName = (actor && actor.name) || '-';
 
-  notificationData.actorAvatar = actor && actor.avatar && actor.avatar.tiny
-    ? actor.avatar.tiny
-    : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
+  notificationData.actorAvatar =
+    actor && actor.avatar && actor.avatar.tiny
+      ? actor.avatar.tiny
+      : 'https://staging.kitsu.io/images/default_avatar-ff0fd0e960e61855f9fc4a2c5d994379.png';
 
   // others
   if (activities.length > 1) {
     notificationData.others =
       activities.length === 2
-        ? activities[1].actor ? activities[1].actor.name : 'Unknown '
+        ? activities[1].actor
+          ? activities[1].actor.name
+          : 'Unknown '
         : `${activities.length - 1} others`;
   }
 
@@ -75,12 +81,14 @@ export const parseNotificationData = (activities, currentUserId) => {
       const type = isAnime ? 'Episode' : 'Chapter';
       const state = isAnime ? 'aired' : 'released';
       notificationData.actorName = type;
-      notificationData.actorAvatar = (actor && actor.posterImage && actor.posterImage.tiny) ||
+      notificationData.actorAvatar =
+        (actor && actor.posterImage && actor.posterImage.tiny) ||
         notificationData.actorAvatar; // Fallback to default avatar
 
       if (subject && subject.number > 0) {
         notificationData.text = `${subject.number} of ${actor.canonicalTitle} ${state}.`;
-      } else { // No `Episode` or `Chapter` relationship exists...
+      } else {
+        // No `Episode` or `Chapter` relationship exists...
         notificationData.text = `${actor.canonicalTitle} ${state} a new ${type}.`;
       }
 
@@ -129,7 +137,7 @@ export const handleOneSignalNotificationData = async (componentId, data) => {
   const { type, id } = data;
 
   switch (type) {
-    case 'follows' : {
+    case 'follows': {
       const user = await fetchFollower(id);
       if (user) {
         Navigation.push(componentId, {
@@ -194,7 +202,6 @@ export const handleOneSignalNotificationData = async (componentId, data) => {
   }
 };
 
-
 /**
  * Handle notification press event.
  * Calling this function will trigger the relevant navigation actions.
@@ -203,7 +210,8 @@ export const handleOneSignalNotificationData = async (componentId, data) => {
  * @param {*} notification The notification
  */
 export const handleNotificationPress = async (componentId, notification) => {
-  const activity = notification && notification.activities && notification.activities[0];
+  const activity =
+    notification && notification.activities && notification.activities[0];
   if (!activity) return;
 
   const { target, verb, actor, subject } = activity;
@@ -227,7 +235,9 @@ export const handleNotificationPress = async (componentId, notification) => {
           component: {
             name: Screens.MEDIA_PAGE,
             passProps: {
-              mediaId: (response.anime && response.anime.id) || (response.manga && response.manga.id),
+              mediaId:
+                (response.anime && response.anime.id) ||
+                (response.manga && response.manga.id),
               mediaType: response.anime ? 'anime' : 'manga',
             },
           },
@@ -239,7 +249,8 @@ export const handleNotificationPress = async (componentId, notification) => {
     case 'post':
       if (subject) {
         navigateToPostDetails(componentId, subject);
-      } else { // should be a "mention"
+      } else {
+        // should be a "mention"
         const post = await fetchPostFromActivity(activity);
         if (post) {
           navigateToPostDetails(componentId, post);
@@ -286,7 +297,7 @@ export const handleNotificationPress = async (componentId, notification) => {
             },
           },
         });
-      // If that fails then take them to the media page instead
+        // If that fails then take them to the media page instead
       } else if (actor.id && actor.type) {
         Navigation.push(componentId, {
           component: {
@@ -308,7 +319,6 @@ export const handleNotificationPress = async (componentId, notification) => {
     await store.dispatch(markNotifications([notification], 'read'));
   }
 };
-
 
 /**
  * Add a NotificationHOC wrapper around a component
@@ -334,11 +344,14 @@ export const withNotifications = (Component) => {
 
     render() {
       const { inAppNotification, ...props } = this.props;
-      const showNotification = this.isVisible && inAppNotification && inAppNotification.visible;
+      const showNotification =
+        this.isVisible && inAppNotification && inAppNotification.visible;
       return (
         <View style={{ flex: 1 }}>
           <Component {...props} />
-          {showNotification && <NotificationOverlay notification={inAppNotification.data} />}
+          {showNotification && (
+            <NotificationOverlay notification={inAppNotification.data} />
+          )}
         </View>
       );
     }
@@ -371,30 +384,28 @@ const navigateToPostDetails = (componentId, post, comments = []) => {
   }
 };
 
-
 /**
  * Fetches media reaction.
  * @param {number} mediaId Media ID of notification target ID.
  */
 // TODO: temporary request to fetch mediareactions & to navigate corresponding
 // media screen. (since we don't have mediareactions screen right now)
-const fetchMediaReactions = async mediaId =>
+const fetchMediaReactions = async (mediaId) =>
   Kitsu.find('mediaReactions', mediaId, {
     include: 'user,anime,manga',
   });
 
 /**
-* Fetches post by extracting postId from activity foreignId.
-* Created for fetching mentions in a hacky way.
-* @param {object} activity Activity object from notifications
-* @returns {object} post
-*/
+ * Fetches post by extracting postId from activity foreignId.
+ * Created for fetching mentions in a hacky way.
+ * @param {object} activity Activity object from notifications
+ * @returns {object} post
+ */
 const fetchPostFromActivity = async (activity) => {
   if (!activity.foreignId) return null;
   const postId = activity.foreignId.split(':')[1];
   return fetchPost(postId);
 };
-
 
 /**
  * Fetches the post like by the given id
@@ -407,7 +418,8 @@ const fetchPostLike = async (postLikeId) => {
 
   try {
     const postLike = await Kitsu.find('postLikes', postLikeId, {
-      include: 'post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
+      include:
+        'post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
     });
     return postLike;
   } catch (e) {
@@ -428,7 +440,8 @@ const fetchCommentLike = async (commentLikeId) => {
 
   try {
     const commentLike = await Kitsu.find('commentLikes', commentLikeId, {
-      include: 'comment,comment.user,comment.uploads,comment.parent,comment.parent.user,comment.parent.uploads,comment.post,comment.post.user,comment.post.targetUser,comment.post.targetGroup,comment.post.media,comment.post.uploads,comment.post.spoiledUnit',
+      include:
+        'comment,comment.user,comment.uploads,comment.parent,comment.parent.user,comment.parent.uploads,comment.post,comment.post.user,comment.post.targetUser,comment.post.targetGroup,comment.post.media,comment.post.uploads,comment.post.spoiledUnit',
     });
     return commentLike;
   } catch (e) {

@@ -1,9 +1,13 @@
+import { Dimensions, Platform, StatusBar } from 'react-native';
+
 import { kitsuConfig } from 'kitsu/config/env';
-import { Platform, StatusBar, Dimensions } from 'react-native';
 
 // The height of the navigation bar itself
 export const navigationBarHeight = 44;
-export const statusBarHeight = Platform.select({ ios: 20, android: StatusBar.currentHeight });
+export const statusBarHeight = Platform.select({
+  ios: 20,
+  android: StatusBar.currentHeight,
+});
 
 // TODO: Probably don't need this if RNN fixes their constants
 // Ref: https://github.com/wix/react-native-navigation/issues/3893
@@ -27,7 +31,7 @@ if (Platform.OS === 'android') {
   if (Platform.Version <= 19) {
     coverWidth /= 4;
     coverHeight /= 4;
-  // Android 6.0 and lower
+    // Android 6.0 and lower
   } else if (Platform.Version <= 23) {
     coverWidth /= 2;
     coverHeight /= 2;

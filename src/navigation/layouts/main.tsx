@@ -1,4 +1,10 @@
-import { homeIcon, searchIcon, updateIcon, notificationIcon, libraryIcon } from 'kitsu/assets/img/tabbar_icons';
+import {
+  homeIcon,
+  libraryIcon,
+  notificationIcon,
+  searchIcon,
+  updateIcon,
+} from 'kitsu/assets/img/tabbar_icons';
 import * as Screens from 'kitsu/navigation/types';
 
 const feed = {
@@ -104,13 +110,7 @@ export const MAIN = {
       center: {
         bottomTabs: {
           id: Screens.BOTTOM_TABS,
-          children: [
-            feed,
-            search,
-            quickUpdate,
-            notification,
-            library,
-          ],
+          children: [feed, search, quickUpdate, notification, library],
         },
       },
     },

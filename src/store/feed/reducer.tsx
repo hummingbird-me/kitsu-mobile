@@ -39,7 +39,9 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         error: '',
       };
     case types.GET_USER_FEED_MORE:
-      filtered = state.userFeed.filter(value => value.group !== action.payload[0].group);
+      filtered = state.userFeed.filter(
+        (value) => value.group !== action.payload[0].group
+      );
       feed = [...action.payload, ...filtered];
       return {
         ...state,
@@ -49,7 +51,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         error: '',
       };
     case types.GET_USER_FEED_LESS:
-      feed = state.userFeed.filter(value => value.id !== action.payload);
+      feed = state.userFeed.filter((value) => value.id !== action.payload);
       return {
         ...state,
         userFeed: feed,
@@ -81,7 +83,9 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         error: '',
       };
     case types.GET_MEDIA_FEED_MORE:
-      filtered = state.mediaFeed.filter(value => value.group !== action.payload[0].group);
+      filtered = state.mediaFeed.filter(
+        (value) => value.group !== action.payload[0].group
+      );
       feed = [...action.payload, ...filtered];
       return {
         ...state,
@@ -91,7 +95,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         error: '',
       };
     case types.GET_MEDIA_FEED_LESS:
-      feed = state.mediaFeed.filter(value => value.id !== action.payload);
+      feed = state.mediaFeed.filter((value) => value.id !== action.payload);
       return {
         ...state,
         mediaFeed: feed,
@@ -123,7 +127,9 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         error: '',
       };
     case types.FETCH_NOTIFICATIONS_MORE:
-      filtered = state.notifications.filter(value => value.group !== action.payload[0].group);
+      filtered = state.notifications.filter(
+        (value) => value.group !== action.payload[0].group
+      );
       notifications = [...action.payload, ...filtered];
       return {
         ...state,
@@ -138,7 +144,9 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         error: '',
       };
     case types.FETCH_NOTIFICATIONS_LESS:
-      notifications = state.notifications.filter(value => value.id !== action.payload);
+      notifications = state.notifications.filter(
+        (value) => value.id !== action.payload
+      );
       return {
         ...state,
         notifications,
@@ -228,7 +236,7 @@ export const feedReducer = (state = INITIAL_STATE, action) => {
         markingRead: false,
         notificationsUnread: 0,
         notificationsUnseen: 0,
-        notifications: state.notifications.map(v => ({
+        notifications: state.notifications.map((v) => ({
           ...v,
           isRead: true,
           isSeen: true,

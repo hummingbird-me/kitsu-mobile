@@ -1,8 +1,10 @@
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { SimpleHeader } from 'kitsu/components/SimpleHeader';
-import { styles } from './styles';
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import { SimpleHeader } from 'kitsu/components/SimpleHeader';
+
+import { styles } from './styles';
 
 interface NavigationHeaderProps {
   navigation?: object;
@@ -22,13 +24,19 @@ export const NavigationHeader = ({
 }: NavigationHeaderProps) => (
   <SimpleHeader
     titleContent={title}
-    leftContent={leftIcon ? <Icon name={leftIcon} style={[styles.icon, { fontSize: 16 }]} /> : null}
+    leftContent={
+      leftIcon ? (
+        <Icon name={leftIcon} style={[styles.icon, { fontSize: 16 }]} />
+      ) : null
+    }
     leftAction={() => {
       if (componentId) {
         Navigation.pop(componentId);
       }
     }}
-    rightContent={rightIcon ? <Icon name={rightIcon} style={styles.icon} /> : null}
+    rightContent={
+      rightIcon ? <Icon name={rightIcon} style={styles.icon} /> : null
+    }
     {...props}
   />
 );

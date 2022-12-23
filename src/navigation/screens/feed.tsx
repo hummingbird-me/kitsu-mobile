@@ -1,8 +1,7 @@
-import Feed from 'kitsu/screens/Feed';
-import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
-import CreatePost from 'kitsu/screens/Feed/pages/PostCreation/CreatePost';
-
 import * as Screens from 'kitsu/navigation/types';
+import Feed from 'kitsu/screens/Feed';
+import CreatePost from 'kitsu/screens/Feed/pages/PostCreation/CreatePost';
+import PostDetails from 'kitsu/screens/Feed/pages/PostDetails';
 
 export default feedRoutes = {
   [Screens.FEED]: Feed,

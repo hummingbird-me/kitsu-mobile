@@ -1,31 +1,44 @@
-import React from 'react';
-import { KeyboardAvoidingView, View, Text, ScrollView, Platform, TouchableOpacity, Keyboard, BackHandler, FlatList, Image } from 'react-native';
-import { connect } from 'react-redux';
+import * as Sentry from '@sentry/react-native';
 import { isEmpty, isNil, isNull } from 'lodash';
-import { Kitsu } from 'kitsu/config/api';
-import { defaultAvatar, ACCEPTED_UPLOAD_TYPES } from 'kitsu/constants/app';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
-import * as colors from 'kitsu/constants/colors';
-import { PostMeta } from 'kitsu/screens/Feed/components/PostMeta';
-import { PostTextInput } from 'kitsu/screens/Feed/components/PostTextInput';
-import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
-import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
-import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
-import { ImageUploader } from 'kitsu/utils/imageUploader';
-import { kitsuConfig } from 'kitsu/config/env';
+import React from 'react';
+import {
+  BackHandler,
+  FlatList,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+
+import { giphy, photo, tag } from 'kitsu/assets/img/post-creation';
+import { CheckBox } from 'kitsu/components/Checkbox';
+import { Kitsu } from 'kitsu/config/api';
+import { kitsuConfig } from 'kitsu/config/env';
+import { ACCEPTED_UPLOAD_TYPES, defaultAvatar } from 'kitsu/constants/app';
+import * as colors from 'kitsu/constants/colors';
+import { GiphyModal } from 'kitsu/screens/Feed/components/GiphyModal';
 import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
 import { ImageSortModal } from 'kitsu/screens/Feed/components/ImageSortModal';
-import { giphy, photo, tag } from 'kitsu/assets/img/post-creation';
+import { MediaModal } from 'kitsu/screens/Feed/components/MediaModal';
+import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
+import { PostMeta } from 'kitsu/screens/Feed/components/PostMeta';
+import { PostTextInput } from 'kitsu/screens/Feed/components/PostTextInput';
+import { feedStreams } from 'kitsu/screens/Feed/feedStreams';
+import { ImageUploader } from 'kitsu/utils/imageUploader';
 import { prettyBytes } from 'kitsu/utils/prettyBytes';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { extractUrls } from 'kitsu/utils/url';
-import * as Sentry from '@sentry/react-native';
-import { CheckBox } from 'kitsu/components/Checkbox';
-import { MediaItem } from './components/MediaItem';
+
 import { EmbedItem } from './components/EmbedItem';
-import { styles } from './styles';
 import { EmbedModal } from './components/EmbedModal';
+import { MediaItem } from './components/MediaItem';
+import { styles } from './styles';
 
 // Maximum number of images that are allowed to be uploaded
 const MAX_UPLOAD_COUNT = 20;
@@ -93,14 +106,16 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     spoiler: false,
     style: null,
     targetUser: null,
-  }
+  };
 
   constructor(props) {
     super(props);
     this.uploader = new ImageUploader(kitsuConfig.uploadUrl);
 
     const post = props.post || {};
-    const sortedUploads = (post.uploads || []).sort((a, b) => (a.uploadOrder - b.uploadOrder));
+    const sortedUploads = (post.uploads || []).sort(
+      (a, b) => a.uploadOrder - b.uploadOrder
+    );
 
     this.state = {
       content: post.originalContent || post.content || '',
@@ -157,7 +172,7 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     }
 
     return false;
-  }
+  };
 
   handleMedia = (media) => {
     this.setState({ media });
@@ -171,28 +186,28 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
       this.setState({ content, currentEmbedUrl: gifURL });
     }
     this.handleGiphyPickerModal(false);
-  }
+  };
 
   handleMediaPickerModal = (mediaPickerModalIsVisible) => {
     this.setState({ mediaPickerModalIsVisible, actionBarExpanded: false });
-  }
+  };
 
   handleGiphyPickerModal = (giphyPickerModalIsVisible) => {
     this.setState({ giphyPickerModalIsVisible, actionBarExpanded: false });
-  }
+  };
 
   handleImageSortModal = (imageSortModalIsVisible) => {
     this.setState({ imageSortModalIsVisible, actionBarExpanded: false });
-  }
+  };
 
   handleEmbedModal = (embedModalIsVisible) => {
     this.setState({ embedModalIsVisible });
-  }
+  };
 
   handleActionBarExpand = (actionBarExpanded) => {
     Keyboard.dismiss();
     this.setState({ actionBarExpanded });
-  }
+  };
 
   handlePressUpload = async () => {
     this.handleActionBarExpand(false);
@@ -208,7 +223,10 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     // Also cap it to the max value of images they can still upload
     // E.g max uploads = 20
     // If user has chose 4 images, then when they choose the next, they can only select 16
-    const maxFiles = Math.max(0, MAX_UPLOAD_COUNT - (this.state.uploads || []).length);
+    const maxFiles = Math.max(
+      0,
+      MAX_UPLOAD_COUNT - (this.state.uploads || []).length
+    );
 
     try {
       this.pickerShown = true;
@@ -224,7 +242,7 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
 
       this.pickerShown = false;
 
-      const uploads = images.map(image => ({
+      const uploads = images.map((image) => ({
         ...image,
         uri: image.path,
       }));
@@ -232,33 +250,39 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
       // Properties needed for filters below
       let currentSize = this.getUploadsSize();
       const idKey = Platform.select({ ios: 'sourceURL', android: 'uri' });
-      const currentUploads = this.state.uploads.map(u => u[idKey]);
+      const currentUploads = this.state.uploads.map((u) => u[idKey]);
 
-      const filtered = uploads.filter((u) => {
-        // Remove any image types that we don't accept
-        const mime = u.mime || '';
-        const validType = ACCEPTED_UPLOAD_TYPES.includes(mime.toLowerCase().trim());
+      const filtered = uploads
+        .filter((u) => {
+          // Remove any image types that we don't accept
+          const mime = u.mime || '';
+          const validType = ACCEPTED_UPLOAD_TYPES.includes(
+            mime.toLowerCase().trim()
+          );
 
-        // Disallow submitting the same image twice
-        const duplicateUpload = currentUploads.includes(u[idKey]);
+          // Disallow submitting the same image twice
+          const duplicateUpload = currentUploads.includes(u[idKey]);
 
-        return validType && !duplicateUpload;
-      }).filter((i) => {
-        // Filter out images that don't fit into our size limit
-        const imageSize = i.size;
-        const imageWithinSizeLimit = !!(imageSize && imageSize + currentSize <= MAX_UPLOAD_SIZE_LIMIT);
+          return validType && !duplicateUpload;
+        })
+        .filter((i) => {
+          // Filter out images that don't fit into our size limit
+          const imageSize = i.size;
+          const imageWithinSizeLimit = !!(
+            imageSize && imageSize + currentSize <= MAX_UPLOAD_SIZE_LIMIT
+          );
 
-        if (imageWithinSizeLimit) currentSize += imageSize;
-        return imageWithinSizeLimit;
-      });
+          if (imageWithinSizeLimit) currentSize += imageSize;
+          return imageWithinSizeLimit;
+        });
 
       // Only update if we have uploads to add
       if (!isEmpty(filtered)) {
         // Make sure we don't go over the upload limit
-        const clipped = [
-          ...this.state.uploads,
-          ...filtered,
-        ].splice(0, MAX_UPLOAD_COUNT);
+        const clipped = [...this.state.uploads, ...filtered].splice(
+          0,
+          MAX_UPLOAD_COUNT
+        );
 
         this.setState({
           uploads: clipped,
@@ -268,11 +292,21 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
       this.pickerShown = false;
       console.log(e);
     }
-  }
+  };
 
   handlePressPost = async () => {
     const { targetUser, post, onPostCreated, currentUser } = this.props;
-    const { busy, content, currentFeed, media, nsfw, spoiler, spoiledUnit, uploads, currentEmbedUrl } = this.state;
+    const {
+      busy,
+      content,
+      currentFeed,
+      media,
+      nsfw,
+      spoiler,
+      spoiledUnit,
+      uploads,
+      currentEmbedUrl,
+    } = this.state;
 
     const currentUserId = currentUser && currentUser.id;
     const isEditing = !isEmpty(post);
@@ -342,26 +376,33 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
       }
     }
 
-    const mediaData = media ? {
-      media: {
-        id: media.id,
-        type: media.kind || media.type,
-      },
-    } : {};
+    const mediaData = media
+      ? {
+          media: {
+            id: media.id,
+            type: media.kind || media.type,
+          },
+        }
+      : {};
 
-    const spoiledData = spoiledUnit ? {
-      spoiledUnit: {
-        id: spoiledUnit.id,
-        type: spoiledUnit.type,
-      },
-    } : {};
+    const spoiledData = spoiledUnit
+      ? {
+          spoiledUnit: {
+            id: spoiledUnit.id,
+            type: spoiledUnit.type,
+          },
+        }
+      : {};
 
-    const targetData = (targetUser && targetUser.id !== currentUserId) ? {
-      targetUser: {
-        type: 'users',
-        id: targetUser.id,
-      },
-    } : {};
+    const targetData =
+      targetUser && targetUser.id !== currentUserId
+        ? {
+            targetUser: {
+              type: 'users',
+              id: targetUser.id,
+            },
+          }
+        : {};
 
     // Target interest is either 'anime', 'manga', or blank depending
     // on the feed we want to post to.
@@ -371,12 +412,14 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     const targetInterestData = isEmpty(targetData) ? { targetInterest } : {};
 
     // Post uploads
-    const postUploads = kitsuUploads ? {
-      uploads: kitsuUploads.map(upload => ({
-        type: 'uploads',
-        id: upload.id,
-      })),
-    } : {};
+    const postUploads = kitsuUploads
+      ? {
+          uploads: kitsuUploads.map((upload) => ({
+            type: 'uploads',
+            id: upload.id,
+          })),
+        }
+      : {};
 
     let newPost = null;
     try {
@@ -384,25 +427,31 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
         // Update the order of images
         // This can be done because we don't allow additions/deletions when editing
         if (!isEmpty(uploads)) {
-          await Promise.all(uploads.map((upload, index) => (
-            Kitsu.update('uploads', {
-              id: upload.id,
-              uploadOrder: index + 1,
-            })
-          )));
+          await Promise.all(
+            uploads.map((upload, index) =>
+              Kitsu.update('uploads', {
+                id: upload.id,
+                uploadOrder: index + 1,
+              })
+            )
+          );
         }
 
         // Update post
-        newPost = await Kitsu.update('posts', {
-          id: post.id,
-          content: trimmed,
-          nsfw,
-          spoiler,
-          embedUrl,
-        }, {
-          // We need to get the new uploads with their new order
-          include: 'uploads',
-        });
+        newPost = await Kitsu.update(
+          'posts',
+          {
+            id: post.id,
+            content: trimmed,
+            nsfw,
+            spoiler,
+            embedUrl,
+          },
+          {
+            // We need to get the new uploads with their new order
+            include: 'uploads',
+          }
+        );
 
         // Link post relationships
         newPost.user = post.user;
@@ -411,23 +460,27 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
         newPost.media = post.media;
         newPost.targetGroup = post.targetGroup;
       } else {
-        newPost = await Kitsu.create('posts', {
-          content: trimmed,
-          ...targetInterestData,
-          user: {
-            type: 'users',
-            id: currentUserId,
+        newPost = await Kitsu.create(
+          'posts',
+          {
+            content: trimmed,
+            ...targetInterestData,
+            user: {
+              type: 'users',
+              id: currentUserId,
+            },
+            ...postUploads,
+            ...targetData,
+            ...mediaData,
+            nsfw,
+            spoiler,
+            ...spoiledData,
+            embedUrl,
           },
-          ...postUploads,
-          ...targetData,
-          ...mediaData,
-          nsfw,
-          spoiler,
-          ...spoiledData,
-          embedUrl,
-        }, {
-          include: 'media,spoiledUnit,user,uploads',
-        });
+          {
+            include: 'media,spoiledUnit,user,uploads',
+          }
+        );
       }
 
       // Clean up any tmp image files
@@ -442,7 +495,7 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     }
 
     this.setState({ busy: false });
-  }
+  };
 
   swapImages = (current, next) => {
     const newUploads = this.state.uploads;
@@ -453,13 +506,13 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     newUploads[next] = tmp;
 
     this.setState({ uploads: [...newUploads] });
-  }
+  };
 
   removeImage = (index) => {
     const newUploads = this.state.uploads;
     newUploads.splice(index, 1);
     this.setState({ uploads: [...newUploads] });
-  }
+  };
 
   canSetActions() {
     const { post, disableMedia } = this.props;
@@ -481,7 +534,9 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
   canUploadImages() {
     const { uploads } = this.state;
     const currentSize = this.getUploadsSize();
-    return (uploads.length < MAX_UPLOAD_COUNT) && (currentSize < MAX_UPLOAD_SIZE_LIMIT);
+    return (
+      uploads.length < MAX_UPLOAD_COUNT && currentSize < MAX_UPLOAD_SIZE_LIMIT
+    );
   }
 
   renderUploadProgress() {
@@ -500,7 +555,9 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     const percentage = total > 0 ? Math.round((loaded / total) * 100) : null;
 
     // Show progress display as: 10% (10kB/100kB)
-    const percentageText = isNil(percentage) ? '' : `- ${percentage}% ${progressText}`;
+    const percentageText = isNil(percentage)
+      ? ''
+      : `- ${percentage}% ${progressText}`;
 
     return (
       <View style={styles.uploadProgressContainer}>
@@ -530,7 +587,11 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
       <View style={styles.checkboxContainer}>
         <CheckBox
           title="NSFW"
-          containerStyle={[styles.checkbox, { marginRight: 0 }, nsfw && styles.checkbox_checked]}
+          containerStyle={[
+            styles.checkbox,
+            { marginRight: 0 },
+            nsfw && styles.checkbox_checked,
+          ]}
           textStyle={nsfw && { color: 'white' }}
           checkedColor={colors.white}
           checked={nsfw}
@@ -579,18 +640,18 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     return (
       <View style={styles.uploadContainer}>
         <ImageGrid
-          images={uploads.map(u => (u.uri || (u.content && u.content.original)))}
+          images={uploads.map(
+            (u) => u.uri || (u.content && u.content.original)
+          )}
           compact
           onImageTapped={() => this.handleImageSortModal(true)}
           disabled={busy}
         />
-        { size > 0 &&
+        {size > 0 && (
           <View style={styles.imageSizeContainer}>
-            <Text numberOfLines={1}>
-              Size: {prettyBytes(size)}
-            </Text>
+            <Text numberOfLines={1}>Size: {prettyBytes(size)}</Text>
           </View>
-        }
+        )}
       </View>
     );
   }
@@ -620,20 +681,23 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
         - Current Embed url is different from the first url
           * For the case where user chooses an embed and then clears out the url, we need to still allow them to choose another embed.
     */
-    const isCurrentEmbedDifferent = !isNull(currentEmbedUrl) && urls.length > 0 && currentEmbedUrl !== urls[0];
+    const isCurrentEmbedDifferent =
+      !isNull(currentEmbedUrl) &&
+      urls.length > 0 &&
+      currentEmbedUrl !== urls[0];
     const showChangeEmbed = urls.length > 1 || isCurrentEmbedDifferent;
 
     return (
       <View style={styles.embed}>
-        {validEmbed ?
+        {validEmbed ? (
           <EmbedItem url={embed} />
-          :
+        ) : (
           <View style={styles.emptyEmbed}>
             <Text style={styles.emptyEmbedText}>No Embed Selected</Text>
           </View>
-        }
+        )}
         <View style={styles.embedOptions}>
-          {showChangeEmbed &&
+          {showChangeEmbed && (
             <TouchableOpacity
               style={[styles.embedText, validEmbed && { marginRight: 4 }]}
               onPress={() => this.handleEmbedModal(true)}
@@ -641,8 +705,8 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
             >
               <Text>Change Embed</Text>
             </TouchableOpacity>
-          }
-          {validEmbed &&
+          )}
+          {validEmbed && (
             <TouchableOpacity
               style={[styles.embedText, styles.clearEmbed]}
               onPress={() => {
@@ -654,7 +718,7 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
             >
               <Text style={{ color: 'white' }}>Clear Embed</Text>
             </TouchableOpacity>
-          }
+          )}
         </View>
         <EmbedModal
           visible={embedModalIsVisible}
@@ -680,7 +744,9 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
       {
         image: photo,
         color: colors.red,
-        title: `Attach Photos (Max ${prettyBytes(MAX_UPLOAD_SIZE_LIMIT)} or ${MAX_UPLOAD_COUNT} Images)`,
+        title: `Attach Photos (Max ${prettyBytes(
+          MAX_UPLOAD_SIZE_LIMIT
+        )} or ${MAX_UPLOAD_COUNT} Images)`,
         onPress: () => this.handlePressUpload(),
         visible: actions.canSetUploads,
       },
@@ -698,7 +764,7 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
         onPress: () => this.handleMediaPickerModal(true),
         visible: actions.canSetMedia,
       },
-    ].filter(d => d.visible);
+    ].filter((d) => d.visible);
 
     // Don't show if nothing can be selected
     if (isEmpty(data)) return null;
@@ -718,7 +784,7 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
           </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: colors.white }}>
-          {data.map(item => this.renderActionModalItem(item))}
+          {data.map((item) => this.renderActionModalItem(item))}
         </View>
       </TouchableOpacity>
     );
@@ -727,14 +793,20 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
   renderActionModalItem = (item) => {
     const { image, title, onPress } = item;
     return (
-      <TouchableOpacity key={title} style={styles.actionModalItem} onPress={onPress}>
-        <Image style={styles.actionModalImage} source={image} resizeMode="contain" />
-        <Text style={styles.actionBarText}>
-          {title}
-        </Text>
+      <TouchableOpacity
+        key={title}
+        style={styles.actionModalItem}
+        onPress={onPress}
+      >
+        <Image
+          style={styles.actionModalImage}
+          source={image}
+          resizeMode="contain"
+        />
+        <Text style={styles.actionBarText}>{title}</Text>
       </TouchableOpacity>
     );
-  }
+  };
 
   renderActionBar() {
     const { busy } = this.state;
@@ -753,7 +825,7 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
         image: tag,
         visible: actions.canSetMedia,
       },
-    ].filter(d => d.visible);
+    ].filter((d) => d.visible);
 
     // Don't render anything if nothing can be set
     if (isEmpty(data)) return null;
@@ -768,8 +840,12 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
           Add to your post
         </Text>
         <View style={styles.actionBarImages}>
-          {data.map(item => (
-            <Image source={item.image} resizeMode="contain" style={styles.actionBarImage} />
+          {data.map((item) => (
+            <Image
+              source={item.image}
+              resizeMode="contain"
+              style={styles.actionBarImage}
+            />
           ))}
         </View>
       </TouchableOpacity>
@@ -815,45 +891,53 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
     } = this.state;
 
     const isEditing = !isEmpty(post);
-    const isValidTargetUser = (currentUser && targetUser && targetUser.id !== currentUser.id && targetUser.name);
+    const isValidTargetUser =
+      currentUser &&
+      targetUser &&
+      targetUser.id !== currentUser.id &&
+      targetUser.name;
 
     // Placeholder text
-    const defaultPlaceholder = isValidTargetUser ? `Write something to ${targetUser.name}` : 'Write something....';
+    const defaultPlaceholder = isValidTargetUser
+      ? `Write something to ${targetUser.name}`
+      : 'Write something....';
     const placeholder = propPlaceholder || defaultPlaceholder;
 
     const renderHeader = propHeaderRender || this.renderHeader;
     const KeyboardView = avoidKeyboard ? KeyboardAvoidingView : View;
 
     return (
-      <KeyboardView
-        behavior="padding"
-        style={[styles.main, style]}
-      >
+      <KeyboardView behavior="padding" style={[styles.main, style]}>
         {/* Header */}
         {renderHeader(busy, isEditing, this.handlePressPost, onCancel)}
         <View style={[styles.flex, editorContainerStyle]}>
           {/* Upload  */}
           {this.renderUploadProgress()}
-          { /* Error */}
+          {/* Error */}
           {this.renderError()}
           {/* Meta */}
-          {!hideMeta &&
+          {!hideMeta && (
             <PostMeta
-              avatar={(currentUser.avatar && currentUser.avatar.medium) || defaultAvatar}
+              avatar={
+                (currentUser.avatar && currentUser.avatar.medium) ||
+                defaultAvatar
+              }
               author={currentUser.name}
               feedTitle={currentFeed.title}
               targetName={(isValidTargetUser && targetUser.name) || ''}
             />
-          }
+          )}
           <ScrollView
             style={[styles.flex, hideMeta && styles.padTop]}
             contentContainerStyle={{ paddingBottom: 10 }}
           >
             {/* Text input */}
             <PostTextInput
-              inputRef={(el) => { this.postTextInput = el; }}
+              inputRef={(el) => {
+                this.postTextInput = el;
+              }}
               multiline
-              onChangeText={c => this.setState({ content: c })}
+              onChangeText={(c) => this.setState({ content: c })}
               value={content}
               placeholder={placeholder}
               placeholderTextColor={colors.grey}
@@ -869,12 +953,12 @@ class PostCreator extends React.PureComponent<PostCreatorProps> {
 
             {/* UI for media, embeds and uploads */}
             <View>
-              { this.renderMedia() }
+              {this.renderMedia()}
 
               {/* Don't allow embeds if user is uploading images */}
-              { isEmpty(uploads) && this.renderEmbed() }
+              {isEmpty(uploads) && this.renderEmbed()}
 
-              { this.renderUpload() }
+              {this.renderUpload()}
             </View>
           </ScrollView>
 

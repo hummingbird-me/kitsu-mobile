@@ -1,15 +1,35 @@
 import React from 'react';
-import { View, Text, TextInput, FlatList, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import * as colors from 'kitsu/constants/colors';
-import { Kitsu, setToken } from 'kitsu/config/api';
-import { queued, success, failed, pending } from 'kitsu/assets/img/sidebar_icons/';
-import myanimelist from 'kitsu/assets/img/myanimelist.png';
+
 import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { Navigation } from 'react-native-navigation';
-import { SidebarHeader, SidebarButton, SidebarTitle, ItemSeparator } from 'kitsu/screens/Sidebar/common/';
+import myanimelist from 'kitsu/assets/img/myanimelist.png';
+import {
+  failed,
+  pending,
+  queued,
+  success,
+} from 'kitsu/assets/img/sidebar_icons/';
+import { Kitsu, setToken } from 'kitsu/config/api';
+import * as colors from 'kitsu/constants/colors';
+import {
+  ItemSeparator,
+  SidebarButton,
+  SidebarHeader,
+  SidebarTitle,
+} from 'kitsu/screens/Sidebar/common/';
+
 import { styles } from './styles';
 
 const keyExtractor = (item, index) => index.toString();
@@ -39,7 +59,10 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
     <View style={[styles.item, { paddingHorizontal: 12 }]}>
       <FastImage
         style={{ width: 30, height: 30 }}
-        source={(posterImage && { uri: posterImage.small || posterImage.large }) || defaultAvatar}
+        source={
+          (posterImage && { uri: posterImage.small || posterImage.large }) ||
+          defaultAvatar
+        }
         cache="web"
       />
       <View style={{ flex: 1 }}>
@@ -51,13 +74,15 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
           >
             {canonicalTitle}
           </Text>
-          <Text style={styles.hintText}>
-            {details}
-          </Text>
+          <Text style={styles.hintText}>{details}</Text>
         </View>
       </View>
       <View>
-        <FastImage source={icon} style={[styles.itemImage, { right: -2 }]} cache="web" />
+        <FastImage
+          source={icon}
+          style={[styles.itemImage, { right: -2 }]}
+          cache="web"
+        />
       </View>
     </View>
   );
@@ -76,7 +101,7 @@ class ExportLibrary extends React.Component {
     loadingMore: false,
     username: '',
     password: '',
-  }
+  };
 
   componentDidMount() {
     this.fetchLinkedAccounts();
@@ -111,7 +136,7 @@ class ExportLibrary extends React.Component {
         authenticating: false,
       });
     }
-  }
+  };
 
   onDisconnectButtonPressed = async () => {
     const { accessToken } = this.props;
@@ -130,7 +155,7 @@ class ExportLibrary extends React.Component {
         loading: false,
       });
     }
-  }
+  };
 
   fetchLinkedAccounts = async () => {
     const { accessToken, currentUser } = this.props;
@@ -144,15 +169,18 @@ class ExportLibrary extends React.Component {
       const hasAccount = typeof linkedAccounts[0] !== 'undefined';
       // show form if user has no linked accounts. else, load the data and fetch
       // entry logs.
-      this.setState({
-        linkedAccount: linkedAccounts[0],
-        loading: hasAccount,
-        hasAccount,
-      }, () => {
-        if (hasAccount) {
-          this.fetchLibraryEntryLogs();
+      this.setState(
+        {
+          linkedAccount: linkedAccounts[0],
+          loading: hasAccount,
+          hasAccount,
+        },
+        () => {
+          if (hasAccount) {
+            this.fetchLibraryEntryLogs();
+          }
         }
-      });
+      );
     } catch (e) {
       this.setState({
         error: e,
@@ -160,7 +188,7 @@ class ExportLibrary extends React.Component {
         hasAccount: false,
       });
     }
-  }
+  };
 
   fetchLibraryEntryLogs = async () => {
     const { accessToken } = this.props;
@@ -189,10 +217,11 @@ class ExportLibrary extends React.Component {
         hasAccount: false,
       });
     }
-  }
+  };
 
   loadMoreEntryLogs = async () => {
-    const { loadingMore, pageLimit, pageIndex, totalEntryLogs, linkedAccount } = this.state;
+    const { loadingMore, pageLimit, pageIndex, totalEntryLogs, linkedAccount } =
+      this.state;
     const hasMore = totalEntryLogs / pageLimit > pageIndex;
     if (!loadingMore && hasMore) {
       const { accessToken, currentUser } = this.props;
@@ -211,7 +240,8 @@ class ExportLibrary extends React.Component {
           include: 'media',
         });
         this.setState({
-          libraryEntryLogs: this.state.libraryEntryLogs.concat(libraryEntryLogs),
+          libraryEntryLogs:
+            this.state.libraryEntryLogs.concat(libraryEntryLogs),
           loading: false,
           loadingMore: false,
           pageIndex: pageIndex + 1,
@@ -226,7 +256,7 @@ class ExportLibrary extends React.Component {
         });
       }
     }
-  }
+  };
 
   renderSetupScreen = () => {
     const { username, password, authenticating } = this.state;
@@ -237,9 +267,7 @@ class ExportLibrary extends React.Component {
           onBackPress={() => Navigation.pop(this.props.componentId)}
         />
         <ScrollView style={{ flex: 1 }}>
-          <View
-            style={styles.card}
-          >
+          <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
                 <FastImage
@@ -248,10 +276,9 @@ class ExportLibrary extends React.Component {
                   cache="web"
                 />
               </View>
-              <Text
-                style={styles.cardText}
-              >
-                Enter your username below to connect your MAL account to your Kitsu account. All future updates will be synced.
+              <Text style={styles.cardText}>
+                Enter your username below to connect your MAL account to your
+                Kitsu account. All future updates will be synced.
               </Text>
             </View>
             <ItemSeparator />
@@ -259,7 +286,7 @@ class ExportLibrary extends React.Component {
               <TextInput
                 style={styles.input}
                 value={username}
-                onChangeText={t => this.setState({ username: t })}
+                onChangeText={(t) => this.setState({ username: t })}
                 placeholder={'Your MyAnimeList Username'}
                 underlineColorAndroid={'transparent'}
                 autoCapitalize={'none'}
@@ -271,7 +298,7 @@ class ExportLibrary extends React.Component {
               <TextInput
                 style={styles.input}
                 value={password}
-                onChangeText={t => this.setState({ password: t })}
+                onChangeText={(t) => this.setState({ password: t })}
                 placeholder={'Your MyAnimeList Password'}
                 secureTextEntry
                 underlineColorAndroid={'transparent'}
@@ -290,7 +317,7 @@ class ExportLibrary extends React.Component {
         </ScrollView>
       </View>
     );
-  }
+  };
 
   renderItemSeparatorComponent() {
     return <ItemSeparator />;
@@ -298,7 +325,12 @@ class ExportLibrary extends React.Component {
 
   renderLoadingIndicator() {
     return (
-      <View style={[styles.containerStyle, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View
+        style={[
+          styles.containerStyle,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
         <ActivityIndicator size={'large'} />
       </View>
     );
@@ -315,13 +347,39 @@ class ExportLibrary extends React.Component {
           headerTitle={'MyAnimeList Sync'}
           onBackPress={() => Navigation.pop(this.props.componentId)}
         />
-        <View style={[styles.card, { flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'space-between' }]}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-            <FastImage source={pending} style={{ width: 30, height: 30 }} cache="web" />
-            <Text style={{ marginLeft: 8, fontFamily: 'OpenSans', fontWeight: '500' }}>{linkedAccount.externalUserId}</Text>
+        <View
+          style={[
+            styles.card,
+            {
+              flexDirection: 'row',
+              padding: 8,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <FastImage
+              source={pending}
+              style={{ width: 30, height: 30 }}
+              cache="web"
+            />
+            <Text
+              style={{
+                marginLeft: 8,
+                fontFamily: 'OpenSans',
+                fontWeight: '500',
+              }}
+            >
+              {linkedAccount.externalUserId}
+            </Text>
           </View>
           <TouchableOpacity onPress={this.onDisconnectButtonPressed} style={{}}>
-            <FastImage source={failed} style={{ width: 16, height: 16 }} cache="web" />
+            <FastImage
+              source={failed}
+              style={{ width: 16, height: 16 }}
+              cache="web"
+            />
           </TouchableOpacity>
         </View>
         <SidebarTitle title={'Entries'} />

@@ -1,13 +1,15 @@
-import React from 'react';
-import { View, TouchableOpacity, Share, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import * as colors from 'kitsu/constants/colors';
+import React from 'react';
+import { Alert, Share, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { SelectMenu } from 'kitsu/components/SelectMenu';
 import { StyledText } from 'kitsu/components/StyledText';
+import { kitsuConfig } from 'kitsu/config/env';
+import * as colors from 'kitsu/constants/colors';
 import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
 import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { kitsuConfig } from 'kitsu/config/env';
+
 import { styles } from './styles';
 
 const formatTime = (time) =>
@@ -36,7 +38,7 @@ export const PostHeader = ({
   onBackButtonPress,
   onEditPress,
   onDelete,
-  currentUser
+  currentUser,
 }: PostHeaderProps) => {
   const user = post && post.user;
   const isCurrentUser = user && currentUser && user.id === currentUser.id;
@@ -97,7 +99,8 @@ export const PostHeader = ({
         {onBackButtonPress && (
           <TouchableOpacity
             onPress={onBackButtonPress}
-            style={styles.postHeaderBackButton}>
+            style={styles.postHeaderBackButton}
+          >
             <Icon
               name="ios-arrow-back"
               color={colors.listBackPurple}
@@ -108,7 +111,8 @@ export const PostHeader = ({
 
         <TouchableOpacity
           onPress={onAvatarPress}
-          style={styles.userDetailsLink}>
+          style={styles.userDetailsLink}
+        >
           <Avatar avatar={avatar} />
           <Layout.RowMain>
             <StyledText color="dark" size="xsmall" bold>
@@ -117,7 +121,8 @@ export const PostHeader = ({
             <StyledText
               color="grey"
               size="xxsmall"
-              textStyle={{ marginTop: 3 }}>
+              textStyle={{ marginTop: 3 }}
+            >
               {postDateTime}
               {post.editedAt && ' · '}
               {post.editedAt && editDateTime}
@@ -130,7 +135,8 @@ export const PostHeader = ({
           onOptionSelected={(value, option) => {
             if (option.onSelected) option.onSelected();
           }}
-          activeOpacity={0.8}>
+          activeOpacity={0.8}
+        >
           <Icon
             name="ios-ellipsis-horizontal-sharp"
             color={colors.lightGrey}

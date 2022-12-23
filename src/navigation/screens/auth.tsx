@@ -1,7 +1,6 @@
 import * as Screens from 'kitsu/navigation/types';
-
-import { IntroScreen, RegistrationScreen } from 'kitsu/screens/Intro';
 import { AuthScreen, RecoveryScreen } from 'kitsu/screens/Auth';
+import { IntroScreen, RegistrationScreen } from 'kitsu/screens/Intro';
 
 export default authRoutes = {
   [Screens.AUTH_INTRO]: IntroScreen,

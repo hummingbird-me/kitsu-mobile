@@ -1,7 +1,4 @@
-import ohNo from './oh-no.png';
 import mystery from './mystery.png';
+import ohNo from './oh-no.png';
 
-export {
-  ohNo,
-  mystery,
-};
+export { ohNo, mystery };

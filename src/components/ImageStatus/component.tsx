@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+
 import styles from './styles';
 
 interface ImageStatusProps {
@@ -14,7 +15,7 @@ export const ImageStatus = ({
   title,
   text,
   image,
-  style
+  style,
 }: ImageStatusProps) => (
   <View style={[styles.statusWrapper, style]}>
     <Text style={styles.statusTitle}>{title}</Text>

@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+
 import { Button } from 'kitsu/components/Button/';
 import { Input } from 'kitsu/components/Input';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
+
 import styles from './styles';
 
 interface SignupFormProps {
@@ -24,7 +26,7 @@ const SignupForm = ({
   loading,
   onSignInFacebook,
   signingInFacebook,
-  onPressTerms
+  onPressTerms,
 }: SignupFormProps) => (
   <View>
     <Input
@@ -33,24 +35,24 @@ const SignupForm = ({
       autoCorrect={false}
       value={data.email}
       keyboardType={'email-address'}
-      onChangeText={text => handleChange(text, 'email')}
+      onChangeText={(text) => handleChange(text, 'email')}
     />
     <Input
       placeholder="Username"
       autoCapitalize="none"
       autoCorrect={false}
       value={data.username}
-      onChangeText={text => handleChange(text, 'username')}
+      onChangeText={(text) => handleChange(text, 'username')}
     />
     <PasswordInput
       placeholder="Password"
       value={data.password}
-      onChangeText={text => handleChange(text, 'password')}
+      onChangeText={(text) => handleChange(text, 'password')}
     />
     <PasswordInput
       placeholder="Confirm Password"
       value={data.confirmPassword}
-      onChangeText={text => handleChange(text, 'confirmPassword')}
+      onChangeText={(text) => handleChange(text, 'confirmPassword')}
     />
     <Button
       loading={loading}
@@ -68,7 +70,9 @@ const SignupForm = ({
     <View style={styles.termsWrapper}>
       <Text style={styles.terms}>By creating an account, you agree our </Text>
       <TouchableOpacity onPress={onPressTerms}>
-        <Text style={[styles.terms, styles.termsHightlight]}>Terms of Service</Text>
+        <Text style={[styles.terms, styles.termsHightlight]}>
+          Terms of Service
+        </Text>
       </TouchableOpacity>
     </View>
   </View>

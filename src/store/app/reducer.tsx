@@ -1,5 +1,6 @@
-import * as types from 'kitsu/store/types';
 import { REHYDRATE } from 'redux-persist';
+
+import * as types from 'kitsu/store/types';
 
 const initialState = {
   algoliaKeys: {

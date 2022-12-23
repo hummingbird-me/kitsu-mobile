@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+
 import { ContentList } from 'kitsu/components/ContentList';
-import * as colors from 'kitsu/constants/colors';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
+import * as colors from 'kitsu/constants/colors';
+
 import { showSeasonResults } from './SearchNavigationHelper';
 
 const styles = StyleSheet.create({
@@ -46,7 +48,9 @@ class SeasonScreen extends PureComponent<SeasonScreenProps> {
     seasons.forEach((season) => {
       data.push({
         ...season,
-        onPress: () => { showSeasonResults(this.props.componentId, season.title, year); },
+        onPress: () => {
+          showSeasonResults(this.props.componentId, season.title, year);
+        },
       });
     });
 
@@ -60,7 +64,7 @@ class SeasonScreen extends PureComponent<SeasonScreenProps> {
     for (let i = maxYear; i >= minYear; i -= 1) {
       listData.push({
         title: `${i}`,
-        dark: (i % 2) === 0,
+        dark: i % 2 === 0,
         data: this.getSeasonData(i),
         type: 'static',
         showViewAll: false,
@@ -69,12 +73,9 @@ class SeasonScreen extends PureComponent<SeasonScreenProps> {
 
     return (
       <View style={{ flex: 1 }}>
-        <NavigationHeader
-          componentId={componentId}
-          title={label}
-        />
+        <NavigationHeader componentId={componentId} title={label} />
         <ScrollView style={styles.scrollContainer}>
-          {listData.map(listItem => (
+          {listData.map((listItem) => (
             <ContentList
               {...listItem}
               key={listItem.title}

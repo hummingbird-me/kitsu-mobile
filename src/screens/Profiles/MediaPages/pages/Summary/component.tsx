@@ -1,25 +1,33 @@
+import { isEmpty, uniqBy, upperFirst } from 'lodash';
 import React, { PureComponent } from 'react';
-import { FlatList, Linking, ActivityIndicator, View, Platform } from 'react-native';
-import { connect } from 'react-redux';
-import { Kitsu } from 'kitsu/config/api';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
-import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
-import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
-import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { upperFirst, isEmpty, uniqBy } from 'lodash';
-import { scenePadding } from 'kitsu/screens/Profiles/constants';
-import { STREAMING_SERVICES, ADMOB_AD_UNITS } from 'kitsu/constants/app';
+import {
+  ActivityIndicator,
+  FlatList,
+  Linking,
+  Platform,
+  View,
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+import URL from 'url-parse';
+
+import { Button } from 'kitsu/components/Button';
+import { Kitsu } from 'kitsu/config/api';
+import { ADMOB_AD_UNITS, STREAMING_SERVICES } from 'kitsu/constants/app';
 import { Screens } from 'kitsu/navigation';
+import { Post } from 'kitsu/screens/Feed/components/Post';
+import { ImageCard } from 'kitsu/screens/Profiles/components/ImageCard';
+import { MediaDetails } from 'kitsu/screens/Profiles/components/MediaDetails';
+import { ReactionBox } from 'kitsu/screens/Profiles/components/ReactionBox';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { ScrollItem } from 'kitsu/screens/Profiles/components/ScrollItem';
+import { ScrollableSection } from 'kitsu/screens/Profiles/components/ScrollableSection';
+import { scenePadding } from 'kitsu/screens/Profiles/constants';
+import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
+import { isAoProOrKitsuPro } from 'kitsu/utils/user';
+
 import { SummaryProgress } from './progress';
 import { styles } from './styles';
-import { Button } from 'kitsu/components/Button';
-import URL from 'url-parse';
-import { isAoProOrKitsuPro } from 'kitsu/utils/user';
 
 interface SummaryComponentProps {
   castings?: unknown[];
@@ -40,13 +48,13 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
     loadingAdditional: false,
     libraryEntry: null,
     onLibraryEditPress: null,
-  }
+  };
 
   state = {
     feed: [],
     loadingFeed: true,
     loadingNextFeed: false,
-  }
+  };
 
   componentDidMount() {
     this.fetchFeed({ reset: true });
@@ -74,7 +82,8 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
     let data = [];
     try {
       const result = await Kitsu.one('mediaFeed', `${endpoint}-${id}`).get({
-        include: 'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
+        include:
+          'media,actor,unit,subject,target,target.user,target.target_user,target.spoiled_unit,target.media,target.target_group,subject.user,subject.target_user,subject.spoiled_unit,subject.media,subject.target_group,subject.followed,subject.library_entry,subject.anime,subject.manga,subject.uploads,target.uploads',
         filter: {
           kind: 'posts',
         },
@@ -85,12 +94,14 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
       });
 
       // I need to read the cursor value out of the 'next' link in the result.
-      this.canFetchNextFeed = !isEmpty(result && result.links && result.links.next);
+      this.canFetchNextFeed = !isEmpty(
+        result && result.links && result.links.next
+      );
       const url = new URL(result.links.next, true);
       this.feedCursor = url.query['page[cursor]'];
 
       // Filter out non-post activities
-      const feed = preprocessFeed(result).filter(i => i.type === 'posts');
+      const feed = preprocessFeed(result).filter((i) => i.type === 'posts');
       data = reset ? [...feed] : [...this.state.feed, ...feed];
       data = uniqBy(data, 'id');
     } catch (error) {
@@ -103,37 +114,41 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
         loadingNextFeed: false,
       });
     }
-  }
+  };
 
-  navigateTo = scene => this.props.setActiveTab(scene);
+  navigateTo = (scene) => this.props.setActiveTab(scene);
 
-  navigateToPost = props => Navigation.push(this.props.componentId, {
-    component: {
-      name: Screens.FEED_POST_DETAILS,
-      passProps: props,
-    },
-  });
+  navigateToPost = (props) =>
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.FEED_POST_DETAILS,
+        passProps: props,
+      },
+    });
 
-  navigateToUserProfile = userId => Navigation.push(this.props.componentId, {
-    component: {
-      name: Screens.PROFILE_PAGE,
-      passProps: { userId },
-    },
-  });
+  navigateToUserProfile = (userId) =>
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.PROFILE_PAGE,
+        passProps: { userId },
+      },
+    });
 
-  navigateToMedia = (mediaType, mediaId) => Navigation.push(this.props.componentId, {
-    component: {
-      name: Screens.MEDIA_PAGE,
-      passProps: { mediaId, mediaType },
-    },
-  });
+  navigateToMedia = (mediaType, mediaId) =>
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA_PAGE,
+        passProps: { mediaId, mediaType },
+      },
+    });
 
-  navigateToUnitPage = (unit, media) => Navigation.push(this.props.componentId, {
-    component: {
-      name: Screens.MEDIA_UNIT_DETAIL,
-      passProps: { unit, media },
-    },
-  });
+  navigateToUnitPage = (unit, media) =>
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: Screens.MEDIA_UNIT_DETAIL,
+        passProps: { unit, media },
+      },
+    });
 
   renderItem = ({ item, index }) => (
     <React.Fragment>
@@ -141,7 +156,7 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
         post={item}
         onPostPress={this.navigateToPost}
         currentUser={this.props.currentUser}
-        navigateToUserProfile={userId => this.navigateToUserProfile(userId)}
+        navigateToUserProfile={(userId) => this.navigateToUserProfile(userId)}
         componentId={this.props.componentId}
       />
       {/* Render a AdMobBanner every 3 posts */}
@@ -156,7 +171,9 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
     if (!media || media.type !== 'anime') return null;
 
     // Filter out episodes that have videos associated with them
-    const episodesWithVideos = (media.episodes || []).filter(e => !isEmpty(e.videos));
+    const episodesWithVideos = (media.episodes || []).filter(
+      (e) => !isEmpty(e.videos)
+    );
     const episodeSuffix = media.episodeCount ? `of ${media.episodeCount}` : '';
 
     // We want to show the loading indicator to the user
@@ -176,8 +193,9 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
               title={item.canonicalTitle}
               variant="landscapeLarge"
               source={{
-                uri: (item.thumbnail && item.thumbnail.original) ||
-                      (media.posterImage && media.posterImage.medium),
+                uri:
+                  (item.thumbnail && item.thumbnail.original) ||
+                  (media.posterImage && media.posterImage.medium),
               }}
               onPress={() => this.navigateToUnitPage(item, media)}
             />
@@ -185,21 +203,26 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
         )}
       />
     );
-  }
+  };
 
   renderStreamingLinks = (media) => {
-    if (!media || media.type !== 'anime' || isEmpty(media.streamingLinks)) return null;
+    if (!media || media.type !== 'anime' || isEmpty(media.streamingLinks))
+      return null;
 
     // Only show the streaming links that we have images for
-    const filtered = media.streamingLinks.filter((link) => {
-      const name = link.streamer && link.streamer.siteName;
-      return name && Object.keys(STREAMING_SERVICES).includes(name.toLowerCase());
-    }).sort((a, b) => a.streamer.siteName.localeCompare(b.streamer.siteName));
+    const filtered = media.streamingLinks
+      .filter((link) => {
+        const name = link.streamer && link.streamer.siteName;
+        return (
+          name && Object.keys(STREAMING_SERVICES).includes(name.toLowerCase())
+        );
+      })
+      .sort((a, b) => a.streamer.siteName.localeCompare(b.streamer.siteName));
 
     return (
       <FlatList
         data={filtered}
-        keyExtractor={i => `${i.id}`}
+        keyExtractor={(i) => `${i.id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.streamingLinksContent}
@@ -207,7 +230,10 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
           <ScrollItem spacing={scenePadding / 2}>
             <ImageCard
               variant="landscapeSmall"
-              source={item.streamer && STREAMING_SERVICES[item.streamer.siteName.toLowerCase()]}
+              source={
+                item.streamer &&
+                STREAMING_SERVICES[item.streamer.siteName.toLowerCase()]
+              }
               onPress={() => {
                 if (!isEmpty(item.url)) {
                   Linking.openURL(item.url);
@@ -219,7 +245,7 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
         style={styles.streamingLinks}
       />
     );
-  }
+  };
 
   renderAdBanner = (margin) => {
     /*
@@ -240,7 +266,14 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
   };
 
   render() {
-    const { media, castings, mediaReactions, loadingAdditional, libraryEntry, onLibraryEditPress } = this.props;
+    const {
+      media,
+      castings,
+      mediaReactions,
+      loadingAdditional,
+      libraryEntry,
+      onLibraryEditPress,
+    } = this.props;
     const { loadingFeed, loadingNextFeed, feed } = this.state;
 
     return (
@@ -297,21 +330,30 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
             const destination = item.destination;
             if (!destination) return null;
 
-            const subheading = destination.type === 'anime' ? destination.showType : destination.mangaType;
+            const subheading =
+              destination.type === 'anime'
+                ? destination.showType
+                : destination.mangaType;
 
-            return (<ScrollItem spacing={4}>
-              <ImageCard
-                centerTitle
-                boldTitle={false}
-                variant="portraitLarge"
-                title={destination.canonicalTitle}
-                subheading={upperFirst(subheading)}
-                source={{
-                  uri: destination.posterImage && destination.posterImage.original,
-                }}
-                onPress={() => this.navigateToMedia(destination.type, destination.id)}
-              />
-            </ScrollItem>);
+            return (
+              <ScrollItem spacing={4}>
+                <ImageCard
+                  centerTitle
+                  boldTitle={false}
+                  variant="portraitLarge"
+                  title={destination.canonicalTitle}
+                  subheading={upperFirst(subheading)}
+                  source={{
+                    uri:
+                      destination.posterImage &&
+                      destination.posterImage.original,
+                  }}
+                  onPress={() =>
+                    this.navigateToMedia(destination.type, destination.id)
+                  }
+                />
+              </ScrollItem>
+            );
           }}
         />
 
@@ -339,27 +381,28 @@ class SummaryComponent extends PureComponent<SummaryComponentProps> {
         /> */}
 
         {/* Feed */}
-        { loadingFeed ?
+        {loadingFeed ? (
           <ActivityIndicator color="white" style={styles.loading} />
-          :
+        ) : (
           <React.Fragment>
             <FlatList
               data={feed || []}
-              keyExtractor={item => `${item.id}`}
+              keyExtractor={(item) => `${item.id}`}
               renderItem={this.renderItem}
             />
             {/* @Temporary - Load more button */}
-            { this.canFetchNextFeed && (
+            {this.canFetchNextFeed && (
               <Button
                 style={styles.loadFeedButton}
                 title="Load More"
-                onPress={() => { this.fetchFeed(); } }
+                onPress={() => {
+                  this.fetchFeed();
+                }}
                 loading={loadingNextFeed}
               />
             )}
           </React.Fragment>
-        }
-
+        )}
       </SceneContainer>
     );
   }

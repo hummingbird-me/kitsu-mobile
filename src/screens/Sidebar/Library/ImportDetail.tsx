@@ -1,11 +1,17 @@
 import React from 'react';
-import { View, TextInput, Text, Modal, ScrollView } from 'react-native';
+import { Modal, ScrollView, Text, TextInput, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { connect } from 'react-redux';
-import * as colors from 'kitsu/constants/colors';
-import { Kitsu, setToken } from 'kitsu/config/api';
 import { Navigation } from 'react-native-navigation';
-import { SidebarHeader, ItemSeparator, SidebarButton } from 'kitsu/screens/Sidebar/common';
+import { connect } from 'react-redux';
+
+import { Kitsu, setToken } from 'kitsu/config/api';
+import * as colors from 'kitsu/constants/colors';
+import {
+  ItemSeparator,
+  SidebarButton,
+  SidebarHeader,
+} from 'kitsu/screens/Sidebar/common';
+
 import { styles } from './styles';
 
 interface ImportDetailProps {
@@ -55,7 +61,7 @@ class ImportDetail extends React.Component<ImportDetailProps> {
       {
         showModal: false,
       },
-      !this.state.errMessage ? Navigation.pop(this.props.componentId) : null,
+      !this.state.errMessage ? Navigation.pop(this.props.componentId) : null
     );
   };
 
@@ -72,10 +78,15 @@ class ImportDetail extends React.Component<ImportDetailProps> {
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <FastImage source={item.image} style={styles.cardLogo} cache="web" />
+                <FastImage
+                  source={item.image}
+                  style={styles.cardLogo}
+                  cache="web"
+                />
               </View>
               <Text style={styles.cardText}>
-                Enter your username below to import your existing anime and manga progress.
+                Enter your username below to import your existing anime and
+                manga progress.
               </Text>
             </View>
             <ItemSeparator />
@@ -83,7 +94,7 @@ class ImportDetail extends React.Component<ImportDetailProps> {
               <TextInput
                 style={styles.input}
                 value={username}
-                onChangeText={t => this.setState({ username: t })}
+                onChangeText={(t) => this.setState({ username: t })}
                 placeholder={`Your ${item.title} Username`}
                 underlineColorAndroid={'transparent'}
                 autoCapitalize={'none'}
@@ -99,7 +110,11 @@ class ImportDetail extends React.Component<ImportDetailProps> {
             loading={loading}
           />
         </ScrollView>
-        <Modal animationType={'fade'} visible={this.state.showModal} transparent>
+        <Modal
+          animationType={'fade'}
+          visible={this.state.showModal}
+          transparent
+        >
           <View
             style={{
               flex: 1,
@@ -110,10 +125,13 @@ class ImportDetail extends React.Component<ImportDetailProps> {
             <View style={[styles.card, { marginTop: 100 }]}>
               {!errMessage ? (
                 <View>
-                  <Text style={styles.modalTitle}>Hang tight! We{"'"}re importing your data!</Text>
+                  <Text style={styles.modalTitle}>
+                    Hang tight! We{"'"}re importing your data!
+                  </Text>
                   <Text style={styles.modalText}>
-                    Your {item.title} import will continue in the background. We{"'"}ll send you a
-                    notification when your import has completed!
+                    Your {item.title} import will continue in the background. We
+                    {"'"}ll send you a notification when your import has
+                    completed!
                   </Text>
                 </View>
               ) : (

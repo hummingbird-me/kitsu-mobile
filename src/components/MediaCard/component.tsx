@@ -1,11 +1,13 @@
-import * as React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import * as React from 'react';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+
 import { ProgressBar } from 'kitsu/components/ProgressBar';
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { Rating } from 'kitsu/components/Rating';
-import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+
 import { styles } from './styles';
 
 interface MediaCardProps {
@@ -31,7 +33,7 @@ export const MediaCard = ({
   ratingTwenty,
   ratingSystem,
   style,
-  loading
+  loading,
 }: MediaCardProps) => {
   const onPress = () => {
     if (componentId && mediaData && mediaData.id && mediaData.type) {
@@ -49,7 +51,13 @@ export const MediaCard = ({
 
   return (
     <TouchableOpacity onPress={onPress} disabled={loading}>
-      <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
+      <View
+        style={[
+          styles.posterImageContainer,
+          { width: cardDimensions.width },
+          style,
+        ]}
+      >
         {mediaData && mediaData.posterImage ? (
           <ProgressiveImage
             duration={500}
@@ -60,10 +68,16 @@ export const MediaCard = ({
           <View style={[styles.posterImageCard, cardDimensions, cardStyle]} />
         )}
 
-        {caption.length > 0 && <Text style={styles.captionText}>{caption}</Text>}
+        {caption.length > 0 && (
+          <Text style={styles.captionText}>{caption}</Text>
+        )}
 
         {progress > 0 && (
-          <ProgressBar fillPercentage={progress} height={3} style={styles.progressBar} />
+          <ProgressBar
+            fillPercentage={progress}
+            height={3}
+            style={styles.progressBar}
+          />
         )}
 
         {typeof ratingTwenty !== 'undefined' && (
@@ -78,12 +92,11 @@ export const MediaCard = ({
           />
         )}
 
-        {loading &&
+        {loading && (
           <View style={styles.loading}>
             <ActivityIndicator color={'rgba(255,255,255,0.6)'} />
           </View>
-        }
-
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -91,7 +104,7 @@ export const MediaCard = ({
 
 MediaCard.propTypes = {
   cardStyle: ViewPropTypes.style,
-  style: ViewPropTypes.style
+  style: ViewPropTypes.style,
 };
 
 MediaCard.defaultProps = {

@@ -1,7 +1,19 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { listBackPurple, grey, darkGrey, lightGrey, yellow, orange, red, green, black } from 'kitsu/constants/colors';
+
 import { ViewMoreText } from 'kitsu/components/ViewMoreText';
+import {
+  black,
+  darkGrey,
+  green,
+  grey,
+  lightGrey,
+  listBackPurple,
+  orange,
+  red,
+  yellow,
+} from 'kitsu/constants/colors';
+
 import { styles } from './styles';
 
 const textSizes = {
@@ -28,8 +40,18 @@ const textColors = {
 
 interface StyledTextProps {
   bold?: boolean;
-  color?: "light" | "dark" | "grey" | "darkGrey" | "lightGrey" | "yellow" | "orange" | "red" | "green" | "black";
-  size?: "default" | "xxsmall" | "xsmall" | "small" | "large" | "xlarge";
+  color?:
+    | 'light'
+    | 'dark'
+    | 'grey'
+    | 'darkGrey'
+    | 'lightGrey'
+    | 'yellow'
+    | 'orange'
+    | 'red'
+    | 'green'
+    | 'black';
+  size?: 'default' | 'xxsmall' | 'xsmall' | 'small' | 'large' | 'xlarge';
   textStyle?: object | number;
 }
 
@@ -65,8 +87,18 @@ StyledText.defaultProps = {
 
 interface ViewMoreStyledTextProps {
   bold?: boolean;
-  color?: "light" | "dark" | "grey" | "darkGrey" | "lightGrey" | "yellow" | "orange" | "red" | "green" | "black";
-  size?: "default" | "xxsmall" | "xsmall" | "small" | "large" | "xlarge";
+  color?:
+    | 'light'
+    | 'dark'
+    | 'grey'
+    | 'darkGrey'
+    | 'lightGrey'
+    | 'yellow'
+    | 'orange'
+    | 'red'
+    | 'green'
+    | 'black';
+  size?: 'default' | 'xxsmall' | 'xsmall' | 'small' | 'large' | 'xlarge';
   textStyle?: object;
   disabled?: boolean;
   cacheKey?: string;

@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
+
 import { fetchUserLibrary, setLibrarySort } from 'kitsu/store/profile/actions';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
+
 import { LibrarySettingsComponent } from './component';
 
 const mapStateToProps = ({ user, profile }, ownProps) => {

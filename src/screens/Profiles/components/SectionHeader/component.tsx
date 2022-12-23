@@ -1,7 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import { StyledText } from 'kitsu/components/StyledText';
+
 import { styles } from './styles';
 
 interface SectionTitleProps {
@@ -15,14 +17,24 @@ export const SectionTitle = ({
   contentDark,
   title,
   titleAction,
-  titleLabel
+  titleLabel,
 }: SectionTitleProps) => (
   <View style={styles.main}>
-    <StyledText bold size="xsmall" color={contentDark ? 'dark' : 'lightGrey'}>{title}</StyledText>
-    {(titleAction && titleLabel) && (
+    <StyledText bold size="xsmall" color={contentDark ? 'dark' : 'lightGrey'}>
+      {title}
+    </StyledText>
+    {titleAction && titleLabel && (
       <TouchableOpacity onPress={titleAction} style={styles.link}>
-        <StyledText bold size="xsmall" color={contentDark ? 'dark' : 'light'}>・</StyledText>
-        <StyledText bold size="xsmall" color={contentDark ? 'yellow' : 'yellow'}>{titleLabel}</StyledText>
+        <StyledText bold size="xsmall" color={contentDark ? 'dark' : 'light'}>
+          ・
+        </StyledText>
+        <StyledText
+          bold
+          size="xsmall"
+          color={contentDark ? 'yellow' : 'yellow'}
+        >
+          {titleLabel}
+        </StyledText>
       </TouchableOpacity>
     )}
   </View>
@@ -50,7 +62,7 @@ export const SectionHeader = ({
   titleAction,
   titleLabel,
   onViewAllPress,
-  viewAllText
+  viewAllText,
 }: SectionHeaderProps) => (
   <View style={styles.wrap}>
     <SectionTitle
@@ -61,8 +73,13 @@ export const SectionHeader = ({
     />
     {onViewAllPress && (
       <TouchableOpacity onPress={onViewAllPress} style={styles.link}>
-        <StyledText color={contentDark ? 'dark' : 'light'} size="xsmall" bold>{viewAllText || 'View All'}</StyledText>
-        <Icon name="ios-arrow-forward" style={[styles.icon, contentDark && styles.icon__contentDark]} />
+        <StyledText color={contentDark ? 'dark' : 'light'} size="xsmall" bold>
+          {viewAllText || 'View All'}
+        </StyledText>
+        <Icon
+          name="ios-arrow-forward"
+          style={[styles.icon, contentDark && styles.icon__contentDark]}
+        />
       </TouchableOpacity>
     )}
   </View>

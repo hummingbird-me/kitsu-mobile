@@ -1,6 +1,7 @@
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal as ModalRN } from 'react-native';
+import { Modal as ModalRN, Text, TouchableOpacity, View } from 'react-native';
+
 import { styles } from './styles';
 
 interface ToastProps {
@@ -26,7 +27,11 @@ export const Toast = ({
     onRequestClose={onRequestClose}
     {...otherProps}
   >
-    <TouchableOpacity activeOpacity={1} style={styles.modalContainer} onPress={onDismiss}>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.modalContainer}
+      onPress={onDismiss}
+    >
       <View style={[styles.contentContainer, style]}>
         <Text style={styles.title}>{title}</Text>
       </View>
@@ -36,7 +41,7 @@ export const Toast = ({
 
 Toast.propTypes = {
   ...ModalRN.propTypes,
-  style: ViewPropTypes.style
+  style: ViewPropTypes.style,
 };
 
 Toast.defaultProps = {

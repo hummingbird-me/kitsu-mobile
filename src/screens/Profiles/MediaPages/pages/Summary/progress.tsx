@@ -1,10 +1,12 @@
+import { isFunction, isNull } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { isNull, isFunction } from 'lodash';
+import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { StyledText } from 'kitsu/components/StyledText';
+
 import { ProgressBar } from 'kitsu/components/ProgressBar';
+import { StyledText } from 'kitsu/components/StyledText';
 import { SectionHeader } from 'kitsu/screens/Profiles/components/SectionHeader';
+
 import { styles } from './styles';
 
 const STATUS_TEXT = {
@@ -34,7 +36,7 @@ export class SummaryProgress extends PureComponent<SummaryProgressProps> {
     libraryEntry: null,
     onPress: null,
     onEditPress: null,
-  }
+  };
 
   render() {
     const { libraryEntry, media, onPress, onEditPress } = this.props;
@@ -42,7 +44,11 @@ export class SummaryProgress extends PureComponent<SummaryProgressProps> {
     const completed = libraryEntry && libraryEntry.status === 'completed';
     const mediaCount = media && (media.episodeCount || media.chapterCount);
 
-    const progress = (libraryEntry && mediaCount && (libraryEntry.progress || 0) / mediaCount) || 0;
+    const progress =
+      (libraryEntry &&
+        mediaCount &&
+        (libraryEntry.progress || 0) / mediaCount) ||
+      0;
     const progressPercentage = Math.floor(progress * 100);
 
     // The status text for the title
@@ -64,34 +70,44 @@ export class SummaryProgress extends PureComponent<SummaryProgressProps> {
         />
         <TouchableOpacity onPress={onPress} style={styles.progressContainer}>
           <View
-            style={[styles.progressIconCircle, completed && styles.progressIconCircle__completed]}
+            style={[
+              styles.progressIconCircle,
+              completed && styles.progressIconCircle__completed,
+            ]}
           >
-            {completed && <Icon name="ios-checkmark" color="#FFFFFF" style={styles.progressIcon} />}
+            {completed && (
+              <Icon
+                name="ios-checkmark"
+                color="#FFFFFF"
+                style={styles.progressIcon}
+              />
+            )}
           </View>
           <View style={styles.progressStatus}>
-            {!libraryEntry &&
+            {!libraryEntry && (
               <StyledText size="default" color="grey">
                 Not Started
               </StyledText>
-            }
-            {libraryEntry && completed &&
+            )}
+            {libraryEntry && completed && (
               <StyledText size="default" color="green">
                 Finished!
               </StyledText>
-            }
-            {libraryEntry && !completed &&
+            )}
+            {libraryEntry && !completed && (
               <ProgressBar
                 fillPercentage={progressPercentage}
                 height={12}
                 backgroundStyle={styles.progressBarBackground}
               />
-            }
+            )}
           </View>
-          { libraryEntry &&
+          {libraryEntry && (
             <StyledText size="default" color="black">
-              {isNull(libraryEntry.progress) ? '-' : libraryEntry.progress}{mediaCount && ` of ${mediaCount}`}
+              {isNull(libraryEntry.progress) ? '-' : libraryEntry.progress}
+              {mediaCount && ` of ${mediaCount}`}
             </StyledText>
-          }
+          )}
           <Icon name="ios-arrow-forward" style={styles.arrowIcon} />
         </TouchableOpacity>
       </View>

@@ -1,15 +1,23 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import algolia from 'algoliasearch/reactnative';
-import { kitsuConfig } from 'kitsu/config/env';
-import { View, Modal, FlatList, Keyboard, TouchableHighlight } from 'react-native';
-import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
-import { SearchBox } from 'kitsu/components/SearchBox';
 import { isNull, upperFirst } from 'lodash';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { StyledText } from 'kitsu/components/StyledText';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import React, { PureComponent } from 'react';
+import {
+  FlatList,
+  Keyboard,
+  Modal,
+  TouchableHighlight,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { SearchBox } from 'kitsu/components/SearchBox';
+import { StyledText } from 'kitsu/components/StyledText';
+import { kitsuConfig } from 'kitsu/config/env';
+import * as Layout from 'kitsu/screens/Feed/components/Layout';
+import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
+
 import { styles } from './styles';
 
 interface MediaModalProps {
@@ -25,7 +33,7 @@ class MediaModal extends PureComponent<MediaModalProps> {
     onCancelPress: null,
     onMediaSelect: null,
     algoliaKeys: null,
-  }
+  };
 
   state = {
     media: [],
@@ -35,7 +43,7 @@ class MediaModal extends PureComponent<MediaModalProps> {
     selected: null,
     apiKey: null,
     indexName: null,
-  }
+  };
 
   componentDidMount() {
     this.doSearch(this.state.query, this.state.page);
@@ -87,7 +95,8 @@ class MediaModal extends PureComponent<MediaModalProps> {
     algoliaIndex.search({ query, page }, (err, content) => {
       let results = {};
       if (!err) {
-        media = page > 0 ? [...this.state.media, ...content.hits] : content.hits;
+        media =
+          page > 0 ? [...this.state.media, ...content.hits] : content.hits;
         results = { media };
       }
       this.setState({ ...results, loading: false });
@@ -99,19 +108,19 @@ class MediaModal extends PureComponent<MediaModalProps> {
       this.props.onMediaSelect(this.state.selected);
     }
     this.setState({ selected: null });
-  }
+  };
 
   handleCancelPress = () => {
     const { onCancelPress } = this.props;
     onCancelPress();
     this.setState({ selected: null });
-  }
+  };
 
   handleSearchStateChange = (query) => {
     this.setState({ query, page: 0 }, () => {
       this.doSearch(query, this.state.page);
     });
-  }
+  };
 
   loadMore = () => {
     if (!this.state.loading) {
@@ -119,7 +128,7 @@ class MediaModal extends PureComponent<MediaModalProps> {
         this.doSearch(this.state.query, this.state.page);
       });
     }
-  }
+  };
 
   renderItem = ({ item }) => {
     const { selected } = this.state;
@@ -134,17 +143,30 @@ class MediaModal extends PureComponent<MediaModalProps> {
               style={{ width: 60, height: 90 }}
             />
             <Layout.RowMain>
-              <StyledText color="dark" size="small" bold>{item.canonicalTitle || 'Title'}</StyledText>
-              <StyledText color="dark" size="xsmall">{upperFirst(item.subtype) || 'Subtype'}</StyledText>
+              <StyledText color="dark" size="small" bold>
+                {item.canonicalTitle || 'Title'}
+              </StyledText>
+              <StyledText color="dark" size="xsmall">
+                {upperFirst(item.subtype) || 'Subtype'}
+              </StyledText>
             </Layout.RowMain>
-            <View style={[styles.pickerIconCircle, isPicked && styles.pickerIconCircle__isPicked]}>
-              <Icon name="ios-checkmark" color="#FFFFFF" style={styles.pickerIcon} />
+            <View
+              style={[
+                styles.pickerIconCircle,
+                isPicked && styles.pickerIconCircle__isPicked,
+              ]}
+            >
+              <Icon
+                name="ios-checkmark"
+                color="#FFFFFF"
+                style={styles.pickerIcon}
+              />
             </View>
           </Layout.RowWrap>
         </View>
       </TouchableHighlight>
     );
-  }
+  };
 
   render() {
     const { visible } = this.props;
@@ -176,8 +198,10 @@ class MediaModal extends PureComponent<MediaModalProps> {
           </View>
           <FlatList
             data={media}
-            ItemSeparatorComponent={() => <View style={styles.rowPickerSeparator} />}
-            keyExtractor={item => `${item.id}`}
+            ItemSeparatorComponent={() => (
+              <View style={styles.rowPickerSeparator} />
+            )}
+            keyExtractor={(item) => `${item.id}`}
             renderItem={this.renderItem}
             onEndReached={this.loadMore}
             onEndReachedThreshold={0.5}

@@ -1,11 +1,13 @@
-import React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { View, TouchableOpacity, Text } from 'react-native';
-import { StyledText } from 'kitsu/components/StyledText';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { cardSize } from 'kitsu/screens/Profiles/constants';
-import LinearGradient from 'react-native-linear-gradient';
 import { isEmpty } from 'lodash';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
+import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
+import { StyledText } from 'kitsu/components/StyledText';
+import { cardSize } from 'kitsu/screens/Profiles/constants';
+
 import { styles } from './styles';
 
 const paddingOptions = {
@@ -19,7 +21,15 @@ const paddingOptions = {
 };
 
 interface TextViewProps {
-  variant?: "landscape" | "portrait" | "square" | "landscapeLarge" | "landscapeSmall" | "portraitLarge" | "thumbnail" | "filled";
+  variant?:
+    | 'landscape'
+    | 'portrait'
+    | 'square'
+    | 'landscapeLarge'
+    | 'landscapeSmall'
+    | 'portraitLarge'
+    | 'thumbnail'
+    | 'filled';
   title?: string;
   subtitle?: string;
   noMask?: boolean;
@@ -33,31 +43,44 @@ const TextView = ({
   subtitle,
   boldTitle,
   centerTitle,
-  noMask
+  noMask,
 }: TextViewProps) => {
   const titleSize = variant === 'landscapeLarge' ? 'default' : 'xsmall';
   const subtitleSize = variant === 'landscapeLarge' ? 'small' : 'xxsmall';
 
-  return (!isEmpty(title) || !isEmpty(subtitle)) && (
-    <View style={[styles.anchorBottom, { height: '60%' }]}>
-      { !noMask && <LinearGradient colors={['transparent', 'rgba(0,0,0,0.9)']} style={styles.linearGradient} />}
-      <View style={[styles.anchorBottom, { padding: paddingOptions[variant] }]}>
-        {!isEmpty(subtitle) && <StyledText color="lightGrey" size={subtitleSize} numberOfLines={1}>{subtitle}</StyledText>}
-        {!isEmpty(title) &&
-          <StyledText
-            color="light"
-            size={titleSize}
-            bold={boldTitle}
-            numberOfLines={2}
-            lineHeight={titleSize}
-            textStyle={centerTitle ? { textAlign: 'center' } : null}
-            ellipsizeMode="tail"
-          >
-            {title}
-          </StyledText>
-        }
+  return (
+    (!isEmpty(title) || !isEmpty(subtitle)) && (
+      <View style={[styles.anchorBottom, { height: '60%' }]}>
+        {!noMask && (
+          <LinearGradient
+            colors={['transparent', 'rgba(0,0,0,0.9)']}
+            style={styles.linearGradient}
+          />
+        )}
+        <View
+          style={[styles.anchorBottom, { padding: paddingOptions[variant] }]}
+        >
+          {!isEmpty(subtitle) && (
+            <StyledText color="lightGrey" size={subtitleSize} numberOfLines={1}>
+              {subtitle}
+            </StyledText>
+          )}
+          {!isEmpty(title) && (
+            <StyledText
+              color="light"
+              size={titleSize}
+              bold={boldTitle}
+              numberOfLines={2}
+              lineHeight={titleSize}
+              textStyle={centerTitle ? { textAlign: 'center' } : null}
+              ellipsizeMode="tail"
+            >
+              {title}
+            </StyledText>
+          )}
+        </View>
       </View>
-    </View>
+    )
   );
 };
 
@@ -71,7 +94,15 @@ TextView.defaultProps = {
 };
 
 interface ImageCardProps {
-  variant?: "landscape" | "portrait" | "square" | "landscapeLarge" | "landscapeSmall" | "portraitLarge" | "thumbnail" | "filled";
+  variant?:
+    | 'landscape'
+    | 'portrait'
+    | 'square'
+    | 'landscapeLarge'
+    | 'landscapeSmall'
+    | 'portraitLarge'
+    | 'thumbnail'
+    | 'filled';
   title?: string;
   subtitle?: string;
   subheading?: string;
@@ -95,7 +126,7 @@ export const ImageCard = ({
   centerTitle,
   style,
   cardStyle,
-  onPress
+  onPress,
 }: ImageCardProps) => {
   const cardDimensions = {
     width: cardSize[variant].width,
@@ -104,7 +135,13 @@ export const ImageCard = ({
 
   return (
     <TouchableOpacity onPress={onPress} disabled={onPress === null}>
-      <View style={[styles.posterImageContainer, { width: cardDimensions.width }, style]}>
+      <View
+        style={[
+          styles.posterImageContainer,
+          { width: cardDimensions.width },
+          style,
+        ]}
+      >
         {source ? (
           <ProgressiveImage
             duration={500}
@@ -128,15 +165,15 @@ export const ImageCard = ({
           <Text numberOfLines={1} style={styles.subheading}>
             {subheading}
           </Text>
-        </View>)
-      }
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
 
 ImageCard.propTypes = {
   style: ViewPropTypes.style,
-  cardStyle: ViewPropTypes.style
+  cardStyle: ViewPropTypes.style,
 };
 
 ImageCard.defaultProps = {

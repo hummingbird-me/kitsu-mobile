@@ -1,1 +1,2 @@
-export const isIdForCurrentUser = (id, currentUser) => (!!currentUser) && (currentUser.id == id);
+export const isIdForCurrentUser = (id, currentUser) =>
+  !!currentUser && currentUser.id == id;

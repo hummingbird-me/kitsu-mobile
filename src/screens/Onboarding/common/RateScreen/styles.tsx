@@ -1,4 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
 import { isX } from 'kitsu/utils/isX';
 

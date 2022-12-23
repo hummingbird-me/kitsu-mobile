@@ -1,17 +1,19 @@
+import { isEmpty, isNull } from 'lodash';
 import React from 'react';
-import { View, Text, Platform, UIManager, LayoutAnimation } from 'react-native';
+import { LayoutAnimation, Platform, Text, UIManager, View } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
 import { Button } from 'kitsu/components/Button';
 import { Input } from 'kitsu/components/Input';
-import { connect } from 'react-redux';
-import { updateGeneralSettings } from 'kitsu/store/user/actions';
-import { setScreenName } from 'kitsu/store/onboarding/actions';
-import { isEmpty, isNull } from 'lodash';
 import { PasswordInput } from 'kitsu/components/PasswordInput';
-import { Navigation } from 'react-native-navigation';
 import { Screens } from 'kitsu/navigation';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding';
+import { setScreenName } from 'kitsu/store/onboarding/actions';
+import { updateGeneralSettings } from 'kitsu/store/user/actions';
+
 import { styles as commonStyles } from '../common/styles';
 import { styles } from './styles';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding';
 
 class CreateAccountScreen extends React.Component {
   state = {
@@ -31,12 +33,15 @@ class CreateAccountScreen extends React.Component {
     if (usernameConfirmed) {
       const { username, email, password, confirmPassword } = this.state;
       const { currentUser, componentId } = this.props;
-      const isValidPass = !isEmpty(password) && password.trim() === confirmPassword.trim();
+      const isValidPass =
+        !isEmpty(password) && password.trim() === confirmPassword.trim();
 
       const valuesToUpdate = {
         ...((username !== currentUser.name && { name: username.trim() }) || {}),
         ...((email !== currentUser.email && { email: email.trim() }) || {}),
-        ...((!currentUser.hasPassword && isValidPass && { password: password.trim() }) || {}),
+        ...((!currentUser.hasPassword &&
+          isValidPass && { password: password.trim() }) ||
+          {}),
       };
       console.log('values to update', valuesToUpdate);
 
@@ -51,7 +56,11 @@ class CreateAccountScreen extends React.Component {
 
         // Only continue if we don't have an error
         if (isNull(error)) {
-          this.setState({ password: '', confirmPassword: '', shouldShowValidationInput: false });
+          this.setState({
+            password: '',
+            confirmPassword: '',
+            shouldShowValidationInput: false,
+          });
           this.props.setScreenName('FavoritesScreen');
           Navigation.setStackRoot(componentId, {
             component: { name: Screens.ONBOARDING_FAVORITES_SCREEN },
@@ -68,17 +77,23 @@ class CreateAccountScreen extends React.Component {
   };
 
   render() {
-    const { email, username, password, confirmPassword, usernameConfirmed } = this.state;
+    const { email, username, password, confirmPassword, usernameConfirmed } =
+      this.state;
     const { currentUser, error, loading } = this.props;
-    const isValidPass = password.trim().length >= 8 && password.trim() === confirmPassword.trim();
+    const isValidPass =
+      password.trim().length >= 8 && password.trim() === confirmPassword.trim();
     const passwordSet = currentUser.hasPassword || isValidPass;
 
     const isEmailValid = !isEmpty(email) && email.includes('@');
     const fieldsValid = isEmailValid && !isEmpty(username);
 
-    const passwordText = passwordSet ? 'Looks good!' : 'Password needs to be atleast 8 characters long';
+    const passwordText = passwordSet
+      ? 'Looks good!'
+      : 'Password needs to be atleast 8 characters long';
     const usernameText = !usernameConfirmed ? 'Confirm Username' : passwordText;
-    const buttonText = !fieldsValid ? 'Please fill out the fields above' : usernameText;
+    const buttonText = !fieldsValid
+      ? 'Please fill out the fields above'
+      : usernameText;
 
     // We need to extract the error contents
     // We can't be sure if it's a kitsu error object or just a string
@@ -86,7 +101,8 @@ class CreateAccountScreen extends React.Component {
     let errorString = null;
     if (!isEmpty(error)) {
       if (error instanceof Array && error[0]) {
-        errorString = error[0].detail || error[0].title || 'Something went wrong';
+        errorString =
+          error[0].detail || error[0].title || 'Something went wrong';
       } else if (error instanceof String) {
         errorString = error;
       } else {
@@ -109,26 +125,28 @@ class CreateAccountScreen extends React.Component {
             autoCorrect={false}
             value={email}
             keyboardType={'email-address'}
-            onChangeText={text => this.onChangeText(text, 'email')}
+            onChangeText={(text) => this.onChangeText(text, 'email')}
           />
           <Input
             placeholder="Username"
             autoCapitalize="none"
             autoCorrect={false}
             value={username}
-            onChangeText={text => this.onChangeText(text, 'username')}
+            onChangeText={(text) => this.onChangeText(text, 'username')}
           />
           {usernameConfirmed && !currentUser.hasPassword ? (
             <View>
               <PasswordInput
                 placeholder="Password"
                 value={password}
-                onChangeText={text => this.onChangeText(text, 'password')}
+                onChangeText={(text) => this.onChangeText(text, 'password')}
               />
               <PasswordInput
                 placeholder="Confirm Password"
                 value={confirmPassword}
-                onChangeText={text => this.onChangeText(text, 'confirmPassword')}
+                onChangeText={(text) =>
+                  this.onChangeText(text, 'confirmPassword')
+                }
               />
             </View>
           ) : (
@@ -142,13 +160,13 @@ class CreateAccountScreen extends React.Component {
             titleStyle={commonStyles.buttonTitleStyle}
             loading={loading}
           />
-          {!isEmpty(errorString) &&
+          {!isEmpty(errorString) && (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>
                 An Error Occurred: {errorString}
               </Text>
             </View>
-          }
+          )}
         </View>
       </View>
     );
@@ -161,6 +179,7 @@ const mapStateToProps = ({ onboarding, user, auth }) => {
   const { fbuser } = auth;
   return { loading, error, currentUser, accounts, fbuser };
 };
-export default connect(mapStateToProps, { updateGeneralSettings, setScreenName })(
-  CreateAccountScreen,
-);
+export default connect(mapStateToProps, {
+  updateGeneralSettings,
+  setScreenName,
+})(CreateAccountScreen);

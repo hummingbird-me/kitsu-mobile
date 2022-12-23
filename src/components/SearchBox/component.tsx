@@ -1,9 +1,11 @@
-import * as React from 'react';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import { TextInput, View, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { commonStyles } from 'kitsu/common/styles';
 import { isEmpty } from 'lodash';
+import * as React from 'react';
+import { TextInput, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import { commonStyles } from 'kitsu/common/styles';
+
 import { styles } from './styles';
 
 interface SearchBoxProps {
@@ -17,7 +19,7 @@ interface SearchBoxProps {
 
 export class SearchBox extends React.PureComponent<SearchBoxProps> {
   static propTypes = {
-    style: ViewPropTypes.style
+    style: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -36,10 +38,7 @@ export class SearchBox extends React.PureComponent<SearchBoxProps> {
       <View style={[styles.searchContainer, this.props.style]}>
         <Icon
           name="ios-search"
-          style={[
-            styles.searchIcon,
-            commonStyles.colorLightGrey,
-          ]}
+          style={[styles.searchIcon, commonStyles.colorLightGrey]}
           size={18}
         />
         <TextInput
@@ -52,18 +51,18 @@ export class SearchBox extends React.PureComponent<SearchBoxProps> {
           autoCorrect={false}
           keyboardAppearance={'dark'}
         />
-        {showClearButton && !isEmpty(value) &&
-          <TouchableOpacity style={styles.clearContainer} onPress={() => onChangeText('')}>
+        {showClearButton && !isEmpty(value) && (
+          <TouchableOpacity
+            style={styles.clearContainer}
+            onPress={() => onChangeText('')}
+          >
             <Icon
               name="ios-close-circle"
-              style={[
-                styles.clearIcon,
-                commonStyles.colorLightGrey,
-              ]}
+              style={[styles.clearIcon, commonStyles.colorLightGrey]}
               size={16}
             />
           </TouchableOpacity>
-        }
+        )}
       </View>
     );
   }

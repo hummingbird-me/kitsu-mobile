@@ -1,18 +1,20 @@
+import { capitalize, isArray, isEmpty, isNull } from 'lodash';
 import React, { PureComponent } from 'react';
-import { FlatList, TouchableOpacity, View, Text } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
-import { Button } from 'kitsu/components/Button';
-import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
-import { SelectMenu } from 'kitsu/components/SelectMenu';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+import { Button } from 'kitsu/components/Button';
+import { SelectMenu } from 'kitsu/components/SelectMenu';
+import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
+import { defaultAvatar, defaultCover } from 'kitsu/constants/app';
+import { NavigationActions } from 'kitsu/navigation';
+import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { Pill } from 'kitsu/screens/Profiles/components/Pill';
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
-import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
 import { cardSize } from 'kitsu/screens/Profiles/constants';
-import { isEmpty, capitalize, isNull, isArray } from 'lodash';
+
 import { styles } from './styles';
-import { NavigationActions } from 'kitsu/navigation';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
@@ -35,7 +37,7 @@ interface SceneHeaderProps {
   averageRating?: number;
   title?: string;
   subtitle?: string | string[];
-  variant?: "profile" | "media" | "group";
+  variant?: 'profile' | 'media' | 'group';
 }
 
 export class SceneHeader extends PureComponent<SceneHeaderProps> {
@@ -60,20 +62,38 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
         <View>
           {/* Rankings */}
           <View style={styles.descriptionView}>
-            <ViewMoreStyledText size="small" color="dark" ellipsizeMode="tail" numberOfLines={4}>{description}</ViewMoreStyledText>
+            <ViewMoreStyledText
+              size="small"
+              color="dark"
+              ellipsizeMode="tail"
+              numberOfLines={4}
+            >
+              {description}
+            </ViewMoreStyledText>
           </View>
           <View style={styles.statusView}>
             <View style={styles.kitsuScore}>
               <StyledText size="xxsmall" color="grey" bold>
                 Kitsu Score
               </StyledText>
-              <StyledText size="large" color="dark" bold textStyle={styles.kitsuScoreText}>
+              <StyledText
+                size="large"
+                color="dark"
+                bold
+                textStyle={styles.kitsuScoreText}
+              >
                 {(rating && `${rating}%`) || '-'}
               </StyledText>
             </View>
             <View style={styles.subStatusView}>
-              <Status statusType="rating" ranking={isNull(ratingRank) ? ' -' : ratingRank} />
-              <Status statusType="popularity" ranking={isNull(popularityRank) ? ' -' : popularityRank} />
+              <Status
+                statusType="rating"
+                ranking={isNull(ratingRank) ? ' -' : ratingRank}
+              />
+              <Status
+                statusType="popularity"
+                ranking={isNull(popularityRank) ? ' -' : popularityRank}
+              />
             </View>
           </View>
 
@@ -87,7 +107,9 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
             renderItem={({ index, item }) => {
               const colorIndex = index % PILL_COLORS.length;
               const color = PILL_COLORS[colorIndex];
-              const onPress = onCategoryPress ? () => onCategoryPress(item) : null;
+              const onPress = onCategoryPress
+                ? () => onCategoryPress(item)
+                : null;
               return (
                 <View style={{ marginLeft: 5 }}>
                   <Pill color={color} label={item.title} onPress={onPress} />
@@ -102,7 +124,9 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
     return (
       <View>
         <View style={styles.descriptionView}>
-          <StyledText size="small" color="dark">{description}</StyledText>
+          <StyledText size="small" color="dark">
+            {description}
+          </StyledText>
         </View>
         <View style={styles.statusView}>
           <FollowStatus followStatusType="following" count={followingCount} />
@@ -110,7 +134,7 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
         </View>
       </View>
     );
-  }
+  };
 
   renderMainButton = () => {
     if (this.props.variant === 'media') {
@@ -143,7 +167,7 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
         />
       </View>
     );
-  }
+  };
 
   render() {
     const {
@@ -160,17 +184,32 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
     let mediaSubTitle = isEmpty(subtitle) ? '' : subtitle;
     if (isArray(mediaSubTitle)) {
       // Join the subtitles
-      mediaSubTitle = mediaSubTitle.filter(t => !isEmpty(t)).join(' · ');
+      mediaSubTitle = mediaSubTitle.filter((t) => !isEmpty(t)).join(' · ');
     }
 
     return (
       <View style={[styles.container, styles[`container__${variant}`]]}>
-        <View style={[styles.backgroundView, styles[`backgroundView__${variant}`]]} />
-        <View style={[styles.profileHeaderView, styles[`profileHeaderView__${variant}`]]}>
+        <View
+          style={[styles.backgroundView, styles[`backgroundView__${variant}`]]}
+        />
+        <View
+          style={[
+            styles.profileHeaderView,
+            styles[`profileHeaderView__${variant}`],
+          ]}
+        >
           {/* Profile Poster Image */}
-          <View style={[styles.profileImageViewShadow, styles[`profileImageViewShadow__${variant}`]]}>
+          <View
+            style={[
+              styles.profileImageViewShadow,
+              styles[`profileImageViewShadow__${variant}`],
+            ]}
+          >
             <TouchableOpacity
-              style={[styles.profileImageView, styles[`profileImageView__${variant}`]]}
+              style={[
+                styles.profileImageView,
+                styles[`profileImageView__${variant}`],
+              ]}
               onPress={() => NavigationActions.showLightBox([posterImage])}
               disabled={isEmpty(posterImage)}
             >
@@ -186,18 +225,22 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
           <View style={[styles.titleView, styles[`titleView__${variant}`]]}>
             {/* Title */}
             <View style={[styles.titleTop, styles[`titleTop__${variant}`]]}>
-              {!isEmpty(mediaSubTitle) &&
+              {!isEmpty(mediaSubTitle) && (
                 <StyledText size="xsmall" color="light">
                   {mediaSubTitle}
                 </StyledText>
-              }
-              <StyledText size="large" color="light" bold numberOfLines={4}>{title}</StyledText>
+              )}
+              <StyledText size="large" color="light" bold numberOfLines={4}>
+                {title}
+              </StyledText>
             </View>
 
             {/* Add to library button & more button */}
-            <View style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}>
+            <View
+              style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}
+            >
               {this.renderMainButton()}
-              {showMoreButton &&
+              {showMoreButton && (
                 <SelectMenu
                   options={moreButtonOptions}
                   onOptionSelected={onMoreButtonOptionsSelected}
@@ -205,7 +248,7 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
                 >
                   <Icon name="md-more" style={styles.moreIcon} />
                 </SelectMenu>
-              }
+              )}
             </View>
           </View>
         </View>
@@ -217,14 +260,11 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
 }
 
 interface StatusProps {
-  statusType?: "popularity" | "rating";
+  statusType?: 'popularity' | 'rating';
   ranking?: string;
 }
 
-const Status = ({
-  statusType,
-  ranking
-}: StatusProps) => (
+const Status = ({ statusType, ranking }: StatusProps) => (
   <View style={[styles.statusItemView, styles[`statusItem__${statusType}`]]}>
     <Icon
       name={statusType === 'popularity' ? 'md-heart' : 'ios-star'}
@@ -232,7 +272,9 @@ const Status = ({
     />
     <StyledText size="xsmall" color="dark">
       Rank #{ranking}
-      <StyledText size="xsmall" color="grey">&nbsp;({capitalize(statusType)})</StyledText>
+      <StyledText size="xsmall" color="grey">
+        &nbsp;({capitalize(statusType)})
+      </StyledText>
     </StyledText>
   </View>
 );
@@ -243,18 +285,19 @@ Status.defaultProps = {
 };
 
 interface FollowStatusProps {
-  followStatusType?: "following" | "followers";
+  followStatusType?: 'following' | 'followers';
   count?: number;
 }
 
-const FollowStatus = ({
-  followStatusType,
-  count
-}: FollowStatusProps) => (
-  <View style={[styles.followStatus, styles[`followStatus__${followStatusType}`]]}>
+const FollowStatus = ({ followStatusType, count }: FollowStatusProps) => (
+  <View
+    style={[styles.followStatus, styles[`followStatus__${followStatusType}`]]}
+  >
     <StyledText size="xsmall" color="dark">
       {count}
-      <StyledText size="xsmall" color="grey">&nbsp;{followStatusType === 'following' ? 'Following' : 'Followers'}</StyledText>
+      <StyledText size="xsmall" color="grey">
+        &nbsp;{followStatusType === 'following' ? 'Following' : 'Followers'}
+      </StyledText>
     </StyledText>
   </View>
 );

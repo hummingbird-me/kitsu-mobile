@@ -1,9 +1,16 @@
 import React from 'react';
-import { View, Switch, Text, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
+import { ScrollView, Switch, Text, View } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
 import { Kitsu, setToken } from 'kitsu/config/api';
-import { SidebarHeader, SidebarTitle, ItemSeparator, SidebarButton } from './common';
+
+import {
+  ItemSeparator,
+  SidebarButton,
+  SidebarHeader,
+  SidebarTitle,
+} from './common';
 import { styles } from './styles';
 
 interface PrivacySettingsProps {
@@ -78,19 +85,22 @@ class PrivacySettings extends React.Component<PrivacySettingsProps> {
         />
         <ScrollView style={{ flex: 1 }}>
           <SidebarTitle title={'Discoverability'} />
-          <View
-            style={styles.privacySettingsWrapper}
-          >
-            <Text style={styles.privacySettingsText}>Share posts to Global Feed</Text>
+          <View style={styles.privacySettingsWrapper}>
+            <Text style={styles.privacySettingsText}>
+              Share posts to Global Feed
+            </Text>
             <Switch
               value={shareToGlobal}
-              onValueChange={v => this.setState({ modified: true, shareToGlobal: v })}
+              onValueChange={(v) =>
+                this.setState({ modified: true, shareToGlobal: v })
+              }
             />
           </View>
           <ItemSeparator />
           <View style={styles.privacyTipsWrapper}>
             <Text style={styles.privacyTipsText}>
-              If disabled, your posts will only be shared to your followers and guests to your profile.
+              If disabled, your posts will only be shared to your followers and
+              guests to your profile.
             </Text>
           </View>
           <SidebarButton

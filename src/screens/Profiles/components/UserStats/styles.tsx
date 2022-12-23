@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+
 import * as colors from 'kitsu/constants/colors';
 import { scenePadding } from 'kitsu/screens/Profiles/constants';
 
@@ -30,7 +31,7 @@ export const styles = StyleSheet.create({
   categoryBreakdown: {
     position: 'relative',
     width: PIE_SIZE,
-    height: PIE_SIZE
+    height: PIE_SIZE,
   },
   categoryOverlay: {
     position: 'absolute',

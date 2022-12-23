@@ -1,11 +1,12 @@
-import React from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
-import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
-import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
 import { upperFirst } from 'lodash';
 import moment from 'moment';
+import React from 'react';
+import { FlatList, TouchableOpacity } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+
 import { Screens } from 'kitsu/navigation';
+import { MediaRow } from 'kitsu/screens/Profiles/components/MediaRow';
+import { TabContainer } from 'kitsu/screens/Profiles/components/TabContainer';
 
 const ROLE_LOOKUP_TABLE = {
   sequel: 'Sequel',
@@ -54,7 +55,10 @@ const renderItem = (item, componentId) => {
         summary={item.destination.synopsis}
         subtitle={subtitle}
         summaryLines={4}
-        thumbnail={{ uri: item.destination.posterImage && item.destination.posterImage.large }}
+        thumbnail={{
+          uri:
+            item.destination.posterImage && item.destination.posterImage.large,
+        }}
       />
     </TouchableOpacity>
   );
@@ -64,23 +68,23 @@ interface componentProps {
   componentId: any;
   media: {
     mediaRelationships: {
-      role: string,
+      role: string;
       destination: {
-        canonicalTitle: string,
-        synopsis: string,
+        canonicalTitle: string;
+        synopsis: string;
         posterImage: {
-          large: string
-        },
-        subtype: string,
-        startDate?: string
-      }
-    }
+          large: string;
+        };
+        subtype: string;
+        startDate?: string;
+      };
+    };
   };
 }
 
 export const component = ({
   media: { mediaRelationships },
-  componentId
+  componentId,
 }: componentProps) => {
   const relationships = mediaRelationships || [];
   const sorted = relationships.sort((a, b) => {

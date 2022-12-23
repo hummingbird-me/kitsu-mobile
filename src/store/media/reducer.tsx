@@ -21,7 +21,10 @@ export const mediaReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        media: { ...state.media, [action.payload.mediaId]: action.payload.media },
+        media: {
+          ...state.media,
+          [action.payload.mediaId]: action.payload.media,
+        },
         error: '',
       };
     case types.FETCH_MEDIA_FAIL:

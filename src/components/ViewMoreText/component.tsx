@@ -1,7 +1,9 @@
+import { isNull } from 'lodash';
 import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
-import { isNull } from 'lodash';
+
 import { ViewMoreTextCache } from 'kitsu/utils/cache';
+
 import { styles } from './styles';
 
 interface ViewMoreTextProps {
@@ -18,7 +20,7 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
     measured: false,
     fullHeight: null,
     shouldShowMore: false,
-  }
+  };
 
   UNSAFE_componentWillMount() {
     const { cacheKey } = this.props;
@@ -32,7 +34,6 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
       });
     }
   }
-
 
   onLayout = (event) => {
     const { fullHeight } = this.state;
@@ -49,36 +50,36 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
     if (fullHeight > height) {
       this.setState({ shouldShowMore: true });
     }
-  }
+  };
 
   handlePressViewMore = () => {
     this.setState({ showAllText: true });
-  }
+  };
 
   handlePressViewLess = () => {
     this.setState({ showAllText: false });
-  }
+  };
 
-  renderViewMore = onPress => (
+  renderViewMore = (onPress) => (
     <Text style={styles.button} onPress={onPress}>
       View more
     </Text>
-  )
+  );
 
-  renderViewLess = onPress => (
+  renderViewLess = (onPress) => (
     <Text style={styles.button} onPress={onPress}>
       View less
     </Text>
-  )
+  );
 
   renderFooter() {
     const { showAllText, shouldShowMore } = this.state;
 
     if (shouldShowMore && !showAllText) {
-      const viewMore = (this.props.renderViewMore || this.renderViewMore);
+      const viewMore = this.props.renderViewMore || this.renderViewMore;
       return viewMore(this.handlePressViewMore);
     } else if (shouldShowMore && showAllText) {
-      const viewLess = (this.props.renderViewLess || this.renderViewLess);
+      const viewLess = this.props.renderViewLess || this.renderViewLess;
       return viewLess(this.handlePressViewLess);
     }
     return null;
@@ -92,7 +93,9 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
       <View>
         <Text
           numberOfLines={measured && !showAllText ? numberOfLines : 0}
-          ref={(text) => { this.text = text; }}
+          ref={(text) => {
+            this.text = text;
+          }}
           style={textStyle}
           {...props}
           onLayout={this.onLayout}

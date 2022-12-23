@@ -1,5 +1,5 @@
-import * as types from 'kitsu/store/types';
 import { Kitsu } from 'kitsu/config/api';
+import * as types from 'kitsu/store/types';
 
 export const fetchGroupMemberships = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS });
@@ -10,6 +10,9 @@ export const fetchGroupMemberships = () => async (dispatch, getState) => {
     });
     dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS_SUCCESS, payload: groups });
   } catch (e) {
-    dispatch({ type: types.FETCH_GROUP_MEMBERSHIPS_FAIL, payload: 'Failed to load groups' });
+    dispatch({
+      type: types.FETCH_GROUP_MEMBERSHIPS_FAIL,
+      payload: 'Failed to load groups',
+    });
   }
 };

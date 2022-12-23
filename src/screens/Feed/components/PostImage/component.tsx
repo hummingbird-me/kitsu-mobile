@@ -1,17 +1,20 @@
+import { isNil } from 'lodash';
 import React, { PureComponent } from 'react';
-import { View, Image, Dimensions, ActivityIndicator, Text } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+
 import { ImageSizeCache } from 'kitsu/utils/cache';
 import { getImgixImage } from 'kitsu/utils/imgix';
-import { isKitsuUrl, isGIFUrl } from 'kitsu/utils/url';
-import { isNil } from 'lodash';
+import { isGIFUrl, isKitsuUrl } from 'kitsu/utils/url';
+
 import { styles } from './styles';
 
 // The maximum width to classify as a phone
 const MAX_PHONE_WIDTH = 480;
 
 // Change the auto height value based on device
-const MAX_AUTO_HEIGHT = Dimensions.get('window').width > MAX_PHONE_WIDTH ? 400 : 325;
+const MAX_AUTO_HEIGHT =
+  Dimensions.get('window').width > MAX_PHONE_WIDTH ? 400 : 325;
 
 interface PostImageProps {
   uri: string;
@@ -44,7 +47,7 @@ export class PostImage extends PureComponent<PostImageProps> {
     height: this.props.height || 0,
     autoHeight: false,
     loading: true,
-  }
+  };
 
   UNSAFE_componentWillMount() {
     this.mounted = true;
@@ -52,9 +55,10 @@ export class PostImage extends PureComponent<PostImageProps> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.uri !== nextProps.uri ||
-        this.props.width !== nextProps.width ||
-        this.props.height !== nextProps.height
+    if (
+      this.props.uri !== nextProps.uri ||
+      this.props.width !== nextProps.width ||
+      this.props.height !== nextProps.height
     ) {
       this.fetchImageSize();
     }
@@ -77,7 +81,11 @@ export class PostImage extends PureComponent<PostImageProps> {
       });
     } else {
       const { originalWidth, originalHeight, loading } = this.state;
-      const imageSize = this.calculateSize(originalWidth, originalHeight, loading);
+      const imageSize = this.calculateSize(
+        originalWidth,
+        originalHeight,
+        loading
+      );
       this.setState({ ...imageSize });
 
       // Remove this once FastImage fixes local image support and passes size in its `onLoad` event
@@ -95,7 +103,7 @@ export class PostImage extends PureComponent<PostImageProps> {
     }
   }
 
-  mounted = false
+  mounted = false;
 
   /*
   Calculate the size of the image.
@@ -115,7 +123,8 @@ export class PostImage extends PureComponent<PostImageProps> {
 
     // The default dimensions if we haven't finished loading the image
     const defaultWidth = propWidth || maxAutoWidth;
-    const defaultHeight = propHeight || Math.min(defaultWidth / 2, maxAutoHeight);
+    const defaultHeight =
+      propHeight || Math.min(defaultWidth / 2, maxAutoHeight);
 
     // Return values
     let width = 0;
@@ -154,13 +163,15 @@ export class PostImage extends PureComponent<PostImageProps> {
   }
 
   render() {
-    const { uri, borderRadius, maxAutoHeight, showGIFOverlayForKitsu } = this.props;
+    const { uri, borderRadius, maxAutoHeight, showGIFOverlayForKitsu } =
+      this.props;
     const { loading, width, height, autoHeight } = this.state;
 
-    const imgixUri = getImgixImage(uri, {
-      w: width,
-      h: height,
-    }) || '';
+    const imgixUri =
+      getImgixImage(uri, {
+        w: width,
+        h: height,
+      }) || '';
 
     // We need to apply 'contain' to any non-kitsu url that has gove over maxAutoHeight
     // We don't need to do it for kitsu urls because imgix smart crops the image
@@ -174,34 +185,38 @@ export class PostImage extends PureComponent<PostImageProps> {
 
     // If we have `showGIFOverlayForKitsu` set to false then we just go ahead and show the animated gif
     // Or if user has set `showAnimatedGIF` use that value
-    const showAnimatedGIF = isNil(this.props.showAnimatedGIF) ? !showGIFOverlayForKitsu : this.props.showAnimatedGIF;
+    const showAnimatedGIF = isNil(this.props.showAnimatedGIF)
+      ? !showGIFOverlayForKitsu
+      : this.props.showAnimatedGIF;
     const animateGIF = isGIF && showAnimatedGIF;
-    const imageUri = (animateGIF) ? uri : imgixUri;
+    const imageUri = animateGIF ? uri : imgixUri;
 
     // Check if images height is above max autoheight
     const isImageMaxAutoHeight = autoHeight && height >= maxAutoHeight;
 
     return (
       <View>
-        {loading &&
+        {loading && (
           <View style={[styles.loadingContainer, { borderRadius }]}>
             <ActivityIndicator color="white" />
           </View>
-        }
-        {!loading && showGIFOverlay &&
+        )}
+        {!loading && showGIFOverlay && (
           <View style={[styles.gifOverlay, { borderRadius }]}>
             <View style={styles.gifOverlayTextContainer}>
-              <Text style={styles.gifOverlayText}>
-                GIF
-              </Text>
+              <Text style={styles.gifOverlayText}>GIF</Text>
             </View>
           </View>
-        }
+        )}
         <FastImage
           // If height is automatically set and it goes over the max auto height
           // We need to make sure that the image is displayed in full to the user.
           // Only applies to non-kitsu images or if we are showing the animated kitsu GIF.
-          resizeMode={(animateGIF || isExternalUrl) && isImageMaxAutoHeight ? 'contain' : 'cover'}
+          resizeMode={
+            (animateGIF || isExternalUrl) && isImageMaxAutoHeight
+              ? 'contain'
+              : 'cover'
+          }
           source={{ uri: imageUri }}
           style={{
             width,

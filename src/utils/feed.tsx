@@ -29,7 +29,8 @@ export const fetchComment = async (commentId) => {
 
   try {
     const comment = await Kitsu.find('comments', commentId, {
-      include: 'user,uploads,parent,parent.user,parent.uploads,post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
+      include:
+        'user,uploads,parent,parent.user,parent.uploads,post,post.user,post.targetUser,post.targetGroup,post.media,post.uploads,post.spoiledUnit',
     });
     return comment;
   } catch (e) {

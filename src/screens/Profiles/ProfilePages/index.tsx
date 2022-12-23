@@ -1,34 +1,45 @@
-import React, { PureComponent } from 'react';
-import { StatusBar, Share, View } from 'react-native';
-import { connect } from 'react-redux';
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
-import { Kitsu } from 'kitsu/config/api';
-import { defaultCover, statusBarHeight, navigationBarHeight } from 'kitsu/constants/app';
-import { listBackPurple } from 'kitsu/constants/colors';
-import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
-import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
+import { isEmpty, isNull } from 'lodash';
+import React, { PureComponent } from 'react';
+import { Share, StatusBar, View } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
 import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
-import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
+import { Kitsu } from 'kitsu/config/api';
+import { kitsuConfig } from 'kitsu/config/env';
+import {
+  defaultCover,
+  navigationBarHeight,
+  statusBarHeight,
+} from 'kitsu/constants/app';
+import { listBackPurple } from 'kitsu/constants/colors';
+import { NavigationActions } from 'kitsu/navigation';
 import { CustomHeader } from 'kitsu/screens/Profiles/components/CustomHeader';
 import { EditModal } from 'kitsu/screens/Profiles/components/EditModal';
-import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { isIdForCurrentUser } from 'kitsu/utils/id';
-import { fetchCurrentUser } from 'kitsu/store/user/actions';
-import { getImgixCoverImage } from 'kitsu/utils/imgix';
-import { parseURL } from 'kitsu/utils/url';
-import { isEmpty, isNull } from 'lodash';
 import { ErrorPage } from 'kitsu/screens/Profiles/components/ErrorPage';
-import { kitsuConfig } from 'kitsu/config/env';
-import { Navigation } from 'react-native-navigation';
-import { NavigationActions } from 'kitsu/navigation';
+import { MaskedImage } from 'kitsu/screens/Profiles/components/MaskedImage';
+import { SceneContainer } from 'kitsu/screens/Profiles/components/SceneContainer';
+import { SceneHeader } from 'kitsu/screens/Profiles/components/SceneHeader';
+import { TabBar, TabBarLink } from 'kitsu/screens/Profiles/components/TabBar';
+import { coverImageHeight, scene } from 'kitsu/screens/Profiles/constants';
 import { fetchUserLibrary } from 'kitsu/store/profile/actions';
-import { Summary, Feed, About, Library, Groups, Reactions } from './pages';
+import { fetchCurrentUser } from 'kitsu/store/user/actions';
+import { isIdForCurrentUser } from 'kitsu/utils/id';
+import { getImgixCoverImage } from 'kitsu/utils/imgix';
+import { isX, paddingX } from 'kitsu/utils/isX';
+import { parseURL } from 'kitsu/utils/url';
 
-const HEADER_HEIGHT = navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
+import { About, Feed, Groups, Library, Reactions, Summary } from './pages';
 
-const tabPage = (name, Component) => ({ key: name.toLowerCase(), label: name, screen: Component });
+const HEADER_HEIGHT =
+  navigationBarHeight + statusBarHeight + (isX ? paddingX : 0);
+
+const tabPage = (name, Component) => ({
+  key: name.toLowerCase(),
+  label: name,
+  screen: Component,
+});
 
 const TAB_ITEMS = [
   tabPage('Summary', Summary),
@@ -39,7 +50,7 @@ const TAB_ITEMS = [
   tabPage('Reactions', Reactions),
 ];
 
-const tabs = TAB_ITEMS.map(t => t.key);
+const tabs = TAB_ITEMS.map((t) => t.key);
 
 interface ProfilePageProps {
   componentId: any;
@@ -52,7 +63,7 @@ interface ProfilePageProps {
 class ProfilePage extends PureComponent<ProfilePageProps> {
   static defaultProps = {
     activeTab: 'summary',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -128,7 +139,8 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
       }
       case 'cover': {
         if (!profile || !profile.coverImage) return;
-        const coverURL = profile.coverImage.original ||
+        const coverURL =
+          profile.coverImage.original ||
           profile.coverImage.large ||
           profile.coverImage.medium ||
           profile.coverImage.small ||
@@ -142,16 +154,20 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
         console.log('unhandled profile option selected:', option);
         break;
     }
-  }
+  };
 
   onEditProfile = async (changes) => {
     try {
       this.setState({ editModalVisible: false, loading: true });
       const { userId } = this.props;
-      const data = await Kitsu.update('users', {
-        id: userId,
-        ...changes,
-      }, { include: 'waifu' });
+      const data = await Kitsu.update(
+        'users',
+        {
+          id: userId,
+          ...changes,
+        },
+        { include: 'waifu' }
+      );
 
       // Bust the cover cache
       if (data && data.coverImage) {
@@ -166,14 +182,15 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
     } finally {
       this.setState({ loading: false });
     }
-  }
+  };
 
   setActiveTab = (tab) => {
     if (tab) {
       this.setState({ active: tab.toLowerCase() });
-      if (this.scrollView) this.scrollView.scrollTo({ x: 0, y: coverImageHeight, animated: true });
+      if (this.scrollView)
+        this.scrollView.scrollTo({ x: 0, y: coverImageHeight, animated: true });
     }
-  }
+  };
 
   fetchLibraryActivity = async () => {
     const { userId } = this.props;
@@ -199,7 +216,7 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
         loadingLibraryActivity: false,
       });
     }
-  }
+  };
 
   fetchReactions = async () => {
     const { userId } = this.props;
@@ -223,7 +240,7 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
         loadingReactions: false,
       });
     }
-  }
+  };
 
   fetchGroups = async () => {
     this.setState({ loadingGroups: true });
@@ -247,7 +264,7 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
       console.log('Unhandled error while retrieving groups: ', err);
       this.setState({ loadingGroups: false });
     }
-  }
+  };
 
   fetchStats = async () => {
     this.setState({ loadingStats: true });
@@ -255,14 +272,14 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
       const stats = await Kitsu.findAll('stats', {
         filter: {
           user_id: this.props.userId,
-        }
+        },
       });
       this.setState({ stats, loadingStats: false });
     } catch (err) {
       console.log('Unhandled error while fetching stats:', err);
       this.setState({ loadingStats: false });
     }
-  }
+  };
 
   /**
    * Apply image cache bust to the given object.
@@ -291,10 +308,9 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
     return updated;
   }
 
-
   goBack = () => {
     Navigation.pop(this.props.componentId);
-  }
+  };
 
   loadUserData = async (userId) => {
     try {
@@ -303,7 +319,8 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
           id: userId,
         },
         fields: {
-          users: 'slug,waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
+          users:
+            'slug,waifuOrHusbando,gender,location,birthday,createdAt,followersCount,followingCount,coverImage,avatar,about,name,waifu',
           characters: 'name,image,description',
         },
         include: 'waifu',
@@ -332,12 +349,14 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
         error,
       });
     }
-  }
+  };
 
   fetchFollow = async (userId) => {
     try {
       const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
-      if (isCurrentUser) { return; }
+      if (isCurrentUser) {
+        return;
+      }
       this.setState({ isLoadingFollow: true });
       const response = await Kitsu.findAll('follows', {
         filter: {
@@ -350,7 +369,7 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
     } catch (err) {
       console.log('Error fetching follow:', err);
     }
-  }
+  };
 
   createFollow = async (userId) => {
     try {
@@ -369,25 +388,28 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
     } catch (err) {
       console.log('Error creating follow:', err);
     }
-  }
+  };
 
   handleFollowing = async () => {
     const { userId } = this.props;
     const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
-    if (isCurrentUser) { // Edit
+    if (isCurrentUser) {
+      // Edit
       this.setState({ editModalVisible: true });
-    } else if (this.state.follow) { // Destroy
+    } else if (this.state.follow) {
+      // Destroy
       this.setState({ isLoadingFollow: true });
       await Kitsu.destroy('follows', this.state.follow.id);
       this.setState({ follow: null, isLoadingFollow: false });
-    } else { // Create
+    } else {
+      // Create
       await this.createFollow(userId);
     }
-  }
+  };
 
   renderTabNav = () => (
     <TabBar>
-      {TAB_ITEMS.map(tabItem => (
+      {TAB_ITEMS.map((tabItem) => (
         <TabBarLink
           key={tabItem.key}
           label={tabItem.label}
@@ -446,18 +468,22 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
         {...otherProps}
       />
     );
-  }
+  };
 
   render() {
-    const { error, loading, profile, follow, isLoadingFollow, editModalVisible } = this.state;
+    const {
+      error,
+      loading,
+      profile,
+      follow,
+      isLoadingFollow,
+      editModalVisible,
+    } = this.state;
 
     if (loading) {
       return (
         <SceneContainer>
-          <CustomHeader
-            leftButtonAction={this.goBack}
-            leftButtonTitle="Back"
-          />
+          <CustomHeader leftButtonAction={this.goBack} leftButtonTitle="Back" />
           <SceneLoader />
         </SceneContainer>
       );
@@ -469,16 +495,24 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
 
     const { userId } = this.props;
     const isCurrentUser = isIdForCurrentUser(userId, this.props.currentUser);
-    const mainButtonTitle = isCurrentUser ? 'Edit' : follow ? 'Unfollow' : 'Follow';
+    const mainButtonTitle = isCurrentUser
+      ? 'Edit'
+      : follow
+      ? 'Unfollow'
+      : 'Follow';
 
     // There's no way to Report Profiles at the moment in the API.
     const MORE_BUTTON_OPTIONS = [
       { text: 'Share Profile Link', value: 'share' },
       // Only display if user has a valid cover image
-      { text: 'View Cover Image', value: 'cover', if: i => !!(i && i.coverImage) },
+      {
+        text: 'View Cover Image',
+        value: 'cover',
+        if: (i) => !!(i && i.coverImage),
+      },
       /* 'Report Profile', */
       'Nevermind',
-    ].filter(item => (item.if ? item.if(profile) : true));
+    ].filter((item) => (item.if ? item.if(profile) : true));
     if (!isCurrentUser) {
       MORE_BUTTON_OPTIONS.unshift('Block');
     }
@@ -487,7 +521,9 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
       <SceneContainer>
         <StatusBar barStyle="light-content" />
         <ParallaxScroll
-          innerRef={(r) => { this.parallaxScroll = r; }}
+          innerRef={(r) => {
+            this.parallaxScroll = r;
+          }}
           style={{ flex: 1 }}
           headerHeight={HEADER_HEIGHT}
           isHeaderFixed
@@ -497,11 +533,12 @@ class ProfilePage extends PureComponent<ProfilePageProps> {
               maskedTop
               maskedBottom
               source={{
-                uri: getImgixCoverImage(profile.coverImage, {
-                  h: coverImageHeight * 2,
-                  w: scene.width * 2,
-                  'max-h': null,
-                }) || defaultCover,
+                uri:
+                  getImgixCoverImage(profile.coverImage, {
+                    h: coverImageHeight * 2,
+                    w: scene.width * 2,
+                    'max-h': null,
+                  }) || defaultCover,
               }}
             />
           )}
@@ -545,4 +582,6 @@ const mapStateToProps = ({ user }) => {
   return { currentUser };
 };
 
-export default connect(mapStateToProps, { fetchCurrentUser, fetchUserLibrary })(ProfilePage);
+export default connect(mapStateToProps, { fetchCurrentUser, fetchUserLibrary })(
+  ProfilePage
+);

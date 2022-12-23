@@ -1,21 +1,23 @@
+import { toLower, upperFirst } from 'lodash';
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
-import { upperFirst, toLower } from 'lodash';
-import { Button } from 'kitsu/components/Button';
+
+import { fox } from 'kitsu/assets/img/onboarding/';
 import awful from 'kitsu/assets/img/ratings/awful.png';
 import good from 'kitsu/assets/img/ratings/good.png';
 import great from 'kitsu/assets/img/ratings/great.png';
 import meh from 'kitsu/assets/img/ratings/meh.png';
 import starFilled from 'kitsu/assets/img/ratings/star.png';
-import { fox } from 'kitsu/assets/img/onboarding/';
-import { updateLibrarySettings } from 'kitsu/store/user/actions/';
-import { setScreenName } from 'kitsu/store/onboarding/actions';
-import { Navigation } from 'react-native-navigation';
+import { Button } from 'kitsu/components/Button';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
 import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+import { setScreenName } from 'kitsu/store/onboarding/actions';
+import { updateLibrarySettings } from 'kitsu/store/user/actions/';
+
+import { styles } from './styles';
 
 const getRatingSystem = (type) => {
   switch (type) {
@@ -43,7 +45,9 @@ const Regular = () => (
   <View style={{ flexDirection: 'row' }}>
     {Array(5)
       .fill({})
-      .map((v, i) => <FastImage key={i} source={starFilled} style={styles.imageRegular} />)}
+      .map((v, i) => (
+        <FastImage key={i} source={starFilled} style={styles.imageRegular} />
+      ))}
   </View>
 );
 
@@ -51,7 +55,9 @@ const Advanced = () => (
   <View style={{ flexDirection: 'row' }}>
     {Array(10)
       .fill({})
-      .map((v, i) => <FastImage key={i} source={starFilled} style={styles.imageAdvanced} />)}
+      .map((v, i) => (
+        <FastImage key={i} source={starFilled} style={styles.imageAdvanced} />
+      ))}
   </View>
 );
 
@@ -63,7 +69,9 @@ const RatingSystem = ({ style, type, selected, onSelectSystem }) => {
       onPress={() => onSelectSystem(type)}
       style={[styles.rowWrapper, styles.rowRating, selectedRowStyle, style]}
     >
-      <Text style={[styles.text, selectedTextStyle]}>{upperFirst(toLower(type))}</Text>
+      <Text style={[styles.text, selectedTextStyle]}>
+        {upperFirst(toLower(type))}
+      </Text>
       {getRatingSystem(type)}
     </TouchableOpacity>
   );
@@ -128,7 +136,10 @@ class RatingSystemScreen extends React.Component {
           />
         </ScrollView>
         <View style={{ flexDirection: 'row' }}>
-          <FastImage source={fox} style={{ width: 50, height: 50, zIndex: 2 }} />
+          <FastImage
+            source={fox}
+            style={{ width: 50, height: 50, zIndex: 2 }}
+          />
           <View
             style={{
               left: -10,
@@ -160,6 +171,7 @@ const mapStateToProps = ({ onboarding, user }) => {
   const { loading, currentUser, error } = user;
   return { loading, currentUser, selectedAccount, error };
 };
-export default connect(mapStateToProps, { updateLibrarySettings, setScreenName })(
-  RatingSystemScreen,
-);
+export default connect(mapStateToProps, {
+  updateLibrarySettings,
+  setScreenName,
+})(RatingSystemScreen);

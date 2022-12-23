@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { Input } from 'kitsu/components/Input';
+
 import { styles } from './styles';
 
 interface PasswordInputProps {
@@ -23,7 +25,7 @@ export class PasswordInput extends PureComponent<PasswordInputProps> {
     this.setState({
       passwordVisible: !this.state.passwordVisible,
     });
-  }
+  };
 
   render() {
     const { value, onChangeText, ...props } = this.props;

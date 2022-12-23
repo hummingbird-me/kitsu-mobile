@@ -1,4 +1,5 @@
 import stream from 'getstream';
+
 import { kitsuConfig } from './env';
 
 export const getStream = () => {

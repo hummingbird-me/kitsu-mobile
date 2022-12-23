@@ -1,5 +1,3 @@
 import PostCreator from './component';
 
-export {
-  PostCreator,
-};
+export { PostCreator };

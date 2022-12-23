@@ -1,7 +1,7 @@
 {
   "singleQuote": true,
   "jsxBracketSameLine": true,
-  "importOrder": ["^app/(.*)$", "^[./]"],
+  "importOrder": ["^kitsu/(.*)$", "^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrderMergeDuplicateImports": true,

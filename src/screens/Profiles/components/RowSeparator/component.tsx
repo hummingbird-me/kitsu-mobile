@@ -1,16 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { styles } from './styles';
 
 interface RowSeparatorProps {
-  size?: "default" | "medium" | "large";
+  size?: 'default' | 'medium' | 'large';
   transparent?: boolean;
 }
 
-export const RowSeparator = ({
-  size,
-  transparent
-}: RowSeparatorProps) => (
+export const RowSeparator = ({ size, transparent }: RowSeparatorProps) => (
   <View
     style={[
       styles.separator,

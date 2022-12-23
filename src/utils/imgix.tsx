@@ -1,7 +1,8 @@
-import { parseURL, isKitsuUrl } from 'kitsu/utils/url';
+import { isEmpty } from 'lodash';
+
 import { kitsuConfig } from 'kitsu/config/env';
 import { coverImageDimensions } from 'kitsu/constants/app';
-import { isEmpty } from 'lodash';
+import { isKitsuUrl, parseURL } from 'kitsu/utils/url';
 
 export const defaultImgixOptions = {
   fit: 'crop',
@@ -36,20 +37,20 @@ export function getImgixImage(url, imageOptions = {}) {
   const { pathname } = parsed;
 
   // Build the search params
-  const mappings = Object.keys(options).filter(k => options[k]).map(key => `${key}=${options[key]}`);
+  const mappings = Object.keys(options)
+    .filter((k) => options[k])
+    .map((key) => `${key}=${options[key]}`);
   const searchParams = mappings.join('&');
 
   // Make the new url
   return `https://${kitsuConfig.imgixBaseUrl}${pathname}?${searchParams}`;
 }
 
-
 export const defaultImgixCoverOptions = {
   ...defaultImgixOptions,
   w: coverImageDimensions.width,
   'max-h': coverImageDimensions.height,
 };
-
 
 /**
  * Get the imgix cover image url from the given coverImages.
@@ -69,11 +70,12 @@ export function getImgixCoverImage(coverImage, imageOptions = {}) {
   if (isEmpty(coverImage) || typeof coverImage !== 'object') return null;
 
   // Get the cover url
-  const coverURL = coverImage.original ||
-  coverImage.large ||
-  coverImage.medium ||
-  coverImage.small ||
-  null;
+  const coverURL =
+    coverImage.original ||
+    coverImage.large ||
+    coverImage.medium ||
+    coverImage.small ||
+    null;
 
   return getImgixImage(coverURL, options);
 }

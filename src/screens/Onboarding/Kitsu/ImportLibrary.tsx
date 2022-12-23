@@ -1,17 +1,23 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { connect } from 'react-redux';
-import myanimelist from 'kitsu/assets/img/myanimelist.png';
-import anilist from 'kitsu/assets/img/anilist.png';
-import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+
+import anilist from 'kitsu/assets/img/anilist.png';
+import myanimelist from 'kitsu/assets/img/myanimelist.png';
 import { Screens } from 'kitsu/navigation';
-import { styles } from './styles';
+import { OnboardingHeader } from 'kitsu/screens/Onboarding/common';
+
 import { styles as commonStyles } from '../common/styles';
+import { styles } from './styles';
 
 const MediaItem = ({ style, onPress, image }) => (
-  <TouchableOpacity onPress={onPress} activeOpacity={1} style={[styles.buttonMedia, style]}>
+  <TouchableOpacity
+    onPress={onPress}
+    activeOpacity={1}
+    style={[styles.buttonMedia, style]}
+  >
     <FastImage source={image} style={styles.buttonLogo} cache="web" />
   </TouchableOpacity>
 );
@@ -37,13 +43,11 @@ class ImportLibrary extends React.Component {
     // TODO: tidy up this mess. onmediaitempressed etc.
     return (
       <View style={commonStyles.container}>
-        <OnboardingHeader
-          componentId={this.props.componentId}
-          backEnabled
-        />
+        <OnboardingHeader componentId={this.props.componentId} backEnabled />
         <View style={{ flex: 1 }}>
           <Text style={[commonStyles.tutorialText, { marginHorizontal: 16 }]}>
-            Select a source below to import your previous anime and manga tracking data.
+            Select a source below to import your previous anime and manga
+            tracking data.
           </Text>
           <MediaItem
             style={{ marginTop: 24 }}
