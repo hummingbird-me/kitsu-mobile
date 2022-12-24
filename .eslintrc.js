@@ -5,17 +5,17 @@ module.exports = {
     ecmaVersion: 2021,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'i18next'],
+  plugins: ['@typescript-eslint', 'react-native'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
-    'plugin:storybook/recommended',
   ],
   env: {
     browser: true,
+    'react-native/react-native': true,
   },
   settings: {
     react: {
@@ -30,36 +30,21 @@ module.exports = {
         minimumDescriptionLength: 3,
       },
     ],
-    'react/prop-types': 'off',
-    'i18next/no-literal-string': [
+    '@typescript-eslint/consistent-type-imports': [
       'error',
       {
-        markupOnly: true,
-        ignoreAttribute: [
-          'path',
-          'to',
-          'displayMode',
-          'role',
-          'href',
-          'autoComplete',
-          'kind',
-          'size',
-        ],
-        ignoreComponent: [
-          'FormattedMessage',
-          'FormattedDate',
-          'HeaderSettings',
-        ],
+        prefer: 'no-type-imports',
       },
     ],
+    '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+    'react/prop-types': 'off',
+    'react-native/no-unused-styles': 2,
+    'react-native/no-inline-styles': 1,
+    'react-native/no-color-literals': 2,
+    'react-native/no-raw-text': 2,
+    'react-native/no-single-element-style-arrays': 1,
   },
   overrides: [
-    {
-      files: ['*.{stories,test}.{js,jsx,ts,tsx}'],
-      rules: {
-        'i18next/no-literal-string': 'off',
-      },
-    },
     {
       files: ['.eslintrc.js', '*.config.{js,ts}'],
       parserOptions: {
