@@ -17,36 +17,28 @@ import { parseURL } from 'kitsu/utils/url';
 
 import { styles } from './styles';
 
-interface ImageLightboxProps {
+type ImageLightboxProps = {
   images: string[];
-  visible?: boolean;
   initialImageIndex?: number;
   onClose(...args: unknown[]): unknown;
   onShare?(...args: unknown[]): unknown;
-  onDownload?(...args: unknown[]): unknown;
   onOpen?(...args: unknown[]): unknown;
-}
+};
 
 export class ImageLightbox extends PureComponent<ImageLightboxProps> {
   static defaultProps = {
-    visible: false,
     initialImageIndex: 0,
     onShare: null,
-    onDownload: null,
     onOpen: null,
   };
 
-  shareImage = (url) => {
+  shareImage = (url: string) => {
     if (isEmpty(url)) return;
     const key = Platform.select({ ios: 'url', android: 'message' });
     Share.share({ [key]: url });
   };
 
-  downloadImage = (url) => {
-    console.log(url);
-  };
-
-  openImage = async (url) => {
+  openImage = async (url: string) => {
     if (isEmpty(url)) return;
 
     try {
@@ -59,13 +51,12 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
     }
   };
 
-  renderFooter(imageUrls) {
-    const { onClose, onShare, onDownload, onOpen } = this.props;
+  renderFooter(imageUrls: { url: string }[]) {
+    const { onClose, onShare, onOpen } = this.props;
     const shareImage = onShare || this.shareImage;
-    const downloadImage = onDownload || this.downloadImage;
     const openImage = onOpen || this.openImage;
 
-    return (currentIndex) => {
+    return function footer(currentIndex: number) {
       const currentImage = imageUrls[currentIndex];
       const url = currentImage && currentImage.url;
 
@@ -88,8 +79,7 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
           {isRemoteUrl && (
             <TouchableOpacity
               style={styles.iconContainer}
-              onPress={() => openImage(url)}
-            >
+              onPress={() => openImage(url)}>
               <Icon
                 style={[styles.icon, styles.openIcon]}
                 name={Platform.select({ ios: 'ios-open', android: 'md-open' })}
@@ -100,8 +90,7 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
           {/* Share */}
           <TouchableOpacity
             style={styles.iconContainer}
-            onPress={() => shareImage(url)}
-          >
+            onPress={() => shareImage(url)}>
             <Icon
               style={styles.icon}
               name={Platform.select({
@@ -134,11 +123,10 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
     };
   }
 
-  renderImage = (props) => <FastImage {...props} cache="web" />;
+  renderImage = (props: unknown) => <FastImage {...props} cache="web" />;
 
   render() {
-    const { images, visible, initialImageIndex, onClose, onShare, onDownload } =
-      this.props;
+    const { images, initialImageIndex = 0, onClose, onShare } = this.props;
 
     if (isEmpty(images)) return null;
 

@@ -4,8 +4,7 @@ import { Modal as ModalRN, Text, TouchableOpacity, View } from 'react-native';
 
 import { styles } from './styles';
 
-interface ModalProps {
-  style?: unknown;
+type ModalProps = {
   onConfirm(...args: unknown[]): unknown;
   onCancel(...args: unknown[]): unknown;
   title: string;
@@ -14,10 +13,9 @@ interface ModalProps {
   contentStyle?: unknown;
   headerStyle?: unknown;
   bodyStyle?: unknown;
-}
+};
 
 export const Modal = ({
-  style,
   visible,
   onRequestClose,
   title,
@@ -34,8 +32,7 @@ export const Modal = ({
     animationType="slide"
     visible={visible}
     onRequestClose={onRequestClose}
-    {...otherProps}
-  >
+    {...otherProps}>
     <View style={[styles.modalContent, contentStyle]}>
       <View style={[styles.modalHeader, headerStyle]}>
         <TouchableOpacity onPress={onCancel}>

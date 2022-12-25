@@ -4,7 +4,7 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { styles } from './styles';
 
-interface CounterProps {
+type CounterProps = {
   disabled?: boolean;
   initialValue: number;
   value?: number;
@@ -13,9 +13,20 @@ interface CounterProps {
   onValueChanged?(...args: unknown[]): unknown;
   progressCounter?: boolean;
   inputRef?(...args: unknown[]): unknown;
-}
+};
 
-export class Counter extends React.PureComponent<CounterProps> {
+type CounterState =
+  | {
+      manualEditMode: false;
+      value: number | null;
+    }
+  | {
+      manualEditMode: true;
+      manualEditValue: number;
+      value: number | null;
+    };
+
+export class Counter extends React.PureComponent<CounterProps, CounterState> {
   static defaultProps = {
     disabled: false,
     maxValue: undefined,
@@ -26,33 +37,37 @@ export class Counter extends React.PureComponent<CounterProps> {
     inputRef: () => {},
   };
 
-  state = {
+  state: CounterState = {
     manualEditMode: false,
     value: this.props.initialValue,
   };
 
-  UNSAFE_componentWillReceiveProps({ value }) {
+  UNSAFE_componentWillReceiveProps({ value }: { value?: number }) {
     if (!isNil(value) && value !== this.state.value) {
       this.setState({ value });
     }
   }
 
-  onManualValueChanged = (value) => {
+  onManualValueChanged = (value: string) => {
     const newValue = parseInt(value, 10);
     const current = this.state.value || 0;
     this.setState({
+      ...this.state,
       manualEditValue: isFinite(newValue) ? newValue : current,
     });
   };
 
   activateManualEdit = () => {
     this.setState({
+      ...this.state,
       manualEditMode: true,
       manualEditValue: this.state.value || 0,
     });
   };
 
   deactivateManualEdit = () => {
+    if (this.state.manualEditMode === false) return;
+
     const { manualEditValue } = this.state;
     const { maxValue, minValue } = this.props;
     let { value } = this.state;
@@ -71,7 +86,7 @@ export class Counter extends React.PureComponent<CounterProps> {
       value,
     });
 
-    this.props.onValueChanged(value);
+    this.props.onValueChanged?.(value);
   };
 
   decrementCount = () => {
@@ -82,7 +97,7 @@ export class Counter extends React.PureComponent<CounterProps> {
     }
 
     this.setState({ value });
-    this.props.onValueChanged(value);
+    this.props.onValueChanged?.(value);
   };
 
   incrementCount = () => {
@@ -93,7 +108,7 @@ export class Counter extends React.PureComponent<CounterProps> {
     }
 
     this.setState({ value });
-    this.props.onValueChanged(value);
+    this.props.onValueChanged?.(value);
   };
 
   render() {
@@ -102,23 +117,21 @@ export class Counter extends React.PureComponent<CounterProps> {
         <TouchableOpacity
           disabled={this.props.disabled}
           onPress={this.decrementCount}
-          style={[styles.counterButton, styles.counterButtonLeft]}
-        >
+          style={[styles.counterButton, styles.counterButtonLeft]}>
           <Text>-</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           disabled={this.props.disabled}
           style={styles.counterStatusContainer}
-          onPress={this.activateManualEdit}
-        >
+          onPress={this.activateManualEdit}>
           {this.state.manualEditMode ? (
             <TextInput
               ref={this.props.inputRef}
               autoFocus
               style={styles.manualEditTextInput}
-              defaultValue={this.state.value.toString()}
-              placeholder={this.state.value.toString()}
+              defaultValue={this.state.value?.toString()}
+              placeholder={this.state.value?.toString()}
               underlineColorAndroid="transparent"
               onBlur={this.deactivateManualEdit}
               onChangeText={this.onManualValueChanged}
@@ -129,16 +142,14 @@ export class Counter extends React.PureComponent<CounterProps> {
           )}
           {this.props.progressCounter && (
             <Text
-              style={styles.progressText}
-            >{` of ${this.props.maxValue}`}</Text>
+              style={styles.progressText}>{` of ${this.props.maxValue}`}</Text>
           )}
         </TouchableOpacity>
 
         <TouchableOpacity
           disabled={this.props.disabled}
           onPress={this.incrementCount}
-          style={[styles.counterButton, styles.counterButtonRight]}
-        >
+          style={[styles.counterButton, styles.counterButtonRight]}>
           <Text>+</Text>
         </TouchableOpacity>
       </View>

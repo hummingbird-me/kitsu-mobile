@@ -1,24 +1,18 @@
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import React from 'react';
-import { Animated, Text } from 'react-native';
+import { Animated, Text, TextStyle, ViewStyle } from 'react-native';
 
 import { styles } from './styles';
 
-interface FeedbackProps {
-  containerStyle?: unknown;
-  titleStyle?: unknown;
+type FeedbackProps = {
+  containerStyle?: ViewStyle;
+  titleStyle?: TextStyle;
   title: string;
   autoHide?: boolean;
   autoHideDuration?: number;
   fadeDuration?: number;
-}
+};
 
 export class Feedback extends React.Component<FeedbackProps> {
-  static propTypes = {
-    containerStyle: ViewPropTypes.style,
-    titleStyle: ViewPropTypes.style,
-  };
-
   static defaultProps = {
     containerStyle: styles.defaultStyles,
     titleStyle: styles.defaultStyles,
@@ -32,6 +26,8 @@ export class Feedback extends React.Component<FeedbackProps> {
     opacity: new Animated.Value(0),
   };
 
+  autoHideTimeout?: ReturnType<typeof setTimeout>;
+
   componentWillUnmount() {
     clearTimeout(this.autoHideTimeout);
   }
@@ -39,7 +35,11 @@ export class Feedback extends React.Component<FeedbackProps> {
   show = () => {
     const { autoHide, fadeDuration, autoHideDuration } = this.props;
     const { opacity } = this.state;
-    Animated.timing(opacity, { toValue: 1, duration: fadeDuration }).start();
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: fadeDuration,
+      useNativeDriver: true,
+    }).start();
     if (autoHide) {
       this.autoHideTimeout = setTimeout(this.hide, autoHideDuration);
     }
@@ -48,7 +48,11 @@ export class Feedback extends React.Component<FeedbackProps> {
   hide = () => {
     const { fadeDuration } = this.props;
     const { opacity } = this.state;
-    Animated.timing(opacity, { toValue: 0, duration: fadeDuration }).start();
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: fadeDuration,
+      useNativeDriver: true,
+    }).start();
   };
 
   render() {

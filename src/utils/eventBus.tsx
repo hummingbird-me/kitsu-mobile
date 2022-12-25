@@ -1,10 +1,11 @@
+type EventBusHandler = (...args: unknown[]) => void;
+
 /**
+ * @todo replace with an off-the-shelf EventEmitter
  * A helper class for delivering messages/events across the app
  */
 export class _EventBus {
-  constructor() {
-    this.handlers = [];
-  }
+  handlers: { event: string; handler: EventBusHandler }[] = [];
 
   /**
    * Subscribe to a library event.
@@ -13,7 +14,7 @@ export class _EventBus {
    * @param {function} handler The handler function which takes in 1 argument.
    * @returns The unsubscribe function.
    */
-  subscribe(event, handler) {
+  subscribe(event: string, handler: EventBusHandler) {
     const eventHandler = { event, handler };
     this.handlers.push(eventHandler);
 
@@ -32,7 +33,7 @@ export class _EventBus {
    * @param {string} event The event to publish
    * @param {any} args An argument.
    */
-  publish(event, args) {
+  publish(event: string, args: unknown) {
     this.handlers.forEach((eventHandler) => {
       if (eventHandler.event === event) {
         eventHandler.handler(args);

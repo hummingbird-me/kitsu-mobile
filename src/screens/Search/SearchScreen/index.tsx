@@ -1,6 +1,5 @@
 import algolia from 'algoliasearch/reactnative';
-import { capitalize, debounce, isEmpty, isEqual, isNil } from 'lodash';
-import PropTypes from 'prop-types';
+import { capitalize, debounce, isEmpty, isEqual } from 'lodash';
 import React, { PureComponent } from 'react';
 import {
   Keyboard,
@@ -9,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Navigation } from 'react-native-navigation';
+import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 
@@ -25,7 +24,34 @@ import { EventBus } from 'kitsu/utils/eventBus';
 
 import { styles } from './styles';
 
-class SearchScreen extends PureComponent {
+type AlgoliaKey = {
+  key: string;
+  value: string;
+  index: string;
+};
+
+type SearchScreenProps = NavigationComponentProps & {
+  algoliaKeys: {
+    media: AlgoliaKey;
+    users: AlgoliaKey;
+  };
+  initialPage: number;
+};
+
+type Scene = {
+  apiKey: string;
+  indexName: string;
+  kind?: string;
+};
+
+type SceneName = 'anime' | 'manga' | 'users';
+
+class SearchScreen extends PureComponent<SearchScreenProps> {
+  static defaultProps = {
+    algoliaKeys: null,
+    initialPage: 0,
+  };
+
   state = {
     query: {
       anime: undefined,
@@ -39,6 +65,10 @@ class SearchScreen extends PureComponent {
     },
   };
 
+  unsubscribe?: () => void;
+  tabView?: ScrollableTabView;
+  scenes?: { anime: Scene; manga: Scene; users: Scene };
+
   UNSAFE_componentWillMount() {
     this.updateScenes();
     this.unsubscribe = EventBus.subscribe(Screens.SEARCH, (page) => {
@@ -46,14 +76,14 @@ class SearchScreen extends PureComponent {
     });
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: SearchScreenProps) {
     if (!isEqual(this.props.algoliaKeys, nextProps.algoliaKeys)) {
       this.updateScenes(nextProps.algoliaKeys);
     }
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribe?.();
   }
 
   updateScenes(keys = this.props.algoliaKeys) {
@@ -78,7 +108,7 @@ class SearchScreen extends PureComponent {
     };
   }
 
-  handleQuery = (scene, query) => {
+  handleQuery = (scene: SceneName, query: string) => {
     const nextState = {
       ...this.state.query,
       [scene]: isEmpty(query) ? undefined : query,
@@ -88,11 +118,9 @@ class SearchScreen extends PureComponent {
     });
   };
 
-  executeSearch = (query, scene) => {
-    const currentScene = this.scenes[scene];
-    if (isEmpty(currentScene.apiKey)) {
-      return;
-    }
+  executeSearch = (query: string, scene: SceneName) => {
+    const currentScene = this.scenes?.[scene];
+    if (!currentScene || isEmpty(currentScene?.apiKey)) return;
 
     const client = algolia(kitsuConfig.algoliaAppId, currentScene.apiKey);
     const index = client.initIndex(currentScene.indexName);
@@ -110,7 +138,7 @@ class SearchScreen extends PureComponent {
   };
   debouncedSearch = debounce(this.executeSearch, 150);
 
-  navigateToMedia = (media) => {
+  navigateToMedia = (media: { id: string; kind: string }) => {
     Navigation.push(this.props.componentId, {
       component: {
         name: Screens.MEDIA_PAGE,
@@ -135,8 +163,7 @@ class SearchScreen extends PureComponent {
     <TouchableOpacity
       key={name}
       style={styles.tabBarItem}
-      onPress={() => goToPage(page)}
-    >
+      onPress={() => goToPage(page)}>
       <StyledText color={active ? 'orange' : 'grey'} size="xsmall" bold>
         {name}
       </StyledText>
@@ -144,7 +171,7 @@ class SearchScreen extends PureComponent {
   );
 
   renderScenes = () => {
-    const scenes = Object.keys(this.scenes);
+    const scenes = Object.keys(this.scenes ?? {});
     return scenes.map((scene) => {
       const label = capitalize(scene);
       return (
@@ -159,8 +186,7 @@ class SearchScreen extends PureComponent {
           />
           <ScrollView
             contentContainerStyle={styles.scrollViewContentContainer}
-            style={styles.scrollView}
-          >
+            style={styles.scrollView}>
             {this.renderSubScene(scene)}
           </ScrollView>
         </View>
@@ -168,7 +194,7 @@ class SearchScreen extends PureComponent {
     });
   };
 
-  renderSubScene = (scene) => {
+  renderSubScene = (scene: SceneName) => {
     const { query } = this.state;
     const { followUser, captureUsersData, componentId } = this.props;
     const hits = this.state.searchResults[scene] || [];
@@ -210,37 +236,18 @@ class SearchScreen extends PureComponent {
     const { initialPage } = this.props;
     return (
       <ScrollableTabView
-        ref={(r) => {
+        ref={(r: ScrollableTabView) => {
           this.tabView = r;
         }}
         style={styles.container}
         initialPage={initialPage || 0}
-        renderTabBar={this.renderTabBar}
-        locked={Platform.OS === 'android'}
-      >
+        renderTabBar={(...args) => this.renderTabBar(...args)}
+        locked={Platform.OS === 'android'}>
         {this.renderScenes()}
       </ScrollableTabView>
     );
   }
 }
-
-const AlgoliaPropType = {
-  key: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-};
-
-SearchScreen.propTypes = {
-  algoliaKeys: PropTypes.shape({
-    media: PropTypes.shape(AlgoliaPropType),
-    users: PropTypes.shape(AlgoliaPropType),
-  }),
-  initialPage: PropTypes.number,
-};
-
-SearchScreen.defaultProps = {
-  algoliaKeys: null,
-  initialPage: 0,
-};
 
 const mapper = (state) => {
   const {

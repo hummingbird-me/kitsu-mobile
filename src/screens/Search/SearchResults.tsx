@@ -20,7 +20,7 @@ import { search } from 'kitsu/store/anime/actions';
 
 import { ResultsList } from './Lists';
 
-interface SearchResultsProps {
+type SearchResultsProps = {
   componentId: any;
   results: unknown[];
   loading: boolean;
@@ -31,7 +31,7 @@ interface SearchResultsProps {
   active: 'anime' | 'manga';
   filter?: any;
   sort?: string;
-}
+};
 
 class SearchResults extends Component<SearchResultsProps> {
   constructor(props) {

@@ -1,6 +1,11 @@
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import * as React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
 
 import { ProgressBar } from 'kitsu/components/ProgressBar';
@@ -10,30 +15,30 @@ import { Screens } from 'kitsu/navigation';
 
 import { styles } from './styles';
 
-interface MediaCardProps {
+type MediaCardProps = {
   caption?: string;
-  cardDimensions: object;
-  cardStyle?: unknown;
-  mediaData: object;
-  componentId?: any;
+  cardDimensions: { width: number; height: number };
+  cardStyle?: ViewStyle | null;
+  mediaData: { id: string; type: string; posterImage: { small: string } };
+  componentId?: string;
   progress?: number;
   ratingTwenty?: number;
-  ratingSystem?: string;
-  style?: unknown;
+  ratingSystem?: 'simple' | 'regular' | 'advanced';
+  style?: ViewStyle | null;
   loading?: boolean;
-}
+};
 
 export const MediaCard = ({
-  caption,
+  caption = '',
   cardDimensions,
-  cardStyle,
+  cardStyle = null,
   mediaData,
   componentId,
-  progress,
-  ratingTwenty,
-  ratingSystem,
-  style,
-  loading,
+  progress = 0,
+  ratingTwenty = undefined,
+  ratingSystem = 'simple',
+  style = null,
+  loading = false,
 }: MediaCardProps) => {
   const onPress = () => {
     if (componentId && mediaData && mediaData.id && mediaData.type) {
@@ -56,8 +61,7 @@ export const MediaCard = ({
           styles.posterImageContainer,
           { width: cardDimensions.width },
           style,
-        ]}
-      >
+        ]}>
         {mediaData && mediaData.posterImage ? (
           <ProgressiveImage
             duration={500}
@@ -100,20 +104,4 @@ export const MediaCard = ({
       </View>
     </TouchableOpacity>
   );
-};
-
-MediaCard.propTypes = {
-  cardStyle: ViewPropTypes.style,
-  style: ViewPropTypes.style,
-};
-
-MediaCard.defaultProps = {
-  caption: '',
-  cardStyle: null,
-  progress: 0,
-  ratingTwenty: undefined,
-  ratingSystem: 'simple',
-  style: null,
-  loading: false,
-  componentId: null,
 };

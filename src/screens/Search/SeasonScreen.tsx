@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { NavigationComponentProps } from 'react-native-navigation';
 
 import { ContentList } from 'kitsu/components/ContentList';
 import { NavigationHeader } from 'kitsu/components/NavigationHeader';
@@ -8,23 +9,26 @@ import * as colors from 'kitsu/constants/colors';
 import { showSeasonResults } from './SearchNavigationHelper';
 
 const styles = StyleSheet.create({
-  button: {
-    padding: 10,
-  },
   scrollContainer: {
     flex: 1,
     backgroundColor: colors.lightPurple,
   },
 });
 
-interface SeasonScreenProps {
-  minYear?: number;
-  maxYear?: number;
+type SeasonScreenProps = NavigationComponentProps & {
+  minYear: number;
+  maxYear: number;
   label?: string;
-}
+};
 
 class SeasonScreen extends PureComponent<SeasonScreenProps> {
-  getSeasonData(year) {
+  static defaultProps = {
+    label: 'Seasons',
+    minYear: 1980,
+    maxYear: new Date().getFullYear() + 1,
+  };
+
+  getSeasonData(year: number) {
     const seasons = [
       {
         title: 'Winter',
@@ -44,23 +48,23 @@ class SeasonScreen extends PureComponent<SeasonScreenProps> {
       },
     ];
 
-    const data = [];
-    seasons.forEach((season) => {
-      data.push({
-        ...season,
-        onPress: () => {
-          showSeasonResults(this.props.componentId, season.title, year);
-        },
-      });
-    });
-
-    return data;
+    return seasons.map((season) => ({
+      ...season,
+      onPress: () =>
+        showSeasonResults(this.props.componentId, season.title, year),
+    }));
   }
 
   render() {
     const { maxYear, minYear, componentId, label } = this.props;
 
-    const listData = [];
+    const listData: {
+      title: string;
+      dark: boolean;
+      data: unknown;
+      type: string;
+      showViewAll: boolean;
+    }[] = [];
     for (let i = maxYear; i >= minYear; i -= 1) {
       listData.push({
         title: `${i}`,
@@ -88,11 +92,5 @@ class SeasonScreen extends PureComponent<SeasonScreenProps> {
     );
   }
 }
-
-SeasonScreen.defaultProps = {
-  label: 'Seasons',
-  minYear: 1980,
-  maxYear: new Date().getFullYear() + 1,
-};
 
 export default SeasonScreen;

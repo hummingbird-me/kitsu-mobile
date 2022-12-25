@@ -16,9 +16,9 @@ import { getCategories, getDefaults } from 'kitsu/store/anime/actions';
 
 import { styles } from './styles';
 
-interface TopsListProps {
+type TopsListProps = {
   componentId: any;
-}
+};
 
 class TopsList extends PureComponent<TopsListProps> {
   UNSAFE_componentWillMount() {

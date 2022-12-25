@@ -4,20 +4,21 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { styles } from './styles';
 
-interface ContentListHeaderProps {
+type ContentListHeaderProps = {
   title: string;
   dark: boolean;
   showViewAll?: boolean;
-}
+};
 
 export const ContentListHeader = ({
   title,
   dark,
-  showViewAll,
+  showViewAll = true,
   ...props
 }: ContentListHeaderProps) => (
   <View style={styles.contentListHeaderContainer}>
-    <Text style={[styles.contentListHeaderText, dark ? styles.lightText : '']}>
+    <Text
+      style={[styles.contentListHeaderText, dark ? styles.lightText : null]}>
       {title}
     </Text>
     {showViewAll && (
@@ -25,9 +26,8 @@ export const ContentListHeader = ({
         <Text
           style={[
             styles.contentListActionLinkText,
-            dark ? styles.lightText : '',
-          ]}
-        >
+            dark ? styles.lightText : null,
+          ]}>
           View All
         </Text>
         <Icon
@@ -38,7 +38,3 @@ export const ContentListHeader = ({
     )}
   </View>
 );
-
-ContentListHeader.defaultProps = {
-  showViewAll: true,
-};

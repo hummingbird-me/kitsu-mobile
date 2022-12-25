@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 
 import { scenePadding } from 'kitsu/screens/Feed/constants';
 
@@ -11,12 +11,12 @@ interface RowWrapProps {
     | 'space-between'
     | 'space-around'
     | 'flex-end';
-  style?: object;
+  style?: ViewStyle;
 }
 
 export const RowWrap = ({
-  alignItems,
-  justifyContent,
+  alignItems = 'flex-start',
+  justifyContent = 'flex-start',
   style,
   ...props
 }: RowWrapProps) => (
@@ -34,19 +34,9 @@ export const RowWrap = ({
 );
 
 interface RowMainProps {
-  style?: object;
+  style?: ViewStyle;
 }
 
 export const RowMain = ({ style, ...props }: RowMainProps) => (
   <View style={[{ flex: 1, paddingLeft: scenePadding }, style]} {...props} />
 );
-
-RowWrap.defaultProps = {
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  style: {},
-};
-
-RowMain.defaultProps = {
-  style: {},
-};

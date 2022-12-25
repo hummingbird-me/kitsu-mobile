@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import {
   Animated,
   DatePickerAndroid,
+  DatePickerAndroidOpenReturn,
   DatePickerIOS,
   Keyboard,
   Modal,
@@ -13,29 +14,36 @@ import {
 
 import { styles } from './styles';
 
-interface DatePickerProps {
+type DatePickerProps = {
   duration?: number;
   style?: object;
   disabled?: boolean;
-}
+};
 
-export class DatePicker extends PureComponent<DatePickerProps> {
+type DatePickerState = {
+  modalVisible: boolean;
+  animatedHeight: Animated.Value;
+  allowPointerEvents: boolean;
+  date?: Date;
+  minDate?: Date;
+  maxDate?: Date;
+  onDateChange?: (date: Date | undefined) => void;
+};
+
+export class DatePicker extends PureComponent<
+  DatePickerProps,
+  DatePickerState
+> {
   static defaultProps = {
     duration: 300,
     style: null,
     disabled: false,
   };
 
-  state = {
+  state: DatePickerState = {
     modalVisible: false,
     animatedHeight: new Animated.Value(0),
     allowPointerEvents: true,
-
-    // We need to keep track of date because on iOS there is no function for confirmation.
-    date: null,
-    minDate: null,
-    maxDate: null,
-    onDateChange: null,
   };
 
   /**
@@ -46,14 +54,19 @@ export class DatePicker extends PureComponent<DatePickerProps> {
    * @param {Date} [max=null] The maximum date.
    * @param {function} [onDateChange=null] The callback function when date change is confirmed.
    */
-  async show(initial, min = null, max = null, onDateChange = null) {
+  async show(
+    initial: Date,
+    min?: Date,
+    max?: Date,
+    onDateChange?: (date: Date | undefined) => void
+  ) {
     if (this.props.disabled) return;
 
     Keyboard.dismiss();
 
     // Default the date values to null
-    const minDate = min instanceof Date ? min : null;
-    const maxDate = max instanceof Date ? max : null;
+    const minDate = min instanceof Date ? min : undefined;
+    const maxDate = max instanceof Date ? max : undefined;
 
     // reset state
     this.setState(
@@ -83,7 +96,11 @@ export class DatePicker extends PureComponent<DatePickerProps> {
   }
 
   // Get the `date` bounded by `minDate` and `maxDate`
-  _getDate(date, minDate = this.state.minDate, maxDate = this.state.maxDate) {
+  _getDate(
+    date?: Date,
+    minDate: Date | undefined = this.state.minDate,
+    maxDate: Date | undefined = this.state.maxDate
+  ) {
     // If no date is provided then use current date
     // Make sure we constrain it to the min and max
     const current = date instanceof Date ? date : new Date();
@@ -109,10 +126,10 @@ export class DatePicker extends PureComponent<DatePickerProps> {
 
   _resetState() {
     this.setState({
-      date: null,
-      minDate: null,
-      maxDate: null,
-      onDateChange: null,
+      date: undefined,
+      minDate: undefined,
+      maxDate: undefined,
+      onDateChange: undefined,
     });
   }
 
@@ -128,7 +145,7 @@ export class DatePicker extends PureComponent<DatePickerProps> {
   };
 
   // iOS: callback
-  _setDate = (date) => {
+  _setDate = (date: Date | undefined) => {
     this.setState({
       allowPointerEvents: false,
       date,
@@ -142,7 +159,7 @@ export class DatePicker extends PureComponent<DatePickerProps> {
   };
 
   // Android: Callback
-  _onDatePicked({ action, year, month, day }) {
+  _onDatePicked({ action, year, month, day }: DatePickerAndroidOpenReturn) {
     if (action !== DatePickerAndroid.dismissedAction) {
       this.setState(
         {
@@ -159,7 +176,7 @@ export class DatePicker extends PureComponent<DatePickerProps> {
   }
 
   // iOS: Show the modal
-  _setModalVisible(visible) {
+  _setModalVisible(visible: boolean) {
     const { duration } = this.props;
 
     // 216 (date picker height) + 42 (top bar height)
@@ -171,12 +188,14 @@ export class DatePicker extends PureComponent<DatePickerProps> {
       return Animated.timing(this.state.animatedHeight, {
         toValue: height,
         duration,
+        useNativeDriver: true,
       }).start();
     }
 
     return Animated.timing(this.state.animatedHeight, {
       toValue: 0,
       duration,
+      useNativeDriver: true,
     }).start(() => {
       this.setState({ modalVisible: visible });
     });
@@ -201,29 +220,24 @@ export class DatePicker extends PureComponent<DatePickerProps> {
         animationType="none"
         visible={modalVisible}
         onRequestClose={() => {
-          this.setModalVisible(false);
-        }}
-      >
+          this._setModalVisible(false);
+        }}>
         <TouchableOpacity
           style={styles.overlay}
           activeOpacity={1}
-          onPress={this._onPressCancel}
-        >
+          onPress={this._onPressCancel}>
           <Animated.View
-            style={[styles.dateContainer, style, { height: animatedHeight }]}
-          >
+            style={[styles.dateContainer, style, { height: animatedHeight }]}>
             <TouchableOpacity style={styles.buttonContainer} activeOpacity={1}>
               <TouchableOpacity
                 onPress={this._onPressCancel}
-                style={styles.button}
-              >
+                style={styles.button}>
                 <Text style={styles.text}>Cancel</Text>
               </TouchableOpacity>
               <Text style={[styles.text, styles.title]}>Select a Date</Text>
               <TouchableOpacity
                 onPress={this._onPressConfirm}
-                style={styles.button}
-              >
+                style={styles.button}>
                 <Text style={[styles.text, styles.confirm]}>Confirm</Text>
               </TouchableOpacity>
             </TouchableOpacity>
