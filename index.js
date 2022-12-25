@@ -1,7 +1,11 @@
-import { Navigation } from 'react-native-navigation';
 import * as Sentry from '@sentry/react-native';
-import { registerScreens, Layouts, defaultOptions } from 'kitsu/navigation';
+import { LogBox } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import OneSignal from 'react-native-onesignal';
+
+import { Layouts, defaultOptions, registerScreens } from 'kitsu/navigation';
+
+LogBox.ignoreLogs(['Could not find Fiber with id']);
 
 window.btoa = require('base-64').encode;
 window.atob = require('base-64').decode;
