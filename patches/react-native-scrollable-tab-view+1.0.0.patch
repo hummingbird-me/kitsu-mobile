@@ -20,7 +20,7 @@ index 4cb92de..08f0dac 100644
      renderTab: PropTypes.func,
      underlineStyle: ViewPropTypes.style,
 diff --git a/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js b/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js
-index 5db3793..6408ffc 100644
+index 5db3793..edc5f4a 100644
 --- a/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js
 +++ b/node_modules/react-native-scrollable-tab-view/ScrollableTabBar.js
 @@ -1,5 +1,6 @@
@@ -41,7 +41,7 @@ index 5db3793..6408ffc 100644
      underlineStyle: ViewPropTypes.style,
      onScroll: PropTypes.func,
 diff --git a/node_modules/react-native-scrollable-tab-view/index.js b/node_modules/react-native-scrollable-tab-view/index.js
-index 82e53c5..ab195c3 100644
+index 82e53c5..2548979 100644
 --- a/node_modules/react-native-scrollable-tab-view/index.js
 +++ b/node_modules/react-native-scrollable-tab-view/index.js
 @@ -1,6 +1,7 @@
@@ -53,7 +53,18 @@ index 82e53c5..ab195c3 100644
  const createReactClass = require('create-react-class');
  const PropTypes = require('prop-types');
  const {
-@@ -137,14 +138,14 @@ const ScrollableTabView = createReactClass({
+@@ -13,9 +14,8 @@ const {
+   InteractionManager,
+ } = ReactNative;
+ 
+-const ViewPagerAndroid = require('@react-native-community/viewpager');
+ const TimerMixin = require('react-timer-mixin');
+-const ViewPager = require('@react-native-community/viewpager');
++const ViewPager = require('react-native-pager-view').default;
+ 
+ const SceneComponent = require('./SceneComponent');
+ const DefaultTabBar = require('./DefaultTabBar');
+@@ -137,14 +137,14 @@ const ScrollableTabView = createReactClass({
      if (Platform.OS === 'ios') {
        const offset = pageNumber * this.state.containerWidth;
        if (this.scrollView) {
