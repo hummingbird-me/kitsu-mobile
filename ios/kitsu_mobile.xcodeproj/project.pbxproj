@@ -50,6 +50,8 @@
 		B588708C294079B000181DA5 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B588707C294079B000181DA5 /* EvilIcons.ttf */; };
 		B588708D294079B000181DA5 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B588707D294079B000181DA5 /* SimpleLineIcons.ttf */; };
 		B588708E294079B000181DA5 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B588707E294079B000181DA5 /* MaterialIcons.ttf */; };
+		B5F3CDF5295D43EF00FE09F8 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */; };
+		B5F3CDF6295D43EF00FE09F8 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */; };
 		DD1D65E95FB24DC5BD5EE693 /* OpenSans-SemiboldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A9A366BB7AF4100A020531C /* OpenSans-SemiboldItalic.ttf */; };
 		DD8F49409CD940BEB0566464 /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAE4ECFD7C764E7EB55D61C3 /* fontello.ttf */; };
 		F895C31CDC544497B6D17318 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55C0DBCCD7794957B4FECA1E /* OpenSans-LightItalic.ttf */; };
@@ -113,6 +115,7 @@
 		B588707C294079B000181DA5 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		B588707D294079B000181DA5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		B588707E294079B000181DA5 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		BAE4ECFD7C764E7EB55D61C3 /* fontello.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = fontello.ttf; path = ../src/assets/fonts/icons/font/fontello.ttf; sourceTree = "<group>"; };
 		C08883BB31714989AC5E4347 /* config.json */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = config.json; path = ../src/assets/fonts/icons/config.json; sourceTree = "<group>"; };
 		C4BE3B958AD74B7682BE6608 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
@@ -195,6 +198,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */,
 				B588706E294079B000181DA5 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* kitsu_mobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -371,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5F3CDF6295D43EF00FE09F8 /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +423,7 @@
 				B5887084294079B000181DA5 /* MaterialCommunityIcons.ttf in Resources */,
 				B588708D294079B000181DA5 /* SimpleLineIcons.ttf in Resources */,
 				02E087F73F274A1E9427ABCD /* fontello.woff2 in Resources */,
+				B5F3CDF5295D43EF00FE09F8 /* Config.xcconfig in Resources */,
 				5A2174E2DA9549FC8B9A729A /* Apache License.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -778,6 +784,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
