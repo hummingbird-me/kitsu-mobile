@@ -41,7 +41,7 @@ index 5db3793..6408ffc 100644
      underlineStyle: ViewPropTypes.style,
      onScroll: PropTypes.func,
 diff --git a/node_modules/react-native-scrollable-tab-view/index.js b/node_modules/react-native-scrollable-tab-view/index.js
-index 82e53c5..4c7e6d6 100644
+index 82e53c5..ab195c3 100644
 --- a/node_modules/react-native-scrollable-tab-view/index.js
 +++ b/node_modules/react-native-scrollable-tab-view/index.js
 @@ -1,6 +1,7 @@
@@ -53,3 +53,21 @@ index 82e53c5..4c7e6d6 100644
  const createReactClass = require('create-react-class');
  const PropTypes = require('prop-types');
  const {
+@@ -137,14 +138,14 @@ const ScrollableTabView = createReactClass({
+     if (Platform.OS === 'ios') {
+       const offset = pageNumber * this.state.containerWidth;
+       if (this.scrollView) {
+-        this.scrollView.getNode().scrollTo({x: offset, y: 0, animated: !this.props.scrollWithoutAnimation, });
++        this.scrollView.scrollTo({x: offset, y: 0, animated: !this.props.scrollWithoutAnimation, });
+       }
+     } else {
+       if (this.scrollView) {
+         if (this.props.scrollWithoutAnimation) {
+-          this.scrollView.getNode().setPageWithoutAnimation(pageNumber);
++          this.scrollView.setPageWithoutAnimation(pageNumber);
+         } else {
+-          this.scrollView.getNode().setPage(pageNumber);
++          this.scrollView.setPage(pageNumber);
+         }
+       }
+     }
