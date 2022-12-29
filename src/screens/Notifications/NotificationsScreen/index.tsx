@@ -32,7 +32,7 @@ export const NOTIFICATION_PRESSED_EVENT = 'notification_pressed_event';
 // Fetch notifications every 5 minutes
 export const NOTIFICATION_FETCH_INTERVAL = 5 * 60 * 1000;
 
-interface NotificationsScreenProps {
+type NotificationsScreenProps = {
   fetchNotifications(...args: unknown[]): unknown;
   currentUser: object;
   notifications: unknown[];
@@ -41,10 +41,10 @@ interface NotificationsScreenProps {
   markAllNotificationsAsRead(...args: unknown[]): unknown;
   markingRead: boolean;
   pushNotificationEnabled: boolean;
-}
+};
 
 class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
-  constructor(props) {
+  constructor(props: NotificationsScreenProps) {
     super(props);
     Navigation.events().bindComponent(this);
   }
@@ -56,9 +56,9 @@ class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
 
   UNSAFE_componentWillMount() {
     // Register all global app events here
-    OneSignal.addEventListener('ids', this.onIds);
-    OneSignal.addEventListener('received', this.onReceived);
-    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.getDeviceState().then(this.onIds);
+    OneSignal.setNotificationWillShowInForegroundHandler(this.onReceived);
+    OneSignal.setNotificationOpenedHandler(this.onOpened);
 
     // Event for handling notification press from `NotificationOverlay`
     this.unsubscribeNotificationPress = EventBus.subscribe(
@@ -83,7 +83,7 @@ class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
 
   componentDidMount() {
     // for once, and listener will invoke afterwards.
-    OneSignal.requestPermissions({ alert: true, sound: true, badge: true });
+    OneSignal.promptForPushNotificationsWithUserResponse();
 
     // Setup notification intervals
     this.fetchNotifications();
@@ -99,16 +99,14 @@ class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
     OneSignal.clearOneSignalNotifications();
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: NotificationsScreenProps) {
     if (!isEqual(this.props.notifications, nextProps.notifications)) {
       this.updateNotificationCount(nextProps);
     }
   }
 
   componentWillUnmount() {
-    OneSignal.removeEventListener('ids', this.onIds);
-    OneSignal.removeEventListener('received', this.onReceived);
-    OneSignal.removeEventListener('opened', this.onOpened);
+    OneSignal.clearHandlers();
     this.unsubscribeNotificationPress();
     clearInterval(this.notificationInterval);
   }

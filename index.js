@@ -5,6 +5,7 @@ import OneSignal from 'react-native-onesignal';
 
 import { Layouts, defaultOptions, registerScreens } from 'kitsu/navigation';
 
+OneSignal.setAppId('01f6e47a-6809-4118-a796-949952e9c209');
 LogBox.ignoreLogs(['Could not find Fiber with id']);
 
 window.btoa = require('base-64').encode;
@@ -16,9 +17,6 @@ if (!__DEV__) {
     dsn: 'https://068b9ab849bf4485beb4884adcc5be83:8c57373b9bb4410f99ebfd17878c739a@sentry.io/200469',
   });
 }
-
-// Set notification display
-OneSignal.inFocusDisplaying(2);
 
 registerScreens();
 

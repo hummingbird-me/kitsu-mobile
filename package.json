@@ -44,7 +44,7 @@
     "react-native-linear-gradient": "^2.6.2",
     "react-native-modal-selector": "^2.1.2",
     "react-native-navigation": "^7.30.3",
-    "react-native-onesignal": "^3.9.3",
+    "react-native-onesignal": "^4.5.0",
     "react-native-pager-view": "^5.4.9",
     "react-native-scrollable-tab-view": "^1.0.0",
     "react-native-snap-carousel": "^3.9.1",
