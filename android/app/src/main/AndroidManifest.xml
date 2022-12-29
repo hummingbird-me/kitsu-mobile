@@ -46,5 +46,7 @@
         <!-- <data android:scheme="https" android:host="kitsu.io" android:pathPrefix="/media-reactions" /> -->
       </intent-filter>
       </activity>
+      <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/FACEBOOK_APP_ID"/>
+      <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/FACEBOOK_CLIENT_TOKEN"/>
     </application>
 </manifest>
