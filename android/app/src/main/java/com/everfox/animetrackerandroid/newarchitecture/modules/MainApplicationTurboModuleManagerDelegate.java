@@ -1,4 +1,4 @@
-package com.kitsumobile.newarchitecture.modules;
+package com.everfox.animetrackerandroid.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

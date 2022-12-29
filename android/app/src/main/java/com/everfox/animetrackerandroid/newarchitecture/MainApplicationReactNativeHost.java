@@ -1,4 +1,4 @@
-package com.kitsumobile.newarchitecture;
+package com.everfox.animetrackerandroid.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.kitsumobile.BuildConfig;
-import com.kitsumobile.newarchitecture.components.MainComponentsRegistry;
-import com.kitsumobile.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.everfox.animetrackerandroid.BuildConfig;
+import com.everfox.animetrackerandroid.newarchitecture.components.MainComponentsRegistry;
+import com.everfox.animetrackerandroid.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.kitsumobile.newarchitecture.components;
+package com.everfox.animetrackerandroid.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

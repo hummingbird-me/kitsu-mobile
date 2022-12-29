@@ -2,6 +2,9 @@ package com.everfox.animetrackerandroid;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
+import androidx.annotation.NonNull;
+
 import com.facebook.react.PackageList;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -10,36 +13,40 @@ import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
-import com.kitsumobile.newarchitecture.MainApplicationReactNativeHost;
+import com.everfox.animetrackerandroid.newarchitecture.MainApplicationReactNativeHost;
+
+import expo.modules.ApplicationLifecycleDispatcher;
+import expo.modules.ReactNativeHostWrapper;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class MainApplication extends NavigationApplication {
+  private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
+    this,
+    new NavigationReactNativeHost(this) {
+    @Override
+    public boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
 
-  private final ReactNativeHost mReactNativeHost =
-      new NavigationReactNativeHost(this) {
-        @Override
-        public boolean getUseDeveloperSupport() {
-          return BuildConfig.DEBUG;
-        }
+    @Override
+    protected List<ReactPackage> getPackages() {
+      @SuppressWarnings("UnnecessaryLocalVariable")
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      // Packages that cannot be autolinked yet can be added manually here, for example:
+      // packages.add(new MyReactNativePackage());
+      return packages;
+    }
 
-        @Override
-        protected List<ReactPackage> getPackages() {
-          @SuppressWarnings("UnnecessaryLocalVariable")
-          List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
-          return packages;
-        }
-
-        @Override
-        protected String getJSMainModuleName() {
-          return "index";
-        }
-      };
+    @Override
+    protected String getJSMainModuleName() {
+      return "index";
+    }
+  });
 
   private final ReactNativeHost mNewArchitectureNativeHost =
-      new MainApplicationReactNativeHost(this);
+      new ReactNativeHostWrapper(this, new MainApplicationReactNativeHost(this));
 
   @Override
   public ReactNativeHost getReactNativeHost() {
@@ -55,8 +62,15 @@ public class MainApplication extends NavigationApplication {
     super.onCreate();
     // If you opted-in for the New Architecture, we enable the TurboModule system
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
-    
+
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    ApplicationLifecycleDispatcher.onApplicationCreate(this);
+  }
+
+  @Override
+  public void onConfigurationChanged(@NonNull Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig);
   }
 
   /**
@@ -74,7 +88,7 @@ public class MainApplication extends NavigationApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.kitsumobile.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.everfox.animetrackerandroid.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

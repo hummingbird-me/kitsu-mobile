@@ -4,6 +4,27 @@ PODS:
     - React-Core
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - EXApplication (5.0.1):
+    - ExpoModulesCore
+  - EXConstants (14.0.2):
+    - ExpoModulesCore
+  - EXErrorRecovery (4.0.1):
+    - ExpoModulesCore
+  - EXFileSystem (15.1.1):
+    - ExpoModulesCore
+  - EXFont (11.0.1):
+    - ExpoModulesCore
+  - Expo (47.0.9):
+    - ExpoModulesCore
+  - ExpoAdapterFBSDKNext (11.1.0):
+    - ExpoModulesCore
+    - FBSDKCoreKit
+    - React-Core
+  - ExpoKeepAwake (11.0.1):
+    - ExpoModulesCore
+  - ExpoModulesCore (1.0.4):
+    - React-Core
+    - ReactCommon/turbomodule/core
   - FBAEMKit (15.0.0):
     - FBSDKCoreKit_Basics (= 15.0.0)
   - FBLazyVector (0.70.6)
@@ -100,7 +121,16 @@ PODS:
   - libwebp/mux (1.2.4):
     - libwebp/demux
   - libwebp/webp (1.2.4)
-  - OneSignal (2.16.5)
+  - OneSignalXCFramework (3.12.3):
+    - OneSignalXCFramework/OneSignalCore (= 3.12.3)
+    - OneSignalXCFramework/OneSignalExtension (= 3.12.3)
+    - OneSignalXCFramework/OneSignalOutcomes (= 3.12.3)
+  - OneSignalXCFramework/OneSignalCore (3.12.3)
+  - OneSignalXCFramework/OneSignalExtension (3.12.3):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalOutcomes (3.12.3):
+    - OneSignalXCFramework/OneSignalCore
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -331,6 +361,10 @@ PODS:
   - React-jsinspector (0.70.6)
   - React-logger (0.70.6):
     - glog
+  - react-native-config (1.4.11):
+    - react-native-config/App (= 1.4.11)
+  - react-native-config/App (1.4.11):
+    - React-Core
   - react-native-fbsdk-next (11.1.0):
     - React-Core
     - react-native-fbsdk-next/Core (= 11.1.0)
@@ -348,9 +382,11 @@ PODS:
     - React-Core
   - react-native-flipper (0.176.0):
     - React-Core
-  - react-native-onesignal (3.9.4):
-    - OneSignal (= 2.16.5)
+  - react-native-onesignal (4.5.0):
+    - OneSignalXCFramework (= 3.12.3)
     - React (< 1.0.0, >= 0.13.0)
+  - react-native-pager-view (5.4.25):
+    - React-Core
   - react-native-webview (11.25.0):
     - React-Core
   - React-perflogger (0.70.6)
@@ -470,6 +506,15 @@ DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
+  - EXFileSystem (from `../node_modules/expo-file-system/ios`)
+  - EXFont (from `../node_modules/expo-font/ios`)
+  - Expo (from `../node_modules/expo`)
+  - ExpoAdapterFBSDKNext (from `../node_modules/react-native-fbsdk-next/ios`)
+  - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - Flipper (= 0.175.0)
@@ -515,9 +560,11 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-config (from `../node_modules/react-native-config`)
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -562,7 +609,7 @@ SPEC REPOS:
     - HMSegmentedControl
     - libevent
     - libwebp
-    - OneSignal
+    - OneSignalXCFramework
     - OpenSSL-Universal
     - SDWebImage
     - SDWebImageWebPCoder
@@ -579,6 +626,24 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EXApplication:
+    :path: "../node_modules/expo-application/ios"
+  EXConstants:
+    :path: "../node_modules/expo-constants/ios"
+  EXErrorRecovery:
+    :path: "../node_modules/expo-error-recovery/ios"
+  EXFileSystem:
+    :path: "../node_modules/expo-file-system/ios"
+  EXFont:
+    :path: "../node_modules/expo-font/ios"
+  Expo:
+    :path: "../node_modules/expo"
+  ExpoAdapterFBSDKNext:
+    :path: "../node_modules/react-native-fbsdk-next/ios"
+  ExpoKeepAwake:
+    :path: "../node_modules/expo-keep-awake/ios"
+  ExpoModulesCore:
+    :path: "../node_modules/expo-modules-core"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -619,12 +684,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-config:
+    :path: "../node_modules/react-native-config"
   react-native-fbsdk-next:
     :path: "../node_modules/react-native-fbsdk-next"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
   react-native-onesignal:
     :path: "../node_modules/react-native-onesignal"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-perflogger:
@@ -673,6 +742,15 @@ SPEC CHECKSUMS:
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
+  EXConstants: 3c86653c422dd77e40d10cbbabb3025003977415
+  EXErrorRecovery: ae43433feb0608a64dc5b1c8363b3e7769a9ea24
+  EXFileSystem: 60602b6eefa6873f97172c684b7537c9760b50d6
+  EXFont: 319606bfe48c33b5b5063fb0994afdc496befe80
+  Expo: 5523a4835730104a301caeac1e68dad095a9dfff
+  ExpoAdapterFBSDKNext: cb13ee1823c70383d17a82e7e2385053fa917d01
+  ExpoKeepAwake: 69b59d0a8d2b24de9f82759c39b3821fec030318
+  ExpoModulesCore: 8211c89bcc3ba86e2d02c54b1d31f1fa81acb6de
   FBAEMKit: d8312d8451ead46282adc7f3565ffc4965e3a4a7
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
@@ -696,7 +774,7 @@ SPEC CHECKSUMS:
   HMSegmentedControl: 34c1f54d822d8308e7b24f5d901ec674dfa31352
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: f62cb61d0a484ba548448a4bd52aabf150ff6eef
-  OneSignal: b72068b06b359f22e27404edee87338f4b68e783
+  OneSignalXCFramework: 75844c29607ca95e6176f6f21257b4382c7fdbfb
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
   RCTRequired: e1866f61af7049eb3d8e08e8b133abd38bc1ca7a
@@ -714,9 +792,11 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b4a65947391c658450151275aa406f2b8263178f
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
+  react-native-config: bcafda5b4c51491ee1b0e1d0c4e3905bc7b56c1b
   react-native-fbsdk-next: c78dede90e3c50ab6936a7d56c43e1a9eb37e25a
   react-native-flipper: bbbbb6e3d8b7e6f5fb083885cb9898765fd6d782
-  react-native-onesignal: 5187b12401c959102a64bde48fbca39c5e3b8136
+  react-native-onesignal: fe498771f4a5c49fac0d8ff288b674e226bdb587
+  react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
   react-native-webview: a71da846ed2e9085440e1d6659c04e285528834b
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
   React-RCTActionSheet: 7316773acabb374642b926c19aef1c115df5c466
@@ -746,6 +826,6 @@ SPEC CHECKSUMS:
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   YoutubePlayer-in-WKWebView: 4fca3b4f6f09940077bfbae7bddb771f2b43aacd
 
-PODFILE CHECKSUM: 070cb6d2825d700c126e58bb1a5ea0b224f5f88e
+PODFILE CHECKSUM: a499020749fe9358caad8630b16d4668c42fe7b4
 
 COCOAPODS: 1.11.3

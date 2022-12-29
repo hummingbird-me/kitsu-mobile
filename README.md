@@ -26,11 +26,8 @@ actual device (good for performance testing and debugging device-specific issues
 
 1. Run `npm install`
 2. Run `bundle install`
-3. Install native dependencies:
-   - **iOS:** Go into the `ios` directory and run `bundle exec pod install`
-   - **Android:** No extra steps needed
-4. Go back to the root and run `npx react-native start`
-5. Run `npx react-native run-ios` or `npx react-native run-android` to open an emulator.
+3. Run `npx expo run:ios` or `npx expo run:android` to start the app in an emulator
+   - Alternatively, you can run `npx expo
 
 ### Debugging
 

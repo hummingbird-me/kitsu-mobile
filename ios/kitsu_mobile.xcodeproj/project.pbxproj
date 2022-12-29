@@ -52,6 +52,8 @@
 		B588708E294079B000181DA5 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B588707E294079B000181DA5 /* MaterialIcons.ttf */; };
 		B5F3CDF5295D43EF00FE09F8 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */; };
 		B5F3CDF6295D43EF00FE09F8 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */; };
+		BE9A2A18FA397DE704DADA3A /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFBC080CCF80014B66FA15B /* ExpoModulesProvider.swift */; };
+		D5ED85E2A7974A69DFD2C9C9 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DD28033F160FB7DEE7CD15 /* ExpoModulesProvider.swift */; };
 		DD1D65E95FB24DC5BD5EE693 /* OpenSans-SemiboldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A9A366BB7AF4100A020531C /* OpenSans-SemiboldItalic.ttf */; };
 		DD8F49409CD940BEB0566464 /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAE4ECFD7C764E7EB55D61C3 /* fontello.ttf */; };
 		F895C31CDC544497B6D17318 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55C0DBCCD7794957B4FECA1E /* OpenSans-LightItalic.ttf */; };
@@ -88,10 +90,12 @@
 		5709B34CF0A7D63546082F79 /* Pods-kitsu_mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kitsu_mobile.release.xcconfig"; path = "Target Support Files/Pods-kitsu_mobile/Pods-kitsu_mobile.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-kitsu_mobile-kitsu_mobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kitsu_mobile-kitsu_mobileTests.debug.xcconfig"; path = "Target Support Files/Pods-kitsu_mobile-kitsu_mobileTests/Pods-kitsu_mobile-kitsu_mobileTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-kitsu_mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kitsu_mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63DD28033F160FB7DEE7CD15 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-kitsu_mobile/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		69D8B6FC16E54BA9AC680B54 /* fontello.woff */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = fontello.woff; path = ../src/assets/fonts/icons/font/fontello.woff; sourceTree = "<group>"; };
 		6A631793D2734CA891B79012 /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBold.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		6A9A366BB7AF4100A020531C /* OpenSans-SemiboldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiboldItalic.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-SemiboldItalic.ttf"; sourceTree = "<group>"; };
 		6F7B009E4C3B41A3BFA9119B /* Apache License.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Apache License.txt"; path = "../src/assets/fonts/open-sans/Apache License.txt"; sourceTree = "<group>"; };
+		6FFBC080CCF80014B66FA15B /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-kitsu_mobile-kitsu_mobileTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		756D25F48E9A40AFBB0F96E8 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = ../src/assets/fonts/FontAwesome.ttf; sourceTree = "<group>"; };
 		7E419A171134441296DC2C2D /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/open-sans/OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = kitsu_mobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -178,6 +182,14 @@
 			name = kitsu_mobile;
 			sourceTree = "<group>";
 		};
+		1B1F64E1DF0E99F4D096604F /* kitsu_mobile */ = {
+			isa = PBXGroup;
+			children = (
+				63DD28033F160FB7DEE7CD15 /* ExpoModulesProvider.swift */,
+			);
+			name = kitsu_mobile;
+			sourceTree = "<group>";
+		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -186,6 +198,15 @@
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-kitsu_mobile-kitsu_mobileTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5E6824F46D50EF43E44D8D9E /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				1B1F64E1DF0E99F4D096604F /* kitsu_mobile */,
+				995B52FA796B80B01194826F /* kitsu_mobileTests */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -207,6 +228,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				C50B365B7BC542C7BF5489A7 /* Resources */,
+				5E6824F46D50EF43E44D8D9E /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -220,6 +242,14 @@
 				00E356EE1AD99517003FC87E /* kitsu_mobileTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		995B52FA796B80B01194826F /* kitsu_mobileTests */ = {
+			isa = PBXGroup;
+			children = (
+				6FFBC080CCF80014B66FA15B /* ExpoModulesProvider.swift */,
+			);
+			name = kitsu_mobileTests;
 			sourceTree = "<group>";
 		};
 		B588706E294079B000181DA5 /* Fonts */ = {
@@ -586,6 +616,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* kitsu_mobileTests.m in Sources */,
+				BE9A2A18FA397DE704DADA3A /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -595,6 +626,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				D5ED85E2A7974A69DFD2C9C9 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,6 +662,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kitsu_mobile.app/kitsu_mobile";
@@ -654,6 +687,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kitsu_mobile.app/kitsu_mobile";
@@ -678,6 +712,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.EverFox.AnimeTrakr;
 				PRODUCT_NAME = kitsu_mobile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -703,6 +738,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.EverFox.AnimeTrakr;
 				PRODUCT_NAME = kitsu_mobile;
 				SWIFT_VERSION = 5.0;
@@ -712,6 +748,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B5F3CDF4295D43EF00FE09F8 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -759,7 +796,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -825,7 +862,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
