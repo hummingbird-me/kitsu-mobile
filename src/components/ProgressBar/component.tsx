@@ -1,23 +1,25 @@
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated, View, ViewStyle } from 'react-native';
 
 import * as colors from 'kitsu/constants/colors';
 
 import { styles } from './styles';
 
-interface ProgressBarProps {
-  backgroundStyle?: unknown;
+type ProgressBarProps = {
+  backgroundStyle?: ViewStyle;
   fillColor?: string;
-  fillPercentage?: number;
+  fillPercentage: number;
   height?: number;
-}
+};
 
-export class ProgressBar extends React.Component<ProgressBarProps> {
-  static propTypes = {
-    backgroundStyle: ViewPropTypes.style,
-  };
+type ProgressBarState = {
+  fillPercentage: Animated.Value;
+};
 
+export class ProgressBar extends React.Component<
+  ProgressBarProps,
+  ProgressBarState
+> {
   static defaultProps = {
     backgroundStyle: {},
     fillColor: colors.green,
@@ -29,13 +31,14 @@ export class ProgressBar extends React.Component<ProgressBarProps> {
     fillPercentage: new Animated.Value(this.props.fillPercentage),
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: ProgressBarProps) {
     this.update(nextProps.fillPercentage);
   }
 
-  update(fillPercentage) {
+  update(fillPercentage: number) {
     Animated.timing(this.state.fillPercentage, {
       toValue: fillPercentage,
+      useNativeDriver: false,
     }).start();
   }
 
@@ -56,9 +59,8 @@ export class ProgressBar extends React.Component<ProgressBarProps> {
           styles.background,
           this.props.backgroundStyle,
           { height: this.props.height, borderRadius: this.props.height },
-        ]}
-      >
-        <Animated.View style={fillStyle} useNativeDriver={true} />
+        ]}>
+        <Animated.View style={fillStyle} />
       </View>
     );
   }
