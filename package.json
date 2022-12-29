@@ -22,7 +22,7 @@
     "client-oauth2": "^4.3.3",
     "d3-shape": "^3.1.0",
     "deprecated-react-native-prop-types": "^3.0.1",
-    "devour-client": "^1.4.3",
+    "devour-client": "^3.1.5",
     "expo": "^47.0.9",
     "getstream": "^8.1.0",
     "lodash": "^4.17.21",
