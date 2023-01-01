@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, TextProps, TextStyle } from 'react-native';
 
-import { ViewMoreText } from 'kitsu/components/ViewMoreText';
+import { ViewMoreText, ViewMoreTextProps } from 'kitsu/components/ViewMoreText';
 import {
   black,
   darkGrey,
@@ -38,27 +38,18 @@ const textColors = {
   black,
 };
 
-interface StyledTextProps {
+type StyledTextProps = TextProps & {
+  children: React.ReactNode;
   bold?: boolean;
-  color?:
-    | 'light'
-    | 'dark'
-    | 'grey'
-    | 'darkGrey'
-    | 'lightGrey'
-    | 'yellow'
-    | 'orange'
-    | 'red'
-    | 'green'
-    | 'black';
-  size?: 'default' | 'xxsmall' | 'xsmall' | 'small' | 'large' | 'xlarge';
-  textStyle?: object | number;
-}
+  color?: keyof typeof textColors;
+  size?: keyof typeof textSizes;
+  textStyle?: TextStyle;
+};
 
 export const StyledText = ({
-  size,
-  color,
-  bold,
+  size = 'default',
+  color = 'light',
+  bold = false,
   textStyle,
   ...props
 }: StyledTextProps) => (
@@ -78,39 +69,18 @@ export const StyledText = ({
   />
 );
 
-StyledText.defaultProps = {
-  bold: false,
-  color: 'light',
-  size: 'default',
-  textStyle: null,
-};
-
-interface ViewMoreStyledTextProps {
-  bold?: boolean;
-  color?:
-    | 'light'
-    | 'dark'
-    | 'grey'
-    | 'darkGrey'
-    | 'lightGrey'
-    | 'yellow'
-    | 'orange'
-    | 'red'
-    | 'green'
-    | 'black';
-  size?: 'default' | 'xxsmall' | 'xsmall' | 'small' | 'large' | 'xlarge';
-  textStyle?: object;
-  disabled?: boolean;
-  cacheKey?: string;
-}
+type ViewMoreStyledTextProps = StyledTextProps &
+  ViewMoreTextProps & {
+    disabled?: boolean;
+    cacheKey?: string;
+  };
 
 export const ViewMoreStyledText = ({
   cacheKey,
-  size,
-  color,
-  bold,
+  size = 'default',
+  color = 'light',
+  bold = false,
   textStyle,
-  disabled,
   ...props
 }: ViewMoreStyledTextProps) => (
   <ViewMoreText
@@ -129,12 +99,3 @@ export const ViewMoreStyledText = ({
     {...props}
   />
 );
-
-ViewMoreStyledText.defaultProps = {
-  bold: false,
-  color: 'light',
-  size: 'default',
-  textStyle: null,
-  disabled: false,
-  cacheKey: null,
-};

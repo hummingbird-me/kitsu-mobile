@@ -1,26 +1,43 @@
 import { isNull } from 'lodash';
 import React, { PureComponent } from 'react';
-import { Text, View } from 'react-native';
+import {
+  GestureResponderEvent,
+  LayoutChangeEvent,
+  Text,
+  TextStyle,
+  View,
+} from 'react-native';
 
 import { ViewMoreTextCache } from 'kitsu/utils/cache';
 
 import { styles } from './styles';
 
-interface ViewMoreTextProps {
+export type ViewMoreTextProps = {
   cacheKey?: string;
-  textStyle?: object | unknown[];
+  textStyle?: TextStyle;
   numberOfLines?: number;
   renderViewMore?(...args: unknown[]): unknown;
   renderViewLess?(...args: unknown[]): unknown;
-}
+  children: string;
+};
 
 export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
+  static defaultProps = {
+    cacheKey: null,
+    textStyle: null,
+    numberOfLines: 0,
+    renderViewMore: null,
+    renderViewLess: null,
+  };
+
   state = {
     showAllText: false,
     measured: false,
     fullHeight: null,
     shouldShowMore: false,
   };
+
+  text?: Text | null;
 
   UNSAFE_componentWillMount() {
     const { cacheKey } = this.props;
@@ -35,7 +52,7 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
     }
   }
 
-  onLayout = (event) => {
+  onLayout = (event: LayoutChangeEvent) => {
     const { fullHeight } = this.state;
     const { cacheKey } = this.props;
 
@@ -60,13 +77,13 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
     this.setState({ showAllText: false });
   };
 
-  renderViewMore = (onPress) => (
+  renderViewMore = (onPress: (e: GestureResponderEvent) => void) => (
     <Text style={styles.button} onPress={onPress}>
       View more
     </Text>
   );
 
-  renderViewLess = (onPress) => (
+  renderViewLess = (onPress: (e: GestureResponderEvent) => void) => (
     <Text style={styles.button} onPress={onPress}>
       View less
     </Text>
@@ -98,8 +115,7 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
           }}
           style={textStyle}
           {...props}
-          onLayout={this.onLayout}
-        >
+          onLayout={this.onLayout}>
           {children}
         </Text>
         {this.renderFooter()}
@@ -107,11 +123,3 @@ export class ViewMoreText extends PureComponent<ViewMoreTextProps> {
     );
   }
 }
-
-ViewMoreText.defaultProps = {
-  cacheKey: null,
-  textStyle: null,
-  numberOfLines: 0,
-  renderViewMore: null,
-  renderViewLess: null,
-};
