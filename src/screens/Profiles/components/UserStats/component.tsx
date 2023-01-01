@@ -1,9 +1,10 @@
+import { Group, Shape, Surface } from '@react-native-community/art';
 import { arc, pie } from 'd3-shape';
 import { capitalize } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { ART, ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 import * as imageMap from 'kitsu/assets/img/stats';
@@ -12,7 +13,6 @@ import { darkPurple } from 'kitsu/constants/colors';
 
 import { PIE_SIZE, styles } from './styles';
 
-const { Surface, Group, Shape } = ART;
 const COLORS = [
   '#FEB700',
   '#FF9300',
@@ -91,19 +91,19 @@ export class UserStats extends PureComponent {
         {/* Legend */}
         <View style={styles.legendWrap}>
           {displayGenres.map((genre) => (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row' }} key={genre.name}>
               <StyledText
                 size="xsmall"
-                textStyle={{ color: genre.color }}
-              >{`${Number(genre.percent || 0).toFixed(0)}%`}</StyledText>
+                textStyle={{ color: genre.color }}>{`${Number(
+                genre.percent || 0
+              ).toFixed(0)}%`}</StyledText>
               <View
                 style={{
                   flex: 1,
                   alignSelf: 'stretch',
                   paddingLeft: 10,
                   paddingRight: 5,
-                }}
-              >
+                }}>
                 <StyledText bold size="xsmall" color="grey" numberOfLines={1}>
                   {genre.name}
                 </StyledText>
@@ -182,8 +182,7 @@ export class UserStats extends PureComponent {
               bold
               size="xsmall"
               color="dark"
-              textStyle={{ marginBottom: 5 }}
-            >
+              textStyle={{ marginBottom: 5 }}>
               {/* toLocaleString doesn't work on Android */}
               {primaryUnit.count.toString().includes('.')
                 ? primaryUnit.count.toFixed(1)
@@ -203,8 +202,7 @@ export class UserStats extends PureComponent {
                   <StyledText
                     bold
                     size="xxsmall"
-                    color="darkGrey"
-                  >{`${percentile.toFixed(0)}% `}</StyledText>
+                    color="darkGrey">{`${percentile.toFixed(0)}% `}</StyledText>
                   {'of users.'}
                 </React.Fragment>
               )}
@@ -256,8 +254,7 @@ export class UserStats extends PureComponent {
               <StyledText
                 size="xsmall"
                 color="dark"
-                textStyle={{ textAlign: 'center' }}
-              >
+                textStyle={{ textAlign: 'center' }}>
                 {isCurrentUser
                   ? "Looks like you don't have enough data yet! Ready to start something new?"
                   : "Looks like this user doesn't have any stats at the moment."}
