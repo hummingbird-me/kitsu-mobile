@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react-native';
 import { isEmpty } from 'lodash';
-import { NetInfo } from 'react-native';
 import {
   AccessToken,
   GraphRequest,
@@ -8,6 +7,8 @@ import {
   LoginManager,
 } from 'react-native-fbsdk-next';
 import { Navigation } from 'react-native-navigation';
+import { AnyAction } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 
 import { auth } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
@@ -23,22 +24,26 @@ import {
 import * as types from 'kitsu/store/types';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
 
-export const refreshTokens = () => async (dispatch, getState) => {
-  const tokens = getState().auth.tokens;
-  if (isEmpty(tokens)) return null;
-  if (getState().auth.isRefreshingTokens) return tokens;
+import { AuthState } from './reducer';
 
-  dispatch({ type: types.TOKEN_REFRESH });
+export const refreshTokens =
+  (): ThunkAction<Promise<any>, { auth: AuthState }, unknown, AnyAction> =>
+  async (dispatch, getState) => {
+    const tokens = getState().auth.tokens;
+    if (isEmpty(tokens)) return null;
+    if (getState().auth.isRefreshingTokens) return tokens;
 
-  try {
-    const newTokens = await auth.createToken(tokens).refresh();
-    dispatch({ type: types.TOKEN_REFRESH_SUCCESS, payload: newTokens.data });
-    return newTokens.data;
-  } catch (e) {
-    dispatch({ type: types.TOKEN_REFRESH_FAIL });
-    return Promise.reject(e);
-  }
-};
+    dispatch({ type: types.TOKEN_REFRESH });
+
+    try {
+      const newTokens = await auth.createToken(tokens).refresh();
+      dispatch({ type: types.TOKEN_REFRESH_SUCCESS, payload: newTokens.data });
+      return newTokens.data;
+    } catch (e) {
+      dispatch({ type: types.TOKEN_REFRESH_FAIL });
+      return Promise.reject(e);
+    }
+  };
 
 export const loginUser =
   (data, componentId, screen) => async (dispatch, getState) => {

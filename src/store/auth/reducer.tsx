@@ -1,8 +1,30 @@
+import { AnyAction } from 'redux';
 import { REHYDRATE } from 'redux-persist';
 
 import * as types from 'kitsu/store/types';
 
-const INITIAL_STATE = {
+export type AuthState = {
+  signingIn: boolean;
+  loadFBuser: boolean;
+  user: never | Record<string, never>;
+  fbuser: Record<string, never>;
+  tokens:
+    | Record<string, never>
+    | {
+        access_token: string;
+        refresh_token: string;
+        token_type: 'Bearer';
+        created_at: number;
+        expires_in: number;
+      };
+  loginError: string;
+  fbError: string;
+  isAuthenticated: boolean;
+  rehydratedAt: string | null;
+  isRefreshingTokens: boolean;
+};
+
+const INITIAL_STATE: AuthState = {
   signingIn: false,
   loadFBuser: false,
   user: {},
@@ -15,7 +37,10 @@ const INITIAL_STATE = {
   isRefreshingTokens: false,
 };
 
-export const authReducer = (state = INITIAL_STATE, action) => {
+export const authReducer = (
+  state = INITIAL_STATE,
+  action: AnyAction
+): AuthState => {
   switch (action.type) {
     case types.TOKEN_REFRESH:
       return {
@@ -33,7 +58,7 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isRefreshingTokens: false,
         isAuthenticated: false,
-        tokens: null,
+        tokens: {},
       };
     case types.LOGIN_USER:
       return {
@@ -54,7 +79,7 @@ export const authReducer = (state = INITIAL_STATE, action) => {
         signingIn: false,
         isAuthenticated: false,
         loginError: action.payload,
-        tokens: [],
+        tokens: {},
       };
     case types.GET_FBUSER:
       return {

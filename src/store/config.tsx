@@ -19,15 +19,15 @@ const config = {
 const middlewares = [thunk];
 
 if (__DEV__) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const createDebugger = require('redux-flipper').default;
   middlewares.push(createDebugger());
 }
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   persistCombineReducers(config, reducers),
   undefined,
-  composeEnhancers(applyMiddleware(...middlewares))
+  compose(applyMiddleware(...middlewares))
 );
 
 // promisify persistStore
