@@ -1,7 +1,9 @@
+import React from 'react';
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
 
 import App from 'kitsu/App';
+import ApplicationContext from 'kitsu/contexts';
 import * as Screens from 'kitsu/navigation/types';
 import { LightBox } from 'kitsu/screens/LightBox';
 import QuickUpdateScreen from 'kitsu/screens/QuickUpdateScreen';
@@ -32,14 +34,16 @@ const routes = {
   [Screens.INITIAL]: App,
 };
 
-function registerComponent(name, callback) {
+function registerComponent(name: string, callback) {
   const Component = callback();
   Navigation.registerComponent(
     name,
     () => (props) => {
       return (
         <Provider store={store}>
-          <Component {...props} />
+          <ApplicationContext>
+            <Component {...props} />
+          </ApplicationContext>
         </Provider>
       );
     },
