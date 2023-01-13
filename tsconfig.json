@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
+    "lib": ["dom", "esnext"],
     "baseUrl": ".",
     "paths": {
       "kitsu/*": ["./src/*"]

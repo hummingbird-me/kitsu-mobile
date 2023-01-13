@@ -11,6 +11,12 @@ module.exports = {
         },
       },
     ],
+    [
+      'babel-plugin-inline-import',
+      {
+        extensions: ['.glsl'],
+      },
+    ],
   ],
   env: {
     production: {
