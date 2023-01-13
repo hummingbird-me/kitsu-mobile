@@ -29,7 +29,7 @@
     "d3-shape": "^3.1.0",
     "date-fns": "^2.29.3",
     "deprecated-react-native-prop-types": "^3.0.1",
-    "devour-client": "^1.4.3",
+    "devour-client": "^3.1.5",
     "expo": "^47.0.9",
     "expo-dev-client": "~2.0.1",
     "expo-gl": "^12.0.1",
