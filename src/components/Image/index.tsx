@@ -52,7 +52,7 @@ export default function Image({
   };
 
   return source ? (
-    <Animated.View style={style}>
+    <Animated.View style={[style, { overflow: 'hidden' }]}>
       {source.blurhash ? (
         <Blurhash
           blurhash={source.blurhash}
