@@ -92,8 +92,7 @@ class App extends PureComponent {
           backgroundColor: colors.darkPurple,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <ActivityIndicator color="white" size="large" />
       </View>
     );
@@ -197,7 +196,4 @@ function onLibraryEntryDeleted(data) {
   );
 }
 
-// FIXME: Codepush is making android crash
-const wrapper = __DEV__ || Platform.OS === 'android' ? identity : codePush;
-
-export default wrapper(App);
+export default App;
