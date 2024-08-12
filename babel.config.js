@@ -5,14 +5,6 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     plugins: [
       [
-        'module-resolver',
-        {
-          alias: {
-            kitsu: './src/',
-          },
-        },
-      ],
-      [
         'babel-plugin-inline-import',
         {
           extensions: ['.glsl'],
