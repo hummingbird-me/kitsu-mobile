@@ -1,6 +1,8 @@
 import { ExpoWebGLRenderingContext, GLSnapshot, GLView } from 'expo-gl';
 import { Platform } from 'react-native';
 
+import * as Log from 'kitsu/utils/log';
+
 import decodeBlurhash from './decoder';
 import BLURHASH_FRAGMENT from './shaders/fragment.glsl';
 import BLURHASH_VERTEX from './shaders/vertex.glsl';
@@ -19,8 +21,12 @@ type RenderCommand = {
   reject: (error: unknown) => void;
 };
 
-export class ShaderCompilationFailed extends Error {}
-export class RendererNotBooted extends Error {}
+export class ShaderCompilationFailed extends Error {
+  message = 'Shader compilation failed';
+}
+export class RendererNotBooted extends Error {
+  message = 'Renderer not booted';
+}
 
 class BlurhashRenderer {
   gl?: ExpoWebGLRenderingContext;
@@ -34,42 +40,46 @@ class BlurhashRenderer {
   }
 
   async init(): Promise<void> {
-    const gl = (this.gl = await GLView.createContextAsync());
+    try {
+      const gl = (this.gl = await GLView.createContextAsync());
 
-    // Set up vertex shader
-    const vertex = gl.createShader(gl.VERTEX_SHADER);
-    if (!vertex) throw new ShaderCompilationFailed('Vertex Shader null');
-    gl.shaderSource(vertex, BLURHASH_VERTEX);
-    gl.compileShader(vertex);
-    if (!gl.getShaderParameter(vertex, gl.COMPILE_STATUS))
-      throw new ShaderCompilationFailed(gl.getShaderInfoLog(vertex) || '');
+      // Set up vertex shader
+      const vertex = gl.createShader(gl.VERTEX_SHADER);
+      if (!vertex) throw new ShaderCompilationFailed('Vertex Shader null');
+      gl.shaderSource(vertex, BLURHASH_VERTEX);
+      gl.compileShader(vertex);
+      if (!gl.getShaderParameter(vertex, gl.COMPILE_STATUS))
+        throw new ShaderCompilationFailed(gl.getShaderInfoLog(vertex) || '');
 
-    // Set up fragment shader
-    const fragment = gl.createShader(gl.FRAGMENT_SHADER);
-    if (!fragment) throw new ShaderCompilationFailed('Fragment Shader null');
-    gl.shaderSource(fragment, BLURHASH_FRAGMENT);
-    gl.compileShader(fragment);
-    if (!gl.getShaderParameter(fragment, gl.COMPILE_STATUS))
-      throw new ShaderCompilationFailed(gl.getShaderInfoLog(fragment) || '');
+      // Set up fragment shader
+      const fragment = gl.createShader(gl.FRAGMENT_SHADER);
+      if (!fragment) throw new ShaderCompilationFailed('Fragment Shader null');
+      gl.shaderSource(fragment, BLURHASH_FRAGMENT);
+      gl.compileShader(fragment);
+      if (!gl.getShaderParameter(fragment, gl.COMPILE_STATUS))
+        throw new ShaderCompilationFailed(gl.getShaderInfoLog(fragment) || '');
 
-    // Link them into a program
-    const program = (this.program = gl.createProgram());
-    if (!program) throw new ShaderCompilationFailed('Program null');
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS))
-      throw new ShaderCompilationFailed(gl.getProgramInfoLog(program) || '');
-    gl.useProgram(program);
+      // Link them into a program
+      const program = (this.program = gl.createProgram());
+      if (!program) throw new ShaderCompilationFailed('Program null');
+      gl.attachShader(program, vertex);
+      gl.attachShader(program, fragment);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS))
+        throw new ShaderCompilationFailed(gl.getProgramInfoLog(program) || '');
+      gl.useProgram(program);
 
-    // Set up a framebuffer
-    const framebuffer = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      // Set up a framebuffer
+      const framebuffer = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
-    // Configure canvas and clear it
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+      // Configure canvas and clear it
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    } catch (error) {
+      Log.error(error);
+    }
   }
 
   // prettier-ignore
@@ -139,8 +149,8 @@ class BlurhashRenderer {
     gl.endFrameEXP();
 
     return GLView.takeSnapshotAsync(gl, {
-      // @ts-ignore The types don't have WebP support
-      format: Platform.OS === 'android' ? 'webp' : 'png'
+      format: 'jpeg',
+      compress: 0,
     });
   }
 
