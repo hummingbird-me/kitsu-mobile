@@ -1,4 +1,3 @@
-import { Group, Shape, Surface } from '@react-native-community/art';
 import { arc, pie } from 'd3-shape';
 import { capitalize } from 'lodash';
 import moment from 'moment';
