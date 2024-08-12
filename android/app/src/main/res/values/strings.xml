@@ -2,5 +2,6 @@
     <string name="app_name">Kitsu</string>
     <string name="onesignal_notification_accent_color">FB7960FF</string>
     <string name="facebook_app_id">325314560922421</string>
+    <string name="facebook_client_token">dbae1dbf77c13f3d6755a2a8cb116106</string>
     <string name="fb_login_protocol_scheme">fb325314560922421</string>
 </resources>
