@@ -60,7 +60,7 @@ export function debug(message: string, data?: Record<string, unknown>) {
 
 export function warn(message: string, data?: Record<string, unknown>) {
   if (__DEV__) {
-    console.warn(chalk`{yellow.bold [WARN]} ${message}`, ...maybe(data));
+    console.warn(message, ...maybe(data));
   } else {
     Sentry.addBreadcrumb({
       category: 'log',
@@ -75,9 +75,9 @@ export function warn(message: string, data?: Record<string, unknown>) {
   }
 }
 
-export function error(message: string | Error, data?: Record<string, unknown>) {
+export function error(message: unknown, data?: Record<string, unknown>) {
   if (__DEV__) {
-    console.error(chalk`{red.bold [ERROR]} ${message}`, ...maybe(data));
+    console.error(message, ...maybe(data));
   } else {
     if (typeof message === 'string') {
       Sentry.captureMessage(message, data);
