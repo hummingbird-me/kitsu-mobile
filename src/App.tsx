@@ -1,13 +1,11 @@
-/* global __DEV__ */
-
 import * as Sentry from '@sentry/react-native';
-import { identity, isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, Platform, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { kitsuConfig } from 'kitsu/config/env';
 import * as colors from 'kitsu/constants/colors';
-import { NavigationActions } from 'kitsu/navigation';
+import * as NavigationActions from 'kitsu/navigation/actions';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { fetchNotifications } from 'kitsu/store/feed/actions';
 import { fetchCurrentUser } from 'kitsu/store/user/actions';
