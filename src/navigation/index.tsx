@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-
 import { listBackPurple, tabInactive, tabRed } from 'kitsu/constants/colors';
 
 import * as NavigationActions from './actions';
@@ -7,16 +5,9 @@ import * as Layouts from './layouts';
 import { registerScreens } from './screens';
 import * as Screens from './types';
 
-const majorVersionIOS =
-  Platform.OS === 'ios' ? parseInt(Platform.Version, 10) : 0;
-
-// Setting badgeColor on iOS 9 causes crash
-const badgeColor =
-  Platform.OS === 'android' || majorVersionIOS >= 10
-    ? {
-        badgeColor: tabRed,
-      }
-    : {};
+const badgeColor = {
+  badgeColor: tabRed,
+}
 
 // Default styling options
 // https://wix.github.io/react-native-navigation/v2/#/docs/styling
