@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Svg, { G as Group, Path } from 'react-native-svg';
 
 import * as imageMap from 'kitsu/assets/img/stats';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -68,16 +69,16 @@ export class UserStats extends PureComponent {
       <View style={styles.graphics}>
         {/* Pie Chart */}
         <View style={styles.categoryBreakdown}>
-          <Surface width={PIE_SIZE} height={PIE_SIZE}>
+          <Svg width={PIE_SIZE} height={PIE_SIZE}>
             {chart(displayGenres).map((arc) => {
               const path = outerArc(arc);
               return (
                 <Group x={radius} y={radius}>
-                  <Shape d={path} fill={arc.data.color} />
+                  <Path d={path} fill={arc.data.color} />
                 </Group>
               );
             })}
-          </Surface>
+          </Svg>
           <View style={styles.categoryOverlay}>
             <StyledText bold size="xlarge" color="dark">{`${Number(
               primaryGenre.percent || 0
