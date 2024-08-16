@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { isNil } from 'lodash';
 import React, { PureComponent } from 'react';
 import {
@@ -11,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { ModalHeader } from 'kitsu/screens/Feed/components/ModalHeader';
@@ -19,7 +19,7 @@ import { prettyBytes } from 'kitsu/utils/prettyBytes';
 
 import { styles } from './styles';
 
-interface ImageSortModalProps {
+type ImageSortModalProps = {
   visible?: boolean;
   onCancelPress?(...args: unknown[]): unknown;
   onAddPress?(...args: unknown[]): unknown;
@@ -30,7 +30,7 @@ interface ImageSortModalProps {
   disableRemoveButton?: boolean;
   maxUploadSize?: number;
   currentImagesSize?: number;
-}
+};
 
 export class ImageSortModal extends PureComponent<ImageSortModalProps> {
   static defaultProps = {
@@ -104,33 +104,29 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
           </View>
         )}
         <View style={styles.imageContainer}>
-          <FastImage
+          <Image
             key={uri}
             source={{ uri }}
             style={{ width, height }}
-            resizeMode={'contain'}
-            cache="web"
+            contentFit={'contain'}
           />
         </View>
         <View style={styles.buttonContainer}>
           {!disableRemoveButton && (
             <TouchableOpacity
               onPress={() => this.handleRemoveImage(index)}
-              style={[styles.button, { width: buttonWidth }]}
-            >
+              style={[styles.button, { width: buttonWidth }]}>
               <Icon name="md-close" style={[styles.icon, styles.closeIcon]} />
             </TouchableOpacity>
           )}
           <TouchableOpacity
             onPress={() => this.handleSortPress(index, 'up')}
-            style={[styles.button, { width: buttonWidth }]}
-          >
+            style={[styles.button, { width: buttonWidth }]}>
             <Icon name="ios-arrow-up" style={styles.icon} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.handleSortPress(index, 'down')}
-            style={[styles.button, { width: buttonWidth }]}
-          >
+            style={[styles.button, { width: buttonWidth }]}>
             <Icon name="ios-arrow-down" style={styles.icon} />
           </TouchableOpacity>
         </View>
@@ -152,8 +148,7 @@ export class ImageSortModal extends PureComponent<ImageSortModalProps> {
         animationType="slide"
         visible={visible}
         transparent={false}
-        onRequestClose={this.handleCancelPress}
-      >
+        onRequestClose={this.handleCancelPress}>
         <ModalHeader
           title="Images"
           leftButtonTitle="Back"

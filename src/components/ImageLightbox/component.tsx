@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { isEmpty } from 'lodash';
 import React, { PureComponent } from 'react';
 import {
@@ -9,7 +10,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -123,7 +123,7 @@ export class ImageLightbox extends PureComponent<ImageLightboxProps> {
     };
   }
 
-  renderImage = (props: unknown) => <FastImage {...props} cache="web" />;
+  renderImage = (props: unknown) => <Image {...props} />;
 
   render() {
     const { images, initialImageIndex = 0, onClose, onShare } = this.props;

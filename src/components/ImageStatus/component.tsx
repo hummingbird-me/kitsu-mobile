@@ -1,15 +1,15 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { Text, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 
 import styles from './styles';
 
-interface ImageStatusProps {
+type ImageStatusProps = {
   title: string;
   text: string;
   image: object;
   style?: object;
-}
+};
 
 export const ImageStatus = ({
   title,
@@ -20,6 +20,6 @@ export const ImageStatus = ({
   <View style={[styles.statusWrapper, style]}>
     <Text style={styles.statusTitle}>{title}</Text>
     <Text style={styles.statusText}>{text}</Text>
-    <FastImage style={styles.statusImage} source={image} cache="web" />
+    <Image style={styles.statusImage} source={image} />
   </View>
 );

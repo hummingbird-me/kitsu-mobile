@@ -1,8 +1,8 @@
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Image } from 'expo-image';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -31,26 +31,25 @@ export const OnboardingHeader = ({
         {backEnabled ? (
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => !isEmpty(componentId) && Navigation.pop(componentId)}
-          >
+            onPress={() =>
+              !isEmpty(componentId) && Navigation.pop(componentId)
+            }>
             <Icon name="ios-arrow-back" color={colors.white} size={26} />
           </TouchableOpacity>
         ) : (
           <View />
         )}
       </View>
-      <FastImage style={styles.logo} source={kitsuLogo} />
+      <Image style={styles.logo} source={kitsuLogo} />
       <TouchableOpacity
         onPress={buttonRightOnPress}
         disabled={!buttonRightEnabled}
-        style={styles.buttonRight}
-      >
+        style={styles.buttonRight}>
         <Text
           style={[
             styles.buttonRightText,
             buttonRightEnabled && styles.buttonRightEnabled,
-          ]}
-        >
+          ]}>
           {buttonRightText}
         </Text>
       </TouchableOpacity>

@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
@@ -33,7 +33,7 @@ import { styles } from './styles';
 const MediaItem = ({ onPress, title, details, image }) => (
   <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.item}>
     <View style={{ justifyContent: 'center' }}>
-      <FastImage source={image} style={styles.itemLogo} cache="web" />
+      <Image source={image} style={styles.itemLogo} />
       <Text style={styles.hintText}>{details}</Text>
     </View>
     <View>
@@ -88,8 +88,7 @@ const ImportItem = ({ kind, status, date, total }) => {
     <View style={[styles.item, { paddingHorizontal: 12 }]}>
       <View style={{ justifyContent: 'center' }}>
         <Text
-          style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}
-        >
+          style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
           {title}
         </Text>
         <Text
@@ -97,25 +96,20 @@ const ImportItem = ({ kind, status, date, total }) => {
             fontFamily: 'OpenSans',
             fontSize: 10,
             color: colors.darkGrey,
-          }}
-        >
+          }}>
           {details}
         </Text>
       </View>
       <View>
-        <FastImage
-          source={icon}
-          style={[styles.itemImage, { right: -2 }]}
-          cache="web"
-        />
+        <Image source={icon} style={[styles.itemImage, { right: -2 }]} />
       </View>
     </View>
   );
 };
 
-interface ImportLibraryProps {
+type ImportLibraryProps = {
   componentId: any;
-}
+};
 
 class ImportLibrary extends React.Component<ImportLibraryProps> {
   state = {

@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import {
   connectInfiniteHits,
@@ -12,7 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 
@@ -33,7 +33,7 @@ const RowItem = ({ type, item, onPress }) => {
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 25, alignItems: 'center' }}>
-            <FastImage
+            <Image
               source={
                 (item.avatar && { uri: item.avatar.small }) || defaultAvatar
               }
@@ -43,7 +43,6 @@ const RowItem = ({ type, item, onPress }) => {
                 height: 24,
                 borderRadius: 12,
               }}
-              cache="web"
             />
           </View>
           <Text
@@ -52,8 +51,7 @@ const RowItem = ({ type, item, onPress }) => {
               fontSize: 12,
               marginLeft: 8,
               color: colors.softBlack,
-            }}
-          >
+            }}>
             {item.name}
           </Text>
         </View>
@@ -70,16 +68,14 @@ const RowItem = ({ type, item, onPress }) => {
             paddingVertical: 8,
             paddingHorizontal: 6,
             borderRadius: 4,
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: 10,
               fontFamily: 'OpenSans',
               fontWeight: '600',
               color: colors.white,
-            }}
-          >
+            }}>
             {buttonText}
           </Text>
         </TouchableOpacity>
@@ -315,8 +311,7 @@ class Blocking extends React.Component<BlockingProps> {
             style={[
               styles.valueText,
               { padding: 12, paddingTop: 8, marginTop: 0 },
-            ]}
-          >
+            ]}>
             Once you block someone, that person can no longer tag you, follow
             you, view your profile, or see the things you post in your feed.
             They basically stop existing.
@@ -327,8 +322,7 @@ class Blocking extends React.Component<BlockingProps> {
             apiKey={algoliaKeys.users.key}
             indexName={algoliaKeys.users.index}
             searchState={searchState}
-            onSearchStateChange={this.handleSearchStateChange}
-          >
+            onSearchStateChange={this.handleSearchStateChange}>
             <InstantSearchBox placeholder={'Search Users to Block'} />
             {this.renderResults()}
           </InstantSearch>

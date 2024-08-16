@@ -1,8 +1,8 @@
+import { Image } from 'expo-image';
 import { cloneDeep } from 'lodash';
 import capitalize from 'lodash/capitalize';
 import React, { Component } from 'react';
 import { Modal, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-crop-picker';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
@@ -120,9 +120,8 @@ export class EditModal extends Component {
               originalCoverImageDimensions.width,
               originalCoverImageDimensions.height
             )
-          }
-        >
-          <FastImage style={styles.profileCover} source={cover} cache="web" />
+          }>
+          <Image style={styles.profileCover} source={cover} />
         </TouchableOpacity>
       </View>
     );
@@ -140,9 +139,8 @@ export class EditModal extends Component {
       <View style={styles.profileImageWrapper}>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => this.onMediaSelect('avatar', 300, 300)}
-        >
-          <FastImage style={styles.profileImage} source={avatar} cache="web" />
+          onPress={() => this.onMediaSelect('avatar', 300, 300)}>
+          <Image style={styles.profileImage} source={avatar} />
         </TouchableOpacity>
       </View>
     );
@@ -166,8 +164,7 @@ export class EditModal extends Component {
     return (
       <SelectMenu
         options={options}
-        onOptionSelected={(option) => this.handleGenderChange(option)}
-      >
+        onOptionSelected={(option) => this.handleGenderChange(option)}>
         <View pointerEvents={this.state.isEditingGender ? 'auto' : 'none'}>
           <Input
             selectTextOnFocus
@@ -228,8 +225,7 @@ export class EditModal extends Component {
           animationType="slide"
           visible={visible}
           transparent={false}
-          onRequestClose={() => this.onCancel()}
-        >
+          onRequestClose={() => this.onCancel()}>
           <ModalHeader
             title="Edit Profile"
             leftButtonTitle="Cancel"

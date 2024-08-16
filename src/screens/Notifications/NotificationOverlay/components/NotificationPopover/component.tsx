@@ -1,18 +1,18 @@
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Image } from 'expo-image';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 
 import { parseNotificationData } from 'kitsu/utils/notifications';
 
 import { styles } from './styles';
 
-interface NotificationPopoverProps {
+type NotificationPopoverProps = {
   style?: unknown;
   data?: object;
   onPress(...args: unknown[]): unknown;
-}
+};
 
 export const NotificationPopover = ({
   style,
@@ -29,8 +29,7 @@ export const NotificationPopover = ({
       <TouchableOpacity
         activeOpacity={1}
         onPress={onPress}
-        style={styles.wrapper}
-      >
+        style={styles.wrapper}>
         <StatusBar
           translucent
           backgroundColor={'rgba(0, 0, 0, 0.3)'}
@@ -39,14 +38,9 @@ export const NotificationPopover = ({
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={onPress}
-          style={styles.content}
-        >
+          style={styles.content}>
           <View style={{ paddingRight: 10 }}>
-            <FastImage
-              style={styles.userAvatar}
-              source={{ uri: actorAvatar }}
-              cache="web"
-            />
+            <Image style={styles.userAvatar} source={{ uri: actorAvatar }} />
           </View>
           <Text style={[styles.activityText, styles.activityTextHighlight]}>
             {actorName || 'Unknown'}{' '}

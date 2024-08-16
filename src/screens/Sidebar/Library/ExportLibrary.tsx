@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -8,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
@@ -57,32 +57,26 @@ const ExportItem = ({ canonicalTitle, posterImage, syncStatus }) => {
   }
   return (
     <View style={[styles.item, { paddingHorizontal: 12 }]}>
-      <FastImage
+      <Image
         style={{ width: 30, height: 30 }}
         source={
           (posterImage && { uri: posterImage.small || posterImage.large }) ||
           defaultAvatar
         }
-        cache="web"
       />
       <View style={{ flex: 1 }}>
         <View style={{ marginHorizontal: 12, justifyContent: 'center' }}>
           <Text
             numberOfLines={1}
             ellipsizeMode={'tail'}
-            style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}
-          >
+            style={{ fontWeight: '600', fontFamily: 'OpenSans', fontSize: 12 }}>
             {canonicalTitle}
           </Text>
           <Text style={styles.hintText}>{details}</Text>
         </View>
       </View>
       <View>
-        <FastImage
-          source={icon}
-          style={[styles.itemImage, { right: -2 }]}
-          cache="web"
-        />
+        <Image source={icon} style={[styles.itemImage, { right: -2 }]} />
       </View>
     </View>
   );
@@ -270,11 +264,7 @@ class ExportLibrary extends React.Component {
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <FastImage
-                  source={myanimelist}
-                  style={styles.cardLogo}
-                  cache="web"
-                />
+                <Image source={myanimelist} style={styles.cardLogo} />
               </View>
               <Text style={styles.cardText}>
                 Enter your username below to connect your MAL account to your
@@ -329,8 +319,7 @@ class ExportLibrary extends React.Component {
         style={[
           styles.containerStyle,
           { justifyContent: 'center', alignItems: 'center' },
-        ]}
-      >
+        ]}>
         <ActivityIndicator size={'large'} />
       </View>
     );
@@ -356,30 +345,20 @@ class ExportLibrary extends React.Component {
               alignItems: 'center',
               justifyContent: 'space-between',
             },
-          ]}
-        >
+          ]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <FastImage
-              source={pending}
-              style={{ width: 30, height: 30 }}
-              cache="web"
-            />
+            <Image source={pending} style={{ width: 30, height: 30 }} />
             <Text
               style={{
                 marginLeft: 8,
                 fontFamily: 'OpenSans',
                 fontWeight: '500',
-              }}
-            >
+              }}>
               {linkedAccount.externalUserId}
             </Text>
           </View>
           <TouchableOpacity onPress={this.onDisconnectButtonPressed} style={{}}>
-            <FastImage
-              source={failed}
-              style={{ width: 16, height: 16 }}
-              cache="web"
-            />
+            <Image source={failed} style={{ width: 16, height: 16 }} />
           </TouchableOpacity>
         </View>
         <SidebarTitle title={'Entries'} />

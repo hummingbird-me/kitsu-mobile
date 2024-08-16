@@ -1,9 +1,9 @@
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import { Image } from 'expo-image';
 import { isEmpty, isEqual } from 'lodash';
 import moment from 'moment';
 import React, { PureComponent } from 'react';
 import { FlatList, Platform, Text, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import OneSignal from 'react-native-onesignal';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -273,10 +273,9 @@ class NotificationsScreen extends PureComponent<NotificationsScreenProps> {
           </View>
           <View style={styles.detailsContainer}>
             <View style={{ paddingRight: 10 }}>
-              <FastImage
+              <Image
                 style={styles.userAvatar}
                 source={{ uri: data.actorAvatar }}
-                cache="web"
               />
             </View>
             <View style={styles.activityContainer}>

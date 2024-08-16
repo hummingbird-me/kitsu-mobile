@@ -1,7 +1,7 @@
+import { Image } from 'expo-image';
 import { debounce } from 'lodash';
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Navigation } from 'react-native-navigation';
 
@@ -39,7 +39,7 @@ const HEADER_TEXT_MAPPING = {
   dropped: { anime: 'Dropped', manga: 'Dropped' },
 };
 
-interface UserLibraryListCardProps {
+type UserLibraryListCardProps = {
   currentUser: object;
   libraryEntry: object;
   libraryStatus: 'current' | 'planned' | 'completed' | 'on_hold' | 'dropped';
@@ -49,7 +49,7 @@ interface UserLibraryListCardProps {
   updateUserLibraryEntry(...args: unknown[]): unknown;
   deleteUserLibraryEntry(...args: unknown[]): unknown;
   componentId?: any;
-}
+};
 
 export class UserLibraryListCard extends React.PureComponent<UserLibraryListCardProps> {
   static defaultProps = {
@@ -256,15 +256,13 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
                 isSliderActive
                   ? styles.swipeButtonActive
                   : styles.swipeButtonInactive,
-              ]}
-            >
+              ]}>
               <Text style={styles.swipeButtonText}>
                 {canEdit ? 'Edit Entry' : 'View Details'}
               </Text>
             </View>,
           ]
-        }
-      >
+        }>
         <View style={styles.container}>
           {libraryEntry.status !== this.props.libraryStatus && (
             <View style={styles.moved}>
@@ -299,12 +297,11 @@ export class UserLibraryListCard extends React.PureComponent<UserLibraryListCard
                   <SelectMenu
                     options={this.selectOptions()}
                     onOptionSelected={this.onStatusSelected}
-                    style={styles.menuButtonContainer}
-                  >
-                    <FastImage
+                    style={styles.menuButtonContainer}>
+                    <Image
                       source={menuImage}
                       style={styles.menuButton}
-                      resizeMode="contain"
+                      contentFit="contain"
                     />
                   </SelectMenu>
                 )}

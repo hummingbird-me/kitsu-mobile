@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import React, { PureComponent } from 'react';
 import {
   Modal,
@@ -7,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import awfulImage from 'kitsu/assets/img/ratings/awful.png';
@@ -21,6 +21,8 @@ import * as colors from 'kitsu/constants/colors';
 
 import { styles } from './styles';
 
+export type RatingType = 'simple' | 'regular' | 'advanced';
+
 const TextSize = {
   Tiny: 10,
   Small: 12,
@@ -33,7 +35,7 @@ const ImageSize = {
   Normal: 30,
 };
 
-function displayRatingFromTwenty(ratingTwenty, type) {
+function displayRatingFromTwenty(ratingTwenty: number, type: RatingType) {
   if (type === 'regular') {
     return Math.round(ratingTwenty / 2) / 2;
   } else if (type === 'advanced') {
@@ -45,8 +47,8 @@ function displayRatingFromTwenty(ratingTwenty, type) {
   throw new Error(`Unknown rating type ${type}.`);
 }
 
-function getRatingTwentyProperties(ratingTwenty, type) {
-  const ratingProperties = {};
+function getRatingTwentyProperties(ratingTwenty: number, type: RatingType) {
+  const ratingProperties: Record<string, unknown> = {};
   const rating = displayRatingFromTwenty(ratingTwenty, type);
 
   switch (type) {
@@ -79,7 +81,7 @@ function getRatingTwentyProperties(ratingTwenty, type) {
   return ratingProperties;
 }
 
-function getRatingTwentyForText(text, type) {
+function getRatingTwentyForText(text: string, type: RatingType) {
   if (type !== 'simple') {
     throw new Error('This function should only be used in simple ratings.');
   }
@@ -102,17 +104,17 @@ function getRatingTwentyForText(text, type) {
   }
 }
 
-interface RatingProps {
+type RatingProps = {
   disabled?: boolean;
   onRatingChanged?(...args: unknown[]): unknown;
   onRatingModalDisplay?(...args: unknown[]): unknown;
   ratingTwenty?: number;
-  ratingSystem?: 'simple' | 'regular' | 'advanced';
+  ratingSystem?: RatingType;
   showNotRated?: boolean;
   size?: string;
   style?: any;
   viewType?: 'single' | 'select';
-}
+};
 
 export class Rating extends PureComponent<RatingProps> {
   static defaultProps = {
@@ -313,59 +315,53 @@ export class Rating extends PureComponent<RatingProps> {
       <View {...this.props} style={[styles.wrapper, this.props.style]}>
         <TouchableOpacity
           onPress={() => this.toggleModal()}
-          disabled={this.props.disabled}
-        >
+          disabled={this.props.disabled}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <FastImage
+            <Image
               source={noRatingStarImage}
               style={this.styleForRatingTwenty(ratingTwenty, 'no-rating-star')}
             />
-            <FastImage
+            <Image
               source={starImage}
               style={this.styleForRatingTwenty(ratingTwenty, 'star')}
             />
 
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'no-rating')}
-              disabled={this.props.disabled}
-            >
-              <FastImage
+              disabled={this.props.disabled}>
+              <Image
                 source={noRatingImage}
                 style={this.styleForRatingTwenty(ratingTwenty, 'no-rating')}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'awful')}
-              disabled={this.props.disabled}
-            >
-              <FastImage
+              disabled={this.props.disabled}>
+              <Image
                 source={awfulImage}
                 style={this.styleForRatingTwenty(ratingTwenty, 'awful')}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'meh')}
-              disabled={this.props.disabled}
-            >
-              <FastImage
+              disabled={this.props.disabled}>
+              <Image
                 source={mehImage}
                 style={this.styleForRatingTwenty(ratingTwenty, 'meh')}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'good')}
-              disabled={this.props.disabled}
-            >
-              <FastImage
+              disabled={this.props.disabled}>
+              <Image
                 source={goodImage}
                 style={this.styleForRatingTwenty(ratingTwenty, 'good')}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.toggleModal(isSelectView && 'great')}
-              disabled={this.props.disabled}
-            >
-              <FastImage
+              disabled={this.props.disabled}>
+              <Image
                 source={greatImage}
                 style={this.styleForRatingTwenty(ratingTwenty, 'great')}
               />
@@ -379,21 +375,18 @@ export class Rating extends PureComponent<RatingProps> {
           animationType="slide"
           visible={this.state.modalVisible}
           onRequestClose={this.onModalClosed}
-          transparent
-        >
+          transparent>
           <View
             style={
               ratingSystem === 'simple'
                 ? styles.modalContentSimple
                 : styles.modalContent
-            }
-          >
+            }>
             <View style={styles.modalHeader}>
               {/* Cancel, Slide / Tap to Rate, Done */}
               <TouchableOpacity onPress={this.cancel}>
                 <Text
-                  style={[styles.modalHeaderText, styles.modalCancelButton]}
-                >
+                  style={[styles.modalHeaderText, styles.modalCancelButton]}>
                   Cancel
                 </Text>
               </TouchableOpacity>

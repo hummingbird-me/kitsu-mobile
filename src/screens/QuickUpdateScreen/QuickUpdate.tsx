@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { capitalize, isEmpty, uniqBy } from 'lodash';
 import React, { Component } from 'react';
 import {
@@ -12,7 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { Navigation } from 'react-native-navigation';
 import Carousel from 'react-native-snap-carousel';
@@ -70,10 +70,10 @@ const CAROUSEL_WIDTH = Dimensions.get('window').width;
 const CAROUSEL_ITEM_WIDTH = Dimensions.get('window').width * 0.85;
 const DOUBLE_PRESS_DELAY = 500;
 
-interface QuickUpdateProps {
+type QuickUpdateProps = {
   componentId: any;
   currentUser: object;
-}
+};
 
 class QuickUpdate extends Component<QuickUpdateProps> {
   state = {
@@ -623,8 +623,7 @@ class QuickUpdate extends Component<QuickUpdateProps> {
             />
           }
           style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
+          contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.emptyStateContainer}>
             <ImageStatus
               title={emptyTitle}
@@ -633,8 +632,7 @@ class QuickUpdate extends Component<QuickUpdateProps> {
             />
             <TouchableOpacity
               style={styles.emptyStateButton}
-              onPress={() => this.onNavigateToSearch(searchIndex)}
-            >
+              onPress={() => this.onNavigateToSearch(searchIndex)}>
               <Text style={styles.emptyStateButtonText}>{buttonTitle}</Text>
             </TouchableOpacity>
           </View>
@@ -677,10 +675,9 @@ class QuickUpdate extends Component<QuickUpdateProps> {
     return (
       <View style={styles.wrapper}>
         {/* Background Image, staging for next image, Cover image for the series. */}
-        <FastImage
+        <Image
           source={{ uri: nextUpBackgroundImageUri }}
           style={styles.backgroundImage}
-          cache="web"
         />
         <Animated.Image
           source={{ uri: backgroundImageUri }}
@@ -800,8 +797,7 @@ class QuickUpdate extends Component<QuickUpdateProps> {
             animationType="slide"
             transparent
             visible={editing}
-            onRequestClose={this.toggleEditor}
-          >
+            onRequestClose={this.toggleEditor}>
             <QuickUpdateEditor
               media={getMedia(entry)}
               currentEpisode={entry.unit[0]}

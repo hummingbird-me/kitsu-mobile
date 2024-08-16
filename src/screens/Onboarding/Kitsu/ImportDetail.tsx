@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { Modal, Text, TextInput, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 
 import { Button } from 'kitsu/components/Button';
@@ -77,11 +77,7 @@ class ImportDetail extends React.Component {
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <FastImage
-                  source={item.image}
-                  style={styles.cardLogo}
-                  cache="web"
-                />
+                <Image source={item.image} style={styles.cardLogo} />
               </View>
               <Text style={styles.cardText}>
                 Enter your username below to import your existing anime and
@@ -114,15 +110,13 @@ class ImportDetail extends React.Component {
           animationType={'fade'}
           visible={showModal}
           transparent
-          onRequestClose={this.onCloseModal}
-        >
+          onRequestClose={this.onCloseModal}>
           <View
             style={{
               flex: 1,
               backgroundColor: 'rgba(0,0,0,0.6)',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <View style={[styles.card, { marginTop: 100, padding: 8 }]}>
               {!errMessage ? (
                 <View>
@@ -145,8 +139,7 @@ class ImportDetail extends React.Component {
                         marginBottom: 4,
                         minWidth: 240,
                       },
-                    ]}
-                  >
+                    ]}>
                     {errMessage}
                   </Text>
                 </View>

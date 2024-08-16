@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react-native';
+import { Image } from 'expo-image';
 import React from 'react';
 import { FlatList, Platform, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { LoginManager } from 'react-native-fbsdk-next';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
@@ -108,13 +108,12 @@ class RegistrationScreen extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
-    <FastImage
+    <Image
       source={
         (item.attributes && { uri: item.attributes.posterImage.large }) ||
         placeholderImage
       }
       style={styles.squareImage}
-      cache="web"
     />
   );
 

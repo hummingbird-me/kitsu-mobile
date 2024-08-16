@@ -1,19 +1,19 @@
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Image } from 'expo-image';
 import React from 'react';
 import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 
 import { slidelogo } from 'kitsu/assets/img/intro/';
 
 import styles from './styles';
 
-interface IntroHeaderProps {
+type IntroHeaderProps = {
   style?: unknown;
-}
+};
 
 const IntroHeader = ({ style }: IntroHeaderProps) => (
   <View style={[styles.logoWrapper, style]}>
-    <FastImage style={styles.logo} source={slidelogo} cache="web" />
+    <Image style={styles.logo} source={slidelogo} />
   </View>
 );
 

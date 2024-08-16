@@ -1,7 +1,7 @@
+import { Image } from 'expo-image';
 import { toLower, upperFirst } from 'lodash';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 
@@ -34,10 +34,10 @@ const getRatingSystem = (type) => {
 
 const Simple = () => (
   <View style={{ flexDirection: 'row' }}>
-    <FastImage source={awful} style={styles.imageSimple} />
-    <FastImage source={good} style={styles.imageSimple} />
-    <FastImage source={great} style={styles.imageSimple} />
-    <FastImage source={meh} style={styles.imageSimple} />
+    <Image source={awful} style={styles.imageSimple} />
+    <Image source={good} style={styles.imageSimple} />
+    <Image source={great} style={styles.imageSimple} />
+    <Image source={meh} style={styles.imageSimple} />
   </View>
 );
 
@@ -46,7 +46,7 @@ const Regular = () => (
     {Array(5)
       .fill({})
       .map((v, i) => (
-        <FastImage key={i} source={starFilled} style={styles.imageRegular} />
+        <Image key={i} source={starFilled} style={styles.imageRegular} />
       ))}
   </View>
 );
@@ -56,7 +56,7 @@ const Advanced = () => (
     {Array(10)
       .fill({})
       .map((v, i) => (
-        <FastImage key={i} source={starFilled} style={styles.imageAdvanced} />
+        <Image key={i} source={starFilled} style={styles.imageAdvanced} />
       ))}
   </View>
 );
@@ -67,8 +67,7 @@ const RatingSystem = ({ style, type, selected, onSelectSystem }) => {
   return (
     <TouchableOpacity
       onPress={() => onSelectSystem(type)}
-      style={[styles.rowWrapper, styles.rowRating, selectedRowStyle, style]}
-    >
+      style={[styles.rowWrapper, styles.rowRating, selectedRowStyle, style]}>
       <Text style={[styles.text, selectedTextStyle]}>
         {upperFirst(toLower(type))}
       </Text>
@@ -136,10 +135,7 @@ class RatingSystemScreen extends React.Component {
           />
         </ScrollView>
         <View style={{ flexDirection: 'row' }}>
-          <FastImage
-            source={fox}
-            style={{ width: 50, height: 50, zIndex: 2 }}
-          />
+          <Image source={fox} style={{ width: 50, height: 50, zIndex: 2 }} />
           <View
             style={{
               left: -10,
@@ -150,14 +146,12 @@ class RatingSystemScreen extends React.Component {
               alignItems: 'center',
               borderRadius: 16,
               backgroundColor: '#4f414e',
-            }}
-          >
+            }}>
             <Text
               style={{
                 color: 'white',
                 fontSize: 12,
-              }}
-            >
+              }}>
               Don{"'"}t worry, you can change this later!
             </Text>
           </View>

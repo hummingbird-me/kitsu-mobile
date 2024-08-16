@@ -1,7 +1,13 @@
+import { Image } from 'expo-image';
 import { isNil } from 'lodash';
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, Dimensions, Image, Text, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image as RNImage,
+  Text,
+  View,
+} from 'react-native';
 
 import { ImageSizeCache } from 'kitsu/utils/cache';
 import { getImgixImage } from 'kitsu/utils/imgix';
@@ -16,7 +22,7 @@ const MAX_PHONE_WIDTH = 480;
 const MAX_AUTO_HEIGHT =
   Dimensions.get('window').width > MAX_PHONE_WIDTH ? 400 : 325;
 
-interface PostImageProps {
+type PostImageProps = {
   uri: string;
   width?: number;
   height?: number;
@@ -30,7 +36,7 @@ interface PostImageProps {
   // This will default to true if `showGIFOverlayForKitsu` is `false`
   // If this is set to false then the GIF will get passed to imgix which will convert it to a 1 frame image
   showAnimatedGIF?: boolean;
-}
+};
 
 export class PostImage extends PureComponent<PostImageProps> {
   static defaultProps = {
@@ -89,7 +95,7 @@ export class PostImage extends PureComponent<PostImageProps> {
       this.setState({ ...imageSize });
 
       // Remove this once FastImage fixes local image support and passes size in its `onLoad` event
-      Image.getSize(uri, (width, height) => {
+      RNImage.getSize(uri, (width, height) => {
         if (!this.mounted) return;
 
         ImageSizeCache.set(uri, width, height);
@@ -208,11 +214,11 @@ export class PostImage extends PureComponent<PostImageProps> {
             </View>
           </View>
         )}
-        <FastImage
+        <Image
           // If height is automatically set and it goes over the max auto height
           // We need to make sure that the image is displayed in full to the user.
           // Only applies to non-kitsu images or if we are showing the animated kitsu GIF.
-          resizeMode={
+          contentFit={
             (animateGIF || isExternalUrl) && isImageMaxAutoHeight
               ? 'contain'
               : 'cover'
@@ -225,7 +231,6 @@ export class PostImage extends PureComponent<PostImageProps> {
             overflow: 'hidden',
             backgroundColor: loading ? 'transparent' : '#fcfcfc',
           }}
-          cache="web"
         />
       </View>
     );

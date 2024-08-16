@@ -1,22 +1,22 @@
+import { Image, ImageContentFit } from 'expo-image';
 import React, { PureComponent } from 'react';
 import { Animated, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { commonStyles } from 'kitsu/common/styles';
 
 import { styles } from './styles';
 
-interface ProgressiveImageProps {
+type ProgressiveImageProps = {
   backgroundStyle?: object;
   children?: object;
   duration?: number;
   style?: any;
-  resizeMode?: string;
+  resizeMode?: ImageContentFit;
   source: any;
   defaultSource?: number;
   hasOverlay?: boolean;
-}
+};
 
 export class ProgressiveImage extends PureComponent<ProgressiveImageProps> {
   static defaultProps = {
@@ -72,21 +72,19 @@ export class ProgressiveImage extends PureComponent<ProgressiveImageProps> {
     return (
       <View style={[styles.imageBackground, backgroundStyle, style]}>
         {source && (
-          <FastImage
+          <Image
             onLoad={this.onLoad}
             onLayout={this.onLayout}
-            resizeMode={resizeMode}
+            contentFit={resizeMode}
             source={source || defaultSource}
             style={[style, { opacity: thumbnailOpacity.Value }]}
-            cache="web"
           />
         )}
 
         {(children || hasOverlay) && source.uri && (
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.6)']}
-            style={[commonStyles.absoluteFill, style]}
-          >
+            style={[commonStyles.absoluteFill, style]}>
             {children}
           </LinearGradient>
         )}

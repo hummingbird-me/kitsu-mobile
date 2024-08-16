@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { Modal, ScrollView, Text, TextInput, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 
@@ -78,11 +78,7 @@ class ImportDetail extends React.Component<ImportDetailProps> {
           <View style={styles.card}>
             <View style={{ padding: 8 }}>
               <View style={{ alignItems: 'center' }}>
-                <FastImage
-                  source={item.image}
-                  style={styles.cardLogo}
-                  cache="web"
-                />
+                <Image source={item.image} style={styles.cardLogo} />
               </View>
               <Text style={styles.cardText}>
                 Enter your username below to import your existing anime and
@@ -113,15 +109,13 @@ class ImportDetail extends React.Component<ImportDetailProps> {
         <Modal
           animationType={'fade'}
           visible={this.state.showModal}
-          transparent
-        >
+          transparent>
           <View
             style={{
               flex: 1,
               backgroundColor: 'rgba(0,0,0,0.6)',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <View style={[styles.card, { marginTop: 100 }]}>
               {!errMessage ? (
                 <View>
@@ -144,8 +138,7 @@ class ImportDetail extends React.Component<ImportDetailProps> {
                         marginBottom: 4,
                         minWidth: 240,
                       },
-                    ]}
-                  >
+                    ]}>
                     {errMessage}
                   </Text>
                 </View>

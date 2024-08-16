@@ -1,10 +1,10 @@
 import { arc, pie } from 'd3-shape';
+import { Image } from 'expo-image';
 import { capitalize } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import Svg, { G as Group, Path } from 'react-native-svg';
 
 import * as imageMap from 'kitsu/assets/img/stats';
@@ -170,11 +170,10 @@ export class UserStats extends PureComponent {
         : null;
     return (
       <View>
-        <FastImage
+        <Image
           style={styles.timeImage}
           source={imageMap[`${kind}${primaryUnit.index}`]}
-          resizeMode="contain"
-          cache="web"
+          contentFit="contain"
         />
         <View style={styles.timeSpent}>
           <View style={{ flexDirection: 'column', marginLeft: 60 }}>

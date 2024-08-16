@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react-native';
+import { Image } from 'expo-image';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { LoginManager } from 'react-native-fbsdk-next';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
@@ -56,7 +56,7 @@ class LinkedAccounts extends React.Component<LinkedAccountsProps> {
         <View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ width: 90, alignItems: 'center' }}>
-              <FastImage
+              <Image
                 source={fblogo}
                 style={{ resizeMode: 'contain', width: 90, height: 40 }}
               />
@@ -75,16 +75,14 @@ class LinkedAccounts extends React.Component<LinkedAccountsProps> {
               paddingVertical: 10,
               paddingHorizontal: 8,
               borderRadius: 4,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 10,
                 fontFamily: 'OpenSans',
                 fontWeight: '600',
                 color: colors.white,
-              }}
-            >
+              }}>
               {isLinked ? 'Disconnect' : 'Connect'}
             </Text>
           </TouchableOpacity>

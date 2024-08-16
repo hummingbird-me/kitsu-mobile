@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import React, { PureComponent } from 'react';
 import {
   ActivityIndicator,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { ProgressBar } from 'kitsu/components/ProgressBar';
@@ -14,7 +14,7 @@ import { Rating } from 'kitsu/components/Rating';
 
 import styles from './styles';
 
-interface QuickUpdateCardProps {
+type QuickUpdateCardProps = {
   // TODO: Not yet a complete definition of the things we use in data.
   ratingSystem: string;
   data: {
@@ -41,7 +41,7 @@ interface QuickUpdateCardProps {
   onMarkComplete?(...args: unknown[]): unknown;
   onRate(...args: unknown[]): unknown;
   onMediaTapped?(...args: unknown[]): unknown;
-}
+};
 
 export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps> {
   static defaultProps = {
@@ -159,18 +159,16 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
           <ImageBackground
             source={{ uri: landscapeImage }}
             style={styles.posterImage}
-            imageStyle={{ resizeMode: 'cover' }}
-          >
+            imageStyle={{ resizeMode: 'cover' }}>
             <LinearGradient
               colors={['transparent', 'rgba(0, 0, 0, 1)']}
               style={styles.posterImageGradient}
             />
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity onPress={() => this.onMediaTapped(media)}>
-                <FastImage
+                <Image
                   source={{ uri: squareImage }}
                   style={styles.avatarImage}
-                  cache="web"
                 />
               </TouchableOpacity>
               <View style={styles.descriptionRow}>
@@ -249,8 +247,7 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
               <View style={styles.actionRow}>
                 <TouchableOpacity
                   onPress={this.onMarkComplete}
-                  style={[styles.button, styles.markWatchedButton]}
-                >
+                  style={[styles.button, styles.markWatchedButton]}>
                   {unitCount === progress + 1 ? ( // is final episode?
                     <Text style={styles.buttonText}>Mark as Complete</Text>
                   ) : (
@@ -274,8 +271,7 @@ export default class QuickUpdateCard extends PureComponent<QuickUpdateCardProps>
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                }}
-              >
+                }}>
                 <Text style={styles.seriesCompleteText}>
                   Series Complete! Rate it!
                 </Text>

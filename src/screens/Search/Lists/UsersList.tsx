@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import * as React from 'react';
 import {
   FlatList,
@@ -7,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -88,11 +88,11 @@ const onUserPress = (componentId, userId) => {
   }
 };
 
-interface UserProps {
+type UserProps = {
   user: object;
   onFollow(...args: unknown[]): unknown;
   componentId: any;
-}
+};
 
 const User = ({ componentId, user, onFollow }: UserProps) => {
   const userAvatar = user.avatar ? { uri: user.avatar.small } : DEFAULT_AVATAR;
@@ -101,15 +101,15 @@ const User = ({ componentId, user, onFollow }: UserProps) => {
     <TouchableOpacity
       onPress={() => onUserPress(componentId, user.id)}
       activeOpacity={0.6}
-      style={styles.userContainer}
-    >
+      style={styles.userContainer}>
       <View style={styles.userLeftSection}>
-        <FastImage source={userAvatar} style={styles.userAvatar} cache="web" />
+        <Image source={userAvatar} style={styles.userAvatar} />
         <View style={styles.userMetaContainer}>
           <Text style={styles.userNameText}>{user.name}</Text>
           <Text
-            style={styles.userFollowText}
-          >{`${user.followersCount} ${followerTxt}`}</Text>
+            style={
+              styles.userFollowText
+            }>{`${user.followersCount} ${followerTxt}`}</Text>
         </View>
       </View>
       {/* <View style={styles.userRightSection}>
@@ -122,12 +122,12 @@ const User = ({ componentId, user, onFollow }: UserProps) => {
   );
 };
 
-interface UsersListProps {
+type UsersListProps = {
   hits?: unknown[];
   onFollow(...args: unknown[]): unknown;
   onData(...args: unknown[]): unknown;
   componentId: any;
-}
+};
 
 const UsersList = ({ hits, onFollow, onData, componentId }: UsersListProps) => {
   // Send users data to reducer to maintain single source of truth

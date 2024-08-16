@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import React, { PureComponent } from 'react';
 import { Linking, Platform, ScrollView, Text, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 
@@ -149,21 +149,18 @@ class SidebarScreen extends PureComponent<SidebarScreenProps> {
         style={[
           { flex: 1, backgroundColor: listBackPurple },
           Platform.OS === 'ios' && iOSWidth,
-        ]}
-      >
+        ]}>
         {/* Header */}
         <ProgressiveImage
           hasOverlay
           style={styles.headerCoverImage}
           source={{
             uri: (coverImage && getImgixCoverImage(coverImage)) || defaultCover,
-          }}
-        >
+          }}>
           <View style={styles.userProfileContainer}>
-            <FastImage
+            <Image
               style={styles.userProfileImage}
               source={{ uri: (avatar && avatar.medium) || defaultAvatar }}
-              cache="web"
             />
             <View style={styles.userProfileTextWrapper}>
               <Text style={styles.userProfileName}>{name}</Text>

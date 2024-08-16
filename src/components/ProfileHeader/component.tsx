@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { commonStyles } from 'kitsu/common/styles';
@@ -10,7 +10,7 @@ import { getImgixCoverImage } from 'kitsu/utils/imgix';
 
 import { styles } from './styles';
 
-interface ProfileHeaderProps {
+type ProfileHeaderProps = {
   onClickFollow?(...args: unknown[]): unknown;
   onClickBack(...args: unknown[]): unknown;
   profile: object;
@@ -19,7 +19,7 @@ interface ProfileHeaderProps {
   showProfileImage?: boolean;
   title?: string;
   hasOverlay?: boolean;
-}
+};
 
 export const ProfileHeader = ({
   profile,
@@ -48,7 +48,7 @@ export const ProfileHeader = ({
       )}
 
       <View style={styles.headerWrapper}>
-        <View style={[styles.header]}>
+        <View style={styles.header}>
           {/* if there is no follow button, render the absolute-centered header first
           so that the back button still lays over top of it. */}
           {!showFollowButton && (
@@ -58,8 +58,7 @@ export const ProfileHeader = ({
                   commonStyles.text,
                   commonStyles.colorWhite,
                   styles.titleText,
-                ]}
-              >
+                ]}>
                 {title}
               </Text>
             </View>
@@ -68,8 +67,7 @@ export const ProfileHeader = ({
           <TouchableOpacity
             style={styles.backButton}
             transparent
-            onPress={goBack}
-          >
+            onPress={goBack}>
             <Icon
               name="chevron-left"
               style={[
@@ -79,10 +77,9 @@ export const ProfileHeader = ({
               ]}
             />
             {showProfileImage && (
-              <FastImage
+              <Image
                 style={styles.profileImage}
                 source={{ uri: profileImageUri }}
-                cache="web"
               />
             )}
             {showFollowButton && (
@@ -91,8 +88,7 @@ export const ProfileHeader = ({
                   commonStyles.text,
                   commonStyles.colorWhite,
                   styles.titleText,
-                ]}
-              >
+                ]}>
                 {title}
               </Text>
             )}
@@ -102,8 +98,7 @@ export const ProfileHeader = ({
             <TouchableOpacity
               transparent
               style={styles.followButton}
-              onPress={onFollow}
-            >
+              onPress={onFollow}>
               <Text style={[commonStyles.text, commonStyles.colorWhite]}>
                 Follow
               </Text>

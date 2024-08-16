@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
-import FastImage from 'react-native-fast-image';
 
 import { MediaCard } from 'kitsu/components/MediaCard';
 
@@ -10,12 +10,11 @@ const MEDIA_CARD_DIMENSIONS = { width: 100, height: 150 };
 
 const LandscapeMediaCard = ({ onPress, title, image, ...props }) => (
   <TouchableOpacity onPress={onPress} style={styles.landscapeImageContainer}>
-    <FastImage
+    <Image
       source={image}
       {...props}
       style={styles.landscapeImage}
-      resizeMode={'cover'}
-      cache="web"
+      contentFit="cover"
     />
     {title && <Text style={styles.landscapeImageTitle}>{title}</Text>}
   </TouchableOpacity>

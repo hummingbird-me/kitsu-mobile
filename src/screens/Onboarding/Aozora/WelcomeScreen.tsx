@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { ImageBackground, ScrollView, Text, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 
@@ -69,21 +69,18 @@ class WelcomeScreen extends React.Component {
         <OnboardingHeader />
         <ScrollView
           style={styles.contentWrapper}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
+          contentContainerStyle={{ flexGrow: 1 }}>
           <Text style={[commonStyles.tutorialText, styles.tutorialText]}>
             {title}
           </Text>
           <ImageBackground
             style={styles.iceBackground}
             imageStyle={{ resizeMode: 'contain' }}
-            source={iceBackground}
-          >
-            <FastImage style={styles.iceCube} source={iceCube} />
+            source={iceBackground}>
+            <Image style={styles.iceCube} source={iceCube} />
           </ImageBackground>
           <Text
-            style={[styles.ps, { marginHorizontal: 24, textAlign: 'center' }]}
-          >
+            style={[styles.ps, { marginHorizontal: 24, textAlign: 'center' }]}>
             {subtitle}
           </Text>
           <Button

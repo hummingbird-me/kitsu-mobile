@@ -1,7 +1,7 @@
+import { Image } from 'expo-image';
 import { toLower, upperFirst } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 
@@ -30,12 +30,10 @@ const AccountView = ({ style, data, selected, onSelectAccount }) => {
   return (
     <TouchableOpacity
       onPress={() => onSelectAccount(data.accountType)}
-      style={[commonStyles.rowWrapper, selectedRowStyle, style]}
-    >
-      <FastImage
+      style={[commonStyles.rowWrapper, selectedRowStyle, style]}>
+      <Image
         style={styles.profileImage}
         source={{ uri: profileImageURL || defaultAvatar }}
-        cache="web"
       />
       <View style={styles.textWrapper}>
         <Text style={[commonStyles.text, selectedTextStyle]}>{username}</Text>
@@ -43,10 +41,9 @@ const AccountView = ({ style, data, selected, onSelectAccount }) => {
           {libraryCount ? `${libraryCount} library entries` : 'Empty Library'}
         </Text>
       </View>
-      <FastImage
+      <Image
         style={styles.brandImage}
         source={accountType === 'kitsu' ? kitsuLogo : aozoraLogo}
-        cache="web"
       />
     </TouchableOpacity>
   );

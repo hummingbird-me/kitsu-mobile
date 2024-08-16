@@ -1,9 +1,9 @@
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Image } from 'expo-image';
 import { isEmpty, isNil, startCase } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { Linking, Platform, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import YouTube from 'react-native-youtube';
 import { connect } from 'react-redux';
@@ -20,7 +20,7 @@ import { handleURL } from 'kitsu/utils/url';
 
 import { styles } from './styles';
 
-interface EmbeddedContentProps {
+type EmbeddedContentProps = {
   embed?: {
     kind?: string;
     site?: {
@@ -52,7 +52,7 @@ interface EmbeddedContentProps {
   // Manual override for data saver
   ignoreDataSaver?: boolean;
   disabled?: boolean;
-}
+};
 
 class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
   // The reason for the combination of string or number is that
@@ -113,13 +113,12 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
     return (
       <TouchableOpacity
         style={[styles.dataSaver, { borderRadius }]}
-        onPress={this.toggleVisibility}
-      >
+        onPress={this.toggleVisibility}>
         {showDataBunny && (
-          <FastImage
+          <Image
             source={dataBunny}
             style={styles.dataBunny}
-            resizeMode="contain"
+            contentFit="contain"
           />
         )}
         <View style={[styles.dataSaverTextContainer, textContainerStyle]}>
@@ -128,8 +127,7 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
             size="default"
             bold
             numberOfLines={1}
-            textStyle={{ marginBottom: 4 }}
-          >
+            textStyle={{ marginBottom: 4 }}>
             Tap to load image
           </StyledText>
           <StyledText color="light" size="xxsmall">
@@ -274,8 +272,7 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
             });
           }
         }}
-        disabled={disabled}
-      >
+        disabled={disabled}>
         <Layout.RowWrap style={styles.kitsuContent}>
           {!isNil(image) && (
             <ProgressiveImage
@@ -292,8 +289,7 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
               size="xxsmall"
               numberOfLines={1}
               bold
-              textStyle={{ paddingVertical: 4 }}
-            >
+              textStyle={{ paddingVertical: 4 }}>
               {startCase(type)}
             </StyledText>
             <StyledText color="dark" size="xsmall" numberOfLines={5}>
@@ -329,10 +325,9 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
             });
           }
         }}
-        disabled={disabled}
-      >
+        disabled={disabled}>
         <Layout.RowWrap style={styles.kitsuContent} alignItems="center">
-          <FastImage source={image} style={styles.userPoster} cache="web" />
+          <Image source={image} style={styles.userPoster} />
           <Layout.RowMain>
             <StyledText color="dark" size="small" numberOfLines={2} bold>
               {embed.title || '-'}
@@ -355,11 +350,9 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
       <TouchableOpacity
         style={{ width: maxWidth }}
         onPress={() => handleURL(embed.url)}
-        disabled={disabled}
-      >
+        disabled={disabled}>
         <Layout.RowWrap
-          style={[styles.kitsuContent, isDescriptionEmpty && styles.center]}
-        >
+          style={[styles.kitsuContent, isDescriptionEmpty && styles.center]}>
           {!isNil(image) && (
             <ProgressiveImage
               source={{ uri: image }}
@@ -371,8 +364,7 @@ class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
               color="dark"
               size="small"
               numberOfLines={isDescriptionEmpty ? 4 : 1}
-              bold
-            >
+              bold>
               {embed.title || '-'}
             </StyledText>
             {!isDescriptionEmpty && (

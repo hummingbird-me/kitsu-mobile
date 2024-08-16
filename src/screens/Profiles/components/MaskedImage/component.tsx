@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/StyledProgressiveImage';
@@ -8,17 +8,17 @@ import { StyledProgressiveImage } from 'kitsu/screens/Profiles/components/Styled
 import { styles } from './styles';
 
 const StyledImage = ({ ...props }) => (
-  <FastImage style={styles.imageView} {...props} cache="web" />
+  <Image style={styles.imageView} {...props} />
 );
 
-interface MaskedImageProps {
+type MaskedImageProps = {
   maskedTop?: boolean;
   maskedBottom?: boolean;
   progressive?: boolean;
   overlay?: boolean;
   resizeMode?: string;
   source?: object;
-}
+};
 
 export const MaskedImage = ({
   maskedTop = false,

@@ -1,18 +1,18 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { Text, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 
 import styles from './styles';
 
-interface StepProps {
+type StepProps = {
   title: string;
   desc: string;
-}
+};
 
 const Step = ({ title, desc, image }: StepProps) => (
   <View style={styles.stepContainer}>
     <View style={styles.slide}>
-      <FastImage style={styles.stepImage} source={image} cache="web" />
+      <Image style={styles.stepImage} source={image} />
       <Text style={styles.text}>{title.toUpperCase()}</Text>
       <Text style={styles.desc}>{desc}</Text>
     </View>

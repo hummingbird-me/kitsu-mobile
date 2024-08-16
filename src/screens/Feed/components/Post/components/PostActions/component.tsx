@@ -1,6 +1,6 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 
 import { StyledText } from 'kitsu/components/StyledText';
 
@@ -13,11 +13,11 @@ const actionButtonLabels = {
   share: 'Share',
 };
 
-interface PostActionButtonProps {
+type PostActionButtonProps = {
   variant?: 'like' | 'liked' | 'comment' | 'share';
   isActive?: boolean;
   onPress?(...args: unknown[]): unknown;
-}
+};
 
 /* eslint-disable global-require */
 export const PostActionButton = ({
@@ -34,17 +34,15 @@ export const PostActionButton = ({
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.postActionButton}>
-      <FastImage
+      <Image
         source={icons[variant]}
-        resizeMode="cover"
+        contentFit="cover"
         style={{ width: 20, height: 18 }}
-        cache="web"
       />
       <StyledText
         size="xsmall"
         color={isActive ? 'red' : 'grey'}
-        textStyle={{ marginLeft: 10 }}
-      >
+        textStyle={{ marginLeft: 10 }}>
         {actionButtonLabels[variant]}
       </StyledText>
     </TouchableOpacity>
@@ -57,11 +55,11 @@ PostActionButton.defaultProps = {
   onPress: null,
 };
 
-interface PostActionsProps {
+type PostActionsProps = {
   isLiked?: boolean;
   onLikePress?(...args: unknown[]): unknown;
   onCommentPress?(...args: unknown[]): unknown;
-}
+};
 
 export const PostActions = ({
   isLiked,
