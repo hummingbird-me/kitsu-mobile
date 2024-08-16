@@ -10,50 +10,26 @@ import store from 'kitsu/store/config';
  * the long run, this really should be switched to a Context like on the frontend, but for now we
  * can use this to enable GraphQL requests.
  */
-
-function addAuthToOperation({ operation }: { operation: Operation }) {
-  const accessToken = store.getState().auth.tokens.access_token;
-
-  if (!accessToken) return operation;
-
-  // fetchOptions can be a function (See Client API) but you can simplify this based on usage
-  const fetchOptions =
-    typeof operation.context.fetchOptions === 'function'
-      ? operation.context.fetchOptions()
-      : operation.context.fetchOptions || {};
-
-  return {
-    ...operation,
-    context: {
-      ...operation.context,
-      fetchOptions: {
-        ...fetchOptions,
-        headers: {
-          ...fetchOptions.headers,
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    },
-  };
-}
-
 export default function kitsuAuthExchange(): Exchange {
-  return authExchange({
-    addAuthToOperation,
-    didAuthError({ error }) {
-      return error.response.status === 401;
-    },
-    async getAuth() {
+  return authExchange(async utils => ({
+    addAuthToOperation(operation) {
       const accessToken = store.getState().auth.tokens.access_token;
 
-      if (!accessToken) return null;
+      if (!accessToken) return operation;
 
-      try {
-        await store.dispatch(refreshTokens());
-        return store.getState().auth.tokens.access_token;
-      } catch (e) {
-        return null;
-      }
+      return utils.appendHeaders(operation, {
+        Authorization: `Bearer ${accessToken}`,
+      });
     },
-  });
+    didAuthError(errors) {
+      return errors.response.status === 401;
+    },
+    async refreshAuth() {
+      const accessToken = store.getState().auth.tokens.access_token;
+
+      if (!accessToken) return;
+
+      await store.dispatch(refreshTokens());
+    },
+  }));
 }

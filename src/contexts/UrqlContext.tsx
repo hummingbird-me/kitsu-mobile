@@ -1,7 +1,7 @@
 import { offlineExchange } from '@urql/exchange-graphcache';
 import { makeAsyncStorage } from '@urql/storage-rn';
 import React from 'react';
-import { Provider, createClient, dedupExchange, fetchExchange } from 'urql';
+import { Provider, createClient, fetchExchange } from 'urql';
 
 import { kitsuConfig } from 'kitsu/config/env';
 import resolvers from 'kitsu/graphql/resolvers';
@@ -16,7 +16,6 @@ const UrqlContext: React.FC<{ children: React.ReactNode }> = function ({
   });
   const client = createClient({
     exchanges: [
-      dedupExchange,
       offlineExchange({
         storage,
         schema,
