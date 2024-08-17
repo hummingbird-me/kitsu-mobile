@@ -6,7 +6,14 @@
     "paths": {
       "kitsu/*": ["./src/*"],
       "@/*": ["./src/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "gql.tada/ts-plugin",
+        "schema": "https://kitsu.app/api/graphql",
+        "tadaOutputLocation": "./src/types/graphql-env.d.ts"
+      }
+    ]
   },
   "include": ["./src"]
 }

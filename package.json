@@ -34,6 +34,7 @@
     "expo-gl": "~13.6.0",
     "expo-image": "~1.10.6",
     "getstream": "^8.1.0",
+    "gql.tada": "^1.8.5",
     "graphql": "^15.8.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
@@ -107,7 +108,7 @@
     "metro-react-native-babel-preset": "0.72.3",
     "patch-package": "^6.5.0",
     "react-test-renderer": "18.1.0",
-    "typescript": "~5.3.3"
+    "typescript": "~5.5.4"
   },
   "jest": {
     "preset": "react-native"
