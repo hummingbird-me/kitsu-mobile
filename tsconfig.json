@@ -4,7 +4,8 @@
     "lib": ["dom", "esnext"],
     "baseUrl": ".",
     "paths": {
-      "kitsu/*": ["./src/*"]
+      "kitsu/*": ["./src/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["./src"]

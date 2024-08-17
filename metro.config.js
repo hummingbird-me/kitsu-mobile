@@ -6,8 +6,8 @@ const { resolve } = require('path');
 const config = getDefaultConfig(__dirname);
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (moduleName.startsWith('kitsu/')) {
-    const resolved = resolve(moduleName.replace(/^kitsu\//i, './src/'));
+  if (moduleName.startsWith('kitsu/') || moduleName.startsWith('@/')) {
+    const resolved = resolve(moduleName.replace(/^(kitsu|@)\//i, './src/'));
     return context.resolveRequest(context, resolved, platform);
   }
 
