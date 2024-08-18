@@ -10,6 +10,7 @@ module.exports = function (api) {
           extensions: ['.glsl'],
         },
       ],
+      'react-native-reanimated/plugin',
     ],
     env: {
       production: {
