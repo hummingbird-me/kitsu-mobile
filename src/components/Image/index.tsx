@@ -4,7 +4,7 @@ import React from 'react';
 import { FragmentOf, graphql } from '@/utils/graphql';
 
 export const ImageFragment = graphql(`
-  fragment ImageFields on Image @_unmask {
+  fragment ImageFragment on Image @_unmask {
     blurhash
     views {
       height
@@ -32,8 +32,8 @@ const viewsToSource = (
   }));
 
 export type ImageProps = {
-  source?: FragmentOf<typeof ImageFragment>;
-} & Exclude<ExpoImageProps, 'source'>;
+  source?: FragmentOf<typeof ImageFragment> | null;
+} & Omit<ExpoImageProps, 'source'>;
 
 export default function Image({ source, ...props }: ImageProps) {
   return source ? (
