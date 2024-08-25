@@ -12,6 +12,8 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@expo-google-fonts/asap": "^0.2.3",
+    "@expo-google-fonts/open-sans": "^0.2.3",
     "@monterosa/react-native-parallax-scroll": "^1.8.0",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-async-storage/async-storage": "1.21.0",
@@ -30,7 +32,9 @@
     "deprecated-react-native-prop-types": "^3.0.1",
     "devour-client": "^1.4.3",
     "expo": "^50.0.20",
+    "expo-constants": "~15.4.6",
     "expo-dev-client": "~3.3.12",
+    "expo-font": "~11.10.3",
     "expo-gl": "~13.6.0",
     "expo-image": "~1.10.6",
     "expo-localization": "~14.8.4",
@@ -77,8 +81,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
-    "urql": "^4.1.0",
-    "expo-constants": "~15.4.6"
+    "urql": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
