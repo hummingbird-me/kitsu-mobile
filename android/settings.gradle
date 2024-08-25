@@ -1,4 +1,4 @@
-rootProject.name = 'kitsu_mobile'
+rootProject.name = 'Kitsu'
 
 dependencyResolutionManagement {
   versionCatalogs {

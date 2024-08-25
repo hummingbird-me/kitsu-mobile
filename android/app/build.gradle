@@ -83,13 +83,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.everfox.animetrackerandroid"
+    namespace 'app.kitsu.mobile.debug'
     defaultConfig {
-        applicationId "com.everfox.animetrackerandroid"
+        applicationId 'app.kitsu.mobile.debug'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "4.0"
 
         buildConfigField("boolean", "REACT_NATIVE_UNSTABLE_USE_RUNTIME_SCHEDULER_ALWAYS", (findProperty("reactNative.unstable_useRuntimeSchedulerAlways") ?: true).toString())
     }
@@ -104,7 +104,6 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".debug"
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -175,8 +174,3 @@ dependencies {
 
 apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), "../native_modules.gradle");
 applyNativeModulesAppBuildGradle(project)
-
-project.ext.vectoricons = [
-    iconFontNames: [ 'FontAwesome.ttf', 'Ionicons.ttf' ] // Specify font files
-]
-apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")

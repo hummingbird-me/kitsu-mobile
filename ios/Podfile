@@ -37,7 +37,7 @@ elsif podfile_properties.key?('ios.flipper') then
   end
 end
 
-target 'kitsu_mobile' do
+target 'Kitsu' do
   use_expo_modules!
   config = use_native_modules!
 
@@ -52,11 +52,6 @@ target 'kitsu_mobile' do
     # Note that if you have use_frameworks! enabled, Flipper will not work if enabled
     :flipper_configuration => flipper_config
   )
-
-  target 'kitsu_mobileTests' do
-    inherit! :complete
-    # Pods for testing
-  end
 
   post_install do |installer|
     react_native_post_install(
