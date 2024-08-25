@@ -3,10 +3,10 @@ import { makeAsyncStorage } from '@urql/storage-rn';
 import React from 'react';
 import { Provider, createClient, fetchExchange } from 'urql';
 
-import { kitsuConfig } from 'kitsu/config/env';
-import resolvers from 'kitsu/graphql/resolvers';
-import schema from 'kitsu/graphql/schema';
-import authExchange from 'kitsu/graphql/urql-exchanges/auth';
+import { kitsuConfig } from '@/config/env';
+import resolvers from '@/graphql/resolvers';
+import schema from '@/graphql/schema';
+import authExchange from '@/graphql/urql-exchanges/auth';
 
 const UrqlContext: React.FC<{ children: React.ReactNode }> = function ({
   children,
