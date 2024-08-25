@@ -1,7 +1,6 @@
 import { capitalize, isArray, isEmpty, isNull } from 'lodash';
 import React, { PureComponent } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { Button } from 'kitsu/components/Button';
@@ -18,7 +17,7 @@ import { styles } from './styles';
 
 const PILL_COLORS = ['#CC6549', '#E79C47', '#6FB98E', '#629DC8', '#A180BE'];
 
-interface SceneHeaderProps {
+type SceneHeaderProps = {
   categories?: unknown[];
   onCategoryPress?(...args: unknown[]): unknown;
   description?: string;
@@ -38,7 +37,7 @@ interface SceneHeaderProps {
   title?: string;
   subtitle?: string | string[];
   variant?: 'profile' | 'media' | 'group';
-}
+};
 
 export class SceneHeader extends PureComponent<SceneHeaderProps> {
   renderDescription = () => {
@@ -66,8 +65,7 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
               size="small"
               color="dark"
               ellipsizeMode="tail"
-              numberOfLines={4}
-            >
+              numberOfLines={4}>
               {description}
             </ViewMoreStyledText>
           </View>
@@ -80,8 +78,7 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
                 size="large"
                 color="dark"
                 bold
-                textStyle={styles.kitsuScoreText}
-              >
+                textStyle={styles.kitsuScoreText}>
                 {(rating && `${rating}%`) || '-'}
               </StyledText>
             </View>
@@ -144,8 +141,7 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
           onOptionSelected={this.props.onMainButtonOptionsSelected}
           activeOpacity={0.8}
           disabled={this.props.mainButtonLoading}
-          style={styles.mainButtonView}
-        >
+          style={styles.mainButtonView}>
           <Button
             block
             title={this.props.mainButtonTitle}
@@ -196,23 +192,20 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
           style={[
             styles.profileHeaderView,
             styles[`profileHeaderView__${variant}`],
-          ]}
-        >
+          ]}>
           {/* Profile Poster Image */}
           <View
             style={[
               styles.profileImageViewShadow,
               styles[`profileImageViewShadow__${variant}`],
-            ]}
-          >
+            ]}>
             <TouchableOpacity
               style={[
                 styles.profileImageView,
                 styles[`profileImageView__${variant}`],
               ]}
               onPress={() => NavigationActions.showLightBox([posterImage])}
-              disabled={isEmpty(posterImage)}
-            >
+              disabled={isEmpty(posterImage)}>
               <StyledProgressiveImage
                 variant={variant}
                 resize="cover"
@@ -237,15 +230,13 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
 
             {/* Add to library button & more button */}
             <View
-              style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}
-            >
+              style={[styles.titleBottom, styles[`titleBottom__${variant}`]]}>
               {this.renderMainButton()}
               {showMoreButton && (
                 <SelectMenu
                   options={moreButtonOptions}
                   onOptionSelected={onMoreButtonOptionsSelected}
-                  style={styles.moreButton}
-                >
+                  style={styles.moreButton}>
                   <Icon name="md-more" style={styles.moreIcon} />
                 </SelectMenu>
               )}
@@ -259,10 +250,10 @@ export class SceneHeader extends PureComponent<SceneHeaderProps> {
   }
 }
 
-interface StatusProps {
+type StatusProps = {
   statusType?: 'popularity' | 'rating';
   ranking?: string;
-}
+};
 
 const Status = ({ statusType, ranking }: StatusProps) => (
   <View style={[styles.statusItemView, styles[`statusItem__${statusType}`]]}>
@@ -284,15 +275,14 @@ Status.defaultProps = {
   ranking: '',
 };
 
-interface FollowStatusProps {
+type FollowStatusProps = {
   followStatusType?: 'following' | 'followers';
   count?: number;
-}
+};
 
 const FollowStatus = ({ followStatusType, count }: FollowStatusProps) => (
   <View
-    style={[styles.followStatus, styles[`followStatus__${followStatusType}`]]}
-  >
+    style={[styles.followStatus, styles[`followStatus__${followStatusType}`]]}>
     <StyledText size="xsmall" color="dark">
       {count}
       <StyledText size="xsmall" color="grey">

@@ -1,18 +1,18 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { getComputedTitle } from 'kitsu/utils/getTitleField';
 
 import { styles } from './styles';
 
-interface ResultsListItemProps {
+type ResultsListItemProps = {
   item: object;
   onPress?(...args: unknown[]): unknown;
   spacing?: object;
   currentUser?: object;
-}
+};
 
 export const ResultsListItem = ({
   item,
@@ -47,13 +47,11 @@ export const ResultsListItem = ({
         {title && (
           <LinearGradient
             colors={['transparent', 'black']}
-            style={styles.linearGradient}
-          >
+            style={styles.linearGradient}>
             <Text
               style={styles.titleText}
               numberOfLines={1}
-              ellipsizeMode="tail"
-            >
+              ellipsizeMode="tail">
               {title}
             </Text>
           </LinearGradient>

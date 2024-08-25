@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { uniqBy } from 'lodash';
 import React from 'react';
 import {
@@ -12,7 +13,6 @@ import {
   UIManager,
   View,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { Navigation } from 'react-native-navigation';
 import Carousel from 'react-native-snap-carousel';
 import { connect } from 'react-redux';
@@ -525,8 +525,7 @@ class RateScreen extends React.Component {
     return (
       <ImageBackground
         style={styles.poster}
-        source={{ uri: posterImage.large }}
-      >
+        source={{ uri: posterImage.large }}>
         {item.isRating ? (
           <View style={styles.loadingWrapper}>
             <ActivityIndicator color={'white'} size={'large'} />
@@ -534,8 +533,7 @@ class RateScreen extends React.Component {
         ) : (
           <LinearGradient
             colors={['transparent', 'rgb(0,0,0)']}
-            style={styles.posterInnerContainer}
-          >
+            style={styles.posterInnerContainer}>
             <Text style={styles.showTitle}>
               {titles.en || titles.en_us || titles.en_jp || titles.ja_jp}
             </Text>
@@ -614,15 +612,13 @@ class RateScreen extends React.Component {
               style={[
                 styles.ratingWrapper,
                 { marginVertical: ratingSystem === 'simple' ? 20 : 8 },
-              ]}
-            >
+              ]}>
               {this.renderRatingComponents()}
             </View>
             <View style={styles.buttonWatchlistWrapper}>
               <TouchableOpacity
                 onPress={this.onPressWantToWatch}
-                style={styles.buttonWatchlist}
-              >
+                style={styles.buttonWatchlist}>
                 {loadingWtW ? (
                   <ActivityIndicator />
                 ) : (

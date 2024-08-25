@@ -1,15 +1,15 @@
 import { Image, ImageContentFit } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { PureComponent } from 'react';
 import { Animated, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
-import { commonStyles } from 'kitsu/common/styles';
+import { commonStyles } from '@/common/styles';
 
 import { styles } from './styles';
 
 type ProgressiveImageProps = {
   backgroundStyle?: object;
-  children?: object;
+  children?: React.ReactNode;
   duration?: number;
   style?: any;
   resizeMode?: ImageContentFit;

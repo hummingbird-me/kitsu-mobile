@@ -1,8 +1,8 @@
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { LinearGradient } from 'expo-linear-gradient';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
 import { StyledText } from 'kitsu/components/StyledText';
@@ -20,7 +20,7 @@ const paddingOptions = {
   thumbnail: 10,
 };
 
-interface TextViewProps {
+type TextViewProps = {
   variant?:
     | 'landscape'
     | 'portrait'
@@ -35,7 +35,7 @@ interface TextViewProps {
   noMask?: boolean;
   boldTitle?: boolean;
   centerTitle?: boolean;
-}
+};
 
 const TextView = ({
   variant,
@@ -58,8 +58,7 @@ const TextView = ({
           />
         )}
         <View
-          style={[styles.anchorBottom, { padding: paddingOptions[variant] }]}
-        >
+          style={[styles.anchorBottom, { padding: paddingOptions[variant] }]}>
           {!isEmpty(subtitle) && (
             <StyledText color="lightGrey" size={subtitleSize} numberOfLines={1}>
               {subtitle}
@@ -73,8 +72,7 @@ const TextView = ({
               numberOfLines={2}
               lineHeight={titleSize}
               textStyle={centerTitle ? { textAlign: 'center' } : null}
-              ellipsizeMode="tail"
-            >
+              ellipsizeMode="tail">
               {title}
             </StyledText>
           )}
@@ -93,7 +91,7 @@ TextView.defaultProps = {
   centerTitle: false,
 };
 
-interface ImageCardProps {
+type ImageCardProps = {
   variant?:
     | 'landscape'
     | 'portrait'
@@ -113,7 +111,7 @@ interface ImageCardProps {
   style?: unknown;
   cardStyle?: unknown;
   onPress?(...args: unknown[]): unknown;
-}
+};
 
 export const ImageCard = ({
   variant,
@@ -140,8 +138,7 @@ export const ImageCard = ({
           styles.posterImageContainer,
           { width: cardDimensions.width },
           style,
-        ]}
-      >
+        ]}>
         {source ? (
           <ProgressiveImage
             duration={500}
