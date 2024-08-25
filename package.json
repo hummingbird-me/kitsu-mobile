@@ -33,6 +33,7 @@
     "expo-dev-client": "~3.3.12",
     "expo-gl": "~13.6.0",
     "expo-image": "~1.10.6",
+    "expo-localization": "~14.8.4",
     "expo-secure-store": "~12.8.1",
     "getstream": "^8.1.0",
     "gql.tada": "^1.8.5",
@@ -40,6 +41,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
+    "preferred-locale": "^2.0.2",
     "prop-types": "^15.8.1",
     "querystring": "^0.2.1",
     "react": "18.2.0",
@@ -75,7 +77,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
-    "urql": "^4.1.0"
+    "urql": "^4.1.0",
+    "expo-constants": "~15.4.6"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
