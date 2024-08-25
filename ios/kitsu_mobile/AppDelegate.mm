@@ -2,11 +2,6 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
-#import <ReactNativeNavigation/ReactNativeNavigation.h>
-
-#import <AuthenticationServices/AuthenticationServices.h>
-#import <SafariServices/SafariServices.h>
-#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 @implementation AppDelegate
 
@@ -18,11 +13,7 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
-  [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
-  
-  [ReactNativeNavigation bootstrapWithDelegate:self launchOptions:launchOptions];
-
-  return YES;
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
@@ -40,20 +31,8 @@
 }
 
 // Linking API
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-  if ([[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options]) {
-    return YES;
-  }
-  if ([super application:application openURL:url options:options]) {
-    return YES;
-  }
-
-  if ([RCTLinkingManager application:application openURL:url options:options]) {
-    return YES;
-  }
-
-  return NO;
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
 }
 
 // Universal Links
@@ -78,10 +57,6 @@ options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
   return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
-}
-
-- (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge {
-  return [ReactNativeNavigation extraModulesForBridge:bridge];
 }
 
 @end
