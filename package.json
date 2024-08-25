@@ -33,6 +33,7 @@
     "expo-dev-client": "~3.3.12",
     "expo-gl": "~13.6.0",
     "expo-image": "~1.10.6",
+    "expo-secure-store": "~12.8.1",
     "getstream": "^8.1.0",
     "gql.tada": "^1.8.5",
     "graphql": "^15.8.0",
@@ -58,6 +59,7 @@
     "react-native-navigation": "^7.40.1",
     "react-native-onesignal": "^4.5.0",
     "react-native-pager-view": "6.2.3",
+    "react-native-reanimated": "~3.6.2",
     "react-native-safe-area-context": "4.8.2",
     "react-native-scrollable-tab-view": "^1.0.0",
     "react-native-snap-carousel": "^3.9.1",
@@ -71,8 +73,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
-    "urql": "^4.1.0",
-    "react-native-reanimated": "~3.6.2"
+    "urql": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
