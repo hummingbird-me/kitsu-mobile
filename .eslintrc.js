@@ -46,6 +46,10 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['*.test.ts', '*.test.tsx'],
+      extends: ['plugin:testing-library/react'],
+    },
+    {
       files: ['.eslintrc.js', '*.config.{js,ts}'],
       parserOptions: {
         sourceType: 'script',
