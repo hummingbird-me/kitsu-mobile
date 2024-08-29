@@ -71,5 +71,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         ],
       },
     ],
+    [
+      'react-native-fbsdk-next',
+      {
+        appID: '325314560922421',
+        clientToken: 'dbae1dbf77c13f3d6755a2a8cb116106',
+        displayName: 'Kitsu',
+        scheme: 'fb325314560922421',
+        advertiserIDCollectionEnabled: false,
+        autoLogAppEventsEnabled: false,
+        isAutoInitEnabled: true,
+      },
+    ],
   ],
 });
