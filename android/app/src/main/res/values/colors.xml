@@ -1,7 +1,0 @@
-<resources>
-  <color name="iconBackground">#433342</color>
-  <color name="colorPrimary">#FD755C</color>
-  <color name="colorPrimaryDark">#ffffff</color>
-  <color name="activityBackground">#433342</color>
-  <color name="notification_icon_color">#FD755C</color>
-</resources>
