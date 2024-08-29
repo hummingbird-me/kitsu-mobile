@@ -1,4 +1,8 @@
+import 'ts-node/register';
+
 import { ConfigContext, ExpoConfig } from 'expo/config';
+
+import { kitsuOrange, kitsuPurple } from './src/constants/palette';
 
 const isDebug = process.env.EXPO_ENV === 'release' ? false : true;
 
@@ -8,8 +12,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '4.0',
   githubUrl: 'https://github.com/hummingbird-me/kitsu-mobile',
   orientation: 'portrait',
-  backgroundColor: '#433342',
-  primaryColor: '#FD755C',
+  backgroundColor: kitsuPurple[5],
+  primaryColor: kitsuOrange,
   icon: `./src/assets/icons/launcher/${isDebug ? 'debug' : 'release'}.png`,
   extra: {
     eas: {
@@ -39,15 +43,20 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     adaptiveIcon: {
       foregroundImage: './src/assets/icons/launcher/adaptive-foreground.png',
       monochromeImage: './src/assets/icons/launcher/adaptive-foreground.png',
-      backgroundColor: '#433342',
+      backgroundColor: kitsuPurple[5],
     },
   },
   androidStatusBar: {
+    backgroundColor: kitsuPurple[5],
+    barStyle: 'light-content',
+  },
+  androidNavigationBar: {
+    backgroundColor: kitsuPurple[5],
     barStyle: 'light-content',
   },
   notification: {
     icon: './src/assets/icons/launcher/adaptive-foreground.png',
-    color: '#FD755C',
+    color: kitsuOrange,
   },
   plugins: [
     'expo-secure-store',

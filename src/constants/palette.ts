@@ -1,6 +1,8 @@
 export const white = '#ffffff';
 export const black = '#000000';
 
+export const kitsuOrange = '#FD755C';
+
 export const red = {
   1: '#f6c8c5',
   2: '#eca39e',
