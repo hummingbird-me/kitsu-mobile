@@ -1,17 +1,17 @@
+import ActionSheet from '@expo/react-native-action-sheet';
 import React, { PureComponent } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import ActionSheet from 'react-native-actionsheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './styles';
 
 const OPTIONS = ['all', 'anime', 'manga', 'nevermind'];
 
-interface HeaderFilterButtonProps {
+type HeaderFilterButtonProps = {
   mode: unknown[];
   onModeChanged(...args: unknown[]): unknown;
   style?: any;
-}
+};
 
 export default class HeaderFilterButton extends PureComponent<HeaderFilterButtonProps> {
   static defaultProps = {

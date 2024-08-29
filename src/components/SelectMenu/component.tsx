@@ -1,10 +1,10 @@
+import ActionSheet from '@expo/react-native-action-sheet';
 import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
-import ActionSheet from 'react-native-actionsheet';
 
 import * as colors from 'kitsu/constants/colors';
 
-interface SelectMenuProps {
+type SelectMenuProps = {
   cancelButtonIndex?: number;
   activeOpacity?: number;
   children?: React.ReactElement;
@@ -13,7 +13,7 @@ interface SelectMenuProps {
   onOptionSelected(...args: unknown[]): unknown;
   style?: any;
   tintColor?: string;
-}
+};
 
 export class SelectMenu extends React.PureComponent<SelectMenuProps> {
   static defaultProps = {
@@ -68,8 +68,7 @@ export class SelectMenu extends React.PureComponent<SelectMenuProps> {
         activeOpacity={this.props.activeOpacity}
         disabled={this.props.disabled}
         onPress={this.showActionSheet}
-        style={this.props.style}
-      >
+        style={this.props.style}>
         {this.props.children}
         <ActionSheet
           cancelButtonIndex={this.getCancelButtonIndex()}
