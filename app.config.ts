@@ -2,7 +2,7 @@ import 'ts-node/register';
 
 import { ConfigContext, ExpoConfig } from 'expo/config';
 
-import { kitsuOrange, kitsuPurple } from './src/constants/palette';
+import { blue, kitsuOrange, kitsuPurple } from './src/constants/palette';
 
 const isDebug = process.env.EXPO_ENV === 'release' ? false : true;
 
@@ -41,9 +41,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     adaptiveIcon: {
-      foregroundImage: './src/assets/icons/launcher/adaptive-foreground.png',
-      monochromeImage: './src/assets/icons/launcher/adaptive-foreground.png',
-      backgroundColor: kitsuPurple[5],
+      foregroundImage: `./src/assets/icons/launcher/${
+        isDebug ? 'debug' : 'release'
+      }-adaptive-foreground.png`,
+      monochromeImage: `./src/assets/icons/launcher/${
+        isDebug ? 'debug' : 'release'
+      }-adaptive-foreground.png`,
+      backgroundColor: isDebug ? blue[1] : kitsuPurple[5],
     },
   },
   androidStatusBar: {
@@ -55,7 +59,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     barStyle: 'light-content',
   },
   notification: {
-    icon: './src/assets/icons/launcher/adaptive-foreground.png',
+    icon: `./src/assets/icons/launcher/${
+      isDebug ? 'debug' : 'release'
+    }-adaptive-foreground.png`,
     color: kitsuOrange,
   },
   plugins: [
