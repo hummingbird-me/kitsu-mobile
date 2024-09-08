@@ -73,6 +73,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         fonts: [
           'node_modules/@expo-google-fonts/asap/Asap_700Bold.ttf',
           'node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf',
+          'node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf',
           'node_modules/@expo-google-fonts/open-sans/OpenSans_700Bold.ttf',
         ],
       },
