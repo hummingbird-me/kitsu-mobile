@@ -87,7 +87,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
-    "urql": "^4.1.0"
+    "urql": "^4.1.0",
+    "expo-device": "~5.9.4"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
