@@ -35,6 +35,13 @@ export function SessionContextProvider({
     _clearSession();
   };
 
+  // Legacy global variable
+  globalSessionContext = {
+    session,
+    setSession,
+    clearSession,
+  };
+
   return (
     <SessionContext.Provider
       value={{
@@ -51,4 +58,39 @@ export const useSession = function () {
   const context = useContext(SessionContext);
   if (!context) throw new InvariantViolated('Session context missing');
   return context.session;
+};
+
+/**
+ * This global session variable allows legacy code to access the session without using hooks.
+ *
+ * @deprecated Use the `useSession` hook instead.
+ */
+export let globalSessionContext: SessionContextType;
+
+/**
+ * Get the current session, without using hooks. For new code, use hooks.
+ *
+ * @deprecated Use the `useSession` hook instead.
+ */
+export const legacy_getSession = function () {
+  return globalSessionContext.session;
+};
+
+/**
+ * Set the current session, without using hooks. For new code, use hooks.
+ * @param newSession The new session object
+ *
+ * @deprecated Use the `useSession` hook instead.
+ */
+export const legacy_setSession = function (newSession: Session) {
+  return globalSessionContext.setSession(newSession);
+};
+
+/**
+ * Clear the current session, without using hooks. For new code, use hooks.
+ *
+ * @deprecated Use the `useSession` hook instead.
+ */
+export const legacy_clearSession = function () {
+  return globalSessionContext.clearSession();
 };
