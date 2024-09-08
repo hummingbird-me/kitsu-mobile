@@ -5,6 +5,10 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     plugins: [
       [
+        'formatjs',
+        { idInterpolationPattern: '[sha512:contenthash:base64:6]', ast: true },
+      ],
+      [
         'babel-plugin-inline-import',
         {
           extensions: ['.glsl'],
