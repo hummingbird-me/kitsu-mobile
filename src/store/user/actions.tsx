@@ -4,8 +4,10 @@ import {
   LoginManager,
 } from 'react-native-fbsdk-next';
 
+import { legacy_getSession } from '@/contexts/SessionContext';
 import { Kitsu, setToken } from 'kitsu/config/api';
 import { kitsuConfig } from 'kitsu/config/env';
+import InvariantViolated from 'kitsu/errors/InvariantViolated';
 import { fetchAlgoliaKeys } from 'kitsu/store/app/actions';
 import { loginUser } from 'kitsu/store/auth/actions';
 import * as types from 'kitsu/store/types';
@@ -13,11 +15,6 @@ import * as types from 'kitsu/store/types';
 export const fetchCurrentUser = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_CURRENT_USER });
   try {
-    const { tokens } = getState().auth;
-    if (tokens && tokens.access_token) {
-      setToken(tokens.access_token);
-    }
-
     const user = await Kitsu.findAll('users', {
       fields: {
         users:
@@ -52,10 +49,13 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
 
 export const getAccountConflicts = () => async (dispatch, getState) => {
   dispatch({ type: types.GET_ACCOUNT_CONFLICTS });
-  const token = getState().auth.tokens.access_token;
+  const session = legacy_getSession();
   try {
+    if (!session.loggedIn) {
+      throw new InvariantViolated('Not logged in for conflicts');
+    }
     const headers = new Headers();
-    headers.append('Authorization', `Bearer ${token}`);
+    headers.append('Authorization', `Bearer ${session.accessToken}`);
     const payload = await fetch(
       `${kitsuConfig.baseUrl}/edge/users/_conflicts`,
       {
@@ -75,10 +75,13 @@ export const getAccountConflicts = () => async (dispatch, getState) => {
 export const resolveAccountConflicts =
   (account) => async (dispatch, getState) => {
     dispatch({ type: types.RESOLVE_ACCOUNT_CONFLICTS });
-    const token = getState().auth.tokens.access_token;
+    const session = legacy_getSession();
     try {
+      if (!session.loggedIn) {
+        throw new InvariantViolated('Not logged in for conflict resolution');
+      }
       const headers = new Headers();
-      headers.append('Authorization', `Bearer ${token}`);
+      headers.append('Authorization', `Bearer ${session.accessToken}`);
       headers.append('Content-Type', 'application/json');
       const body = JSON.stringify({
         chosen: account,
@@ -143,9 +146,7 @@ export const connectFBUser = () => async (dispatch, getState) => {
     },
     async (error, fbdata) => {
       if (!error) {
-        const token = getState().auth.tokens.access_token;
         const currentUser = getState().user.currentUser;
-        setToken(token);
         try {
           await Kitsu.update('users', {
             id: currentUser.id,
@@ -173,9 +174,7 @@ export const connectFBUser = () => async (dispatch, getState) => {
 
 export const disconnectFBUser = () => async (dispatch, getState) => {
   dispatch({ type: types.DISCONNECT_FBUSER });
-  const token = getState().auth.tokens.access_token;
   const currentUser = getState().user.currentUser;
-  setToken(token);
   try {
     await Kitsu.update('users', { id: currentUser.id, facebookId: null });
     dispatch({ type: types.DISCONNECT_FBUSER_SUCCESS });
@@ -191,10 +190,7 @@ export const disconnectFBUser = () => async (dispatch, getState) => {
 
 export const updateGeneralSettings = (data) => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_GENERAL_SETTINGS });
-  const { user, auth } = getState();
-  const { id } = user.currentUser;
-  const token = auth.tokens.access_token;
-  setToken(token);
+  const { id } = getState().user.currentUser;
   try {
     // Update everything we have.
     const payload = data;
@@ -211,12 +207,8 @@ export const updateGeneralSettings = (data) => async (dispatch, getState) => {
 
 export const updateLibrarySettings = (data) => async (dispatch, getState) => {
   dispatch({ type: types.UPDATE_LIBRARY_SETTINGS });
-  const { user, auth } = getState();
+  const { user } = getState();
   const { id } = user.currentUser;
-  const token = auth.tokens && auth.tokens.access_token;
-  if (token) {
-    setToken(token);
-  }
   try {
     await Kitsu.update('users', { id, ...data });
     dispatch({ type: types.UPDATE_LIBRARY_SETTINGS_SUCCESS, payload: data });
