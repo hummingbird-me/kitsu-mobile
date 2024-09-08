@@ -1,4 +1,3 @@
-import OAuth2 from 'client-oauth2';
 import JsonApi from 'devour-client';
 
 import { kitsuConfig } from './env';
@@ -7,12 +6,6 @@ import {
   kitsuRequestMiddleware,
   titleMiddleware,
 } from './middlewares';
-
-export const auth = new OAuth2({
-  clientId: kitsuConfig.authConfig.CLIENT_ID,
-  clientSecret: kitsuConfig.authConfig.CLIENT_SECRET,
-  accessTokenUri: `${kitsuConfig.baseUrl}/oauth/token`,
-});
 
 export const Kitsu = new JsonApi({
   apiUrl: `${kitsuConfig.baseUrl}/edge`,
