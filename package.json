@@ -21,9 +21,10 @@
     "@react-native-community/hooks": "^3.0.0",
     "@react-native-community/netinfo": "11.1.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
-    "@react-navigation/bottom-tabs": "^6.6.1",
-    "@react-navigation/native": "^6.1.18",
-    "@react-navigation/stack": "^6.4.1",
+    "@react-navigation/bottom-tabs": "^7.0.0-rc.31",
+    "@react-navigation/native": "^7.0.0-rc.19",
+    "@react-navigation/native-stack": "^7.0.0-rc.26",
+    "@react-navigation/stack": "^7.0.0-rc.25",
     "@sentry/react-native": "~5.30.0",
     "@urql/exchange-auth": "^2.2.0",
     "@urql/exchange-graphcache": "^7.1.2",
@@ -40,6 +41,7 @@
     "expo-apple-authentication": "~6.3.0",
     "expo-constants": "~15.4.6",
     "expo-dev-client": "~3.3.12",
+    "expo-device": "~5.9.4",
     "expo-font": "~11.10.3",
     "expo-image": "~1.10.6",
     "expo-linear-gradient": "~12.7.2",
@@ -87,8 +89,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
-    "urql": "^4.1.0",
-    "expo-device": "~5.9.4"
+    "urql": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
