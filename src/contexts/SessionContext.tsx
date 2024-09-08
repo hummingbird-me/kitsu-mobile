@@ -1,6 +1,8 @@
+import { memoize } from 'lodash-es';
 import React, { useContext, useState } from 'react';
 
 import InvariantViolated from '@/errors/InvariantViolated';
+import loginWithRefreshToken from '@/utils/login/withRefreshToken';
 import {
   Session,
   clear as _clearSession,
@@ -54,11 +56,40 @@ export function SessionContextProvider({
   );
 }
 
+/**
+ * Get the current session from the context.
+ *
+ * @returns The current session object
+ */
 export const useSession = function () {
   const context = useContext(SessionContext);
   if (!context) throw new InvariantViolated('Session context missing');
   return context.session;
 };
+
+/**
+ * Refresh the session by exchanging the refreshToken for a new accessToken.
+ *
+ * Note that this function is memoized to prevent multiple calls using the same refreshToken, with
+ * repeated calls returning the same promise.
+ *
+ * @param session The current session context object
+ */
+export const refreshSession = memoize(
+  async function ({
+    session,
+    setSession,
+  }: SessionContextType): Promise<Session> {
+    if (!session.loggedIn) return session;
+
+    const newSession = await loginWithRefreshToken(session.refreshToken);
+
+    setSession(newSession);
+
+    return newSession;
+  },
+  ({ session }) => (session.loggedIn ? session.refreshToken : null)
+);
 
 /**
  * This global session variable allows legacy code to access the session without using hooks.
@@ -93,4 +124,13 @@ export const legacy_setSession = function (newSession: Session) {
  */
 export const legacy_clearSession = function () {
   return globalSessionContext.clearSession();
+};
+
+/**
+ * Refresh the current session, without using hooks. For new code, use hooks.
+ *
+ * @deprecated Get the session object from the Context and call `refreshSession` directly.
+ */
+export const legacy_refreshSession = function () {
+  return refreshSession(globalSessionContext);
 };
