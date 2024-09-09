@@ -1,13 +1,14 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import Text, { TextWebLink } from '@/components/content/Text';
 import TextSeparator from '@/components/content/TextSeparator';
 import Button, { SolidButton } from '@/components/controls/Button';
 import { OpenSans } from '@/constants/fonts';
-import { white } from '@/constants/palette';
+import { kitsuPurple, white } from '@/constants/palette';
 import { useNavigation } from '@/navigation/Root/Landing/hooks';
 
 import ScrollingPosters from './ScrollingPosters';
@@ -74,6 +75,21 @@ export default function RegistrationSlide() {
               'Intro -> Registration -> Sign up with Facebook button text',
           })}
         />
+        <Text style={styles.legalese}>
+          <FormattedMessage
+            defaultMessage="By continuing, you agree to Kitsu's <terms>Terms of Service</terms> and acknowledge you've read our <privacy>Privacy Policy</privacy>."
+            values={{
+              terms: (text) => (
+                <TextWebLink url="https://kitsu.app/terms">{text}</TextWebLink>
+              ),
+              privacy: (text) => (
+                <TextWebLink url="https://kitsu.app/privacy">
+                  {text}
+                </TextWebLink>
+              ),
+            }}
+          />
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -102,4 +118,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: { width: '100%', height: 54, padding: 0 },
+  legalese: {
+    color: kitsuPurple[2],
+    textAlign: 'center',
+  },
 });
