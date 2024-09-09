@@ -8,6 +8,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'react-native'],
   extends: [
     'eslint:recommended',
+    'plugin:import/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
@@ -21,6 +22,9 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    'import/resolver': {
+      typescript: true,
+    },
   },
   rules: {
     '@typescript-eslint/ban-ts-comment': [
@@ -33,10 +37,14 @@ module.exports = {
     '@typescript-eslint/consistent-type-imports': [
       'error',
       {
-        prefer: 'no-type-imports',
+        prefer: 'type-imports',
+        fixStyle: 'inline-type-imports',
       },
     ],
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+    'import/no-absolute-path': 'error',
+    'import/no-cycle': ['error', { ignoreExternal: true }],
+    'import/consistent-type-specifier-style': ['error', 'prefer-inline'],
     'react/prop-types': 'off',
     'react-native/no-unused-styles': 2,
     'react-native/no-inline-styles': 1,
