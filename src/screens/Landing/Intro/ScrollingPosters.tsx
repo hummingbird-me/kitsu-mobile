@@ -142,6 +142,7 @@ export default function ScrollingPosters({ style }: { style?: ViewStyle }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    overflow: 'hidden',
   },
   rowContainer: {
     height: POSTER_HEIGHT + POSTER_GAP,
