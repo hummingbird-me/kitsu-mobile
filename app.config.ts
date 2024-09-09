@@ -12,7 +12,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '4.0',
   githubUrl: 'https://github.com/hummingbird-me/kitsu-mobile',
   orientation: 'portrait',
-  backgroundColor: kitsuPurple[5],
+  backgroundColor: kitsuPurple[6],
   primaryColor: kitsuOrange,
   icon: `./src/assets/icons/launcher/${isDebug ? 'debug' : 'release'}.png`,
   extra: {
@@ -49,6 +49,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       }-adaptive-foreground.png`,
       backgroundColor: isDebug ? blue[1] : kitsuPurple[5],
     },
+  },
+  splash: {
+    image: undefined,
+    backgroundColor: kitsuPurple[5],
   },
   androidStatusBar: {
     backgroundColor: kitsuPurple[5],
