@@ -13,7 +13,11 @@ import Animated, {
 import Spinner from '@/components/Feedback/Spinner';
 import * as palette from '@/constants/palette';
 
-import { ButtonChildren, ButtonColor, ButtonProps } from './Button';
+import {
+  type ButtonChildren,
+  type ButtonColor,
+  type ButtonProps,
+} from './Button';
 
 const AnimatedFontAwesome = Animated.createAnimatedComponent(FontAwesome);
 
@@ -25,17 +29,17 @@ const SPRING = {
 
 type ColorScheme = { normal: string; active: string };
 
-type SolidButtonProps = Omit<ButtonProps, 'color' | 'kind'> & {
+type OutlineButtonProps = Omit<ButtonProps, 'color' | 'kind'> & {
   color: ButtonColor | ColorScheme;
 } & ButtonChildren;
 
-export default function SolidButton({
+export default function OutlineButton({
   color,
   style,
   loading,
   disabled,
   ...args
-}: SolidButtonProps) {
+}: OutlineButtonProps) {
   const scheme = typeof color === 'string' ? colors[color] : color;
   const { onLayout, ...layout } = useLayout();
 
@@ -72,11 +76,21 @@ export default function SolidButton({
       {args.faIcon ? (
         <AnimatedFontAwesome
           name={args.faIcon}
-          style={[styles.buttonIcon, args.faIconStyle, { color: textColor }]}
+          style={[
+            styles.buttonIcon,
+            args.faIconStyle,
+            { color: scheme.normal },
+            { color: textColor },
+          ]}
         />
       ) : null}
       <Animated.Text
-        style={[styles.buttonText, args.textStyle, { color: textColor }]}>
+        style={[
+          styles.buttonText,
+          args.textStyle,
+          { color: scheme.normal },
+          { color: textColor },
+        ]}>
         {args.text}
       </Animated.Text>
     </>
@@ -161,8 +175,8 @@ const colors: { [key in ButtonColor]: ColorScheme } = {
     active: palette.purple[5],
   },
   'kitsu-purple': {
-    normal: palette.kitsuPurple[3],
-    active: palette.kitsuPurple[4],
+    normal: palette.kitsuPurple[2],
+    active: palette.kitsuPurple[3],
   },
   grey: {
     normal: palette.grey[3],

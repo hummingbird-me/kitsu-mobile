@@ -13,7 +13,11 @@ import Animated, {
 import Spinner from '@/components/Feedback/Spinner';
 import * as palette from '@/constants/palette';
 
-import { ButtonChildren, ButtonColor, ButtonProps } from './Button';
+import {
+  type ButtonChildren,
+  type ButtonColor,
+  type ButtonProps,
+} from './Button';
 
 const AnimatedFontAwesome = Animated.createAnimatedComponent(FontAwesome);
 
@@ -64,11 +68,21 @@ export default function SolidButton({
         <AnimatedFontAwesome
           name={args.faIcon}
           color={textColor}
-          style={[styles.buttonIcon, args.faIconStyle]}
+          style={[
+            styles.buttonIcon,
+            args.faIconStyle,
+            { color: scheme.text },
+            { color: textColor },
+          ]}
         />
       ) : null}
       <Animated.Text
-        style={[styles.buttonText, args.textStyle, { color: textColor }]}>
+        style={[
+          styles.buttonText,
+          args.textStyle,
+          { color: scheme.text },
+          { color: textColor },
+        ]}>
         {args.text}
       </Animated.Text>
     </>

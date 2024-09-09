@@ -1,7 +1,7 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import React, { ComponentProps } from 'react';
-import { TextStyle } from 'react-native';
-import { BaseButtonProps } from 'react-native-gesture-handler';
+import type FontAwesome from '@expo/vector-icons/FontAwesome';
+import React, { type ComponentProps } from 'react';
+import { type TextStyle } from 'react-native';
+import { type BaseButtonProps } from 'react-native-gesture-handler';
 
 import OutlineButton from './OutlineButton';
 import SolidButton from './SolidButton';
@@ -29,7 +29,7 @@ export type ButtonChildren =
       children: React.ReactNode;
     }
   | {
-      bare: false | undefined;
+      bare?: false;
       /** The text for the button */
       text: string;
       /** The text styles for the button */
