@@ -1,21 +1,10 @@
 import * as Sentry from '@sentry/react-native';
+import { registerRootComponent } from 'expo';
 import { LogBox } from 'react-native';
-import Config from 'react-native-config';
-import { Settings as Facebook } from 'react-native-fbsdk-next';
-import { Navigation } from 'react-native-navigation';
-import OneSignal from 'react-native-onesignal';
 
-OneSignal.setAppId('01f6e47a-6809-4118-a796-949952e9c209');
-Facebook.setAppID(Config.FACEBOOK_APP_ID);
-Facebook.initializeSDK();
+import App from '@/App';
 
 LogBox.ignoreLogs(['Could not find Fiber with id']);
-
-window.btoa = require('base-64').encode;
-window.atob = require('base-64').decode;
-
-// We need btoa/atob for the OAuth2 library
-let { registerScreens, defaultOptions, Layouts } = require('kitsu/navigation');
 
 // Only enable sentry on production builds
 if (!__DEV__) {
@@ -24,9 +13,4 @@ if (!__DEV__) {
   });
 }
 
-registerScreens();
-
-Navigation.events().registerAppLaunchedListener(() => {
-  Navigation.setDefaultOptions(defaultOptions);
-  Navigation.setRoot(Layouts.INITIAL);
-});
+registerRootComponent(App);
