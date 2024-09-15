@@ -1,6 +1,7 @@
 import { LocaleStatus, defineLocale } from '../../utils/locale';
 
 export default defineLocale({
+  code: 'en-US',
   name: 'English (United States)',
   status: LocaleStatus.COMPLETE,
   bundles: {

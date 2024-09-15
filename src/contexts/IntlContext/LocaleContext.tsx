@@ -1,18 +1,26 @@
 import React from 'react';
 
 import InvariantViolated from '@/errors/InvariantViolated';
+import locales from '@/locales';
+import { type Locale } from '@/locales/utils/locale';
 
-export const LocaleContext = React.createContext<string | null>(null);
+export const LocaleContext = React.createContext<{
+  key: string;
+  locale: Locale;
+} | null>(null);
 
 export default function LocaleProvider({
   children,
-  locale,
+  locale: key,
 }: {
   children: React.ReactNode;
   locale: string;
 }) {
+  const locale = locales[key];
   return (
-    <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>
+    <LocaleContext.Provider value={{ key, locale }}>
+      {children}
+    </LocaleContext.Provider>
   );
 }
 

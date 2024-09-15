@@ -35,6 +35,8 @@ export type LocaleBundles = {
 export type Locale = {
   /** The name of the locale */
   name: string;
+  /** The IETF locale code */
+  code: string;
   /** Specifies how complete the locale is */
   status: LocaleStatus;
   /** Load the locale data */
@@ -45,10 +47,12 @@ export type Locale = {
 
 export function defineLocale({
   name,
+  code,
   status,
   bundles: bundleLoaders,
 }: {
   name: string;
+  code: string;
   status: LocaleStatus;
   bundles: {
     [key in keyof LocaleBundles]: () => Promise<{
@@ -58,9 +62,16 @@ export function defineLocale({
 }): Locale {
   return {
     name,
+    code,
     status,
-    bundles: mapValues(bundleLoaders, async (loader) => {
-      return (await loader()).default;
+    bundles: mapValues(bundleLoaders, (loader, key) => {
+      return Object.defineProperty(
+        async () => (await loader()).default,
+        'name',
+        {
+          value: `loadLocaleBundle(${code}/${key})`,
+        }
+      );
     }) as unknown as Locale['bundles'],
   };
 }

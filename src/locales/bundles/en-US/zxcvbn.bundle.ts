@@ -1,1 +1,1 @@
-export { default as zxcvbn } from '@zxcvbn-ts/language-en';
+export { default } from '@zxcvbn-ts/language-en';

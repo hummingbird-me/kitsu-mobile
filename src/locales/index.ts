@@ -10,7 +10,6 @@ const translations: Record<string, Locale> = {};
 
 for (const key of translationFiles.keys()) {
   const locale = key.replace(/^\.\/([a-zA-Z-]+)\/header\.ts$/, '$1');
-  console.log(locale);
   translations[locale] = translationFiles(key).default;
 }
 
