@@ -1,4 +1,4 @@
-import { Locale as DateFnsLocale } from 'date-fns';
+import { type Locale as DateFnsLocale } from 'date-fns';
 import React from 'react';
 
 import InvariantViolated from '@/errors/InvariantViolated';

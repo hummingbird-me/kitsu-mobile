@@ -1,13 +1,12 @@
-import { OnErrorFn } from '@formatjs/intl';
-import Constants from 'expo-constants';
+import { type OnErrorFn } from '@formatjs/intl';
 import React from 'react';
 import {
-  MessageFormatElement,
   IntlProvider as ReactIntlProvider,
+  type MessageFormatElement,
 } from 'react-intl';
 
 // Swallow missing translation errors in development mode
-const onError: OnErrorFn | undefined = Constants.debugMode
+const onError: OnErrorFn | undefined = __DEV__
   ? (err) => {
       if (err.code === 'MISSING_TRANSLATION') return;
       throw err;

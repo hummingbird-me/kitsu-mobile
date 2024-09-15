@@ -4,7 +4,7 @@ import React from 'react';
 
 import BaseError from '@/errors/base';
 import usePromise from '@/hooks/usePromise';
-import translations from '@/locales';
+import locales from '@/locales';
 
 import DateFnsLocaleProvider from './DateFnsLocaleContext';
 import IntlProvider from './IntlProvider';
@@ -16,7 +16,7 @@ export class IntlLoadError extends BaseError {
 
 function useResolvedLocale() {
   const userLocales = useLocales().map((locale) => locale.languageTag);
-  const appLocales = Object.keys(translations);
+  const appLocales = Object.keys(locales);
   const locale = availableLocales(userLocales, appLocales)[0] ?? 'en-US';
 
   return locale;
@@ -36,7 +36,7 @@ export default function IntlContextProvider({
     state,
     error,
     value: data,
-  } = usePromise(translations[locale].load, [locale]);
+  } = usePromise(locales[locale].bundles.main, [locale]);
 
   if (state === 'pending') {
     return null;

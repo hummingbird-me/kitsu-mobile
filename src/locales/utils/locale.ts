@@ -1,5 +1,6 @@
-import { Locale as DateFnsLocale } from 'date-fns';
-import { MessageFormatElement } from 'react-intl';
+import { type Locale as DateFnsLocale } from 'date-fns';
+import { mapValues } from 'lodash-es';
+import { type MessageFormatElement } from 'react-intl';
 
 type KitsuLocale = Record<string, MessageFormatElement[]>;
 
@@ -12,36 +13,42 @@ export enum LocaleStatus {
   'INCOMPLETE',
 }
 
+export type LocaleBundles = {
+  main: {
+    kitsu: KitsuLocale;
+    dateFns: DateFnsLocale;
+  };
+};
+
 export type Locale = {
   /** The name of the locale */
   name: string;
   /** Specifies how complete the locale is */
   status: LocaleStatus;
   /** Load the locale data */
-  load: () => Promise<{
-    kitsu: KitsuLocale;
-    dateFns: DateFnsLocale;
-  }>;
+  bundles: {
+    [key in keyof LocaleBundles]: () => Promise<LocaleBundles[key]>;
+  };
 };
 
 export function defineLocale({
-  kitsu: loadKitsuLocale,
-  dateFns: loadDateFnsLocale,
-  ...other
+  name,
+  status,
+  bundles: bundleLoaders,
 }: {
   name: string;
   status: LocaleStatus;
-  kitsu: () => Promise<{ default: unknown }>;
-  dateFns: () => Promise<{ default: DateFnsLocale }>;
+  bundles: {
+    [key in keyof LocaleBundles]: () => Promise<{
+      default: LocaleBundles[key];
+    }>;
+  };
 }): Locale {
   return {
-    ...other,
-    load: async () => {
-      const [{ default: kitsu }, { default: dateFns }] = await Promise.all([
-        loadKitsuLocale(),
-        loadDateFnsLocale(),
-      ]);
-      return { kitsu: kitsu as unknown as KitsuLocale, dateFns };
-    },
+    name,
+    status,
+    bundles: mapValues(bundleLoaders, async (loader) => {
+      return (await loader()).default;
+    }) as unknown as Locale['bundles'],
   };
 }
