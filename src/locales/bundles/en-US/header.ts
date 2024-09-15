@@ -5,5 +5,6 @@ export default defineLocale({
   status: LocaleStatus.COMPLETE,
   bundles: {
     main: () => import('./main.bundle'),
+    zxcvbn: () => import('./zxcvbn.bundle'),
   },
 });

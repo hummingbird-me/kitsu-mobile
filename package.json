@@ -29,6 +29,9 @@
     "@urql/exchange-auth": "^2.2.0",
     "@urql/exchange-graphcache": "^7.1.2",
     "@urql/storage-rn": "^1.1.0",
+    "@zxcvbn-ts/core": "^3.0.4",
+    "@zxcvbn-ts/language-common": "^3.0.4",
+    "@zxcvbn-ts/language-en": "^3.0.2",
     "algoliasearch": "^3.28.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "base-64": "^1.0.0",
@@ -49,6 +52,7 @@
     "expo-secure-store": "~12.8.1",
     "expo-splash-screen": "~0.26.5",
     "expo-system-ui": "~2.9.4",
+    "expo-web-browser": "~12.8.2",
     "getstream": "^8.1.0",
     "gql.tada": "^1.8.5",
     "graphql": "^15.8.0",
@@ -90,7 +94,7 @@
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
     "urql": "^4.1.0",
-    "expo-web-browser": "~12.8.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

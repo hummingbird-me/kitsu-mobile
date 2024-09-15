@@ -1,8 +1,19 @@
+import {
+  type OptionsDictionary,
+  type OptionsGraph,
+  type TranslationKeys,
+} from '@zxcvbn-ts/core';
 import { type Locale as DateFnsLocale } from 'date-fns';
 import { mapValues } from 'lodash-es';
 import { type MessageFormatElement } from 'react-intl';
 
 type KitsuLocale = Record<string, MessageFormatElement[]>;
+
+type ZxcvbnLocale = {
+  translations: TranslationKeys;
+  dictionary: OptionsDictionary;
+  graph: OptionsGraph;
+};
 
 export enum LocaleStatus {
   /** The locale has at least 99% string coverage */
@@ -18,6 +29,7 @@ export type LocaleBundles = {
     kitsu: KitsuLocale;
     dateFns: DateFnsLocale;
   };
+  zxcvbn: ZxcvbnLocale;
 };
 
 export type Locale = {
