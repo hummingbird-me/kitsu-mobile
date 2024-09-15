@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native-stack';
 import React from 'react';
 
-import Placeholder from '@/components/Placeholder';
+import { usePlaceholder } from '@/components/Placeholder';
 import { useSession } from '@/contexts/SessionContext';
 
 import Landing, { type LandingNavigatorParamList } from './Landing';
@@ -33,7 +33,7 @@ export default function RootNavigator() {
       <Stack.Screen name="Landing" component={Landing} />
       <Stack.Screen
         name="ProfileDrawer"
-        component={() => <Placeholder text="Profile Drawer" />}
+        component={usePlaceholder('Profile Drawer')}
       />
     </Stack.Navigator>
   );
