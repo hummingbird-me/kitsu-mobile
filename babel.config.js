@@ -8,12 +8,6 @@ module.exports = function (api) {
         'formatjs',
         { idInterpolationPattern: '[sha512:contenthash:base64:6]', ast: true },
       ],
-      [
-        'babel-plugin-inline-import',
-        {
-          extensions: ['.glsl'],
-        },
-      ],
       'react-native-reanimated/plugin',
     ],
   };
