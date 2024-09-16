@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     height: 40,
     flex: 1,
     marginLeft: 8,
-    backgroundColor: colors.white,
+    backgroundColor: colors.transparent,
     fontSize: 14,
     fontFamily: 'OpenSans',
     color: colors.softBlack,

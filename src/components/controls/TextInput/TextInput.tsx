@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
+import { Controller, type ControllerProps } from 'react-hook-form';
 import {
   Keyboard,
   TextInput as RNTextInput,
@@ -15,15 +16,15 @@ export type TextInputProps = {
   containerStyle?: ViewStyle;
 } & RNTextInputProps;
 
-export default function TextInput({
-  style,
-  containerStyle,
-  ...otherProps
-}: TextInputProps) {
+const TextInput = forwardRef<RNTextInput, TextInputProps>(function TextInput(
+  { style, containerStyle, ...otherProps },
+  ref
+) {
   return (
     <View style={[styles.container, containerStyle]}>
       <RNTextInput
         {...otherProps}
+        ref={ref}
         style={[styles.input, style]}
         placeholderTextColor={colors.grey}
         underlineColorAndroid={colors.transparent}
@@ -31,5 +32,19 @@ export default function TextInput({
         keyboardAppearance={'dark'}
       />
     </View>
+  );
+});
+export default TextInput;
+
+export function ControlledTextInput(
+  props: TextInputProps & Omit<ControllerProps, 'render'>
+) {
+  return (
+    <Controller
+      {...props}
+      render={({ field }) => (
+        <TextInput {...field} {...props} onChangeText={field.onChange} />
+      )}
+    />
   );
 }
