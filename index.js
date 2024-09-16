@@ -1,10 +1,13 @@
 import * as Sentry from '@sentry/react-native';
 import { registerRootComponent } from 'expo';
+import { warmUpAsync } from 'expo-web-browser';
 import { LogBox } from 'react-native';
 
 import App from '@/App';
 
 LogBox.ignoreLogs(['Could not find Fiber with id']);
+// Warm up the browser on Android
+warmUpAsync();
 
 // Only enable sentry on production builds
 if (!__DEV__) {
