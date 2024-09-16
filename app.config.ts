@@ -1,6 +1,6 @@
 import 'ts-node/register';
 
-import { ConfigContext, ExpoConfig } from 'expo/config';
+import { type ConfigContext, type ExpoConfig } from 'expo/config';
 
 import { blue, kitsuOrange, kitsuPurple } from './src/constants/palette';
 
@@ -23,7 +23,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: `app.kitsu.mobile${isDebug ? '.debug' : ''}`,
     usesAppleSignIn: true,
-    associatedDomains: ['applinks:kitsu.io'],
+    associatedDomains: ['applinks:kitsu.app'],
   },
   android: {
     package: `app.kitsu.mobile${isDebug ? '.debug' : ''}`,
