@@ -5,9 +5,16 @@ import { LogBox } from 'react-native';
 
 import App from '@/App';
 
-LogBox.ignoreLogs(['Could not find Fiber with id']);
 // Warm up the browser on Android
 warmUpAsync();
+
+if (__DEV__) {
+  // Ignore common development-only warnings
+  LogBox.ignoreLogs([
+    'Could not find Fiber with id',
+    'AppleAuthenticationButton',
+  ]);
+}
 
 // Only enable sentry on production builds
 if (!__DEV__) {
