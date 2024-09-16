@@ -7,6 +7,9 @@ const config = getDefaultConfig(__dirname);
 
 config.transformer = {
   ...config.transformer,
+  minifierConfig: {
+    drop_console: true,
+  },
   babelTransformerPath: require.resolve('react-native-svg-transformer/expo'),
 };
 config.resolver = {
