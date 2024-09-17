@@ -1,12 +1,19 @@
 import * as Sentry from '@sentry/react-native';
 import { registerRootComponent } from 'expo';
+import { setBackgroundColorAsync, setPositionAsync } from 'expo-navigation-bar';
+import { setStatusBarTranslucent } from 'expo-status-bar';
 import { warmUpAsync } from 'expo-web-browser';
-import { LogBox } from 'react-native';
+import { LogBox, Platform } from 'react-native';
 
 import App from '@/App';
 
 // Warm up the browser on Android
-warmUpAsync();
+if (Platform.OS === 'android') {
+  warmUpAsync();
+  setPositionAsync('absolute');
+  setBackgroundColorAsync('#00000000');
+  setStatusBarTranslucent(true);
+}
 
 if (__DEV__) {
   // Ignore common development-only warnings
