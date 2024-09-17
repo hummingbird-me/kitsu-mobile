@@ -8,7 +8,7 @@ import { slidelogo } from 'kitsu/assets/img/intro/';
 import AnimatedWrapper from './AnimatedWrapper';
 import styles from './styles';
 
-const AuthWrapper = ({ children }) => (
+const AuthWrapper = ({ children }: { children: React.ReactNode }) => (
   <KeyboardAwareScrollView
     enableOnAndroid={false}
     extraHeight={80}

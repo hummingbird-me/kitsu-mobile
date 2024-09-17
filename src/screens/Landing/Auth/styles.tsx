@@ -1,7 +1,7 @@
 import { Platform, StyleSheet } from 'react-native';
 
-import * as colors from 'kitsu/constants/colors';
-import { isX, safeAreaInsetX } from 'kitsu/utils/isX';
+import * as colors from '@/constants/colors';
+import { isX, safeAreaInsetX } from '@/utils/isX';
 
 export default StyleSheet.create({
   container: {

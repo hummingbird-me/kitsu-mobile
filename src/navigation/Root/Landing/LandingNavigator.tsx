@@ -1,25 +1,22 @@
-import {
-  useNavigation as _useNavigation,
-  useRoute as _useRoute,
-  type CompositeScreenProps,
-} from '@react-navigation/native';
+import { type CompositeScreenProps } from '@react-navigation/native';
 import {
   TransitionPresets,
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import React from 'react';
-import { Text } from 'react-native';
 
 import { kitsuPurple } from '@/constants/palette';
+import AuthScreen, {
+  type AuthScreenProps,
+} from '@/screens/Landing/Auth/AuthScreen';
 import Intro from '@/screens/Landing/Intro';
 
 import { type RootNavigatorScreenProps } from '../../Root';
 
 export type LandingNavigatorParamList = {
   Intro: undefined;
-  Auth: { tab: 'sign-in' | 'sign-up' };
-  Legal: { tab: 'terms-of-service' | 'privacy-policy' };
+  Auth: AuthScreenProps;
 };
 
 export type LandingNavigatorScreenProps<
@@ -41,8 +38,7 @@ export default function LandingNavigator() {
         ...TransitionPresets.FadeFromBottomAndroid,
       }}>
       <Stack.Screen name="Intro" component={Intro} />
-      <Stack.Screen name="Auth" component={() => <Text>Hewwo</Text>} />
-      <Stack.Screen name="Legal" component={() => <Text>Terms</Text>} />
+      <Stack.Screen name="Auth" component={AuthScreen} />
     </Stack.Navigator>
   );
 }

@@ -7,6 +7,7 @@ export default class AnimatedWrapped extends PureComponent {
     ind: 0,
     scale: 1,
   };
+  image?: Image | null;
 
   componentDidMount() {
     this.startAnimation();
@@ -55,8 +56,7 @@ export default class AnimatedWrapped extends PureComponent {
           height: 600,
           overflow: 'hidden',
           backgroundColor: '#372836',
-        }}
-      >
+        }}>
         <Image
           ref={(el) => (this.image = el)}
           style={{
