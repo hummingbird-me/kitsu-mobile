@@ -1,9 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { Pressable, type GestureResponderEvent } from 'react-native';
 import Animated, {
   interpolate,
-  interpolateColor,
-  useAnimatedProps,
   useDerivedValue,
   useSharedValue,
   withSpring,
@@ -15,7 +13,6 @@ import { kitsuOrange, kitsuPurple, white } from '@/constants/palette';
 const PRESS_SPRING = {
   duration: 400,
   dampingRatio: 0.4,
-  overshootClamping: true,
 };
 
 export default function TabBarIcon({
@@ -29,7 +26,7 @@ export default function TabBarIcon({
 }) {
   const pressed = useSharedValue(0);
   const scale = useDerivedValue(() =>
-    interpolate(pressed.value, [0, 1], [1, 1.2])
+    interpolate(pressed.value, [0, 1], [1, 0.8])
   );
 
   return (
