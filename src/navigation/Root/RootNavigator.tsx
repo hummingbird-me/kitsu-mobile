@@ -5,14 +5,14 @@ import {
 } from '@react-navigation/native-stack';
 import React from 'react';
 
-import { usePlaceholder } from '@/components/Placeholder';
 import { useSession } from '@/contexts/SessionContext';
 
 import Landing, { type LandingNavigatorParamList } from './Landing';
+import Main, { type MainNavigatorParamList } from './Main';
 
 export type RootNavigatorParamList = {
   Landing: NavigatorScreenParams<LandingNavigatorParamList>;
-  ProfileDrawer: undefined;
+  Main: NavigatorScreenParams<MainNavigatorParamList>;
 };
 
 export type RootNavigatorScreenProps<
@@ -26,15 +26,12 @@ export default function RootNavigator() {
 
   return (
     <Stack.Navigator
-      initialRouteName={session?.loggedIn ? 'ProfileDrawer' : 'Landing'}
+      initialRouteName={session?.loggedIn ? 'Main' : 'Landing'}
       screenOptions={{
         headerShown: false,
       }}>
       <Stack.Screen name="Landing" component={Landing} />
-      <Stack.Screen
-        name="ProfileDrawer"
-        component={usePlaceholder('Profile Drawer')}
-      />
+      <Stack.Screen name="Main" component={Main} />
     </Stack.Navigator>
   );
 }
