@@ -4,10 +4,10 @@ import React, { useContext, useState } from 'react';
 import InvariantViolated from '@/errors/InvariantViolated';
 import loginWithRefreshToken from '@/utils/login/withRefreshToken';
 import {
-  Session,
   clear as _clearSession,
   load as _loadSession,
   save as _saveSession,
+  type Session,
 } from '@/utils/session';
 
 export type SessionContextType = {
