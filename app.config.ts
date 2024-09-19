@@ -7,6 +7,7 @@ import { blue, kitsuOrange, kitsuPurple } from './src/constants/palette';
 const isDebug = process.env.EXPO_ENV === 'release' ? false : true;
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
+  owner: 'kitsu',
   name: 'Kitsu',
   slug: 'kitsu',
   version: '4.0',
