@@ -1,7 +1,11 @@
-import { Image as ExpoImage, ImageProps as ExpoImageProps } from 'expo-image';
+import {
+  Image as ExpoImage,
+  type ImageProps as ExpoImageProps,
+} from 'expo-image';
 import React from 'react';
+import Animated from 'react-native-reanimated';
 
-import { FragmentOf, graphql } from '@/utils/graphql';
+import { graphql, type FragmentOf } from '@/utils/graphql';
 
 export const ImageFragment = graphql(`
   fragment ImageFragment on Image @_unmask {
@@ -35,13 +39,19 @@ export type ImageProps = {
   source?: FragmentOf<typeof ImageFragment> | null;
 } & Omit<ExpoImageProps, 'source'>;
 
-export default function Image({ source, ...props }: ImageProps) {
-  return source ? (
-    <ExpoImage
-      source={viewsToSource(source?.views)}
-      placeholder={source.blurhash ? { blurhash: source.blurhash } : null}
-      transition={500}
-      {...props}
-    />
-  ) : null;
-}
+export default Animated.createAnimatedComponent(
+  React.forwardRef<ExpoImage, ImageProps>(function Image(
+    { source, ...props }: ImageProps,
+    ref
+  ) {
+    return (
+      <ExpoImage
+        ref={ref}
+        source={source ? viewsToSource(source?.views) : null}
+        placeholder={source?.blurhash ? { blurhash: source.blurhash } : null}
+        transition={500}
+        {...props}
+      />
+    );
+  })
+);

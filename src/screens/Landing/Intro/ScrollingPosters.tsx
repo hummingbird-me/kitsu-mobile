@@ -1,5 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, ViewStyle, useWindowDimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  type ViewStyle,
+} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useDerivedValue,
@@ -9,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useQuery } from 'urql';
 
-import Image, { ImageFragment } from '@/components/Image';
+import Image, { ImageFragment } from '@/components/content/Image';
 import { graphql } from '@/utils/graphql';
 
 const ScrollingPostersQuery = graphql(
