@@ -5,7 +5,6 @@
   - LandingNavigator<Stack>
     - IntroScreen
     - AuthScreen
-      # Non-navigator subscreens
       - Register
       - SignIn
       - ForgotPassword
@@ -26,14 +25,20 @@
     - Onboarding.Categories
     - Onboarding.RatingSystem
     - AozoraManga (build)
-  - ProfileDrawerNavigator
-    - HomeNavigator = MainNavigator(page = "Feed")
-    - SearchNavigator = MainNavigator(page = "Search")
-    - QuickUpdateNavigator = MainNavigator(page = "QuickUpdate")
-    - NotificationsNavigator = MainNavigator(page = "Notifications")
-    - LibraryNavigator = MainNavigator(page = "Library")
+  - MainNavigator<TabBar(layout = Drawer)>
+    - StackNavigator(page = "Feed")
+    - StackNavigator(page = "Search")
+    - StackNavigator(page = "QuickUpdate")
+    - StackNavigator(page = "Notifications")
+    - StackNavigator(page = "Library")
 
-- MainNavigator<Stack>
+# This holds basically every screen a logged-in user will come across
+- StackNavigator<Stack>
+  - Feed
+  - Post
+  - Search
+  - QuickUpdate
+  - Notifications
   - Profile
     - Summary
     - About

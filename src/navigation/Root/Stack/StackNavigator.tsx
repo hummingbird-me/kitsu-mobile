@@ -1,11 +1,14 @@
+import { useFocusEffect } from '@react-navigation/native';
 import {
-  createStackNavigator,
+  createStackNavigator as rnCreateStackNavigator,
+  type StackNavigationProp,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import React, { useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 
-import { usePlaceholder } from '@/components/Placeholder';
+import Placeholder, { usePlaceholder } from '@/components/Placeholder';
 import { kitsuPurple } from '@/constants/palette';
+import { StackNavigationContext } from '@/contexts/StackNavigationContext';
 
 type MediaIdentifier = { id: string; type: 'anime' | 'manga' };
 
@@ -40,18 +43,53 @@ export type StackNavigatorParamList = {
 export type stackNavigatorScreenProps<T extends keyof StackNavigatorParamList> =
   StackScreenProps<StackNavigatorParamList, T>;
 
+const Stack = rnCreateStackNavigator<StackNavigatorParamList>();
+
+export function createStackNavigator({
+  initialRouteName,
+}: {
+  initialRouteName: keyof StackNavigatorParamList;
+}) {
+  // We know the name isn't useStackNavigator but our name is better :)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useMemo(
+    () =>
+      Object.defineProperty(
+        () => <StackNavigator initialRouteName={initialRouteName} />,
+        'name',
+        { value: `StackNavigator<${initialRouteName}>` }
+      ),
+    [initialRouteName]
+  );
+}
+
+function FocusWrapper({
+  children,
+  navigation,
+}: {
+  children: React.ReactNode;
+  navigation: StackNavigationProp<StackNavigatorParamList>;
+}) {
+  // Update the navigation ref when focused stack changes
+  const ref = useContext(StackNavigationContext);
+  useFocusEffect(
+    useCallback(() => {
+      ref.current = navigation;
+    }, [ref, navigation])
+  );
+
+  return children;
+}
+
 export default function StackNavigator({
   initialRouteName,
 }: {
   initialRouteName: keyof StackNavigatorParamList;
 }) {
-  const Stack = useMemo(
-    () => createStackNavigator<StackNavigatorParamList>(),
-    []
-  );
-
   return (
     <Stack.Navigator
+      // @ts-expect-error The layout is not given the narrower type definition :/
+      layout={FocusWrapper}
       initialRouteName={initialRouteName}
       screenOptions={{
         headerStyle: { backgroundColor: kitsuPurple[5] },

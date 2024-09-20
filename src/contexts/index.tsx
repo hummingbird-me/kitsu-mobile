@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import IntlContextProvider from './IntlContext';
 import NavigationContainer from './NavigationContainer';
 import { SessionContextProvider } from './SessionContext';
+import { StackNavigationProvider } from './StackNavigationContext';
 import UrqlContextProvider from './UrqlContext';
 
 const ApplicationContext: React.FC<{ children: React.ReactNode }> = function ({
@@ -12,15 +13,17 @@ const ApplicationContext: React.FC<{ children: React.ReactNode }> = function ({
 }) {
   return (
     <NavigationContainer>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <IntlContextProvider>
-            <SessionContextProvider>
-              <UrqlContextProvider>{children}</UrqlContextProvider>
-            </SessionContextProvider>
-          </IntlContextProvider>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
+      <StackNavigationProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <IntlContextProvider>
+              <SessionContextProvider>
+                <UrqlContextProvider>{children}</UrqlContextProvider>
+              </SessionContextProvider>
+            </IntlContextProvider>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </StackNavigationProvider>
     </NavigationContainer>
   );
 };

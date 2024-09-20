@@ -11,7 +11,7 @@ export const DrawerContext =
 export function useDrawer(): MutableRefObject<RNGHDrawerLayout> {
   const drawer = useContext(DrawerContext);
 
-  if (!drawer || !drawer.current)
+  if (!drawer)
     throw new InvariantViolated(
       'useDrawer must be used within a DrawerContext.Provider'
     );
