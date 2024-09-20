@@ -49,8 +49,10 @@
     "expo-image": "~1.12.15",
     "expo-linear-gradient": "~13.0.2",
     "expo-localization": "~15.0.3",
+    "expo-navigation-bar": "~3.0.7",
     "expo-secure-store": "~13.0.2",
     "expo-splash-screen": "~0.27.5",
+    "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
     "getstream": "^8.1.0",
@@ -76,6 +78,7 @@
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-keyboard-controller": "^1.13.4",
     "react-native-modal-selector": "^2.1.2",
     "react-native-onesignal": "^4.5.0",
     "react-native-pager-view": "6.3.0",
@@ -95,9 +98,7 @@
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
     "urql": "^4.1.0",
-    "zod": "^3.23.8",
-    "expo-navigation-bar": "~3.0.7",
-    "expo-status-bar": "~1.12.1"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
