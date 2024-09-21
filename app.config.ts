@@ -70,6 +70,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     }-adaptive-foreground.png`,
     color: kitsuOrange,
   },
+  updates: {
+    url: 'https://u.expo.dev/1d3b1dca-db2b-470d-80fd-47a5f2936195',
+  },
+  runtimeVersion: {
+    policy: 'appVersion',
+  },
   plugins: [
     'expo-secure-store',
     'expo-localization',
