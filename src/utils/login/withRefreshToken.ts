@@ -1,10 +1,10 @@
-import { Session } from '../session';
+import { type LoggedInSession } from '../session';
 import login from './login';
 
 export default async function loginWithRefreshToken(
   refreshToken: string,
   init: RequestInit = {}
-): Promise<NonNullable<Session>> {
+): Promise<LoggedInSession> {
   return login({
     params: {
       grant_type: 'refresh_token',

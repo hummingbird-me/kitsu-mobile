@@ -4,7 +4,7 @@ import { apiPrefix, clientId } from '@/config/kitsu';
 import NetworkError from '@/errors/NetworkError';
 import BaseError from '@/errors/base';
 
-import { Session } from '../session';
+import { type LoggedInSession } from '../session';
 
 export class LoginFailed extends BaseError {
   readonly name = 'LoginFailed';
@@ -16,7 +16,7 @@ export default async function login({
 }: {
   params?: Record<string, string>;
   init?: RequestInit;
-}): Promise<NonNullable<Session>> {
+}): Promise<LoggedInSession> {
   const body = new URLSearchParams(params);
   body.set('client_id', clientId);
   const response = await fetch(`${apiPrefix}/oauth/token`, {

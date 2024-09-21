@@ -1,10 +1,10 @@
-import { Session } from '../session';
+import { type LoggedInSession } from '../session';
 import login, { LoginFailed } from './login';
 
 export default async function loginWithPassword(
   { username, password }: { username?: string; password?: string },
   init: RequestInit = {}
-): Promise<NonNullable<Session>> {
+): Promise<LoggedInSession> {
   if (!username || !password) throw LoginFailed;
 
   return login({
