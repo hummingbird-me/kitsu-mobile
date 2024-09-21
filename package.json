@@ -98,7 +98,9 @@
     "redux-thunk": "^2.4.2",
     "url-parse": "^1.5.10",
     "urql": "^4.1.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "expo-application": "~5.9.1",
+    "expo-updates": "~0.25.24"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
