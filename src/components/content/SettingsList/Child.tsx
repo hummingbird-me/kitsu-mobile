@@ -52,6 +52,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomColor: grey[3],
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   leftContentWrapper: {
     flexDirection: 'row',
