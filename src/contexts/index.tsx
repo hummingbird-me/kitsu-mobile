@@ -1,5 +1,6 @@
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import IntlContextProvider from './IntlContext';
@@ -15,13 +16,15 @@ const ApplicationContext: React.FC<{ children: React.ReactNode }> = function ({
     <NavigationContainer>
       <StackNavigationProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <IntlContextProvider>
-              <SessionContextProvider>
-                <UrqlContextProvider>{children}</UrqlContextProvider>
-              </SessionContextProvider>
-            </IntlContextProvider>
-          </SafeAreaProvider>
+          <KeyboardProvider>
+            <SafeAreaProvider>
+              <IntlContextProvider>
+                <SessionContextProvider>
+                  <UrqlContextProvider>{children}</UrqlContextProvider>
+                </SessionContextProvider>
+              </IntlContextProvider>
+            </SafeAreaProvider>
+          </KeyboardProvider>
         </GestureHandlerRootView>
       </StackNavigationProvider>
     </NavigationContainer>
