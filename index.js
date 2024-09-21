@@ -1,3 +1,7 @@
+// Load this first to record the start time of the app
+// prettier-ignore
+import { mark } from '@/utils/performance';
+
 import * as Sentry from '@sentry/react-native';
 import { registerRootComponent } from 'expo';
 import { setBackgroundColorAsync, setPositionAsync } from 'expo-navigation-bar';
@@ -29,5 +33,6 @@ if (!__DEV__) {
     dsn: 'https://068b9ab849bf4485beb4884adcc5be83:8c57373b9bb4410f99ebfd17878c739a@sentry.io/200469',
   });
 }
+mark('Kitsu.App.Loaded');
 
 registerRootComponent(App);
