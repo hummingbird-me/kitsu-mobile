@@ -2,7 +2,6 @@
 // prettier-ignore
 import { mark } from '@/utils/performance';
 
-import * as Sentry from '@sentry/react-native';
 import { registerRootComponent } from 'expo';
 import { LogBox } from 'react-native';
 
