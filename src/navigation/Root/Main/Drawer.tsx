@@ -1,5 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Constants from 'expo-constants';
+import * as Application from 'expo-application';
+import * as Updates from 'expo-updates';
 import React, { useContext } from 'react';
 import {
   Pressable,
@@ -7,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import Animated, {
   useAnimatedRef,
@@ -22,7 +24,7 @@ import BannerImage from '@/components/content/BannerImage';
 import { ImageFragment } from '@/components/content/Image';
 import * as SettingsList from '@/components/content/SettingsList';
 import { OutlineButton } from '@/components/controls/Button';
-import { Asap } from '@/constants/fonts';
+import { Asap, OpenSans } from '@/constants/fonts';
 import { kitsuPurple, white } from '@/constants/palette';
 import { useDrawer } from '@/contexts/DrawerContext';
 import { SessionContext } from '@/contexts/SessionContext';
@@ -55,6 +57,7 @@ const COVER_HEIGHT = 200;
 
 export default function Drawer() {
   const drawer = useDrawer();
+  const { height: minHeight } = useWindowDimensions();
   const session = useContext(SessionContext);
   if (!session) throw new InvariantViolated('Session context missing');
   const navigation = useStackNavigation();
@@ -69,7 +72,7 @@ export default function Drawer() {
 
   return (
     <Animated.ScrollView style={styles.drawerContainer} ref={scrollView}>
-      <View style={{ height: '100%', flex: 1 }}>
+      <View style={{ minHeight, flex: 1 }}>
         <Pressable
           onPress={() => {
             if (!result.data?.currentAccount?.id) return;
@@ -130,8 +133,8 @@ export default function Drawer() {
             Contact Us
           </SettingsList.Child>
           <OutlineButton
-            color="grey"
-            style={{ flex: 0 }}
+            color="kitsu-purple"
+            style={{ flex: 0, margin: 10 }}
             onPress={() => {
               session.clearSession();
               navigation.navigate('Landing');
@@ -142,14 +145,20 @@ export default function Drawer() {
         </View>
         <SafeAreaView edges={['bottom', 'left']} style={{ width: '100%' }}>
           <TouchableOpacity
-            onPress={() => {
+            onLongPress={() => {
               navigation.navigate('Debug');
               drawer.current?.closeDrawer();
             }}>
-            <Text style={{ textAlign: 'center', color: kitsuPurple[3] }}>
-              Kitsu App {Constants.expoConfig?.version} (
-              {Constants.nativeAppVersion})
-            </Text>
+            <View>
+              <Text style={styles.versionText}>
+                {Application.applicationName} {Updates.channel || 'Development'}
+              </Text>
+              <Text style={styles.versionText}>
+                {Application.nativeApplicationVersion} (
+                {Application.nativeBuildVersion})
+              </Text>
+              <Text style={styles.versionText}>{Updates.manifest.id}</Text>
+            </View>
           </TouchableOpacity>
         </SafeAreaView>
       </View>
@@ -175,5 +184,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     width: '100%',
+  },
+  versionText: {
+    textAlign: 'center',
+    color: kitsuPurple[3],
+    fontSize: 12,
+    fontFamily: OpenSans.normal,
   },
 });
