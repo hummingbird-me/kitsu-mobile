@@ -1,6 +1,12 @@
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import React from 'react';
-import { Modal as ModalRN, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Modal as ModalRN,
+  Text,
+  TouchableOpacity,
+  View,
+  type ModalProps as ModalPropsRN,
+  type ViewStyle,
+} from 'react-native';
 
 import { styles } from './styles';
 
@@ -10,10 +16,11 @@ type ModalProps = {
   title: string;
   visible: boolean;
   onRequestClose(...args: unknown[]): unknown;
-  contentStyle?: unknown;
-  headerStyle?: unknown;
-  bodyStyle?: unknown;
-};
+  contentStyle?: ViewStyle;
+  headerStyle?: ViewStyle;
+  bodyStyle?: ViewStyle;
+  children: React.ReactNode;
+} & ModalPropsRN;
 
 export const Modal = ({
   visible,
@@ -51,17 +58,3 @@ export const Modal = ({
     </View>
   </ModalRN>
 );
-
-Modal.propTypes = {
-  ...ModalRN.propTypes,
-  style: ViewPropTypes.style,
-  contentStyle: ViewPropTypes.style,
-  headerStyle: ViewPropTypes.style,
-  bodyStyle: ViewPropTypes.style,
-};
-Modal.defaultProps = {
-  style: null,
-  contentStyle: null,
-  headerStyle: null,
-  bodyStyle: null,
-};

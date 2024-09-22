@@ -1,30 +1,30 @@
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  TextInput,
+  TouchableOpacity,
+  View,
+  type TextInputProps,
+  type ViewStyle,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { commonStyles } from 'kitsu/common/styles';
 
 import { styles } from './styles';
 
-interface SearchBoxProps {
-  style?: unknown;
+type SearchBoxProps = {
+  style?: ViewStyle;
   defaultValue?: string;
-  onChangeText?(...args: unknown[]): unknown;
+  onChangeText?(text: string): void;
   placeholder?: string;
   value?: string;
   showClearButton?: boolean;
-}
+} & TextInputProps;
 
 export class SearchBox extends React.PureComponent<SearchBoxProps> {
-  static propTypes = {
-    style: ViewPropTypes.style,
-  };
-
   static defaultProps = {
     defaultValue: '',
-    onChangeText: () => {},
     placeholder: 'Search',
     style: null,
     value: '',
@@ -54,8 +54,7 @@ export class SearchBox extends React.PureComponent<SearchBoxProps> {
         {showClearButton && !isEmpty(value) && (
           <TouchableOpacity
             style={styles.clearContainer}
-            onPress={() => onChangeText('')}
-          >
+            onPress={() => onChangeText?.('')}>
             <Icon
               name="ios-close-circle"
               style={[styles.clearIcon, commonStyles.colorLightGrey]}
