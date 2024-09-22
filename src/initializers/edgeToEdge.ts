@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 export default async function initializeEdgeToEdge(): Promise<void> {
   if (Platform.OS !== 'android') return;
 
-  await Promise.allSettled([
+  await Promise.all([
     setBackgroundColorAsync('#ffffff00'),
     setPositionAsync('absolute'),
     setStatusBarTranslucent(true),
