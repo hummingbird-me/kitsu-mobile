@@ -1,52 +1,42 @@
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { Navigation } from 'react-native-navigation';
 
-import { StyledText } from 'kitsu/components/StyledText';
-import { Screens } from 'kitsu/navigation';
+import { StyledText } from '@/components/StyledText';
+import { useStackNavigation } from '@/contexts/StackNavigationContext';
 
 import { styles } from './styles';
 
-const navigateToMedia = (media, componentId) => {
-  if (media) {
-    Navigation.push(componentId, {
-      component: {
-        name: Screens.MEDIA_PAGE,
-        passProps: { mediaId: media.id, mediaType: media.type },
-      },
-    });
-  }
-};
-
-interface MediaTagProps {
+type MediaTagProps = {
   media: {
     canonicalTitle: string;
+    type: 'anime' | 'manga';
+    id: string;
   };
   episode?: {
     number: number;
   };
   componentId: any;
   disabled?: boolean;
-  style?: unknown;
-}
+  style?: ViewStyle;
+};
 
 export const MediaTag = ({
   disabled,
   media,
   episode,
-  componentId,
   style,
 }: MediaTagProps) => {
-  if (!media) return null;
+  const navigation = useStackNavigation();
   const episodePrefix = media.type === 'anime' ? 'E' : 'CH';
-  return (
+
+  return media ? (
     <View style={[styles.mediaTagView, style]}>
       <TouchableOpacity
         disabled={disabled}
-        onPress={() => navigateToMedia(media, componentId)}
-        style={styles.mediaTag}
-      >
+        onPress={() =>
+          navigation.push('Media', { type: media.type, id: media.id })
+        }
+        style={styles.mediaTag}>
         <StyledText color="green" size="xxsmall">
           {media.canonicalTitle}
         </StyledText>
@@ -54,28 +44,18 @@ export const MediaTag = ({
       {episode && (
         <TouchableOpacity
           disabled={disabled}
-          onPress={() => navigateToMedia(media, componentId)}
-          style={styles.episodeTagView}
-        >
+          onPress={() =>
+            navigation.push('Unit', { type: media.type, id: media.id })
+          }
+          style={styles.episodeTagView}>
           <View style={styles.episodeTagLine} />
           <View style={styles.mediaTag}>
             <StyledText
               color="green"
-              size="xxsmall"
-            >{`${episodePrefix} ${episode.number}`}</StyledText>
+              size="xxsmall">{`${episodePrefix} ${episode.number}`}</StyledText>
           </View>
         </TouchableOpacity>
       )}
     </View>
-  );
-};
-
-MediaTag.propTypes = {
-  style: ViewPropTypes.style,
-};
-
-MediaTag.defaultProps = {
-  episode: null,
-  disabled: false,
-  style: null,
+  ) : null;
 };
