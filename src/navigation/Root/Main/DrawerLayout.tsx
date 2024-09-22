@@ -22,7 +22,7 @@ export default function DrawerLayout({
       <DrawerContext.Provider value={drawerRef}>
         <RNGHDrawerLayout
           ref={(value) => (drawerRef.current = value)}
-          drawerWidth={width * 0.8}
+          drawerWidth={Math.min(width * 0.8, 350)}
           drawerPosition="left"
           drawerType="back"
           drawerBackgroundColor={kitsuPurple[5]}
