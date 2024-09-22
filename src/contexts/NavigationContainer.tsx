@@ -1,9 +1,29 @@
 import {
-  NavigationContainerRef,
   NavigationContainer as ReactNavigationContainer,
-  Route,
+  type NavigationContainerRef,
+  type NavigationState,
+  type ParamListBase,
 } from '@react-navigation/native';
 import React, { useRef } from 'react';
+
+import { type RootNavigatorParamList } from '@/navigation/Root';
+
+function formatBreadcrumbs<State extends NavigationState<ParamListBase>>(
+  name: string,
+  state: State | undefined,
+  params?: unknown
+): string {
+  if (state) {
+    const route = state.routes[state.index];
+    return `${name}/${formatBreadcrumbs(
+      route.name,
+      route.state,
+      route.params
+    )}`;
+  } else {
+    return `${name}${params ? `(${JSON.stringify(params)})` : ''}`;
+  }
+}
 
 export default function NavigationContainer({
   children,
@@ -11,28 +31,26 @@ export default function NavigationContainer({
   children: React.ReactNode;
 }) {
   // Used to log navigation events
-  const navigationRef = useRef<NavigationContainerRef<any>>(null);
-  const routeRef = useRef<Route<string>>();
+  const navigationRef =
+    useRef<NavigationContainerRef<RootNavigatorParamList>>(null);
+  const routePath = useRef<string>();
 
   return (
     <ReactNavigationContainer
       ref={navigationRef}
-      onReady={() =>
-        (routeRef.current = navigationRef?.current?.getCurrentRoute())
-      }
-      onStateChange={() => {
-        const previousRoute = routeRef.current;
-        const currentRoute = navigationRef?.current?.getCurrentRoute();
-
-        console.log(
-          `Navigation: ${previousRoute?.name} (${JSON.stringify(
-            previousRoute?.params
-          )}) => ${currentRoute?.name} (${JSON.stringify(
-            currentRoute?.params
-          )})`
+      onReady={() => {
+        routePath.current = formatBreadcrumbs(
+          'Root',
+          navigationRef?.current?.getRootState()
         );
+      }}
+      onStateChange={(state) => {
+        const previousRoute = routePath.current;
+        const currentRoute = formatBreadcrumbs('Root', state);
 
-        routeRef.current = currentRoute;
+        console.log(`${previousRoute} -> ${currentRoute}`);
+
+        routePath.current = currentRoute;
       }}>
       {children}
     </ReactNavigationContainer>
