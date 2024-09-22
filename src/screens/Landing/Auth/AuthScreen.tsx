@@ -8,6 +8,7 @@ import { ControlledTextInput as TextInput } from '@/components/controls/TextInpu
 import { SessionContext } from '@/contexts/SessionContext';
 import InvariantViolated from '@/errors/InvariantViolated';
 import { type LandingNavigatorScreenProps } from '@/navigation/Root/Landing/LandingNavigator';
+import { useNavigation } from '@/navigation/Root/hooks';
 import loginWithPassword from '@/utils/login/withPassword';
 
 import AuthWrapper from './AuthWrapper';
@@ -34,6 +35,7 @@ export default function AuthScreen({
   route,
 }: LandingNavigatorScreenProps<'Auth'>) {
   const session = useContext(SessionContext);
+  const navigation = useNavigation();
   if (!session) throw new InvariantViolated('SessionContext is null');
 
   const form = useForm({
@@ -79,11 +81,14 @@ export default function AuthScreen({
                 text="Continue"
                 color="green"
                 onPress={() =>
-                  form.handleSubmit((values) => {
-                    loginWithPassword({
-                      username: values.email,
-                      password: values.password,
-                    }).then(session.setSession);
+                  form.handleSubmit(async (values) => {
+                    session.setSession(
+                      await loginWithPassword({
+                        username: values.email,
+                        password: values.password,
+                      })
+                    );
+                    navigation.replace('Main');
                   })()
                 }
               />
