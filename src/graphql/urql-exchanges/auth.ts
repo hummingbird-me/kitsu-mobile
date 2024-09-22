@@ -1,7 +1,8 @@
+import * as Sentry from '@sentry/react-native';
 import { authExchange } from '@urql/exchange-auth';
-import { Exchange } from 'urql';
+import { type Exchange } from 'urql';
 
-import { SessionContextType } from '@/contexts/SessionContext';
+import { type SessionContextType } from '@/contexts/SessionContext';
 import loginWithRefreshToken from '@/utils/login/withRefreshToken';
 
 export default function kitsuAuthExchange({
@@ -27,6 +28,7 @@ export default function kitsuAuthExchange({
       try {
         setSession(await loginWithRefreshToken(session.refreshToken));
       } catch (e) {
+        Sentry.captureException(e);
         clearSession();
       }
     },

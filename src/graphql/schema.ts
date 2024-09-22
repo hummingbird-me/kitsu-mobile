@@ -1,4 +1,4 @@
-import { IntrospectionSchema } from 'graphql';
+import { type IntrospectionSchema } from 'graphql';
 
 import schemaJson from './schema.json';
 

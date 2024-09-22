@@ -1,12 +1,10 @@
-import { offlineExchange } from '@urql/exchange-graphcache';
-import { makeAsyncStorage } from '@urql/storage-rn';
 import React, { useContext } from 'react';
 import { Provider, createClient, fetchExchange } from 'urql';
 
 import { kitsuConfig } from '@/config/env';
-import resolvers from '@/graphql/resolvers';
-import schema from '@/graphql/schema';
+import InvariantViolated from '@/errors/InvariantViolated';
 import authExchange from '@/graphql/urql-exchanges/auth';
+import cacheExchange from '@/graphql/urql-exchanges/cache';
 
 import { SessionContext } from './SessionContext';
 
@@ -16,25 +14,11 @@ export default function UrqlContext({
   children: React.ReactNode;
 }): JSX.Element {
   const sessionContext = useContext(SessionContext);
-  const storage = makeAsyncStorage({
-    maxAge: 7,
-  });
+  if (!sessionContext) throw new InvariantViolated('SessionContext is missing');
+
   const client = createClient({
     suspense: true,
-    exchanges: [
-      offlineExchange({
-        storage,
-        schema,
-        keys: {
-          Image: () => null,
-          ImageView: () => null,
-          TitlesList: () => null,
-        },
-        resolvers,
-      }),
-      authExchange(sessionContext),
-      fetchExchange,
-    ],
+    exchanges: [cacheExchange, authExchange(sessionContext), fetchExchange],
     url: `${kitsuConfig.kitsuUrl}/api/graphql`,
   });
 
