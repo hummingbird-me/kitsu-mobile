@@ -12,9 +12,9 @@ export default function Initializer({
 }: {
   children: React.ReactNode;
 }) {
-  const { state } = usePromise(initialize, []);
+  const { state, error } = usePromise(initialize, []);
+  if (error) throw error;
   const [isSuspended, setSuspended] = useState(false);
-  const startTime = useRef(0);
 
   const Fallback = useMemo(
     () =>
@@ -43,10 +43,7 @@ export default function Initializer({
 
   return (
     <View style={styles.wrapper}>
-      <Animation
-        style={styles.animation}
-        isBooted={!isSuspended && state === 'fulfilled'}
-      />
+      <Animation isBooted={!isSuspended && state === 'fulfilled'} />
       <Suspense fallback={<Fallback />}>{children}</Suspense>
     </View>
   );
@@ -55,11 +52,5 @@ export default function Initializer({
 const styles = StyleSheet.create({
   wrapper: {
     ...StyleSheet.absoluteFillObject,
-  },
-  animation: {
-    ...StyleSheet.absoluteFillObject,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

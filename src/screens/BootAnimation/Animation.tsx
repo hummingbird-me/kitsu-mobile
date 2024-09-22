@@ -35,12 +35,8 @@ const HIDE_ANIMATION = new Keyframe({
  */
 
 export default function BootAnimation({
-  style,
-  onAnimationFinish,
   isBooted = false,
 }: {
-  style: ViewStyle;
-  onAnimationFinish?: () => void;
   isBooted?: boolean;
 }) {
   const { width, height } = useWindowDimensions();
@@ -64,7 +60,9 @@ export default function BootAnimation({
     }
   }, []);
 
-  return !isBooted || !isLottieFinished ? (
+  if (isBooted && isLottieFinished) mark('Kitsu.BootAnimation.Hide');
+
+  return isBooted && isLottieFinished ? null : (
     <Animated.View exiting={HIDE_ANIMATION.duration(250)}>
       <LottieView
         source={logoAnimation}
@@ -78,5 +76,5 @@ export default function BootAnimation({
         style={{ width, height, backgroundColor: kitsuPurple[5] }}
       />
     </Animated.View>
-  ) : null;
+  );
 }
