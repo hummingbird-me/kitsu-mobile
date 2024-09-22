@@ -25,6 +25,7 @@
     "@react-navigation/native": "^7.0.0-rc.19",
     "@react-navigation/native-stack": "^7.0.0-rc.26",
     "@react-navigation/stack": "^7.0.0-rc.25",
+    "@reduxjs/toolkit": "^2.2.7",
     "@sentry/react-native": "~5.22.0",
     "@urql/exchange-auth": "^2.2.0",
     "@urql/exchange-graphcache": "^7.1.2",
