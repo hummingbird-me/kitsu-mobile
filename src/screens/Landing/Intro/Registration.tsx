@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     paddingHorizontal: 18,
-    paddingTop: 27,
+    paddingVertical: 27,
     gap: 10,
   },
   registrationButtonText: {
