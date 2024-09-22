@@ -7,9 +7,9 @@ import Initializer from '@/screens/BootAnimation/Initializer';
 export default function App() {
   return (
     <Initializer>
-    <ApplicationContext>
-      <RootNavigator />
-    </ApplicationContext>
+      <ApplicationContext>
+        <RootNavigator />
+      </ApplicationContext>
     </Initializer>
   );
 }

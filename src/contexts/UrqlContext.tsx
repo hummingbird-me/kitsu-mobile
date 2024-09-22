@@ -20,6 +20,7 @@ export default function UrqlContext({
     maxAge: 7,
   });
   const client = createClient({
+    suspense: true,
     exchanges: [
       offlineExchange({
         storage,
