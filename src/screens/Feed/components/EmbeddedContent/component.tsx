@@ -1,22 +1,19 @@
-import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { Image } from 'expo-image';
 import { isEmpty, isNil, startCase } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { Linking, Platform, TouchableOpacity, View } from 'react-native';
-import { Navigation } from 'react-native-navigation';
+import { Platform, TouchableOpacity, View, type ViewStyle } from 'react-native';
 import YouTube from 'react-native-youtube';
 import { connect } from 'react-redux';
 
-import dataBunny from 'kitsu/assets/img/data-bunny.png';
-import defaultAvatar from 'kitsu/assets/img/default_avatar.png';
-import { ProgressiveImage } from 'kitsu/components/ProgressiveImage';
-import { StyledText } from 'kitsu/components/StyledText';
-import { NavigationActions, Screens } from 'kitsu/navigation';
-import { ImageGrid } from 'kitsu/screens/Feed/components/ImageGrid';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { WebComponent } from 'kitsu/utils/components';
-import { handleURL } from 'kitsu/utils/url';
+import dataBunny from '@/assets/img/data-bunny.png';
+import defaultAvatar from '@/assets/img/default_avatar.png';
+import { ProgressiveImage } from '@/components/ProgressiveImage';
+import { StyledText } from '@/components/StyledText';
+import { ImageGrid } from '@/screens/Feed/components/ImageGrid';
+import * as Layout from '@/screens/Feed/components/Layout';
+import { WebComponent } from '@/utils/components';
+import { handleURL } from '@/utils/url';
 
 import { styles } from './styles';
 
@@ -55,28 +52,6 @@ type EmbeddedContentProps = {
 };
 
 class EmbeddedContent extends PureComponent<EmbeddedContentProps> {
-  // The reason for the combination of string or number is that
-  // sometimes the embeds return width/height as strings
-  // othertimes as numbers ...
-  static typeStringNumber = PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]);
-
-  // Same case here
-  static typeStringImage = PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      width: this.typeStringNumber,
-      height: this.typeStringNumber,
-    }),
-  ]);
-
-  static propTypes = {
-    style: ViewPropTypes.style,
-  };
-
   static defaultProps = {
     embed: null,
     uploads: null,

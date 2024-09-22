@@ -1,77 +1,53 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
-import {
-  Dimensions,
-  Linking,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { Navigation } from 'react-native-navigation';
-import { connect } from 'react-redux';
-import URL from 'url-parse';
+import { FlatList, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
-import { SceneLoader } from 'kitsu/components/SceneLoader';
-import { Kitsu } from 'kitsu/config/api';
-import { ADMOB_AD_UNITS, statusBarHeight } from 'kitsu/constants/app';
-import { listBackPurple, offWhite } from 'kitsu/constants/colors';
-import { NavigationActions, Screens } from 'kitsu/navigation';
-import { CreatePostRow } from 'kitsu/screens/Feed/components/CreatePostRow';
-import { Post } from 'kitsu/screens/Feed/components/Post';
-import { TabBar, TabBarLink } from 'kitsu/screens/Feed/components/TabBar';
-import { FeedCache } from 'kitsu/utils/cache';
-import { registerDeepLinks, unregisterDeepLinks } from 'kitsu/utils/deeplink';
-import { isX, paddingX } from 'kitsu/utils/isX';
-import { preprocessFeed } from 'kitsu/utils/preprocessFeed';
-import { isAoProOrKitsuPro } from 'kitsu/utils/user';
+import { SceneLoader } from '@/components/SceneLoader';
+import { Kitsu } from '@/config/api';
+import { statusBarHeight } from '@/constants/app';
+import { listBackPurple, offWhite } from '@/constants/colors';
+import { useAccount } from '@/contexts/AccountContext';
+import CreatePostRow from '@/screens/Feed/components/CreatePostRow';
+import { Post } from '@/screens/Feed/components/Post';
+import { TabBar, TabBarLink } from '@/screens/Feed/components/TabBar';
+import { FeedCache } from '@/utils/cache';
+import { isX, paddingX } from '@/utils/isX';
+import { preprocessFeed } from '@/utils/preprocessFeed';
 
 import { feedStreams } from './feedStreams';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: listBackPurple,
-    paddingTop: statusBarHeight + (isX ? paddingX : 0),
-  },
-  contentContainer: {
-    flex: 1,
-    backgroundColor: listBackPurple,
-  },
-});
+type FeedProps = {
+  currentUser: {
+    id: string;
+  };
+};
 
-interface FeedProps {
-  componentId: any;
-  currentUser: object;
-}
+type FeedState = {
+  activeFeed: 'followingFeed' | 'globalFeed';
+  refreshing: boolean;
+  isLoadingNextPage: boolean;
+  data: any[];
+  error: unknown;
+};
 
-class Feed extends React.PureComponent<FeedProps> {
-  static options() {
-    return {
-      sideMenu: {
-        left: {
-          // Enable side drawer only for Feed
-          enabled: true,
-        },
-      },
-    };
-  }
+const keyExtractor = (item, index) => {
+  return `${item.id}-${item.updatedAt}`;
+};
 
-  state = {
+class Feed extends React.PureComponent<FeedProps, FeedState> {
+  isFetchingFeed = false;
+  onEndReachedCalledDuringMomentum = false;
+  state: FeedState = {
     activeFeed: 'followingFeed',
     refreshing: false,
     isLoadingNextPage: false,
     data: [],
+    error: null,
   };
 
   componentDidMount() {
-    registerDeepLinks();
     this.fetchFeed();
-  }
-
-  componentWillUnmount() {
-    unregisterDeepLinks();
   }
 
   onRefresh = async () => {
@@ -80,17 +56,7 @@ class Feed extends React.PureComponent<FeedProps> {
     this.setState({ refreshing: false });
   };
 
-  onDrawer = () => {
-    Navigation.mergeOptions(Screens.SIDEBAR, {
-      sideMenu: {
-        left: {
-          visible: true,
-        },
-      },
-    });
-  };
-
-  setActiveFeed = (activeFeed) => {
+  setActiveFeed = (activeFeed: 'followingFeed' | 'globalFeed') => {
     this.setState(
       {
         activeFeed,
@@ -134,15 +100,7 @@ class Feed extends React.PureComponent<FeedProps> {
       // /api/edge/feeds/timeline/160571
       let subPath = this.props.currentUser.id;
 
-      if (this.state.activeFeed === 'animeFeed') {
-        // Anime Feed Example URL:
-        // /api/edge/feeds/interest_timeline/160571-Anime
-        subPath += '-Anime';
-      } else if (this.state.activeFeed === 'mangaFeed') {
-        // Manga Feed Example URL:
-        // /api/edge/feeds/interest_timeline/160571-Manga
-        subPath += '-Manga';
-      } else if (this.state.activeFeed === 'globalFeed') {
+      if (this.state.activeFeed === 'globalFeed') {
         // Global feed
         // /api/edge/feeds/global/global
         subPath = 'global';
@@ -160,7 +118,7 @@ class Feed extends React.PureComponent<FeedProps> {
 
       // I need to read the cursor value out of the 'next' link in the result.
       this.canFetchNext = !isEmpty(result && result.links && result.links.next);
-      const url = new URL(result.links.next, true);
+      const url = new URL(result.links.next);
       this.cursor = url.query['page[cursor]'];
 
       // Discard the activity groups and activities for now, flattening to
@@ -219,37 +177,18 @@ class Feed extends React.PureComponent<FeedProps> {
     });
   };
 
-  keyExtractor = (item, index) => {
-    return `${item.id}-${item.updatedAt}`;
-  };
-
   renderPost = ({ item, index }) => {
     // This dispatches based on the type of an entity to the correct
     // component. If it's not in here it'll just ignore the feed item.
     switch (item.type) {
       case 'posts':
         return (
-          <React.Fragment>
-            <Post
-              post={item}
-              onPostPress={this.navigateToPost}
-              currentUser={this.props.currentUser}
-              componentId={this.props.componentId}
-            />
-            {/* Render a AdMobBanner every 3 posts */}
-            {/*!isAoProOrKitsuPro(this.props.currentUser) &&
-              ((index + 1) % 3 === 0) && (
-                <React.Fragment>
-                  <View style={{ marginTop: 10 }} />
-                  <AdMobBanner
-                    adUnitID={ADMOB_AD_UNITS[Platform.OS]}
-                    adSize="smartBannerPortrait"
-                    testDevices={[AdMobBanner.simulatorId]}
-                    onAdFailedToLoad={error => console.log(error)}
-                  />
-                </React.Fragment>
-              )*/}
-          </React.Fragment>
+          <Post
+            post={item}
+            onPostPress={this.navigateToPost}
+            currentUser={this.props.currentUser}
+            componentId={this.props.componentId}
+          />
         );
       default:
         console.log(`WARNING: Ignored post type: ${item.type}`);
@@ -258,10 +197,11 @@ class Feed extends React.PureComponent<FeedProps> {
   };
 
   render() {
+    console.log('Render feed');
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <TabBar currentUser={this.props.currentUser} onPress={this.onDrawer}>
+        <TabBar>
           {feedStreams.map((tabItem) => (
             <TabBarLink
               key={tabItem.key}
@@ -273,9 +213,12 @@ class Feed extends React.PureComponent<FeedProps> {
         </TabBar>
 
         <View style={styles.contentContainer}>
-          <KeyboardAwareFlatList
+          <FlatList
+            renderScrollComponent={(props) => (
+              <KeyboardAwareScrollView {...props} />
+            )}
             data={this.state.data}
-            keyExtractor={this.keyExtractor}
+            keyExtractor={keyExtractor}
             renderItem={this.renderPost}
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
@@ -308,9 +251,19 @@ class Feed extends React.PureComponent<FeedProps> {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { currentUser } = user;
-  return { currentUser };
+export default () => {
+  const { profile } = useAccount();
+  return <Feed currentUser={profile} />;
 };
 
-export default connect(mapStateToProps)(Feed);
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: listBackPurple,
+    paddingTop: statusBarHeight + (isX ? paddingX : 0),
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: listBackPurple,
+  },
+});

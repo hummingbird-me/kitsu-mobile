@@ -3,27 +3,24 @@ import moment from 'moment';
 import React, { PureComponent } from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Hyperlink from 'react-native-hyperlink';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { StyledText, ViewMoreStyledText } from 'kitsu/components/StyledText';
-import { Kitsu } from 'kitsu/config/api';
-import { defaultAvatar } from 'kitsu/constants/app';
-import { listBackPurple } from 'kitsu/constants/colors';
-import { Avatar } from 'kitsu/screens/Feed/components/Avatar';
-import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
-import { EmbeddedContent } from 'kitsu/screens/Feed/components/EmbeddedContent';
-import * as Layout from 'kitsu/screens/Feed/components/Layout';
-import { scenePadding } from 'kitsu/screens/Feed/constants';
-import { BasicCache } from 'kitsu/utils/cache';
-import { preprocessFeedPosts } from 'kitsu/utils/preprocessFeed';
-import { handleURL } from 'kitsu/utils/url';
+import { StyledText, ViewMoreStyledText } from '@/components/StyledText';
+import { Kitsu } from '@/config/api';
+import { defaultAvatar } from '@/constants/app';
+import { listBackPurple } from '@/constants/colors';
+import { Avatar } from '@/screens/Feed/components/Avatar';
+import { EmbeddedContent } from '@/screens/Feed/components/EmbeddedContent';
+import * as Layout from '@/screens/Feed/components/Layout';
+import { scenePadding } from '@/screens/Feed/constants';
+import { BasicCache } from '@/utils/cache';
+import { preprocessFeedPosts } from '@/utils/preprocessFeed';
+import { handleURL } from '@/utils/url';
 
 import { styles } from './styles';
 
@@ -32,7 +29,7 @@ const CACHE_WIDTH_KEYS = {
   reply: 'commentReplyWidth',
 };
 
-interface CommentProps {
+type CommentProps = {
   post: {
     id?: string;
   };
@@ -51,7 +48,7 @@ interface CommentProps {
   onReplyPress?(...args: unknown[]): unknown;
   hideEmbeds?: boolean;
   isCommentReply?: boolean;
-}
+};
 
 export class Comment extends PureComponent<CommentProps> {
   constructor(props) {
@@ -264,16 +261,14 @@ export class Comment extends PureComponent<CommentProps> {
             {!isEmpty(content) && (
               <Hyperlink
                 linkStyle={styles.linkStyle}
-                onPress={(url) => handleURL(url)}
-              >
+                onPress={(url) => handleURL(url)}>
                 <ViewMoreStyledText
                   cacheKey={`${id}-${updatedAt}`}
                   size="xsmall"
                   color="dark"
                   textStyle={{ lineHeight: null }}
                   numberOfLines={(isTruncated && 3) || 8}
-                  selectable
-                >
+                  selectable>
                   {content}
                 </ViewMoreStyledText>
               </Hyperlink>
@@ -300,16 +295,14 @@ export class Comment extends PureComponent<CommentProps> {
               </StyledText>
               <TouchableOpacity
                 onPress={this.toggleLike}
-                style={styles.commentActionItem}
-              >
+                style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">{`Like${
                   isLiked ? 'd' : ''
                 }`}</StyledText>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => this.onReplyPress(comment)}
-                style={styles.commentActionItem}
-              >
+                style={styles.commentActionItem}>
                 <StyledText color="grey" size="xxsmall">
                   Reply
                 </StyledText>
@@ -373,11 +366,11 @@ Comment.defaultProps = {
   componentId: null,
 };
 
-interface ToggleRepliesProps {
+type ToggleRepliesProps = {
   onPress?(...args: unknown[]): unknown;
   isLoading?: boolean;
   repliesCount?: number;
-}
+};
 
 export const ToggleReplies = ({
   onPress,
@@ -402,10 +395,10 @@ ToggleReplies.defaultProps = {
   repliesCount: 0,
 };
 
-interface CommentPaginationProps {
+type CommentPaginationProps = {
   onPress?(...args: unknown[]): unknown;
   isLoading?: boolean;
-}
+};
 
 export const CommentPagination = ({
   onPress,

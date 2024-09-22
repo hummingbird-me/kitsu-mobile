@@ -1,8 +1,8 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { View } from 'react-native';
 
-import { defaultAvatar } from 'kitsu/constants/app';
-import { StyledProgressiveImage } from 'kitsu/screens/Feed/components/StyledProgressiveImage';
+import { defaultAvatar } from '@/constants/app';
 
 import { styles } from './styles';
 
@@ -14,12 +14,12 @@ const avatarSizes = {
   xsmall: 22,
 };
 
-interface AvatarProps {
-  avatar?: string;
+type AvatarProps = {
+  avatar: string;
   size?: 'large' | 'default' | 'medium' | 'small' | 'xsmall';
-}
+};
 
-export const Avatar = ({ size, avatar }: AvatarProps) => (
+export const Avatar = ({ size = 'default', avatar }: AvatarProps) => (
   <View
     style={[
       styles.wrap,
@@ -28,17 +28,11 @@ export const Avatar = ({ size, avatar }: AvatarProps) => (
         height: avatarSizes[size],
         borderRadius: avatarSizes[size],
       },
-    ]}
-  >
-    <StyledProgressiveImage
-      resize="cover"
+    ]}>
+    <Image
+      contentFit="cover"
       source={{ uri: avatar || defaultAvatar }}
-      borderRadius={avatarSizes[size]}
+      style={{ borderRadius: avatarSizes[size] }}
     />
   </View>
 );
-
-Avatar.defaultProps = {
-  avatar: null,
-  size: 'default',
-};

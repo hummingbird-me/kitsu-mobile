@@ -1,17 +1,15 @@
 import React, { PureComponent } from 'react';
 import { FlatList, View } from 'react-native';
-import { Navigation } from 'react-native-navigation';
 
-import { Screens } from 'kitsu/navigation';
 import { Comment } from 'kitsu/screens/Feed/components/Comment';
 
-interface CommentFlatListProps {
+type CommentFlatListProps = {
   post: object;
   hideEmbeds?: boolean;
   latestComments: unknown[];
   componentId: any;
   isTruncated?: boolean;
-}
+};
 
 export class CommentFlatList extends PureComponent<CommentFlatListProps> {
   static defaultProps = {

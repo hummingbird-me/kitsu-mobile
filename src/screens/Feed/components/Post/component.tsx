@@ -2,19 +2,16 @@ import { isEmpty, uniqBy } from 'lodash';
 import React, { PureComponent } from 'react';
 import {
   Alert,
-  FlatList,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { Navigation } from 'react-native-navigation';
 
 import { SceneLoader } from 'kitsu/components/SceneLoader';
 import { StyledText } from 'kitsu/components/StyledText';
 import { Kitsu } from 'kitsu/config/api';
 import { defaultAvatar } from 'kitsu/constants/app';
 import * as colors from 'kitsu/constants/colors';
-import { NavigationActions, Screens } from 'kitsu/navigation';
 import { CommentTextInput } from 'kitsu/screens/Feed/components/CommentTextInput';
 import { FeedCache } from 'kitsu/utils/cache';
 import {
@@ -32,12 +29,12 @@ import {
 } from './components';
 import { styles } from './styles';
 
-interface PostProps {
+type PostProps = {
   componentId: any;
   post: object;
   currentUser: object;
   onPostPress?(...args: unknown[]): unknown;
-}
+};
 
 // Post
 export class Post extends PureComponent<PostProps> {
@@ -445,10 +442,10 @@ export class Post extends PureComponent<PostProps> {
   }
 }
 
-interface PostReplyBannerProps {
+type PostReplyBannerProps = {
   name?: string;
   onClose?(...args: unknown[]): unknown;
-}
+};
 
 export const PostReplyBanner = ({ name, onClose }: PostReplyBannerProps) => (
   <View style={styles.postReplyBanner}>

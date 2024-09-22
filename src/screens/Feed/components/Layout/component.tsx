@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, ViewStyle } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 
-import { scenePadding } from 'kitsu/screens/Feed/constants';
+import { scenePadding } from '@/screens/Feed/constants';
 
-interface RowWrapProps {
+type RowWrapProps = {
   alignItems?: 'flex-start' | 'center' | 'flex-end';
   justifyContent?:
     | 'flex-start'
@@ -11,8 +11,7 @@ interface RowWrapProps {
     | 'space-between'
     | 'space-around'
     | 'flex-end';
-  style?: ViewStyle;
-}
+} & ViewProps;
 
 export const RowWrap = ({
   alignItems = 'flex-start',
@@ -33,10 +32,6 @@ export const RowWrap = ({
   />
 );
 
-interface RowMainProps {
-  style?: ViewStyle;
-}
-
-export const RowMain = ({ style, ...props }: RowMainProps) => (
+export const RowMain = ({ style, ...props }: ViewProps) => (
   <View style={[{ flex: 1, paddingLeft: scenePadding }, style]} {...props} />
 );
