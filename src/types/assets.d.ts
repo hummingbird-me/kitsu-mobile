@@ -24,9 +24,6 @@ declare module '*.png' {
 declare module '*.psd' {
   export default number;
 }
-declare module '*.svg' {
-  export default number;
-}
 declare module '*.webp' {
   export default number;
 }
