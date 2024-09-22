@@ -1,9 +1,9 @@
 import LottieView from 'lottie-react-native';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useWindowDimensions, type ViewStyle } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 import Animated, { Easing, Keyframe } from 'react-native-reanimated';
 
-import logoAnimation from '@/assets/animation/splash/full.json';
+import logoAnimation from '@/assets/animation/splash.json';
 import { kitsuPurple } from '@/constants/palette';
 import { mark } from '@/utils/performance';
 import storage from '@/utils/storage';
