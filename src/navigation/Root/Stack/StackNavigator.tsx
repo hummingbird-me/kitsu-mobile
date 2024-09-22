@@ -9,6 +9,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import Placeholder, { usePlaceholder } from '@/components/Placeholder';
 import { kitsuPurple } from '@/constants/palette';
 import { StackNavigationContext } from '@/contexts/StackNavigationContext';
+import DebugScreen from '@/screens/Debug/DebugScreen';
 
 type MediaIdentifier = { id: string; type: 'anime' | 'manga' };
 
@@ -110,7 +111,7 @@ export default function StackNavigator({
         name="Notifications"
         component={usePlaceholder('Notifications')}
       />
-      <Stack.Screen name="Debug" component={usePlaceholder('Debug')} />
+      <Stack.Screen name="Debug" component={DebugScreen} />
       <Stack.Screen name="Profile" component={usePlaceholder('Profile')} />
       <Stack.Screen name="Library" component={usePlaceholder('Library')} />
     </Stack.Navigator>
