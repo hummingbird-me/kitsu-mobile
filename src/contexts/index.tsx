@@ -3,6 +3,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import AccountContext from './AccountContext';
 import IntlContextProvider from './IntlContext';
 import NavigationContainer from './NavigationContainer';
 import ReduxContext from './ReduxContext';
@@ -22,7 +23,9 @@ const ApplicationContext: React.FC<{ children: React.ReactNode }> = function ({
               <IntlContextProvider>
                 <SessionContextProvider>
                   <ReduxContext>
-                    <UrqlContextProvider>{children}</UrqlContextProvider>
+                    <UrqlContextProvider>
+                      <AccountContext>{children}</AccountContext>
+                    </UrqlContextProvider>
                   </ReduxContext>
                 </SessionContextProvider>
               </IntlContextProvider>
