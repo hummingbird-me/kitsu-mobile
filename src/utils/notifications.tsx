@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import { Kitsu } from 'kitsu/config/api';
 import { Screens } from 'kitsu/navigation';
 import { NotificationOverlay } from 'kitsu/screens/Notifications/NotificationOverlay';
-import store from 'kitsu/store/config';
 import { markNotifications } from 'kitsu/store/feed/actions';
+import store from 'kitsu/store/store';
 
 import { fetchComment, fetchPost } from './feed';
 

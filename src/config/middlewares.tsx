@@ -7,7 +7,7 @@ import {
   legacy_refreshSession,
 } from '@/contexts/SessionContext';
 import InvariantViolated from '@/errors/InvariantViolated';
-import store from '@/store/config';
+import store from '@/store/store';
 import { getComputedTitle } from '@/utils/getTitleField';
 
 export const errorMiddleware = {

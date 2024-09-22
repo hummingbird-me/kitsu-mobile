@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 
-import store from 'kitsu/store/config';
+import store from 'kitsu/store/store';
 
 /**
  * A class to help with uploading images.
