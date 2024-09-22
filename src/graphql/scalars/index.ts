@@ -1,3 +1,9 @@
-export { default as Date } from './Date';
-export { default as ISO8601DateTime } from './Date';
-export { default as ISO8601Date } from './Date';
+import Date from './Date';
+
+export default {
+  Date,
+  ISO8601DateTime: Date,
+  ISO8601Date: Date,
+} as {
+  [key: string]: (str: string | null) => unknown;
+};
