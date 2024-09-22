@@ -45,7 +45,7 @@ export default function MainNavigator() {
       }}
       tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen name="HomeTab" options={{ tabBarIcon: HomeIcon }}>
-        {createStackNavigator({ initialRouteName: 'Profile' })}
+        {createStackNavigator({ initialRouteName: 'Feed' })}
       </Tab.Screen>
       <Tab.Screen name="SearchTab" options={{ tabBarIcon: SearchIcon }}>
         {createStackNavigator({ initialRouteName: 'Search' })}
