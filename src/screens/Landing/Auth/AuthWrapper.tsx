@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import React from 'react';
 import { Platform, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { slidelogo } from 'kitsu/assets/img/intro/';
 
@@ -10,8 +10,6 @@ import styles from './styles';
 
 const AuthWrapper = ({ children }: { children: React.ReactNode }) => (
   <KeyboardAwareScrollView
-    enableOnAndroid={false}
-    extraHeight={80}
     contentContainerStyle={styles.stretch}
     scrollEnabled={Platform.select({ ios: false, android: true })}>
     <View style={styles.stretch}>
