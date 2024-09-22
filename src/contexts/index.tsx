@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import IntlContextProvider from './IntlContext';
 import NavigationContainer from './NavigationContainer';
+import ReduxContext from './ReduxContext';
 import { SessionContextProvider } from './SessionContext';
 import { StackNavigationProvider } from './StackNavigationContext';
 import UrqlContextProvider from './UrqlContext';
@@ -20,7 +21,9 @@ const ApplicationContext: React.FC<{ children: React.ReactNode }> = function ({
             <SafeAreaProvider>
               <IntlContextProvider>
                 <SessionContextProvider>
-                  <UrqlContextProvider>{children}</UrqlContextProvider>
+                  <ReduxContext>
+                    <UrqlContextProvider>{children}</UrqlContextProvider>
+                  </ReduxContext>
                 </SessionContextProvider>
               </IntlContextProvider>
             </SafeAreaProvider>
